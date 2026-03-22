@@ -1,2 +1,1 @@
-# LYProj_C34
-Final year project of group C34
+LY Project C34

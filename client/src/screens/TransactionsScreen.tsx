@@ -1,15 +1,17 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native';
+import { FlatList, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { getTransactions } from '../services/api';
 import { useStore } from '../store/useStore';
 import { Transaction } from '../types';
 import { formatCurrency } from '../utils/format';
+import { TransactionEntryScreen } from './TransactionEntryScreen';
 
 const categories = ['all', 'food', 'travel', 'bills', 'shopping'];
 
-export function TransactionsScreen(): JSX.Element {
+export function TransactionsScreen(): React.ReactElement {
   const { transactions, setTransactions } = useStore();
   const [activeCategory, setActiveCategory] = useState('all');
+  const [showEntry, setShowEntry] = useState(false);
 
   useEffect(() => {
     getTransactions().then(setTransactions).catch(console.error);
@@ -47,6 +49,21 @@ export function TransactionsScreen(): JSX.Element {
       </View>
 
       <FlatList data={filtered} renderItem={renderItem} keyExtractor={(item: Transaction) => item.id} />
+
+      {/* Floating Add Button */}
+      <TouchableOpacity style={styles.fab} onPress={() => setShowEntry(true)} activeOpacity={0.85}>
+        <Text style={styles.fabIcon}>＋</Text>
+      </TouchableOpacity>
+
+      {/* Transaction Entry Modal */}
+      <Modal
+        visible={showEntry}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setShowEntry(false)}
+      >
+        <TransactionEntryScreen onClose={() => setShowEntry(false)} />
+      </Modal>
     </View>
   );
 }
@@ -69,5 +86,26 @@ const styles = StyleSheet.create({
   anomaly: { borderWidth: 1, borderColor: '#f97316' },
   category: { fontWeight: '700' },
   sentiment: { color: '#64748b' },
-  amount: { fontWeight: '700' }
+  amount: { fontWeight: '700' },
+  fab: {
+    position: 'absolute',
+    bottom: 24,
+    right: 16,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: '#3B3BDE',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#3B3BDE',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.4,
+    shadowRadius: 10,
+    elevation: 10,
+  },
+  fabIcon: {
+    fontSize: 28,
+    color: '#fff',
+    lineHeight: 32,
+  },
 });

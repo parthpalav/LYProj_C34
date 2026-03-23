@@ -1,7 +1,9 @@
 const express = require('express');
 const cors = require('cors');
+require('dotenv').config();
 
 const routes = require('./routes');
+const { connectDB } = require('./config/db');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -15,6 +17,16 @@ app.get('/health', (_req, res) => {
 
 app.use('/api', routes);
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+async function startServer() {
+  try {
+    await connectDB();
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error('Failed to start server:', error.message);
+    process.exit(1);
+  }
+}
+
+startServer();

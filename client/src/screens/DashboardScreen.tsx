@@ -234,7 +234,6 @@ const lnStyles = StyleSheet.create({
     position: 'absolute',
     height: 2.5, backgroundColor: BLUE,
     borderRadius: 2,
-    transformOrigin: 'left center',
   },
   dot:     { position: 'absolute', width: 8, height: 8, borderRadius: 4, backgroundColor: BLUE, borderWidth: 2, borderColor: '#fff' },
   xRow:    { flexDirection: 'row', justifyContent: 'space-between', marginTop: 6 },

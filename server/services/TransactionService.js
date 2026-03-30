@@ -13,8 +13,5 @@ function detectAnomaly(txList) {
   return txList.map((tx) => ({ ...tx, isAnomaly: tx.amount > avg * 1.8 }));
 }
 
-// module.exports = {
-//   categorizeTransaction,
-//   detectAnomaly
-// };
+
 export { categorizeTransaction, detectAnomaly };

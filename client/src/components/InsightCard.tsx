@@ -5,7 +5,7 @@ interface Props {
   text: string;
 }
 
-export function InsightCard({ text }: Props): JSX.Element {
+export function InsightCard({ text }: Props): React.ReactElement {
   return (
     <View style={styles.card}>
       <Text style={styles.label}>Insight</Text>

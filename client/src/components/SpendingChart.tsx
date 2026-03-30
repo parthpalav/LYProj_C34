@@ -5,7 +5,7 @@ interface Props {
   values: number[];
 }
 
-export function SpendingChart({ values }: Props): JSX.Element {
+export function SpendingChart({ values }: Props): React.ReactElement {
   const maxValue = Math.max(...values, 1);
 
   return (

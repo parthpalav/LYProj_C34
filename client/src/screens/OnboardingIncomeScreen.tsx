@@ -48,7 +48,7 @@ export function OnboardingIncomeScreen({ onNext, onPrev }: Props): React.ReactEl
   };
 
   const formatIncome = (val: number) =>
-    `$${val.toLocaleString('en-US')}`;
+    `₹${val.toLocaleString('en-IN')}`;
 
   return (
     <SafeAreaView style={styles.safe}>

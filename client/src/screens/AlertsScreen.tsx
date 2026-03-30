@@ -1,20 +1,41 @@
-import React, { useEffect } from 'react';
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { getAlerts } from '../services/api';
 import { useStore } from '../store/useStore';
 
-export function AlertsScreen(): JSX.Element {
+export function AlertsScreen(): React.ReactElement {
   const { alerts, setAlerts } = useStore();
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetchAlerts = useCallback(async (isRefresh = false) => {
+    try {
+      if (isRefresh) setRefreshing(true);
+      const data = await getAlerts();
+      setAlerts(data);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setRefreshing(false);
+    }
+  }, [setAlerts]);
 
   useEffect(() => {
-    getAlerts().then(setAlerts).catch(console.error);
-  }, [setAlerts]);
+    fetchAlerts();
+  }, [fetchAlerts]);
 
   return (
     <View style={styles.container}>
       <FlatList
         data={alerts}
         keyExtractor={(item) => item.id}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => fetchAlerts(true)}
+            tintColor="#3B3BDE"
+            colors={['#3B3BDE']}
+          />
+        }
         renderItem={({ item }) => (
           <View style={styles.card}>
             <Text style={styles.type}>{item.type.toUpperCase()} - {item.severity.toUpperCase()}</Text>

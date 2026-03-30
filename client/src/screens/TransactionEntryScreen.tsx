@@ -9,7 +9,11 @@ import {
   ScrollView,
   Modal,
   FlatList,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
+import { addTransaction } from '../services/api';
+import { useStore } from '../store/useStore';
 
 const CATEGORIES = [
   { label: 'Food & Drink', emoji: '🍔' },
@@ -30,19 +34,66 @@ interface Props {
 }
 
 export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
-  const [amount, setAmount] = useState('15.50');
-  const [description, setDescription] = useState('Coffee at Starbucks');
+  const [amount, setAmount] = useState('');
+  const [description, setDescription] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(CATEGORIES[0]);
   const [selectedType, setSelectedType] = useState<SpendType>('Want');
   const [showCategoryModal, setShowCategoryModal] = useState(false);
-  const [logged, setLogged] = useState(false);
-
-  const handleLog = () => {
-    setLogged(true);
-    setTimeout(() => setLogged(false), 1500);
-  };
+  const [logged,   setLogged]   = useState(false);
+  const [saving,   setSaving]   = useState(false);
+  const { transactions, addTransaction: addToStore } = useStore();
 
   const parsedAmount = parseFloat(amount.replace(/[^0-9.]/g, '')) || 0;
+
+  // Real-time stats
+  const today = new Date().toDateString();
+  const todaySpend = transactions
+    .filter(t => new Date(t.timestamp).toDateString() === today)
+    .reduce((s, t) => s + (t.amount < 0 ? Math.abs(t.amount) : 0), 0) + parsedAmount;
+
+  const startOfWeek = new Date(); startOfWeek.setDate(startOfWeek.getDate() - 7);
+  const weekSpend = transactions
+    .filter(t => new Date(t.timestamp) > startOfWeek)
+    .reduce((s, t) => s + (t.amount < 0 ? Math.abs(t.amount) : 0), 0) + parsedAmount;
+
+  const wantsRatio = transactions.length > 0 
+    ? Math.round((transactions.filter(t => t.sentiment === 'negative').length / transactions.length) * 100)
+    : 0;
+
+
+  const handleLog = async () => {
+    if (saving) return;
+    if (parsedAmount <= 0) {
+      Alert.alert('Invalid Amount', 'Please enter a valid amount greater than 0.');
+      return;
+    }
+    setSaving(true);
+    try {
+      // Map UI category + type → server fields
+      const categoryKey = selectedCategory.label.toLowerCase().replace(' & ', '-').split(' ')[0];
+      const sentimentMap: Record<string, 'positive' | 'neutral' | 'negative'> = {
+        Need: 'neutral', Want: 'negative', Saving: 'positive', Invest: 'positive',
+      };
+      const newTx = await addTransaction({
+        amount:      parsedAmount,
+        category:    categoryKey,
+        sentiment:   sentimentMap[selectedType] ?? 'neutral',
+        description: description.trim() || selectedCategory.label,
+      });
+      addToStore(newTx);
+      setLogged(true);
+      setTimeout(() => {
+        setLogged(false);
+        onClose?.();
+      }, 1200);
+    } catch {
+      Alert.alert('Error', 'Failed to save transaction. Please check the server.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -66,10 +117,11 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
           {/* Amount */}
           <TextInput
             style={styles.amountInput}
-            value={`$${amount}`}
-            onChangeText={(t) => setAmount(t.replace('$', ''))}
+            value={`₹${amount}`}
+            onChangeText={(t) => setAmount(t.replace('₹', ''))}
             keyboardType="decimal-pad"
             selectTextOnFocus
+            placeholder="₹0"
           />
 
           {/* Divider */}
@@ -81,7 +133,7 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
             style={styles.textInput}
             value={description}
             onChangeText={setDescription}
-            placeholder="e.g. Coffee at Starbucks"
+            placeholder="e.g. Grocery dinner"
             placeholderTextColor="#A0AEC0"
           />
 
@@ -130,10 +182,15 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
             style={[styles.logButton, logged && styles.logButtonSuccess]}
             onPress={handleLog}
             activeOpacity={0.85}
+            disabled={saving}
           >
-            <Text style={styles.logButtonText}>
-              {logged ? '✓ Logged!' : 'Log Transaction'}
-            </Text>
+            {saving ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={styles.logButtonText}>
+                {logged ? '✓ Logged!' : 'Log Transaction'}
+              </Text>
+            )}
           </TouchableOpacity>
 
           {/* Summary Footer */}
@@ -141,18 +198,18 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
             <View style={styles.summaryItem}>
               <Text style={styles.summaryLabel}>Today's Spend</Text>
               <Text style={styles.summaryValue}>
-                ${parsedAmount.toFixed(2)}
+                ₹{todaySpend.toFixed(0)}
               </Text>
             </View>
             <View style={styles.summaryDivider} />
             <View style={styles.summaryItem}>
-              <Text style={styles.summaryLabel}>This Week's Spend</Text>
-              <Text style={styles.summaryValue}>$310.00</Text>
+              <Text style={styles.summaryLabel}>7-Day Spend</Text>
+              <Text style={styles.summaryValue}>₹{weekSpend.toFixed(0)}</Text>
             </View>
             <View style={styles.summaryDivider} />
             <View style={styles.summaryItem}>
               <Text style={styles.summaryLabel}>Wants Ratio</Text>
-              <Text style={styles.summaryValue}>22%</Text>
+              <Text style={styles.summaryValue}>{wantsRatio}%</Text>
             </View>
           </View>
         </View>

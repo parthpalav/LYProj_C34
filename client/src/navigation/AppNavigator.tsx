@@ -7,6 +7,8 @@ import { EnvelopesScreen } from '../screens/EnvelopesScreen';
 import { FmiScreen } from '../screens/FmiScreen';
 import { GoalPlannerScreen } from '../screens/GoalPlannerScreen';
 import { TransactionsScreen } from '../screens/TransactionsScreen';
+import { IncomeFlowScreen } from '../screens/IncomeFlowScreen';
+import { ReportsScreen } from '../screens/ReportsScreen';
 
 export type RootTabParamList = {
   Dashboard: undefined;
@@ -16,6 +18,8 @@ export type RootTabParamList = {
   Goals: undefined;
   Chat: undefined;
   Alerts: undefined;
+  Income: undefined;
+  Reports: undefined;
 };
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
@@ -30,11 +34,13 @@ export function AppNavigator(): React.ReactElement {
       }}
     >
       <Tab.Screen name="Dashboard"    component={DashboardScreen} />
+      <Tab.Screen name="Chat"         component={ChatScreen} />
       <Tab.Screen name="Transactions" component={TransactionsScreen} />
-      <Tab.Screen name="FMI"          component={FmiScreen} />
+      <Tab.Screen name="Income"       component={IncomeFlowScreen} />
       <Tab.Screen name="Envelopes"    component={EnvelopesScreen} />
       <Tab.Screen name="Goals"        component={GoalPlannerScreen} />
-      <Tab.Screen name="Chat"         component={ChatScreen} />
+      <Tab.Screen name="FMI"          component={FmiScreen} />
+      <Tab.Screen name="Reports"      component={ReportsScreen} />
       <Tab.Screen name="Alerts"       component={AlertsScreen} />
     </Tab.Navigator>
   );

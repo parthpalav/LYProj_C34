@@ -7,7 +7,7 @@ interface Props {
   risk: RiskLevel;
 }
 
-export function FmiMeter({ score, risk }: Props): JSX.Element {
+export function FmiMeter({ score, risk }: Props): React.ReactElement {
   const normalized = Math.max(0, Math.min(100, score));
   const riskColor = risk === 'high' ? '#dc2626' : risk === 'medium' ? '#f59e0b' : '#16a34a';
 

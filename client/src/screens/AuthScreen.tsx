@@ -12,6 +12,8 @@ import {
   Animated,
   Alert,
 } from 'react-native';
+import { registerUser } from '../services/api';
+import { useStore } from '../store/useStore';
 
 interface Props {
   onAuthSuccess: () => void;
@@ -20,6 +22,7 @@ interface Props {
 type AuthMode = 'signin' | 'signup';
 
 export function AuthScreen({ onAuthSuccess }: Props): React.ReactElement {
+  const { setUser } = useStore();
   const [mode, setMode] = useState<AuthMode>('signin');
 
   // Sign In fields
@@ -70,7 +73,7 @@ export function AuthScreen({ onAuthSuccess }: Props): React.ReactElement {
     }, 1200);
   };
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     if (!signUpName.trim() || !signUpEmail.trim() || !signUpPassword.trim() || !signUpConfirmPassword.trim()) {
       Alert.alert('Missing Fields', 'Please fill in all fields.');
       return;
@@ -88,11 +91,20 @@ export function AuthScreen({ onAuthSuccess }: Props): React.ReactElement {
       return;
     }
     setLoading(true);
-    // Simulate auth — replace with real API call
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      const result = await registerUser({
+        name:       signUpName.trim(),
+        incomeType: 'salaried',
+        goals:      [],
+      });
+      setUser({ name: result.name });
       onAuthSuccess();
-    }, 1400);
+    } catch (err: any) {
+      const msg = err?.response?.data?.message ?? 'Could not create account. Please try again.';
+      Alert.alert('Sign Up Failed', msg);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const indicatorLeft = tabAnim.interpolate({

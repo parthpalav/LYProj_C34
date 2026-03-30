@@ -1,9 +1,9 @@
-const { transactions, fmiHistory, alerts, user, envelopes } = require('./mockData');
-const User = require('../models/User');
-const Transaction = require('../models/Transaction');
-const FMIHistory = require('../models/FMIHistory');
-const Alert = require('../models/Alert');
-const Envelope = require('../models/Envelope');
+import { transactions, fmiHistory, alerts, user, envelopes } from './mockData.js';
+import User from '../models/User.js';
+import Transaction from '../models/Transaction.js';
+import FMIHistory from '../models/FMIHistory.js';
+import Alert from '../models/Alert.js';
+import Envelope from '../models/Envelope.js';
 
 async function seedDatabase() {
   const [userCount, txCount, fmiCount, alertCount, envelopeCount] = await Promise.all([
@@ -45,6 +45,4 @@ async function seedDatabase() {
   }
 }
 
-module.exports = {
-  seedDatabase
-};
+export { seedDatabase };

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const fmiHistorySchema = new mongoose.Schema(
   {
@@ -9,4 +9,4 @@ const fmiHistorySchema = new mongoose.Schema(
   { versionKey: false }
 );
 
-module.exports = mongoose.model('FMIHistory', fmiHistorySchema);
+export default mongoose.model('FMIHistory', fmiHistorySchema);

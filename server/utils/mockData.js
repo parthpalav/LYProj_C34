@@ -64,7 +64,7 @@ const envelopes = {
   targetSavings: 12000
 };
 
-module.exports = {
+export {
   transactions,
   fmiHistory,
   alerts,

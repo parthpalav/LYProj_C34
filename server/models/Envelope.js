@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const envelopeSchema = new mongoose.Schema(
   {
@@ -11,4 +11,4 @@ const envelopeSchema = new mongoose.Schema(
   { versionKey: false }
 );
 
-module.exports = mongoose.model('Envelope', envelopeSchema);
+export default mongoose.model('Envelope', envelopeSchema);

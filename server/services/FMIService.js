@@ -24,6 +24,7 @@ function calculateFMI({ spendingDeviation, sentimentScore, upcomingBills, income
   };
 }
 
-module.exports = {
-  calculateFMI
-};
+// module.exports = {
+//   calculateFMI
+// };
+export { calculateFMI };

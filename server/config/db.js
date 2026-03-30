@@ -1,5 +1,5 @@
-const mongoose = require('mongoose');
-const { seedDatabase } = require('../utils/seedDatabase');
+import mongoose from 'mongoose';
+import { seedDatabase } from '../utils/seedDatabase.js';
 
 const DEFAULT_MONGO_URI = 'mongodb://127.0.0.1:27017/lyproj';
 
@@ -10,6 +10,4 @@ async function connectDB() {
   await seedDatabase();
 }
 
-module.exports = {
-  connectDB
-};
+export { connectDB };

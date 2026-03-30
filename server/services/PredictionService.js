@@ -9,7 +9,8 @@ function detectLowBalanceRisk(balance = 0, upcomingBills = 0) {
   return balance - upcomingBills < 3000;
 }
 
-module.exports = {
-  predictOverspend,
-  detectLowBalanceRisk
-};
+// module.exports = {
+//   predictOverspend,
+//   detectLowBalanceRisk
+// };
+export { predictOverspend, detectLowBalanceRisk };

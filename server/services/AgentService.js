@@ -16,6 +16,4 @@ function generateResponse(userInput, context) {
   return 'Your spending pattern is stable. Continue tracking food and shopping categories for better FMI gains.';
 }
 
-module.exports = {
-  generateResponse
-};
+export { generateResponse };

@@ -1,9 +1,9 @@
-const express = require('express');
-const cors = require('cors');
-require('dotenv').config();
+import express from 'express';
+import cors from 'cors';
+import 'dotenv/config';
 
-const routes = require('./routes');
-const { connectDB } = require('./config/db');
+import routes from './routes/index.js';
+import { connectDB } from './config/db.js';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -13,6 +13,10 @@ app.use(express.json());
 
 app.get('/health', (_req, res) => {
   res.json({ ok: true, service: 'lyproj-server' });
+});
+
+app.get("/", (_req, res) => {
+  res.send("Welcome to LYProj API");
 });
 
 app.use('/api', routes);

@@ -1,14 +1,14 @@
-const { Router } = require('express');
-const { detectAnomaly } = require('../services/TransactionService');
-const { calculateFMI } = require('../services/FMIService');
-const { predictOverspend, detectLowBalanceRisk } = require('../services/PredictionService');
-const { applyRoundup, allocateToEnvelope } = require('../services/MicroActionService');
-const { generateResponse } = require('../services/AgentService');
-const User = require('../models/User');
-const Transaction = require('../models/Transaction');
-const FMIHistory = require('../models/FMIHistory');
-const Alert = require('../models/Alert');
-const Envelope = require('../models/Envelope');
+import { Router } from 'express';
+import { detectAnomaly } from '../services/TransactionService.js';
+import { calculateFMI } from '../services/FMIService.js';
+import { predictOverspend, detectLowBalanceRisk } from '../services/PredictionService.js';
+import { applyRoundup, allocateToEnvelope } from '../services/MicroActionService.js';
+import { generateResponse } from '../services/AgentService.js';
+import User from '../models/User.js';
+import Transaction from '../models/Transaction.js';
+import FMIHistory from '../models/FMIHistory.js';
+import Alert from '../models/Alert.js';
+import Envelope from '../models/Envelope.js';
 
 const router = Router();
 
@@ -210,4 +210,4 @@ router.use((error, _req, res, _next) => {
   res.status(500).json({ message: 'Internal server error' });
 });
 
-module.exports = router;
+export default router;

@@ -10,7 +10,8 @@ function allocateToEnvelope(envelopes, roundupAmount) {
   };
 }
 
-module.exports = {
-  applyRoundup,
-  allocateToEnvelope
-};
+// module.exports = {
+//   applyRoundup,
+//   allocateToEnvelope
+// };
+export { applyRoundup, allocateToEnvelope };

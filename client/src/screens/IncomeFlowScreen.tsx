@@ -5,6 +5,7 @@ import {
 } from 'react-native';
 import { addIncome, getIncomeFlow, updateIncome, deleteIncome } from '../services/api';
 import { IncomeFlowData } from '../types';
+import { formatCurrency } from '../utils/format';
 
 const BLUE    = '#3B3BDE';
 const GREEN   = '#22C880';
@@ -58,7 +59,7 @@ function AllocationRing({ allocation }: { allocation: IncomeFlowData['allocation
           <View key={s.label} style={rStyles.legItem}>
             <View style={[rStyles.legDot, { backgroundColor: s.color }]} />
             <Text style={rStyles.legLbl}>{s.label}</Text>
-            <Text style={[rStyles.legVal, { color: s.color }]}>₹{s.value.toLocaleString()}</Text>
+            <Text style={[rStyles.legVal, { color: s.color }]}>{formatCurrency(s.value)}</Text>
           </View>
         ))}
       </View>
@@ -175,7 +176,7 @@ export function IncomeFlowScreen(): React.ReactElement {
 
   useEffect(() => { fetchFlow(); }, [fetchFlow]);
 
-  const handleLongPress = (item: any) => {
+  const handleLongPress = (item: IncomeFlowData['timeline'][number]) => {
     Alert.alert(
       'Manage Income',
       `What would you like to do with "${item.description || item.source}"?`,
@@ -244,11 +245,11 @@ export function IncomeFlowScreen(): React.ReactElement {
         <View style={s.header}>
           <View>
             <Text style={s.headerLabel}>Total Monthly Income</Text>
-            <Text style={s.headerAmount}>₹{(flow?.total ?? 0).toLocaleString()}</Text>
+            <Text style={s.headerAmount}>{formatCurrency(flow?.total ?? 0)}</Text>
           </View>
           <View style={s.dailyPill}>
             <Text style={s.dailyLabel}>Daily</Text>
-            <Text style={s.dailyAmount}>₹{flow?.dailySmoothed ?? 0}</Text>
+            <Text style={s.dailyAmount}>{formatCurrency(flow?.dailySmoothed ?? 0)}</Text>
           </View>
         </View>
 
@@ -273,14 +274,15 @@ export function IncomeFlowScreen(): React.ReactElement {
         {flow && Object.keys(flow.sources).length > 0 && (
           <Card title="Income Sources">
             {Object.entries(flow.sources).map(([src, amt]) => {
-              const pct = flow.total > 0 ? Math.round((amt / flow.total) * 100) : 0;
+              const amount = Number(amt);
+              const pct = flow.total > 0 ? Math.round((amount / flow.total) * 100) : 0;
               return (
                 <View key={src} style={s.sourceRow}>
                   <Text style={s.sourceName}>{SOURCE_LABELS[src] ?? src}</Text>
                   <View style={s.sourceBarWrap}>
-                    <View style={[s.sourceBar, { width: `${pct}%` as any, backgroundColor: SOURCES[src] ?? BLUE }]} />
+                    <View style={[s.sourceBar, { width: `${pct}%`, backgroundColor: SOURCES[src] ?? BLUE }]} />
                   </View>
-                  <Text style={[s.sourceAmt, { color: SOURCES[src] ?? BLUE }]}>₹{(amt as number).toLocaleString()}</Text>
+                  <Text style={[s.sourceAmt, { color: SOURCES[src] ?? BLUE }]}>{formatCurrency(amount)}</Text>
                 </View>
               );
             })}
@@ -305,7 +307,7 @@ export function IncomeFlowScreen(): React.ReactElement {
                   </Text>
                 </View>
                 <Text style={[s.timelineAmt, { color: SOURCES[item.source] ?? BLUE }]}>
-                  +₹{item.amount.toLocaleString()}
+                  +{formatCurrency(item.amount)}
                 </Text>
               </TouchableOpacity>
             ))}
@@ -323,7 +325,7 @@ export function IncomeFlowScreen(): React.ReactElement {
 
       {/* FAB */}
       <TouchableOpacity style={s.fab} onPress={() => setShowAdd(true)} activeOpacity={0.85}>
-        <Text style={s.fabIcon}>＋</Text>
+        <Text style={s.fabIcon}>+</Text>
       </TouchableOpacity>
 
       <AddIncomeModal visible={showAdd} onClose={() => setShowAdd(false)} onAdd={() => fetchFlow(true)} />

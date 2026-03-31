@@ -90,8 +90,9 @@ export function TransactionsScreen(): React.ReactElement {
   };
 
   const renderItem = ({ item }: { item: Transaction }) => {
-    const isNegative = item.amount > 0;
-    const sign = isNegative ? '-' : '+';
+    const isExpense = item.amount < 0;
+    const sign = isExpense ? '-' : '+';
+    const displayAmount = `${sign}${formatCurrency(Math.abs(item.amount))}`;
     let icon = '🍔';
     if (item.category === 'travel') icon = '🚕';
     if (item.category === 'shopping') icon = '🛍️';
@@ -116,7 +117,7 @@ export function TransactionsScreen(): React.ReactElement {
           <Text style={styles.date}>{new Date(item.timestamp).toLocaleDateString()} at {new Date(item.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</Text>
           {item.tags && item.tags.length > 0 && (
             <View style={{ flexDirection: 'row', gap: 4, marginTop: 4 }}>
-              {item.tags.map(t => (
+              {item.tags.map((t) => (
                 <View key={t} style={{ backgroundColor: '#F3F4F6', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4 }}>
                   <Text style={{ fontSize: 10, color: '#4B5563', textTransform: 'uppercase' }}>{t}</Text>
                 </View>
@@ -125,8 +126,8 @@ export function TransactionsScreen(): React.ReactElement {
           )}
         </View>
         <View style={{ alignItems: 'flex-end' }}>
-          <Text style={[styles.amount, !isNegative && styles.income]}>
-            {sign}₹{Math.abs(item.amount)}
+          <Text style={[styles.amount, !isExpense && styles.income]}>
+            {displayAmount}
           </Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 4 }}>
             <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: sentimentColor }} />
@@ -174,7 +175,7 @@ export function TransactionsScreen(): React.ReactElement {
 
       {/* Floating Add Button */}
       <TouchableOpacity style={styles.fab} onPress={() => setShowEntry(true)} activeOpacity={0.85}>
-        <Text style={styles.fabIcon}>＋</Text>
+        <Text style={styles.fabIcon}>+</Text>
       </TouchableOpacity>
 
       {/* Transaction Entry Modal */}

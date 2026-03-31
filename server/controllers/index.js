@@ -163,16 +163,16 @@ router.get('/fmi/history', async (_req, res, next) => {
 
 router.get('/alerts', async (_req, res, next) => {
   try {
-    const txDocs  = await Transaction.find({ userId: USER_ID }).sort({ timestamp: -1 }).lean();
+    const txDocs = await Transaction.find({ userId: USER_ID }).sort({ timestamp: -1 }).lean();
     const incomes = await Income.find({ userId: USER_ID }).lean();
-    const alerts  = await Alert.find({ userId: USER_ID }).lean();
-    
-    const totalInc = incomes.reduce((s, i) => s + i.amount, 0);
-    const totalExp = txDocs.reduce((s, t) => s + t.amount, 0);
+    const alerts = await Alert.find({ userId: USER_ID }).lean();
+
+    const totalInc = incomes.reduce((sum, income) => sum + income.amount, 0);
+    const totalExp = txDocs.reduce((sum, tx) => sum + tx.amount, 0);
     const currentBalance = totalInc - totalExp;
 
     const recentSpending = txDocs.slice(0, 4).map((tx) => tx.amount);
-    const overspend  = predictOverspend(recentSpending, currentBalance);
+    const overspend = predictOverspend(recentSpending, currentBalance);
     const lowBalance = detectLowBalanceRisk(currentBalance, totalInc * 0.2);
 
     const patterns = detectBehavioralPatterns(annotateTransactions(txDocs));
@@ -244,31 +244,31 @@ router.post('/envelopes/update', async (req, res, next) => {
 
 router.get('/dashboard', async (_req, res, next) => {
   try {
+    const txDocs = await Transaction.find({ userId: USER_ID }).sort({ timestamp: 1 }).lean();
+    const incomes = await Income.find({ userId: USER_ID }).lean();
+    const goals = await Goal.find({ userId: USER_ID }).lean();
+
     const currentFmi = await FMIHistory.findOne().sort({ timestamp: -1 }).lean();
-    const txDocs     = await Transaction.find().sort({ timestamp: 1 }).lean();
-    const envelopes  = await Envelope.findOne({ userId: USER_ID }).lean();
-    const incomes    = await Income.find({ userId: USER_ID }).lean();
+    const fmiHistory = await FMIHistory.find().sort({ timestamp: 1 }).lean();
+    const envelopes = await Envelope.findOne({ userId: USER_ID }).lean();
 
     const totalInc = incomes.reduce((s, i) => s + i.amount, 0);
     const totalExp = txDocs.reduce((s, t) => s + t.amount, 0);
     const currentBalance = totalInc - totalExp;
 
     const annotated = annotateTransactions(txDocs);
-    const patterns  = detectBehavioralPatterns(annotated);
-    const fmiHistory = await FMIHistory.find().sort({ timestamp: 1 }).lean();
+    const patterns = detectBehavioralPatterns(annotated);
     const recentSpending = txDocs.slice(-14).map((tx) => ({ amount: tx.amount, timestamp: tx.timestamp }));
-    const overspendData  = predictOverspend(recentSpending, envelopes?.savings || 0);
+    const overspendData = predictOverspend(recentSpending, envelopes?.savings || 0);
     const lowBalanceRisk = detectLowBalanceRisk(currentBalance, totalInc * 0.15, currentFmi?.score ?? 50);
-    const microActions   = generateMicroActions(currentFmi?.score ?? 50, overspendData);
-    
-    const fisData   = calculateFIS(annotated, fmiHistory, envelopes);
+    const microActions = generateMicroActions(currentFmi?.score ?? 50, overspendData);
+
+    const fisData = calculateFIS(annotated, fmiHistory, envelopes);
     const totalIncome = totalInc;
 
-    const goals = await Goal.find({ userId: USER_ID }).lean();
-    
     // Category Breakdown (last 30 days)
     const thirtyDaysAgo = new Date(); thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    const recentTx = txDocs.filter(t => new Date(t.timestamp) > thirtyDaysAgo);
+    const recentTx = txDocs.filter((t) => new Date(t.timestamp) > thirtyDaysAgo);
     const catMap = recentTx.reduce((acc, t) => {
       acc[t.category] = (acc[t.category] || 0) + Math.abs(t.amount);
       return acc;
@@ -292,7 +292,7 @@ router.get('/dashboard', async (_req, res, next) => {
     if (lowBalanceRisk) insights.push('High risk of low balance detected. Consider pausing non-essential spend.');
     if (overspendData.risk === 'high') insights.push('Your weekly spending trend is significantly above average.');
     
-    patterns.slice(0, 2).forEach(p => insights.push(p.message));
+    patterns.slice(0, 2).forEach((p) => insights.push(p.message));
     
     if (insights.length < 3) {
       insights.push('Try one no-spend day in the next 48 hours.');

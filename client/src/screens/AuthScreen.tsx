@@ -65,15 +65,20 @@ export function AuthScreen({ onAuthSuccess }: Props): React.ReactElement {
       Alert.alert('Invalid Email', 'Please enter a valid email address.');
       return;
     }
+    if (signInPassword.trim().length < 6) {
+      Alert.alert('Invalid Password', 'Password must be at least 6 characters.');
+      return;
+    }
     setLoading(true);
-    // Simulate auth — replace with real API call
+    // TODO: Replace with real API call when backend is ready
     setTimeout(() => {
       setLoading(false);
+      setUser({ name: signInEmail.split('@')[0] });
       onAuthSuccess();
-    }, 1200);
+    }, 1000);
   };
 
-  const handleSignUp = async () => {
+  const handleSignUp = () => {
     if (!signUpName.trim() || !signUpEmail.trim() || !signUpPassword.trim() || !signUpConfirmPassword.trim()) {
       Alert.alert('Missing Fields', 'Please fill in all fields.');
       return;
@@ -82,7 +87,7 @@ export function AuthScreen({ onAuthSuccess }: Props): React.ReactElement {
       Alert.alert('Invalid Email', 'Please enter a valid email address.');
       return;
     }
-    if (signUpPassword.length < 6) {
+    if (signUpPassword.trim().length < 6) {
       Alert.alert('Weak Password', 'Password must be at least 6 characters.');
       return;
     }
@@ -91,20 +96,12 @@ export function AuthScreen({ onAuthSuccess }: Props): React.ReactElement {
       return;
     }
     setLoading(true);
-    try {
-      const result = await registerUser({
-        name:       signUpName.trim(),
-        incomeType: 'salaried',
-        goals:      [],
-      });
-      setUser({ name: result.name });
-      onAuthSuccess();
-    } catch (err: any) {
-      const msg = err?.response?.data?.message ?? 'Could not create account. Please try again.';
-      Alert.alert('Sign Up Failed', msg);
-    } finally {
+    // TODO: Replace with real API call (registerUser) when backend + MongoDB is set up
+    setTimeout(() => {
       setLoading(false);
-    }
+      setUser({ name: signUpName.trim() });
+      onAuthSuccess();
+    }, 1000);
   };
 
   const indicatorLeft = tabAnim.interpolate({

@@ -517,6 +517,38 @@ router.get('/reports/weekly', async (_req, res, next) => {
   } catch (error) { next(error); }
 });
 
+// ═══════════════════════════════════════════════════════════
+// ML EXPENSE CLASSIFIER  (proxies to Flask on port 5001)
+// ═══════════════════════════════════════════════════════════
+
+const ML_SERVICE_URL = process.env.ML_SERVICE_URL || 'http://localhost:5001';
+
+router.post('/classify', async (req, res, next) => {
+  try {
+    const text = (req.body.text || '').trim();
+    if (!text) return res.status(400).json({ error: 'text field is required' });
+
+    const response = await fetch(`${ML_SERVICE_URL}/classify`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ text }),
+      signal:  AbortSignal.timeout(5000),   // 5-second timeout
+    });
+
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      return res.status(response.status).json(err);
+    }
+
+    const data = await response.json();
+    return res.json(data);
+  } catch (err) {
+    // Flask is offline — return safe fallback so the app still works
+    console.warn('[classify] ML service unreachable:', err.message);
+    return res.json({ category: 'Misc', confidence: 0, all_probs: {}, offline: true });
+  }
+});
+
 // ── Global error handler ─────────────────────────────────────
 router.use((error, _req, res, _next) => {
   console.error(error);

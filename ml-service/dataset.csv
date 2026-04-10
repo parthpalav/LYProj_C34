@@ -1,0 +1,343 @@
+text,category
+pizza,Food
+burger,Food
+biryani,Food
+pasta,Food
+noodles,Food
+sandwich,Food
+dosa,Food
+idli,Food
+paratha,Food
+chicken,Food
+mutton,Food
+fish curry,Food
+paneer,Food
+dal,Food
+rice,Food
+roti,Food
+sabzi,Food
+maggi,Food
+poha,Food
+upma,Food
+chai,Food
+coffee,Food
+tea,Food
+juice,Food
+smoothie,Food
+cold drink,Food
+coca cola,Food
+pepsi,Food
+drinks,Food
+beer,Food
+wine,Food
+whiskey,Food
+alcohol,Food
+snacks,Food
+chips,Food
+biscuits,Food
+chocolate,Food
+cake,Food
+ice cream,Food
+sweets,Food
+mithai,Food
+halwa,Food
+samosa,Food
+pav bhaji,Food
+vada pav,Food
+pani puri,Food
+chole bhature,Food
+rajma,Food
+khichdi,Food
+thali,Food
+dominos,Food
+pizza hut,Food
+mcdonalds,Food
+kfc,Food
+subway,Food
+zomato,Food
+swiggy,Food
+food delivery,Food
+restaurant bill,Food
+cafe,Food
+dhaba,Food
+mess bill,Food
+canteen,Food
+lunch,Food
+dinner,Food
+breakfast,Food
+evening snack,Food
+fast food,Food
+chinese food,Food
+sushi,Food
+tacos,Food
+uber,Travel
+ola,Travel
+rapido,Travel
+auto,Travel
+taxi,Travel
+cab,Travel
+rickshaw,Travel
+bus,Travel
+train,Travel
+metro,Travel
+flight,Travel
+airline ticket,Travel
+bus ticket,Travel
+train ticket,Travel
+petrol,Travel
+diesel,Travel
+fuel,Travel
+toll,Travel
+parking,Travel
+bike rental,Travel
+car rental,Travel
+hotel,Travel
+hostel,Travel
+resort,Travel
+airbnb,Travel
+trip,Travel
+tour,Travel
+travel,Travel
+vacation,Travel
+holiday,Travel
+road trip,Travel
+irctc,Travel
+redbus,Travel
+makemytrip,Travel
+goibibo,Travel
+cleartrip,Travel
+booking.com,Travel
+uber ride,Travel
+ola cab,Travel
+metro card,Travel
+bus pass,Travel
+movie,Entertainment
+netflix,Entertainment
+amazon prime,Entertainment
+hotstar,Entertainment
+spotify,Entertainment
+youtube premium,Entertainment
+gaming,Entertainment
+video games,Entertainment
+ps5,Entertainment
+xbox,Entertainment
+concert,Entertainment
+stand up comedy,Entertainment
+comedy show,Entertainment
+show ticket,Entertainment
+event ticket,Entertainment
+amusement park,Entertainment
+zoo,Entertainment
+museum,Entertainment
+theme park,Entertainment
+bowling,Entertainment
+pool,Entertainment
+cricket match,Entertainment
+ipl ticket,Entertainment
+football match,Entertainment
+streaming subscription,Entertainment
+ott subscription,Entertainment
+movie ticket,Entertainment
+multiplex,Entertainment
+pvr,Entertainment
+inox,Entertainment
+carnival,Entertainment
+escape room,Entertainment
+laser tag,Entertainment
+arcade,Entertainment
+board games,Entertainment
+play station,Entertainment
+dress,Shopping
+clothes,Shopping
+shirt,Shopping
+jeans,Shopping
+kurta,Shopping
+saree,Shopping
+shoes,Shopping
+sandals,Shopping
+heels,Shopping
+sneakers,Shopping
+bag,Shopping
+purse,Shopping
+wallet,Shopping
+accessories,Shopping
+jewellery,Shopping
+watch,Shopping
+sunglasses,Shopping
+perfume,Shopping
+makeup,Shopping
+cosmetics,Shopping
+lipstick,Shopping
+moisturizer,Shopping
+shampoo,Shopping
+amazon,Shopping
+flipkart,Shopping
+myntra,Shopping
+meesho,Shopping
+ajio,Shopping
+nykaa,Shopping
+gift,Shopping
+present,Shopping
+toy,Shopping
+gadget,Shopping
+phone,Shopping
+charger,Shopping
+earphones,Shopping
+headphones,Shopping
+laptop bag,Shopping
+stationery,Shopping
+notebook,Shopping
+pen,Shopping
+electricity bill,Bills
+electricity,Bills
+light bill,Bills
+power bill,Bills
+water bill,Bills
+gas bill,Bills
+internet,Bills
+wifi bill,Bills
+broadband,Bills
+mobile recharge,Bills
+phone bill,Bills
+dth,Bills
+cable tv,Bills
+house rent,Bills
+rent,Bills
+emi,Bills
+loan emi,Bills
+insurance,Bills
+subscription,Bills
+maintenance,Bills
+society charges,Bills
+landlord,Bills
+recharge,Bills
+postpaid bill,Bills
+prepaid recharge,Bills
+vegetables,Groceries
+fruits,Groceries
+milk,Groceries
+eggs,Groceries
+bread,Groceries
+butter,Groceries
+curd,Groceries
+paneer grocery,Groceries
+grocery,Groceries
+supermarket,Groceries
+dmart,Groceries
+big bazaar,Groceries
+reliance fresh,Groceries
+more supermarket,Groceries
+store,Groceries
+ration,Groceries
+weekly grocery,Groceries
+monthly grocery,Groceries
+flour,Groceries
+sugar,Groceries
+salt,Groceries
+cooking oil,Groceries
+spices,Groceries
+masala,Groceries
+lentils,Groceries
+pulses,Groceries
+cereal,Groceries
+oats,Groceries
+instant food,Groceries
+blinkit,Groceries
+zepto,Groceries
+instamart,Groceries
+doctor,Health
+hospital,Health
+clinic,Health
+medicine,Health
+pharmacy,Health
+tablets,Health
+pills,Health
+health checkup,Health
+blood test,Health
+lab test,Health
+pathlab,Health
+x-ray,Health
+scan,Health
+dentist,Health
+dental,Health
+eye doctor,Health
+optician,Health
+spectacles,Health
+gym,Health
+gym membership,Health
+yoga,Health
+physiotherapy,Health
+vaccination,Health
+vitamin,Health
+supplement,Health
+protein powder,Health
+mental health,Health
+therapy,Health
+counselling,Health
+party,Party
+birthday party,Party
+anniversary,Party
+celebration,Party
+club,Party
+nightclub,Party
+bar,Party
+pub,Party
+hookah,Party
+dj night,Party
+cocktails,Party
+mocktails,Party
+birthday cake,Party
+birthday gift,Party
+decorator,Party
+event planning,Party
+wedding,Party
+reception,Party
+get together,Party
+housewarming,Party
+farewell,Party
+bachelor party,Party
+kitty party,Party
+books,Education
+textbook,Education
+book,Education
+course,Education
+online course,Education
+udemy,Education
+coursera,Education
+upgrad,Education
+tuition,Education
+coaching,Education
+fees,Education
+college fees,Education
+school fees,Education
+exam fees,Education
+certification,Education
+workshop,Education
+seminar,Education
+study material,Education
+notebook education,Education
+stationery education,Education
+library,Education
+pen drive,Education
+laptop for study,Education
+misc,Misc
+miscellaneous,Misc
+other,Misc
+unknown,Misc
+random,Misc
+cash withdrawal,Misc
+atm,Misc
+donation,Misc
+charity,Misc
+temple,Misc
+church,Misc
+mosque,Misc
+flowers,Misc
+pooja,Misc
+repair,Misc
+service charge,Misc
+tip,Misc
+fine,Misc
+penalty,Misc
+bank charges,Misc
+transaction fee,Misc

@@ -203,3 +203,16 @@ export async function getUserProfile(): Promise<{ id: string; name: string; inco
   const { data } = await api.get('/api/user/profile');
   return data;
 }
+
+// ── ML Expense Classifier ─────────────────────────────────────
+export interface ClassifyResult {
+  category:   string;
+  confidence: number;
+  all_probs:  Record<string, number>;
+  offline?:   boolean;
+}
+
+export async function classifyExpense(text: string): Promise<ClassifyResult> {
+  const { data } = await api.post('/api/classify', { text });
+  return data;
+}

@@ -8,10 +8,12 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   RefreshControl,
+  Modal,
 } from 'react-native';
 import { getDashboard } from '../services/api';
 import { useStore } from '../store/useStore';
 import { DashboardData } from '../types';
+import { UpdateBalanceScreen } from './UpdateBalanceScreen';
 
 const { width: SCREEN_W } = Dimensions.get('window');
 const CARD_PAD = 16;
@@ -356,6 +358,7 @@ export function DashboardScreen(): React.ReactElement {
   const [loading,     setLoading]   = useState(!dashboard);
   const [refreshing,  setRefreshing] = useState(false);
   const [error,       setError]     = useState<string | null>(null);
+  const [showUpdateBalance, setShowUpdateBalance] = useState(false);
 
   const fetchDashboard = useCallback(async (isRefresh = false) => {
     try {
@@ -406,19 +409,20 @@ export function DashboardScreen(): React.ReactElement {
   }
 
   return (
-    <ScrollView
-      style={s.screen}
-      contentContainerStyle={s.content}
-      showsVerticalScrollIndicator={false}
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={() => fetchDashboard(true)}
-          tintColor={BLUE}
-          colors={[BLUE]}
-        />
-      }
-    >
+    <View style={s.container}>
+      <ScrollView
+        style={s.screen}
+        contentContainerStyle={s.content}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => fetchDashboard(true)}
+            tintColor={BLUE}
+            colors={[BLUE]}
+          />
+        }
+      >
 
       {/* Balance */}
       <BalanceCard balance={balance} />
@@ -460,27 +464,6 @@ export function DashboardScreen(): React.ReactElement {
          </View>
       )}
 
-      {/* Row 2 */}
-      <View style={s.row}>
-        <View style={{ flex: 1 }}>
-          <Card title="Spending Trend">
-            <Text style={s.chartSub}>Last {spendSeries.length} transactions</Text>
-            <LineGraph series={spendSeries} />
-          </Card>
-        </View>
-        <View style={{ flex: 1 }}>
-          <Card title="Spend Mix">
-            <DonutRing data={dashboard?.categoryBreakdown} />
-          </Card>
-        </View>
-      </View>
-
-      {/* Bar Chart – full width */}
-      <Card title="Budget Breakdown">
-        <Text style={s.chartSub}>Current allocation flow across buckets</Text>
-        <BarChart data={dashboard?.budgetMetrics} />
-      </Card>
-
       {/* Embedded MicroActions directly from PredictionService */}
       {dashboard?.microActions && dashboard.microActions.length > 0 && (
         <Card title="Suggested Micro-Actions">
@@ -513,10 +496,39 @@ export function DashboardScreen(): React.ReactElement {
       </View>
 
     </ScrollView>
+
+    {/* Floating Balance Button - Always Visible */}
+    <TouchableOpacity
+      style={s.floatingBtn}
+      onPress={() => setShowUpdateBalance(true)}
+      activeOpacity={0.8}
+    >
+      <Text style={s.floatingBtnIcon}>☰</Text>
+    </TouchableOpacity>
+
+    {/* Update Balance Modal */}
+    <Modal
+      visible={showUpdateBalance}
+      transparent
+      animationType="slide"
+      onRequestClose={() => {
+        setShowUpdateBalance(false);
+        fetchDashboard(true);
+      }}
+    >
+      <UpdateBalanceScreen
+        onClose={() => {
+          setShowUpdateBalance(false);
+          fetchDashboard(true);
+        }}
+      />
+    </Modal>
+    </View>
   );
 }
 
 const s = StyleSheet.create({
+  container: { flex: 1, backgroundColor: '#F4F6FA', position: 'relative' },
   screen:   { flex: 1, backgroundColor: '#F4F6FA' },
   content:  { padding: 16, gap: 16, paddingBottom: 32 },
   row:      { flexDirection: 'row', gap: 12 },
@@ -539,4 +551,25 @@ const s = StyleSheet.create({
   maImpact:        { fontSize: 11, fontWeight: '600', color: GREEN, marginTop: 4 },
   maBtn:           { backgroundColor: BLUE, paddingHorizontal: 16, paddingVertical: 8, borderRadius: 12 },
   maBtnText:       { color: '#fff', fontSize: 12, fontWeight: '600' },
+  floatingBtn: {
+    position: 'absolute',
+    bottom: 24,
+    right: 24,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: BLUE,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: BLUE,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.4,
+    shadowRadius: 12,
+    elevation: 8,
+  },
+  floatingBtnIcon: {
+    fontSize: 28,
+    color: '#fff',
+    fontWeight: '700',
+  },
 });

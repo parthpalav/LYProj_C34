@@ -12,7 +12,8 @@ const userSchema = new mongoose.Schema(
     monthlyIncome: { type: Number, default: null },
     onboardingComplete: { type: Boolean, default: false },
     incomeType: { type: String, required: true },
-    goals: { type: [String], default: [] }
+    goals: { type: [String], default: [] },
+    currentBalance: { type: Number, default: 0 }
   },
   { versionKey: false }
 );

@@ -250,6 +250,34 @@ router.put('/user/:id/onboarding-complete', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
+router.put('/user/:id/current-balance', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { currentBalance } = req.body;
+    
+    if (currentBalance === undefined || currentBalance === null) {
+      return res.status(400).json({ error: 'Current balance is required' });
+    }
+    
+    const balance = parseFloat(currentBalance);
+    if (isNaN(balance)) {
+      return res.status(400).json({ error: 'Current balance must be a valid number' });
+    }
+    
+    const updated = await User.findOneAndUpdate(
+      { id },
+      { currentBalance: balance },
+      { new: true }
+    ).lean();
+    
+    if (!updated) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    res.json({ success: true, currentBalance: updated.currentBalance });
+  } catch (error) { next(error); }
+});
+
 // ═══════════════════════════════════════════════════════════
 // TRANSACTIONS
 // ═══════════════════════════════════════════════════════════
@@ -435,6 +463,7 @@ router.post('/envelopes/update', async (req, res, next) => {
 
 router.get('/dashboard', async (_req, res, next) => {
   try {
+    const user = await User.findOne({ id: USER_ID }).lean();
     const txDocs = await Transaction.find({ userId: USER_ID }).sort({ timestamp: 1 }).lean();
     const incomes = await Income.find({ userId: USER_ID }).lean();
     const goals = await Goal.find({ userId: USER_ID }).lean();
@@ -445,7 +474,7 @@ router.get('/dashboard', async (_req, res, next) => {
 
     const totalInc = incomes.reduce((s, i) => s + i.amount, 0);
     const totalExp = txDocs.reduce((s, t) => s + t.amount, 0);
-    const currentBalance = totalInc - totalExp;
+    const currentBalance = user?.currentBalance ?? (totalInc - totalExp);
 
     const annotated = annotateTransactions(txDocs);
     const patterns = detectBehavioralPatterns(annotated);

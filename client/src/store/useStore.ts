@@ -14,6 +14,7 @@ export interface User {
   onboardingComplete?: boolean;
   incomeType?: string;
   goals?: string[];
+  currentBalance?: number;
 }
 
 interface AppState {

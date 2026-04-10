@@ -105,7 +105,31 @@ def predict_endpoint():
     return jsonify(prediction)
 
 
-# ─── NEW: Expense Categorisation ─────────────────────────────────────────────
+# ─── NEW: Expense Categorisation + Sentiment ──────────────────────────────────
+
+# Sentiment rules based on category
+# negative  → discretionary / impulsive spending (bad for finances)
+# neutral   → necessary / unavoidable spending
+# positive  → investment in self / future
+_CATEGORY_SENTIMENT: dict[str, str] = {
+    "Food":          "negative",    # often discretionary / eating out
+    "Travel":        "neutral",     # could be work or leisure
+    "Entertainment": "negative",    # pure discretionary
+    "Shopping":      "negative",    # often impulsive
+    "Bills":         "neutral",     # necessary / unavoidable
+    "Groceries":     "neutral",     # necessary household expense
+    "Health":        "positive",    # investment in wellbeing
+    "Party":         "negative",    # discretionary social spending
+    "Education":     "positive",    # investment in skills/growth
+    "Misc":          "neutral",     # unknown — don't penalise
+}
+
+_SENTIMENT_META = {
+    "positive": {"emoji": "💚", "label": "Good Spend",   "verdict": "This is a healthy investment in yourself!"},
+    "neutral":  {"emoji": "🔵", "label": "Neutral Spend", "verdict": "Necessary expense — keep it within budget."},
+    "negative": {"emoji": "🔴", "label": "Watch Out",    "verdict": "Discretionary spend — think before you pay!"},
+}
+
 
 @app.post('/classify')
 def classify_expense():
@@ -115,9 +139,13 @@ def classify_expense():
 
     Response:
     {
-      "category":   "Food",
-      "confidence": 0.92,
-      "all_probs":  { "Food": 0.92, "Travel": 0.02, ... }
+      "category":       "Food",
+      "confidence":     0.92,
+      "all_probs":      { "Food": 0.92, "Travel": 0.02, ... },
+      "sentiment":      "negative",
+      "sentiment_emoji": "🔴",
+      "sentiment_label": "Watch Out",
+      "verdict":        "Discretionary spend — think before you pay!"
     }
     """
     if not _load_classifier():
@@ -125,7 +153,11 @@ def classify_expense():
             "error": "Model not trained yet. Run train_classifier.py first.",
             "category": "Misc",
             "confidence": 0.0,
-            "all_probs": {}
+            "all_probs": {},
+            "sentiment": "neutral",
+            "sentiment_emoji": "🔵",
+            "sentiment_label": "Neutral Spend",
+            "verdict": "Could not classify."
         }), 503
 
     payload = request.get_json(force=True)
@@ -136,22 +168,34 @@ def classify_expense():
             "error": "No text provided",
             "category": "Misc",
             "confidence": 0.0,
-            "all_probs": {}
+            "all_probs": {},
+            "sentiment": "neutral",
+            "sentiment_emoji": "🔵",
+            "sentiment_label": "Neutral Spend",
+            "verdict": "No input provided."
         }), 400
 
-    cleaned  = _clean_text(raw)
-    vec      = _vectorizer.transform([cleaned])
-    category = _model.predict(vec)[0]
-    probs    = _model.predict_proba(vec)[0]
+    cleaned    = _clean_text(raw)
+    vec        = _vectorizer.transform([cleaned])
+    category   = _model.predict(vec)[0]
+    probs      = _model.predict_proba(vec)[0]
     confidence = float(probs.max())
     all_probs  = {cls: round(float(p), 4) for cls, p in zip(_model.classes_, probs)}
 
-    log.info(f"classify: '{raw}' → {category} ({confidence*100:.0f}%)")
+    # Derive sentiment from predicted category
+    sentiment    = _CATEGORY_SENTIMENT.get(category, "neutral")
+    meta         = _SENTIMENT_META[sentiment]
+
+    log.info(f"classify: '{raw}' -> {category} ({confidence*100:.0f}%) | sentiment: {sentiment}")
 
     return jsonify({
-        "category":   category,
-        "confidence": confidence,
-        "all_probs":  all_probs
+        "category":        category,
+        "confidence":      confidence,
+        "all_probs":       all_probs,
+        "sentiment":       sentiment,
+        "sentiment_emoji": meta["emoji"],
+        "sentiment_label": meta["label"],
+        "verdict":         meta["verdict"],
     })
 
 

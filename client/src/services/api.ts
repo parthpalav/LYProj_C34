@@ -253,10 +253,14 @@ export async function getUserProfile(): Promise<{ id: string; name: string; inco
 
 // ── ML Expense Classifier ─────────────────────────────────────
 export interface ClassifyResult {
-  category:   string;
-  confidence: number;
-  all_probs:  Record<string, number>;
-  offline?:   boolean;
+  category:        string;
+  confidence:      number;
+  all_probs:       Record<string, number>;
+  sentiment?:      string;
+  sentiment_emoji?: string;
+  sentiment_label?: string;
+  verdict?:        string;
+  offline?:        boolean;
 }
 
 export async function classifyExpense(text: string): Promise<ClassifyResult> {

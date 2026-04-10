@@ -1,29 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  SafeAreaView,
   ScrollView,
   Modal,
   FlatList,
   Alert,
   ActivityIndicator,
+  Animated,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { addTransaction } from '../services/api';
+import { addTransaction, classifyExpense, ClassifyResult } from '../services/api';
 import { useStore } from '../store/useStore';
 
 const CATEGORIES = [
-  { label: 'Food & Drink', emoji: '🍔' },
-  { label: 'Transport', emoji: '🚗' },
-  { label: 'Shopping', emoji: '🛍️' },
-  { label: 'Health', emoji: '💊' },
-  { label: 'Entertainment', emoji: '🎬' },
-  { label: 'Utilities', emoji: '💡' },
-  { label: 'Education', emoji: '📚' },
-  { label: 'Other', emoji: '📦' },
+  { label: 'Food',          emoji: '🍕', ml: 'Food'          },
+  { label: 'Travel',        emoji: '🚕', ml: 'Travel'        },
+  { label: 'Entertainment', emoji: '🎬', ml: 'Entertainment' },
+  { label: 'Shopping',      emoji: '🛍️', ml: 'Shopping'      },
+  { label: 'Bills',         emoji: '💡', ml: 'Bills'         },
+  { label: 'Groceries',     emoji: '🥦', ml: 'Groceries'     },
+  { label: 'Health',        emoji: '💊', ml: 'Health'        },
+  { label: 'Party',         emoji: '🎉', ml: 'Party'         },
+  { label: 'Education',     emoji: '📚', ml: 'Education'     },
+  { label: 'Misc',          emoji: '📦', ml: 'Misc'          },
 ];
 
 const SPEND_TYPES = ['Need', 'Want', 'Investment'] as const;
@@ -42,6 +45,51 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
   const [logged,   setLogged]   = useState(false);
   const [saving,   setSaving]   = useState(false);
   const { transactions, addTransaction: addToStore } = useStore();
+
+  // ── AI Classifier state ─────────────────────────────────────
+  const [aiResult,       setAiResult]       = useState<ClassifyResult | null>(null);
+  const [aiLoading,      setAiLoading]      = useState(false);
+  const badgeAnim = useRef(new Animated.Value(0)).current;
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    const text = description.trim();
+    if (!text || text.length < 3) {
+      setAiResult(null);
+      return;
+    }
+    // Debounce: wait 600 ms after user stops typing
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(async () => {
+      setAiLoading(true);
+      try {
+        const result = await classifyExpense(amount ? `${amount} ${text}` : text);
+        setAiResult(result);
+        // Animate badge in
+        badgeAnim.setValue(0);
+        Animated.spring(badgeAnim, { toValue: 1, useNativeDriver: true, tension: 120, friction: 8 }).start();
+        
+        // Auto-update selectedType based on sentiment if requested
+        if (result.sentiment) {
+          if (result.sentiment === 'positive') setSelectedType('Investment');
+          else if (result.sentiment === 'negative') setSelectedType('Want');
+          else setSelectedType('Need');
+        }
+      } catch {
+        setAiResult(null);
+      } finally {
+        setAiLoading(false);
+      }
+    }, 600);
+    return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
+  }, [description, amount]);
+
+  // Accept AI suggestion with one tap
+  const acceptSuggestion = () => {
+    if (!aiResult) return;
+    const match = CATEGORIES.find(c => c.ml === aiResult.category);
+    if (match) setSelectedCategory(match);
+  };
 
   const parsedAmount = parseFloat(amount.replace(/[^0-9.]/g, '')) || 0;
 
@@ -133,9 +181,68 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
             style={styles.textInput}
             value={description}
             onChangeText={setDescription}
-            placeholder="e.g. Grocery dinner"
+            placeholder="e.g. Pizza, Uber ride, Book…"
             placeholderTextColor="#A0AEC0"
           />
+
+          {/* AI Suggestion Badge */}
+          {aiLoading && (
+            <View style={styles.aiBadgeRow}>
+              <ActivityIndicator size="small" color={BRAND_BLUE} />
+              <Text style={styles.aiBadgeLoadingText}>AI classifying…</Text>
+            </View>
+          )}
+          {!aiLoading && aiResult && aiResult.confidence > 0 && (
+            <Animated.View style={[
+              styles.aiBadgeContainer,
+              { opacity: badgeAnim, transform: [{ scale: badgeAnim }] }
+            ]}>
+              <View style={styles.aiBadgeHeader}>
+                <Text style={styles.aiBadgeIcon}>🤖</Text>
+                <Text style={styles.aiBadgeLabel}>AI Suggestion</Text>
+                <TouchableOpacity style={styles.aiAcceptBtn} onPress={acceptSuggestion} activeOpacity={0.8}>
+                  <Text style={styles.aiAcceptText}>Tap to apply ✓</Text>
+                </TouchableOpacity>
+              </View>
+
+              {/* Main row: Category + Sentiment */}
+              <View style={styles.aiMainPred}>
+                <Text style={styles.aiMainCategory}>
+                  {CATEGORIES.find(c => c.ml === aiResult.category)?.emoji ?? '📦'}  {aiResult.category}
+                </Text>
+                <Text style={styles.aiConfidence}>{Math.round(aiResult.confidence * 100)}%</Text>
+              </View>
+              
+              {/* Sentiment Info */}
+              {aiResult.sentiment && (
+                <View style={styles.sentimentContainer}>
+                  <Text style={styles.sentimentLabel}>
+                    {aiResult.sentiment_emoji} {aiResult.sentiment_label}
+                  </Text>
+                  <Text style={styles.verdictText}>{aiResult.verdict}</Text>
+                </View>
+              )}
+
+              {/* Top 3 mini bars */}
+              <View style={{ marginTop: 8 }}>
+                {Object.entries(aiResult.all_probs)
+                  .sort((a, b) => b[1] - a[1])
+                  .slice(0, 3)
+                  .map(([cat, prob]) => (
+                    <View key={cat} style={styles.aiBarRow}>
+                      <Text style={styles.aiBarLabel}>
+                        {CATEGORIES.find(c => c.ml === cat)?.emoji ?? '📦'} {cat}
+                      </Text>
+                      <View style={styles.aiBarTrack}>
+                        <View style={[styles.aiBarFill, { width: `${Math.round(prob * 100)}%` }]} />
+                      </View>
+                      <Text style={styles.aiBarPct}>{Math.round(prob * 100)}%</Text>
+                    </View>
+                  ))
+                }
+              </View>
+            </Animated.View>
+          )}
 
           {/* Category */}
           <Text style={[styles.fieldLabel, { marginTop: 16 }]}>Category</Text>
@@ -262,7 +369,9 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
 }
 
 const BRAND_BLUE = '#3B3BDE';
-const GREEN = '#3DBE7B';
+const GREEN      = '#3DBE7B';
+const AI_BG      = '#F0F0FF';
+const AI_BORDER  = '#C7C7FF';
 
 const styles = StyleSheet.create({
   safe: {
@@ -448,6 +557,118 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: '#1A202C',
     letterSpacing: -0.3,
+  },
+
+  // ── AI Badge styles ───────────────────────────────────────
+  aiBadgeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginTop: 8,
+    paddingLeft: 4,
+  },
+  aiBadgeLoadingText: {
+    fontSize: 12,
+    color: BRAND_BLUE,
+    fontWeight: '500',
+  },
+  aiBadgeContainer: {
+    marginTop: 10,
+    backgroundColor: AI_BG,
+    borderRadius: 14,
+    borderWidth: 1.5,
+    borderColor: AI_BORDER,
+    padding: 12,
+  },
+  aiBadgeHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+    gap: 6,
+  },
+  aiBadgeIcon: { fontSize: 16 },
+  aiBadgeLabel: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: BRAND_BLUE,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    flex: 1,
+  },
+  aiAcceptBtn: {
+    backgroundColor: BRAND_BLUE,
+    borderRadius: 99,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
+  aiAcceptText: {
+    fontSize: 11,
+    color: '#fff',
+    fontWeight: '700',
+  },
+  aiMainPred: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  aiMainCategory: {
+    fontSize: 16,
+    fontWeight: '800',
+    color: '#1A202C',
+  },
+  aiConfidence: {
+    fontSize: 18,
+    fontWeight: '900',
+    color: GREEN,
+    letterSpacing: -0.5,
+  },
+  sentimentContainer: {
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    padding: 8,
+    marginTop: 8,
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+  },
+  sentimentLabel: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#1A202C',
+  },
+  verdictText: {
+    fontSize: 11,
+    color: '#4A5568',
+    marginTop: 2,
+  },
+  aiBarRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 5,
+  },
+  aiBarLabel: {
+    fontSize: 11,
+    color: '#64748B',
+    width: 90,
+  },
+  aiBarTrack: {
+    flex: 1,
+    height: 5,
+    backgroundColor: '#DDE0FF',
+    borderRadius: 99,
+    overflow: 'hidden',
+  },
+  aiBarFill: {
+    height: '100%',
+    backgroundColor: BRAND_BLUE,
+    borderRadius: 99,
+  },
+  aiBarPct: {
+    fontSize: 10,
+    color: '#64748B',
+    fontWeight: '600',
+    width: 28,
+    textAlign: 'right',
   },
 
   // Modal

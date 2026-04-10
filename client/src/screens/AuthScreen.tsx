@@ -5,13 +5,13 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  SafeAreaView,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   Animated,
   Alert,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { registerUser, loginUser } from '../services/api';
 import { useStore } from '../store/useStore';
 
@@ -72,7 +72,17 @@ export function AuthScreen({ onAuthSuccess }: Props): React.ReactElement {
     setLoading(true);
     try {
       const user = await loginUser(signInEmail.trim(), signInPassword.trim());
-      setUser({ id: user.id, name: user.name });
+      setUser({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        dateOfBirth: user.dateOfBirth,
+        retirementAge: user.retirementAge,
+        monthlyIncome: user.monthlyIncome,
+        onboardingComplete: user.onboardingComplete,
+        incomeType: user.incomeType,
+        goals: user.goals,
+      });
       onAuthSuccess();
     } catch (error: any) {
       const errorMsg = error?.response?.data?.error || error?.message || 'Login failed. Please try again.';
@@ -107,7 +117,17 @@ export function AuthScreen({ onAuthSuccess }: Props): React.ReactElement {
         password: signUpPassword,
         incomeType: 'salary'
       });
-      setUser({ id: user.id, name: user.name });
+      setUser({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        dateOfBirth: user.dateOfBirth,
+        retirementAge: user.retirementAge,
+        monthlyIncome: user.monthlyIncome,
+        onboardingComplete: user.onboardingComplete || false,
+        incomeType: user.incomeType,
+        goals: user.goals,
+      });
       onAuthSuccess();
     } catch (error: any) {
       const errorMsg = error?.response?.data?.error || error?.message || 'Sign up failed. Please try again.';

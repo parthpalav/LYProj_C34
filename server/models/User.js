@@ -7,6 +7,10 @@ const userSchema = new mongoose.Schema(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    dateOfBirth: { type: Date, default: null },
+    retirementAge: { type: Number, default: null, min: 40, max: 100 },
+    monthlyIncome: { type: Number, default: null },
+    onboardingComplete: { type: Boolean, default: false },
     incomeType: { type: String, required: true },
     goals: { type: [String], default: [] }
   },

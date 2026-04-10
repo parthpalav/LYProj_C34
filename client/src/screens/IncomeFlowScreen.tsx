@@ -159,7 +159,7 @@ export function IncomeFlowScreen(): React.ReactElement {
   const [refreshing, setRefreshing] = useState(false);
   const [loading,    setLoading]    = useState(true);
   const [showAdd,    setShowAdd]    = useState(false);
-  const [editInc,    setEditInc]    = useState<{id: string, amount: number, source: string, description?: string} | null>(null);
+  const [editInc,    setEditInc]    = useState<{id: string, amount: number, source: 'salary'|'gig'|'freelance'|'other', description?: string} | null>(null);
   const [editAmount, setEditAmount] = useState('');
   const [editDesc,   setEditDesc]   = useState('');
   const [editSource, setEditSource] = useState<'salary'|'gig'|'freelance'|'other'>('salary');
@@ -185,10 +185,13 @@ export function IncomeFlowScreen(): React.ReactElement {
         { 
           text: 'Edit', 
           onPress: () => {
-            setEditInc(item);
+            setEditInc({
+              ...item,
+              source: item.source as 'salary' | 'gig' | 'freelance' | 'other',
+            });
             setEditAmount(String(item.amount));
             setEditDesc(item.description || '');
-            setEditSource(item.source);
+            setEditSource(item.source as 'salary' | 'gig' | 'freelance' | 'other');
           } 
         },
         {

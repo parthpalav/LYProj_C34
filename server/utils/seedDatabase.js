@@ -47,7 +47,14 @@ export async function seedDatabase() {
 
   // User
   await User.deleteMany({});
-  await User.create({ id: 'u1', name: 'Parth Palav', incomeType: 'salaried', goals: ['retirement', 'emergency'] });
+  await User.create({ 
+    id: 'u1', 
+    name: 'Parth Palav', 
+    email: 'parth@example.com',
+    password: 'password123',
+    incomeType: 'salaried', 
+    goals: ['retirement', 'emergency'] 
+  });
 
   // Transactions
   await Transaction.deleteMany({});

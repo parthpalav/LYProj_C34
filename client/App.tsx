@@ -1,25 +1,31 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
+import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AppNavigator } from './src/navigation/AppNavigator';
 import { OnboardingNavigator } from './src/navigation/OnboardingNavigator';
 import { AuthScreen } from './src/screens/AuthScreen';
 import { WelcomeOverlay } from './src/components/WelcomeOverlay';
+import { useStore } from './src/store/useStore';
 
 export default function App(): React.ReactElement {
-  const [authDone, setAuthDone] = useState(false);
-  const [onboardingDone, setOnboardingDone] = useState(false);
-  const [welcomeDone, setWelcomeDone] = useState(false);
+  const [welcomeDone, setWelcomeDone] = React.useState(false);
+  const user = useStore((state) => state.user);
+
+  // Check if user is authenticated
+  const isAuthenticated = user !== null;
+
+  // Check if onboarding is complete
+  const isOnboardingComplete = user?.onboardingComplete ?? false;
 
   return (
     <SafeAreaProvider>
       <NavigationContainer>
         <StatusBar style="dark" />
-        {!authDone ? (
-          <AuthScreen onAuthSuccess={() => setAuthDone(true)} />
-        ) : !onboardingDone ? (
-          <OnboardingNavigator onFinish={() => setOnboardingDone(true)} />
+        {!isAuthenticated ? (
+          <AuthScreen onAuthSuccess={() => {}} />
+        ) : !isOnboardingComplete ? (
+          <OnboardingNavigator onFinish={() => {}} />
         ) : (
           <>
             <AppNavigator />

@@ -4,8 +4,20 @@ import {
   FISData, FMIRecord, Goal, IncomeRecord, Transaction, WeeklyReport
 } from '../types';
 
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  dateOfBirth?: Date | string | null;
+  retirementAge?: number | null;
+  monthlyIncome?: number | null;
+  onboardingComplete?: boolean;
+  incomeType?: string;
+  goals?: string[];
+}
+
 interface AppState {
-  user:         { name: string } | null;
+  user:         User | null;
   dashboard:    DashboardData | null;
   transactions: Transaction[];
   fmi:          FMIRecord[];
@@ -17,7 +29,7 @@ interface AppState {
   patterns:     BehaviorPattern[];
   weeklyReport: WeeklyReport | null;
 
-  setUser:         (user: { name: string } | null) => void;
+  setUser:         (user: User | null) => void;
   setDashboard:    (dashboard: DashboardData) => void;
   setTransactions: (transactions: Transaction[]) => void;
   setFmi:          (fmi: FMIRecord[]) => void;
@@ -37,7 +49,7 @@ interface AppState {
 }
 
 export const useStore = create<AppState>((set) => ({
-  user:         { name: 'Demo User' },
+  user:         null,
   dashboard:    null,
   transactions: [],
   fmi:          [],

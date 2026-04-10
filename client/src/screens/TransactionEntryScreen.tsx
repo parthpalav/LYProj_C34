@@ -5,13 +5,13 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  SafeAreaView,
   ScrollView,
   Modal,
   FlatList,
   Alert,
   ActivityIndicator,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { addTransaction } from '../services/api';
 import { useStore } from '../store/useStore';
 
@@ -26,7 +26,7 @@ const CATEGORIES = [
   { label: 'Other', emoji: '📦' },
 ];
 
-const SPEND_TYPES = ['Need', 'Want', 'Saving', 'Invest'] as const;
+const SPEND_TYPES = ['Need', 'Want', 'Investment'] as const;
 type SpendType = (typeof SPEND_TYPES)[number];
 
 interface Props {
@@ -72,7 +72,7 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
       // Map UI category + type → server fields
       const categoryKey = selectedCategory.label.toLowerCase().replace(' & ', '-').split(' ')[0];
       const sentimentMap: Record<string, 'positive' | 'neutral' | 'negative'> = {
-        Need: 'neutral', Want: 'negative', Saving: 'positive', Invest: 'positive',
+        Need: 'neutral', Want: 'negative', Investment: 'positive',
       };
       const newTx = await addTransaction({
         amount:      parsedAmount,
@@ -153,26 +153,20 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
             </View>
           </TouchableOpacity>
 
-          {/* Spend Type Tabs */}
-          <View style={styles.typeRow}>
+          {/* Spend Type Radio Buttons */}
+          <Text style={[styles.fieldLabel, { marginTop: 16 }]}>Transaction Type</Text>
+          <View style={styles.radioGroup}>
             {SPEND_TYPES.map((type) => (
               <TouchableOpacity
                 key={type}
-                style={[
-                  styles.typeChip,
-                  selectedType === type && styles.typeChipActive,
-                ]}
+                style={styles.radioItem}
                 onPress={() => setSelectedType(type)}
-                activeOpacity={0.8}
+                activeOpacity={0.7}
               >
-                <Text
-                  style={[
-                    styles.typeChipText,
-                    selectedType === type && styles.typeChipTextActive,
-                  ]}
-                >
-                  {type}
-                </Text>
+                <View style={[styles.radioOuter, selectedType === type && styles.radioOuterActive]}>
+                  {selectedType === type && <View style={styles.radioDot} />}
+                </View>
+                <Text style={styles.radioLabel}>{type}</Text>
               </TouchableOpacity>
             ))}
           </View>
@@ -399,36 +393,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 
-  // Type chips
-  typeRow: {
-    flexDirection: 'row',
-    gap: 8,
-    marginTop: 20,
-    marginBottom: 24,
-  },
-  typeChip: {
-    flex: 1,
-    height: 38,
-    borderRadius: 99,
-    borderWidth: 1.5,
-    borderColor: '#E2E8F0',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#F8FAFC',
-  },
-  typeChipActive: {
-    backgroundColor: GREEN,
-    borderColor: GREEN,
-  },
-  typeChipText: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#64748B',
-  },
-  typeChipTextActive: {
-    color: '#FFFFFF',
-  },
-
   // Log button
   logButton: {
     height: 54,
@@ -535,5 +499,44 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: BRAND_BLUE,
     fontWeight: '700',
+  },
+
+  // Radio buttons
+  radioGroup: {
+    flexDirection: 'row',
+    gap: 16,
+    marginVertical: 16,
+  },
+  radioItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    flex: 1,
+  },
+  radioOuter: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: '#E2E8F0',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FAFAFA',
+  },
+  radioOuterActive: {
+    borderColor: BRAND_BLUE,
+    backgroundColor: '#EEF2FF',
+  },
+  radioDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: BRAND_BLUE,
+  },
+  radioLabel: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#1A202C',
+    flex: 1,
   },
 });

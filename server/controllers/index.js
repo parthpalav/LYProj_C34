@@ -47,8 +47,62 @@ const USER_ID = 'u1';
 router.post('/user/register', async (req, res, next) => {
   try {
     const payload = req.body || {};
+    const { email } = payload;
+    
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required' });
+    }
+    
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(409).json({ error: 'Email already registered. Please sign in or use a different email.' });
+    }
+    
     const doc = await User.create({ id: `u-${Date.now()}`, ...payload });
-    res.status(201).json({ id: doc.id, name: doc.name, incomeType: doc.incomeType, goals: doc.goals });
+    res.status(201).json({
+      id: doc.id,
+      name: doc.name,
+      email: doc.email,
+      dateOfBirth: doc.dateOfBirth,
+      retirementAge: doc.retirementAge,
+      monthlyIncome: doc.monthlyIncome,
+      onboardingComplete: doc.onboardingComplete,
+      incomeType: doc.incomeType,
+      goals: doc.goals,
+    });
+  } catch (error) { next(error); }
+});
+
+router.post('/user/login', async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password required' });
+    }
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ error: 'Email not found. Please check your email or sign up.' });
+    }
+    const isPasswordValid = await user.comparePassword(password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ error: 'Incorrect password. Please try again.' });
+    }
+    const derivedOnboardingComplete =
+      user.onboardingComplete === true ||
+      (user.dateOfBirth && user.retirementAge !== null && user.monthlyIncome !== null);
+
+    res.json({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      dateOfBirth: user.dateOfBirth,
+      retirementAge: user.retirementAge,
+      monthlyIncome: user.monthlyIncome,
+      onboardingComplete: derivedOnboardingComplete,
+      incomeType: user.incomeType,
+      goals: user.goals,
+    });
   } catch (error) { next(error); }
 });
 
@@ -56,6 +110,143 @@ router.get('/user/profile', async (_req, res, next) => {
   try {
     const user = await User.findOne({ id: USER_ID }).lean();
     res.json(user);
+  } catch (error) { next(error); }
+});
+
+router.put('/user/:id/dob', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { dateOfBirth } = req.body;
+    
+    if (!dateOfBirth) {
+      return res.status(400).json({ error: 'Date of birth is required' });
+    }
+    
+    const updated = await User.findOneAndUpdate(
+      { id },
+      { dateOfBirth: new Date(dateOfBirth) },
+      { new: true }
+    ).lean();
+    
+    if (!updated) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    res.json({ success: true, dateOfBirth: updated.dateOfBirth });
+  } catch (error) { next(error); }
+});
+
+router.put('/user/:id/retirement-age', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { retirementAge } = req.body;
+    
+    if (!retirementAge) {
+      return res.status(400).json({ error: 'Retirement age is required' });
+    }
+    
+    const age = parseInt(retirementAge, 10);
+    if (isNaN(age) || age < 40 || age > 100) {
+      return res.status(400).json({ error: 'Retirement age must be between 40 and 100' });
+    }
+    
+    const updated = await User.findOneAndUpdate(
+      { id },
+      { retirementAge: age },
+      { new: true }
+    ).lean();
+    
+    if (!updated) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    res.json({ success: true, retirementAge: updated.retirementAge });
+  } catch (error) { next(error); }
+});
+
+router.put('/user/:id/monthly-income', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { monthlyIncome } = req.body;
+    
+    if (monthlyIncome === undefined || monthlyIncome === null) {
+      return res.status(400).json({ error: 'Monthly income is required' });
+    }
+    
+    const income = parseFloat(monthlyIncome);
+    if (isNaN(income) || income < 0) {
+      return res.status(400).json({ error: 'Monthly income must be a positive number' });
+    }
+    
+    const updated = await User.findOneAndUpdate(
+      { id },
+      { monthlyIncome: income },
+      { new: true }
+    ).lean();
+    
+    if (!updated) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    res.json({ success: true, monthlyIncome: updated.monthlyIncome });
+  } catch (error) { next(error); }
+});
+
+router.put('/user/:id/onboarding-complete', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { dateOfBirth, retirementAge, monthlyIncome } = req.body;
+    
+    // Validate all required fields
+    if (!dateOfBirth) {
+      return res.status(400).json({ error: 'Date of birth is required' });
+    }
+    if (!retirementAge) {
+      return res.status(400).json({ error: 'Retirement age is required' });
+    }
+    if (monthlyIncome === undefined || monthlyIncome === null) {
+      return res.status(400).json({ error: 'Monthly income is required' });
+    }
+    
+    // Validate retirement age
+    const age = parseInt(retirementAge, 10);
+    if (isNaN(age) || age < 40 || age > 100) {
+      return res.status(400).json({ error: 'Retirement age must be between 40 and 100' });
+    }
+    
+    // Validate monthly income
+    const income = parseFloat(monthlyIncome);
+    if (isNaN(income) || income < 0) {
+      return res.status(400).json({ error: 'Monthly income must be a positive number' });
+    }
+    
+    const updated = await User.findOneAndUpdate(
+      { id },
+      {
+        dateOfBirth: new Date(dateOfBirth),
+        retirementAge: age,
+        monthlyIncome: income,
+        onboardingComplete: true,
+      },
+      { new: true }
+    ).lean();
+    
+    if (!updated) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    res.json({
+      success: true,
+      user: {
+        id: updated.id,
+        name: updated.name,
+        email: updated.email,
+        dateOfBirth: updated.dateOfBirth,
+        retirementAge: updated.retirementAge,
+        monthlyIncome: updated.monthlyIncome,
+        onboardingComplete: updated.onboardingComplete,
+      },
+    });
   } catch (error) { next(error); }
 });
 

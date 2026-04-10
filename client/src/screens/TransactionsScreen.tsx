@@ -7,7 +7,7 @@ import { formatCurrency } from '../utils/format';
 import { TransactionEntryScreen } from './TransactionEntryScreen';
 import { updateTransaction, deleteTransaction } from '../services/api';
 
-const categories = ['all', 'food', 'travel', 'bills', 'shopping'];
+const categories = ['all', 'food', 'travel', 'bills', 'shopping', 'others'];
 
 export function TransactionsScreen(): React.ReactElement {
   const { transactions, setTransactions } = useStore();

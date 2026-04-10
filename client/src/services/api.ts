@@ -16,6 +16,8 @@ export interface NewTransaction {
 
 export interface RegisterPayload {
   name:        string;
+  email:       string;
+  password:    string;
   incomeType:  string;
   goals?:      string[];
 }
@@ -23,6 +25,11 @@ export interface RegisterPayload {
 export interface RegisterResponse {
   id:         string;
   name:       string;
+  email:      string;
+  dateOfBirth?: string | null;
+  retirementAge?: number | null;
+  monthlyIncome?: number | null;
+  onboardingComplete?: boolean;
   incomeType: string;
   goals:      string[];
 }
@@ -46,14 +53,20 @@ export interface NewIncomePayload {
 function getApiBaseUrl(): string {
   if (process.env.EXPO_PUBLIC_API_URL) return process.env.EXPO_PUBLIC_API_URL;
 
-  const hostUri      = Constants.expoConfig?.hostUri;
-  const debuggerHost = (Constants as { expoGoConfig?: { debuggerHost?: string } }).expoGoConfig?.debuggerHost;
+  const hostUri =
+    Constants.expoConfig?.hostUri ||
+    (Constants as { expoGoConfig?: { debuggerHost?: string } }).expoGoConfig?.debuggerHost;
   const expoHost =
-    (debuggerHost ? debuggerHost.split(':')[0] : undefined) ||
-    (hostUri      ? hostUri.split(':')[0]      : undefined);
+    hostUri
+      ? hostUri
+          .replace(/^exp:\/\//, '')
+          .replace(/^http:\/\//, '')
+          .split(':')[0]
+      : undefined;
 
   if (expoHost) return `http://${expoHost}:4000`;
   if (Platform.OS === 'android') return 'http://10.0.2.2:4000';
+  if (Platform.OS === 'ios') return 'http://localhost:4000';
   return 'http://localhost:4000';
 }
 
@@ -196,6 +209,40 @@ export async function getWeeklyReport(): Promise<WeeklyReport> {
 // ── User ──────────────────────────────────────────────────────
 export async function registerUser(payload: RegisterPayload): Promise<RegisterResponse> {
   const { data } = await api.post('/api/user/register', payload);
+  return data;
+}
+
+export async function loginUser(email: string, password: string): Promise<RegisterResponse> {
+  const { data } = await api.post('/api/user/login', { email, password });
+  return data;
+}
+
+export async function updateUserDOB(userId: string, dateOfBirth: Date): Promise<{ success: boolean }> {
+  const { data } = await api.put(`/api/user/${userId}/dob`, { dateOfBirth });
+  return data;
+}
+
+export async function updateUserRetirementAge(userId: string, retirementAge: number): Promise<{ success: boolean }> {
+  const { data } = await api.put(`/api/user/${userId}/retirement-age`, { retirementAge });
+  return data;
+}
+
+export async function updateUserMonthlyIncome(userId: string, monthlyIncome: number): Promise<{ success: boolean }> {
+  const { data } = await api.put(`/api/user/${userId}/monthly-income`, { monthlyIncome });
+  return data;
+}
+
+export async function completeOnboarding(
+  userId: string,
+  dateOfBirth: Date,
+  retirementAge: number,
+  monthlyIncome: number
+): Promise<{ success: boolean; user: any }> {
+  const { data } = await api.put(`/api/user/${userId}/onboarding-complete`, {
+    dateOfBirth,
+    retirementAge,
+    monthlyIncome,
+  });
   return data;
 }
 

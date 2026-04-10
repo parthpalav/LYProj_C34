@@ -190,24 +190,25 @@ interface ChatMessage {
   timestamp: string;
 }
 
-const INITIAL_MESSAGES: ChatMessage[] = [
-  {
-    id: 'bot-0',
-    role: 'assistant',
-    content: 'Hi Sarah! 👋 How can I help with your finances today?',
-    timestamp: new Date().toISOString(),
-  },
-];
-
 // ═══════════════════════════════════════════════════════════
 // CHAT SCREEN
 // ═══════════════════════════════════════════════════════════
 export function ChatScreen(): React.ReactElement {
-  const { chatHistory: storeHistory, addChatMessage } = useStore();
+  const { user, chatHistory: storeHistory, addChatMessage } = useStore();
   const [input,         setInput]         = useState('');
   const [loading,       setLoading]       = useState(false);
   const [showReasoning, setShowReasoning] = useState(false);
   const listRef = useRef<FlatList>(null);
+
+  const userName = user?.name ?? 'Friend';
+  const INITIAL_MESSAGES: ChatMessage[] = [
+    {
+      id: 'bot-0',
+      role: 'assistant',
+      content: `Hi ${userName}! 👋 How can I help with your finances today?`,
+      timestamp: new Date().toISOString(),
+    },
+  ];
 
   const messages: ChatMessage[] =
     (storeHistory as ChatMessage[]).length > 0

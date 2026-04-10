@@ -13,44 +13,43 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useOnboardingStore } from '../store/onboardingContext';
 
 const TOTAL_STEPS = 5;
-const CURRENT_STEP = 4;
+const CURRENT_STEP = 3;
 
 interface Props {
   onNext?: () => void;
 }
 
-export function OnboardingIncomeScreen({ onNext }: Props): React.ReactElement {
-  const [monthlyIncome, setMonthlyIncome] = useState('50000');
+export function OnboardingRetirementScreen({ onNext }: Props): React.ReactElement {
+  const [retirementAge, setRetirementAge] = useState('65');
   const [error, setError] = useState('');
-  const setMonthlyIncomeStore = useOnboardingStore((state) => state.setMonthlyIncome);
+  const setRetirementAgeStore = useOnboardingStore((state) => state.setRetirementAge);
 
   const handleContinue = () => {
-    const income = parseFloat(monthlyIncome);
-
-    if (!monthlyIncome.trim()) {
-      setError('Please enter your monthly income');
+    const age = parseInt(retirementAge, 10);
+    
+    if (!retirementAge.trim()) {
+      setError('Please enter your retirement age');
       return;
     }
-
-    if (Number.isNaN(income)) {
+    
+    if (isNaN(age)) {
       setError('Please enter a valid number');
       return;
     }
-
-    if (income < 0) {
-      setError('Monthly income must be a positive number');
+    
+    if (age < 40) {
+      setError('Retirement age must be at least 40');
+      return;
+    }
+    
+    if (age > 100) {
+      setError('Retirement age cannot exceed 100');
       return;
     }
 
     setError('');
-    setMonthlyIncomeStore(income);
+    setRetirementAgeStore(age);
     onNext?.();
-  };
-
-  const formatIncomeDisplay = (value: string) => {
-    const num = parseFloat(value);
-    if (!num || Number.isNaN(num)) return '₹0';
-    return `₹${num.toLocaleString('en-IN')}`;
   };
 
   return (
@@ -60,6 +59,7 @@ export function OnboardingIncomeScreen({ onNext }: Props): React.ReactElement {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
         <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+          {/* Logo / Brand */}
           <View style={styles.logoRow}>
             <View style={styles.logoIcon}>
               <Text style={styles.logoIconText}>⟡</Text>
@@ -67,6 +67,7 @@ export function OnboardingIncomeScreen({ onNext }: Props): React.ReactElement {
             <Text style={styles.logoText}>Finaura</Text>
           </View>
 
+          {/* Progress bar */}
           <View style={styles.progressContainer}>
             <Text style={styles.stepLabel}>Step {CURRENT_STEP} of {TOTAL_STEPS}</Text>
             <View style={styles.progressBarRow}>
@@ -83,36 +84,35 @@ export function OnboardingIncomeScreen({ onNext }: Props): React.ReactElement {
             </View>
           </View>
 
+          {/* Card */}
           <View style={styles.card}>
-            <Text style={styles.heading}>What's your{'\n'}monthly income?</Text>
-            <Text style={styles.subtitle}>This helps us tailor your budget strategies</Text>
+            {/* Heading */}
+            <Text style={styles.heading}>When would you like to{'\n'}retire?</Text>
+            <Text style={styles.subtitle}>Enter your expected retirement age</Text>
 
-            <View style={styles.displayBox}>
-              <Text style={styles.displayValue}>{formatIncomeDisplay(monthlyIncome)}</Text>
-            </View>
-
+            {/* Input */}
             <View style={styles.inputContainer}>
-              <Text style={styles.inputLabel}>Enter amount</Text>
-              <View style={styles.inputWrapper}>
-                <Text style={styles.currencySymbol}>₹</Text>
-                <TextInput
-                  style={[styles.input, error && styles.inputError]}
-                  placeholder="50000"
-                  placeholderTextColor="#D1D5DB"
-                  keyboardType="decimal-pad"
-                  value={monthlyIncome}
-                  onChangeText={(text) => {
-                    setMonthlyIncome(text);
-                    if (error) setError('');
-                  }}
-                />
-              </View>
+              <TextInput
+                style={[styles.input, error && styles.inputError]}
+                placeholder="65"
+                placeholderTextColor="#D1D5DB"
+                keyboardType="number-pad"
+                value={retirementAge}
+                onChangeText={(text) => {
+                  setRetirementAge(text);
+                  if (error) setError('');
+                }}
+                maxLength={3}
+              />
             </View>
 
+            {/* Error Message */}
             {error && <Text style={styles.errorText}>{error}</Text>}
 
-            <Text style={styles.hint}>Enter your expected net monthly income</Text>
+            {/* Hint */}
+            <Text style={styles.hint}>Must be between 40 and 100 years old</Text>
 
+            {/* Continue Button */}
             <TouchableOpacity
               style={styles.continueButton}
               onPress={handleContinue}
@@ -143,6 +143,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 16,
   },
+
+  // Logo
   logoRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -168,6 +170,8 @@ const styles = StyleSheet.create({
     color: '#1A1A2E',
     letterSpacing: 0.3,
   },
+
+  // Progress
   progressContainer: {
     marginBottom: 20,
   },
@@ -191,6 +195,8 @@ const styles = StyleSheet.create({
   progressSegmentInactive: {
     backgroundColor: '#D1D5DB',
   },
+
+  // Card
   card: {
     backgroundColor: '#FFFFFF',
     borderRadius: 20,
@@ -214,57 +220,32 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#6B7280',
     textAlign: 'center',
-    marginBottom: 24,
+    marginBottom: 28,
     fontWeight: '500',
   },
-  displayBox: {
-    backgroundColor: '#F3F4F6',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 24,
-    alignItems: 'center',
-  },
-  displayValue: {
-    fontSize: 32,
-    fontWeight: '800',
-    color: BRAND_BLUE,
-  },
+
+  // Input
   inputContainer: {
-    marginBottom: 24,
+    marginBottom: 12,
   },
-  inputLabel: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#6B7280',
-    marginBottom: 8,
-  },
-  inputWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  input: {
+    height: 56,
     borderRadius: 12,
     borderWidth: 1.5,
     borderColor: '#E5E7EB',
-    paddingHorizontal: 12,
-    backgroundColor: '#F9FAFB',
-  },
-  currencySymbol: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: BRAND_BLUE,
-    marginRight: 4,
-  },
-  input: {
-    flex: 1,
-    height: 56,
-    paddingHorizontal: 8,
-    fontSize: 18,
+    paddingHorizontal: 16,
+    fontSize: 20,
     fontWeight: '700',
     color: '#1A1A2E',
+    textAlign: 'center',
+    backgroundColor: '#F9FAFB',
   },
   inputError: {
     borderColor: '#EF4444',
     backgroundColor: '#FEE2E2',
   },
+
+  // Error
   errorText: {
     fontSize: 13,
     color: '#EF4444',
@@ -272,6 +253,8 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     textAlign: 'center',
   },
+
+  // Hint
   hint: {
     fontSize: 12,
     color: '#9CA3AF',
@@ -279,6 +262,8 @@ const styles = StyleSheet.create({
     marginBottom: 28,
     fontWeight: '500',
   },
+
+  // Button
   continueButton: {
     height: 50,
     borderRadius: 25,
@@ -290,6 +275,11 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 5,
+  },
+  continueButtonDisabled: {
+    backgroundColor: '#D1D5DB',
+    shadowOpacity: 0,
+    elevation: 0,
   },
   continueButtonText: {
     fontSize: 16,

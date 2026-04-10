@@ -102,6 +102,11 @@ export function TransactionsScreen(): React.ReactElement {
     if (item.sentiment === 'positive') sentimentColor = '#34D399';
     if (item.sentiment === 'negative') sentimentColor = '#F87171';
     if (item.tags?.includes('impulse')) sentimentColor = '#FBBF24';
+    const sentimentMeta = item.sentiment === 'positive'
+      ? { emoji: '💚', label: 'Good Spend' }
+      : item.sentiment === 'negative'
+        ? { emoji: '🔴', label: 'Watch Out' }
+        : { emoji: '🔵', label: 'Neutral Spend' };
 
     return (
       <TouchableOpacity 
@@ -131,7 +136,7 @@ export function TransactionsScreen(): React.ReactElement {
           </Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 4 }}>
             <View style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: sentimentColor }} />
-            <Text style={{ fontSize: 10, color: '#6B7280' }}>{item.sentiment}</Text>
+            <Text style={{ fontSize: 10, color: '#6B7280' }}>{`${sentimentMeta.emoji} ${sentimentMeta.label}`}</Text>
           </View>
         </View>
       </TouchableOpacity>

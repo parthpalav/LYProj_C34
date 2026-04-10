@@ -65,6 +65,8 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
       try {
         const result = await classifyExpense(amount ? `${amount} ${text}` : text);
         setAiResult(result);
+        const match = CATEGORIES.find(c => c.ml === result.category);
+        if (match) setSelectedCategory(match);
         // Animate badge in
         badgeAnim.setValue(0);
         Animated.spring(badgeAnim, { toValue: 1, useNativeDriver: true, tension: 120, friction: 8 }).start();
@@ -83,13 +85,6 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
     }, 600);
     return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
   }, [description, amount]);
-
-  // Accept AI suggestion with one tap
-  const acceptSuggestion = () => {
-    if (!aiResult) return;
-    const match = CATEGORIES.find(c => c.ml === aiResult.category);
-    if (match) setSelectedCategory(match);
-  };
 
   const parsedAmount = parseFloat(amount.replace(/[^0-9.]/g, '')) || 0;
 
@@ -118,14 +113,18 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
     setSaving(true);
     try {
       // Map UI category + type → server fields
-      const categoryKey = selectedCategory.label.toLowerCase().replace(' & ', '-').split(' ')[0];
+      const categoryKey = selectedCategory.ml.toLowerCase();
       const sentimentMap: Record<string, 'positive' | 'neutral' | 'negative'> = {
         Need: 'neutral', Want: 'negative', Investment: 'positive',
       };
+      const finalSentiment: 'positive' | 'neutral' | 'negative' =
+        aiResult?.sentiment === 'positive' || aiResult?.sentiment === 'neutral' || aiResult?.sentiment === 'negative'
+          ? aiResult.sentiment
+          : sentimentMap[selectedType] ?? 'neutral';
       const newTx = await addTransaction({
         amount:      parsedAmount,
         category:    categoryKey,
-        sentiment:   sentimentMap[selectedType] ?? 'neutral',
+        sentiment:   finalSentiment,
         description: description.trim() || selectedCategory.label,
       });
       addToStore(newTx);
@@ -200,9 +199,7 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
               <View style={styles.aiBadgeHeader}>
                 <Text style={styles.aiBadgeIcon}>🤖</Text>
                 <Text style={styles.aiBadgeLabel}>AI Suggestion</Text>
-                <TouchableOpacity style={styles.aiAcceptBtn} onPress={acceptSuggestion} activeOpacity={0.8}>
-                  <Text style={styles.aiAcceptText}>Tap to apply ✓</Text>
-                </TouchableOpacity>
+                <Text style={styles.aiAppliedText}>Auto-applied ✓</Text>
               </View>
 
               {/* Main row: Category + Sentiment */}
@@ -595,15 +592,9 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
     flex: 1,
   },
-  aiAcceptBtn: {
-    backgroundColor: BRAND_BLUE,
-    borderRadius: 99,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-  },
-  aiAcceptText: {
+  aiAppliedText: {
     fontSize: 11,
-    color: '#fff',
+    color: BRAND_BLUE,
     fontWeight: '700',
   },
   aiMainPred: {

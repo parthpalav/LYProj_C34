@@ -9,6 +9,9 @@
       "ES2020"
     ],
     "skipLibCheck": true,
+    "types": [
+      "node"
+    ],
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "ignoreDeprecations": "5.0",

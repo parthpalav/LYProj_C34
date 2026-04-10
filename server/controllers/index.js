@@ -47,8 +47,38 @@ const USER_ID = 'u1';
 router.post('/user/register', async (req, res, next) => {
   try {
     const payload = req.body || {};
+    const { email } = payload;
+    
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required' });
+    }
+    
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(409).json({ error: 'Email already registered. Please sign in or use a different email.' });
+    }
+    
     const doc = await User.create({ id: `u-${Date.now()}`, ...payload });
-    res.status(201).json({ id: doc.id, name: doc.name, incomeType: doc.incomeType, goals: doc.goals });
+    res.status(201).json({ id: doc.id, name: doc.name, email: doc.email, incomeType: doc.incomeType, goals: doc.goals });
+  } catch (error) { next(error); }
+});
+
+router.post('/user/login', async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password required' });
+    }
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ error: 'Email not found. Please check your email or sign up.' });
+    }
+    const isPasswordValid = await user.comparePassword(password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ error: 'Incorrect password. Please try again.' });
+    }
+    res.json({ id: user.id, name: user.name, email: user.email, incomeType: user.incomeType, goals: user.goals });
   } catch (error) { next(error); }
 });
 

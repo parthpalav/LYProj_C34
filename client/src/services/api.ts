@@ -16,6 +16,8 @@ export interface NewTransaction {
 
 export interface RegisterPayload {
   name:        string;
+  email:       string;
+  password:    string;
   incomeType:  string;
   goals?:      string[];
 }
@@ -23,6 +25,7 @@ export interface RegisterPayload {
 export interface RegisterResponse {
   id:         string;
   name:       string;
+  email:      string;
   incomeType: string;
   goals:      string[];
 }
@@ -196,6 +199,11 @@ export async function getWeeklyReport(): Promise<WeeklyReport> {
 // ── User ──────────────────────────────────────────────────────
 export async function registerUser(payload: RegisterPayload): Promise<RegisterResponse> {
   const { data } = await api.post('/api/user/register', payload);
+  return data;
+}
+
+export async function loginUser(email: string, password: string): Promise<RegisterResponse> {
+  const { data } = await api.post('/api/user/login', { email, password });
   return data;
 }
 

@@ -12,7 +12,7 @@ import {
   Animated,
   Alert,
 } from 'react-native';
-import { registerUser } from '../services/api';
+import { registerUser, loginUser } from '../services/api';
 import { useStore } from '../store/useStore';
 
 interface Props {
@@ -56,7 +56,7 @@ export function AuthScreen({ onAuthSuccess }: Props): React.ReactElement {
   const validateEmail = (email: string) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 
-  const handleSignIn = () => {
+  const handleSignIn = async () => {
     if (!signInEmail.trim() || !signInPassword.trim()) {
       Alert.alert('Missing Fields', 'Please fill in your email and password.');
       return;
@@ -70,15 +70,19 @@ export function AuthScreen({ onAuthSuccess }: Props): React.ReactElement {
       return;
     }
     setLoading(true);
-    // TODO: Replace with real API call when backend is ready
-    setTimeout(() => {
-      setLoading(false);
-      setUser({ name: signInEmail.split('@')[0] });
+    try {
+      const user = await loginUser(signInEmail.trim(), signInPassword.trim());
+      setUser({ id: user.id, name: user.name });
       onAuthSuccess();
-    }, 1000);
+    } catch (error: any) {
+      const errorMsg = error?.response?.data?.error || error?.message || 'Login failed. Please try again.';
+      Alert.alert('Login Failed', errorMsg);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     if (!signUpName.trim() || !signUpEmail.trim() || !signUpPassword.trim() || !signUpConfirmPassword.trim()) {
       Alert.alert('Missing Fields', 'Please fill in all fields.');
       return;
@@ -96,12 +100,21 @@ export function AuthScreen({ onAuthSuccess }: Props): React.ReactElement {
       return;
     }
     setLoading(true);
-    // TODO: Replace with real API call (registerUser) when backend + MongoDB is set up
-    setTimeout(() => {
-      setLoading(false);
-      setUser({ name: signUpName.trim() });
+    try {
+      const user = await registerUser({
+        name: signUpName.trim(),
+        email: signUpEmail.trim(),
+        password: signUpPassword,
+        incomeType: 'salary'
+      });
+      setUser({ id: user.id, name: user.name });
       onAuthSuccess();
-    }, 1000);
+    } catch (error: any) {
+      const errorMsg = error?.response?.data?.error || error?.message || 'Sign up failed. Please try again.';
+      Alert.alert('Sign Up Failed', errorMsg);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const indicatorLeft = tabAnim.interpolate({

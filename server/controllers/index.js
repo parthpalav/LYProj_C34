@@ -60,7 +60,17 @@ router.post('/user/register', async (req, res, next) => {
     }
     
     const doc = await User.create({ id: `u-${Date.now()}`, ...payload });
-    res.status(201).json({ id: doc.id, name: doc.name, email: doc.email, incomeType: doc.incomeType, goals: doc.goals });
+    res.status(201).json({
+      id: doc.id,
+      name: doc.name,
+      email: doc.email,
+      dateOfBirth: doc.dateOfBirth,
+      retirementAge: doc.retirementAge,
+      monthlyIncome: doc.monthlyIncome,
+      onboardingComplete: doc.onboardingComplete,
+      incomeType: doc.incomeType,
+      goals: doc.goals,
+    });
   } catch (error) { next(error); }
 });
 
@@ -78,7 +88,21 @@ router.post('/user/login', async (req, res, next) => {
     if (!isPasswordValid) {
       return res.status(401).json({ error: 'Incorrect password. Please try again.' });
     }
-    res.json({ id: user.id, name: user.name, email: user.email, incomeType: user.incomeType, goals: user.goals });
+    const derivedOnboardingComplete =
+      user.onboardingComplete === true ||
+      (user.dateOfBirth && user.retirementAge !== null && user.monthlyIncome !== null);
+
+    res.json({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      dateOfBirth: user.dateOfBirth,
+      retirementAge: user.retirementAge,
+      monthlyIncome: user.monthlyIncome,
+      onboardingComplete: derivedOnboardingComplete,
+      incomeType: user.incomeType,
+      goals: user.goals,
+    });
   } catch (error) { next(error); }
 });
 

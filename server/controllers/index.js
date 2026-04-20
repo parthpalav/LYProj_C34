@@ -253,20 +253,43 @@ router.put('/user/:id/onboarding-complete', async (req, res, next) => {
 router.put('/user/:id/current-balance', async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { currentBalance } = req.body;
-    
-    if (currentBalance === undefined || currentBalance === null) {
-      return res.status(400).json({ error: 'Current balance is required' });
+    const { operation, amount, currentBalance } = req.body;
+    let nextBalance;
+
+    if (currentBalance !== undefined && currentBalance !== null) {
+      const absoluteBalance = parseFloat(currentBalance);
+      if (isNaN(absoluteBalance)) {
+        return res.status(400).json({ error: 'Current balance must be a valid number' });
+      }
+      nextBalance = absoluteBalance;
+    } else {
+      if (!operation || amount === undefined || amount === null) {
+        return res.status(400).json({ error: 'Operation and amount are required' });
+      }
+
+      if (!['credit', 'debit'].includes(operation)) {
+        return res.status(400).json({ error: 'Operation must be credit or debit' });
+      }
+
+      const parsedAmount = parseFloat(amount);
+      if (isNaN(parsedAmount) || parsedAmount <= 0) {
+        return res.status(400).json({ error: 'Amount must be a positive number' });
+      }
+
+      const user = await User.findOne({ id }).lean();
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      const existingBalance = parseFloat(user.currentBalance || 0);
+      nextBalance = operation === 'credit'
+        ? existingBalance + parsedAmount
+        : existingBalance - parsedAmount;
     }
-    
-    const balance = parseFloat(currentBalance);
-    if (isNaN(balance)) {
-      return res.status(400).json({ error: 'Current balance must be a valid number' });
-    }
-    
+
     const updated = await User.findOneAndUpdate(
       { id },
-      { currentBalance: balance },
+      { currentBalance: nextBalance },
       { new: true }
     ).lean();
     

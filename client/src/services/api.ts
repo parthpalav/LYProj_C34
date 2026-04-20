@@ -268,7 +268,11 @@ export async function classifyExpense(text: string): Promise<ClassifyResult> {
   return data;
 }
 
-export async function updateCurrentBalance(userId: string, currentBalance: number): Promise<{ success: boolean; currentBalance: number }> {
-  const { data } = await api.put(`/api/user/${userId}/current-balance`, { currentBalance });
+export async function updateCurrentBalance(
+  userId: string,
+  operation: 'credit' | 'debit',
+  amount: number
+): Promise<{ success: boolean; currentBalance: number }> {
+  const { data } = await api.put(`/api/user/${userId}/current-balance`, { operation, amount });
   return data;
 }

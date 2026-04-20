@@ -21,10 +21,15 @@ interface Props {
 
 export function UpdateBalanceScreen({ onClose }: Props): React.ReactElement {
   const { user, setUser } = useStore();
-  const [balance, setBalance] = useState(String(user?.currentBalance ?? 0));
+  const [operation, setOperation] = useState<'credit' | 'debit'>('credit');
+  const [amount, setAmount] = useState('');
   const [saving, setSaving] = useState(false);
 
-  const parsedBalance = parseFloat(balance.replace(/[^0-9.]/g, '')) || 0;
+  const parsedAmount = parseFloat(amount.replace(/[^0-9.]/g, '')) || 0;
+  const currentBalance = user?.currentBalance ?? 0;
+  const projectedBalance = operation === 'credit'
+    ? currentBalance + parsedAmount
+    : currentBalance - parsedAmount;
 
   const handleUpdate = async () => {
     if (saving) return;
@@ -34,19 +39,19 @@ export function UpdateBalanceScreen({ onClose }: Props): React.ReactElement {
       return;
     }
 
-    if (isNaN(parsedBalance)) {
-      Alert.alert('Invalid Amount', 'Please enter a valid balance amount.');
+    if (isNaN(parsedAmount) || parsedAmount <= 0) {
+      Alert.alert('Invalid Amount', 'Please enter a valid amount greater than 0.');
       return;
     }
 
     setSaving(true);
     try {
-      await updateCurrentBalance(user.id, parsedBalance);
+      const response = await updateCurrentBalance(user.id, operation, parsedAmount);
       
       // Update local store
       setUser({
         ...user,
-        currentBalance: parsedBalance,
+        currentBalance: response.currentBalance,
       });
 
       Alert.alert('Success', 'Bank balance updated successfully!');
@@ -65,7 +70,7 @@ export function UpdateBalanceScreen({ onClose }: Props): React.ReactElement {
     <SafeAreaView style={styles.safe}>
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.title}>Update Bank Balance</Text>
+          <Text style={styles.title}>Adjust Bank Balance</Text>
           <TouchableOpacity onPress={onClose} activeOpacity={0.7}>
             <Text style={styles.closeBtn}>✕</Text>
           </TouchableOpacity>
@@ -73,12 +78,35 @@ export function UpdateBalanceScreen({ onClose }: Props): React.ReactElement {
 
         <View style={styles.card}>
           <Text style={styles.label}>Current Balance</Text>
+          <View style={styles.balanceBox}>
+            <Text style={styles.balanceValue}>₹{currentBalance.toFixed(2)}</Text>
+          </View>
+
+          <Text style={styles.label}>Transaction Type</Text>
+          <View style={styles.segmentWrap}>
+            <TouchableOpacity
+              style={[styles.segmentBtn, operation === 'credit' && styles.segmentBtnActive]}
+              onPress={() => setOperation('credit')}
+              activeOpacity={0.8}
+            >
+              <Text style={[styles.segmentText, operation === 'credit' && styles.segmentTextActive]}>Credit</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.segmentBtn, operation === 'debit' && styles.segmentBtnActive]}
+              onPress={() => setOperation('debit')}
+              activeOpacity={0.8}
+            >
+              <Text style={[styles.segmentText, operation === 'debit' && styles.segmentTextActive]}>Debit</Text>
+            </TouchableOpacity>
+          </View>
+
+          <Text style={styles.label}>Amount</Text>
           <View style={styles.inputWrapper}>
             <Text style={styles.currencySymbol}>₹</Text>
             <TextInput
               style={styles.input}
-              value={balance}
-              onChangeText={(text) => setBalance(text.replace('₹', ''))}
+              value={amount}
+              onChangeText={(text) => setAmount(text.replace('₹', ''))}
               keyboardType="decimal-pad"
               placeholder="0"
               selectTextOnFocus
@@ -86,9 +114,9 @@ export function UpdateBalanceScreen({ onClose }: Props): React.ReactElement {
           </View>
 
           <View style={styles.infoBox}>
-            <Text style={styles.infoLabel}>Amount to Update</Text>
+            <Text style={styles.infoLabel}>New Balance Preview</Text>
             <Text style={styles.infoValue}>
-              ₹{parsedBalance.toFixed(2)}
+              ₹{projectedBalance.toFixed(2)}
             </Text>
           </View>
 
@@ -101,7 +129,7 @@ export function UpdateBalanceScreen({ onClose }: Props): React.ReactElement {
             {saving ? (
               <ActivityIndicator color="#fff" />
             ) : (
-              <Text style={styles.confirmBtnText}>Update Balance</Text>
+              <Text style={styles.confirmBtnText}>{operation === 'credit' ? 'Add Money' : 'Subtract Money'}</Text>
             )}
           </TouchableOpacity>
 
@@ -165,6 +193,45 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     letterSpacing: 0.4,
     marginBottom: 12,
+  },
+  balanceBox: {
+    borderWidth: 1,
+    borderColor: '#dbe3f0',
+    borderRadius: 12,
+    padding: 14,
+    marginBottom: 20,
+    backgroundColor: '#f8fafc',
+  },
+  balanceValue: {
+    fontSize: 24,
+    fontWeight: '800',
+    color: '#0f172a',
+  },
+  segmentWrap: {
+    flexDirection: 'row',
+    borderWidth: 1,
+    borderColor: '#dbe3f0',
+    borderRadius: 12,
+    marginBottom: 20,
+    overflow: 'hidden',
+  },
+  segmentBtn: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 12,
+    backgroundColor: '#f8fafc',
+  },
+  segmentBtnActive: {
+    backgroundColor: '#e6edff',
+  },
+  segmentText: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#475569',
+    textTransform: 'uppercase',
+  },
+  segmentTextActive: {
+    color: BLUE,
   },
   inputWrapper: {
     flexDirection: 'row',

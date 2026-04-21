@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, TextInput, KeyboardAvoidingView } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { getEnvelopes, simulateMicroSavings, getRoundupPreview } from '../services/api';
 import { EnvelopeData } from '../types';
 
@@ -87,8 +87,10 @@ export function EnvelopesScreen(): React.ReactElement {
   const savingsPct   = Math.round((savingsTotal / envelope.targetSavings) * 100);
 
   return (
-    <ScrollView style={s.screen} contentContainerStyle={s.content}>
-      
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={{ flex: 1 }}>
+        <ScrollView style={s.screen} contentContainerStyle={s.content} keyboardShouldPersistTaps="handled">
+
       <View style={s.header}>
         <Text style={s.headerTitle}>Total Savings Vault</Text>
         <Text style={s.headerAmount}>₹{savingsTotal.toLocaleString()}</Text>
@@ -135,7 +137,9 @@ export function EnvelopesScreen(): React.ReactElement {
           )}
         </View>
       </KeyboardAvoidingView>
-    </ScrollView>
+        </ScrollView>
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 

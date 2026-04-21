@@ -4,6 +4,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   StyleSheet,
   SafeAreaView,
   ScrollView,
@@ -12,6 +13,7 @@ import {
   Alert,
   ActivityIndicator,
   Animated,
+  Keyboard,
 } from 'react-native';
 import { addTransaction, classifyExpense, ClassifyResult } from '../services/api';
 import { useStore } from '../store/useStore';
@@ -144,12 +146,13 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
 
   return (
     <SafeAreaView style={styles.safe}>
-      {/* Dark background */}
-      <View style={styles.backdrop} />
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <View style={styles.sheetWrapper}>
+          {/* Dark background */}
+          <View style={styles.backdrop} />
 
-      <View style={styles.sheetWrapper}>
-        {/* Bottom Sheet Card */}
-        <View style={styles.sheet}>
+          {/* Bottom Sheet Card */}
+          <View style={styles.sheet}>
           {/* Drag handle */}
           <View style={styles.dragHandle} />
 
@@ -310,8 +313,9 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
               <Text style={styles.summaryValue}>{wantsRatio}%</Text>
             </View>
           </View>
+          </View>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
 
       {/* Category Modal */}
       <Modal

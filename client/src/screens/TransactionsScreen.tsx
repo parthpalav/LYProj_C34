@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { FlatList, Modal, Pressable, RefreshControl, StyleSheet, Text, TouchableOpacity, View, Alert, TextInput } from 'react-native';
+import { FlatList, Modal, Pressable, RefreshControl, StyleSheet, Text, TouchableOpacity, View, Alert, TextInput, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { getTransactions } from '../services/api';
 import { useStore } from '../store/useStore';
 import { Transaction } from '../types';
@@ -190,8 +190,9 @@ export function TransactionsScreen(): React.ReactElement {
 
       {/* Quick Edit Modal */}
       <Modal visible={!!editTx} transparent animationType="fade" onRequestClose={() => setEditTx(null)}>
-        <View style={styles.editOverlay}>
-          <View style={styles.editCard}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          <View style={styles.editOverlay}>
+            <View style={styles.editCard}>
             <Text style={styles.editTitle}>Edit Transaction</Text>
             
             <Text style={styles.label}>Amount</Text>
@@ -217,8 +218,9 @@ export function TransactionsScreen(): React.ReactElement {
                 <Text style={{ color: '#fff', fontWeight: '600' }}>Save</Text>
               </TouchableOpacity>
             </View>
+            </View>
           </View>
-        </View>
+        </TouchableWithoutFeedback>
       </Modal>
     </View>
   );

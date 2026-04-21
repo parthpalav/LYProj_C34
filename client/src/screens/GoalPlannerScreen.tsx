@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet, Modal,
   TextInput, KeyboardAvoidingView, Platform, Alert, ActivityIndicator,
-  RefreshControl, Vibration, Animated, Easing
+  RefreshControl, Vibration, Animated, Easing, Keyboard, TouchableWithoutFeedback
 } from 'react-native';
 import { getGoals, createGoal, deleteGoal } from '../services/api';
 import { useStore } from '../store/useStore';
@@ -56,6 +56,7 @@ function AddGoalModal({
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <KeyboardAvoidingView style={m.overlay} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <TouchableOpacity style={m.backdrop} activeOpacity={1} onPress={onClose} />
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={m.sheet}>
           <View style={m.dragHandle} />
           <Text style={m.sheetTitle}>Add New Goal</Text>
@@ -88,6 +89,7 @@ function AddGoalModal({
             <Text style={m.cancelTxt}>Cancel</Text>
           </TouchableOpacity>
         </View>
+        </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
     </Modal>
   );

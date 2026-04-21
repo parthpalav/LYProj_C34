@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import {
   View, Text, ScrollView, StyleSheet, TouchableOpacity,
   RefreshControl, TextInput, Modal, Alert, ActivityIndicator,
+  Keyboard, TouchableWithoutFeedback,
 } from 'react-native';
 import { addIncome, getIncomeFlow, updateIncome, deleteIncome } from '../services/api';
 import { IncomeFlowData } from '../types';
@@ -110,6 +111,7 @@ function AddIncomeModal({ visible, onClose, onAdd }: {
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <TouchableOpacity style={m.overlay} activeOpacity={1} onPress={onClose}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={m.sheet} onStartShouldSetResponder={() => true}>
           <View style={m.handle} />
           <Text style={m.title}>Log Income</Text>
@@ -136,6 +138,7 @@ function AddIncomeModal({ visible, onClose, onAdd }: {
             {saving ? <ActivityIndicator color="#fff" /> : <Text style={m.addTxt}>Log Income</Text>}
           </TouchableOpacity>
         </View>
+        </TouchableWithoutFeedback>
       </TouchableOpacity>
     </Modal>
   );
@@ -336,6 +339,7 @@ export function IncomeFlowScreen(): React.ReactElement {
       {/* Edit Income Modal */}
       <Modal visible={!!editInc} transparent animationType="slide" onRequestClose={() => setEditInc(null)}>
         <TouchableOpacity style={m.overlay} activeOpacity={1} onPress={() => setEditInc(null)}>
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <View style={m.sheet} onStartShouldSetResponder={() => true}>
             <View style={m.handle} />
             <Text style={m.title}>Edit Income</Text>
@@ -367,6 +371,7 @@ export function IncomeFlowScreen(): React.ReactElement {
               </TouchableOpacity>
             </View>
           </View>
+          </TouchableWithoutFeedback>
         </TouchableOpacity>
       </Modal>
     </>

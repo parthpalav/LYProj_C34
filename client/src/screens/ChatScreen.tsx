@@ -9,7 +9,9 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
+  Keyboard,
 } from 'react-native';
 import { sendMessageToAgent } from '../services/api';
 import { useStore } from '../store/useStore';
@@ -265,11 +267,12 @@ export function ChatScreen(): React.ReactElement {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={s.screen}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={90}
-    >
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <KeyboardAvoidingView
+        style={s.screen}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={90}
+      >
       {/* Message list */}
       <FlatList
         ref={listRef}
@@ -327,7 +330,8 @@ export function ChatScreen(): React.ReactElement {
 
       {/* AI Reasoning Panel */}
       {showReasoning && <AiReasoningPanel onClose={() => setShowReasoning(false)} />}
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 }
 

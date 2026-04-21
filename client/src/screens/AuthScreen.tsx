@@ -4,12 +4,14 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   Animated,
   Alert,
+  Keyboard,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { registerUser, loginUser } from '../services/api';
@@ -144,15 +146,16 @@ export function AuthScreen({ onAuthSuccess }: Props): React.ReactElement {
 
   return (
     <SafeAreaView style={styles.safe}>
-      <KeyboardAvoidingView
-        style={styles.flex}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      >
-        <ScrollView
-          contentContainerStyle={styles.scrollContent}
-          keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <KeyboardAvoidingView
+          style={styles.flex}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
+          <ScrollView
+            contentContainerStyle={styles.scrollContent}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+          >
           {/* ── Brand Header ── */}
           <View style={styles.brandSection}>
             {/* Decorative blobs */}
@@ -386,8 +389,9 @@ export function AuthScreen({ onAuthSuccess }: Props): React.ReactElement {
           </View>
 
           <Text style={styles.footerText}>© 2025 Finaura · All rights reserved</Text>
-        </ScrollView>
-      </KeyboardAvoidingView>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 }

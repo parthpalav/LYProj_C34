@@ -4,10 +4,12 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   StyleSheet,
   ActivityIndicator,
   Alert,
   SafeAreaView,
+  Keyboard,
 } from 'react-native';
 import { updateCurrentBalance } from '../services/api';
 import { useStore } from '../store/useStore';
@@ -68,7 +70,8 @@ export function UpdateBalanceScreen({ onClose }: Props): React.ReactElement {
 
   return (
     <SafeAreaView style={styles.safe}>
-      <View style={styles.container}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.title}>Adjust Bank Balance</Text>
           <TouchableOpacity onPress={onClose} activeOpacity={0.7}>
@@ -143,7 +146,8 @@ export function UpdateBalanceScreen({ onClose }: Props): React.ReactElement {
             Your balance will be reflected in the dashboard immediately after update.
           </Text>
         </View>
-      </View>
+        </View>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 }

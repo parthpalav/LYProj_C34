@@ -317,18 +317,45 @@ router.get('/transactions', async (_req, res, next) => {
 
 router.post('/transactions', async (req, res, next) => {
   try {
+    const amount = parseFloat(req.body.amount);
+    if (isNaN(amount) || amount <= 0) {
+      return res.status(400).json({ error: 'Transaction amount must be a positive number' });
+    }
+
+    const debitAmount = Math.abs(amount);
+
+    const updatedUser = await User.findOneAndUpdate(
+      { id: USER_ID },
+      { $inc: { currentBalance: -debitAmount } },
+      { new: true }
+    ).lean();
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
     const { sentiment, tags } = analyzeSentiment(req.body.description, new Date());
-    const tx = await Transaction.create({
-      id:          `t-${Date.now()}`,
-      userId:      USER_ID,
-      amount:      req.body.amount,
-      category:    req.body.category || 'shopping',
-      sentiment:   req.body.sentiment || sentiment,
-      sentimentScore: 0,
-      tags:        tags,
-      description: req.body.description || 'manual input',
-      timestamp:   new Date()
-    });
+    let tx;
+    try {
+      tx = await Transaction.create({
+        id:          `t-${Date.now()}`,
+        userId:      USER_ID,
+        amount:      debitAmount,
+        category:    req.body.category || 'shopping',
+        sentiment:   req.body.sentiment || sentiment,
+        sentimentScore: 0,
+        tags:        tags,
+        description: req.body.description || 'manual input',
+        timestamp:   new Date()
+      });
+    } catch (createError) {
+      await User.findOneAndUpdate(
+        { id: USER_ID },
+        { $inc: { currentBalance: debitAmount } }
+      );
+      throw createError;
+    }
+
     res.status(201).json(normalizeTransaction(tx));
   } catch (error) { next(error); }
 });

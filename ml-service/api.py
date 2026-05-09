@@ -5,9 +5,13 @@ Flask ML microservice — runs on port 5001
 Endpoints:
   GET  /health          → service health check
   POST /sentiment       → rule-based sentiment score
-  POST /fmi             → Financial Momentum Index computation
+  POST /fmi-score       → Deterministic FMI (Financial Maturity Index) scoring engine
   POST /predict         → spending threshold alerts
-  POST /classify        → TF-IDF + LogReg expense categorisation  ← NEW
+  POST /classify        → TF-IDF + LogReg expense categorisation
+
+NOTE: FMI is no longer a supervised ML prediction model. It is a transparent,
+mathematically-grounded financial wellness index computed from retirement readiness.
+See fmi_engine.py for full financial mathematics.
 """
 
 import os
@@ -18,9 +22,9 @@ import logging
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
-from fmi_model import compute_fmi
 from predictor import detect_threshold_alerts
 from sentiment import score_sentiment
+from fmi_engine import calculate_fmi
 
 # ─── App setup ────────────────────────────────────────────────────────────────
 app = Flask(__name__)
@@ -84,16 +88,103 @@ def sentiment_endpoint():
     return jsonify({'score': score})
 
 
-@app.post('/fmi')
-def fmi_endpoint():
-    payload = request.get_json(force=True)
-    score   = compute_fmi(
-        sentiment          = float(payload.get('sentiment', 0.0)),
-        spending_deviation = float(payload.get('spending_deviation', 0.0)),
-        income_stability   = float(payload.get('income_stability', 0.0)),
-        upcoming_bills     = float(payload.get('upcoming_bills', 0.0)),
-    )
-    return jsonify({'score': score})
+@app.post('/fmi-score')
+def fmi_score_endpoint():
+    """
+    POST /fmi-score
+    
+    Calculate Financial Maturity Index (FMI) using deterministic financial mathematics.
+    
+    FMI measures retirement readiness: 50 = on-track, <50 = behind, >50 = ahead.
+    
+    Request body (all fields optional, reasonable defaults applied):
+    {
+      "age": 45,
+      "retirement_age": 65,
+      "current_retirement_savings": 500000,
+      "retirement_goal": 2000000,
+      "monthly_income": 8000,
+      "monthly_savings": 1500,
+      "investment_contribution": 500,
+      "debt": 50000,
+      "savings_consistency": 0.8,
+      "annual_interest_rate": 0.05,
+      "annual_inflation_rate": 0.03
+    }
+    
+    Response:
+    {
+      "score": 58.5,
+      "status": "Ahead",
+      "required_monthly_savings": 1234.56,
+      "actual_monthly_savings": 2000.0,
+      "monthly_gap": 765.44,
+      "projected_retirement_corpus": 2500000.0,
+      "years_remaining": 20,
+      "months_remaining": 240,
+      "savings_rate_performance": 1.621,
+      "debt_to_income_ratio": 0.052,
+      "savings_consistency_score": 0.8,
+      "retirement_readiness_pct": 125.0,
+      "assumptions": { ... },
+      "warnings": []
+    }
+    """
+    try:
+        payload = request.get_json(force=True)
+        
+        # Extract parameters with sensible defaults
+        age = int(payload.get('age', 40))
+        retirement_age = int(payload.get('retirement_age', 65))
+        current_retirement_savings = float(payload.get('current_retirement_savings', 0))
+        retirement_goal = float(payload.get('retirement_goal', 1000000))
+        monthly_income = float(payload.get('monthly_income', 5000))
+        monthly_savings = float(payload.get('monthly_savings', 0))
+        investment_contribution = float(payload.get('investment_contribution', 0))
+        debt = float(payload.get('debt', 0))
+        savings_consistency = float(payload.get('savings_consistency', 0.7))
+        annual_interest_rate = float(payload.get('annual_interest_rate', 0.05))
+        annual_inflation_rate = float(payload.get('annual_inflation_rate', 0.03))
+        
+        # Calculate FMI
+        result = calculate_fmi(
+            age=age,
+            retirement_age=retirement_age,
+            current_retirement_savings=current_retirement_savings,
+            retirement_goal=retirement_goal,
+            monthly_income=monthly_income,
+            monthly_savings=monthly_savings,
+            investment_contribution=investment_contribution,
+            debt=debt,
+            savings_consistency=savings_consistency,
+            annual_interest_rate=annual_interest_rate,
+            annual_inflation_rate=annual_inflation_rate
+        )
+        
+        # Convert dataclass to dict for JSON response
+        response = {
+            'score': result.score,
+            'status': result.status,
+            'required_monthly_savings': result.required_monthly_savings,
+            'actual_monthly_savings': result.actual_monthly_savings,
+            'monthly_gap': result.monthly_gap,
+            'projected_retirement_corpus': result.projected_retirement_corpus,
+            'years_remaining': result.years_remaining,
+            'months_remaining': result.months_remaining,
+            'savings_rate_performance': result.savings_rate_performance,
+            'debt_to_income_ratio': result.debt_to_income_ratio,
+            'savings_consistency_score': result.savings_consistency_score,
+            'retirement_readiness_pct': result.retirement_readiness_pct,
+            'assumptions': result.assumptions,
+            'warnings': result.warnings
+        }
+        
+        log.info(f"FMI calculation: age={age}, score={result.score}, status={result.status}")
+        return jsonify(response)
+    
+    except Exception as e:
+        log.exception('FMI score calculation failed: %s', e)
+        return jsonify({'error': str(e)}), 400
 
 
 @app.post('/predict')

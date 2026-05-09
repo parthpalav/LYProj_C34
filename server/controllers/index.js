@@ -382,7 +382,8 @@ router.delete('/transactions/:id', async (req, res, next) => {
 
 router.get('/fmi', async (_req, res, next) => {
   try {
-    const totalInc = (await Income.find({ userId: USER_ID }).lean()).reduce((s, i) => s + i.amount, 0);
+    const incomes = await Income.find({ userId: USER_ID }).lean();
+    const totalInc = incomes.reduce((s, i) => s + i.amount, 0);
     const txDocs = await Transaction.find({ userId: USER_ID }).sort({ timestamp: -1 }).lean();
     const totalExp = txDocs.reduce((s, t) => s + t.amount, 0);
     const currentBalance = totalInc - totalExp;
@@ -401,12 +402,44 @@ router.get('/fmi', async (_req, res, next) => {
       ? Math.sqrt(txDocs.reduce((s, t) => s + Math.pow(t.amount - avgSpend, 2), 0) / txDocs.length) / (avgSpend || 1)
       : 0.5;
 
-    const computed = calculateFMI({
-      spendingDeviation: Math.min(1, deviation),
-      sentimentScore:    1 - negativeRatio - impulseRatio * 0.5,
-      upcomingBills:     0.4, // placeholder for bill tracking
-      incomeStability:   0.8  // placeholder for income analysis
-    });
+    // Build ML profile for FMI prediction
+    const user = await User.findOne({ id: USER_ID }).lean();
+    const envelopes = await Envelope.findOne({ userId: USER_ID }).lean();
+    const goals = await Goal.find({ userId: USER_ID }).lean();
+
+    // Attempt to locate a retirement goal
+    const retirementGoalObj = goals.find(g => /retire/i.test(g.name)) || null;
+
+    const monthly_income = user?.monthlyIncome ?? totalInc;
+    const monthly_expenses = totalExp; // best-effort; assumes recent period
+    const monthly_savings = Math.max(0, (monthly_income || 0) - (monthly_expenses || 0));
+    const investment_contribution = retirementGoalObj?.monthlyContribution || 0;
+    const current_retirement_savings = retirementGoalObj?.savedAmount || (envelopes?.savings || 0);
+    const retirement_goal = retirementGoalObj?.targetAmount || Math.round((monthly_income || 0) * 12 * 20);
+    const age = user?.dateOfBirth ? Math.max(18, new Date().getFullYear() - new Date(user.dateOfBirth).getFullYear()) : 40;
+    const retirement_age = user?.retirementAge || 65;
+
+    const profile = {
+      age,
+      retirement_age,
+      years_to_retire: Math.max(1, retirement_age - age),
+      monthly_income,
+      monthly_expenses,
+      monthly_savings,
+      investment_contribution,
+      current_retirement_savings,
+      retirement_goal,
+      debt: 0,
+      savings_consistency: 0.75,
+      income_volatility: 0.2,
+      spend_volatility: Math.min(1, deviation),
+      food_spend_ratio: 0.2,
+      entertainment_spend_ratio: 0.05,
+      shopping_spend_ratio: 0.05,
+      essential_spend_ratio: 0.7
+    };
+
+    const computed = await calculateFMI(profile);
 
     // Persist FMI snapshot
     await FMIHistory.create({

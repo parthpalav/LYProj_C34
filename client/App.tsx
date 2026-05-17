@@ -5,28 +5,46 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AppNavigator } from './src/navigation/AppNavigator';
 import { WelcomeOverlay } from './src/components/WelcomeOverlay';
 import { useStore } from './src/store/useStore';
-
-const DEMO_USER = {
-  id: 'u1',
-  name: 'Parth Palav',
-  email: 'parth@example.com',
-  onboardingComplete: true,
-  incomeType: 'salaried',
-  goals: [],
-  currentBalance: 0,
-};
+import { useAuthStore } from './src/store/useAuthStore';
+import { LoginScreen } from './src/screens/LoginScreen';
 
 export default function App(): React.ReactElement {
   const [welcomeDone, setWelcomeDone] = React.useState(false);
-  const user = useStore((state) => state.user);
+  const token = useAuthStore((state) => state.token);
+  const authUser = useAuthStore((state) => state.user);
   const setUser = useStore((state) => state.setUser);
 
+  // Sync auth user to the main app store so all screens can access it
   React.useEffect(() => {
-    if (!user) {
-      setUser(DEMO_USER);
+    if (authUser) {
+      setUser({
+        id: authUser.id,
+        name: authUser.name,
+        email: authUser.email,
+        dateOfBirth: authUser.dateOfBirth,
+        retirementAge: authUser.retirementAge,
+        monthlyIncome: authUser.monthlyIncome,
+        onboardingComplete: authUser.onboardingComplete,
+        incomeType: authUser.incomeType,
+        goals: authUser.goals,
+        currentBalance: authUser.currentBalance,
+      });
+    } else {
+      setUser(null);
     }
-  }, [user, setUser]);
+  }, [authUser, setUser]);
 
+  // Not authenticated — show login
+  if (!token) {
+    return (
+      <SafeAreaProvider>
+        <StatusBar style="dark" />
+        <LoginScreen />
+      </SafeAreaProvider>
+    );
+  }
+
+  // Authenticated — show the app
   return (
     <SafeAreaProvider>
       <NavigationContainer>

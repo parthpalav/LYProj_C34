@@ -1,6 +1,7 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useStore } from '../store/useStore';
+import { useAuthStore } from '../store/useAuthStore';
 
 function formatDOB(value: Date | string | null | undefined): string {
   if (!value) return 'Not set';
@@ -18,6 +19,7 @@ function formatCurrency(value: number | null | undefined): string {
 
 export function ProfileScreen(): React.ReactElement {
   const user = useStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -43,6 +45,10 @@ export function ProfileScreen(): React.ReactElement {
         <Text style={styles.label}>Onboarding Status</Text>
         <Text style={styles.value}>{user?.onboardingComplete ? 'Complete' : 'Pending'}</Text>
       </View>
+
+      <TouchableOpacity style={styles.logoutBtn} activeOpacity={0.85} onPress={logout}>
+        <Text style={styles.logoutText}>Sign Out</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 }
@@ -84,5 +90,20 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#101827',
+  },
+  logoutBtn: {
+    marginTop: 24,
+    height: 50,
+    backgroundColor: '#FEE2E2',
+    borderRadius: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#FECACA',
+  },
+  logoutText: {
+    color: '#DC2626',
+    fontSize: 15,
+    fontWeight: '700',
   },
 });

@@ -265,3 +265,23 @@ export async function updateCurrentBalance(
   const { data } = await api.put(`/api/user/${userId}/current-balance`, { operation, amount });
   return data;
 }
+
+// ── Auth ──────────────────────────────────────────────────────
+
+export function setAuthToken(token?: string): void {
+  if (token) {
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  } else {
+    delete api.defaults.headers.common['Authorization'];
+  }
+}
+
+export async function loginUser(payload: { email: string; password: string }): Promise<{ token: string; user: any }> {
+  const { data } = await api.post('/api/auth/login', payload);
+  return data;
+}
+
+export async function registerUser(payload: { name: string; email: string; password: string }): Promise<{ token: string; user: any }> {
+  const { data } = await api.post('/api/auth/register', payload);
+  return data;
+}

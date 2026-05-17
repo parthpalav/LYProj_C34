@@ -60,7 +60,7 @@ export function AppNavigator(): React.ReactElement {
         ),
       })}
     >
-      <Tab.Screen name="Envelopes" component={EnvelopesScreen}/>
+      <Tab.Screen name="Envelopes" component={EnvelopesScreen} />
       <Tab.Screen name="Transactions" component={TransactionsScreen} />
       <Tab.Screen
         name="Dashboard"

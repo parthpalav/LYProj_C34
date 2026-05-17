@@ -930,8 +930,6 @@ router.get('/reports/weekly', async (_req, res, next) => {
 // ML EXPENSE CLASSIFIER  (proxies to Flask on port 5001)
 // ═══════════════════════════════════════════════════════════
 
-const ML_SERVICE_URL = process.env.ML_SERVICE_URL || 'http://localhost:5001';
-
 router.post('/classify', async (req, res, next) => {
   try {
     const text = (req.body.text || '').trim();

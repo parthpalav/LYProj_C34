@@ -332,25 +332,7 @@ const balStyles = StyleSheet.create({
   amount: { fontSize: 32, fontWeight: '800', color: '#fff', letterSpacing: -1 },
 });
 
-// ═══════════════════════════════════════════════════════════
-// FIS SCORE CARD
-// ═══════════════════════════════════════════════════════════
-function FisCard({ fis, grade }: { fis: number; grade: string }) {
-  const color = fis >= 80 ? GREEN : fis >= 65 ? BLUE : fis >= 50 ? AMBER : RED;
-  return (
-    <Card title="Integrity Score (FIS)" info>
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-        <View>
-          <Text style={{ fontSize: 36, fontWeight: '800', color: '#111827', letterSpacing: -1 }}>{fis}</Text>
-          <Text style={{ fontSize: 13, color: '#6B7280', marginTop: 2 }}>out of 100</Text>
-        </View>
-        <View style={{ width: 56, height: 56, borderRadius: 28, backgroundColor: color + '1A', alignItems: 'center', justifyContent: 'center', borderWidth: 2, borderColor: color }}>
-          <Text style={{ fontSize: 24, fontWeight: '800', color }}>{grade}</Text>
-        </View>
-      </View>
-    </Card>
-  );
-}
+
 
 // ═══════════════════════════════════════════════════════════
 // MAIN DASHBOARD SCREEN
@@ -429,17 +411,10 @@ export function DashboardScreen(): React.ReactElement {
       {/* Balance */}
       <BalanceCard balance={balance} />
 
-      {/* Row 0: FIS and FMI */}
-      <View style={s.row}>
-        <View style={{ flex: 1 }}>
-          <FisCard fis={dashboard?.fis ?? 0} grade={dashboard?.fisGrade ?? 'N/A'} />
-        </View>
-        <View style={{ flex: 1 }}>
-          <Card title="FMI Score" info>
-            <SavingsGauge score={fmiScore} max={100} />
-          </Card>
-        </View>
-      </View>
+      {/* FMI Score */}
+      <Card title="FMI Score" info>
+        <SavingsGauge score={fmiScore} max={100} />
+      </Card>
 
       {/* Budget Pacing + Heatmap (placed under Balance/FMI) */}
       <View style={s.visualsWrapper}>

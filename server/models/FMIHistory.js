@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 
 const fmiHistorySchema = new mongoose.Schema(
   {
+    userId: { type: String, required: true },
     score: { type: Number, required: true },
     factors: { type: [String], default: [] },
     timestamp: { type: Date, required: true }

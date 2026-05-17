@@ -16,26 +16,6 @@ export interface NewTransaction {
   confidenceScore?: number;
 }
 
-export interface RegisterPayload {
-  name:        string;
-  email:       string;
-  password:    string;
-  incomeType:  string;
-  goals?:      string[];
-}
-
-export interface RegisterResponse {
-  id:         string;
-  name:       string;
-  email:      string;
-  dateOfBirth?: string | null;
-  retirementAge?: number | null;
-  monthlyIncome?: number | null;
-  onboardingComplete?: boolean;
-  incomeType: string;
-  goals:      string[];
-}
-
 export interface NewGoalPayload {
   name:                string;
   emoji?:              string;
@@ -214,16 +194,6 @@ export async function getWeeklyReport(): Promise<WeeklyReport> {
 }
 
 // ── User ──────────────────────────────────────────────────────
-export async function registerUser(payload: RegisterPayload): Promise<RegisterResponse> {
-  const { data } = await api.post('/api/user/register', payload);
-  return data;
-}
-
-export async function loginUser(email: string, password: string): Promise<RegisterResponse> {
-  const { data } = await api.post('/api/user/login', { email, password });
-  return data;
-}
-
 export async function updateUserDOB(userId: string, dateOfBirth: Date): Promise<{ success: boolean }> {
   const { data } = await api.put(`/api/user/${userId}/dob`, { dateOfBirth });
   return data;

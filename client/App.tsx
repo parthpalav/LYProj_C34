@@ -3,35 +3,36 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AppNavigator } from './src/navigation/AppNavigator';
-import { OnboardingNavigator } from './src/navigation/OnboardingNavigator';
-import { AuthScreen } from './src/screens/AuthScreen';
 import { WelcomeOverlay } from './src/components/WelcomeOverlay';
 import { useStore } from './src/store/useStore';
+
+const DEMO_USER = {
+  id: 'u1',
+  name: 'Parth Palav',
+  email: 'parth@example.com',
+  onboardingComplete: true,
+  incomeType: 'salaried',
+  goals: [],
+  currentBalance: 0,
+};
 
 export default function App(): React.ReactElement {
   const [welcomeDone, setWelcomeDone] = React.useState(false);
   const user = useStore((state) => state.user);
+  const setUser = useStore((state) => state.setUser);
 
-  // Check if user is authenticated
-  const isAuthenticated = user !== null;
-
-  // Check if onboarding is complete
-  const isOnboardingComplete = user?.onboardingComplete ?? false;
+  React.useEffect(() => {
+    if (!user) {
+      setUser(DEMO_USER);
+    }
+  }, [user, setUser]);
 
   return (
     <SafeAreaProvider>
       <NavigationContainer>
         <StatusBar style="dark" />
-        {!isAuthenticated ? (
-          <AuthScreen onAuthSuccess={() => {}} />
-        ) : !isOnboardingComplete ? (
-          <OnboardingNavigator onFinish={() => {}} />
-        ) : (
-          <>
-            <AppNavigator />
-            {!welcomeDone && <WelcomeOverlay onDismiss={() => setWelcomeDone(true)} />}
-          </>
-        )}
+        <AppNavigator />
+        {!welcomeDone && <WelcomeOverlay onDismiss={() => setWelcomeDone(true)} />}
       </NavigationContainer>
     </SafeAreaProvider>
   );

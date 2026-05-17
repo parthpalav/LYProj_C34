@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import jwt from 'jsonwebtoken';
 import { detectAnomaly } from '../services/TransactionService.js';
 import { calculateFMI } from '../services/FMIService.js';
 import { predictOverspend, detectLowBalanceRisk } from '../services/PredictionService.js';
@@ -7,6 +8,7 @@ import { generateResponse } from '../services/AgentService.js';
 import { analyzeSentiment, annotateTransactions } from '../services/SentimentService.js';
 import { detectBehavioralPatterns, calculateFIS, generateWeeklyReport } from '../services/BehaviorService.js';
 import { smoothIncomeFlow } from '../services/IncomeFlowService.js';
+import { authMiddleware } from '../middleware/authMiddleware.js';
 import User        from '../models/User.js';
 import Transaction from '../models/Transaction.js';
 import FMIHistory  from '../models/FMIHistory.js';
@@ -38,59 +40,92 @@ function normalizeFmi(item) {
   return { score: item.score, factors: item.factors, timestamp: item.timestamp };
 }
 
-const USER_ID = 'u1';
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
 const ML_SERVICE_URL = process.env.ML_SERVICE_URL || 'http://localhost:5001';
+
+function normalizeEmail(email) {
+  return String(email || '').trim().toLowerCase();
+}
+
+function getJwtSecret() {
+  if (!process.env.JWT_SECRET) {
+    throw new Error('JWT_SECRET is not configured');
+  }
+  return process.env.JWT_SECRET;
+}
+
+function issueToken(user) {
+  return jwt.sign({ id: user.id, email: user.email }, getJwtSecret(), { expiresIn: JWT_EXPIRES_IN });
+}
+
+function deriveOnboardingComplete(user) {
+  return Boolean(
+    user.onboardingComplete === true ||
+    (user.dateOfBirth && user.retirementAge !== null && user.monthlyIncome !== null)
+  );
+}
+
+function publicUser(user) {
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    dateOfBirth: user.dateOfBirth,
+    retirementAge: user.retirementAge,
+    monthlyIncome: user.monthlyIncome,
+    onboardingComplete: deriveOnboardingComplete(user),
+    incomeType: user.incomeType,
+    goals: user.goals,
+    currentBalance: user.currentBalance
+  };
+}
 
 // ═══════════════════════════════════════════════════════════
 // USER
 // ═══════════════════════════════════════════════════════════
 
-router.post('/user/register', async (req, res, next) => {
+async function handleRegister(req, res, next) {
   try {
     const payload = req.body || {};
-    const { email } = payload;
-    
-    if (!email) {
-      return res.status(400).json({ error: 'Email is required' });
-    }
-    if (!payload.name) {
-      return res.status(400).json({ error: 'Name is required' });
-    }
-    if (!payload.password) {
-      return res.status(400).json({ error: 'Password is required' });
-    }
-    if (!payload.incomeType) {
-      return res.status(400).json({ error: 'Income type is required' });
-    }
-    
-    // Check if user already exists
+    const email = normalizeEmail(payload.email);
+
+    if (!email) return res.status(400).json({ error: 'Email is required' });
+    if (!payload.name) return res.status(400).json({ error: 'Name is required' });
+    if (!payload.password) return res.status(400).json({ error: 'Password is required' });
+
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(409).json({ error: 'Email already registered. Please sign in or use a different email.' });
     }
-    
-    const doc = await User.create({ id: `u-${Date.now()}`, ...payload });
-    res.status(201).json({
-      id: doc.id,
-      name: doc.name,
-      email: doc.email,
-      dateOfBirth: doc.dateOfBirth,
-      retirementAge: doc.retirementAge,
-      monthlyIncome: doc.monthlyIncome,
-      onboardingComplete: doc.onboardingComplete,
-      incomeType: doc.incomeType,
-      goals: doc.goals,
-    });
-  } catch (error) { next(error); }
-});
 
-router.post('/user/login', async (req, res, next) => {
+    const doc = await User.create({
+      id: `u-${Date.now()}`,
+      name: payload.name,
+      email,
+      password: payload.password,
+      incomeType: payload.incomeType || 'salaried',
+      goals: Array.isArray(payload.goals) ? payload.goals : []
+    });
+
+    const token = issueToken(doc);
+    res.status(201).json({ token, user: publicUser(doc) });
+  } catch (error) {
+    if (error?.message === 'JWT_SECRET is not configured') {
+      return res.status(500).json({ error: error.message });
+    }
+    next(error);
+  }
+}
+
+async function handleLogin(req, res, next) {
   try {
-    const { email, password } = req.body;
+    const { email: rawEmail, password } = req.body || {};
+    const email = normalizeEmail(rawEmail);
     if (!email || !password) {
       return res.status(400).json({ error: 'Email and password required' });
     }
-    const user = await User.findOne({ email });
+
+    const user = await User.findOne({ email }).select('+password');
     if (!user) {
       return res.status(401).json({ error: 'Email not found. Please check your email or sign up.' });
     }
@@ -98,28 +133,28 @@ router.post('/user/login', async (req, res, next) => {
     if (!isPasswordValid) {
       return res.status(401).json({ error: 'Incorrect password. Please try again.' });
     }
-    const derivedOnboardingComplete = Boolean(
-      user.onboardingComplete === true ||
-      (user.dateOfBirth && user.retirementAge !== null && user.monthlyIncome !== null)
-    );
 
-    res.json({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      dateOfBirth: user.dateOfBirth,
-      retirementAge: user.retirementAge,
-      monthlyIncome: user.monthlyIncome,
-      onboardingComplete: derivedOnboardingComplete,
-      incomeType: user.incomeType,
-      goals: user.goals,
-    });
-  } catch (error) { next(error); }
-});
+    const token = issueToken(user);
+    res.json({ token, user: publicUser(user) });
+  } catch (error) {
+    if (error?.message === 'JWT_SECRET is not configured') {
+      return res.status(500).json({ error: error.message });
+    }
+    next(error);
+  }
+}
 
-router.get('/user/profile', async (_req, res, next) => {
+router.post('/auth/register', handleRegister);
+router.post('/auth/login', handleLogin);
+router.post('/user/register', handleRegister);
+router.post('/user/login', handleLogin);
+
+router.use(authMiddleware);
+
+router.get('/user/profile', async (req, res, next) => {
   try {
-    const user = await User.findOne({ id: USER_ID }).lean();
+    const userId = req.user.id;
+    const user = await User.findOne({ id: userId }).lean();
     res.json(user);
   } catch (error) { next(error); }
 });
@@ -128,6 +163,10 @@ router.put('/user/:id/dob', async (req, res, next) => {
   try {
     const { id } = req.params;
     const { dateOfBirth } = req.body;
+
+    if (id !== req.user.id) {
+      return res.status(403).json({ error: 'Forbidden' });
+    }
     
     if (!dateOfBirth) {
       return res.status(400).json({ error: 'Date of birth is required' });
@@ -151,6 +190,10 @@ router.put('/user/:id/retirement-age', async (req, res, next) => {
   try {
     const { id } = req.params;
     const { retirementAge } = req.body;
+
+    if (id !== req.user.id) {
+      return res.status(403).json({ error: 'Forbidden' });
+    }
     
     if (!retirementAge) {
       return res.status(400).json({ error: 'Retirement age is required' });
@@ -179,6 +222,10 @@ router.put('/user/:id/monthly-income', async (req, res, next) => {
   try {
     const { id } = req.params;
     const { monthlyIncome } = req.body;
+
+    if (id !== req.user.id) {
+      return res.status(403).json({ error: 'Forbidden' });
+    }
     
     if (monthlyIncome === undefined || monthlyIncome === null) {
       return res.status(400).json({ error: 'Monthly income is required' });
@@ -207,6 +254,10 @@ router.put('/user/:id/onboarding-complete', async (req, res, next) => {
   try {
     const { id } = req.params;
     const { dateOfBirth, retirementAge, monthlyIncome } = req.body;
+
+    if (id !== req.user.id) {
+      return res.status(403).json({ error: 'Forbidden' });
+    }
     
     // Validate all required fields
     if (!dateOfBirth) {
@@ -267,6 +318,10 @@ router.put('/user/:id/current-balance', async (req, res, next) => {
     const { operation, amount, currentBalance } = req.body;
     let nextBalance;
 
+    if (id !== req.user.id) {
+      return res.status(403).json({ error: 'Forbidden' });
+    }
+
     if (currentBalance !== undefined && currentBalance !== null) {
       const absoluteBalance = parseFloat(currentBalance);
       if (isNaN(absoluteBalance)) {
@@ -316,9 +371,10 @@ router.put('/user/:id/current-balance', async (req, res, next) => {
 // TRANSACTIONS
 // ═══════════════════════════════════════════════════════════
 
-router.get('/transactions', async (_req, res, next) => {
+router.get('/transactions', async (req, res, next) => {
   try {
-    const txDocs  = await Transaction.find().sort({ timestamp: -1 }).lean();
+    const userId = req.user.id;
+    const txDocs  = await Transaction.find({ userId }).sort({ timestamp: -1 }).lean();
     const txList  = txDocs.map(normalizeTransaction);
     const withAnomaly = detectAnomaly(txList);
     const annotated   = annotateTransactions(withAnomaly);
@@ -328,6 +384,7 @@ router.get('/transactions', async (_req, res, next) => {
 
 router.post('/transactions', async (req, res, next) => {
   try {
+    const userId = req.user.id;
     const amount = parseFloat(req.body.amount);
     if (isNaN(amount) || amount <= 0) {
       return res.status(400).json({ error: 'Transaction amount must be a positive number' });
@@ -336,7 +393,7 @@ router.post('/transactions', async (req, res, next) => {
     const debitAmount = Math.abs(amount);
 
     const updatedUser = await User.findOneAndUpdate(
-      { id: USER_ID },
+      { id: userId },
       { $inc: { currentBalance: -debitAmount } },
       { new: true }
     ).lean();
@@ -370,7 +427,7 @@ router.post('/transactions', async (req, res, next) => {
     try {
       tx = await Transaction.create({
         id:             `t-${Date.now()}`,
-        userId:         USER_ID,
+        userId:         userId,
         amount:         debitAmount,
         category:       req.body.category || (mlData.category ? mlData.category.toLowerCase() : 'shopping'),
         sentiment:      req.body.sentiment || sentiment,
@@ -383,7 +440,7 @@ router.post('/transactions', async (req, res, next) => {
     } catch (createError) {
       // revert user balance on create failure
       await User.findOneAndUpdate(
-        { id: USER_ID },
+        { id: userId },
         { $inc: { currentBalance: debitAmount } }
       );
       throw createError;
@@ -395,7 +452,12 @@ router.post('/transactions', async (req, res, next) => {
 
 router.put('/transactions/:id', async (req, res, next) => {
   try {
-    const updated = await Transaction.findByIdAndUpdate(req.params.id, req.body, { new: true }).lean();
+    const userId = req.user.id;
+    const updated = await Transaction.findOneAndUpdate(
+      { id: req.params.id, userId },
+      req.body,
+      { new: true }
+    ).lean();
     if (!updated) return res.status(404).json({ error: 'Transaction not found' });
     res.json(normalizeTransaction(updated));
   } catch (error) { next(error); }
@@ -403,7 +465,8 @@ router.put('/transactions/:id', async (req, res, next) => {
 
 router.delete('/transactions/:id', async (req, res, next) => {
   try {
-    const deleted = await Transaction.findByIdAndDelete(req.params.id).lean();
+    const userId = req.user.id;
+    const deleted = await Transaction.findOneAndDelete({ id: req.params.id, userId }).lean();
     if (!deleted) return res.status(404).json({ error: 'Transaction not found' });
     res.json({ success: true, id: req.params.id });
   } catch (error) { next(error); }
@@ -413,11 +476,12 @@ router.delete('/transactions/:id', async (req, res, next) => {
 // FMI
 // ═══════════════════════════════════════════════════════════
 
-router.get('/fmi', async (_req, res, next) => {
+router.get('/fmi', async (req, res, next) => {
   try {
-    const incomes = await Income.find({ userId: USER_ID }).lean();
+    const userId = req.user.id;
+    const incomes = await Income.find({ userId }).lean();
     const totalInc = incomes.reduce((s, i) => s + i.amount, 0);
-    const txDocs = await Transaction.find({ userId: USER_ID }).sort({ timestamp: -1 }).lean();
+    const txDocs = await Transaction.find({ userId }).sort({ timestamp: -1 }).lean();
     const totalExp = txDocs.reduce((s, t) => s + t.amount, 0);
     const currentBalance = totalInc - totalExp;
 
@@ -436,9 +500,9 @@ router.get('/fmi', async (_req, res, next) => {
       : 0.5;
 
     // Build ML profile for FMI prediction
-    const user = await User.findOne({ id: USER_ID }).lean();
-    const envelopes = await Envelope.findOne({ userId: USER_ID }).lean();
-    const goals = await Goal.find({ userId: USER_ID }).lean();
+    const user = await User.findOne({ id: userId }).lean();
+    const envelopes = await Envelope.findOne({ userId }).lean();
+    const goals = await Goal.find({ userId }).lean();
 
     // Attempt to locate a retirement goal
     const retirementGoalObj = goals.find(g => /retire/i.test(g.name)) || null;
@@ -511,6 +575,7 @@ router.get('/fmi', async (_req, res, next) => {
 
     // Persist FMI snapshot
     await FMIHistory.create({
+      userId,
       score:     computed.score,
       factors:   computed.factors,
       timestamp: new Date()
@@ -520,9 +585,10 @@ router.get('/fmi', async (_req, res, next) => {
   } catch (error) { next(error); }
 });
 
-router.get('/fmi/history', async (_req, res, next) => {
+router.get('/fmi/history', async (req, res, next) => {
   try {
-    const history = await FMIHistory.find().sort({ timestamp: 1 }).lean();
+    const userId = req.user.id;
+    const history = await FMIHistory.find({ userId }).sort({ timestamp: 1 }).lean();
     res.json(history.map(normalizeFmi));
   } catch (error) { next(error); }
 });
@@ -531,11 +597,12 @@ router.get('/fmi/history', async (_req, res, next) => {
 // ALERTS
 // ═══════════════════════════════════════════════════════════
 
-router.get('/alerts', async (_req, res, next) => {
+router.get('/alerts', async (req, res, next) => {
   try {
-    const txDocs = await Transaction.find({ userId: USER_ID }).sort({ timestamp: -1 }).lean();
-    const incomes = await Income.find({ userId: USER_ID }).lean();
-    const alerts = await Alert.find({ userId: USER_ID }).lean();
+    const userId = req.user.id;
+    const txDocs = await Transaction.find({ userId }).sort({ timestamp: -1 }).lean();
+    const incomes = await Income.find({ userId }).lean();
+    const alerts = await Alert.find({ userId }).lean();
 
     const totalInc = incomes.reduce((sum, income) => sum + income.amount, 0);
     const totalExp = txDocs.reduce((sum, tx) => sum + tx.amount, 0);
@@ -549,13 +616,13 @@ router.get('/alerts', async (_req, res, next) => {
     const dynamic = [];
 
     if (overspend.risk === 'high') {
-      dynamic.push({ id: `a-${Date.now()}-1`, userId: USER_ID, message: 'Spending trend is above your average this week.', type: 'nudge', severity: 'medium' });
+      dynamic.push({ id: `a-${Date.now()}-1`, userId, message: 'Spending trend is above your average this week.', type: 'nudge', severity: 'medium' });
     }
     if (lowBalance) {
-      dynamic.push({ id: `a-${Date.now()}-2`, userId: USER_ID, message: 'Risk of low balance before next income date.', type: 'warning', severity: 'high' });
+      dynamic.push({ id: `a-${Date.now()}-2`, userId, message: 'Risk of low balance before next income date.', type: 'warning', severity: 'high' });
     }
     patterns.forEach((p, i) => {
-      dynamic.push({ id: `a-${Date.now()}-p${i}`, userId: USER_ID, message: `${p.emoji} ${p.message}`, type: 'nudge', severity: p.severity });
+      dynamic.push({ id: `a-${Date.now()}-p${i}`, userId, message: `${p.emoji} ${p.message}`, type: 'nudge', severity: p.severity });
     });
 
     res.json([...alerts, ...dynamic]);
@@ -566,16 +633,18 @@ router.get('/alerts', async (_req, res, next) => {
 // ENVELOPES
 // ═══════════════════════════════════════════════════════════
 
-router.get('/envelopes', async (_req, res, next) => {
+router.get('/envelopes', async (req, res, next) => {
   try {
-    const envelopes = await Envelope.findOne({ userId: USER_ID }).lean();
+    const userId = req.user.id;
+    const envelopes = await Envelope.findOne({ userId }).lean();
     res.json(envelopes);
   } catch (error) { next(error); }
 });
 
-router.get('/envelopes/roundup-preview', async (_req, res, next) => {
+router.get('/envelopes/roundup-preview', async (req, res, next) => {
   try {
-    const lastTx  = await Transaction.findOne().sort({ timestamp: -1 }).lean();
+    const userId = req.user.id;
+    const lastTx  = await Transaction.findOne({ userId }).sort({ timestamp: -1 }).lean();
     if (!lastTx) return res.json({ amount: 0, previewText: 'No recent transactions to round up.' });
     
     // Default roundup algorithm (round up to nearest 50)
@@ -592,6 +661,7 @@ router.get('/envelopes/roundup-preview', async (_req, res, next) => {
 
 router.post('/envelopes/update', async (req, res, next) => {
   try {
+    const userId = req.user.id;
     // If client passes an amount (e.g., they edited the preview), use it.
     // Otherwise fallback to 0.
     const customAmount = req.body.amount ? Number(req.body.amount) : 0;
@@ -600,10 +670,10 @@ router.post('/envelopes/update', async (req, res, next) => {
       return res.status(400).json({ error: 'Transfer amount must be greater than 0.' });
     }
 
-    const envelopes = await Envelope.findOne({ userId: USER_ID }).lean();
+    const envelopes = await Envelope.findOne({ userId }).lean();
     const newSavings = (envelopes?.savings || 0) + customAmount;
     
-    await Envelope.updateOne({ userId: USER_ID }, { $set: { savings: newSavings }});
+    await Envelope.updateOne({ userId }, { $set: { savings: newSavings }});
     res.json({ message: `Successfully vaulted ₹${customAmount.toFixed(2)} into savings.` });
   } catch (error) { next(error); }
 });
@@ -612,16 +682,17 @@ router.post('/envelopes/update', async (req, res, next) => {
 // DASHBOARD
 // ═══════════════════════════════════════════════════════════
 
-router.get('/dashboard', async (_req, res, next) => {
+router.get('/dashboard', async (req, res, next) => {
   try {
-    const user = await User.findOne({ id: USER_ID }).lean();
-    const txDocs = await Transaction.find({ userId: USER_ID }).sort({ timestamp: 1 }).lean();
-    const incomes = await Income.find({ userId: USER_ID }).lean();
-    const goals = await Goal.find({ userId: USER_ID }).lean();
+    const userId = req.user.id;
+    const user = await User.findOne({ id: userId }).lean();
+    const txDocs = await Transaction.find({ userId }).sort({ timestamp: 1 }).lean();
+    const incomes = await Income.find({ userId }).lean();
+    const goals = await Goal.find({ userId }).lean();
 
-    const currentFmi = await FMIHistory.findOne().sort({ timestamp: -1 }).lean();
-    const fmiHistory = await FMIHistory.find().sort({ timestamp: 1 }).lean();
-    const envelopes = await Envelope.findOne({ userId: USER_ID }).lean();
+    const currentFmi = await FMIHistory.findOne({ userId }).sort({ timestamp: -1 }).lean();
+    const fmiHistory = await FMIHistory.find({ userId }).sort({ timestamp: 1 }).lean();
+    const envelopes = await Envelope.findOne({ userId }).lean();
 
     const totalInc = incomes.reduce((s, i) => s + i.amount, 0);
     const totalExp = txDocs.reduce((s, t) => s + t.amount, 0);
@@ -693,9 +764,10 @@ router.get('/dashboard', async (_req, res, next) => {
 // AGENT CHAT
 // ═══════════════════════════════════════════════════════════
 
-router.get('/agent/history', async (_req, res, next) => {
+router.get('/agent/history', async (req, res, next) => {
   try {
-    const history = await AgentMemory.find({ userId: USER_ID }).sort({ timestamp: 1 }).lean();
+    const userId = req.user.id;
+    const history = await AgentMemory.find({ userId }).sort({ timestamp: 1 }).lean();
     res.json(history.map((m) => ({
       id:        m._id.toString(),
       role:      m.role,
@@ -707,19 +779,20 @@ router.get('/agent/history', async (_req, res, next) => {
 
 router.post('/agent/chat', async (req, res, next) => {
   try {
+    const userId = req.user.id;
     const message = req.body.message || '';
-    const fmi     = await FMIHistory.findOne().sort({ timestamp: -1 }).lean();
-    const alerts  = await Alert.find().lean();
-    const goals   = await Goal.find({ userId: USER_ID }).lean();
-    const envelope = await Envelope.findOne({ userId: USER_ID }).lean();
+    const fmi     = await FMIHistory.findOne({ userId }).sort({ timestamp: -1 }).lean();
+    const alerts  = await Alert.find({ userId }).lean();
+    const goals   = await Goal.find({ userId }).lean();
+    const envelope = await Envelope.findOne({ userId }).lean();
 
     // Persist user message
-    await AgentMemory.create({ userId: USER_ID, role: 'user', content: message });
+    await AgentMemory.create({ userId, role: 'user', content: message });
 
     const response = await generateResponse(message, { fmi, alerts, goals, envelope });
 
     // Persist assistant response
-    const saved = await AgentMemory.create({ userId: USER_ID, role: 'assistant', content: response });
+    const saved = await AgentMemory.create({ userId, role: 'assistant', content: response });
 
     res.json({
       id:        saved._id.toString(),
@@ -734,19 +807,21 @@ router.post('/agent/chat', async (req, res, next) => {
 // GOALS
 // ═══════════════════════════════════════════════════════════
 
-router.get('/goals', async (_req, res, next) => {
+router.get('/goals', async (req, res, next) => {
   try {
-    const goals = await Goal.find({ userId: USER_ID }).sort({ createdAt: 1 }).lean();
+    const userId = req.user.id;
+    const goals = await Goal.find({ userId }).sort({ createdAt: 1 }).lean();
     res.json(goals);
   } catch (error) { next(error); }
 });
 
 router.post('/goals', async (req, res, next) => {
   try {
+    const userId = req.user.id;
     const { name, emoji, targetAmount, targetDate, monthlyContribution } = req.body;
     const goal = await Goal.create({
       id:                  `g-${Date.now()}`,
-      userId:              USER_ID,
+      userId:              userId,
       name,
       emoji:               emoji || '🎯',
       targetAmount:        Number(targetAmount),
@@ -760,6 +835,7 @@ router.post('/goals', async (req, res, next) => {
 
 router.put('/goals/:id', async (req, res, next) => {
   try {
+    const userId = req.user.id;
     const { savedAmount, monthlyContribution, name, emoji, targetAmount, targetDate } = req.body;
     const update = {};
     if (savedAmount !== undefined)         update.savedAmount         = Number(savedAmount);
@@ -768,7 +844,7 @@ router.put('/goals/:id', async (req, res, next) => {
     if (emoji !== undefined)               update.emoji               = emoji;
     if (targetAmount !== undefined)        update.targetAmount        = Number(targetAmount);
     if (targetDate !== undefined)          update.targetDate          = targetDate;
-    const goal = await Goal.findOneAndUpdate({ id: req.params.id }, update, { new: true }).lean();
+    const goal = await Goal.findOneAndUpdate({ id: req.params.id, userId }, update, { new: true }).lean();
     if (!goal) return res.status(404).json({ message: 'Goal not found' });
     res.json(goal);
   } catch (error) { next(error); }
@@ -776,7 +852,9 @@ router.put('/goals/:id', async (req, res, next) => {
 
 router.delete('/goals/:id', async (req, res, next) => {
   try {
-    await Goal.findOneAndDelete({ id: req.params.id });
+    const userId = req.user.id;
+    const deleted = await Goal.findOneAndDelete({ id: req.params.id, userId });
+    if (!deleted) return res.status(404).json({ message: 'Goal not found' });
     res.json({ message: 'Goal deleted' });
   } catch (error) { next(error); }
 });
@@ -785,19 +863,21 @@ router.delete('/goals/:id', async (req, res, next) => {
 // INCOME
 // ═══════════════════════════════════════════════════════════
 
-router.get('/income', async (_req, res, next) => {
+router.get('/income', async (req, res, next) => {
   try {
-    const incomes = await Income.find({ userId: USER_ID }).sort({ timestamp: -1 }).lean();
+    const userId = req.user.id;
+    const incomes = await Income.find({ userId }).sort({ timestamp: -1 }).lean();
     res.json(incomes);
   } catch (error) { next(error); }
 });
 
 router.post('/income', async (req, res, next) => {
   try {
+    const userId = req.user.id;
     const { amount, source, description } = req.body;
     const income = await Income.create({
       id:          `i-${Date.now()}`,
-      userId:      USER_ID,
+      userId:      userId,
       amount:      Number(amount),
       source:      source || 'salary',
       description: description || '',
@@ -809,13 +889,14 @@ router.post('/income', async (req, res, next) => {
 
 router.put('/income/:id', async (req, res, next) => {
   try {
+    const userId = req.user.id;
     const { amount, source, description } = req.body;
     const update = {};
     if (amount !== undefined) update.amount = Number(amount);
     if (source !== undefined) update.source = source;
     if (description !== undefined) update.description = description;
 
-    const income = await Income.findOneAndUpdate({ id: req.params.id }, update, { new: true }).lean();
+    const income = await Income.findOneAndUpdate({ id: req.params.id, userId }, update, { new: true }).lean();
     if (!income) return res.status(404).json({ message: 'Income not found' });
     res.json(income);
   } catch (error) { next(error); }
@@ -823,15 +904,17 @@ router.put('/income/:id', async (req, res, next) => {
 
 router.delete('/income/:id', async (req, res, next) => {
   try {
-    const deleted = await Income.findOneAndDelete({ id: req.params.id }).lean();
+    const userId = req.user.id;
+    const deleted = await Income.findOneAndDelete({ id: req.params.id, userId }).lean();
     if (!deleted) return res.status(404).json({ message: 'Income not found' });
     res.json({ success: true, id: req.params.id });
   } catch (error) { next(error); }
 });
 
-router.get('/income/flow', async (_req, res, next) => {
+router.get('/income/flow', async (req, res, next) => {
   try {
-    const incomes = await Income.find({ userId: USER_ID }).sort({ timestamp: 1 }).lean();
+    const userId = req.user.id;
+    const incomes = await Income.find({ userId }).sort({ timestamp: 1 }).lean();
     const flow = smoothIncomeFlow(incomes);
     res.json(flow);
   } catch (error) { next(error); }
@@ -841,11 +924,12 @@ router.get('/income/flow', async (_req, res, next) => {
 // FINANCIAL INTEGRITY SCORE
 // ═══════════════════════════════════════════════════════════
 
-router.get('/fis', async (_req, res, next) => {
+router.get('/fis', async (req, res, next) => {
   try {
-    const txDocs   = await Transaction.find().sort({ timestamp: -1 }).lean();
-    const fmiHist  = await FMIHistory.find().sort({ timestamp: 1 }).lean();
-    const envelope = await Envelope.findOne({ userId: USER_ID }).lean();
+    const userId = req.user.id;
+    const txDocs   = await Transaction.find({ userId }).sort({ timestamp: -1 }).lean();
+    const fmiHist  = await FMIHistory.find({ userId }).sort({ timestamp: 1 }).lean();
+    const envelope = await Envelope.findOne({ userId }).lean();
     const annotated = annotateTransactions(txDocs);
     const fisData = calculateFIS(annotated, fmiHist, envelope);
     res.json({ ...fisData, timestamp: new Date().toISOString() });
@@ -856,9 +940,10 @@ router.get('/fis', async (_req, res, next) => {
 // BEHAVIOR PATTERNS
 // ═══════════════════════════════════════════════════════════
 
-router.get('/behavior', async (_req, res, next) => {
+router.get('/behavior', async (req, res, next) => {
   try {
-    const txDocs = await Transaction.find().sort({ timestamp: -1 }).limit(50).lean();
+    const userId = req.user.id;
+    const txDocs = await Transaction.find({ userId }).sort({ timestamp: -1 }).limit(50).lean();
     const annotated = annotateTransactions(txDocs);
     const patterns  = detectBehavioralPatterns(annotated);
     res.json({ patterns, analyzedCount: txDocs.length });
@@ -869,14 +954,15 @@ router.get('/behavior', async (_req, res, next) => {
 // REPORTS
 // ═══════════════════════════════════════════════════════════
 
-router.get('/reports/pacing', async (_req, res, next) => {
+router.get('/reports/pacing', async (req, res, next) => {
   try {
+    const userId = req.user.id;
     // Month range: start of current month -> start of next month
     const start = new Date(); start.setDate(1); start.setHours(0,0,0,0);
     const end = new Date(start); end.setMonth(start.getMonth() + 1);
 
     const agg = await Transaction.aggregate([
-      { $match: { userId: USER_ID, timestamp: { $gte: start, $lt: end } } },
+      { $match: { userId, timestamp: { $gte: start, $lt: end } } },
       { $group: { _id: '$type', total: { $sum: { $abs: '$amount' } } } }
     ]);
 
@@ -888,7 +974,7 @@ router.get('/reports/pacing', async (_req, res, next) => {
       else if (key === 'Investment') totals.Investments = a.total;
     });
 
-    const user = await User.findOne({ id: USER_ID }).lean();
+    const user = await User.findOne({ id: userId }).lean();
     const monthlyIncome = Number(user?.monthlyIncome || 0);
     const limits = {
       Needs: Math.round(monthlyIncome * 0.5),
@@ -904,11 +990,12 @@ router.get('/reports/pacing', async (_req, res, next) => {
   } catch (error) { next(error); }
 });
 
-router.get('/reports/heatmap', async (_req, res, next) => {
+router.get('/reports/heatmap', async (req, res, next) => {
   try {
+    const userId = req.user.id;
     const since = new Date(); since.setDate(since.getDate() - 365);
     const agg = await Transaction.aggregate([
-      { $match: { userId: USER_ID, timestamp: { $gte: since } } },
+      { $match: { userId, timestamp: { $gte: since } } },
       { $group: { _id: { $dateToString: { format: '%Y-%m-%d', date: '$timestamp' } }, total: { $sum: { $abs: '$amount' } } } },
       { $project: { date: '$_id', totalAmount: '$total', _id: 0 } },
       { $sort: { date: 1 } }
@@ -917,13 +1004,14 @@ router.get('/reports/heatmap', async (_req, res, next) => {
   } catch (error) { next(error); }
 });
 
-router.get('/reports/weekly', async (_req, res, next) => {
+router.get('/reports/weekly', async (req, res, next) => {
   try {
+    const userId = req.user.id;
     const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-    const txDocs   = await Transaction.find({ timestamp: { $gte: oneWeekAgo } }).sort({ timestamp: -1 }).lean();
-    const fmiHist  = await FMIHistory.find({ timestamp: { $gte: oneWeekAgo } }).lean();
-    const incomes  = await Income.find({ userId: USER_ID, timestamp: { $gte: oneWeekAgo } }).lean();
-    const envelope = await Envelope.findOne({ userId: USER_ID }).lean();
+    const txDocs   = await Transaction.find({ userId, timestamp: { $gte: oneWeekAgo } }).sort({ timestamp: -1 }).lean();
+    const fmiHist  = await FMIHistory.find({ userId, timestamp: { $gte: oneWeekAgo } }).lean();
+    const incomes  = await Income.find({ userId, timestamp: { $gte: oneWeekAgo } }).lean();
+    const envelope = await Envelope.findOne({ userId }).lean();
 
     const annotated  = annotateTransactions(txDocs);
     const report     = generateWeeklyReport(annotated, fmiHist);

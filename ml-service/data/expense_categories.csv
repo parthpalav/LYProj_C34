@@ -1,0 +1,966 @@
+item,category,default_label,subcategory,notes
+rice,Food & Dining,need,rice,"rice is usually classified as need, but final label may change using amount/time/baseline context."
+dal,Food & Dining,need,dal,"dal is usually classified as need, but final label may change using amount/time/baseline context."
+milk,Food & Dining,need,milk,"milk is usually classified as need, but final label may change using amount/time/baseline context."
+bread,Food & Dining,need,bread,"bread is usually classified as need, but final label may change using amount/time/baseline context."
+vegetables,Food & Dining,need,vegetables,"vegetables is usually classified as need, but final label may change using amount/time/baseline context."
+fruits,Food & Dining,need,fruits,"fruits is usually classified as need, but final label may change using amount/time/baseline context."
+eggs,Food & Dining,need,eggs,"eggs is usually classified as need, but final label may change using amount/time/baseline context."
+chicken,Food & Dining,need,chicken,"chicken is usually classified as need, but final label may change using amount/time/baseline context."
+fish,Food & Dining,need,fish,"fish is usually classified as need, but final label may change using amount/time/baseline context."
+atta,Food & Dining,need,atta,"atta is usually classified as need, but final label may change using amount/time/baseline context."
+oil,Food & Dining,need,oil,"oil is usually classified as need, but final label may change using amount/time/baseline context."
+salt,Food & Dining,need,salt,"salt is usually classified as need, but final label may change using amount/time/baseline context."
+breakfast,Food & Dining,need,breakfast,"breakfast is usually classified as need, but final label may change using amount/time/baseline context."
+pizza,Food & Dining,want,pizza,"pizza is usually classified as want, but final label may change using amount/time/baseline context."
+burger,Food & Dining,want,burger,"burger is usually classified as want, but final label may change using amount/time/baseline context."
+fries,Food & Dining,want,fries,"fries is usually classified as want, but final label may change using amount/time/baseline context."
+coke,Food & Dining,want,coke,"coke is usually classified as want, but final label may change using amount/time/baseline context."
+ice cream,Food & Dining,want,ice cream,"ice cream is usually classified as want, but final label may change using amount/time/baseline context."
+cake,Food & Dining,want,cake,"cake is usually classified as want, but final label may change using amount/time/baseline context."
+shawarma,Food & Dining,want,shawarma,"shawarma is usually classified as want, but final label may change using amount/time/baseline context."
+biryani party,Food & Dining,want,biryani party,"biryani party is usually classified as want, but final label may change using amount/time/baseline context."
+late night food,Food & Dining,want,late night food,"late night food is usually classified as want, but final label may change using amount/time/baseline context."
+fancy dinner,Food & Dining,want,fancy dinner,"fancy dinner is usually classified as want, but final label may change using amount/time/baseline context."
+book,Education,need,book,"book is usually classified as need, but final label may change using amount/time/baseline context."
+pen,Education,need,pen,"pen is usually classified as need, but final label may change using amount/time/baseline context."
+pencil,Education,need,pencil,"pencil is usually classified as need, but final label may change using amount/time/baseline context."
+notebook,Education,need,notebook,"notebook is usually classified as need, but final label may change using amount/time/baseline context."
+school fees,Education,need,school fees,"school fees is usually classified as need, but final label may change using amount/time/baseline context."
+college fees,Education,need,college fees,"college fees is usually classified as need, but final label may change using amount/time/baseline context."
+exam form,Education,need,exam form,"exam form is usually classified as need, but final label may change using amount/time/baseline context."
+course subscription,Education,need,course subscription,"course subscription is usually classified as need, but final label may change using amount/time/baseline context."
+certification course,Education,investment,certification course,"certification course is usually classified as investment, but final label may change using amount/time/baseline context."
+skill course,Education,investment,skill course,"skill course is usually classified as investment, but final label may change using amount/time/baseline context."
+coding bootcamp,Education,investment,coding bootcamp,"coding bootcamp is usually classified as investment, but final label may change using amount/time/baseline context."
+professional workshop,Education,investment,professional workshop,"professional workshop is usually classified as investment, but final label may change using amount/time/baseline context."
+medicine,Health,need,medicine,"medicine is usually classified as need, but final label may change using amount/time/baseline context."
+doctor visit,Health,need,doctor visit,"doctor visit is usually classified as need, but final label may change using amount/time/baseline context."
+hospital bill,Health,need,hospital bill,"hospital bill is usually classified as need, but final label may change using amount/time/baseline context."
+blood test,Health,need,blood test,"blood test is usually classified as need, but final label may change using amount/time/baseline context."
+therapy,Health,need,therapy,"therapy is usually classified as need, but final label may change using amount/time/baseline context."
+pharmacy,Health,need,pharmacy,"pharmacy is usually classified as need, but final label may change using amount/time/baseline context."
+surgery,Health,need,surgery,"surgery is usually classified as need, but final label may change using amount/time/baseline context."
+health insurance,Health,need,health insurance,"health insurance is usually classified as need, but final label may change using amount/time/baseline context."
+movie ticket,Entertainment,want,movie ticket,"movie ticket is usually classified as want, but final label may change using amount/time/baseline context."
+netflix,Entertainment,want,netflix,"netflix is usually classified as want, but final label may change using amount/time/baseline context."
+spotify,Entertainment,want,spotify,"spotify is usually classified as want, but final label may change using amount/time/baseline context."
+gaming,Entertainment,want,gaming,"gaming is usually classified as want, but final label may change using amount/time/baseline context."
+concert,Entertainment,want,concert,"concert is usually classified as want, but final label may change using amount/time/baseline context."
+club entry,Entertainment,want,club entry,"club entry is usually classified as want, but final label may change using amount/time/baseline context."
+bowling,Entertainment,want,bowling,"bowling is usually classified as want, but final label may change using amount/time/baseline context."
+arcade,Entertainment,want,arcade,"arcade is usually classified as want, but final label may change using amount/time/baseline context."
+party,Entertainment,want,party,"party is usually classified as want, but final label may change using amount/time/baseline context."
+shirt,Shopping,want,shirt,"shirt is usually classified as want, but final label may change using amount/time/baseline context."
+jeans,Shopping,want,jeans,"jeans is usually classified as want, but final label may change using amount/time/baseline context."
+shoes,Shopping,want,shoes,"shoes is usually classified as want, but final label may change using amount/time/baseline context."
+watch,Shopping,want,watch,"watch is usually classified as want, but final label may change using amount/time/baseline context."
+perfume,Shopping,want,perfume,"perfume is usually classified as want, but final label may change using amount/time/baseline context."
+makeup,Shopping,want,makeup,"makeup is usually classified as want, but final label may change using amount/time/baseline context."
+online shopping,Shopping,want,online shopping,"online shopping is usually classified as want, but final label may change using amount/time/baseline context."
+impulse purchase,Shopping,want,impulse purchase,"impulse purchase is usually classified as want, but final label may change using amount/time/baseline context."
+bus pass,Transport,need,bus pass,"bus pass is usually classified as need, but final label may change using amount/time/baseline context."
+train ticket,Transport,need,train ticket,"train ticket is usually classified as need, but final label may change using amount/time/baseline context."
+fuel,Transport,need,fuel,"fuel is usually classified as need, but final label may change using amount/time/baseline context."
+metro card,Transport,need,metro card,"metro card is usually classified as need, but final label may change using amount/time/baseline context."
+office cab,Transport,need,office cab,"office cab is usually classified as need, but final label may change using amount/time/baseline context."
+auto to work,Transport,need,auto to work,"auto to work is usually classified as need, but final label may change using amount/time/baseline context."
+weekend cab,Transport,want,weekend cab,"weekend cab is usually classified as want, but final label may change using amount/time/baseline context."
+late night cab,Transport,want,late night cab,"late night cab is usually classified as want, but final label may change using amount/time/baseline context."
+road trip fuel,Transport,want,road trip fuel,"road trip fuel is usually classified as want, but final label may change using amount/time/baseline context."
+SIP,Investment,investment,SIP,"SIP is usually classified as investment, but final label may change using amount/time/baseline context."
+mutual fund,Investment,investment,mutual fund,"mutual fund is usually classified as investment, but final label may change using amount/time/baseline context."
+gold,Investment,investment,gold,"gold is usually classified as investment, but final label may change using amount/time/baseline context."
+silver,Investment,investment,silver,"silver is usually classified as investment, but final label may change using amount/time/baseline context."
+stocks,Investment,investment,stocks,"stocks is usually classified as investment, but final label may change using amount/time/baseline context."
+FD,Investment,investment,FD,"FD is usually classified as investment, but final label may change using amount/time/baseline context."
+RD,Investment,investment,RD,"RD is usually classified as investment, but final label may change using amount/time/baseline context."
+NPS,Investment,investment,NPS,"NPS is usually classified as investment, but final label may change using amount/time/baseline context."
+PPF,Investment,investment,PPF,"PPF is usually classified as investment, but final label may change using amount/time/baseline context."
+ETF,Investment,investment,ETF,"ETF is usually classified as investment, but final label may change using amount/time/baseline context."
+emergency fund,Investment,investment,emergency fund,"emergency fund is usually classified as investment, but final label may change using amount/time/baseline context."
+rent,Bills & Obligations,need,rent,"rent is usually classified as need, but final label may change using amount/time/baseline context."
+electricity bill,Bills & Obligations,need,electricity bill,"electricity bill is usually classified as need, but final label may change using amount/time/baseline context."
+water bill,Bills & Obligations,need,water bill,"water bill is usually classified as need, but final label may change using amount/time/baseline context."
+gas bill,Bills & Obligations,need,gas bill,"gas bill is usually classified as need, but final label may change using amount/time/baseline context."
+wifi bill,Bills & Obligations,need,wifi bill,"wifi bill is usually classified as need, but final label may change using amount/time/baseline context."
+phone bill,Bills & Obligations,need,phone bill,"phone bill is usually classified as need, but final label may change using amount/time/baseline context."
+EMI,Bills & Obligations,need,EMI,"EMI is usually classified as need, but final label may change using amount/time/baseline context."
+loan repayment,Bills & Obligations,need,loan repayment,"loan repayment is usually classified as need, but final label may change using amount/time/baseline context."
+office tools,Work,need,office tools,"office tools is usually classified as need, but final label may change using amount/time/baseline context."
+client meeting,Work,need,client meeting,"client meeting is usually classified as need, but final label may change using amount/time/baseline context."
+laptop repair,Work,need,laptop repair,"laptop repair is usually classified as need, but final label may change using amount/time/baseline context."
+software subscription,Work,need,software subscription,"software subscription is usually classified as need, but final label may change using amount/time/baseline context."
+business course,Work,investment,business course,"business course is usually classified as investment, but final label may change using amount/time/baseline context."
+work equipment upgrade,Work,investment,work equipment upgrade,"work equipment upgrade is usually classified as investment, but final label may change using amount/time/baseline context."
+professional license,Work,investment,professional license,"professional license is usually classified as investment, but final label may change using amount/time/baseline context."
+high value dessert,Bills & Obligations,need,dessert,Synthetic category mapping for training/testing.
+high value saving,Investment,investment,saving,Synthetic category mapping for training/testing.
+premium index fund,Investment,want,index fund,Synthetic category mapping for training/testing.
+premium dividend,Investment,want,dividend,Synthetic category mapping for training/testing.
+low cost bus,Investment,need,bus,Synthetic category mapping for training/testing.
+large treat,Health,want,treat,Synthetic category mapping for training/testing.
+night water,Work,investment,water,Synthetic category mapping for training/testing.
+personal grocery,Bills & Obligations,want,grocery,Synthetic category mapping for training/testing.
+stable water,Work,want,water,Synthetic category mapping for training/testing.
+office water,Investment,need,water,Synthetic category mapping for training/testing.
+family fixed deposit,Shopping,need,fixed deposit,Synthetic category mapping for training/testing.
+office dinner,Education,want,dinner,Synthetic category mapping for training/testing.
+weekly stocks,Shopping,want,stocks,Synthetic category mapping for training/testing.
+first time bond,Health,need,bond,Synthetic category mapping for training/testing.
+night shopping,Food & Dining,want,shopping,Synthetic category mapping for training/testing.
+monthly stocks,Health,investment,stocks,Synthetic category mapping for training/testing.
+regular clothes,Education,investment,clothes,Synthetic category mapping for training/testing.
+safe mutual fund,Food & Dining,want,mutual fund,Synthetic category mapping for training/testing.
+medical gift,Shopping,investment,gift,Synthetic category mapping for training/testing.
+large crypto,Investment,want,crypto,Synthetic category mapping for training/testing.
+advance portfolio,Health,investment,portfolio,Synthetic category mapping for training/testing.
+family gift,Bills & Obligations,investment,gift,Synthetic category mapping for training/testing.
+delayed pension,Transport,need,pension,Synthetic category mapping for training/testing.
+local stationery,Investment,want,stationery,Synthetic category mapping for training/testing.
+subscription groceries,Transport,investment,groceries,Synthetic category mapping for training/testing.
+personal fees,Shopping,investment,fees,Synthetic category mapping for training/testing.
+emergency wealth,Food & Dining,investment,wealth,Synthetic category mapping for training/testing.
+one time water,Work,investment,water,Synthetic category mapping for training/testing.
+recurring pension,Education,need,pension,Synthetic category mapping for training/testing.
+home fixed deposit,Food & Dining,investment,fixed deposit,Synthetic category mapping for training/testing.
+small hospital,Bills & Obligations,investment,hospital,Synthetic category mapping for training/testing.
+essential hospital,Work,need,hospital,Synthetic category mapping for training/testing.
+subscription index fund,Entertainment,need,index fund,Synthetic category mapping for training/testing.
+festival crypto,Education,investment,crypto,Synthetic category mapping for training/testing.
+premium groceries,Investment,investment,groceries,Synthetic category mapping for training/testing.
+work cosmetics,Food & Dining,want,cosmetics,Synthetic category mapping for training/testing.
+festival rd,Investment,need,rd,Synthetic category mapping for training/testing.
+small fees,Investment,want,fees,Synthetic category mapping for training/testing.
+extra loan emi,Education,investment,loan emi,Synthetic category mapping for training/testing.
+online party,Health,need,party,Synthetic category mapping for training/testing.
+personal mall,Health,want,mall,Synthetic category mapping for training/testing.
+work late night,Food & Dining,investment,late night,Synthetic category mapping for training/testing.
+emergency rice,Food & Dining,investment,rice,Synthetic category mapping for training/testing.
+family friends,Investment,need,friends,Synthetic category mapping for training/testing.
+client club,Investment,want,club,Synthetic category mapping for training/testing.
+discounted medical,Education,need,medical,Synthetic category mapping for training/testing.
+low cost fd,Entertainment,want,fd,Synthetic category mapping for training/testing.
+planned movie,Investment,need,movie,Synthetic category mapping for training/testing.
+first time ppf,Transport,want,ppf,Synthetic category mapping for training/testing.
+first time doctor,Education,want,doctor,Synthetic category mapping for training/testing.
+one time movie,Entertainment,need,movie,Synthetic category mapping for training/testing.
+large saving,Education,need,saving,Synthetic category mapping for training/testing.
+subscription mall,Shopping,investment,mall,Synthetic category mapping for training/testing.
+night silver,Education,investment,silver,Synthetic category mapping for training/testing.
+personal nps,Health,want,nps,Synthetic category mapping for training/testing.
+one time online shopping,Entertainment,investment,online shopping,Synthetic category mapping for training/testing.
+advance rent,Bills & Obligations,need,rent,Synthetic category mapping for training/testing.
+monthly loan emi,Shopping,investment,loan emi,Synthetic category mapping for training/testing.
+stable movie,Food & Dining,want,movie,Synthetic category mapping for training/testing.
+college trip,Shopping,investment,trip,Synthetic category mapping for training/testing.
+extra fd,Entertainment,investment,fd,Synthetic category mapping for training/testing.
+safe recurring deposit,Food & Dining,need,recurring deposit,Synthetic category mapping for training/testing.
+local fees,Education,want,fees,Synthetic category mapping for training/testing.
+essential saving,Education,need,saving,Synthetic category mapping for training/testing.
+low cost retirement,Investment,need,retirement,Synthetic category mapping for training/testing.
+cashback gaming,Transport,investment,gaming,Synthetic category mapping for training/testing.
+festival burger,Bills & Obligations,want,burger,Synthetic category mapping for training/testing.
+stable treat,Transport,need,treat,Synthetic category mapping for training/testing.
+large dividend,Transport,need,dividend,Synthetic category mapping for training/testing.
+monthly sip,Food & Dining,investment,sip,Synthetic category mapping for training/testing.
+first time insurance,Food & Dining,investment,insurance,Synthetic category mapping for training/testing.
+local stocks,Work,investment,stocks,Synthetic category mapping for training/testing.
+regular capital,Work,need,capital,Synthetic category mapping for training/testing.
+subscription deposit,Work,need,deposit,Synthetic category mapping for training/testing.
+stable trip,Education,want,trip,Synthetic category mapping for training/testing.
+monthly insurance,Transport,want,insurance,Synthetic category mapping for training/testing.
+home dessert,Education,want,dessert,Synthetic category mapping for training/testing.
+weekly books,Bills & Obligations,need,books,Synthetic category mapping for training/testing.
+home shoes,Shopping,investment,shoes,Synthetic category mapping for training/testing.
+office gold,Entertainment,need,gold,Synthetic category mapping for training/testing.
+stable gold,Food & Dining,want,gold,Synthetic category mapping for training/testing.
+local medical,Entertainment,need,medical,Synthetic category mapping for training/testing.
+low cost savings,Education,want,savings,Synthetic category mapping for training/testing.
+home ppf,Bills & Obligations,need,ppf,Synthetic category mapping for training/testing.
+large bond,Health,need,bond,Synthetic category mapping for training/testing.
+safe club,Education,need,club,Synthetic category mapping for training/testing.
+home netflix,Entertainment,investment,netflix,Synthetic category mapping for training/testing.
+recurring long term,Food & Dining,investment,long term,Synthetic category mapping for training/testing.
+advance saving,Shopping,investment,saving,Synthetic category mapping for training/testing.
+planned investment,Food & Dining,want,investment,Synthetic category mapping for training/testing.
+essential mall,Transport,want,mall,Synthetic category mapping for training/testing.
+advance fixed deposit,Education,investment,fixed deposit,Synthetic category mapping for training/testing.
+urgent fixed deposit,Bills & Obligations,want,fixed deposit,Synthetic category mapping for training/testing.
+first time netflix,Entertainment,need,netflix,Synthetic category mapping for training/testing.
+monthly friends,Work,want,friends,Synthetic category mapping for training/testing.
+online snacks,Investment,need,snacks,Synthetic category mapping for training/testing.
+repeat books,Food & Dining,investment,books,Synthetic category mapping for training/testing.
+personal medical,Education,need,medical,Synthetic category mapping for training/testing.
+offline dal,Transport,want,dal,Synthetic category mapping for training/testing.
+weekly cosmetics,Food & Dining,want,cosmetics,Synthetic category mapping for training/testing.
+offline burger,Transport,want,burger,Synthetic category mapping for training/testing.
+planned gaming,Bills & Obligations,need,gaming,Synthetic category mapping for training/testing.
+regular pizza,Transport,investment,pizza,Synthetic category mapping for training/testing.
+subscription wealth,Bills & Obligations,need,wealth,Synthetic category mapping for training/testing.
+urgent rice,Education,need,rice,Synthetic category mapping for training/testing.
+regular dividend,Investment,want,dividend,Synthetic category mapping for training/testing.
+planned salon,Health,need,salon,Synthetic category mapping for training/testing.
+repeat wealth,Shopping,investment,wealth,Synthetic category mapping for training/testing.
+planned long term,Education,need,long term,Synthetic category mapping for training/testing.
+client zomato,Work,need,zomato,Synthetic category mapping for training/testing.
+first time pension,Investment,need,pension,Synthetic category mapping for training/testing.
+delayed asset,Entertainment,investment,asset,Synthetic category mapping for training/testing.
+advance vacation,Food & Dining,want,vacation,Synthetic category mapping for training/testing.
+offline pension,Investment,investment,pension,Synthetic category mapping for training/testing.
+weekly long term,Transport,investment,long term,Synthetic category mapping for training/testing.
+risky snacks,Bills & Obligations,investment,snacks,Synthetic category mapping for training/testing.
+monthly tuition,Entertainment,need,tuition,Synthetic category mapping for training/testing.
+safe repair,Education,investment,repair,Synthetic category mapping for training/testing.
+cashback fd,Health,investment,fd,Synthetic category mapping for training/testing.
+delayed mutual fund,Transport,want,mutual fund,Synthetic category mapping for training/testing.
+large burger,Bills & Obligations,need,burger,Synthetic category mapping for training/testing.
+emergency gas,Food & Dining,need,gas,Synthetic category mapping for training/testing.
+college capital,Investment,investment,capital,Synthetic category mapping for training/testing.
+family nps,Shopping,investment,nps,Synthetic category mapping for training/testing.
+stable dinner,Health,want,dinner,Synthetic category mapping for training/testing.
+monthly dessert,Transport,want,dessert,Synthetic category mapping for training/testing.
+family asset,Work,investment,asset,Synthetic category mapping for training/testing.
+one time silver,Food & Dining,need,silver,Synthetic category mapping for training/testing.
+home clothes,Food & Dining,want,clothes,Synthetic category mapping for training/testing.
+regular medical,Entertainment,investment,medical,Synthetic category mapping for training/testing.
+basic deposit,Transport,need,deposit,Synthetic category mapping for training/testing.
+medical dividend,Bills & Obligations,investment,dividend,Synthetic category mapping for training/testing.
+first time swiggy,Transport,investment,swiggy,Synthetic category mapping for training/testing.
+advance tuition,Transport,need,tuition,Synthetic category mapping for training/testing.
+monthly books,Food & Dining,want,books,Synthetic category mapping for training/testing.
+advance stationery,Entertainment,investment,stationery,Synthetic category mapping for training/testing.
+medical mutual fund,Entertainment,need,mutual fund,Synthetic category mapping for training/testing.
+work date,Investment,need,date,Synthetic category mapping for training/testing.
+regular medicine,Food & Dining,want,medicine,Synthetic category mapping for training/testing.
+small saving,Transport,need,saving,Synthetic category mapping for training/testing.
+home salon,Health,want,salon,Synthetic category mapping for training/testing.
+home doctor,Transport,need,doctor,Synthetic category mapping for training/testing.
+morning insurance,Entertainment,want,insurance,Synthetic category mapping for training/testing.
+medical insurance,Shopping,investment,insurance,Synthetic category mapping for training/testing.
+home insurance,Work,need,insurance,Synthetic category mapping for training/testing.
+offline club,Food & Dining,need,club,Synthetic category mapping for training/testing.
+client internet,Food & Dining,investment,internet,Synthetic category mapping for training/testing.
+emergency pharmacy,Education,want,pharmacy,Synthetic category mapping for training/testing.
+office dessert,Bills & Obligations,need,dessert,Synthetic category mapping for training/testing.
+repeat pension,Health,investment,pension,Synthetic category mapping for training/testing.
+large bus,Education,need,bus,Synthetic category mapping for training/testing.
+client recurring deposit,Entertainment,need,recurring deposit,Synthetic category mapping for training/testing.
+repeat etf,Transport,want,etf,Synthetic category mapping for training/testing.
+risky retirement,Entertainment,need,retirement,Synthetic category mapping for training/testing.
+family zomato,Entertainment,investment,zomato,Synthetic category mapping for training/testing.
+essential milk,Transport,need,milk,Synthetic category mapping for training/testing.
+basic school,Entertainment,investment,school,Synthetic category mapping for training/testing.
+client fd,Education,need,fd,Synthetic category mapping for training/testing.
+high value gold,Work,want,gold,Synthetic category mapping for training/testing.
+office late night,Bills & Obligations,need,late night,Synthetic category mapping for training/testing.
+premium mutual fund,Work,investment,mutual fund,Synthetic category mapping for training/testing.
+local index fund,Bills & Obligations,want,index fund,Synthetic category mapping for training/testing.
+home books,Food & Dining,need,books,Synthetic category mapping for training/testing.
+night concert,Bills & Obligations,need,concert,Synthetic category mapping for training/testing.
+safe trip,Shopping,want,trip,Synthetic category mapping for training/testing.
+one time party,Health,want,party,Synthetic category mapping for training/testing.
+extra school,Education,need,school,Synthetic category mapping for training/testing.
+morning shoes,Bills & Obligations,investment,shoes,Synthetic category mapping for training/testing.
+delayed fd,Food & Dining,want,fd,Synthetic category mapping for training/testing.
+advance gift,Transport,want,gift,Synthetic category mapping for training/testing.
+premium dessert,Investment,want,dessert,Synthetic category mapping for training/testing.
+weekly trip,Transport,want,trip,Synthetic category mapping for training/testing.
+cashback stationery,Health,want,stationery,Synthetic category mapping for training/testing.
+online nps,Work,investment,nps,Synthetic category mapping for training/testing.
+small college,Shopping,need,college,Synthetic category mapping for training/testing.
+recurring grocery,Education,want,grocery,Synthetic category mapping for training/testing.
+medical medical,Entertainment,want,medical,Synthetic category mapping for training/testing.
+essential financial goal,Shopping,want,financial goal,Synthetic category mapping for training/testing.
+emergency medicine,Work,want,medicine,Synthetic category mapping for training/testing.
+local date,Shopping,want,date,Synthetic category mapping for training/testing.
+low cost capital,Food & Dining,want,capital,Synthetic category mapping for training/testing.
+morning stationery,Health,want,stationery,Synthetic category mapping for training/testing.
+high value stationery,Entertainment,want,stationery,Synthetic category mapping for training/testing.
+medical outing,Work,want,outing,Synthetic category mapping for training/testing.
+repeat repair,Education,want,repair,Synthetic category mapping for training/testing.
+subscription salon,Investment,need,salon,Synthetic category mapping for training/testing.
+large dessert,Work,need,dessert,Synthetic category mapping for training/testing.
+premium medicine,Health,want,medicine,Synthetic category mapping for training/testing.
+first time books,Transport,want,books,Synthetic category mapping for training/testing.
+recurring date,Investment,investment,date,Synthetic category mapping for training/testing.
+weekly bond,Shopping,want,bond,Synthetic category mapping for training/testing.
+medical train,Food & Dining,need,train,Synthetic category mapping for training/testing.
+local pharmacy,Investment,want,pharmacy,Synthetic category mapping for training/testing.
+home vacation,Education,investment,vacation,Synthetic category mapping for training/testing.
+safe snacks,Bills & Obligations,need,snacks,Synthetic category mapping for training/testing.
+online swiggy,Bills & Obligations,investment,swiggy,Synthetic category mapping for training/testing.
+one time long term,Health,need,long term,Synthetic category mapping for training/testing.
+stable dividend,Health,need,dividend,Synthetic category mapping for training/testing.
+home family support,Bills & Obligations,need,family support,Synthetic category mapping for training/testing.
+high value asset,Entertainment,want,asset,Synthetic category mapping for training/testing.
+office rice,Education,want,rice,Synthetic category mapping for training/testing.
+festival loan emi,Work,need,loan emi,Synthetic category mapping for training/testing.
+small fuel,Investment,want,fuel,Synthetic category mapping for training/testing.
+basic impulse buy,Health,investment,impulse buy,Synthetic category mapping for training/testing.
+large pharmacy,Education,want,pharmacy,Synthetic category mapping for training/testing.
+basic cosmetics,Entertainment,want,cosmetics,Synthetic category mapping for training/testing.
+emergency emergency fund,Health,investment,emergency fund,Synthetic category mapping for training/testing.
+advance financial goal,Entertainment,investment,financial goal,Synthetic category mapping for training/testing.
+family rent,Shopping,need,rent,Synthetic category mapping for training/testing.
+stable date,Bills & Obligations,need,date,Synthetic category mapping for training/testing.
+safe outing,Bills & Obligations,want,outing,Synthetic category mapping for training/testing.
+extra fees,Food & Dining,investment,fees,Synthetic category mapping for training/testing.
+emergency interest,Bills & Obligations,want,interest,Synthetic category mapping for training/testing.
+work asset,Bills & Obligations,want,asset,Synthetic category mapping for training/testing.
+urgent interest,Education,want,interest,Synthetic category mapping for training/testing.
+recurring netflix,Entertainment,need,netflix,Synthetic category mapping for training/testing.
+night dal,Shopping,investment,dal,Synthetic category mapping for training/testing.
+small ppf,Bills & Obligations,want,ppf,Synthetic category mapping for training/testing.
+low cost tuition,Transport,need,tuition,Synthetic category mapping for training/testing.
+personal gift,Transport,want,gift,Synthetic category mapping for training/testing.
+urgent silver,Shopping,need,silver,Synthetic category mapping for training/testing.
+advance vegetables,Bills & Obligations,need,vegetables,Synthetic category mapping for training/testing.
+home date,Investment,want,date,Synthetic category mapping for training/testing.
+cashback medicine,Investment,need,medicine,Synthetic category mapping for training/testing.
+festival internet,Education,investment,internet,Synthetic category mapping for training/testing.
+regular outing,Bills & Obligations,want,outing,Synthetic category mapping for training/testing.
+discounted asset,Education,investment,asset,Synthetic category mapping for training/testing.
+essential sip,Bills & Obligations,need,sip,Synthetic category mapping for training/testing.
+stable hospital,Health,need,hospital,Synthetic category mapping for training/testing.
+small zomato,Education,need,zomato,Synthetic category mapping for training/testing.
+personal concert,Work,investment,concert,Synthetic category mapping for training/testing.
+essential medicine,Education,investment,medicine,Synthetic category mapping for training/testing.
+work shoes,Health,want,shoes,Synthetic category mapping for training/testing.
+planned interest,Entertainment,want,interest,Synthetic category mapping for training/testing.
+offline asset,Work,investment,asset,Synthetic category mapping for training/testing.
+subscription dinner,Investment,investment,dinner,Synthetic category mapping for training/testing.
+planned rent,Food & Dining,investment,rent,Synthetic category mapping for training/testing.
+office burger,Investment,need,burger,Synthetic category mapping for training/testing.
+weekly fees,Entertainment,need,fees,Synthetic category mapping for training/testing.
+medical medicine,Investment,need,medicine,Synthetic category mapping for training/testing.
+regular deposit,Entertainment,investment,deposit,Synthetic category mapping for training/testing.
+personal deposit,Entertainment,need,deposit,Synthetic category mapping for training/testing.
+low cost impulse buy,Health,need,impulse buy,Synthetic category mapping for training/testing.
+one time late night,Education,want,late night,Synthetic category mapping for training/testing.
+recurring pharmacy,Entertainment,investment,pharmacy,Synthetic category mapping for training/testing.
+morning water,Investment,want,water,Synthetic category mapping for training/testing.
+festival shoes,Entertainment,need,shoes,Synthetic category mapping for training/testing.
+festival date,Health,need,date,Synthetic category mapping for training/testing.
+advance uniform,Food & Dining,want,uniform,Synthetic category mapping for training/testing.
+essential asset,Entertainment,need,asset,Synthetic category mapping for training/testing.
+premium etf,Investment,want,etf,Synthetic category mapping for training/testing.
+stable college,Health,want,college,Synthetic category mapping for training/testing.
+client interest,Transport,investment,interest,Synthetic category mapping for training/testing.
+festival insurance,Health,want,insurance,Synthetic category mapping for training/testing.
+weekly snacks,Bills & Obligations,need,snacks,Synthetic category mapping for training/testing.
+morning fd,Bills & Obligations,want,fd,Synthetic category mapping for training/testing.
+morning medicine,Work,investment,medicine,Synthetic category mapping for training/testing.
+emergency water,Food & Dining,investment,water,Synthetic category mapping for training/testing.
+discounted online shopping,Entertainment,investment,online shopping,Synthetic category mapping for training/testing.
+office internet,Education,need,internet,Synthetic category mapping for training/testing.
+family medical,Bills & Obligations,want,medical,Synthetic category mapping for training/testing.
+urgent investment,Investment,need,investment,Synthetic category mapping for training/testing.
+subscription etf,Entertainment,investment,etf,Synthetic category mapping for training/testing.
+festival netflix,Transport,need,netflix,Synthetic category mapping for training/testing.
+extra impulse buy,Food & Dining,investment,impulse buy,Synthetic category mapping for training/testing.
+medical snacks,Food & Dining,need,snacks,Synthetic category mapping for training/testing.
+planned nps,Entertainment,need,nps,Synthetic category mapping for training/testing.
+morning interest,Entertainment,investment,interest,Synthetic category mapping for training/testing.
+regular rent,Bills & Obligations,investment,rent,Synthetic category mapping for training/testing.
+planned repair,Bills & Obligations,need,repair,Synthetic category mapping for training/testing.
+online gas,Health,need,gas,Synthetic category mapping for training/testing.
+night ppf,Health,investment,ppf,Synthetic category mapping for training/testing.
+repeat school,Entertainment,investment,school,Synthetic category mapping for training/testing.
+home loan emi,Bills & Obligations,want,loan emi,Synthetic category mapping for training/testing.
+stable insurance,Entertainment,want,insurance,Synthetic category mapping for training/testing.
+safe shopping,Entertainment,want,shopping,Synthetic category mapping for training/testing.
+essential medical,Bills & Obligations,investment,medical,Synthetic category mapping for training/testing.
+local coffee,Bills & Obligations,need,coffee,Synthetic category mapping for training/testing.
+subscription sip,Investment,need,sip,Synthetic category mapping for training/testing.
+repeat retirement,Investment,investment,retirement,Synthetic category mapping for training/testing.
+client hospital,Health,want,hospital,Synthetic category mapping for training/testing.
+stable swiggy,Investment,need,swiggy,Synthetic category mapping for training/testing.
+work ppf,Work,need,ppf,Synthetic category mapping for training/testing.
+emergency outing,Shopping,want,outing,Synthetic category mapping for training/testing.
+one time trip,Bills & Obligations,want,trip,Synthetic category mapping for training/testing.
+large snacks,Bills & Obligations,need,snacks,Synthetic category mapping for training/testing.
+home train,Bills & Obligations,need,train,Synthetic category mapping for training/testing.
+office silver,Food & Dining,need,silver,Synthetic category mapping for training/testing.
+local impulse buy,Bills & Obligations,want,impulse buy,Synthetic category mapping for training/testing.
+emergency stocks,Transport,want,stocks,Synthetic category mapping for training/testing.
+small grocery,Education,want,grocery,Synthetic category mapping for training/testing.
+home fuel,Investment,investment,fuel,Synthetic category mapping for training/testing.
+low cost clothes,Investment,want,clothes,Synthetic category mapping for training/testing.
+office dividend,Bills & Obligations,investment,dividend,Synthetic category mapping for training/testing.
+repeat vacation,Food & Dining,investment,vacation,Synthetic category mapping for training/testing.
+urgent mutual fund,Entertainment,need,mutual fund,Synthetic category mapping for training/testing.
+advance crypto,Health,want,crypto,Synthetic category mapping for training/testing.
+stable burger,Health,want,burger,Synthetic category mapping for training/testing.
+online electricity,Health,need,electricity,Synthetic category mapping for training/testing.
+online bond,Investment,want,bond,Synthetic category mapping for training/testing.
+personal online shopping,Work,need,online shopping,Synthetic category mapping for training/testing.
+emergency dividend,Investment,want,dividend,Synthetic category mapping for training/testing.
+client asset,Work,investment,asset,Synthetic category mapping for training/testing.
+online mall,Shopping,investment,mall,Synthetic category mapping for training/testing.
+college emergency fund,Education,investment,emergency fund,Synthetic category mapping for training/testing.
+premium loan emi,Shopping,need,loan emi,Synthetic category mapping for training/testing.
+first time dal,Food & Dining,need,dal,Synthetic category mapping for training/testing.
+extra capital,Work,want,capital,Synthetic category mapping for training/testing.
+office insurance,Investment,need,insurance,Synthetic category mapping for training/testing.
+home internet,Health,investment,internet,Synthetic category mapping for training/testing.
+small silver,Bills & Obligations,need,silver,Synthetic category mapping for training/testing.
+work uniform,Bills & Obligations,investment,uniform,Synthetic category mapping for training/testing.
+delayed salon,Shopping,want,salon,Synthetic category mapping for training/testing.
+online loan emi,Education,investment,loan emi,Synthetic category mapping for training/testing.
+small trip,Shopping,need,trip,Synthetic category mapping for training/testing.
+weekly gaming,Shopping,need,gaming,Synthetic category mapping for training/testing.
+offline stocks,Entertainment,want,stocks,Synthetic category mapping for training/testing.
+monthly movie,Food & Dining,need,movie,Synthetic category mapping for training/testing.
+high value uniform,Food & Dining,need,uniform,Synthetic category mapping for training/testing.
+high value crypto,Food & Dining,want,crypto,Synthetic category mapping for training/testing.
+medical sip,Shopping,want,sip,Synthetic category mapping for training/testing.
+medical dessert,Investment,want,dessert,Synthetic category mapping for training/testing.
+college rice,Investment,investment,rice,Synthetic category mapping for training/testing.
+weekly internet,Investment,investment,internet,Synthetic category mapping for training/testing.
+discounted netflix,Education,investment,netflix,Synthetic category mapping for training/testing.
+basic pension,Transport,want,pension,Synthetic category mapping for training/testing.
+home asset,Work,want,asset,Synthetic category mapping for training/testing.
+weekly late night,Food & Dining,investment,late night,Synthetic category mapping for training/testing.
+subscription late night,Transport,need,late night,Synthetic category mapping for training/testing.
+basic online shopping,Education,want,online shopping,Synthetic category mapping for training/testing.
+extra vacation,Education,investment,vacation,Synthetic category mapping for training/testing.
+high value bus,Entertainment,investment,bus,Synthetic category mapping for training/testing.
+premium gas,Work,need,gas,Synthetic category mapping for training/testing.
+small gift,Bills & Obligations,need,gift,Synthetic category mapping for training/testing.
+discounted nps,Bills & Obligations,investment,nps,Synthetic category mapping for training/testing.
+personal doctor,Education,want,doctor,Synthetic category mapping for training/testing.
+morning netflix,Transport,want,netflix,Synthetic category mapping for training/testing.
+small sip,Shopping,investment,sip,Synthetic category mapping for training/testing.
+premium portfolio,Health,investment,portfolio,Synthetic category mapping for training/testing.
+morning snacks,Education,investment,snacks,Synthetic category mapping for training/testing.
+client gaming,Education,investment,gaming,Synthetic category mapping for training/testing.
+one time investment,Investment,investment,investment,Synthetic category mapping for training/testing.
+cashback books,Investment,need,books,Synthetic category mapping for training/testing.
+home bond,Education,want,bond,Synthetic category mapping for training/testing.
+monthly emergency fund,Transport,want,emergency fund,Synthetic category mapping for training/testing.
+recurring bond,Shopping,need,bond,Synthetic category mapping for training/testing.
+festival online shopping,Entertainment,want,online shopping,Synthetic category mapping for training/testing.
+high value gas,Transport,investment,gas,Synthetic category mapping for training/testing.
+monthly concert,Entertainment,need,concert,Synthetic category mapping for training/testing.
+advance gold,Shopping,need,gold,Synthetic category mapping for training/testing.
+family shopping,Health,investment,shopping,Synthetic category mapping for training/testing.
+emergency friends,Food & Dining,investment,friends,Synthetic category mapping for training/testing.
+essential water,Work,investment,water,Synthetic category mapping for training/testing.
+premium uniform,Bills & Obligations,investment,uniform,Synthetic category mapping for training/testing.
+planned trip,Shopping,investment,trip,Synthetic category mapping for training/testing.
+morning pharmacy,Transport,need,pharmacy,Synthetic category mapping for training/testing.
+weekly fuel,Shopping,investment,fuel,Synthetic category mapping for training/testing.
+repeat gaming,Work,want,gaming,Synthetic category mapping for training/testing.
+local concert,Bills & Obligations,want,concert,Synthetic category mapping for training/testing.
+extra shopping,Education,investment,shopping,Synthetic category mapping for training/testing.
+local ppf,Entertainment,investment,ppf,Synthetic category mapping for training/testing.
+risky late night,Education,need,late night,Synthetic category mapping for training/testing.
+advance swiggy,Food & Dining,investment,swiggy,Synthetic category mapping for training/testing.
+subscription internet,Health,investment,internet,Synthetic category mapping for training/testing.
+night bus,Bills & Obligations,want,bus,Synthetic category mapping for training/testing.
+monthly medical,Entertainment,investment,medical,Synthetic category mapping for training/testing.
+offline emergency fund,Transport,investment,emergency fund,Synthetic category mapping for training/testing.
+basic shoes,Food & Dining,need,shoes,Synthetic category mapping for training/testing.
+low cost water,Health,need,water,Synthetic category mapping for training/testing.
+family cosmetics,Transport,investment,cosmetics,Synthetic category mapping for training/testing.
+online trip,Health,investment,trip,Synthetic category mapping for training/testing.
+essential trip,Bills & Obligations,investment,trip,Synthetic category mapping for training/testing.
+small medicine,Bills & Obligations,want,medicine,Synthetic category mapping for training/testing.
+premium water,Education,need,water,Synthetic category mapping for training/testing.
+risky hospital,Work,need,hospital,Synthetic category mapping for training/testing.
+offline dividend,Bills & Obligations,want,dividend,Synthetic category mapping for training/testing.
+repeat mutual fund,Health,want,mutual fund,Synthetic category mapping for training/testing.
+offline gas,Shopping,investment,gas,Synthetic category mapping for training/testing.
+work recurring deposit,Transport,need,recurring deposit,Synthetic category mapping for training/testing.
+local hospital,Investment,investment,hospital,Synthetic category mapping for training/testing.
+premium rd,Work,investment,rd,Synthetic category mapping for training/testing.
+recurring index fund,Education,investment,index fund,Synthetic category mapping for training/testing.
+small asset,Education,need,asset,Synthetic category mapping for training/testing.
+work dividend,Health,investment,dividend,Synthetic category mapping for training/testing.
+festival gift,Food & Dining,investment,gift,Synthetic category mapping for training/testing.
+safe gas,Education,need,gas,Synthetic category mapping for training/testing.
+online fuel,Entertainment,investment,fuel,Synthetic category mapping for training/testing.
+online grocery,Work,want,grocery,Synthetic category mapping for training/testing.
+office swiggy,Education,investment,swiggy,Synthetic category mapping for training/testing.
+monthly online shopping,Work,need,online shopping,Synthetic category mapping for training/testing.
+high value groceries,Entertainment,want,groceries,Synthetic category mapping for training/testing.
+subscription recurring deposit,Shopping,investment,recurring deposit,Synthetic category mapping for training/testing.
+festival stocks,Health,investment,stocks,Synthetic category mapping for training/testing.
+recurring crypto,Work,want,crypto,Synthetic category mapping for training/testing.
+home grocery,Food & Dining,need,grocery,Synthetic category mapping for training/testing.
+large uniform,Health,want,uniform,Synthetic category mapping for training/testing.
+college bond,Work,need,bond,Synthetic category mapping for training/testing.
+cashback party,Education,investment,party,Synthetic category mapping for training/testing.
+local fuel,Investment,investment,fuel,Synthetic category mapping for training/testing.
+repeat party,Bills & Obligations,need,party,Synthetic category mapping for training/testing.
+regular pharmacy,Health,investment,pharmacy,Synthetic category mapping for training/testing.
+home interest,Shopping,investment,interest,Synthetic category mapping for training/testing.
+low cost asset,Transport,investment,asset,Synthetic category mapping for training/testing.
+festival train,Health,want,train,Synthetic category mapping for training/testing.
+stable doctor,Investment,want,doctor,Synthetic category mapping for training/testing.
+small movie,Entertainment,need,movie,Synthetic category mapping for training/testing.
+one time financial goal,Work,need,financial goal,Synthetic category mapping for training/testing.
+family movie,Transport,want,movie,Synthetic category mapping for training/testing.
+offline medicine,Entertainment,want,medicine,Synthetic category mapping for training/testing.
+offline trip,Investment,need,trip,Synthetic category mapping for training/testing.
+emergency rd,Education,need,rd,Synthetic category mapping for training/testing.
+college rd,Bills & Obligations,need,rd,Synthetic category mapping for training/testing.
+recurring clothes,Investment,need,clothes,Synthetic category mapping for training/testing.
+basic date,Work,investment,date,Synthetic category mapping for training/testing.
+low cost medicine,Health,want,medicine,Synthetic category mapping for training/testing.
+family gas,Health,investment,gas,Synthetic category mapping for training/testing.
+work treat,Investment,investment,treat,Synthetic category mapping for training/testing.
+low cost outing,Bills & Obligations,want,outing,Synthetic category mapping for training/testing.
+high value online shopping,Shopping,want,online shopping,Synthetic category mapping for training/testing.
+online portfolio,Entertainment,want,portfolio,Synthetic category mapping for training/testing.
+online friends,Shopping,want,friends,Synthetic category mapping for training/testing.
+online pizza,Education,need,pizza,Synthetic category mapping for training/testing.
+online rice,Health,investment,rice,Synthetic category mapping for training/testing.
+monthly gold,Shopping,investment,gold,Synthetic category mapping for training/testing.
+large fd,Investment,investment,fd,Synthetic category mapping for training/testing.
+recurring fd,Bills & Obligations,want,fd,Synthetic category mapping for training/testing.
+delayed medicine,Education,want,medicine,Synthetic category mapping for training/testing.
+repeat rent,Entertainment,investment,rent,Synthetic category mapping for training/testing.
+discounted clothes,Work,investment,clothes,Synthetic category mapping for training/testing.
+urgent crypto,Work,investment,crypto,Synthetic category mapping for training/testing.
+high value long term,Bills & Obligations,need,long term,Synthetic category mapping for training/testing.
+office vegetables,Entertainment,need,vegetables,Synthetic category mapping for training/testing.
+planned shoes,Health,investment,shoes,Synthetic category mapping for training/testing.
+personal trip,Investment,want,trip,Synthetic category mapping for training/testing.
+discounted gaming,Transport,need,gaming,Synthetic category mapping for training/testing.
+emergency zomato,Work,need,zomato,Synthetic category mapping for training/testing.
+night club,Bills & Obligations,want,club,Synthetic category mapping for training/testing.
+safe wealth,Food & Dining,investment,wealth,Synthetic category mapping for training/testing.
+low cost dinner,Investment,need,dinner,Synthetic category mapping for training/testing.
+premium pension,Food & Dining,want,pension,Synthetic category mapping for training/testing.
+delayed rent,Food & Dining,want,rent,Synthetic category mapping for training/testing.
+college swiggy,Bills & Obligations,want,swiggy,Synthetic category mapping for training/testing.
+work clothes,Education,need,clothes,Synthetic category mapping for training/testing.
+online medical,Investment,want,medical,Synthetic category mapping for training/testing.
+first time train,Work,investment,train,Synthetic category mapping for training/testing.
+local sip,Shopping,need,sip,Synthetic category mapping for training/testing.
+repeat coffee,Transport,want,coffee,Synthetic category mapping for training/testing.
+offline movie,Health,investment,movie,Synthetic category mapping for training/testing.
+personal salon,Bills & Obligations,investment,salon,Synthetic category mapping for training/testing.
+monthly cosmetics,Health,want,cosmetics,Synthetic category mapping for training/testing.
+small medical,Transport,investment,medical,Synthetic category mapping for training/testing.
+large groceries,Entertainment,want,groceries,Synthetic category mapping for training/testing.
+urgent snacks,Investment,want,snacks,Synthetic category mapping for training/testing.
+basic medical,Health,investment,medical,Synthetic category mapping for training/testing.
+premium impulse buy,Shopping,need,impulse buy,Synthetic category mapping for training/testing.
+large financial goal,Work,want,financial goal,Synthetic category mapping for training/testing.
+client silver,Transport,want,silver,Synthetic category mapping for training/testing.
+weekly tuition,Health,need,tuition,Synthetic category mapping for training/testing.
+planned pizza,Food & Dining,investment,pizza,Synthetic category mapping for training/testing.
+monthly etf,Transport,want,etf,Synthetic category mapping for training/testing.
+extra zomato,Investment,want,zomato,Synthetic category mapping for training/testing.
+work fd,Health,investment,fd,Synthetic category mapping for training/testing.
+cashback electricity,Entertainment,want,electricity,Synthetic category mapping for training/testing.
+home online shopping,Entertainment,investment,online shopping,Synthetic category mapping for training/testing.
+family bond,Health,need,bond,Synthetic category mapping for training/testing.
+local gas,Entertainment,need,gas,Synthetic category mapping for training/testing.
+family repair,Food & Dining,want,repair,Synthetic category mapping for training/testing.
+home retirement,Investment,need,retirement,Synthetic category mapping for training/testing.
+first time trip,Education,need,trip,Synthetic category mapping for training/testing.
+planned online shopping,Food & Dining,investment,online shopping,Synthetic category mapping for training/testing.
+office movie,Shopping,need,movie,Synthetic category mapping for training/testing.
+discounted impulse buy,Shopping,want,impulse buy,Synthetic category mapping for training/testing.
+urgent family support,Transport,need,family support,Synthetic category mapping for training/testing.
+festival asset,Food & Dining,need,asset,Synthetic category mapping for training/testing.
+cashback family support,Education,want,family support,Synthetic category mapping for training/testing.
+emergency snacks,Bills & Obligations,want,snacks,Synthetic category mapping for training/testing.
+monthly deposit,Education,need,deposit,Synthetic category mapping for training/testing.
+office snacks,Work,need,snacks,Synthetic category mapping for training/testing.
+high value bond,Transport,investment,bond,Synthetic category mapping for training/testing.
+essential capital,Transport,need,capital,Synthetic category mapping for training/testing.
+online vacation,Entertainment,investment,vacation,Synthetic category mapping for training/testing.
+stable wealth,Education,need,wealth,Synthetic category mapping for training/testing.
+offline gift,Entertainment,investment,gift,Synthetic category mapping for training/testing.
+medical pension,Education,investment,pension,Synthetic category mapping for training/testing.
+home sip,Shopping,investment,sip,Synthetic category mapping for training/testing.
+urgent train,Work,investment,train,Synthetic category mapping for training/testing.
+one time impulse buy,Health,need,impulse buy,Synthetic category mapping for training/testing.
+office clothes,Shopping,investment,clothes,Synthetic category mapping for training/testing.
+repeat water,Bills & Obligations,investment,water,Synthetic category mapping for training/testing.
+high value impulse buy,Education,want,impulse buy,Synthetic category mapping for training/testing.
+stable loan emi,Work,need,loan emi,Synthetic category mapping for training/testing.
+extra gas,Shopping,investment,gas,Synthetic category mapping for training/testing.
+home rice,Food & Dining,investment,rice,Synthetic category mapping for training/testing.
+recurring financial goal,Investment,want,financial goal,Synthetic category mapping for training/testing.
+subscription loan emi,Work,need,loan emi,Synthetic category mapping for training/testing.
+client saving,Work,want,saving,Synthetic category mapping for training/testing.
+night movie,Investment,investment,movie,Synthetic category mapping for training/testing.
+safe fuel,Health,need,fuel,Synthetic category mapping for training/testing.
+monthly interest,Entertainment,investment,interest,Synthetic category mapping for training/testing.
+high value silver,Work,want,silver,Synthetic category mapping for training/testing.
+extra books,Shopping,want,books,Synthetic category mapping for training/testing.
+personal water,Shopping,investment,water,Synthetic category mapping for training/testing.
+discounted recurring deposit,Entertainment,need,recurring deposit,Synthetic category mapping for training/testing.
+family portfolio,Shopping,need,portfolio,Synthetic category mapping for training/testing.
+small recurring deposit,Entertainment,need,recurring deposit,Synthetic category mapping for training/testing.
+stable clothes,Food & Dining,investment,clothes,Synthetic category mapping for training/testing.
+one time school,Transport,want,school,Synthetic category mapping for training/testing.
+first time internet,Shopping,investment,internet,Synthetic category mapping for training/testing.
+monthly rice,Shopping,want,rice,Synthetic category mapping for training/testing.
+work netflix,Transport,need,netflix,Synthetic category mapping for training/testing.
+risky recurring deposit,Shopping,need,recurring deposit,Synthetic category mapping for training/testing.
+client dividend,Education,investment,dividend,Synthetic category mapping for training/testing.
+stable portfolio,Shopping,investment,portfolio,Synthetic category mapping for training/testing.
+morning salon,Work,need,salon,Synthetic category mapping for training/testing.
+risky pharmacy,Transport,want,pharmacy,Synthetic category mapping for training/testing.
+morning gift,Investment,need,gift,Synthetic category mapping for training/testing.
+basic bus,Investment,want,bus,Synthetic category mapping for training/testing.
+advance family support,Education,want,family support,Synthetic category mapping for training/testing.
+extra family support,Bills & Obligations,investment,family support,Synthetic category mapping for training/testing.
+work fuel,Food & Dining,want,fuel,Synthetic category mapping for training/testing.
+home crypto,Investment,investment,crypto,Synthetic category mapping for training/testing.
+repeat vegetables,Education,need,vegetables,Synthetic category mapping for training/testing.
+local investment,Entertainment,want,investment,Synthetic category mapping for training/testing.
+large rd,Education,investment,rd,Synthetic category mapping for training/testing.
+client college,Food & Dining,investment,college,Synthetic category mapping for training/testing.
+monthly electricity,Investment,need,electricity,Synthetic category mapping for training/testing.
+online burger,Food & Dining,need,burger,Synthetic category mapping for training/testing.
+recurring tuition,Food & Dining,need,tuition,Synthetic category mapping for training/testing.
+home school,Transport,investment,school,Synthetic category mapping for training/testing.
+subscription savings,Health,want,savings,Synthetic category mapping for training/testing.
+basic snacks,Health,want,snacks,Synthetic category mapping for training/testing.
+recurring rice,Health,need,rice,Synthetic category mapping for training/testing.
+small nps,Shopping,investment,nps,Synthetic category mapping for training/testing.
+first time fd,Shopping,need,fd,Synthetic category mapping for training/testing.
+family vacation,Entertainment,want,vacation,Synthetic category mapping for training/testing.
+morning shopping,Transport,investment,shopping,Synthetic category mapping for training/testing.
+premium electricity,Investment,investment,electricity,Synthetic category mapping for training/testing.
+offline books,Health,need,books,Synthetic category mapping for training/testing.
+delayed vegetables,Shopping,want,vegetables,Synthetic category mapping for training/testing.
+online coffee,Transport,need,coffee,Synthetic category mapping for training/testing.
+work train,Food & Dining,investment,train,Synthetic category mapping for training/testing.
+stable snacks,Investment,investment,snacks,Synthetic category mapping for training/testing.
+family online shopping,Health,investment,online shopping,Synthetic category mapping for training/testing.
+college shopping,Shopping,investment,shopping,Synthetic category mapping for training/testing.
+monthly vegetables,Shopping,investment,vegetables,Synthetic category mapping for training/testing.
+festival bus,Health,investment,bus,Synthetic category mapping for training/testing.
+basic gift,Health,want,gift,Synthetic category mapping for training/testing.
+repeat emergency fund,Education,need,emergency fund,Synthetic category mapping for training/testing.
+festival fees,Shopping,need,fees,Synthetic category mapping for training/testing.
+college vacation,Health,need,vacation,Synthetic category mapping for training/testing.
+medical portfolio,Investment,investment,portfolio,Synthetic category mapping for training/testing.
+client burger,Health,investment,burger,Synthetic category mapping for training/testing.
+recurring gold,Investment,investment,gold,Synthetic category mapping for training/testing.
+recurring recurring deposit,Work,want,recurring deposit,Synthetic category mapping for training/testing.
+risky school,Entertainment,want,school,Synthetic category mapping for training/testing.
+morning emergency fund,Investment,investment,emergency fund,Synthetic category mapping for training/testing.
+monthly coffee,Education,need,coffee,Synthetic category mapping for training/testing.
+one time coffee,Entertainment,need,coffee,Synthetic category mapping for training/testing.
+planned electricity,Bills & Obligations,need,electricity,Synthetic category mapping for training/testing.
+extra internet,Transport,want,internet,Synthetic category mapping for training/testing.
+planned books,Entertainment,need,books,Synthetic category mapping for training/testing.
+family interest,Health,need,interest,Synthetic category mapping for training/testing.
+repeat doctor,Investment,investment,doctor,Synthetic category mapping for training/testing.
+offline interest,Transport,need,interest,Synthetic category mapping for training/testing.
+personal etf,Education,want,etf,Synthetic category mapping for training/testing.
+family coffee,Food & Dining,need,coffee,Synthetic category mapping for training/testing.
+basic family support,Investment,need,family support,Synthetic category mapping for training/testing.
+subscription gaming,Bills & Obligations,want,gaming,Synthetic category mapping for training/testing.
+family electricity,Food & Dining,want,electricity,Synthetic category mapping for training/testing.
+stable grocery,Food & Dining,investment,grocery,Synthetic category mapping for training/testing.
+monthly fuel,Health,investment,fuel,Synthetic category mapping for training/testing.
+repeat stationery,Work,want,stationery,Synthetic category mapping for training/testing.
+high value fees,Health,want,fees,Synthetic category mapping for training/testing.
+local uniform,Investment,need,uniform,Synthetic category mapping for training/testing.
+work concert,Food & Dining,need,concert,Synthetic category mapping for training/testing.
+local capital,Bills & Obligations,want,capital,Synthetic category mapping for training/testing.
+office milk,Investment,need,milk,Synthetic category mapping for training/testing.
+stable coffee,Education,need,coffee,Synthetic category mapping for training/testing.
+extra pizza,Transport,need,pizza,Synthetic category mapping for training/testing.
+regular tuition,Health,investment,tuition,Synthetic category mapping for training/testing.
+urgent medical,Entertainment,investment,medical,Synthetic category mapping for training/testing.
+safe school,Entertainment,want,school,Synthetic category mapping for training/testing.
+emergency fees,Food & Dining,want,fees,Synthetic category mapping for training/testing.
+local shopping,Food & Dining,want,shopping,Synthetic category mapping for training/testing.
+local friends,Work,need,friends,Synthetic category mapping for training/testing.
+offline silver,Transport,want,silver,Synthetic category mapping for training/testing.
+risky doctor,Work,need,doctor,Synthetic category mapping for training/testing.
+urgent bond,Investment,want,bond,Synthetic category mapping for training/testing.
+advance train,Shopping,need,train,Synthetic category mapping for training/testing.
+morning fees,Education,investment,fees,Synthetic category mapping for training/testing.
+family capital,Entertainment,investment,capital,Synthetic category mapping for training/testing.
+stable fixed deposit,Health,investment,fixed deposit,Synthetic category mapping for training/testing.
+large gift,Work,want,gift,Synthetic category mapping for training/testing.
+delayed coffee,Transport,want,coffee,Synthetic category mapping for training/testing.
+client financial goal,Investment,need,financial goal,Synthetic category mapping for training/testing.
+stable retirement,Entertainment,need,retirement,Synthetic category mapping for training/testing.
+premium savings,Education,need,savings,Synthetic category mapping for training/testing.
+emergency bus,Education,need,bus,Synthetic category mapping for training/testing.
+offline gold,Work,need,gold,Synthetic category mapping for training/testing.
+safe netflix,Health,need,netflix,Synthetic category mapping for training/testing.
+regular fees,Transport,want,fees,Synthetic category mapping for training/testing.
+cashback treat,Health,investment,treat,Synthetic category mapping for training/testing.
+large salon,Bills & Obligations,want,salon,Synthetic category mapping for training/testing.
+urgent stocks,Education,investment,stocks,Synthetic category mapping for training/testing.
+first time date,Transport,want,date,Synthetic category mapping for training/testing.
+low cost coffee,Health,want,coffee,Synthetic category mapping for training/testing.
+first time school,Transport,want,school,Synthetic category mapping for training/testing.
+urgent club,Work,want,club,Synthetic category mapping for training/testing.
+one time burger,Food & Dining,investment,burger,Synthetic category mapping for training/testing.
+extra tuition,Food & Dining,need,tuition,Synthetic category mapping for training/testing.
+local savings,Investment,need,savings,Synthetic category mapping for training/testing.
+advance outing,Education,want,outing,Synthetic category mapping for training/testing.
+online tuition,Work,want,tuition,Synthetic category mapping for training/testing.
+local tuition,Health,investment,tuition,Synthetic category mapping for training/testing.
+medical date,Investment,need,date,Synthetic category mapping for training/testing.
+stable gaming,Education,want,gaming,Synthetic category mapping for training/testing.
+basic interest,Bills & Obligations,need,interest,Synthetic category mapping for training/testing.
+urgent treat,Education,want,treat,Synthetic category mapping for training/testing.
+family sip,Work,need,sip,Synthetic category mapping for training/testing.
+urgent savings,Entertainment,want,savings,Synthetic category mapping for training/testing.
+night milk,Bills & Obligations,need,milk,Synthetic category mapping for training/testing.
+essential online shopping,Food & Dining,investment,online shopping,Synthetic category mapping for training/testing.
+online insurance,Shopping,investment,insurance,Synthetic category mapping for training/testing.
+local netflix,Health,need,netflix,Synthetic category mapping for training/testing.
+first time gift,Education,want,gift,Synthetic category mapping for training/testing.
+cashback deposit,Work,need,deposit,Synthetic category mapping for training/testing.
+repeat fees,Health,need,fees,Synthetic category mapping for training/testing.
+basic mutual fund,Transport,want,mutual fund,Synthetic category mapping for training/testing.
+repeat fuel,Work,investment,fuel,Synthetic category mapping for training/testing.
+client emergency fund,Transport,investment,emergency fund,Synthetic category mapping for training/testing.
+home etf,Food & Dining,investment,etf,Synthetic category mapping for training/testing.
+risky deposit,Education,investment,deposit,Synthetic category mapping for training/testing.
+festival deposit,Health,want,deposit,Synthetic category mapping for training/testing.
+family treat,Food & Dining,need,treat,Synthetic category mapping for training/testing.
+first time electricity,Bills & Obligations,want,electricity,Synthetic category mapping for training/testing.
+subscription rent,Shopping,investment,rent,Synthetic category mapping for training/testing.
+risky gift,Health,investment,gift,Synthetic category mapping for training/testing.
+home uniform,Education,need,uniform,Synthetic category mapping for training/testing.
+night clothes,Investment,need,clothes,Synthetic category mapping for training/testing.
+emergency hospital,Transport,want,hospital,Synthetic category mapping for training/testing.
+college mall,Bills & Obligations,want,mall,Synthetic category mapping for training/testing.
+advance insurance,Transport,need,insurance,Synthetic category mapping for training/testing.
+one time insurance,Investment,want,insurance,Synthetic category mapping for training/testing.
+client cosmetics,Health,investment,cosmetics,Synthetic category mapping for training/testing.
+repeat dividend,Shopping,investment,dividend,Synthetic category mapping for training/testing.
+delayed gold,Investment,need,gold,Synthetic category mapping for training/testing.
+subscription portfolio,Work,need,portfolio,Synthetic category mapping for training/testing.
+extra grocery,Work,investment,grocery,Synthetic category mapping for training/testing.
+advance books,Investment,need,books,Synthetic category mapping for training/testing.
+home electricity,Work,want,electricity,Synthetic category mapping for training/testing.
+advance clothes,Bills & Obligations,need,clothes,Synthetic category mapping for training/testing.
+extra silver,Transport,need,silver,Synthetic category mapping for training/testing.
+emergency club,Shopping,investment,club,Synthetic category mapping for training/testing.
+monthly pizza,Investment,investment,pizza,Synthetic category mapping for training/testing.
+weekly medicine,Investment,need,medicine,Synthetic category mapping for training/testing.
+safe loan emi,Transport,want,loan emi,Synthetic category mapping for training/testing.
+local saving,Investment,need,saving,Synthetic category mapping for training/testing.
+large online shopping,Food & Dining,investment,online shopping,Synthetic category mapping for training/testing.
+local insurance,Investment,investment,insurance,Synthetic category mapping for training/testing.
+low cost gas,Entertainment,need,gas,Synthetic category mapping for training/testing.
+local emergency fund,Education,investment,emergency fund,Synthetic category mapping for training/testing.
+festival fuel,Shopping,investment,fuel,Synthetic category mapping for training/testing.
+risky wealth,Investment,need,wealth,Synthetic category mapping for training/testing.
+college portfolio,Health,want,portfolio,Synthetic category mapping for training/testing.
+morning capital,Health,need,capital,Synthetic category mapping for training/testing.
+planned asset,Investment,want,asset,Synthetic category mapping for training/testing.
+weekly bus,Shopping,need,bus,Synthetic category mapping for training/testing.
+extra bus,Education,need,bus,Synthetic category mapping for training/testing.
+first time hospital,Education,want,hospital,Synthetic category mapping for training/testing.
+regular wealth,Education,want,wealth,Synthetic category mapping for training/testing.
+client impulse buy,Entertainment,investment,impulse buy,Synthetic category mapping for training/testing.
+work medicine,Health,want,medicine,Synthetic category mapping for training/testing.
+college gaming,Food & Dining,need,gaming,Synthetic category mapping for training/testing.
+recurring etf,Bills & Obligations,investment,etf,Synthetic category mapping for training/testing.
+cashback fixed deposit,Food & Dining,need,fixed deposit,Synthetic category mapping for training/testing.
+weekly crypto,Education,need,crypto,Synthetic category mapping for training/testing.
+low cost fixed deposit,Work,need,fixed deposit,Synthetic category mapping for training/testing.
+small coffee,Health,need,coffee,Synthetic category mapping for training/testing.
+large late night,Entertainment,need,late night,Synthetic category mapping for training/testing.
+home mutual fund,Shopping,want,mutual fund,Synthetic category mapping for training/testing.
+extra ppf,Education,want,ppf,Synthetic category mapping for training/testing.
+repeat gold,Bills & Obligations,investment,gold,Synthetic category mapping for training/testing.
+cashback repair,Work,want,repair,Synthetic category mapping for training/testing.
+risky index fund,Investment,need,index fund,Synthetic category mapping for training/testing.
+premium pharmacy,Shopping,need,pharmacy,Synthetic category mapping for training/testing.
+stable online shopping,Investment,want,online shopping,Synthetic category mapping for training/testing.
+safe medical,Investment,want,medical,Synthetic category mapping for training/testing.
+low cost grocery,Bills & Obligations,need,grocery,Synthetic category mapping for training/testing.
+extra mall,Shopping,investment,mall,Synthetic category mapping for training/testing.
+weekly concert,Work,want,concert,Synthetic category mapping for training/testing.
+repeat late night,Education,need,late night,Synthetic category mapping for training/testing.
+regular burger,Health,want,burger,Synthetic category mapping for training/testing.
+monthly water,Health,want,water,Synthetic category mapping for training/testing.
+festival savings,Entertainment,want,savings,Synthetic category mapping for training/testing.
+client dal,Entertainment,investment,dal,Synthetic category mapping for training/testing.
+first time investment,Education,investment,investment,Synthetic category mapping for training/testing.
+home friends,Investment,want,friends,Synthetic category mapping for training/testing.
+premium gold,Entertainment,need,gold,Synthetic category mapping for training/testing.
+small impulse buy,Food & Dining,want,impulse buy,Synthetic category mapping for training/testing.
+discounted vacation,Transport,investment,vacation,Synthetic category mapping for training/testing.
+safe hospital,Food & Dining,want,hospital,Synthetic category mapping for training/testing.
+large shopping,Food & Dining,want,shopping,Synthetic category mapping for training/testing.
+high value recurring deposit,Investment,need,recurring deposit,Synthetic category mapping for training/testing.
+weekly investment,Food & Dining,want,investment,Synthetic category mapping for training/testing.
+first time college,Education,want,college,Synthetic category mapping for training/testing.
+college friends,Shopping,want,friends,Synthetic category mapping for training/testing.
+festival saving,Investment,need,saving,Synthetic category mapping for training/testing.
+local milk,Bills & Obligations,investment,milk,Synthetic category mapping for training/testing.
+premium treat,Shopping,investment,treat,Synthetic category mapping for training/testing.
+monthly milk,Food & Dining,need,milk,Synthetic category mapping for training/testing.
+home fees,Entertainment,need,fees,Synthetic category mapping for training/testing.
+medical club,Shopping,need,club,Synthetic category mapping for training/testing.
+personal interest,Investment,want,interest,Synthetic category mapping for training/testing.
+small treat,Health,investment,treat,Synthetic category mapping for training/testing.
+risky bus,Health,want,bus,Synthetic category mapping for training/testing.
+safe pizza,Work,investment,pizza,Synthetic category mapping for training/testing.
+essential stocks,Bills & Obligations,investment,stocks,Synthetic category mapping for training/testing.
+morning mutual fund,Transport,investment,mutual fund,Synthetic category mapping for training/testing.
+online zomato,Education,want,zomato,Synthetic category mapping for training/testing.
+night burger,Transport,investment,burger,Synthetic category mapping for training/testing.
+planned gold,Education,need,gold,Synthetic category mapping for training/testing.
+night deposit,Entertainment,need,deposit,Synthetic category mapping for training/testing.
+premium repair,Bills & Obligations,want,repair,Synthetic category mapping for training/testing.
+low cost train,Bills & Obligations,investment,train,Synthetic category mapping for training/testing.
+office books,Education,need,books,Synthetic category mapping for training/testing.
+low cost pension,Investment,want,pension,Synthetic category mapping for training/testing.
+regular repair,Entertainment,want,repair,Synthetic category mapping for training/testing.
+emergency loan emi,Shopping,want,loan emi,Synthetic category mapping for training/testing.
+offline outing,Education,need,outing,Synthetic category mapping for training/testing.
+advance hospital,Education,need,hospital,Synthetic category mapping for training/testing.
+basic doctor,Health,want,doctor,Synthetic category mapping for training/testing.
+cashback shoes,Work,want,shoes,Synthetic category mapping for training/testing.
+college school,Education,investment,school,Synthetic category mapping for training/testing.
+local train,Investment,need,train,Synthetic category mapping for training/testing.
+medical fd,Work,want,fd,Synthetic category mapping for training/testing.
+client capital,Education,need,capital,Synthetic category mapping for training/testing.
+home zomato,Investment,need,zomato,Synthetic category mapping for training/testing.
+essential etf,Investment,need,etf,Synthetic category mapping for training/testing.
+planned financial goal,Investment,need,financial goal,Synthetic category mapping for training/testing.
+small books,Entertainment,need,books,Synthetic category mapping for training/testing.
+essential emergency fund,Food & Dining,need,emergency fund,Synthetic category mapping for training/testing.
+offline recurring deposit,Entertainment,need,recurring deposit,Synthetic category mapping for training/testing.
+local pension,Shopping,need,pension,Synthetic category mapping for training/testing.
+morning college,Investment,want,college,Synthetic category mapping for training/testing.
+personal pharmacy,Shopping,want,pharmacy,Synthetic category mapping for training/testing.
+extra portfolio,Entertainment,want,portfolio,Synthetic category mapping for training/testing.
+offline rent,Shopping,investment,rent,Synthetic category mapping for training/testing.
+delayed interest,Health,investment,interest,Synthetic category mapping for training/testing.
+discounted dinner,Bills & Obligations,investment,dinner,Synthetic category mapping for training/testing.
+regular financial goal,Health,want,financial goal,Synthetic category mapping for training/testing.
+advance snacks,Health,need,snacks,Synthetic category mapping for training/testing.
+work hospital,Investment,want,hospital,Synthetic category mapping for training/testing.
+monthly index fund,Transport,want,index fund,Synthetic category mapping for training/testing.
+extra savings,Food & Dining,need,savings,Synthetic category mapping for training/testing.
+personal silver,Entertainment,investment,silver,Synthetic category mapping for training/testing.
+emergency college,Health,need,college,Synthetic category mapping for training/testing.
+college stocks,Transport,want,stocks,Synthetic category mapping for training/testing.
+premium asset,Work,want,asset,Synthetic category mapping for training/testing.
+monthly treat,Shopping,want,treat,Synthetic category mapping for training/testing.
+high value snacks,Transport,want,snacks,Synthetic category mapping for training/testing.
+high value movie,Bills & Obligations,need,movie,Synthetic category mapping for training/testing.
+morning mall,Food & Dining,need,mall,Synthetic category mapping for training/testing.
+weekly gold,Health,want,gold,Synthetic category mapping for training/testing.
+repeat interest,Entertainment,investment,interest,Synthetic category mapping for training/testing.
+essential tuition,Investment,investment,tuition,Synthetic category mapping for training/testing.
+work rd,Work,want,rd,Synthetic category mapping for training/testing.
+medical clothes,Shopping,investment,clothes,Synthetic category mapping for training/testing.
+essential impulse buy,Investment,investment,impulse buy,Synthetic category mapping for training/testing.
+risky groceries,Shopping,need,groceries,Synthetic category mapping for training/testing.
+delayed gaming,Work,investment,gaming,Synthetic category mapping for training/testing.
+safe treat,Education,want,treat,Synthetic category mapping for training/testing.
+advance bus,Bills & Obligations,investment,bus,Synthetic category mapping for training/testing.
+delayed zomato,Health,investment,zomato,Synthetic category mapping for training/testing.
+emergency fuel,Work,investment,fuel,Synthetic category mapping for training/testing.
+extra dal,Bills & Obligations,want,dal,Synthetic category mapping for training/testing.
+night groceries,Food & Dining,want,groceries,Synthetic category mapping for training/testing.
+planned water,Shopping,investment,water,Synthetic category mapping for training/testing.
+extra clothes,Shopping,need,clothes,Synthetic category mapping for training/testing.
+family saving,Work,investment,saving,Synthetic category mapping for training/testing.
+online index fund,Entertainment,want,index fund,Synthetic category mapping for training/testing.
+basic grocery,Shopping,need,grocery,Synthetic category mapping for training/testing.
+client long term,Transport,need,long term,Synthetic category mapping for training/testing.
+cashback college,Investment,want,college,Synthetic category mapping for training/testing.
+work dinner,Shopping,investment,dinner,Synthetic category mapping for training/testing.
+cashback medical,Health,investment,medical,Synthetic category mapping for training/testing.
+emergency school,Shopping,want,school,Synthetic category mapping for training/testing.
+client family support,Bills & Obligations,investment,family support,Synthetic category mapping for training/testing.
+high value internet,Investment,need,internet,Synthetic category mapping for training/testing.
+low cost friends,Bills & Obligations,investment,friends,Synthetic category mapping for training/testing.
+repeat shoes,Transport,want,shoes,Synthetic category mapping for training/testing.
+advance mall,Bills & Obligations,want,mall,Synthetic category mapping for training/testing.
+emergency retirement,Education,need,retirement,Synthetic category mapping for training/testing.
+office fd,Entertainment,investment,fd,Synthetic category mapping for training/testing.
+safe nps,Health,investment,nps,Synthetic category mapping for training/testing.
+large concert,Shopping,need,concert,Synthetic category mapping for training/testing.
+online milk,Work,want,milk,Synthetic category mapping for training/testing.
+offline capital,Food & Dining,want,capital,Synthetic category mapping for training/testing.
+extra college,Transport,investment,college,Synthetic category mapping for training/testing.
+planned snacks,Bills & Obligations,investment,snacks,Synthetic category mapping for training/testing.
+low cost index fund,Education,investment,index fund,Synthetic category mapping for training/testing.
+high value pharmacy,Food & Dining,investment,pharmacy,Synthetic category mapping for training/testing.
+large gold,Health,investment,gold,Synthetic category mapping for training/testing.
+monthly dinner,Shopping,investment,dinner,Synthetic category mapping for training/testing.
+home dividend,Bills & Obligations,investment,dividend,Synthetic category mapping for training/testing.
+discounted college,Education,investment,college,Synthetic category mapping for training/testing.
+weekly sip,Entertainment,need,sip,Synthetic category mapping for training/testing.
+planned concert,Work,want,concert,Synthetic category mapping for training/testing.
+cashback nps,Health,need,nps,Synthetic category mapping for training/testing.
+small retirement,Bills & Obligations,investment,retirement,Synthetic category mapping for training/testing.
+weekly portfolio,Investment,need,portfolio,Synthetic category mapping for training/testing.
+recurring interest,Health,investment,interest,Synthetic category mapping for training/testing.
+extra mutual fund,Entertainment,want,mutual fund,Synthetic category mapping for training/testing.
+risky college,Shopping,investment,college,Synthetic category mapping for training/testing.
+essential deposit,Bills & Obligations,want,deposit,Synthetic category mapping for training/testing.
+emergency index fund,Investment,need,index fund,Synthetic category mapping for training/testing.
+delayed capital,Food & Dining,investment,capital,Synthetic category mapping for training/testing.
+large shoes,Bills & Obligations,need,shoes,Synthetic category mapping for training/testing.
+essential treat,Bills & Obligations,investment,treat,Synthetic category mapping for training/testing.
+low cost shoes,Food & Dining,need,shoes,Synthetic category mapping for training/testing.
+high value clothes,Work,need,clothes,Synthetic category mapping for training/testing.
+work dal,Investment,investment,dal,Synthetic category mapping for training/testing.
+safe capital,Health,want,capital,Synthetic category mapping for training/testing.
+essential internet,Transport,want,internet,Synthetic category mapping for training/testing.
+basic dal,Shopping,want,dal,Synthetic category mapping for training/testing.
+work crypto,Investment,want,crypto,Synthetic category mapping for training/testing.
+cashback rd,Work,investment,rd,Synthetic category mapping for training/testing.
+offline deposit,Entertainment,need,deposit,Synthetic category mapping for training/testing.
+festival sip,Bills & Obligations,investment,sip,Synthetic category mapping for training/testing.
+offline pizza,Entertainment,investment,pizza,Synthetic category mapping for training/testing.
+first time vacation,Health,investment,vacation,Synthetic category mapping for training/testing.
+cashback retirement,Education,need,retirement,Synthetic category mapping for training/testing.
+subscription vegetables,Education,need,vegetables,Synthetic category mapping for training/testing.
+weekly wealth,Transport,investment,wealth,Synthetic category mapping for training/testing.
+subscription tuition,Health,want,tuition,Synthetic category mapping for training/testing.
+safe portfolio,Investment,need,portfolio,Synthetic category mapping for training/testing.
+extra long term,Bills & Obligations,want,long term,Synthetic category mapping for training/testing.
+risky fees,Work,need,fees,Synthetic category mapping for training/testing.
+monthly internet,Entertainment,need,internet,Synthetic category mapping for training/testing.
+recurring savings,Transport,want,savings,Synthetic category mapping for training/testing.
+high value family support,Education,want,family support,Synthetic category mapping for training/testing.
+safe pharmacy,Bills & Obligations,need,pharmacy,Synthetic category mapping for training/testing.
+college shoes,Bills & Obligations,investment,shoes,Synthetic category mapping for training/testing.
+subscription dal,Work,need,dal,Synthetic category mapping for training/testing.
+regular trip,Investment,investment,trip,Synthetic category mapping for training/testing.
+emergency fixed deposit,Education,need,fixed deposit,Synthetic category mapping for training/testing.
+morning gold,Education,need,gold,Synthetic category mapping for training/testing.
+medical nps,Food & Dining,investment,nps,Synthetic category mapping for training/testing.
+cashback zomato,Food & Dining,need,zomato,Synthetic category mapping for training/testing.
+regular shoes,Investment,investment,shoes,Synthetic category mapping for training/testing.
+recurring vegetables,Health,want,vegetables,Synthetic category mapping for training/testing.
+planned pension,Shopping,want,pension,Synthetic category mapping for training/testing.
+risky electricity,Work,investment,electricity,Synthetic category mapping for training/testing.
+weekly capital,Bills & Obligations,want,capital,Synthetic category mapping for training/testing.
+cashback impulse buy,Food & Dining,want,impulse buy,Synthetic category mapping for training/testing.
+large rice,Entertainment,want,rice,Synthetic category mapping for training/testing.
+safe vegetables,Entertainment,want,vegetables,Synthetic category mapping for training/testing.
+first time vegetables,Food & Dining,want,vegetables,Synthetic category mapping for training/testing.
+large mutual fund,Education,investment,mutual fund,Synthetic category mapping for training/testing.
+offline groceries,Shopping,investment,groceries,Synthetic category mapping for training/testing.
+morning silver,Food & Dining,want,silver,Synthetic category mapping for training/testing.
+emergency mutual fund,Transport,want,mutual fund,Synthetic category mapping for training/testing.
+weekly rice,Entertainment,need,rice,Synthetic category mapping for training/testing.
+client crypto,Entertainment,investment,crypto,Synthetic category mapping for training/testing.
+planned mutual fund,Food & Dining,investment,mutual fund,Synthetic category mapping for training/testing.
+large interest,Investment,want,interest,Synthetic category mapping for training/testing.
+small salon,Health,need,salon,Synthetic category mapping for training/testing.
+medical repair,Transport,want,repair,Synthetic category mapping for training/testing.
+morning pizza,Investment,need,pizza,Synthetic category mapping for training/testing.
+planned burger,Food & Dining,need,burger,Synthetic category mapping for training/testing.
+subscription gas,Education,need,gas,Synthetic category mapping for training/testing.

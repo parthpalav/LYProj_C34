@@ -1,0 +1,2058 @@
+keyword,base_keyword,label,weight,logic
+small fuel,fuel,need,0.56,Detected as need due to keyword/context: small fuel
+discounted dal,dal,need,0.64,Detected as need due to keyword/context: discounted dal
+offline family support,family support,need,0.82,Detected as need due to keyword/context: offline family support
+recurring books,books,need,0.58,Detected as need due to keyword/context: recurring books
+urgent tuition,tuition,need,0.56,Detected as need due to keyword/context: urgent tuition
+morning milk,milk,need,0.75,Detected as need due to keyword/context: morning milk
+one time rent,rent,need,0.63,Detected as need due to keyword/context: one time rent
+recurring fuel,fuel,need,0.72,Detected as need due to keyword/context: recurring fuel
+risky electricity,electricity,need,0.66,Detected as need due to keyword/context: risky electricity
+monthly uniform,uniform,need,0.85,Detected as need due to keyword/context: monthly uniform
+repeat groceries,groceries,need,0.69,Detected as need due to keyword/context: repeat groceries
+night grocery,grocery,need,0.93,Detected as need due to keyword/context: night grocery
+offline school,school,need,0.59,Detected as need due to keyword/context: offline school
+college doctor,doctor,need,0.89,Detected as need due to keyword/context: college doctor
+cashback train,train,need,0.87,Detected as need due to keyword/context: cashback train
+advance family support,family support,need,0.76,Detected as need due to keyword/context: advance family support
+client stationery,stationery,need,0.58,Detected as need due to keyword/context: client stationery
+delayed vegetables,vegetables,need,0.9,Detected as need due to keyword/context: delayed vegetables
+safe fees,fees,need,0.63,Detected as need due to keyword/context: safe fees
+urgent hospital,hospital,need,0.81,Detected as need due to keyword/context: urgent hospital
+extra repair,repair,need,0.94,Detected as need due to keyword/context: extra repair
+morning uniform,uniform,need,0.9,Detected as need due to keyword/context: morning uniform
+essential college,college,need,0.73,Detected as need due to keyword/context: essential college
+office pharmacy,pharmacy,need,0.62,Detected as need due to keyword/context: office pharmacy
+night fees,fees,need,0.82,Detected as need due to keyword/context: night fees
+regular insurance,insurance,need,0.79,Detected as need due to keyword/context: regular insurance
+recurring groceries,groceries,need,0.84,Detected as need due to keyword/context: recurring groceries
+advance groceries,groceries,need,0.7,Detected as need due to keyword/context: advance groceries
+one time stationery,stationery,need,0.64,Detected as need due to keyword/context: one time stationery
+planned school,school,need,0.64,Detected as need due to keyword/context: planned school
+festival medicine,medicine,need,0.71,Detected as need due to keyword/context: festival medicine
+night hospital,hospital,need,0.92,Detected as need due to keyword/context: night hospital
+festival bus,bus,need,0.64,Detected as need due to keyword/context: festival bus
+local water,water,need,0.9,Detected as need due to keyword/context: local water
+advance fuel,fuel,need,0.61,Detected as need due to keyword/context: advance fuel
+discounted grocery,grocery,need,0.85,Detected as need due to keyword/context: discounted grocery
+cashback internet,internet,need,0.85,Detected as need due to keyword/context: cashback internet
+risky tuition,tuition,need,0.71,Detected as need due to keyword/context: risky tuition
+large rice,rice,need,0.75,Detected as need due to keyword/context: large rice
+planned hospital,hospital,need,0.89,Detected as need due to keyword/context: planned hospital
+personal grocery,grocery,need,0.87,Detected as need due to keyword/context: personal grocery
+stable tuition,tuition,need,0.58,Detected as need due to keyword/context: stable tuition
+stable college,college,need,0.95,Detected as need due to keyword/context: stable college
+cashback gas,gas,need,0.94,Detected as need due to keyword/context: cashback gas
+recurring doctor,doctor,need,0.85,Detected as need due to keyword/context: recurring doctor
+medical repair,repair,need,0.59,Detected as need due to keyword/context: medical repair
+personal tuition,tuition,need,0.73,Detected as need due to keyword/context: personal tuition
+cashback family support,family support,need,0.94,Detected as need due to keyword/context: cashback family support
+work repair,repair,need,0.75,Detected as need due to keyword/context: work repair
+emergency doctor,doctor,need,0.89,Detected as need due to keyword/context: emergency doctor
+stable gas,gas,need,0.63,Detected as need due to keyword/context: stable gas
+personal fees,fees,need,0.77,Detected as need due to keyword/context: personal fees
+high value repair,repair,need,0.92,Detected as need due to keyword/context: high value repair
+festival train,train,need,0.75,Detected as need due to keyword/context: festival train
+office doctor,doctor,need,0.9,Detected as need due to keyword/context: office doctor
+emergency pharmacy,pharmacy,need,0.65,Detected as need due to keyword/context: emergency pharmacy
+safe rice,rice,need,0.93,Detected as need due to keyword/context: safe rice
+premium hospital,hospital,need,0.88,Detected as need due to keyword/context: premium hospital
+recurring repair,repair,need,0.86,Detected as need due to keyword/context: recurring repair
+basic grocery,grocery,need,0.93,Detected as need due to keyword/context: basic grocery
+cashback groceries,groceries,need,0.76,Detected as need due to keyword/context: cashback groceries
+repeat train,train,need,0.94,Detected as need due to keyword/context: repeat train
+recurring stationery,stationery,need,0.85,Detected as need due to keyword/context: recurring stationery
+home insurance,insurance,need,0.84,Detected as need due to keyword/context: home insurance
+office college,college,need,0.73,Detected as need due to keyword/context: office college
+subscription gas,gas,need,0.6,Detected as need due to keyword/context: subscription gas
+regular rice,rice,need,0.69,Detected as need due to keyword/context: regular rice
+one time bus,bus,need,0.64,Detected as need due to keyword/context: one time bus
+monthly rice,rice,need,0.58,Detected as need due to keyword/context: monthly rice
+planned fuel,fuel,need,0.64,Detected as need due to keyword/context: planned fuel
+urgent books,books,need,0.89,Detected as need due to keyword/context: urgent books
+low cost hospital,hospital,need,0.65,Detected as need due to keyword/context: low cost hospital
+premium loan emi,loan emi,need,0.64,Detected as need due to keyword/context: premium loan emi
+safe grocery,grocery,need,0.78,Detected as need due to keyword/context: safe grocery
+basic rice,rice,need,0.87,Detected as need due to keyword/context: basic rice
+offline milk,milk,need,0.59,Detected as need due to keyword/context: offline milk
+college tuition,tuition,need,0.72,Detected as need due to keyword/context: college tuition
+planned electricity,electricity,need,0.82,Detected as need due to keyword/context: planned electricity
+offline fuel,fuel,need,0.57,Detected as need due to keyword/context: offline fuel
+medical family support,family support,need,0.87,Detected as need due to keyword/context: medical family support
+discounted doctor,doctor,need,0.63,Detected as need due to keyword/context: discounted doctor
+subscription internet,internet,need,0.61,Detected as need due to keyword/context: subscription internet
+essential groceries,groceries,need,0.74,Detected as need due to keyword/context: essential groceries
+regular uniform,uniform,need,0.73,Detected as need due to keyword/context: regular uniform
+one time uniform,uniform,need,0.59,Detected as need due to keyword/context: one time uniform
+discounted hospital,hospital,need,0.62,Detected as need due to keyword/context: discounted hospital
+basic water,water,need,0.64,Detected as need due to keyword/context: basic water
+planned college,college,need,0.62,Detected as need due to keyword/context: planned college
+client rent,rent,need,0.66,Detected as need due to keyword/context: client rent
+advance medical,medical,need,0.66,Detected as need due to keyword/context: advance medical
+one time insurance,insurance,need,0.81,Detected as need due to keyword/context: one time insurance
+family water,water,need,0.63,Detected as need due to keyword/context: family water
+planned milk,milk,need,0.78,Detected as need due to keyword/context: planned milk
+planned internet,internet,need,0.85,Detected as need due to keyword/context: planned internet
+planned medicine,medicine,need,0.78,Detected as need due to keyword/context: planned medicine
+high value gas,gas,need,0.61,Detected as need due to keyword/context: high value gas
+online gas,gas,need,0.89,Detected as need due to keyword/context: online gas
+stable hospital,hospital,need,0.58,Detected as need due to keyword/context: stable hospital
+discounted uniform,uniform,need,0.71,Detected as need due to keyword/context: discounted uniform
+safe books,books,need,0.65,Detected as need due to keyword/context: safe books
+urgent train,train,need,0.8,Detected as need due to keyword/context: urgent train
+cashback school,school,need,0.63,Detected as need due to keyword/context: cashback school
+festival insurance,insurance,need,0.65,Detected as need due to keyword/context: festival insurance
+large college,college,need,0.82,Detected as need due to keyword/context: large college
+advance vegetables,vegetables,need,0.68,Detected as need due to keyword/context: advance vegetables
+regular repair,repair,need,0.55,Detected as need due to keyword/context: regular repair
+safe train,train,need,0.95,Detected as need due to keyword/context: safe train
+recurring hospital,hospital,need,0.64,Detected as need due to keyword/context: recurring hospital
+large dal,dal,need,0.92,Detected as need due to keyword/context: large dal
+regular books,books,need,0.9,Detected as need due to keyword/context: regular books
+extra fees,fees,need,0.61,Detected as need due to keyword/context: extra fees
+recurring pharmacy,pharmacy,need,0.83,Detected as need due to keyword/context: recurring pharmacy
+high value train,train,need,0.55,Detected as need due to keyword/context: high value train
+one time pharmacy,pharmacy,need,0.67,Detected as need due to keyword/context: one time pharmacy
+offline loan emi,loan emi,need,0.93,Detected as need due to keyword/context: offline loan emi
+cashback grocery,grocery,need,0.6,Detected as need due to keyword/context: cashback grocery
+one time doctor,doctor,need,0.61,Detected as need due to keyword/context: one time doctor
+stable vegetables,vegetables,need,0.63,Detected as need due to keyword/context: stable vegetables
+night school,school,need,0.82,Detected as need due to keyword/context: night school
+cashback uniform,uniform,need,0.75,Detected as need due to keyword/context: cashback uniform
+planned dal,dal,need,0.59,Detected as need due to keyword/context: planned dal
+essential tuition,tuition,need,0.57,Detected as need due to keyword/context: essential tuition
+large school,school,need,0.8,Detected as need due to keyword/context: large school
+personal dal,dal,need,0.85,Detected as need due to keyword/context: personal dal
+repeat internet,internet,need,0.77,Detected as need due to keyword/context: repeat internet
+regular doctor,doctor,need,0.93,Detected as need due to keyword/context: regular doctor
+family insurance,insurance,need,0.77,Detected as need due to keyword/context: family insurance
+repeat grocery,grocery,need,0.6,Detected as need due to keyword/context: repeat grocery
+office vegetables,vegetables,need,0.91,Detected as need due to keyword/context: office vegetables
+urgent medical,medical,need,0.91,Detected as need due to keyword/context: urgent medical
+discounted milk,milk,need,0.82,Detected as need due to keyword/context: discounted milk
+one time fees,fees,need,0.9,Detected as need due to keyword/context: one time fees
+delayed tuition,tuition,need,0.85,Detected as need due to keyword/context: delayed tuition
+discounted stationery,stationery,need,0.9,Detected as need due to keyword/context: discounted stationery
+work medical,medical,need,0.9,Detected as need due to keyword/context: work medical
+work rent,rent,need,0.84,Detected as need due to keyword/context: work rent
+first time school,school,need,0.87,Detected as need due to keyword/context: first time school
+offline medical,medical,need,0.7,Detected as need due to keyword/context: offline medical
+basic medicine,medicine,need,0.64,Detected as need due to keyword/context: basic medicine
+advance pharmacy,pharmacy,need,0.69,Detected as need due to keyword/context: advance pharmacy
+morning pharmacy,pharmacy,need,0.64,Detected as need due to keyword/context: morning pharmacy
+home loan emi,loan emi,need,0.71,Detected as need due to keyword/context: home loan emi
+regular dal,dal,need,0.94,Detected as need due to keyword/context: regular dal
+college dal,dal,need,0.81,Detected as need due to keyword/context: college dal
+recurring college,college,need,0.68,Detected as need due to keyword/context: recurring college
+small rent,rent,need,0.9,Detected as need due to keyword/context: small rent
+work dal,dal,need,0.78,Detected as need due to keyword/context: work dal
+urgent dal,dal,need,0.59,Detected as need due to keyword/context: urgent dal
+repeat school,school,need,0.79,Detected as need due to keyword/context: repeat school
+small gas,gas,need,0.7,Detected as need due to keyword/context: small gas
+home bus,bus,need,0.65,Detected as need due to keyword/context: home bus
+repeat insurance,insurance,need,0.55,Detected as need due to keyword/context: repeat insurance
+home family support,family support,need,0.7,Detected as need due to keyword/context: home family support
+medical hospital,hospital,need,0.8,Detected as need due to keyword/context: medical hospital
+small loan emi,loan emi,need,0.84,Detected as need due to keyword/context: small loan emi
+low cost vegetables,vegetables,need,0.67,Detected as need due to keyword/context: low cost vegetables
+festival tuition,tuition,need,0.71,Detected as need due to keyword/context: festival tuition
+one time vegetables,vegetables,need,0.6,Detected as need due to keyword/context: one time vegetables
+client tuition,tuition,need,0.82,Detected as need due to keyword/context: client tuition
+work books,books,need,0.8,Detected as need due to keyword/context: work books
+local vegetables,vegetables,need,0.77,Detected as need due to keyword/context: local vegetables
+emergency rent,rent,need,0.66,Detected as need due to keyword/context: emergency rent
+advance school,school,need,0.73,Detected as need due to keyword/context: advance school
+night loan emi,loan emi,need,0.75,Detected as need due to keyword/context: night loan emi
+personal medical,medical,need,0.81,Detected as need due to keyword/context: personal medical
+medical train,train,need,0.59,Detected as need due to keyword/context: medical train
+discounted repair,repair,need,0.82,Detected as need due to keyword/context: discounted repair
+home rice,rice,need,0.61,Detected as need due to keyword/context: home rice
+discounted medicine,medicine,need,0.94,Detected as need due to keyword/context: discounted medicine
+regular train,train,need,0.73,Detected as need due to keyword/context: regular train
+client insurance,insurance,need,0.75,Detected as need due to keyword/context: client insurance
+family rice,rice,need,0.81,Detected as need due to keyword/context: family rice
+offline rent,rent,need,0.86,Detected as need due to keyword/context: offline rent
+work rice,rice,need,0.87,Detected as need due to keyword/context: work rice
+high value insurance,insurance,need,0.74,Detected as need due to keyword/context: high value insurance
+discounted internet,internet,need,0.92,Detected as need due to keyword/context: discounted internet
+advance doctor,doctor,need,0.6,Detected as need due to keyword/context: advance doctor
+high value electricity,electricity,need,0.95,Detected as need due to keyword/context: high value electricity
+subscription books,books,need,0.8,Detected as need due to keyword/context: subscription books
+low cost family support,family support,need,0.72,Detected as need due to keyword/context: low cost family support
+basic groceries,groceries,need,0.73,Detected as need due to keyword/context: basic groceries
+high value dal,dal,need,0.74,Detected as need due to keyword/context: high value dal
+essential rice,rice,need,0.73,Detected as need due to keyword/context: essential rice
+extra insurance,insurance,need,0.64,Detected as need due to keyword/context: extra insurance
+festival school,school,need,0.91,Detected as need due to keyword/context: festival school
+large hospital,hospital,need,0.61,Detected as need due to keyword/context: large hospital
+family college,college,need,0.83,Detected as need due to keyword/context: family college
+first time hospital,hospital,need,0.71,Detected as need due to keyword/context: first time hospital
+advance internet,internet,need,0.72,Detected as need due to keyword/context: advance internet
+first time milk,milk,need,0.71,Detected as need due to keyword/context: first time milk
+risky repair,repair,need,0.93,Detected as need due to keyword/context: risky repair
+safe rent,rent,need,0.7,Detected as need due to keyword/context: safe rent
+college rent,rent,need,0.67,Detected as need due to keyword/context: college rent
+first time college,college,need,0.77,Detected as need due to keyword/context: first time college
+recurring family support,family support,need,0.87,Detected as need due to keyword/context: recurring family support
+morning books,books,need,0.75,Detected as need due to keyword/context: morning books
+repeat dal,dal,need,0.74,Detected as need due to keyword/context: repeat dal
+medical college,college,need,0.82,Detected as need due to keyword/context: medical college
+local medical,medical,need,0.84,Detected as need due to keyword/context: local medical
+recurring train,train,need,0.56,Detected as need due to keyword/context: recurring train
+risky college,college,need,0.78,Detected as need due to keyword/context: risky college
+online rent,rent,need,0.81,Detected as need due to keyword/context: online rent
+advance grocery,grocery,need,0.62,Detected as need due to keyword/context: advance grocery
+client dal,dal,need,0.68,Detected as need due to keyword/context: client dal
+festival electricity,electricity,need,0.69,Detected as need due to keyword/context: festival electricity
+client books,books,need,0.66,Detected as need due to keyword/context: client books
+first time pharmacy,pharmacy,need,0.65,Detected as need due to keyword/context: first time pharmacy
+basic hospital,hospital,need,0.56,Detected as need due to keyword/context: basic hospital
+morning fees,fees,need,0.81,Detected as need due to keyword/context: morning fees
+urgent repair,repair,need,0.85,Detected as need due to keyword/context: urgent repair
+family train,train,need,0.65,Detected as need due to keyword/context: family train
+small water,water,need,0.78,Detected as need due to keyword/context: small water
+advance milk,milk,need,0.83,Detected as need due to keyword/context: advance milk
+office repair,repair,need,0.62,Detected as need due to keyword/context: office repair
+small train,train,need,0.86,Detected as need due to keyword/context: small train
+emergency groceries,groceries,need,0.59,Detected as need due to keyword/context: emergency groceries
+discounted insurance,insurance,need,0.59,Detected as need due to keyword/context: discounted insurance
+emergency repair,repair,need,0.89,Detected as need due to keyword/context: emergency repair
+urgent bus,bus,need,0.69,Detected as need due to keyword/context: urgent bus
+office tuition,tuition,need,0.58,Detected as need due to keyword/context: office tuition
+medical fuel,fuel,need,0.56,Detected as need due to keyword/context: medical fuel
+premium tuition,tuition,need,0.59,Detected as need due to keyword/context: premium tuition
+advance fees,fees,need,0.83,Detected as need due to keyword/context: advance fees
+work tuition,tuition,need,0.84,Detected as need due to keyword/context: work tuition
+essential fuel,fuel,need,0.8,Detected as need due to keyword/context: essential fuel
+repeat electricity,electricity,need,0.88,Detected as need due to keyword/context: repeat electricity
+essential bus,bus,need,0.68,Detected as need due to keyword/context: essential bus
+online rice,rice,need,0.66,Detected as need due to keyword/context: online rice
+discounted electricity,electricity,need,0.85,Detected as need due to keyword/context: discounted electricity
+delayed bus,bus,need,0.82,Detected as need due to keyword/context: delayed bus
+weekly school,school,need,0.75,Detected as need due to keyword/context: weekly school
+work school,school,need,0.75,Detected as need due to keyword/context: work school
+cashback fees,fees,need,0.69,Detected as need due to keyword/context: cashback fees
+stable books,books,need,0.83,Detected as need due to keyword/context: stable books
+one time dal,dal,need,0.55,Detected as need due to keyword/context: one time dal
+online milk,milk,need,0.65,Detected as need due to keyword/context: online milk
+subscription water,water,need,0.87,Detected as need due to keyword/context: subscription water
+extra hospital,hospital,need,0.64,Detected as need due to keyword/context: extra hospital
+office bus,bus,need,0.74,Detected as need due to keyword/context: office bus
+college gas,gas,need,0.72,Detected as need due to keyword/context: college gas
+one time family support,family support,need,0.68,Detected as need due to keyword/context: one time family support
+advance insurance,insurance,need,0.66,Detected as need due to keyword/context: advance insurance
+morning dal,dal,need,0.6,Detected as need due to keyword/context: morning dal
+festival milk,milk,need,0.6,Detected as need due to keyword/context: festival milk
+work internet,internet,need,0.63,Detected as need due to keyword/context: work internet
+basic family support,family support,need,0.66,Detected as need due to keyword/context: basic family support
+high value bus,bus,need,0.79,Detected as need due to keyword/context: high value bus
+home doctor,doctor,need,0.67,Detected as need due to keyword/context: home doctor
+work fees,fees,need,0.67,Detected as need due to keyword/context: work fees
+recurring insurance,insurance,need,0.6,Detected as need due to keyword/context: recurring insurance
+large insurance,insurance,need,0.81,Detected as need due to keyword/context: large insurance
+premium repair,repair,need,0.59,Detected as need due to keyword/context: premium repair
+cashback medicine,medicine,need,0.93,Detected as need due to keyword/context: cashback medicine
+premium college,college,need,0.58,Detected as need due to keyword/context: premium college
+safe medical,medical,need,0.93,Detected as need due to keyword/context: safe medical
+first time repair,repair,need,0.79,Detected as need due to keyword/context: first time repair
+delayed medical,medical,need,0.64,Detected as need due to keyword/context: delayed medical
+client gas,gas,need,0.73,Detected as need due to keyword/context: client gas
+emergency electricity,electricity,need,0.89,Detected as need due to keyword/context: emergency electricity
+emergency tuition,tuition,need,0.78,Detected as need due to keyword/context: emergency tuition
+delayed medicine,medicine,need,0.93,Detected as need due to keyword/context: delayed medicine
+night doctor,doctor,need,0.8,Detected as need due to keyword/context: night doctor
+online dal,dal,need,0.61,Detected as need due to keyword/context: online dal
+one time groceries,groceries,need,0.58,Detected as need due to keyword/context: one time groceries
+first time rent,rent,need,0.73,Detected as need due to keyword/context: first time rent
+basic train,train,need,0.67,Detected as need due to keyword/context: basic train
+extra rice,rice,need,0.83,Detected as need due to keyword/context: extra rice
+cashback rice,rice,need,0.87,Detected as need due to keyword/context: cashback rice
+risky fuel,fuel,need,0.81,Detected as need due to keyword/context: risky fuel
+home stationery,stationery,need,0.72,Detected as need due to keyword/context: home stationery
+morning internet,internet,need,0.81,Detected as need due to keyword/context: morning internet
+essential stationery,stationery,need,0.88,Detected as need due to keyword/context: essential stationery
+extra bus,bus,need,0.73,Detected as need due to keyword/context: extra bus
+low cost dal,dal,need,0.77,Detected as need due to keyword/context: low cost dal
+online electricity,electricity,need,0.79,Detected as need due to keyword/context: online electricity
+repeat books,books,need,0.84,Detected as need due to keyword/context: repeat books
+essential rent,rent,need,0.78,Detected as need due to keyword/context: essential rent
+subscription fuel,fuel,need,0.92,Detected as need due to keyword/context: subscription fuel
+risky groceries,groceries,need,0.72,Detected as need due to keyword/context: risky groceries
+premium pharmacy,pharmacy,need,0.94,Detected as need due to keyword/context: premium pharmacy
+college water,water,need,0.71,Detected as need due to keyword/context: college water
+urgent internet,internet,need,0.73,Detected as need due to keyword/context: urgent internet
+local repair,repair,need,0.9,Detected as need due to keyword/context: local repair
+monthly pharmacy,pharmacy,need,0.81,Detected as need due to keyword/context: monthly pharmacy
+high value milk,milk,need,0.69,Detected as need due to keyword/context: high value milk
+planned repair,repair,need,0.63,Detected as need due to keyword/context: planned repair
+large internet,internet,need,0.92,Detected as need due to keyword/context: large internet
+premium electricity,electricity,need,0.6,Detected as need due to keyword/context: premium electricity
+stable fuel,fuel,need,0.87,Detected as need due to keyword/context: stable fuel
+personal insurance,insurance,need,0.67,Detected as need due to keyword/context: personal insurance
+small rice,rice,need,0.73,Detected as need due to keyword/context: small rice
+family doctor,doctor,need,0.75,Detected as need due to keyword/context: family doctor
+first time dal,dal,need,0.88,Detected as need due to keyword/context: first time dal
+discounted water,water,need,0.73,Detected as need due to keyword/context: discounted water
+client grocery,grocery,need,0.63,Detected as need due to keyword/context: client grocery
+low cost train,train,need,0.85,Detected as need due to keyword/context: low cost train
+regular grocery,grocery,need,0.66,Detected as need due to keyword/context: regular grocery
+first time medical,medical,need,0.69,Detected as need due to keyword/context: first time medical
+low cost medical,medical,need,0.66,Detected as need due to keyword/context: low cost medical
+extra rent,rent,need,0.84,Detected as need due to keyword/context: extra rent
+risky pharmacy,pharmacy,need,0.78,Detected as need due to keyword/context: risky pharmacy
+recurring electricity,electricity,need,0.74,Detected as need due to keyword/context: recurring electricity
+one time school,school,need,0.86,Detected as need due to keyword/context: one time school
+advance college,college,need,0.92,Detected as need due to keyword/context: advance college
+home uniform,uniform,need,0.94,Detected as need due to keyword/context: home uniform
+first time uniform,uniform,need,0.57,Detected as need due to keyword/context: first time uniform
+client medical,medical,need,0.7,Detected as need due to keyword/context: client medical
+family loan emi,loan emi,need,0.75,Detected as need due to keyword/context: family loan emi
+large medicine,medicine,need,0.75,Detected as need due to keyword/context: large medicine
+medical bus,bus,need,0.9,Detected as need due to keyword/context: medical bus
+subscription uniform,uniform,need,0.59,Detected as need due to keyword/context: subscription uniform
+advance stationery,stationery,need,0.56,Detected as need due to keyword/context: advance stationery
+first time grocery,grocery,need,0.9,Detected as need due to keyword/context: first time grocery
+medical dal,dal,need,0.8,Detected as need due to keyword/context: medical dal
+online college,college,need,0.89,Detected as need due to keyword/context: online college
+recurring uniform,uniform,need,0.7,Detected as need due to keyword/context: recurring uniform
+premium school,school,need,0.9,Detected as need due to keyword/context: premium school
+extra fuel,fuel,need,0.95,Detected as need due to keyword/context: extra fuel
+online family support,family support,need,0.72,Detected as need due to keyword/context: online family support
+offline doctor,doctor,need,0.73,Detected as need due to keyword/context: offline doctor
+emergency insurance,insurance,need,0.91,Detected as need due to keyword/context: emergency insurance
+college vegetables,vegetables,need,0.7,Detected as need due to keyword/context: college vegetables
+work bus,bus,need,0.62,Detected as need due to keyword/context: work bus
+delayed hospital,hospital,need,0.9,Detected as need due to keyword/context: delayed hospital
+discounted train,train,need,0.75,Detected as need due to keyword/context: discounted train
+family bus,bus,need,0.64,Detected as need due to keyword/context: family bus
+cashback fuel,fuel,need,0.73,Detected as need due to keyword/context: cashback fuel
+monthly loan emi,loan emi,need,0.91,Detected as need due to keyword/context: monthly loan emi
+extra electricity,electricity,need,0.82,Detected as need due to keyword/context: extra electricity
+regular groceries,groceries,need,0.73,Detected as need due to keyword/context: regular groceries
+risky fees,fees,need,0.67,Detected as need due to keyword/context: risky fees
+cashback tuition,tuition,need,0.73,Detected as need due to keyword/context: cashback tuition
+home vegetables,vegetables,need,0.95,Detected as need due to keyword/context: home vegetables
+basic uniform,uniform,need,0.59,Detected as need due to keyword/context: basic uniform
+safe college,college,need,0.69,Detected as need due to keyword/context: safe college
+extra vegetables,vegetables,need,0.56,Detected as need due to keyword/context: extra vegetables
+local pharmacy,pharmacy,need,0.66,Detected as need due to keyword/context: local pharmacy
+planned bus,bus,need,0.91,Detected as need due to keyword/context: planned bus
+premium family support,family support,need,0.88,Detected as need due to keyword/context: premium family support
+extra books,books,need,0.86,Detected as need due to keyword/context: extra books
+stable rice,rice,need,0.87,Detected as need due to keyword/context: stable rice
+large loan emi,loan emi,need,0.8,Detected as need due to keyword/context: large loan emi
+urgent electricity,electricity,need,0.78,Detected as need due to keyword/context: urgent electricity
+large family support,family support,need,0.59,Detected as need due to keyword/context: large family support
+festival vegetables,vegetables,need,0.85,Detected as need due to keyword/context: festival vegetables
+home groceries,groceries,need,0.6,Detected as need due to keyword/context: home groceries
+office internet,internet,need,0.76,Detected as need due to keyword/context: office internet
+basic dal,dal,need,0.94,Detected as need due to keyword/context: basic dal
+medical vegetables,vegetables,need,0.87,Detected as need due to keyword/context: medical vegetables
+regular electricity,electricity,need,0.61,Detected as need due to keyword/context: regular electricity
+local rice,rice,need,0.94,Detected as need due to keyword/context: local rice
+one time medical,medical,need,0.7,Detected as need due to keyword/context: one time medical
+small internet,internet,need,0.73,Detected as need due to keyword/context: small internet
+cashback loan emi,loan emi,need,0.78,Detected as need due to keyword/context: cashback loan emi
+one time books,books,need,0.68,Detected as need due to keyword/context: one time books
+morning train,train,need,0.81,Detected as need due to keyword/context: morning train
+first time vegetables,vegetables,need,0.6,Detected as need due to keyword/context: first time vegetables
+urgent medicine,medicine,need,0.67,Detected as need due to keyword/context: urgent medicine
+office electricity,electricity,need,0.82,Detected as need due to keyword/context: office electricity
+family family support,family support,need,0.9,Detected as need due to keyword/context: family family support
+first time train,train,need,0.93,Detected as need due to keyword/context: first time train
+subscription milk,milk,need,0.73,Detected as need due to keyword/context: subscription milk
+office rice,rice,need,0.59,Detected as need due to keyword/context: office rice
+office loan emi,loan emi,need,0.77,Detected as need due to keyword/context: office loan emi
+college fuel,fuel,need,0.57,Detected as need due to keyword/context: college fuel
+home dal,dal,need,0.94,Detected as need due to keyword/context: home dal
+advance uniform,uniform,need,0.59,Detected as need due to keyword/context: advance uniform
+stable milk,milk,need,0.94,Detected as need due to keyword/context: stable milk
+medical medicine,medicine,need,0.65,Detected as need due to keyword/context: medical medicine
+stable grocery,grocery,need,0.55,Detected as need due to keyword/context: stable grocery
+family uniform,uniform,need,0.95,Detected as need due to keyword/context: family uniform
+weekly doctor,doctor,need,0.6,Detected as need due to keyword/context: weekly doctor
+discounted fees,fees,need,0.79,Detected as need due to keyword/context: discounted fees
+regular family support,family support,need,0.74,Detected as need due to keyword/context: regular family support
+subscription doctor,doctor,need,0.75,Detected as need due to keyword/context: subscription doctor
+high value stationery,stationery,need,0.67,Detected as need due to keyword/context: high value stationery
+weekly fuel,fuel,need,0.57,Detected as need due to keyword/context: weekly fuel
+premium doctor,doctor,need,0.83,Detected as need due to keyword/context: premium doctor
+stable school,school,need,0.61,Detected as need due to keyword/context: stable school
+essential grocery,grocery,need,0.8,Detected as need due to keyword/context: essential grocery
+low cost electricity,electricity,need,0.79,Detected as need due to keyword/context: low cost electricity
+small doctor,doctor,need,0.89,Detected as need due to keyword/context: small doctor
+one time fuel,fuel,need,0.84,Detected as need due to keyword/context: one time fuel
+repeat milk,milk,need,0.73,Detected as need due to keyword/context: repeat milk
+first time rice,rice,need,0.69,Detected as need due to keyword/context: first time rice
+local electricity,electricity,need,0.72,Detected as need due to keyword/context: local electricity
+festival doctor,doctor,need,0.72,Detected as need due to keyword/context: festival doctor
+online pharmacy,pharmacy,need,0.59,Detected as need due to keyword/context: online pharmacy
+one time internet,internet,need,0.68,Detected as need due to keyword/context: one time internet
+first time doctor,doctor,need,0.69,Detected as need due to keyword/context: first time doctor
+repeat loan emi,loan emi,need,0.9,Detected as need due to keyword/context: repeat loan emi
+planned family support,family support,need,0.94,Detected as need due to keyword/context: planned family support
+emergency train,train,need,0.69,Detected as need due to keyword/context: emergency train
+low cost bus,bus,need,0.64,Detected as need due to keyword/context: low cost bus
+basic loan emi,loan emi,need,0.64,Detected as need due to keyword/context: basic loan emi
+small fees,fees,need,0.86,Detected as need due to keyword/context: small fees
+morning bus,bus,need,0.87,Detected as need due to keyword/context: morning bus
+delayed pharmacy,pharmacy,need,0.8,Detected as need due to keyword/context: delayed pharmacy
+emergency dal,dal,need,0.92,Detected as need due to keyword/context: emergency dal
+monthly fees,fees,need,0.62,Detected as need due to keyword/context: monthly fees
+family hospital,hospital,need,0.85,Detected as need due to keyword/context: family hospital
+client milk,milk,need,0.72,Detected as need due to keyword/context: client milk
+personal school,school,need,0.7,Detected as need due to keyword/context: personal school
+festival family support,family support,need,0.86,Detected as need due to keyword/context: festival family support
+stable bus,bus,need,0.58,Detected as need due to keyword/context: stable bus
+family medicine,medicine,need,0.61,Detected as need due to keyword/context: family medicine
+planned train,train,need,0.82,Detected as need due to keyword/context: planned train
+subscription dal,dal,need,0.81,Detected as need due to keyword/context: subscription dal
+stable water,water,need,0.73,Detected as need due to keyword/context: stable water
+night dal,dal,need,0.85,Detected as need due to keyword/context: night dal
+risky vegetables,vegetables,need,0.74,Detected as need due to keyword/context: risky vegetables
+emergency loan emi,loan emi,need,0.57,Detected as need due to keyword/context: emergency loan emi
+emergency milk,milk,need,0.93,Detected as need due to keyword/context: emergency milk
+large repair,repair,need,0.86,Detected as need due to keyword/context: large repair
+repeat water,water,need,0.62,Detected as need due to keyword/context: repeat water
+one time gas,gas,need,0.88,Detected as need due to keyword/context: one time gas
+college medical,medical,need,0.58,Detected as need due to keyword/context: college medical
+urgent uniform,uniform,need,0.72,Detected as need due to keyword/context: urgent uniform
+repeat bus,bus,need,0.78,Detected as need due to keyword/context: repeat bus
+first time insurance,insurance,need,0.67,Detected as need due to keyword/context: first time insurance
+weekly college,college,need,0.94,Detected as need due to keyword/context: weekly college
+delayed groceries,groceries,need,0.73,Detected as need due to keyword/context: delayed groceries
+office insurance,insurance,need,0.59,Detected as need due to keyword/context: office insurance
+offline uniform,uniform,need,0.65,Detected as need due to keyword/context: offline uniform
+local bus,bus,need,0.76,Detected as need due to keyword/context: local bus
+emergency college,college,need,0.85,Detected as need due to keyword/context: emergency college
+medical rice,rice,need,0.86,Detected as need due to keyword/context: medical rice
+low cost gas,gas,need,0.63,Detected as need due to keyword/context: low cost gas
+college repair,repair,need,0.69,Detected as need due to keyword/context: college repair
+family pharmacy,pharmacy,need,0.64,Detected as need due to keyword/context: family pharmacy
+regular fuel,fuel,need,0.62,Detected as need due to keyword/context: regular fuel
+risky bus,bus,need,0.73,Detected as need due to keyword/context: risky bus
+safe stationery,stationery,need,0.81,Detected as need due to keyword/context: safe stationery
+festival fuel,fuel,need,0.61,Detected as need due to keyword/context: festival fuel
+essential vegetables,vegetables,need,0.79,Detected as need due to keyword/context: essential vegetables
+low cost fees,fees,need,0.58,Detected as need due to keyword/context: low cost fees
+subscription electricity,electricity,need,0.57,Detected as need due to keyword/context: subscription electricity
+online uniform,uniform,need,0.8,Detected as need due to keyword/context: online uniform
+planned grocery,grocery,need,0.73,Detected as need due to keyword/context: planned grocery
+medical medical,medical,need,0.94,Detected as need due to keyword/context: medical medical
+office groceries,groceries,need,0.7,Detected as need due to keyword/context: office groceries
+client vegetables,vegetables,need,0.71,Detected as need due to keyword/context: client vegetables
+cashback vegetables,vegetables,need,0.84,Detected as need due to keyword/context: cashback vegetables
+stable loan emi,loan emi,need,0.9,Detected as need due to keyword/context: stable loan emi
+online school,school,need,0.78,Detected as need due to keyword/context: online school
+college grocery,grocery,need,0.67,Detected as need due to keyword/context: college grocery
+local fuel,fuel,need,0.6,Detected as need due to keyword/context: local fuel
+online insurance,insurance,need,0.67,Detected as need due to keyword/context: online insurance
+high value loan emi,loan emi,need,0.59,Detected as need due to keyword/context: high value loan emi
+office rent,rent,need,0.67,Detected as need due to keyword/context: office rent
+medical milk,milk,need,0.93,Detected as need due to keyword/context: medical milk
+home water,water,need,0.64,Detected as need due to keyword/context: home water
+family grocery,grocery,need,0.58,Detected as need due to keyword/context: family grocery
+high value internet,internet,need,0.57,Detected as need due to keyword/context: high value internet
+delayed school,school,need,0.6,Detected as need due to keyword/context: delayed school
+subscription groceries,groceries,need,0.57,Detected as need due to keyword/context: subscription groceries
+extra train,train,need,0.85,Detected as need due to keyword/context: extra train
+subscription medical,medical,need,0.64,Detected as need due to keyword/context: subscription medical
+emergency rice,rice,need,0.94,Detected as need due to keyword/context: emergency rice
+basic medical,medical,need,0.91,Detected as need due to keyword/context: basic medical
+office milk,milk,need,0.82,Detected as need due to keyword/context: office milk
+subscription bus,bus,need,0.73,Detected as need due to keyword/context: subscription bus
+stable medical,medical,need,0.61,Detected as need due to keyword/context: stable medical
+office uniform,uniform,need,0.77,Detected as need due to keyword/context: office uniform
+high value doctor,doctor,need,0.89,Detected as need due to keyword/context: high value doctor
+online vegetables,vegetables,need,0.86,Detected as need due to keyword/context: online vegetables
+morning stationery,stationery,need,0.88,Detected as need due to keyword/context: morning stationery
+college books,books,need,0.92,Detected as need due to keyword/context: college books
+planned tuition,tuition,need,0.71,Detected as need due to keyword/context: planned tuition
+office hospital,hospital,need,0.64,Detected as need due to keyword/context: office hospital
+urgent grocery,grocery,need,0.66,Detected as need due to keyword/context: urgent grocery
+basic pharmacy,pharmacy,need,0.83,Detected as need due to keyword/context: basic pharmacy
+family milk,milk,need,0.77,Detected as need due to keyword/context: family milk
+stable family support,family support,need,0.76,Detected as need due to keyword/context: stable family support
+extra doctor,doctor,need,0.65,Detected as need due to keyword/context: extra doctor
+planned doctor,doctor,need,0.65,Detected as need due to keyword/context: planned doctor
+delayed fuel,fuel,need,0.73,Detected as need due to keyword/context: delayed fuel
+low cost rent,rent,need,0.78,Detected as need due to keyword/context: low cost rent
+delayed rent,rent,need,0.69,Detected as need due to keyword/context: delayed rent
+first time bus,bus,need,0.62,Detected as need due to keyword/context: first time bus
+online loan emi,loan emi,need,0.76,Detected as need due to keyword/context: online loan emi
+regular fees,fees,need,0.93,Detected as need due to keyword/context: regular fees
+low cost internet,internet,need,0.86,Detected as need due to keyword/context: low cost internet
+recurring fees,fees,need,0.69,Detected as need due to keyword/context: recurring fees
+work fuel,fuel,need,0.88,Detected as need due to keyword/context: work fuel
+advance loan emi,loan emi,need,0.94,Detected as need due to keyword/context: advance loan emi
+work water,water,need,0.87,Detected as need due to keyword/context: work water
+advance hospital,hospital,need,0.56,Detected as need due to keyword/context: advance hospital
+urgent milk,milk,need,0.87,Detected as need due to keyword/context: urgent milk
+home medicine,medicine,need,0.66,Detected as need due to keyword/context: home medicine
+planned uniform,uniform,need,0.9,Detected as need due to keyword/context: planned uniform
+essential school,school,need,0.6,Detected as need due to keyword/context: essential school
+repeat fees,fees,need,0.91,Detected as need due to keyword/context: repeat fees
+subscription family support,family support,need,0.91,Detected as need due to keyword/context: subscription family support
+premium water,water,need,0.7,Detected as need due to keyword/context: premium water
+high value medical,medical,need,0.66,Detected as need due to keyword/context: high value medical
+repeat hospital,hospital,need,0.58,Detected as need due to keyword/context: repeat hospital
+work train,train,need,0.77,Detected as need due to keyword/context: work train
+extra loan emi,loan emi,need,0.67,Detected as need due to keyword/context: extra loan emi
+college electricity,electricity,need,0.73,Detected as need due to keyword/context: college electricity
+college family support,family support,need,0.8,Detected as need due to keyword/context: college family support
+planned medical,medical,need,0.58,Detected as need due to keyword/context: planned medical
+subscription loan emi,loan emi,need,0.93,Detected as need due to keyword/context: subscription loan emi
+subscription fees,fees,need,0.86,Detected as need due to keyword/context: subscription fees
+large bus,bus,need,0.76,Detected as need due to keyword/context: large bus
+festival college,college,need,0.81,Detected as need due to keyword/context: festival college
+premium groceries,groceries,need,0.76,Detected as need due to keyword/context: premium groceries
+cashback repair,repair,need,0.83,Detected as need due to keyword/context: cashback repair
+delayed milk,milk,need,0.66,Detected as need due to keyword/context: delayed milk
+premium stationery,stationery,need,0.63,Detected as need due to keyword/context: premium stationery
+festival medical,medical,need,0.82,Detected as need due to keyword/context: festival medical
+emergency vegetables,vegetables,need,0.89,Detected as need due to keyword/context: emergency vegetables
+work insurance,insurance,need,0.87,Detected as need due to keyword/context: work insurance
+morning gas,gas,need,0.6,Detected as need due to keyword/context: morning gas
+large milk,milk,need,0.64,Detected as need due to keyword/context: large milk
+weekly water,water,need,0.69,Detected as need due to keyword/context: weekly water
+regular hospital,hospital,need,0.67,Detected as need due to keyword/context: regular hospital
+basic insurance,insurance,need,0.76,Detected as need due to keyword/context: basic insurance
+large groceries,groceries,need,0.72,Detected as need due to keyword/context: large groceries
+planned stationery,stationery,need,0.88,Detected as need due to keyword/context: planned stationery
+family gas,gas,need,0.67,Detected as need due to keyword/context: family gas
+festival groceries,groceries,need,0.92,Detected as need due to keyword/context: festival groceries
+college rice,rice,need,0.93,Detected as need due to keyword/context: college rice
+extra gas,gas,need,0.89,Detected as need due to keyword/context: extra gas
+essential internet,internet,need,0.6,Detected as need due to keyword/context: essential internet
+personal gas,gas,need,0.79,Detected as need due to keyword/context: personal gas
+stable train,train,need,0.69,Detected as need due to keyword/context: stable train
+weekly uniform,uniform,need,0.58,Detected as need due to keyword/context: weekly uniform
+safe fuel,fuel,need,0.66,Detected as need due to keyword/context: safe fuel
+safe milk,milk,need,0.72,Detected as need due to keyword/context: safe milk
+basic vegetables,vegetables,need,0.65,Detected as need due to keyword/context: basic vegetables
+basic tuition,tuition,need,0.74,Detected as need due to keyword/context: basic tuition
+festival uniform,uniform,need,0.84,Detected as need due to keyword/context: festival uniform
+college uniform,uniform,need,0.94,Detected as need due to keyword/context: college uniform
+office grocery,grocery,need,0.76,Detected as need due to keyword/context: office grocery
+essential doctor,doctor,need,0.73,Detected as need due to keyword/context: essential doctor
+offline grocery,grocery,need,0.57,Detected as need due to keyword/context: offline grocery
+delayed college,college,need,0.72,Detected as need due to keyword/context: delayed college
+personal uniform,uniform,need,0.88,Detected as need due to keyword/context: personal uniform
+personal milk,milk,need,0.75,Detected as need due to keyword/context: personal milk
+advance gas,gas,need,0.75,Detected as need due to keyword/context: advance gas
+premium vegetables,vegetables,need,0.56,Detected as need due to keyword/context: premium vegetables
+low cost college,college,need,0.73,Detected as need due to keyword/context: low cost college
+night rice,rice,need,0.78,Detected as need due to keyword/context: night rice
+cashback books,books,need,0.84,Detected as need due to keyword/context: cashback books
+client hospital,hospital,need,0.75,Detected as need due to keyword/context: client hospital
+one time repair,repair,need,0.66,Detected as need due to keyword/context: one time repair
+delayed train,train,need,0.6,Detected as need due to keyword/context: delayed train
+local doctor,doctor,need,0.7,Detected as need due to keyword/context: local doctor
+family repair,repair,need,0.63,Detected as need due to keyword/context: family repair
+local gas,gas,need,0.75,Detected as need due to keyword/context: local gas
+basic school,school,need,0.76,Detected as need due to keyword/context: basic school
+festival grocery,grocery,need,0.92,Detected as need due to keyword/context: festival grocery
+safe insurance,insurance,need,0.67,Detected as need due to keyword/context: safe insurance
+weekly pharmacy,pharmacy,need,0.7,Detected as need due to keyword/context: weekly pharmacy
+emergency bus,bus,need,0.87,Detected as need due to keyword/context: emergency bus
+weekly family support,family support,need,0.79,Detected as need due to keyword/context: weekly family support
+risky dal,dal,need,0.78,Detected as need due to keyword/context: risky dal
+high value groceries,groceries,need,0.8,Detected as need due to keyword/context: high value groceries
+client train,train,need,0.61,Detected as need due to keyword/context: client train
+discounted loan emi,loan emi,need,0.56,Detected as need due to keyword/context: discounted loan emi
+small insurance,insurance,need,0.63,Detected as need due to keyword/context: small insurance
+night tuition,tuition,need,0.71,Detected as need due to keyword/context: night tuition
+delayed repair,repair,need,0.92,Detected as need due to keyword/context: delayed repair
+night gas,gas,need,0.77,Detected as need due to keyword/context: night gas
+medical internet,internet,need,0.77,Detected as need due to keyword/context: medical internet
+morning vegetables,vegetables,need,0.93,Detected as need due to keyword/context: morning vegetables
+premium insurance,insurance,need,0.68,Detected as need due to keyword/context: premium insurance
+essential medical,medical,need,0.67,Detected as need due to keyword/context: essential medical
+recurring bus,bus,need,0.7,Detected as need due to keyword/context: recurring bus
+college college,college,need,0.93,Detected as need due to keyword/context: college college
+family medical,medical,need,0.67,Detected as need due to keyword/context: family medical
+cashback electricity,electricity,need,0.85,Detected as need due to keyword/context: cashback electricity
+home milk,milk,need,0.88,Detected as need due to keyword/context: home milk
+discounted bus,bus,need,0.65,Detected as need due to keyword/context: discounted bus
+planned rice,rice,need,0.59,Detected as need due to keyword/context: planned rice
+personal internet,internet,need,0.71,Detected as need due to keyword/context: personal internet
+basic stationery,stationery,need,0.74,Detected as need due to keyword/context: basic stationery
+extra milk,milk,need,0.68,Detected as need due to keyword/context: extra milk
+safe hospital,hospital,need,0.64,Detected as need due to keyword/context: safe hospital
+urgent family support,family support,need,0.92,Detected as need due to keyword/context: urgent family support
+first time groceries,groceries,need,0.9,Detected as need due to keyword/context: first time groceries
+urgent groceries,groceries,need,0.95,Detected as need due to keyword/context: urgent groceries
+extra family support,family support,need,0.9,Detected as need due to keyword/context: extra family support
+medical doctor,doctor,need,0.66,Detected as need due to keyword/context: medical doctor
+large books,books,need,0.89,Detected as need due to keyword/context: large books
+essential electricity,electricity,need,0.63,Detected as need due to keyword/context: essential electricity
+medical rent,rent,need,0.87,Detected as need due to keyword/context: medical rent
+local uniform,uniform,need,0.88,Detected as need due to keyword/context: local uniform
+festival gas,gas,need,0.58,Detected as need due to keyword/context: festival gas
+subscription rice,rice,need,0.85,Detected as need due to keyword/context: subscription rice
+emergency school,school,need,0.78,Detected as need due to keyword/context: emergency school
+monthly bus,bus,need,0.65,Detected as need due to keyword/context: monthly bus
+emergency books,books,need,0.83,Detected as need due to keyword/context: emergency books
+morning rice,rice,need,0.93,Detected as need due to keyword/context: morning rice
+office train,train,need,0.72,Detected as need due to keyword/context: office train
+basic internet,internet,need,0.85,Detected as need due to keyword/context: basic internet
+night medical,medical,need,0.85,Detected as need due to keyword/context: night medical
+high value hospital,hospital,need,0.73,Detected as need due to keyword/context: high value hospital
+small bus,bus,need,0.57,Detected as need due to keyword/context: small bus
+family internet,internet,need,0.62,Detected as need due to keyword/context: family internet
+high value uniform,uniform,need,0.73,Detected as need due to keyword/context: high value uniform
+online water,water,need,0.91,Detected as need due to keyword/context: online water
+first time gas,gas,need,0.73,Detected as need due to keyword/context: first time gas
+one time medicine,medicine,need,0.73,Detected as need due to keyword/context: one time medicine
+emergency medical,medical,need,0.84,Detected as need due to keyword/context: emergency medical
+cashback college,college,need,0.88,Detected as need due to keyword/context: cashback college
+night family support,family support,need,0.78,Detected as need due to keyword/context: night family support
+repeat medicine,medicine,need,0.69,Detected as need due to keyword/context: repeat medicine
+regular stationery,stationery,need,0.94,Detected as need due to keyword/context: regular stationery
+urgent water,water,need,0.66,Detected as need due to keyword/context: urgent water
+first time family support,family support,need,0.7,Detected as need due to keyword/context: first time family support
+recurring loan emi,loan emi,need,0.6,Detected as need due to keyword/context: recurring loan emi
+local internet,internet,need,0.76,Detected as need due to keyword/context: local internet
+morning family support,family support,need,0.88,Detected as need due to keyword/context: morning family support
+weekly repair,repair,need,0.94,Detected as need due to keyword/context: weekly repair
+morning college,college,need,0.65,Detected as need due to keyword/context: morning college
+family fees,fees,need,0.66,Detected as need due to keyword/context: family fees
+small stationery,stationery,need,0.56,Detected as need due to keyword/context: small stationery
+first time loan emi,loan emi,need,0.8,Detected as need due to keyword/context: first time loan emi
+weekly stationery,stationery,need,0.65,Detected as need due to keyword/context: weekly stationery
+offline hospital,hospital,need,0.79,Detected as need due to keyword/context: offline hospital
+stable electricity,electricity,need,0.82,Detected as need due to keyword/context: stable electricity
+local medicine,medicine,need,0.73,Detected as need due to keyword/context: local medicine
+night internet,internet,need,0.85,Detected as need due to keyword/context: night internet
+safe family support,family support,need,0.68,Detected as need due to keyword/context: safe family support
+family books,books,need,0.94,Detected as need due to keyword/context: family books
+one time tuition,tuition,need,0.75,Detected as need due to keyword/context: one time tuition
+client fees,fees,need,0.86,Detected as need due to keyword/context: client fees
+first time internet,internet,need,0.94,Detected as need due to keyword/context: first time internet
+online fuel,fuel,need,0.92,Detected as need due to keyword/context: online fuel
+medical uniform,uniform,need,0.67,Detected as need due to keyword/context: medical uniform
+monthly stationery,stationery,need,0.63,Detected as need due to keyword/context: monthly stationery
+small milk,milk,need,0.85,Detected as need due to keyword/context: small milk
+basic repair,repair,need,0.92,Detected as need due to keyword/context: basic repair
+stable insurance,insurance,need,0.83,Detected as need due to keyword/context: stable insurance
+discounted college,college,need,0.77,Detected as need due to keyword/context: discounted college
+college internet,internet,need,0.67,Detected as need due to keyword/context: college internet
+offline electricity,electricity,need,0.87,Detected as need due to keyword/context: offline electricity
+risky internet,internet,need,0.78,Detected as need due to keyword/context: risky internet
+extra tuition,tuition,need,0.61,Detected as need due to keyword/context: extra tuition
+morning school,school,need,0.7,Detected as need due to keyword/context: morning school
+discounted pharmacy,pharmacy,need,0.75,Detected as need due to keyword/context: discounted pharmacy
+premium fuel,fuel,need,0.73,Detected as need due to keyword/context: premium fuel
+high value medicine,medicine,need,0.56,Detected as need due to keyword/context: high value medicine
+planned loan emi,loan emi,need,0.86,Detected as need due to keyword/context: planned loan emi
+large tuition,tuition,need,0.89,Detected as need due to keyword/context: large tuition
+night rent,rent,need,0.75,Detected as need due to keyword/context: night rent
+planned fees,fees,need,0.8,Detected as need due to keyword/context: planned fees
+delayed loan emi,loan emi,need,0.92,Detected as need due to keyword/context: delayed loan emi
+high value rent,rent,need,0.84,Detected as need due to keyword/context: high value rent
+extra internet,internet,need,0.56,Detected as need due to keyword/context: extra internet
+repeat pharmacy,pharmacy,need,0.87,Detected as need due to keyword/context: repeat pharmacy
+work stationery,stationery,need,0.59,Detected as need due to keyword/context: work stationery
+college pharmacy,pharmacy,need,0.66,Detected as need due to keyword/context: college pharmacy
+morning insurance,insurance,need,0.67,Detected as need due to keyword/context: morning insurance
+client college,college,need,0.77,Detected as need due to keyword/context: client college
+monthly medicine,medicine,need,0.83,Detected as need due to keyword/context: monthly medicine
+urgent stationery,stationery,need,0.64,Detected as need due to keyword/context: urgent stationery
+regular medicine,medicine,need,0.82,Detected as need due to keyword/context: regular medicine
+recurring dal,dal,need,0.78,Detected as need due to keyword/context: recurring dal
+work medicine,medicine,need,0.92,Detected as need due to keyword/context: work medicine
+local insurance,insurance,need,0.92,Detected as need due to keyword/context: local insurance
+personal vegetables,vegetables,need,0.78,Detected as need due to keyword/context: personal vegetables
+client bus,bus,need,0.82,Detected as need due to keyword/context: client bus
+client loan emi,loan emi,need,0.58,Detected as need due to keyword/context: client loan emi
+family fuel,fuel,need,0.85,Detected as need due to keyword/context: family fuel
+office school,school,need,0.59,Detected as need due to keyword/context: office school
+essential repair,repair,need,0.59,Detected as need due to keyword/context: essential repair
+work hospital,hospital,need,0.72,Detected as need due to keyword/context: work hospital
+online internet,internet,need,0.79,Detected as need due to keyword/context: online internet
+online repair,repair,need,0.84,Detected as need due to keyword/context: online repair
+client groceries,groceries,need,0.62,Detected as need due to keyword/context: client groceries
+regular medical,medical,need,0.69,Detected as need due to keyword/context: regular medical
+premium rice,rice,need,0.79,Detected as need due to keyword/context: premium rice
+monthly vegetables,vegetables,need,0.93,Detected as need due to keyword/context: monthly vegetables
+basic milk,milk,need,0.68,Detected as need due to keyword/context: basic milk
+discounted medical,medical,need,0.68,Detected as need due to keyword/context: discounted medical
+local dal,dal,need,0.7,Detected as need due to keyword/context: local dal
+weekly internet,internet,need,0.93,Detected as need due to keyword/context: weekly internet
+night electricity,electricity,need,0.73,Detected as need due to keyword/context: night electricity
+regular vegetables,vegetables,need,0.88,Detected as need due to keyword/context: regular vegetables
+emergency grocery,grocery,need,0.65,Detected as need due to keyword/context: emergency grocery
+office medical,medical,need,0.83,Detected as need due to keyword/context: office medical
+recurring medical,medical,need,0.79,Detected as need due to keyword/context: recurring medical
+online stationery,stationery,need,0.59,Detected as need due to keyword/context: online stationery
+cashback doctor,doctor,need,0.64,Detected as need due to keyword/context: cashback doctor
+high value family support,family support,need,0.77,Detected as need due to keyword/context: high value family support
+local late night,late night,want,0.74,Detected as want due to keyword/context: local late night
+risky date,date,want,0.83,Detected as want due to keyword/context: risky date
+college movie,movie,want,0.95,Detected as want due to keyword/context: college movie
+offline shoes,shoes,want,0.67,Detected as want due to keyword/context: offline shoes
+online outing,outing,want,0.6,Detected as want due to keyword/context: online outing
+family impulse buy,impulse buy,want,0.69,Detected as want due to keyword/context: family impulse buy
+advance friends,friends,want,0.86,Detected as want due to keyword/context: advance friends
+basic coffee,coffee,want,0.69,Detected as want due to keyword/context: basic coffee
+subscription club,club,want,0.84,Detected as want due to keyword/context: subscription club
+festival clothes,clothes,want,0.58,Detected as want due to keyword/context: festival clothes
+small burger,burger,want,0.56,Detected as want due to keyword/context: small burger
+offline friends,friends,want,0.82,Detected as want due to keyword/context: offline friends
+discounted netflix,netflix,want,0.76,Detected as want due to keyword/context: discounted netflix
+personal dessert,dessert,want,0.68,Detected as want due to keyword/context: personal dessert
+advance gaming,gaming,want,0.64,Detected as want due to keyword/context: advance gaming
+work snacks,snacks,want,0.62,Detected as want due to keyword/context: work snacks
+repeat date,date,want,0.71,Detected as want due to keyword/context: repeat date
+delayed impulse buy,impulse buy,want,0.9,Detected as want due to keyword/context: delayed impulse buy
+risky clothes,clothes,want,0.72,Detected as want due to keyword/context: risky clothes
+night pizza,pizza,want,0.63,Detected as want due to keyword/context: night pizza
+regular online shopping,online shopping,want,0.78,Detected as want due to keyword/context: regular online shopping
+recurring cosmetics,cosmetics,want,0.62,Detected as want due to keyword/context: recurring cosmetics
+home friends,friends,want,0.73,Detected as want due to keyword/context: home friends
+premium swiggy,swiggy,want,0.76,Detected as want due to keyword/context: premium swiggy
+festival concert,concert,want,0.79,Detected as want due to keyword/context: festival concert
+local vacation,vacation,want,0.78,Detected as want due to keyword/context: local vacation
+college late night,late night,want,0.89,Detected as want due to keyword/context: college late night
+work vacation,vacation,want,0.88,Detected as want due to keyword/context: work vacation
+emergency mall,mall,want,0.92,Detected as want due to keyword/context: emergency mall
+online trip,trip,want,0.82,Detected as want due to keyword/context: online trip
+small friends,friends,want,0.65,Detected as want due to keyword/context: small friends
+work club,club,want,0.7,Detected as want due to keyword/context: work club
+low cost movie,movie,want,0.71,Detected as want due to keyword/context: low cost movie
+large vacation,vacation,want,0.78,Detected as want due to keyword/context: large vacation
+work gaming,gaming,want,0.74,Detected as want due to keyword/context: work gaming
+work dessert,dessert,want,0.77,Detected as want due to keyword/context: work dessert
+extra shoes,shoes,want,0.61,Detected as want due to keyword/context: extra shoes
+subscription friends,friends,want,0.8,Detected as want due to keyword/context: subscription friends
+college gift,gift,want,0.93,Detected as want due to keyword/context: college gift
+large shoes,shoes,want,0.63,Detected as want due to keyword/context: large shoes
+one time snacks,snacks,want,0.75,Detected as want due to keyword/context: one time snacks
+first time shoes,shoes,want,0.82,Detected as want due to keyword/context: first time shoes
+subscription gaming,gaming,want,0.75,Detected as want due to keyword/context: subscription gaming
+safe party,party,want,0.56,Detected as want due to keyword/context: safe party
+morning online shopping,online shopping,want,0.67,Detected as want due to keyword/context: morning online shopping
+morning swiggy,swiggy,want,0.77,Detected as want due to keyword/context: morning swiggy
+advance netflix,netflix,want,0.78,Detected as want due to keyword/context: advance netflix
+premium online shopping,online shopping,want,0.77,Detected as want due to keyword/context: premium online shopping
+safe club,club,want,0.6,Detected as want due to keyword/context: safe club
+recurring online shopping,online shopping,want,0.88,Detected as want due to keyword/context: recurring online shopping
+recurring late night,late night,want,0.88,Detected as want due to keyword/context: recurring late night
+subscription burger,burger,want,0.77,Detected as want due to keyword/context: subscription burger
+offline gaming,gaming,want,0.84,Detected as want due to keyword/context: offline gaming
+discounted concert,concert,want,0.67,Detected as want due to keyword/context: discounted concert
+online gift,gift,want,0.73,Detected as want due to keyword/context: online gift
+discounted club,club,want,0.63,Detected as want due to keyword/context: discounted club
+risky impulse buy,impulse buy,want,0.83,Detected as want due to keyword/context: risky impulse buy
+delayed gift,gift,want,0.8,Detected as want due to keyword/context: delayed gift
+delayed netflix,netflix,want,0.61,Detected as want due to keyword/context: delayed netflix
+night shopping,shopping,want,0.87,Detected as want due to keyword/context: night shopping
+college trip,trip,want,0.76,Detected as want due to keyword/context: college trip
+recurring vacation,vacation,want,0.62,Detected as want due to keyword/context: recurring vacation
+extra mall,mall,want,0.67,Detected as want due to keyword/context: extra mall
+low cost swiggy,swiggy,want,0.94,Detected as want due to keyword/context: low cost swiggy
+offline date,date,want,0.6,Detected as want due to keyword/context: offline date
+first time online shopping,online shopping,want,0.92,Detected as want due to keyword/context: first time online shopping
+large swiggy,swiggy,want,0.83,Detected as want due to keyword/context: large swiggy
+discounted movie,movie,want,0.61,Detected as want due to keyword/context: discounted movie
+discounted friends,friends,want,0.85,Detected as want due to keyword/context: discounted friends
+local date,date,want,0.75,Detected as want due to keyword/context: local date
+essential trip,trip,want,0.8,Detected as want due to keyword/context: essential trip
+subscription snacks,snacks,want,0.58,Detected as want due to keyword/context: subscription snacks
+online cosmetics,cosmetics,want,0.71,Detected as want due to keyword/context: online cosmetics
+essential impulse buy,impulse buy,want,0.83,Detected as want due to keyword/context: essential impulse buy
+office treat,treat,want,0.73,Detected as want due to keyword/context: office treat
+festival shoes,shoes,want,0.78,Detected as want due to keyword/context: festival shoes
+college clothes,clothes,want,0.89,Detected as want due to keyword/context: college clothes
+night gaming,gaming,want,0.75,Detected as want due to keyword/context: night gaming
+extra friends,friends,want,0.69,Detected as want due to keyword/context: extra friends
+large trip,trip,want,0.78,Detected as want due to keyword/context: large trip
+medical shoes,shoes,want,0.91,Detected as want due to keyword/context: medical shoes
+planned online shopping,online shopping,want,0.57,Detected as want due to keyword/context: planned online shopping
+advance concert,concert,want,0.56,Detected as want due to keyword/context: advance concert
+personal outing,outing,want,0.73,Detected as want due to keyword/context: personal outing
+repeat pizza,pizza,want,0.63,Detected as want due to keyword/context: repeat pizza
+large mall,mall,want,0.9,Detected as want due to keyword/context: large mall
+personal dinner,dinner,want,0.9,Detected as want due to keyword/context: personal dinner
+essential treat,treat,want,0.59,Detected as want due to keyword/context: essential treat
+cashback late night,late night,want,0.58,Detected as want due to keyword/context: cashback late night
+personal date,date,want,0.57,Detected as want due to keyword/context: personal date
+emergency concert,concert,want,0.84,Detected as want due to keyword/context: emergency concert
+offline party,party,want,0.55,Detected as want due to keyword/context: offline party
+regular shoes,shoes,want,0.6,Detected as want due to keyword/context: regular shoes
+high value zomato,zomato,want,0.82,Detected as want due to keyword/context: high value zomato
+monthly pizza,pizza,want,0.83,Detected as want due to keyword/context: monthly pizza
+small salon,salon,want,0.95,Detected as want due to keyword/context: small salon
+large gaming,gaming,want,0.74,Detected as want due to keyword/context: large gaming
+client zomato,zomato,want,0.59,Detected as want due to keyword/context: client zomato
+offline cosmetics,cosmetics,want,0.59,Detected as want due to keyword/context: offline cosmetics
+emergency late night,late night,want,0.6,Detected as want due to keyword/context: emergency late night
+large online shopping,online shopping,want,0.81,Detected as want due to keyword/context: large online shopping
+family date,date,want,0.58,Detected as want due to keyword/context: family date
+monthly trip,trip,want,0.79,Detected as want due to keyword/context: monthly trip
+subscription netflix,netflix,want,0.69,Detected as want due to keyword/context: subscription netflix
+family shopping,shopping,want,0.92,Detected as want due to keyword/context: family shopping
+subscription vacation,vacation,want,0.89,Detected as want due to keyword/context: subscription vacation
+risky club,club,want,0.84,Detected as want due to keyword/context: risky club
+repeat late night,late night,want,0.68,Detected as want due to keyword/context: repeat late night
+discounted party,party,want,0.77,Detected as want due to keyword/context: discounted party
+stable vacation,vacation,want,0.66,Detected as want due to keyword/context: stable vacation
+weekly mall,mall,want,0.89,Detected as want due to keyword/context: weekly mall
+emergency date,date,want,0.63,Detected as want due to keyword/context: emergency date
+low cost vacation,vacation,want,0.63,Detected as want due to keyword/context: low cost vacation
+extra snacks,snacks,want,0.81,Detected as want due to keyword/context: extra snacks
+discounted cosmetics,cosmetics,want,0.75,Detected as want due to keyword/context: discounted cosmetics
+regular vacation,vacation,want,0.76,Detected as want due to keyword/context: regular vacation
+office pizza,pizza,want,0.92,Detected as want due to keyword/context: office pizza
+client movie,movie,want,0.89,Detected as want due to keyword/context: client movie
+first time trip,trip,want,0.7,Detected as want due to keyword/context: first time trip
+work date,date,want,0.86,Detected as want due to keyword/context: work date
+monthly party,party,want,0.65,Detected as want due to keyword/context: monthly party
+planned burger,burger,want,0.93,Detected as want due to keyword/context: planned burger
+low cost snacks,snacks,want,0.66,Detected as want due to keyword/context: low cost snacks
+low cost mall,mall,want,0.86,Detected as want due to keyword/context: low cost mall
+local gaming,gaming,want,0.58,Detected as want due to keyword/context: local gaming
+recurring dessert,dessert,want,0.8,Detected as want due to keyword/context: recurring dessert
+online swiggy,swiggy,want,0.67,Detected as want due to keyword/context: online swiggy
+night coffee,coffee,want,0.94,Detected as want due to keyword/context: night coffee
+recurring movie,movie,want,0.68,Detected as want due to keyword/context: recurring movie
+regular trip,trip,want,0.67,Detected as want due to keyword/context: regular trip
+discounted gaming,gaming,want,0.57,Detected as want due to keyword/context: discounted gaming
+repeat party,party,want,0.6,Detected as want due to keyword/context: repeat party
+premium netflix,netflix,want,0.93,Detected as want due to keyword/context: premium netflix
+high value coffee,coffee,want,0.86,Detected as want due to keyword/context: high value coffee
+cashback impulse buy,impulse buy,want,0.62,Detected as want due to keyword/context: cashback impulse buy
+essential movie,movie,want,0.84,Detected as want due to keyword/context: essential movie
+weekly club,club,want,0.68,Detected as want due to keyword/context: weekly club
+essential gaming,gaming,want,0.76,Detected as want due to keyword/context: essential gaming
+safe swiggy,swiggy,want,0.8,Detected as want due to keyword/context: safe swiggy
+advance shoes,shoes,want,0.75,Detected as want due to keyword/context: advance shoes
+premium burger,burger,want,0.89,Detected as want due to keyword/context: premium burger
+office netflix,netflix,want,0.61,Detected as want due to keyword/context: office netflix
+offline online shopping,online shopping,want,0.91,Detected as want due to keyword/context: offline online shopping
+small date,date,want,0.64,Detected as want due to keyword/context: small date
+monthly coffee,coffee,want,0.57,Detected as want due to keyword/context: monthly coffee
+monthly gift,gift,want,0.65,Detected as want due to keyword/context: monthly gift
+office shoes,shoes,want,0.7,Detected as want due to keyword/context: office shoes
+work movie,movie,want,0.92,Detected as want due to keyword/context: work movie
+urgent gift,gift,want,0.77,Detected as want due to keyword/context: urgent gift
+first time outing,outing,want,0.64,Detected as want due to keyword/context: first time outing
+first time zomato,zomato,want,0.92,Detected as want due to keyword/context: first time zomato
+essential friends,friends,want,0.88,Detected as want due to keyword/context: essential friends
+office trip,trip,want,0.6,Detected as want due to keyword/context: office trip
+planned date,date,want,0.62,Detected as want due to keyword/context: planned date
+high value cosmetics,cosmetics,want,0.94,Detected as want due to keyword/context: high value cosmetics
+regular snacks,snacks,want,0.9,Detected as want due to keyword/context: regular snacks
+extra gift,gift,want,0.86,Detected as want due to keyword/context: extra gift
+festival dinner,dinner,want,0.58,Detected as want due to keyword/context: festival dinner
+monthly clothes,clothes,want,0.7,Detected as want due to keyword/context: monthly clothes
+safe dinner,dinner,want,0.86,Detected as want due to keyword/context: safe dinner
+risky late night,late night,want,0.94,Detected as want due to keyword/context: risky late night
+home online shopping,online shopping,want,0.84,Detected as want due to keyword/context: home online shopping
+discounted dessert,dessert,want,0.61,Detected as want due to keyword/context: discounted dessert
+college dessert,dessert,want,0.8,Detected as want due to keyword/context: college dessert
+monthly mall,mall,want,0.93,Detected as want due to keyword/context: monthly mall
+client pizza,pizza,want,0.89,Detected as want due to keyword/context: client pizza
+emergency impulse buy,impulse buy,want,0.59,Detected as want due to keyword/context: emergency impulse buy
+discounted coffee,coffee,want,0.72,Detected as want due to keyword/context: discounted coffee
+family burger,burger,want,0.83,Detected as want due to keyword/context: family burger
+urgent party,party,want,0.92,Detected as want due to keyword/context: urgent party
+high value treat,treat,want,0.72,Detected as want due to keyword/context: high value treat
+online impulse buy,impulse buy,want,0.78,Detected as want due to keyword/context: online impulse buy
+large coffee,coffee,want,0.8,Detected as want due to keyword/context: large coffee
+repeat burger,burger,want,0.81,Detected as want due to keyword/context: repeat burger
+festival gift,gift,want,0.92,Detected as want due to keyword/context: festival gift
+festival snacks,snacks,want,0.68,Detected as want due to keyword/context: festival snacks
+large shopping,shopping,want,0.86,Detected as want due to keyword/context: large shopping
+offline trip,trip,want,0.61,Detected as want due to keyword/context: offline trip
+small gaming,gaming,want,0.76,Detected as want due to keyword/context: small gaming
+night online shopping,online shopping,want,0.73,Detected as want due to keyword/context: night online shopping
+cashback clothes,clothes,want,0.89,Detected as want due to keyword/context: cashback clothes
+personal party,party,want,0.87,Detected as want due to keyword/context: personal party
+stable dinner,dinner,want,0.57,Detected as want due to keyword/context: stable dinner
+festival salon,salon,want,0.61,Detected as want due to keyword/context: festival salon
+discounted mall,mall,want,0.94,Detected as want due to keyword/context: discounted mall
+cashback dinner,dinner,want,0.88,Detected as want due to keyword/context: cashback dinner
+weekly netflix,netflix,want,0.93,Detected as want due to keyword/context: weekly netflix
+subscription gift,gift,want,0.77,Detected as want due to keyword/context: subscription gift
+large club,club,want,0.6,Detected as want due to keyword/context: large club
+morning burger,burger,want,0.6,Detected as want due to keyword/context: morning burger
+local salon,salon,want,0.7,Detected as want due to keyword/context: local salon
+online concert,concert,want,0.78,Detected as want due to keyword/context: online concert
+regular swiggy,swiggy,want,0.56,Detected as want due to keyword/context: regular swiggy
+home party,party,want,0.91,Detected as want due to keyword/context: home party
+large clothes,clothes,want,0.59,Detected as want due to keyword/context: large clothes
+medical gift,gift,want,0.6,Detected as want due to keyword/context: medical gift
+planned clothes,clothes,want,0.62,Detected as want due to keyword/context: planned clothes
+repeat trip,trip,want,0.88,Detected as want due to keyword/context: repeat trip
+premium snacks,snacks,want,0.56,Detected as want due to keyword/context: premium snacks
+work shopping,shopping,want,0.66,Detected as want due to keyword/context: work shopping
+family clothes,clothes,want,0.56,Detected as want due to keyword/context: family clothes
+delayed vacation,vacation,want,0.65,Detected as want due to keyword/context: delayed vacation
+premium dinner,dinner,want,0.71,Detected as want due to keyword/context: premium dinner
+basic dessert,dessert,want,0.57,Detected as want due to keyword/context: basic dessert
+client swiggy,swiggy,want,0.6,Detected as want due to keyword/context: client swiggy
+high value shopping,shopping,want,0.65,Detected as want due to keyword/context: high value shopping
+college snacks,snacks,want,0.74,Detected as want due to keyword/context: college snacks
+premium cosmetics,cosmetics,want,0.69,Detected as want due to keyword/context: premium cosmetics
+low cost trip,trip,want,0.68,Detected as want due to keyword/context: low cost trip
+work swiggy,swiggy,want,0.56,Detected as want due to keyword/context: work swiggy
+morning vacation,vacation,want,0.56,Detected as want due to keyword/context: morning vacation
+essential cosmetics,cosmetics,want,0.57,Detected as want due to keyword/context: essential cosmetics
+high value shoes,shoes,want,0.69,Detected as want due to keyword/context: high value shoes
+morning trip,trip,want,0.94,Detected as want due to keyword/context: morning trip
+recurring swiggy,swiggy,want,0.88,Detected as want due to keyword/context: recurring swiggy
+planned outing,outing,want,0.86,Detected as want due to keyword/context: planned outing
+safe zomato,zomato,want,0.89,Detected as want due to keyword/context: safe zomato
+client cosmetics,cosmetics,want,0.69,Detected as want due to keyword/context: client cosmetics
+work salon,salon,want,0.62,Detected as want due to keyword/context: work salon
+festival trip,trip,want,0.87,Detected as want due to keyword/context: festival trip
+college mall,mall,want,0.92,Detected as want due to keyword/context: college mall
+college pizza,pizza,want,0.93,Detected as want due to keyword/context: college pizza
+family trip,trip,want,0.78,Detected as want due to keyword/context: family trip
+premium shopping,shopping,want,0.77,Detected as want due to keyword/context: premium shopping
+high value pizza,pizza,want,0.74,Detected as want due to keyword/context: high value pizza
+delayed friends,friends,want,0.63,Detected as want due to keyword/context: delayed friends
+medical movie,movie,want,0.84,Detected as want due to keyword/context: medical movie
+festival outing,outing,want,0.57,Detected as want due to keyword/context: festival outing
+risky movie,movie,want,0.83,Detected as want due to keyword/context: risky movie
+small movie,movie,want,0.89,Detected as want due to keyword/context: small movie
+office gift,gift,want,0.93,Detected as want due to keyword/context: office gift
+emergency friends,friends,want,0.68,Detected as want due to keyword/context: emergency friends
+repeat netflix,netflix,want,0.87,Detected as want due to keyword/context: repeat netflix
+delayed dessert,dessert,want,0.86,Detected as want due to keyword/context: delayed dessert
+risky zomato,zomato,want,0.88,Detected as want due to keyword/context: risky zomato
+emergency snacks,snacks,want,0.84,Detected as want due to keyword/context: emergency snacks
+large dinner,dinner,want,0.62,Detected as want due to keyword/context: large dinner
+safe pizza,pizza,want,0.71,Detected as want due to keyword/context: safe pizza
+safe online shopping,online shopping,want,0.56,Detected as want due to keyword/context: safe online shopping
+festival vacation,vacation,want,0.92,Detected as want due to keyword/context: festival vacation
+premium club,club,want,0.61,Detected as want due to keyword/context: premium club
+regular impulse buy,impulse buy,want,0.65,Detected as want due to keyword/context: regular impulse buy
+personal friends,friends,want,0.8,Detected as want due to keyword/context: personal friends
+medical party,party,want,0.73,Detected as want due to keyword/context: medical party
+night swiggy,swiggy,want,0.65,Detected as want due to keyword/context: night swiggy
+college party,party,want,0.65,Detected as want due to keyword/context: college party
+monthly club,club,want,0.57,Detected as want due to keyword/context: monthly club
+first time clothes,clothes,want,0.94,Detected as want due to keyword/context: first time clothes
+first time treat,treat,want,0.75,Detected as want due to keyword/context: first time treat
+basic club,club,want,0.87,Detected as want due to keyword/context: basic club
+cashback friends,friends,want,0.93,Detected as want due to keyword/context: cashback friends
+personal snacks,snacks,want,0.84,Detected as want due to keyword/context: personal snacks
+online dessert,dessert,want,0.69,Detected as want due to keyword/context: online dessert
+basic vacation,vacation,want,0.83,Detected as want due to keyword/context: basic vacation
+personal gaming,gaming,want,0.79,Detected as want due to keyword/context: personal gaming
+night friends,friends,want,0.94,Detected as want due to keyword/context: night friends
+one time gaming,gaming,want,0.84,Detected as want due to keyword/context: one time gaming
+recurring impulse buy,impulse buy,want,0.66,Detected as want due to keyword/context: recurring impulse buy
+emergency dinner,dinner,want,0.65,Detected as want due to keyword/context: emergency dinner
+local burger,burger,want,0.78,Detected as want due to keyword/context: local burger
+premium salon,salon,want,0.61,Detected as want due to keyword/context: premium salon
+monthly late night,late night,want,0.72,Detected as want due to keyword/context: monthly late night
+extra concert,concert,want,0.94,Detected as want due to keyword/context: extra concert
+small shoes,shoes,want,0.67,Detected as want due to keyword/context: small shoes
+basic snacks,snacks,want,0.75,Detected as want due to keyword/context: basic snacks
+cashback date,date,want,0.59,Detected as want due to keyword/context: cashback date
+client dessert,dessert,want,0.62,Detected as want due to keyword/context: client dessert
+client treat,treat,want,0.7,Detected as want due to keyword/context: client treat
+urgent clothes,clothes,want,0.66,Detected as want due to keyword/context: urgent clothes
+risky online shopping,online shopping,want,0.64,Detected as want due to keyword/context: risky online shopping
+client burger,burger,want,0.88,Detected as want due to keyword/context: client burger
+recurring gaming,gaming,want,0.82,Detected as want due to keyword/context: recurring gaming
+basic outing,outing,want,0.78,Detected as want due to keyword/context: basic outing
+basic zomato,zomato,want,0.67,Detected as want due to keyword/context: basic zomato
+urgent snacks,snacks,want,0.75,Detected as want due to keyword/context: urgent snacks
+delayed date,date,want,0.61,Detected as want due to keyword/context: delayed date
+subscription online shopping,online shopping,want,0.62,Detected as want due to keyword/context: subscription online shopping
+night netflix,netflix,want,0.87,Detected as want due to keyword/context: night netflix
+urgent movie,movie,want,0.72,Detected as want due to keyword/context: urgent movie
+family salon,salon,want,0.88,Detected as want due to keyword/context: family salon
+festival swiggy,swiggy,want,0.91,Detected as want due to keyword/context: festival swiggy
+regular outing,outing,want,0.58,Detected as want due to keyword/context: regular outing
+local dessert,dessert,want,0.77,Detected as want due to keyword/context: local dessert
+essential gift,gift,want,0.76,Detected as want due to keyword/context: essential gift
+monthly outing,outing,want,0.86,Detected as want due to keyword/context: monthly outing
+risky vacation,vacation,want,0.76,Detected as want due to keyword/context: risky vacation
+safe movie,movie,want,0.79,Detected as want due to keyword/context: safe movie
+recurring gift,gift,want,0.9,Detected as want due to keyword/context: recurring gift
+premium concert,concert,want,0.78,Detected as want due to keyword/context: premium concert
+urgent shoes,shoes,want,0.62,Detected as want due to keyword/context: urgent shoes
+family snacks,snacks,want,0.8,Detected as want due to keyword/context: family snacks
+medical treat,treat,want,0.83,Detected as want due to keyword/context: medical treat
+basic burger,burger,want,0.92,Detected as want due to keyword/context: basic burger
+emergency salon,salon,want,0.67,Detected as want due to keyword/context: emergency salon
+large zomato,zomato,want,0.67,Detected as want due to keyword/context: large zomato
+subscription impulse buy,impulse buy,want,0.86,Detected as want due to keyword/context: subscription impulse buy
+online vacation,vacation,want,0.63,Detected as want due to keyword/context: online vacation
+first time shopping,shopping,want,0.85,Detected as want due to keyword/context: first time shopping
+high value online shopping,online shopping,want,0.9,Detected as want due to keyword/context: high value online shopping
+planned salon,salon,want,0.76,Detected as want due to keyword/context: planned salon
+regular netflix,netflix,want,0.67,Detected as want due to keyword/context: regular netflix
+local coffee,coffee,want,0.6,Detected as want due to keyword/context: local coffee
+high value gift,gift,want,0.9,Detected as want due to keyword/context: high value gift
+work pizza,pizza,want,0.63,Detected as want due to keyword/context: work pizza
+home salon,salon,want,0.88,Detected as want due to keyword/context: home salon
+urgent zomato,zomato,want,0.73,Detected as want due to keyword/context: urgent zomato
+office outing,outing,want,0.83,Detected as want due to keyword/context: office outing
+office swiggy,swiggy,want,0.88,Detected as want due to keyword/context: office swiggy
+stable shoes,shoes,want,0.73,Detected as want due to keyword/context: stable shoes
+basic gift,gift,want,0.78,Detected as want due to keyword/context: basic gift
+cashback treat,treat,want,0.85,Detected as want due to keyword/context: cashback treat
+online mall,mall,want,0.66,Detected as want due to keyword/context: online mall
+planned snacks,snacks,want,0.62,Detected as want due to keyword/context: planned snacks
+night trip,trip,want,0.89,Detected as want due to keyword/context: night trip
+morning concert,concert,want,0.82,Detected as want due to keyword/context: morning concert
+first time swiggy,swiggy,want,0.76,Detected as want due to keyword/context: first time swiggy
+morning pizza,pizza,want,0.65,Detected as want due to keyword/context: morning pizza
+emergency cosmetics,cosmetics,want,0.84,Detected as want due to keyword/context: emergency cosmetics
+essential mall,mall,want,0.72,Detected as want due to keyword/context: essential mall
+advance shopping,shopping,want,0.67,Detected as want due to keyword/context: advance shopping
+delayed coffee,coffee,want,0.71,Detected as want due to keyword/context: delayed coffee
+office date,date,want,0.77,Detected as want due to keyword/context: office date
+stable cosmetics,cosmetics,want,0.71,Detected as want due to keyword/context: stable cosmetics
+large friends,friends,want,0.84,Detected as want due to keyword/context: large friends
+urgent impulse buy,impulse buy,want,0.78,Detected as want due to keyword/context: urgent impulse buy
+home trip,trip,want,0.69,Detected as want due to keyword/context: home trip
+morning mall,mall,want,0.82,Detected as want due to keyword/context: morning mall
+basic concert,concert,want,0.91,Detected as want due to keyword/context: basic concert
+college date,date,want,0.75,Detected as want due to keyword/context: college date
+personal gift,gift,want,0.89,Detected as want due to keyword/context: personal gift
+one time treat,treat,want,0.62,Detected as want due to keyword/context: one time treat
+one time swiggy,swiggy,want,0.86,Detected as want due to keyword/context: one time swiggy
+medical netflix,netflix,want,0.81,Detected as want due to keyword/context: medical netflix
+college zomato,zomato,want,0.64,Detected as want due to keyword/context: college zomato
+emergency gift,gift,want,0.72,Detected as want due to keyword/context: emergency gift
+extra trip,trip,want,0.74,Detected as want due to keyword/context: extra trip
+risky concert,concert,want,0.78,Detected as want due to keyword/context: risky concert
+low cost shopping,shopping,want,0.6,Detected as want due to keyword/context: low cost shopping
+client date,date,want,0.76,Detected as want due to keyword/context: client date
+planned gaming,gaming,want,0.9,Detected as want due to keyword/context: planned gaming
+large movie,movie,want,0.95,Detected as want due to keyword/context: large movie
+first time friends,friends,want,0.94,Detected as want due to keyword/context: first time friends
+advance treat,treat,want,0.61,Detected as want due to keyword/context: advance treat
+work gift,gift,want,0.86,Detected as want due to keyword/context: work gift
+festival netflix,netflix,want,0.8,Detected as want due to keyword/context: festival netflix
+subscription pizza,pizza,want,0.66,Detected as want due to keyword/context: subscription pizza
+personal online shopping,online shopping,want,0.78,Detected as want due to keyword/context: personal online shopping
+online online shopping,online shopping,want,0.6,Detected as want due to keyword/context: online online shopping
+repeat gaming,gaming,want,0.71,Detected as want due to keyword/context: repeat gaming
+client shoes,shoes,want,0.55,Detected as want due to keyword/context: client shoes
+home dessert,dessert,want,0.84,Detected as want due to keyword/context: home dessert
+festival pizza,pizza,want,0.85,Detected as want due to keyword/context: festival pizza
+home coffee,coffee,want,0.56,Detected as want due to keyword/context: home coffee
+discounted pizza,pizza,want,0.64,Detected as want due to keyword/context: discounted pizza
+college treat,treat,want,0.67,Detected as want due to keyword/context: college treat
+client club,club,want,0.75,Detected as want due to keyword/context: client club
+emergency burger,burger,want,0.93,Detected as want due to keyword/context: emergency burger
+high value clothes,clothes,want,0.79,Detected as want due to keyword/context: high value clothes
+repeat friends,friends,want,0.91,Detected as want due to keyword/context: repeat friends
+college shoes,shoes,want,0.85,Detected as want due to keyword/context: college shoes
+local netflix,netflix,want,0.56,Detected as want due to keyword/context: local netflix
+risky pizza,pizza,want,0.75,Detected as want due to keyword/context: risky pizza
+office club,club,want,0.83,Detected as want due to keyword/context: office club
+urgent cosmetics,cosmetics,want,0.7,Detected as want due to keyword/context: urgent cosmetics
+cashback concert,concert,want,0.86,Detected as want due to keyword/context: cashback concert
+planned vacation,vacation,want,0.79,Detected as want due to keyword/context: planned vacation
+offline burger,burger,want,0.81,Detected as want due to keyword/context: offline burger
+planned pizza,pizza,want,0.83,Detected as want due to keyword/context: planned pizza
+cashback dessert,dessert,want,0.74,Detected as want due to keyword/context: cashback dessert
+night movie,movie,want,0.83,Detected as want due to keyword/context: night movie
+monthly concert,concert,want,0.67,Detected as want due to keyword/context: monthly concert
+delayed swiggy,swiggy,want,0.79,Detected as want due to keyword/context: delayed swiggy
+first time movie,movie,want,0.88,Detected as want due to keyword/context: first time movie
+low cost club,club,want,0.84,Detected as want due to keyword/context: low cost club
+extra club,club,want,0.6,Detected as want due to keyword/context: extra club
+cashback shopping,shopping,want,0.88,Detected as want due to keyword/context: cashback shopping
+college shopping,shopping,want,0.83,Detected as want due to keyword/context: college shopping
+night shoes,shoes,want,0.83,Detected as want due to keyword/context: night shoes
+online pizza,pizza,want,0.91,Detected as want due to keyword/context: online pizza
+safe salon,salon,want,0.82,Detected as want due to keyword/context: safe salon
+online movie,movie,want,0.86,Detected as want due to keyword/context: online movie
+festival date,date,want,0.72,Detected as want due to keyword/context: festival date
+offline club,club,want,0.89,Detected as want due to keyword/context: offline club
+urgent treat,treat,want,0.55,Detected as want due to keyword/context: urgent treat
+personal movie,movie,want,0.68,Detected as want due to keyword/context: personal movie
+subscription treat,treat,want,0.93,Detected as want due to keyword/context: subscription treat
+work friends,friends,want,0.6,Detected as want due to keyword/context: work friends
+advance snacks,snacks,want,0.66,Detected as want due to keyword/context: advance snacks
+personal concert,concert,want,0.6,Detected as want due to keyword/context: personal concert
+planned mall,mall,want,0.94,Detected as want due to keyword/context: planned mall
+risky outing,outing,want,0.74,Detected as want due to keyword/context: risky outing
+subscription trip,trip,want,0.62,Detected as want due to keyword/context: subscription trip
+large gift,gift,want,0.74,Detected as want due to keyword/context: large gift
+safe trip,trip,want,0.64,Detected as want due to keyword/context: safe trip
+medical date,date,want,0.76,Detected as want due to keyword/context: medical date
+delayed mall,mall,want,0.59,Detected as want due to keyword/context: delayed mall
+discounted date,date,want,0.74,Detected as want due to keyword/context: discounted date
+one time salon,salon,want,0.91,Detected as want due to keyword/context: one time salon
+premium shoes,shoes,want,0.9,Detected as want due to keyword/context: premium shoes
+premium party,party,want,0.68,Detected as want due to keyword/context: premium party
+one time zomato,zomato,want,0.81,Detected as want due to keyword/context: one time zomato
+discounted snacks,snacks,want,0.58,Detected as want due to keyword/context: discounted snacks
+safe clothes,clothes,want,0.73,Detected as want due to keyword/context: safe clothes
+premium gift,gift,want,0.73,Detected as want due to keyword/context: premium gift
+offline pizza,pizza,want,0.71,Detected as want due to keyword/context: offline pizza
+one time burger,burger,want,0.77,Detected as want due to keyword/context: one time burger
+online salon,salon,want,0.87,Detected as want due to keyword/context: online salon
+emergency vacation,vacation,want,0.91,Detected as want due to keyword/context: emergency vacation
+night dessert,dessert,want,0.81,Detected as want due to keyword/context: night dessert
+medical clothes,clothes,want,0.7,Detected as want due to keyword/context: medical clothes
+one time friends,friends,want,0.86,Detected as want due to keyword/context: one time friends
+subscription late night,late night,want,0.6,Detected as want due to keyword/context: subscription late night
+extra late night,late night,want,0.77,Detected as want due to keyword/context: extra late night
+offline late night,late night,want,0.57,Detected as want due to keyword/context: offline late night
+first time mall,mall,want,0.59,Detected as want due to keyword/context: first time mall
+home vacation,vacation,want,0.63,Detected as want due to keyword/context: home vacation
+local outing,outing,want,0.64,Detected as want due to keyword/context: local outing
+first time club,club,want,0.57,Detected as want due to keyword/context: first time club
+monthly shoes,shoes,want,0.76,Detected as want due to keyword/context: monthly shoes
+risky salon,salon,want,0.74,Detected as want due to keyword/context: risky salon
+work coffee,coffee,want,0.83,Detected as want due to keyword/context: work coffee
+large netflix,netflix,want,0.59,Detected as want due to keyword/context: large netflix
+stable date,date,want,0.79,Detected as want due to keyword/context: stable date
+low cost friends,friends,want,0.9,Detected as want due to keyword/context: low cost friends
+stable gaming,gaming,want,0.92,Detected as want due to keyword/context: stable gaming
+discounted online shopping,online shopping,want,0.66,Detected as want due to keyword/context: discounted online shopping
+one time mall,mall,want,0.89,Detected as want due to keyword/context: one time mall
+college dinner,dinner,want,0.92,Detected as want due to keyword/context: college dinner
+festival mall,mall,want,0.83,Detected as want due to keyword/context: festival mall
+college online shopping,online shopping,want,0.77,Detected as want due to keyword/context: college online shopping
+recurring treat,treat,want,0.66,Detected as want due to keyword/context: recurring treat
+repeat gift,gift,want,0.87,Detected as want due to keyword/context: repeat gift
+offline coffee,coffee,want,0.56,Detected as want due to keyword/context: offline coffee
+planned movie,movie,want,0.82,Detected as want due to keyword/context: planned movie
+essential shopping,shopping,want,0.85,Detected as want due to keyword/context: essential shopping
+extra netflix,netflix,want,0.82,Detected as want due to keyword/context: extra netflix
+night dinner,dinner,want,0.85,Detected as want due to keyword/context: night dinner
+college burger,burger,want,0.88,Detected as want due to keyword/context: college burger
+delayed club,club,want,0.9,Detected as want due to keyword/context: delayed club
+one time impulse buy,impulse buy,want,0.9,Detected as want due to keyword/context: one time impulse buy
+extra coffee,coffee,want,0.83,Detected as want due to keyword/context: extra coffee
+festival cosmetics,cosmetics,want,0.94,Detected as want due to keyword/context: festival cosmetics
+monthly burger,burger,want,0.85,Detected as want due to keyword/context: monthly burger
+delayed shopping,shopping,want,0.9,Detected as want due to keyword/context: delayed shopping
+stable dessert,dessert,want,0.63,Detected as want due to keyword/context: stable dessert
+home impulse buy,impulse buy,want,0.67,Detected as want due to keyword/context: home impulse buy
+low cost netflix,netflix,want,0.6,Detected as want due to keyword/context: low cost netflix
+cashback gift,gift,want,0.55,Detected as want due to keyword/context: cashback gift
+delayed online shopping,online shopping,want,0.89,Detected as want due to keyword/context: delayed online shopping
+high value netflix,netflix,want,0.58,Detected as want due to keyword/context: high value netflix
+personal coffee,coffee,want,0.72,Detected as want due to keyword/context: personal coffee
+night zomato,zomato,want,0.82,Detected as want due to keyword/context: night zomato
+office friends,friends,want,0.67,Detected as want due to keyword/context: office friends
+monthly dessert,dessert,want,0.6,Detected as want due to keyword/context: monthly dessert
+delayed concert,concert,want,0.92,Detected as want due to keyword/context: delayed concert
+client friends,friends,want,0.92,Detected as want due to keyword/context: client friends
+extra impulse buy,impulse buy,want,0.56,Detected as want due to keyword/context: extra impulse buy
+office coffee,coffee,want,0.76,Detected as want due to keyword/context: office coffee
+subscription coffee,coffee,want,0.74,Detected as want due to keyword/context: subscription coffee
+home dinner,dinner,want,0.68,Detected as want due to keyword/context: home dinner
+regular concert,concert,want,0.63,Detected as want due to keyword/context: regular concert
+night concert,concert,want,0.9,Detected as want due to keyword/context: night concert
+repeat salon,salon,want,0.81,Detected as want due to keyword/context: repeat salon
+family party,party,want,0.56,Detected as want due to keyword/context: family party
+medical mall,mall,want,0.57,Detected as want due to keyword/context: medical mall
+planned party,party,want,0.62,Detected as want due to keyword/context: planned party
+morning salon,salon,want,0.91,Detected as want due to keyword/context: morning salon
+client gaming,gaming,want,0.73,Detected as want due to keyword/context: client gaming
+repeat snacks,snacks,want,0.68,Detected as want due to keyword/context: repeat snacks
+small snacks,snacks,want,0.76,Detected as want due to keyword/context: small snacks
+regular gift,gift,want,0.69,Detected as want due to keyword/context: regular gift
+subscription dinner,dinner,want,0.7,Detected as want due to keyword/context: subscription dinner
+weekly salon,salon,want,0.74,Detected as want due to keyword/context: weekly salon
+morning dessert,dessert,want,0.6,Detected as want due to keyword/context: morning dessert
+recurring snacks,snacks,want,0.67,Detected as want due to keyword/context: recurring snacks
+family concert,concert,want,0.67,Detected as want due to keyword/context: family concert
+one time pizza,pizza,want,0.9,Detected as want due to keyword/context: one time pizza
+stable trip,trip,want,0.71,Detected as want due to keyword/context: stable trip
+college impulse buy,impulse buy,want,0.63,Detected as want due to keyword/context: college impulse buy
+low cost treat,treat,want,0.61,Detected as want due to keyword/context: low cost treat
+morning netflix,netflix,want,0.8,Detected as want due to keyword/context: morning netflix
+home swiggy,swiggy,want,0.6,Detected as want due to keyword/context: home swiggy
+safe date,date,want,0.89,Detected as want due to keyword/context: safe date
+one time gift,gift,want,0.73,Detected as want due to keyword/context: one time gift
+regular dessert,dessert,want,0.67,Detected as want due to keyword/context: regular dessert
+cashback party,party,want,0.59,Detected as want due to keyword/context: cashback party
+college friends,friends,want,0.6,Detected as want due to keyword/context: college friends
+premium friends,friends,want,0.73,Detected as want due to keyword/context: premium friends
+monthly netflix,netflix,want,0.68,Detected as want due to keyword/context: monthly netflix
+morning cosmetics,cosmetics,want,0.83,Detected as want due to keyword/context: morning cosmetics
+repeat concert,concert,want,0.66,Detected as want due to keyword/context: repeat concert
+large late night,late night,want,0.82,Detected as want due to keyword/context: large late night
+basic friends,friends,want,0.74,Detected as want due to keyword/context: basic friends
+essential party,party,want,0.89,Detected as want due to keyword/context: essential party
+weekly treat,treat,want,0.89,Detected as want due to keyword/context: weekly treat
+weekly concert,concert,want,0.88,Detected as want due to keyword/context: weekly concert
+local trip,trip,want,0.86,Detected as want due to keyword/context: local trip
+urgent shopping,shopping,want,0.77,Detected as want due to keyword/context: urgent shopping
+family online shopping,online shopping,want,0.7,Detected as want due to keyword/context: family online shopping
+online coffee,coffee,want,0.71,Detected as want due to keyword/context: online coffee
+low cost online shopping,online shopping,want,0.61,Detected as want due to keyword/context: low cost online shopping
+work netflix,netflix,want,0.78,Detected as want due to keyword/context: work netflix
+night date,date,want,0.76,Detected as want due to keyword/context: night date
+office cosmetics,cosmetics,want,0.71,Detected as want due to keyword/context: office cosmetics
+advance outing,outing,want,0.9,Detected as want due to keyword/context: advance outing
+festival burger,burger,want,0.59,Detected as want due to keyword/context: festival burger
+essential coffee,coffee,want,0.88,Detected as want due to keyword/context: essential coffee
+risky swiggy,swiggy,want,0.77,Detected as want due to keyword/context: risky swiggy
+client netflix,netflix,want,0.81,Detected as want due to keyword/context: client netflix
+regular salon,salon,want,0.76,Detected as want due to keyword/context: regular salon
+morning snacks,snacks,want,0.76,Detected as want due to keyword/context: morning snacks
+large treat,treat,want,0.73,Detected as want due to keyword/context: large treat
+regular zomato,zomato,want,0.76,Detected as want due to keyword/context: regular zomato
+medical gaming,gaming,want,0.84,Detected as want due to keyword/context: medical gaming
+basic shoes,shoes,want,0.74,Detected as want due to keyword/context: basic shoes
+personal trip,trip,want,0.81,Detected as want due to keyword/context: personal trip
+weekly gaming,gaming,want,0.65,Detected as want due to keyword/context: weekly gaming
+stable snacks,snacks,want,0.94,Detected as want due to keyword/context: stable snacks
+subscription shopping,shopping,want,0.79,Detected as want due to keyword/context: subscription shopping
+first time salon,salon,want,0.79,Detected as want due to keyword/context: first time salon
+risky cosmetics,cosmetics,want,0.88,Detected as want due to keyword/context: risky cosmetics
+personal swiggy,swiggy,want,0.84,Detected as want due to keyword/context: personal swiggy
+morning party,party,want,0.7,Detected as want due to keyword/context: morning party
+offline movie,movie,want,0.56,Detected as want due to keyword/context: offline movie
+low cost coffee,coffee,want,0.82,Detected as want due to keyword/context: low cost coffee
+basic netflix,netflix,want,0.91,Detected as want due to keyword/context: basic netflix
+urgent vacation,vacation,want,0.9,Detected as want due to keyword/context: urgent vacation
+low cost dessert,dessert,want,0.85,Detected as want due to keyword/context: low cost dessert
+basic party,party,want,0.81,Detected as want due to keyword/context: basic party
+stable treat,treat,want,0.77,Detected as want due to keyword/context: stable treat
+urgent late night,late night,want,0.83,Detected as want due to keyword/context: urgent late night
+morning gaming,gaming,want,0.93,Detected as want due to keyword/context: morning gaming
+safe cosmetics,cosmetics,want,0.59,Detected as want due to keyword/context: safe cosmetics
+cashback movie,movie,want,0.74,Detected as want due to keyword/context: cashback movie
+online zomato,zomato,want,0.66,Detected as want due to keyword/context: online zomato
+monthly shopping,shopping,want,0.83,Detected as want due to keyword/context: monthly shopping
+monthly cosmetics,cosmetics,want,0.78,Detected as want due to keyword/context: monthly cosmetics
+high value club,club,want,0.55,Detected as want due to keyword/context: high value club
+repeat movie,movie,want,0.81,Detected as want due to keyword/context: repeat movie
+cashback swiggy,swiggy,want,0.89,Detected as want due to keyword/context: cashback swiggy
+safe gaming,gaming,want,0.7,Detected as want due to keyword/context: safe gaming
+local swiggy,swiggy,want,0.85,Detected as want due to keyword/context: local swiggy
+work shoes,shoes,want,0.7,Detected as want due to keyword/context: work shoes
+local mall,mall,want,0.84,Detected as want due to keyword/context: local mall
+small gift,gift,want,0.85,Detected as want due to keyword/context: small gift
+personal clothes,clothes,want,0.59,Detected as want due to keyword/context: personal clothes
+one time cosmetics,cosmetics,want,0.8,Detected as want due to keyword/context: one time cosmetics
+repeat vacation,vacation,want,0.59,Detected as want due to keyword/context: repeat vacation
+high value date,date,want,0.66,Detected as want due to keyword/context: high value date
+stable burger,burger,want,0.75,Detected as want due to keyword/context: stable burger
+urgent date,date,want,0.69,Detected as want due to keyword/context: urgent date
+regular mall,mall,want,0.92,Detected as want due to keyword/context: regular mall
+extra dessert,dessert,want,0.84,Detected as want due to keyword/context: extra dessert
+risky dessert,dessert,want,0.69,Detected as want due to keyword/context: risky dessert
+essential salon,salon,want,0.64,Detected as want due to keyword/context: essential salon
+low cost gaming,gaming,want,0.59,Detected as want due to keyword/context: low cost gaming
+low cost party,party,want,0.67,Detected as want due to keyword/context: low cost party
+cashback trip,trip,want,0.83,Detected as want due to keyword/context: cashback trip
+safe snacks,snacks,want,0.74,Detected as want due to keyword/context: safe snacks
+medical zomato,zomato,want,0.93,Detected as want due to keyword/context: medical zomato
+advance clothes,clothes,want,0.91,Detected as want due to keyword/context: advance clothes
+weekly gift,gift,want,0.74,Detected as want due to keyword/context: weekly gift
+festival zomato,zomato,want,0.71,Detected as want due to keyword/context: festival zomato
+high value late night,late night,want,0.76,Detected as want due to keyword/context: high value late night
+cashback mall,mall,want,0.65,Detected as want due to keyword/context: cashback mall
+local party,party,want,0.82,Detected as want due to keyword/context: local party
+medical salon,salon,want,0.58,Detected as want due to keyword/context: medical salon
+work outing,outing,want,0.74,Detected as want due to keyword/context: work outing
+night late night,late night,want,0.91,Detected as want due to keyword/context: night late night
+home date,date,want,0.75,Detected as want due to keyword/context: home date
+discounted shopping,shopping,want,0.84,Detected as want due to keyword/context: discounted shopping
+family late night,late night,want,0.86,Detected as want due to keyword/context: family late night
+online club,club,want,0.82,Detected as want due to keyword/context: online club
+premium date,date,want,0.8,Detected as want due to keyword/context: premium date
+safe treat,treat,want,0.9,Detected as want due to keyword/context: safe treat
+low cost outing,outing,want,0.66,Detected as want due to keyword/context: low cost outing
+repeat coffee,coffee,want,0.74,Detected as want due to keyword/context: repeat coffee
+urgent dessert,dessert,want,0.75,Detected as want due to keyword/context: urgent dessert
+client shopping,shopping,want,0.78,Detected as want due to keyword/context: client shopping
+essential zomato,zomato,want,0.74,Detected as want due to keyword/context: essential zomato
+medical vacation,vacation,want,0.7,Detected as want due to keyword/context: medical vacation
+repeat shoes,shoes,want,0.63,Detected as want due to keyword/context: repeat shoes
+office mall,mall,want,0.7,Detected as want due to keyword/context: office mall
+essential snacks,snacks,want,0.73,Detected as want due to keyword/context: essential snacks
+morning date,date,want,0.88,Detected as want due to keyword/context: morning date
+repeat dessert,dessert,want,0.89,Detected as want due to keyword/context: repeat dessert
+high value movie,movie,want,0.76,Detected as want due to keyword/context: high value movie
+safe dessert,dessert,want,0.57,Detected as want due to keyword/context: safe dessert
+personal club,club,want,0.57,Detected as want due to keyword/context: personal club
+cashback salon,salon,want,0.74,Detected as want due to keyword/context: cashback salon
+offline concert,concert,want,0.73,Detected as want due to keyword/context: offline concert
+one time dessert,dessert,want,0.92,Detected as want due to keyword/context: one time dessert
+college swiggy,swiggy,want,0.56,Detected as want due to keyword/context: college swiggy
+college club,club,want,0.9,Detected as want due to keyword/context: college club
+recurring concert,concert,want,0.62,Detected as want due to keyword/context: recurring concert
+extra online shopping,online shopping,want,0.69,Detected as want due to keyword/context: extra online shopping
+low cost date,date,want,0.74,Detected as want due to keyword/context: low cost date
+delayed snacks,snacks,want,0.66,Detected as want due to keyword/context: delayed snacks
+medical concert,concert,want,0.72,Detected as want due to keyword/context: medical concert
+safe vacation,vacation,want,0.71,Detected as want due to keyword/context: safe vacation
+morning friends,friends,want,0.68,Detected as want due to keyword/context: morning friends
+office clothes,clothes,want,0.85,Detected as want due to keyword/context: office clothes
+cashback zomato,zomato,want,0.93,Detected as want due to keyword/context: cashback zomato
+offline snacks,snacks,want,0.59,Detected as want due to keyword/context: offline snacks
+local pizza,pizza,want,0.76,Detected as want due to keyword/context: local pizza
+extra zomato,zomato,want,0.73,Detected as want due to keyword/context: extra zomato
+festival late night,late night,want,0.9,Detected as want due to keyword/context: festival late night
+recurring clothes,clothes,want,0.92,Detected as want due to keyword/context: recurring clothes
+subscription dessert,dessert,want,0.6,Detected as want due to keyword/context: subscription dessert
+recurring mall,mall,want,0.62,Detected as want due to keyword/context: recurring mall
+advance vacation,vacation,want,0.8,Detected as want due to keyword/context: advance vacation
+safe concert,concert,want,0.72,Detected as want due to keyword/context: safe concert
+basic late night,late night,want,0.77,Detected as want due to keyword/context: basic late night
+first time late night,late night,want,0.65,Detected as want due to keyword/context: first time late night
+monthly dinner,dinner,want,0.55,Detected as want due to keyword/context: monthly dinner
+large salon,salon,want,0.69,Detected as want due to keyword/context: large salon
+recurring shoes,shoes,want,0.55,Detected as want due to keyword/context: recurring shoes
+premium outing,outing,want,0.93,Detected as want due to keyword/context: premium outing
+emergency shoes,shoes,want,0.55,Detected as want due to keyword/context: emergency shoes
+extra gaming,gaming,want,0.79,Detected as want due to keyword/context: extra gaming
+client mall,mall,want,0.88,Detected as want due to keyword/context: client mall
+delayed cosmetics,cosmetics,want,0.87,Detected as want due to keyword/context: delayed cosmetics
+essential date,date,want,0.66,Detected as want due to keyword/context: essential date
+home gaming,gaming,want,0.89,Detected as want due to keyword/context: home gaming
+weekly friends,friends,want,0.61,Detected as want due to keyword/context: weekly friends
+weekly dessert,dessert,want,0.62,Detected as want due to keyword/context: weekly dessert
+subscription mall,mall,want,0.84,Detected as want due to keyword/context: subscription mall
+local online shopping,online shopping,want,0.58,Detected as want due to keyword/context: local online shopping
+monthly salon,salon,want,0.6,Detected as want due to keyword/context: monthly salon
+discounted clothes,clothes,want,0.85,Detected as want due to keyword/context: discounted clothes
+home burger,burger,want,0.73,Detected as want due to keyword/context: home burger
+basic shopping,shopping,want,0.71,Detected as want due to keyword/context: basic shopping
+high value dessert,dessert,want,0.6,Detected as want due to keyword/context: high value dessert
+planned treat,treat,want,0.9,Detected as want due to keyword/context: planned treat
+small shopping,shopping,want,0.64,Detected as want due to keyword/context: small shopping
+festival gaming,gaming,want,0.56,Detected as want due to keyword/context: festival gaming
+risky burger,burger,want,0.86,Detected as want due to keyword/context: risky burger
+online shoes,shoes,want,0.82,Detected as want due to keyword/context: online shoes
+planned friends,friends,want,0.57,Detected as want due to keyword/context: planned friends
+college cosmetics,cosmetics,want,0.87,Detected as want due to keyword/context: college cosmetics
+home clothes,clothes,want,0.56,Detected as want due to keyword/context: home clothes
+urgent swiggy,swiggy,want,0.74,Detected as want due to keyword/context: urgent swiggy
+one time clothes,clothes,want,0.67,Detected as want due to keyword/context: one time clothes
+premium mall,mall,want,0.63,Detected as want due to keyword/context: premium mall
+recurring netflix,netflix,want,0.69,Detected as want due to keyword/context: recurring netflix
+advance impulse buy,impulse buy,want,0.66,Detected as want due to keyword/context: advance impulse buy
+stable salon,salon,want,0.92,Detected as want due to keyword/context: stable salon
+subscription movie,movie,want,0.67,Detected as want due to keyword/context: subscription movie
+low cost pizza,pizza,want,0.7,Detected as want due to keyword/context: low cost pizza
+delayed late night,late night,want,0.65,Detected as want due to keyword/context: delayed late night
+delayed movie,movie,want,0.66,Detected as want due to keyword/context: delayed movie
+regular coffee,coffee,want,0.57,Detected as want due to keyword/context: regular coffee
+offline shopping,shopping,want,0.74,Detected as want due to keyword/context: offline shopping
+urgent club,club,want,0.78,Detected as want due to keyword/context: urgent club
+client salon,salon,want,0.81,Detected as want due to keyword/context: client salon
+planned swiggy,swiggy,want,0.7,Detected as want due to keyword/context: planned swiggy
+night outing,outing,want,0.81,Detected as want due to keyword/context: night outing
+planned concert,concert,want,0.69,Detected as want due to keyword/context: planned concert
+first time impulse buy,impulse buy,want,0.88,Detected as want due to keyword/context: first time impulse buy
+planned cosmetics,cosmetics,want,0.88,Detected as want due to keyword/context: planned cosmetics
+high value swiggy,swiggy,want,0.57,Detected as want due to keyword/context: high value swiggy
+emergency party,party,want,0.58,Detected as want due to keyword/context: emergency party
+morning impulse buy,impulse buy,want,0.76,Detected as want due to keyword/context: morning impulse buy
+home shopping,shopping,want,0.76,Detected as want due to keyword/context: home shopping
+one time netflix,netflix,want,0.85,Detected as want due to keyword/context: one time netflix
+repeat mall,mall,want,0.9,Detected as want due to keyword/context: repeat mall
+medical coffee,coffee,want,0.81,Detected as want due to keyword/context: medical coffee
+stable friends,friends,want,0.65,Detected as want due to keyword/context: stable friends
+subscription clothes,clothes,want,0.93,Detected as want due to keyword/context: subscription clothes
+urgent pizza,pizza,want,0.94,Detected as want due to keyword/context: urgent pizza
+weekly vacation,vacation,want,0.76,Detected as want due to keyword/context: weekly vacation
+emergency treat,treat,want,0.55,Detected as want due to keyword/context: emergency treat
+essential pizza,pizza,want,0.92,Detected as want due to keyword/context: essential pizza
+one time coffee,coffee,want,0.78,Detected as want due to keyword/context: one time coffee
+morning zomato,zomato,want,0.65,Detected as want due to keyword/context: morning zomato
+online dinner,dinner,want,0.78,Detected as want due to keyword/context: online dinner
+festival impulse buy,impulse buy,want,0.87,Detected as want due to keyword/context: festival impulse buy
+safe mall,mall,want,0.88,Detected as want due to keyword/context: safe mall
+stable club,club,want,0.81,Detected as want due to keyword/context: stable club
+safe burger,burger,want,0.7,Detected as want due to keyword/context: safe burger
+first time gaming,gaming,want,0.92,Detected as want due to keyword/context: first time gaming
+morning club,club,want,0.85,Detected as want due to keyword/context: morning club
+stable gift,gift,want,0.92,Detected as want due to keyword/context: stable gift
+client concert,concert,want,0.57,Detected as want due to keyword/context: client concert
+urgent coffee,coffee,want,0.68,Detected as want due to keyword/context: urgent coffee
+stable online shopping,online shopping,want,0.78,Detected as want due to keyword/context: stable online shopping
+local cosmetics,cosmetics,want,0.61,Detected as want due to keyword/context: local cosmetics
+online friends,friends,want,0.74,Detected as want due to keyword/context: online friends
+planned impulse buy,impulse buy,want,0.77,Detected as want due to keyword/context: planned impulse buy
+one time bond,bond,investment,0.63,Detected as investment due to keyword/context: one time bond
+safe savings,savings,investment,0.63,Detected as investment due to keyword/context: safe savings
+high value pension,pension,investment,0.65,Detected as investment due to keyword/context: high value pension
+essential stocks,stocks,investment,0.86,Detected as investment due to keyword/context: essential stocks
+safe ppf,ppf,investment,0.59,Detected as investment due to keyword/context: safe ppf
+first time portfolio,portfolio,investment,0.72,Detected as investment due to keyword/context: first time portfolio
+home saving,saving,investment,0.68,Detected as investment due to keyword/context: home saving
+weekly pension,pension,investment,0.86,Detected as investment due to keyword/context: weekly pension
+college fd,fd,investment,0.8,Detected as investment due to keyword/context: college fd
+subscription deposit,deposit,investment,0.8,Detected as investment due to keyword/context: subscription deposit
+urgent index fund,index fund,investment,0.92,Detected as investment due to keyword/context: urgent index fund
+home rd,rd,investment,0.82,Detected as investment due to keyword/context: home rd
+online silver,silver,investment,0.59,Detected as investment due to keyword/context: online silver
+discounted mutual fund,mutual fund,investment,0.93,Detected as investment due to keyword/context: discounted mutual fund
+family interest,interest,investment,0.9,Detected as investment due to keyword/context: family interest
+extra long term,long term,investment,0.56,Detected as investment due to keyword/context: extra long term
+small investment,investment,investment,0.67,Detected as investment due to keyword/context: small investment
+weekly bond,bond,investment,0.68,Detected as investment due to keyword/context: weekly bond
+recurring capital,capital,investment,0.63,Detected as investment due to keyword/context: recurring capital
+high value crypto,crypto,investment,0.85,Detected as investment due to keyword/context: high value crypto
+basic crypto,crypto,investment,0.8,Detected as investment due to keyword/context: basic crypto
+weekly silver,silver,investment,0.7,Detected as investment due to keyword/context: weekly silver
+high value dividend,dividend,investment,0.57,Detected as investment due to keyword/context: high value dividend
+planned fd,fd,investment,0.66,Detected as investment due to keyword/context: planned fd
+delayed deposit,deposit,investment,0.66,Detected as investment due to keyword/context: delayed deposit
+monthly index fund,index fund,investment,0.58,Detected as investment due to keyword/context: monthly index fund
+essential portfolio,portfolio,investment,0.82,Detected as investment due to keyword/context: essential portfolio
+office interest,interest,investment,0.9,Detected as investment due to keyword/context: office interest
+extra sip,sip,investment,0.9,Detected as investment due to keyword/context: extra sip
+client wealth,wealth,investment,0.64,Detected as investment due to keyword/context: client wealth
+low cost savings,savings,investment,0.94,Detected as investment due to keyword/context: low cost savings
+festival gold,gold,investment,0.74,Detected as investment due to keyword/context: festival gold
+recurring pension,pension,investment,0.59,Detected as investment due to keyword/context: recurring pension
+low cost fixed deposit,fixed deposit,investment,0.94,Detected as investment due to keyword/context: low cost fixed deposit
+weekly crypto,crypto,investment,0.57,Detected as investment due to keyword/context: weekly crypto
+high value interest,interest,investment,0.67,Detected as investment due to keyword/context: high value interest
+local bond,bond,investment,0.85,Detected as investment due to keyword/context: local bond
+college sip,sip,investment,0.82,Detected as investment due to keyword/context: college sip
+emergency saving,saving,investment,0.64,Detected as investment due to keyword/context: emergency saving
+essential etf,etf,investment,0.87,Detected as investment due to keyword/context: essential etf
+cashback wealth,wealth,investment,0.9,Detected as investment due to keyword/context: cashback wealth
+weekly dividend,dividend,investment,0.93,Detected as investment due to keyword/context: weekly dividend
+morning recurring deposit,recurring deposit,investment,0.61,Detected as investment due to keyword/context: morning recurring deposit
+local dividend,dividend,investment,0.81,Detected as investment due to keyword/context: local dividend
+client stocks,stocks,investment,0.76,Detected as investment due to keyword/context: client stocks
+delayed portfolio,portfolio,investment,0.9,Detected as investment due to keyword/context: delayed portfolio
+morning portfolio,portfolio,investment,0.72,Detected as investment due to keyword/context: morning portfolio
+family retirement,retirement,investment,0.72,Detected as investment due to keyword/context: family retirement
+stable nps,nps,investment,0.68,Detected as investment due to keyword/context: stable nps
+large crypto,crypto,investment,0.63,Detected as investment due to keyword/context: large crypto
+risky silver,silver,investment,0.77,Detected as investment due to keyword/context: risky silver
+home deposit,deposit,investment,0.9,Detected as investment due to keyword/context: home deposit
+high value nps,nps,investment,0.91,Detected as investment due to keyword/context: high value nps
+family emergency fund,emergency fund,investment,0.81,Detected as investment due to keyword/context: family emergency fund
+personal retirement,retirement,investment,0.68,Detected as investment due to keyword/context: personal retirement
+recurring crypto,crypto,investment,0.93,Detected as investment due to keyword/context: recurring crypto
+work gold,gold,investment,0.68,Detected as investment due to keyword/context: work gold
+family dividend,dividend,investment,0.84,Detected as investment due to keyword/context: family dividend
+festival asset,asset,investment,0.9,Detected as investment due to keyword/context: festival asset
+first time emergency fund,emergency fund,investment,0.67,Detected as investment due to keyword/context: first time emergency fund
+essential capital,capital,investment,0.61,Detected as investment due to keyword/context: essential capital
+offline fixed deposit,fixed deposit,investment,0.6,Detected as investment due to keyword/context: offline fixed deposit
+delayed sip,sip,investment,0.8,Detected as investment due to keyword/context: delayed sip
+safe pension,pension,investment,0.79,Detected as investment due to keyword/context: safe pension
+morning pension,pension,investment,0.64,Detected as investment due to keyword/context: morning pension
+basic asset,asset,investment,0.6,Detected as investment due to keyword/context: basic asset
+stable financial goal,financial goal,investment,0.74,Detected as investment due to keyword/context: stable financial goal
+office wealth,wealth,investment,0.62,Detected as investment due to keyword/context: office wealth
+premium savings,savings,investment,0.74,Detected as investment due to keyword/context: premium savings
+home fd,fd,investment,0.64,Detected as investment due to keyword/context: home fd
+monthly emergency fund,emergency fund,investment,0.92,Detected as investment due to keyword/context: monthly emergency fund
+morning emergency fund,emergency fund,investment,0.85,Detected as investment due to keyword/context: morning emergency fund
+night fixed deposit,fixed deposit,investment,0.58,Detected as investment due to keyword/context: night fixed deposit
+subscription interest,interest,investment,0.9,Detected as investment due to keyword/context: subscription interest
+festival bond,bond,investment,0.9,Detected as investment due to keyword/context: festival bond
+discounted dividend,dividend,investment,0.72,Detected as investment due to keyword/context: discounted dividend
+urgent asset,asset,investment,0.79,Detected as investment due to keyword/context: urgent asset
+client long term,long term,investment,0.84,Detected as investment due to keyword/context: client long term
+delayed savings,savings,investment,0.93,Detected as investment due to keyword/context: delayed savings
+stable retirement,retirement,investment,0.76,Detected as investment due to keyword/context: stable retirement
+urgent wealth,wealth,investment,0.76,Detected as investment due to keyword/context: urgent wealth
+advance index fund,index fund,investment,0.88,Detected as investment due to keyword/context: advance index fund
+urgent savings,savings,investment,0.77,Detected as investment due to keyword/context: urgent savings
+planned etf,etf,investment,0.63,Detected as investment due to keyword/context: planned etf
+local index fund,index fund,investment,0.9,Detected as investment due to keyword/context: local index fund
+extra asset,asset,investment,0.73,Detected as investment due to keyword/context: extra asset
+extra emergency fund,emergency fund,investment,0.8,Detected as investment due to keyword/context: extra emergency fund
+high value mutual fund,mutual fund,investment,0.91,Detected as investment due to keyword/context: high value mutual fund
+subscription index fund,index fund,investment,0.59,Detected as investment due to keyword/context: subscription index fund
+small etf,etf,investment,0.62,Detected as investment due to keyword/context: small etf
+recurring retirement,retirement,investment,0.6,Detected as investment due to keyword/context: recurring retirement
+festival emergency fund,emergency fund,investment,0.73,Detected as investment due to keyword/context: festival emergency fund
+advance fd,fd,investment,0.79,Detected as investment due to keyword/context: advance fd
+home investment,investment,investment,0.9,Detected as investment due to keyword/context: home investment
+cashback stocks,stocks,investment,0.68,Detected as investment due to keyword/context: cashback stocks
+personal wealth,wealth,investment,0.84,Detected as investment due to keyword/context: personal wealth
+online gold,gold,investment,0.6,Detected as investment due to keyword/context: online gold
+office index fund,index fund,investment,0.58,Detected as investment due to keyword/context: office index fund
+client investment,investment,investment,0.84,Detected as investment due to keyword/context: client investment
+delayed etf,etf,investment,0.93,Detected as investment due to keyword/context: delayed etf
+one time savings,savings,investment,0.7,Detected as investment due to keyword/context: one time savings
+personal asset,asset,investment,0.91,Detected as investment due to keyword/context: personal asset
+work silver,silver,investment,0.86,Detected as investment due to keyword/context: work silver
+first time mutual fund,mutual fund,investment,0.67,Detected as investment due to keyword/context: first time mutual fund
+subscription capital,capital,investment,0.67,Detected as investment due to keyword/context: subscription capital
+small fd,fd,investment,0.91,Detected as investment due to keyword/context: small fd
+monthly fixed deposit,fixed deposit,investment,0.8,Detected as investment due to keyword/context: monthly fixed deposit
+monthly recurring deposit,recurring deposit,investment,0.73,Detected as investment due to keyword/context: monthly recurring deposit
+premium financial goal,financial goal,investment,0.77,Detected as investment due to keyword/context: premium financial goal
+stable sip,sip,investment,0.9,Detected as investment due to keyword/context: stable sip
+night rd,rd,investment,0.79,Detected as investment due to keyword/context: night rd
+advance bond,bond,investment,0.71,Detected as investment due to keyword/context: advance bond
+stable stocks,stocks,investment,0.79,Detected as investment due to keyword/context: stable stocks
+one time rd,rd,investment,0.66,Detected as investment due to keyword/context: one time rd
+one time wealth,wealth,investment,0.88,Detected as investment due to keyword/context: one time wealth
+planned fixed deposit,fixed deposit,investment,0.62,Detected as investment due to keyword/context: planned fixed deposit
+college mutual fund,mutual fund,investment,0.56,Detected as investment due to keyword/context: college mutual fund
+urgent financial goal,financial goal,investment,0.82,Detected as investment due to keyword/context: urgent financial goal
+stable long term,long term,investment,0.67,Detected as investment due to keyword/context: stable long term
+online interest,interest,investment,0.57,Detected as investment due to keyword/context: online interest
+work emergency fund,emergency fund,investment,0.61,Detected as investment due to keyword/context: work emergency fund
+delayed nps,nps,investment,0.81,Detected as investment due to keyword/context: delayed nps
+stable investment,investment,investment,0.78,Detected as investment due to keyword/context: stable investment
+work crypto,crypto,investment,0.94,Detected as investment due to keyword/context: work crypto
+risky capital,capital,investment,0.69,Detected as investment due to keyword/context: risky capital
+online mutual fund,mutual fund,investment,0.86,Detected as investment due to keyword/context: online mutual fund
+office ppf,ppf,investment,0.91,Detected as investment due to keyword/context: office ppf
+regular long term,long term,investment,0.85,Detected as investment due to keyword/context: regular long term
+one time long term,long term,investment,0.58,Detected as investment due to keyword/context: one time long term
+large bond,bond,investment,0.6,Detected as investment due to keyword/context: large bond
+essential financial goal,financial goal,investment,0.68,Detected as investment due to keyword/context: essential financial goal
+high value emergency fund,emergency fund,investment,0.63,Detected as investment due to keyword/context: high value emergency fund
+delayed fixed deposit,fixed deposit,investment,0.57,Detected as investment due to keyword/context: delayed fixed deposit
+high value retirement,retirement,investment,0.94,Detected as investment due to keyword/context: high value retirement
+stable bond,bond,investment,0.92,Detected as investment due to keyword/context: stable bond
+extra investment,investment,investment,0.72,Detected as investment due to keyword/context: extra investment
+festival financial goal,financial goal,investment,0.65,Detected as investment due to keyword/context: festival financial goal
+delayed retirement,retirement,investment,0.69,Detected as investment due to keyword/context: delayed retirement
+delayed silver,silver,investment,0.78,Detected as investment due to keyword/context: delayed silver
+premium etf,etf,investment,0.75,Detected as investment due to keyword/context: premium etf
+delayed fd,fd,investment,0.64,Detected as investment due to keyword/context: delayed fd
+home nps,nps,investment,0.55,Detected as investment due to keyword/context: home nps
+advance sip,sip,investment,0.8,Detected as investment due to keyword/context: advance sip
+night gold,gold,investment,0.87,Detected as investment due to keyword/context: night gold
+one time saving,saving,investment,0.87,Detected as investment due to keyword/context: one time saving
+emergency stocks,stocks,investment,0.67,Detected as investment due to keyword/context: emergency stocks
+festival crypto,crypto,investment,0.86,Detected as investment due to keyword/context: festival crypto
+medical gold,gold,investment,0.69,Detected as investment due to keyword/context: medical gold
+safe capital,capital,investment,0.8,Detected as investment due to keyword/context: safe capital
+work sip,sip,investment,0.63,Detected as investment due to keyword/context: work sip
+medical long term,long term,investment,0.92,Detected as investment due to keyword/context: medical long term
+basic bond,bond,investment,0.87,Detected as investment due to keyword/context: basic bond
+large wealth,wealth,investment,0.74,Detected as investment due to keyword/context: large wealth
+advance wealth,wealth,investment,0.91,Detected as investment due to keyword/context: advance wealth
+medical crypto,crypto,investment,0.73,Detected as investment due to keyword/context: medical crypto
+first time long term,long term,investment,0.92,Detected as investment due to keyword/context: first time long term
+festival capital,capital,investment,0.77,Detected as investment due to keyword/context: festival capital
+night sip,sip,investment,0.78,Detected as investment due to keyword/context: night sip
+college ppf,ppf,investment,0.58,Detected as investment due to keyword/context: college ppf
+essential silver,silver,investment,0.89,Detected as investment due to keyword/context: essential silver
+client ppf,ppf,investment,0.8,Detected as investment due to keyword/context: client ppf
+personal long term,long term,investment,0.78,Detected as investment due to keyword/context: personal long term
+work savings,savings,investment,0.79,Detected as investment due to keyword/context: work savings
+emergency financial goal,financial goal,investment,0.83,Detected as investment due to keyword/context: emergency financial goal
+urgent ppf,ppf,investment,0.66,Detected as investment due to keyword/context: urgent ppf
+premium stocks,stocks,investment,0.9,Detected as investment due to keyword/context: premium stocks
+subscription saving,saving,investment,0.88,Detected as investment due to keyword/context: subscription saving
+night nps,nps,investment,0.76,Detected as investment due to keyword/context: night nps
+home mutual fund,mutual fund,investment,0.92,Detected as investment due to keyword/context: home mutual fund
+low cost index fund,index fund,investment,0.56,Detected as investment due to keyword/context: low cost index fund
+low cost bond,bond,investment,0.61,Detected as investment due to keyword/context: low cost bond
+basic ppf,ppf,investment,0.84,Detected as investment due to keyword/context: basic ppf
+emergency etf,etf,investment,0.86,Detected as investment due to keyword/context: emergency etf
+offline silver,silver,investment,0.88,Detected as investment due to keyword/context: offline silver
+large etf,etf,investment,0.63,Detected as investment due to keyword/context: large etf
+advance mutual fund,mutual fund,investment,0.71,Detected as investment due to keyword/context: advance mutual fund
+high value financial goal,financial goal,investment,0.6,Detected as investment due to keyword/context: high value financial goal
+urgent nps,nps,investment,0.82,Detected as investment due to keyword/context: urgent nps
+online pension,pension,investment,0.68,Detected as investment due to keyword/context: online pension
+urgent dividend,dividend,investment,0.59,Detected as investment due to keyword/context: urgent dividend
+emergency asset,asset,investment,0.56,Detected as investment due to keyword/context: emergency asset
+festival fixed deposit,fixed deposit,investment,0.63,Detected as investment due to keyword/context: festival fixed deposit
+essential nps,nps,investment,0.76,Detected as investment due to keyword/context: essential nps
+subscription asset,asset,investment,0.82,Detected as investment due to keyword/context: subscription asset
+family recurring deposit,recurring deposit,investment,0.61,Detected as investment due to keyword/context: family recurring deposit
+monthly gold,gold,investment,0.93,Detected as investment due to keyword/context: monthly gold
+low cost crypto,crypto,investment,0.59,Detected as investment due to keyword/context: low cost crypto
+college crypto,crypto,investment,0.77,Detected as investment due to keyword/context: college crypto
+extra deposit,deposit,investment,0.78,Detected as investment due to keyword/context: extra deposit
+regular fd,fd,investment,0.67,Detected as investment due to keyword/context: regular fd
+medical dividend,dividend,investment,0.77,Detected as investment due to keyword/context: medical dividend
+large mutual fund,mutual fund,investment,0.56,Detected as investment due to keyword/context: large mutual fund
+planned dividend,dividend,investment,0.59,Detected as investment due to keyword/context: planned dividend
+stable fd,fd,investment,0.91,Detected as investment due to keyword/context: stable fd
+subscription wealth,wealth,investment,0.8,Detected as investment due to keyword/context: subscription wealth
+medical nps,nps,investment,0.88,Detected as investment due to keyword/context: medical nps
+recurring investment,investment,investment,0.58,Detected as investment due to keyword/context: recurring investment
+advance interest,interest,investment,0.78,Detected as investment due to keyword/context: advance interest
+advance stocks,stocks,investment,0.59,Detected as investment due to keyword/context: advance stocks
+advance nps,nps,investment,0.74,Detected as investment due to keyword/context: advance nps
+family rd,rd,investment,0.89,Detected as investment due to keyword/context: family rd
+cashback pension,pension,investment,0.92,Detected as investment due to keyword/context: cashback pension
+medical portfolio,portfolio,investment,0.87,Detected as investment due to keyword/context: medical portfolio
+festival dividend,dividend,investment,0.73,Detected as investment due to keyword/context: festival dividend
+regular sip,sip,investment,0.74,Detected as investment due to keyword/context: regular sip
+basic saving,saving,investment,0.73,Detected as investment due to keyword/context: basic saving
+extra fd,fd,investment,0.86,Detected as investment due to keyword/context: extra fd
+local gold,gold,investment,0.88,Detected as investment due to keyword/context: local gold
+offline deposit,deposit,investment,0.68,Detected as investment due to keyword/context: offline deposit
+regular wealth,wealth,investment,0.87,Detected as investment due to keyword/context: regular wealth
+advance crypto,crypto,investment,0.71,Detected as investment due to keyword/context: advance crypto
+discounted emergency fund,emergency fund,investment,0.8,Detected as investment due to keyword/context: discounted emergency fund
+personal crypto,crypto,investment,0.94,Detected as investment due to keyword/context: personal crypto
+regular savings,savings,investment,0.69,Detected as investment due to keyword/context: regular savings
+risky long term,long term,investment,0.72,Detected as investment due to keyword/context: risky long term
+safe emergency fund,emergency fund,investment,0.86,Detected as investment due to keyword/context: safe emergency fund
+discounted crypto,crypto,investment,0.62,Detected as investment due to keyword/context: discounted crypto
+regular portfolio,portfolio,investment,0.85,Detected as investment due to keyword/context: regular portfolio
+safe investment,investment,investment,0.88,Detected as investment due to keyword/context: safe investment
+risky gold,gold,investment,0.79,Detected as investment due to keyword/context: risky gold
+one time ppf,ppf,investment,0.59,Detected as investment due to keyword/context: one time ppf
+work index fund,index fund,investment,0.67,Detected as investment due to keyword/context: work index fund
+stable portfolio,portfolio,investment,0.86,Detected as investment due to keyword/context: stable portfolio
+festival savings,savings,investment,0.75,Detected as investment due to keyword/context: festival savings
+planned portfolio,portfolio,investment,0.59,Detected as investment due to keyword/context: planned portfolio
+large long term,long term,investment,0.9,Detected as investment due to keyword/context: large long term
+monthly dividend,dividend,investment,0.85,Detected as investment due to keyword/context: monthly dividend
+family portfolio,portfolio,investment,0.73,Detected as investment due to keyword/context: family portfolio
+client nps,nps,investment,0.8,Detected as investment due to keyword/context: client nps
+home index fund,index fund,investment,0.63,Detected as investment due to keyword/context: home index fund
+emergency deposit,deposit,investment,0.92,Detected as investment due to keyword/context: emergency deposit
+repeat interest,interest,investment,0.84,Detected as investment due to keyword/context: repeat interest
+college interest,interest,investment,0.95,Detected as investment due to keyword/context: college interest
+monthly retirement,retirement,investment,0.79,Detected as investment due to keyword/context: monthly retirement
+local etf,etf,investment,0.89,Detected as investment due to keyword/context: local etf
+extra financial goal,financial goal,investment,0.57,Detected as investment due to keyword/context: extra financial goal
+one time dividend,dividend,investment,0.94,Detected as investment due to keyword/context: one time dividend
+one time sip,sip,investment,0.88,Detected as investment due to keyword/context: one time sip
+small saving,saving,investment,0.89,Detected as investment due to keyword/context: small saving
+weekly financial goal,financial goal,investment,0.64,Detected as investment due to keyword/context: weekly financial goal
+risky investment,investment,investment,0.71,Detected as investment due to keyword/context: risky investment
+recurring emergency fund,emergency fund,investment,0.63,Detected as investment due to keyword/context: recurring emergency fund
+basic fd,fd,investment,0.61,Detected as investment due to keyword/context: basic fd
+client crypto,crypto,investment,0.89,Detected as investment due to keyword/context: client crypto
+first time saving,saving,investment,0.61,Detected as investment due to keyword/context: first time saving
+large financial goal,financial goal,investment,0.6,Detected as investment due to keyword/context: large financial goal
+weekly stocks,stocks,investment,0.61,Detected as investment due to keyword/context: weekly stocks
+premium dividend,dividend,investment,0.81,Detected as investment due to keyword/context: premium dividend
+first time deposit,deposit,investment,0.89,Detected as investment due to keyword/context: first time deposit
+stable dividend,dividend,investment,0.92,Detected as investment due to keyword/context: stable dividend
+work pension,pension,investment,0.73,Detected as investment due to keyword/context: work pension
+one time emergency fund,emergency fund,investment,0.88,Detected as investment due to keyword/context: one time emergency fund
+college savings,savings,investment,0.64,Detected as investment due to keyword/context: college savings
+stable emergency fund,emergency fund,investment,0.55,Detected as investment due to keyword/context: stable emergency fund
+discounted bond,bond,investment,0.83,Detected as investment due to keyword/context: discounted bond
+first time recurring deposit,recurring deposit,investment,0.92,Detected as investment due to keyword/context: first time recurring deposit
+office retirement,retirement,investment,0.56,Detected as investment due to keyword/context: office retirement
+safe mutual fund,mutual fund,investment,0.74,Detected as investment due to keyword/context: safe mutual fund
+online investment,investment,investment,0.61,Detected as investment due to keyword/context: online investment
+high value capital,capital,investment,0.94,Detected as investment due to keyword/context: high value capital
+essential asset,asset,investment,0.74,Detected as investment due to keyword/context: essential asset
+high value stocks,stocks,investment,0.91,Detected as investment due to keyword/context: high value stocks
+discounted stocks,stocks,investment,0.74,Detected as investment due to keyword/context: discounted stocks
+regular capital,capital,investment,0.82,Detected as investment due to keyword/context: regular capital
+risky crypto,crypto,investment,0.67,Detected as investment due to keyword/context: risky crypto
+medical mutual fund,mutual fund,investment,0.76,Detected as investment due to keyword/context: medical mutual fund
+basic sip,sip,investment,0.73,Detected as investment due to keyword/context: basic sip
+basic dividend,dividend,investment,0.78,Detected as investment due to keyword/context: basic dividend
+first time ppf,ppf,investment,0.69,Detected as investment due to keyword/context: first time ppf
+stable mutual fund,mutual fund,investment,0.85,Detected as investment due to keyword/context: stable mutual fund
+basic wealth,wealth,investment,0.78,Detected as investment due to keyword/context: basic wealth
+planned retirement,retirement,investment,0.81,Detected as investment due to keyword/context: planned retirement
+online bond,bond,investment,0.6,Detected as investment due to keyword/context: online bond
+essential pension,pension,investment,0.66,Detected as investment due to keyword/context: essential pension
+family capital,capital,investment,0.81,Detected as investment due to keyword/context: family capital
+work saving,saving,investment,0.65,Detected as investment due to keyword/context: work saving
+discounted investment,investment,investment,0.74,Detected as investment due to keyword/context: discounted investment
+high value deposit,deposit,investment,0.89,Detected as investment due to keyword/context: high value deposit
+online ppf,ppf,investment,0.94,Detected as investment due to keyword/context: online ppf
+family pension,pension,investment,0.89,Detected as investment due to keyword/context: family pension
+first time asset,asset,investment,0.86,Detected as investment due to keyword/context: first time asset
+subscription rd,rd,investment,0.84,Detected as investment due to keyword/context: subscription rd
+night fd,fd,investment,0.78,Detected as investment due to keyword/context: night fd
+college long term,long term,investment,0.57,Detected as investment due to keyword/context: college long term
+small recurring deposit,recurring deposit,investment,0.57,Detected as investment due to keyword/context: small recurring deposit
+recurring bond,bond,investment,0.64,Detected as investment due to keyword/context: recurring bond
+client portfolio,portfolio,investment,0.74,Detected as investment due to keyword/context: client portfolio
+high value silver,silver,investment,0.9,Detected as investment due to keyword/context: high value silver
+client index fund,index fund,investment,0.82,Detected as investment due to keyword/context: client index fund
+urgent etf,etf,investment,0.59,Detected as investment due to keyword/context: urgent etf
+delayed emergency fund,emergency fund,investment,0.92,Detected as investment due to keyword/context: delayed emergency fund
+offline recurring deposit,recurring deposit,investment,0.65,Detected as investment due to keyword/context: offline recurring deposit
+local retirement,retirement,investment,0.73,Detected as investment due to keyword/context: local retirement
+discounted portfolio,portfolio,investment,0.84,Detected as investment due to keyword/context: discounted portfolio
+home retirement,retirement,investment,0.76,Detected as investment due to keyword/context: home retirement
+work portfolio,portfolio,investment,0.68,Detected as investment due to keyword/context: work portfolio
+monthly sip,sip,investment,0.88,Detected as investment due to keyword/context: monthly sip
+first time sip,sip,investment,0.59,Detected as investment due to keyword/context: first time sip
+subscription gold,gold,investment,0.69,Detected as investment due to keyword/context: subscription gold
+extra capital,capital,investment,0.65,Detected as investment due to keyword/context: extra capital
+weekly mutual fund,mutual fund,investment,0.8,Detected as investment due to keyword/context: weekly mutual fund
+night long term,long term,investment,0.93,Detected as investment due to keyword/context: night long term
+small wealth,wealth,investment,0.83,Detected as investment due to keyword/context: small wealth
+client silver,silver,investment,0.81,Detected as investment due to keyword/context: client silver
+safe dividend,dividend,investment,0.87,Detected as investment due to keyword/context: safe dividend
+extra recurring deposit,recurring deposit,investment,0.74,Detected as investment due to keyword/context: extra recurring deposit
+regular interest,interest,investment,0.81,Detected as investment due to keyword/context: regular interest
+essential interest,interest,investment,0.86,Detected as investment due to keyword/context: essential interest
+festival investment,investment,investment,0.65,Detected as investment due to keyword/context: festival investment
+regular asset,asset,investment,0.66,Detected as investment due to keyword/context: regular asset
+client mutual fund,mutual fund,investment,0.71,Detected as investment due to keyword/context: client mutual fund
+cashback mutual fund,mutual fund,investment,0.93,Detected as investment due to keyword/context: cashback mutual fund
+work recurring deposit,recurring deposit,investment,0.73,Detected as investment due to keyword/context: work recurring deposit
+home bond,bond,investment,0.79,Detected as investment due to keyword/context: home bond
+premium fd,fd,investment,0.59,Detected as investment due to keyword/context: premium fd
+repeat crypto,crypto,investment,0.64,Detected as investment due to keyword/context: repeat crypto
+offline wealth,wealth,investment,0.92,Detected as investment due to keyword/context: offline wealth
+cashback investment,investment,investment,0.59,Detected as investment due to keyword/context: cashback investment
+regular stocks,stocks,investment,0.78,Detected as investment due to keyword/context: regular stocks
+subscription recurring deposit,recurring deposit,investment,0.56,Detected as investment due to keyword/context: subscription recurring deposit
+family bond,bond,investment,0.81,Detected as investment due to keyword/context: family bond
+urgent sip,sip,investment,0.82,Detected as investment due to keyword/context: urgent sip
+client sip,sip,investment,0.93,Detected as investment due to keyword/context: client sip
+basic long term,long term,investment,0.6,Detected as investment due to keyword/context: basic long term
+local nps,nps,investment,0.57,Detected as investment due to keyword/context: local nps
+online wealth,wealth,investment,0.7,Detected as investment due to keyword/context: online wealth
+medical financial goal,financial goal,investment,0.58,Detected as investment due to keyword/context: medical financial goal
+extra index fund,index fund,investment,0.81,Detected as investment due to keyword/context: extra index fund
+one time fd,fd,investment,0.57,Detected as investment due to keyword/context: one time fd
+home savings,savings,investment,0.67,Detected as investment due to keyword/context: home savings
+offline savings,savings,investment,0.8,Detected as investment due to keyword/context: offline savings
+premium saving,saving,investment,0.58,Detected as investment due to keyword/context: premium saving
+urgent silver,silver,investment,0.63,Detected as investment due to keyword/context: urgent silver
+emergency wealth,wealth,investment,0.75,Detected as investment due to keyword/context: emergency wealth
+subscription long term,long term,investment,0.94,Detected as investment due to keyword/context: subscription long term
+high value fixed deposit,fixed deposit,investment,0.73,Detected as investment due to keyword/context: high value fixed deposit
+recurring portfolio,portfolio,investment,0.61,Detected as investment due to keyword/context: recurring portfolio
+morning retirement,retirement,investment,0.92,Detected as investment due to keyword/context: morning retirement
+family mutual fund,mutual fund,investment,0.75,Detected as investment due to keyword/context: family mutual fund
+urgent pension,pension,investment,0.65,Detected as investment due to keyword/context: urgent pension
+planned wealth,wealth,investment,0.91,Detected as investment due to keyword/context: planned wealth
+offline long term,long term,investment,0.73,Detected as investment due to keyword/context: offline long term
+risky fd,fd,investment,0.58,Detected as investment due to keyword/context: risky fd
+delayed pension,pension,investment,0.64,Detected as investment due to keyword/context: delayed pension
+local deposit,deposit,investment,0.68,Detected as investment due to keyword/context: local deposit
+safe portfolio,portfolio,investment,0.77,Detected as investment due to keyword/context: safe portfolio
+night ppf,ppf,investment,0.86,Detected as investment due to keyword/context: night ppf
+work retirement,retirement,investment,0.68,Detected as investment due to keyword/context: work retirement
+essential gold,gold,investment,0.61,Detected as investment due to keyword/context: essential gold
+personal emergency fund,emergency fund,investment,0.83,Detected as investment due to keyword/context: personal emergency fund
+risky interest,interest,investment,0.57,Detected as investment due to keyword/context: risky interest
+delayed gold,gold,investment,0.7,Detected as investment due to keyword/context: delayed gold
+weekly fd,fd,investment,0.9,Detected as investment due to keyword/context: weekly fd
+monthly stocks,stocks,investment,0.55,Detected as investment due to keyword/context: monthly stocks
+extra retirement,retirement,investment,0.72,Detected as investment due to keyword/context: extra retirement
+basic deposit,deposit,investment,0.83,Detected as investment due to keyword/context: basic deposit
+family fixed deposit,fixed deposit,investment,0.81,Detected as investment due to keyword/context: family fixed deposit
+subscription etf,etf,investment,0.71,Detected as investment due to keyword/context: subscription etf
+high value gold,gold,investment,0.94,Detected as investment due to keyword/context: high value gold
+office pension,pension,investment,0.9,Detected as investment due to keyword/context: office pension
+night asset,asset,investment,0.66,Detected as investment due to keyword/context: night asset
+small fixed deposit,fixed deposit,investment,0.87,Detected as investment due to keyword/context: small fixed deposit
+basic portfolio,portfolio,investment,0.75,Detected as investment due to keyword/context: basic portfolio
+urgent fd,fd,investment,0.57,Detected as investment due to keyword/context: urgent fd
+extra saving,saving,investment,0.63,Detected as investment due to keyword/context: extra saving
+medical recurring deposit,recurring deposit,investment,0.8,Detected as investment due to keyword/context: medical recurring deposit
+advance dividend,dividend,investment,0.57,Detected as investment due to keyword/context: advance dividend
+planned capital,capital,investment,0.92,Detected as investment due to keyword/context: planned capital
+personal fd,fd,investment,0.86,Detected as investment due to keyword/context: personal fd
+risky retirement,retirement,investment,0.68,Detected as investment due to keyword/context: risky retirement
+first time rd,rd,investment,0.9,Detected as investment due to keyword/context: first time rd
+morning savings,savings,investment,0.58,Detected as investment due to keyword/context: morning savings
+premium retirement,retirement,investment,0.57,Detected as investment due to keyword/context: premium retirement
+advance pension,pension,investment,0.62,Detected as investment due to keyword/context: advance pension
+large saving,saving,investment,0.73,Detected as investment due to keyword/context: large saving
+college fixed deposit,fixed deposit,investment,0.94,Detected as investment due to keyword/context: college fixed deposit
+medical fixed deposit,fixed deposit,investment,0.6,Detected as investment due to keyword/context: medical fixed deposit
+small silver,silver,investment,0.89,Detected as investment due to keyword/context: small silver
+first time index fund,index fund,investment,0.62,Detected as investment due to keyword/context: first time index fund
+morning ppf,ppf,investment,0.9,Detected as investment due to keyword/context: morning ppf
+personal pension,pension,investment,0.87,Detected as investment due to keyword/context: personal pension
+delayed wealth,wealth,investment,0.91,Detected as investment due to keyword/context: delayed wealth
+one time retirement,retirement,investment,0.89,Detected as investment due to keyword/context: one time retirement
+first time stocks,stocks,investment,0.89,Detected as investment due to keyword/context: first time stocks
+night bond,bond,investment,0.79,Detected as investment due to keyword/context: night bond
+advance long term,long term,investment,0.66,Detected as investment due to keyword/context: advance long term
+repeat capital,capital,investment,0.84,Detected as investment due to keyword/context: repeat capital
+discounted rd,rd,investment,0.68,Detected as investment due to keyword/context: discounted rd
+urgent mutual fund,mutual fund,investment,0.95,Detected as investment due to keyword/context: urgent mutual fund
+low cost capital,capital,investment,0.56,Detected as investment due to keyword/context: low cost capital
+online rd,rd,investment,0.77,Detected as investment due to keyword/context: online rd
+college silver,silver,investment,0.67,Detected as investment due to keyword/context: college silver
+emergency portfolio,portfolio,investment,0.61,Detected as investment due to keyword/context: emergency portfolio
+safe index fund,index fund,investment,0.85,Detected as investment due to keyword/context: safe index fund
+local silver,silver,investment,0.62,Detected as investment due to keyword/context: local silver
+office financial goal,financial goal,investment,0.8,Detected as investment due to keyword/context: office financial goal
+monthly investment,investment,investment,0.89,Detected as investment due to keyword/context: monthly investment
+high value ppf,ppf,investment,0.56,Detected as investment due to keyword/context: high value ppf
+essential emergency fund,emergency fund,investment,0.83,Detected as investment due to keyword/context: essential emergency fund
+online fixed deposit,fixed deposit,investment,0.8,Detected as investment due to keyword/context: online fixed deposit
+planned ppf,ppf,investment,0.76,Detected as investment due to keyword/context: planned ppf
+client gold,gold,investment,0.7,Detected as investment due to keyword/context: client gold
+night crypto,crypto,investment,0.61,Detected as investment due to keyword/context: night crypto
+discounted ppf,ppf,investment,0.77,Detected as investment due to keyword/context: discounted ppf
+risky asset,asset,investment,0.9,Detected as investment due to keyword/context: risky asset
+night investment,investment,investment,0.85,Detected as investment due to keyword/context: night investment
+morning asset,asset,investment,0.68,Detected as investment due to keyword/context: morning asset
+essential dividend,dividend,investment,0.75,Detected as investment due to keyword/context: essential dividend
+college saving,saving,investment,0.73,Detected as investment due to keyword/context: college saving
+high value etf,etf,investment,0.88,Detected as investment due to keyword/context: high value etf
+extra crypto,crypto,investment,0.73,Detected as investment due to keyword/context: extra crypto
+regular saving,saving,investment,0.63,Detected as investment due to keyword/context: regular saving
+offline stocks,stocks,investment,0.62,Detected as investment due to keyword/context: offline stocks
+family gold,gold,investment,0.75,Detected as investment due to keyword/context: family gold
+night financial goal,financial goal,investment,0.76,Detected as investment due to keyword/context: night financial goal
+weekly wealth,wealth,investment,0.67,Detected as investment due to keyword/context: weekly wealth
+college bond,bond,investment,0.72,Detected as investment due to keyword/context: college bond
+weekly capital,capital,investment,0.67,Detected as investment due to keyword/context: weekly capital
+high value rd,rd,investment,0.81,Detected as investment due to keyword/context: high value rd
+risky emergency fund,emergency fund,investment,0.69,Detected as investment due to keyword/context: risky emergency fund
+festival wealth,wealth,investment,0.74,Detected as investment due to keyword/context: festival wealth
+high value portfolio,portfolio,investment,0.89,Detected as investment due to keyword/context: high value portfolio
+emergency silver,silver,investment,0.62,Detected as investment due to keyword/context: emergency silver
+planned nps,nps,investment,0.61,Detected as investment due to keyword/context: planned nps
+work nps,nps,investment,0.94,Detected as investment due to keyword/context: work nps
+family long term,long term,investment,0.61,Detected as investment due to keyword/context: family long term
+urgent gold,gold,investment,0.95,Detected as investment due to keyword/context: urgent gold
+large retirement,retirement,investment,0.73,Detected as investment due to keyword/context: large retirement
+urgent investment,investment,investment,0.82,Detected as investment due to keyword/context: urgent investment
+family saving,saving,investment,0.7,Detected as investment due to keyword/context: family saving
+weekly gold,gold,investment,0.71,Detected as investment due to keyword/context: weekly gold
+festival interest,interest,investment,0.61,Detected as investment due to keyword/context: festival interest
+extra ppf,ppf,investment,0.74,Detected as investment due to keyword/context: extra ppf
+safe nps,nps,investment,0.82,Detected as investment due to keyword/context: safe nps
+safe deposit,deposit,investment,0.84,Detected as investment due to keyword/context: safe deposit
+basic gold,gold,investment,0.91,Detected as investment due to keyword/context: basic gold
+one time silver,silver,investment,0.6,Detected as investment due to keyword/context: one time silver
+local sip,sip,investment,0.8,Detected as investment due to keyword/context: local sip
+risky fixed deposit,fixed deposit,investment,0.76,Detected as investment due to keyword/context: risky fixed deposit
+essential deposit,deposit,investment,0.63,Detected as investment due to keyword/context: essential deposit
+recurring stocks,stocks,investment,0.89,Detected as investment due to keyword/context: recurring stocks
+online portfolio,portfolio,investment,0.94,Detected as investment due to keyword/context: online portfolio
+stable pension,pension,investment,0.75,Detected as investment due to keyword/context: stable pension
+office mutual fund,mutual fund,investment,0.71,Detected as investment due to keyword/context: office mutual fund
+repeat investment,investment,investment,0.7,Detected as investment due to keyword/context: repeat investment
+monthly saving,saving,investment,0.66,Detected as investment due to keyword/context: monthly saving
+one time financial goal,financial goal,investment,0.59,Detected as investment due to keyword/context: one time financial goal
+subscription emergency fund,emergency fund,investment,0.67,Detected as investment due to keyword/context: subscription emergency fund
+repeat deposit,deposit,investment,0.84,Detected as investment due to keyword/context: repeat deposit
+large emergency fund,emergency fund,investment,0.88,Detected as investment due to keyword/context: large emergency fund
+basic nps,nps,investment,0.95,Detected as investment due to keyword/context: basic nps
+medical etf,etf,investment,0.58,Detected as investment due to keyword/context: medical etf
+client retirement,retirement,investment,0.59,Detected as investment due to keyword/context: client retirement
+large asset,asset,investment,0.63,Detected as investment due to keyword/context: large asset
+urgent bond,bond,investment,0.88,Detected as investment due to keyword/context: urgent bond
+risky nps,nps,investment,0.67,Detected as investment due to keyword/context: risky nps
+monthly deposit,deposit,investment,0.61,Detected as investment due to keyword/context: monthly deposit
+extra portfolio,portfolio,investment,0.72,Detected as investment due to keyword/context: extra portfolio
+basic retirement,retirement,investment,0.78,Detected as investment due to keyword/context: basic retirement
+cashback financial goal,financial goal,investment,0.8,Detected as investment due to keyword/context: cashback financial goal
+small bond,bond,investment,0.7,Detected as investment due to keyword/context: small bond
+personal recurring deposit,recurring deposit,investment,0.78,Detected as investment due to keyword/context: personal recurring deposit
+festival silver,silver,investment,0.73,Detected as investment due to keyword/context: festival silver
+large investment,investment,investment,0.69,Detected as investment due to keyword/context: large investment
+essential mutual fund,mutual fund,investment,0.69,Detected as investment due to keyword/context: essential mutual fund
+college wealth,wealth,investment,0.57,Detected as investment due to keyword/context: college wealth
+low cost stocks,stocks,investment,0.63,Detected as investment due to keyword/context: low cost stocks
+work wealth,wealth,investment,0.86,Detected as investment due to keyword/context: work wealth
+office investment,investment,investment,0.59,Detected as investment due to keyword/context: office investment
+college retirement,retirement,investment,0.88,Detected as investment due to keyword/context: college retirement
+large sip,sip,investment,0.76,Detected as investment due to keyword/context: large sip
+personal interest,interest,investment,0.59,Detected as investment due to keyword/context: personal interest
+low cost silver,silver,investment,0.64,Detected as investment due to keyword/context: low cost silver
+one time fixed deposit,fixed deposit,investment,0.8,Detected as investment due to keyword/context: one time fixed deposit
+high value long term,long term,investment,0.89,Detected as investment due to keyword/context: high value long term
+one time investment,investment,investment,0.83,Detected as investment due to keyword/context: one time investment
+small deposit,deposit,investment,0.72,Detected as investment due to keyword/context: small deposit
+office nps,nps,investment,0.61,Detected as investment due to keyword/context: office nps
+stable index fund,index fund,investment,0.76,Detected as investment due to keyword/context: stable index fund
+work ppf,ppf,investment,0.83,Detected as investment due to keyword/context: work ppf
+small sip,sip,investment,0.64,Detected as investment due to keyword/context: small sip
+family financial goal,financial goal,investment,0.83,Detected as investment due to keyword/context: family financial goal
+large nps,nps,investment,0.63,Detected as investment due to keyword/context: large nps
+repeat stocks,stocks,investment,0.83,Detected as investment due to keyword/context: repeat stocks
+low cost deposit,deposit,investment,0.79,Detected as investment due to keyword/context: low cost deposit
+regular mutual fund,mutual fund,investment,0.67,Detected as investment due to keyword/context: regular mutual fund
+offline sip,sip,investment,0.86,Detected as investment due to keyword/context: offline sip
+stable interest,interest,investment,0.63,Detected as investment due to keyword/context: stable interest
+home dividend,dividend,investment,0.62,Detected as investment due to keyword/context: home dividend
+weekly saving,saving,investment,0.59,Detected as investment due to keyword/context: weekly saving
+regular retirement,retirement,investment,0.59,Detected as investment due to keyword/context: regular retirement
+recurring fd,fd,investment,0.55,Detected as investment due to keyword/context: recurring fd
+offline capital,capital,investment,0.92,Detected as investment due to keyword/context: offline capital
+low cost interest,interest,investment,0.89,Detected as investment due to keyword/context: low cost interest
+office bond,bond,investment,0.83,Detected as investment due to keyword/context: office bond
+subscription fd,fd,investment,0.82,Detected as investment due to keyword/context: subscription fd
+repeat savings,savings,investment,0.64,Detected as investment due to keyword/context: repeat savings
+small ppf,ppf,investment,0.74,Detected as investment due to keyword/context: small ppf
+emergency pension,pension,investment,0.82,Detected as investment due to keyword/context: emergency pension
+home emergency fund,emergency fund,investment,0.89,Detected as investment due to keyword/context: home emergency fund
+premium portfolio,portfolio,investment,0.82,Detected as investment due to keyword/context: premium portfolio
+subscription savings,savings,investment,0.76,Detected as investment due to keyword/context: subscription savings
+local savings,savings,investment,0.83,Detected as investment due to keyword/context: local savings
+personal gold,gold,investment,0.58,Detected as investment due to keyword/context: personal gold
+local financial goal,financial goal,investment,0.6,Detected as investment due to keyword/context: local financial goal
+repeat long term,long term,investment,0.84,Detected as investment due to keyword/context: repeat long term
+risky recurring deposit,recurring deposit,investment,0.79,Detected as investment due to keyword/context: risky recurring deposit
+local asset,asset,investment,0.69,Detected as investment due to keyword/context: local asset
+advance asset,asset,investment,0.59,Detected as investment due to keyword/context: advance asset
+premium recurring deposit,recurring deposit,investment,0.75,Detected as investment due to keyword/context: premium recurring deposit
+stable savings,savings,investment,0.82,Detected as investment due to keyword/context: stable savings
+regular gold,gold,investment,0.81,Detected as investment due to keyword/context: regular gold
+extra fixed deposit,fixed deposit,investment,0.81,Detected as investment due to keyword/context: extra fixed deposit
+recurring ppf,ppf,investment,0.77,Detected as investment due to keyword/context: recurring ppf
+small dividend,dividend,investment,0.7,Detected as investment due to keyword/context: small dividend
+safe gold,gold,investment,0.82,Detected as investment due to keyword/context: safe gold
+one time portfolio,portfolio,investment,0.82,Detected as investment due to keyword/context: one time portfolio
+personal financial goal,financial goal,investment,0.75,Detected as investment due to keyword/context: personal financial goal
+cashback savings,savings,investment,0.75,Detected as investment due to keyword/context: cashback savings
+risky sip,sip,investment,0.57,Detected as investment due to keyword/context: risky sip
+office long term,long term,investment,0.69,Detected as investment due to keyword/context: office long term
+college emergency fund,emergency fund,investment,0.95,Detected as investment due to keyword/context: college emergency fund
+regular investment,investment,investment,0.9,Detected as investment due to keyword/context: regular investment
+repeat portfolio,portfolio,investment,0.78,Detected as investment due to keyword/context: repeat portfolio
+first time dividend,dividend,investment,0.66,Detected as investment due to keyword/context: first time dividend
+basic investment,investment,investment,0.79,Detected as investment due to keyword/context: basic investment
+offline bond,bond,investment,0.83,Detected as investment due to keyword/context: offline bond
+medical deposit,deposit,investment,0.62,Detected as investment due to keyword/context: medical deposit
+premium fixed deposit,fixed deposit,investment,0.8,Detected as investment due to keyword/context: premium fixed deposit
+regular deposit,deposit,investment,0.89,Detected as investment due to keyword/context: regular deposit
+emergency mutual fund,mutual fund,investment,0.95,Detected as investment due to keyword/context: emergency mutual fund
+risky stocks,stocks,investment,0.59,Detected as investment due to keyword/context: risky stocks
+essential ppf,ppf,investment,0.58,Detected as investment due to keyword/context: essential ppf
+repeat nps,nps,investment,0.82,Detected as investment due to keyword/context: repeat nps
+home ppf,ppf,investment,0.72,Detected as investment due to keyword/context: home ppf
+delayed recurring deposit,recurring deposit,investment,0.76,Detected as investment due to keyword/context: delayed recurring deposit
+high value sip,sip,investment,0.9,Detected as investment due to keyword/context: high value sip
+recurring wealth,wealth,investment,0.87,Detected as investment due to keyword/context: recurring wealth
+repeat financial goal,financial goal,investment,0.92,Detected as investment due to keyword/context: repeat financial goal
+advance saving,saving,investment,0.61,Detected as investment due to keyword/context: advance saving
+first time financial goal,financial goal,investment,0.66,Detected as investment due to keyword/context: first time financial goal
+personal nps,nps,investment,0.65,Detected as investment due to keyword/context: personal nps
+discounted pension,pension,investment,0.71,Detected as investment due to keyword/context: discounted pension
+emergency rd,rd,investment,0.74,Detected as investment due to keyword/context: emergency rd
+large recurring deposit,recurring deposit,investment,0.56,Detected as investment due to keyword/context: large recurring deposit
+online dividend,dividend,investment,0.68,Detected as investment due to keyword/context: online dividend
+regular nps,nps,investment,0.91,Detected as investment due to keyword/context: regular nps
+office emergency fund,emergency fund,investment,0.82,Detected as investment due to keyword/context: office emergency fund
+low cost retirement,retirement,investment,0.92,Detected as investment due to keyword/context: low cost retirement
+risky etf,etf,investment,0.93,Detected as investment due to keyword/context: risky etf
+discounted capital,capital,investment,0.92,Detected as investment due to keyword/context: discounted capital
+essential fixed deposit,fixed deposit,investment,0.73,Detected as investment due to keyword/context: essential fixed deposit
+office crypto,crypto,investment,0.83,Detected as investment due to keyword/context: office crypto
+discounted deposit,deposit,investment,0.65,Detected as investment due to keyword/context: discounted deposit
+emergency savings,savings,investment,0.81,Detected as investment due to keyword/context: emergency savings
+small portfolio,portfolio,investment,0.76,Detected as investment due to keyword/context: small portfolio
+local interest,interest,investment,0.92,Detected as investment due to keyword/context: local interest
+cashback interest,interest,investment,0.67,Detected as investment due to keyword/context: cashback interest
+discounted interest,interest,investment,0.67,Detected as investment due to keyword/context: discounted interest
+online recurring deposit,recurring deposit,investment,0.88,Detected as investment due to keyword/context: online recurring deposit
+medical interest,interest,investment,0.84,Detected as investment due to keyword/context: medical interest
+offline dividend,dividend,investment,0.88,Detected as investment due to keyword/context: offline dividend
+weekly index fund,index fund,investment,0.85,Detected as investment due to keyword/context: weekly index fund
+large deposit,deposit,investment,0.55,Detected as investment due to keyword/context: large deposit
+emergency fixed deposit,fixed deposit,investment,0.68,Detected as investment due to keyword/context: emergency fixed deposit
+small stocks,stocks,investment,0.61,Detected as investment due to keyword/context: small stocks
+subscription ppf,ppf,investment,0.74,Detected as investment due to keyword/context: subscription ppf
+large capital,capital,investment,0.65,Detected as investment due to keyword/context: large capital
+risky portfolio,portfolio,investment,0.88,Detected as investment due to keyword/context: risky portfolio
+client dividend,dividend,investment,0.93,Detected as investment due to keyword/context: client dividend
+morning wealth,wealth,investment,0.91,Detected as investment due to keyword/context: morning wealth
+repeat pension,pension,investment,0.79,Detected as investment due to keyword/context: repeat pension
+safe fd,fd,investment,0.6,Detected as investment due to keyword/context: safe fd
+high value investment,investment,investment,0.72,Detected as investment due to keyword/context: high value investment
+home fixed deposit,fixed deposit,investment,0.93,Detected as investment due to keyword/context: home fixed deposit
+essential long term,long term,investment,0.67,Detected as investment due to keyword/context: essential long term
+client bond,bond,investment,0.6,Detected as investment due to keyword/context: client bond
+first time fixed deposit,fixed deposit,investment,0.62,Detected as investment due to keyword/context: first time fixed deposit
+family deposit,deposit,investment,0.56,Detected as investment due to keyword/context: family deposit
+discounted recurring deposit,recurring deposit,investment,0.8,Detected as investment due to keyword/context: discounted recurring deposit
+advance portfolio,portfolio,investment,0.58,Detected as investment due to keyword/context: advance portfolio
+local investment,investment,investment,0.82,Detected as investment due to keyword/context: local investment
+stable capital,capital,investment,0.65,Detected as investment due to keyword/context: stable capital
+one time gold,gold,investment,0.57,Detected as investment due to keyword/context: one time gold
+stable saving,saving,investment,0.93,Detected as investment due to keyword/context: stable saving
+stable deposit,deposit,investment,0.83,Detected as investment due to keyword/context: stable deposit
+urgent deposit,deposit,investment,0.55,Detected as investment due to keyword/context: urgent deposit
+office savings,savings,investment,0.6,Detected as investment due to keyword/context: office savings
+cashback fd,fd,investment,0.62,Detected as investment due to keyword/context: cashback fd
+medical bond,bond,investment,0.9,Detected as investment due to keyword/context: medical bond
+repeat etf,etf,investment,0.61,Detected as investment due to keyword/context: repeat etf
+premium silver,silver,investment,0.9,Detected as investment due to keyword/context: premium silver
+cashback dividend,dividend,investment,0.8,Detected as investment due to keyword/context: cashback dividend
+cashback asset,asset,investment,0.76,Detected as investment due to keyword/context: cashback asset
+planned silver,silver,investment,0.64,Detected as investment due to keyword/context: planned silver
+basic mutual fund,mutual fund,investment,0.65,Detected as investment due to keyword/context: basic mutual fund
+advance investment,investment,investment,0.72,Detected as investment due to keyword/context: advance investment
+night stocks,stocks,investment,0.9,Detected as investment due to keyword/context: night stocks
+first time fd,fd,investment,0.92,Detected as investment due to keyword/context: first time fd
+premium rd,rd,investment,0.82,Detected as investment due to keyword/context: premium rd
+offline retirement,retirement,investment,0.88,Detected as investment due to keyword/context: offline retirement
+stable recurring deposit,recurring deposit,investment,0.81,Detected as investment due to keyword/context: stable recurring deposit
+festival index fund,index fund,investment,0.93,Detected as investment due to keyword/context: festival index fund
+planned financial goal,financial goal,investment,0.87,Detected as investment due to keyword/context: planned financial goal
+festival nps,nps,investment,0.87,Detected as investment due to keyword/context: festival nps
+client pension,pension,investment,0.59,Detected as investment due to keyword/context: client pension
+family asset,asset,investment,0.6,Detected as investment due to keyword/context: family asset
+repeat bond,bond,investment,0.84,Detected as investment due to keyword/context: repeat bond
+emergency interest,interest,investment,0.91,Detected as investment due to keyword/context: emergency interest
+large pension,pension,investment,0.69,Detected as investment due to keyword/context: large pension
+office gold,gold,investment,0.76,Detected as investment due to keyword/context: office gold
+subscription bond,bond,investment,0.9,Detected as investment due to keyword/context: subscription bond
+essential bond,bond,investment,0.78,Detected as investment due to keyword/context: essential bond
+online emergency fund,emergency fund,investment,0.85,Detected as investment due to keyword/context: online emergency fund
+office deposit,deposit,investment,0.8,Detected as investment due to keyword/context: office deposit
+repeat emergency fund,emergency fund,investment,0.59,Detected as investment due to keyword/context: repeat emergency fund
+family investment,investment,investment,0.92,Detected as investment due to keyword/context: family investment
+repeat index fund,index fund,investment,0.58,Detected as investment due to keyword/context: repeat index fund
+one time mutual fund,mutual fund,investment,0.58,Detected as investment due to keyword/context: one time mutual fund
+low cost mutual fund,mutual fund,investment,0.59,Detected as investment due to keyword/context: low cost mutual fund
+cashback saving,saving,investment,0.78,Detected as investment due to keyword/context: cashback saving
+low cost asset,asset,investment,0.56,Detected as investment due to keyword/context: low cost asset
+advance capital,capital,investment,0.62,Detected as investment due to keyword/context: advance capital
+local fd,fd,investment,0.57,Detected as investment due to keyword/context: local fd
+emergency emergency fund,emergency fund,investment,0.68,Detected as investment due to keyword/context: emergency emergency fund
+delayed index fund,index fund,investment,0.87,Detected as investment due to keyword/context: delayed index fund
+offline portfolio,portfolio,investment,0.72,Detected as investment due to keyword/context: offline portfolio
+personal sip,sip,investment,0.81,Detected as investment due to keyword/context: personal sip
+large stocks,stocks,investment,0.6,Detected as investment due to keyword/context: large stocks
+basic fixed deposit,fixed deposit,investment,0.81,Detected as investment due to keyword/context: basic fixed deposit
+discounted wealth,wealth,investment,0.72,Detected as investment due to keyword/context: discounted wealth
+weekly emergency fund,emergency fund,investment,0.6,Detected as investment due to keyword/context: weekly emergency fund
+premium index fund,index fund,investment,0.74,Detected as investment due to keyword/context: premium index fund
+subscription financial goal,financial goal,investment,0.78,Detected as investment due to keyword/context: subscription financial goal
+local long term,long term,investment,0.57,Detected as investment due to keyword/context: local long term
+one time pension,pension,investment,0.95,Detected as investment due to keyword/context: one time pension
+premium mutual fund,mutual fund,investment,0.71,Detected as investment due to keyword/context: premium mutual fund
+premium interest,interest,investment,0.64,Detected as investment due to keyword/context: premium interest
+festival retirement,retirement,investment,0.77,Detected as investment due to keyword/context: festival retirement
+premium gold,gold,investment,0.8,Detected as investment due to keyword/context: premium gold
+home capital,capital,investment,0.74,Detected as investment due to keyword/context: home capital
+morning index fund,index fund,investment,0.75,Detected as investment due to keyword/context: morning index fund
+medical retirement,retirement,investment,0.92,Detected as investment due to keyword/context: medical retirement
+advance financial goal,financial goal,investment,0.6,Detected as investment due to keyword/context: advance financial goal
+personal deposit,deposit,investment,0.8,Detected as investment due to keyword/context: personal deposit
+online nps,nps,investment,0.82,Detected as investment due to keyword/context: online nps
+premium pension,pension,investment,0.59,Detected as investment due to keyword/context: premium pension
+premium emergency fund,emergency fund,investment,0.67,Detected as investment due to keyword/context: premium emergency fund
+personal saving,saving,investment,0.62,Detected as investment due to keyword/context: personal saving
+low cost financial goal,financial goal,investment,0.56,Detected as investment due to keyword/context: low cost financial goal
+medical stocks,stocks,investment,0.72,Detected as investment due to keyword/context: medical stocks
+one time asset,asset,investment,0.66,Detected as investment due to keyword/context: one time asset
+planned gold,gold,investment,0.92,Detected as investment due to keyword/context: planned gold
+small asset,asset,investment,0.94,Detected as investment due to keyword/context: small asset
+offline financial goal,financial goal,investment,0.88,Detected as investment due to keyword/context: offline financial goal
+subscription nps,nps,investment,0.85,Detected as investment due to keyword/context: subscription nps
+medical saving,saving,investment,0.88,Detected as investment due to keyword/context: medical saving
+home gold,gold,investment,0.73,Detected as investment due to keyword/context: home gold
+personal etf,etf,investment,0.58,Detected as investment due to keyword/context: personal etf
+high value asset,asset,investment,0.72,Detected as investment due to keyword/context: high value asset
+large rd,rd,investment,0.87,Detected as investment due to keyword/context: large rd
+monthly asset,asset,investment,0.84,Detected as investment due to keyword/context: monthly asset
+regular etf,etf,investment,0.58,Detected as investment due to keyword/context: regular etf
+local ppf,ppf,investment,0.94,Detected as investment due to keyword/context: local ppf
+repeat fd,fd,investment,0.57,Detected as investment due to keyword/context: repeat fd
+family wealth,wealth,investment,0.91,Detected as investment due to keyword/context: family wealth
+local emergency fund,emergency fund,investment,0.9,Detected as investment due to keyword/context: local emergency fund
+essential sip,sip,investment,0.91,Detected as investment due to keyword/context: essential sip
+night index fund,index fund,investment,0.91,Detected as investment due to keyword/context: night index fund
+college investment,investment,investment,0.91,Detected as investment due to keyword/context: college investment
+emergency dividend,dividend,investment,0.58,Detected as investment due to keyword/context: emergency dividend
+one time etf,etf,investment,0.67,Detected as investment due to keyword/context: one time etf
+personal ppf,ppf,investment,0.56,Detected as investment due to keyword/context: personal ppf
+recurring dividend,dividend,investment,0.79,Detected as investment due to keyword/context: recurring dividend
+college etf,etf,investment,0.6,Detected as investment due to keyword/context: college etf
+risky rd,rd,investment,0.78,Detected as investment due to keyword/context: risky rd
+college rd,rd,investment,0.67,Detected as investment due to keyword/context: college rd
+offline rd,rd,investment,0.68,Detected as investment due to keyword/context: offline rd
+online stocks,stocks,investment,0.57,Detected as investment due to keyword/context: online stocks
+large dividend,dividend,investment,0.74,Detected as investment due to keyword/context: large dividend

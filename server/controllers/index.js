@@ -39,6 +39,7 @@ function normalizeFmi(item) {
 }
 
 const USER_ID = 'u1';
+const ML_SERVICE_URL = process.env.ML_SERVICE_URL || 'http://localhost:5001';
 
 // ═══════════════════════════════════════════════════════════
 // USER
@@ -334,21 +335,43 @@ router.post('/transactions', async (req, res, next) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
+    // Call sentiment analyzer and ML classifier (graceful fallback if ML is offline)
     const { sentiment, tags } = analyzeSentiment(req.body.description, new Date());
+    let mlData = { category: null, confidence: 0, type: 'Need', confidenceScore: 0 };
+    try {
+      const resp = await fetch(`${ML_SERVICE_URL}/classify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: req.body.description || '' }),
+        signal: AbortSignal.timeout(5000),
+      });
+      if (resp.ok) {
+        const d = await resp.json();
+        mlData.category = d.category || null;
+        mlData.confidence = typeof d.confidence === 'number' ? d.confidence : (d.confidenceScore || 0);
+        mlData.type = d.type || (d.sentiment === 'positive' ? 'Investment' : (d.sentiment === 'negative' ? 'Want' : 'Need'));
+        mlData.confidenceScore = typeof d.confidenceScore === 'number' ? d.confidenceScore : (d.confidence || 0);
+      }
+    } catch (e) {
+      console.warn('[transactions] ML classify failed:', e.message || e);
+    }
+
     let tx;
     try {
       tx = await Transaction.create({
-        id:          `t-${Date.now()}`,
-        userId:      USER_ID,
-        amount:      debitAmount,
-        category:    req.body.category || 'shopping',
-        sentiment:   req.body.sentiment || sentiment,
-        sentimentScore: 0,
-        tags:        tags,
-        description: req.body.description || 'manual input',
-        timestamp:   new Date()
+        id:             `t-${Date.now()}`,
+        userId:         USER_ID,
+        amount:         debitAmount,
+        category:       req.body.category || (mlData.category ? mlData.category.toLowerCase() : 'shopping'),
+        sentiment:      req.body.sentiment || sentiment,
+        type:           req.body.type || mlData.type,
+        confidenceScore: req.body.confidenceScore !== undefined ? Number(req.body.confidenceScore) : (mlData.confidenceScore || 0),
+        tags:           tags,
+        description:    req.body.description || 'manual input',
+        timestamp:      new Date()
       });
     } catch (createError) {
+      // revert user balance on create failure
       await User.findOneAndUpdate(
         { id: USER_ID },
         { $inc: { currentBalance: debitAmount } }
@@ -439,7 +462,42 @@ router.get('/fmi', async (_req, res, next) => {
       essential_spend_ratio: 0.7
     };
 
+    // Compute required monthly savings to reach retirement goal
+    const monthsToRetire = Math.max(1, (retirement_age - age) * 12);
+    const requiredMonthlySavings = monthsToRetire > 0
+      ? Math.max(0, (retirement_goal - current_retirement_savings) / monthsToRetire)
+      : 0;
+
+    // Compute actual monthly investments from recent transactions (last 30 days)
+    const thirtyDaysAgo = new Date(); thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const recentInvestmentTxs = txDocs.filter((t) => new Date(t.timestamp) > thirtyDaysAgo && (t.type === 'Investment' || (t.type && String(t.type).toLowerCase() === 'investment')));
+    const actualInvestmentMonthly = recentInvestmentTxs.reduce((s, t) => s + Math.abs(t.amount || 0), 0);
+
+    // Attach these to the profile to let the FMI engine see them if needed
+    profile.requiredMonthlySavings = requiredMonthlySavings;
+    profile.actualInvestmentMonthly = actualInvestmentMonthly;
+
     const computed = await calculateFMI(profile);
+
+    // Adjust FMI score based on how actual investments compare to required monthly savings
+    try {
+      if (requiredMonthlySavings > 0) {
+        const ratio = actualInvestmentMonthly / requiredMonthlySavings;
+        let adjustment = 0;
+        if (ratio >= 1) {
+          adjustment = Math.min(5, (ratio - 1) * 5); // small positive bump
+        } else {
+          adjustment = -Math.min(10, (1 - ratio) * 10); // penalize up to -10
+        }
+        computed.score = Math.max(0, Math.min(100, Math.round((computed.score || 0) + adjustment)));
+        if (!computed.assumptions) computed.assumptions = {};
+        computed.assumptions.requiredMonthlySavings = requiredMonthlySavings;
+        computed.assumptions.actualInvestmentMonthly = actualInvestmentMonthly;
+        computed.assumptions.investment_ratio = ratio;
+      }
+    } catch (e) {
+      console.warn('[fmi] score adjustment failed:', e.message || e);
+    }
 
     // Persist FMI snapshot
     await FMIHistory.create({
@@ -800,6 +858,54 @@ router.get('/behavior', async (_req, res, next) => {
 // ═══════════════════════════════════════════════════════════
 // REPORTS
 // ═══════════════════════════════════════════════════════════
+
+router.get('/reports/pacing', async (_req, res, next) => {
+  try {
+    // Month range: start of current month -> start of next month
+    const start = new Date(); start.setDate(1); start.setHours(0,0,0,0);
+    const end = new Date(start); end.setMonth(start.getMonth() + 1);
+
+    const agg = await Transaction.aggregate([
+      { $match: { userId: USER_ID, timestamp: { $gte: start, $lt: end } } },
+      { $group: { _id: '$type', total: { $sum: { $abs: '$amount' } } } }
+    ]);
+
+    const totals = { Needs: 0, Wants: 0, Investments: 0 };
+    agg.forEach((a) => {
+      const key = a._id || 'Need';
+      if (key === 'Need') totals.Needs = a.total;
+      else if (key === 'Want') totals.Wants = a.total;
+      else if (key === 'Investment') totals.Investments = a.total;
+    });
+
+    const user = await User.findOne({ id: USER_ID }).lean();
+    const monthlyIncome = Number(user?.monthlyIncome || 0);
+    const limits = {
+      Needs: Math.round(monthlyIncome * 0.5),
+      Wants: Math.round(monthlyIncome * 0.3),
+      Investments: Math.round(monthlyIncome * 0.2),
+    };
+
+    res.json({
+      Needs: { actual: totals.Needs || 0, limit: limits.Needs },
+      Wants: { actual: totals.Wants || 0, limit: limits.Wants },
+      Investments: { actual: totals.Investments || 0, limit: limits.Investments },
+    });
+  } catch (error) { next(error); }
+});
+
+router.get('/reports/heatmap', async (_req, res, next) => {
+  try {
+    const since = new Date(); since.setDate(since.getDate() - 365);
+    const agg = await Transaction.aggregate([
+      { $match: { userId: USER_ID, timestamp: { $gte: since } } },
+      { $group: { _id: { $dateToString: { format: '%Y-%m-%d', date: '$timestamp' } }, total: { $sum: { $abs: '$amount' } } } },
+      { $project: { date: '$_id', totalAmount: '$total', _id: 0 } },
+      { $sort: { date: 1 } }
+    ]);
+    res.json(agg);
+  } catch (error) { next(error); }
+});
 
 router.get('/reports/weekly', async (_req, res, next) => {
   try {

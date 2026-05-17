@@ -73,8 +73,11 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
         badgeAnim.setValue(0);
         Animated.spring(badgeAnim, { toValue: 1, useNativeDriver: true, tension: 120, friction: 8 }).start();
         
-        // Auto-update selectedType based on sentiment if requested
-        if (result.sentiment) {
+        // Prefer explicit ML `type` if provided, otherwise fallback to sentiment mapping
+        if (result.type) {
+          // result.type comes as 'Need'|'Want'|'Investment'
+          setSelectedType(result.type as SpendType);
+        } else if (result.sentiment) {
           if (result.sentiment === 'positive') setSelectedType('Investment');
           else if (result.sentiment === 'negative') setSelectedType('Want');
           else setSelectedType('Need');
@@ -128,9 +131,13 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
         category:    categoryKey,
         sentiment:   finalSentiment,
         description: description.trim() || selectedCategory.label,
+        type:        aiResult?.type ?? selectedType,
+        confidenceScore: aiResult?.confidenceScore ?? aiResult?.confidence ?? 0,
       });
       addToStore(newTx);
       setLogged(true);
+      // Show inferred type to the user briefly
+      Alert.alert('Saved', `Transaction logged. Inferred type: ${newTx.type || aiResult?.type || selectedType}`);
       setTimeout(() => {
         setLogged(false);
         onClose?.();

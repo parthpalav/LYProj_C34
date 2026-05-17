@@ -14,6 +14,8 @@ import { getDashboard } from '../services/api';
 import { useStore } from '../store/useStore';
 import { DashboardData } from '../types';
 import { UpdateBalanceScreen } from './UpdateBalanceScreen';
+import { BudgetPacing } from '../components/BudgetPacing';
+import { Heatmap } from '../components/Heatmap';
 
 const { width: SCREEN_W } = Dimensions.get('window');
 const CARD_PAD = 16;
@@ -439,6 +441,19 @@ export function DashboardScreen(): React.ReactElement {
         </View>
       </View>
 
+      {/* Budget Pacing + Heatmap (placed under Balance/FMI) */}
+      <View style={s.visualsWrapper}>
+        <Card title="Budget Pacing">
+          <BudgetPacing />
+        </Card>
+
+        <View style={{ height: 12 }} />
+
+        <Card title="Spend Heatmap">
+          <Heatmap />
+        </Card>
+      </View>
+
       {/* Row 1 */}
       <View style={s.row}>
         <View style={{ flex: 1 }}>
@@ -544,6 +559,8 @@ const s = StyleSheet.create({
   bannerIcon:      { fontSize: 20 },
   bannerText:      { flex: 1, fontSize: 13, lineHeight: 20, marginTop: 2 },
   bannerBold:      { fontWeight: '700', fontSize: 13, marginBottom: 4 },
+
+  visualsWrapper: { marginTop: 12, gap: 12 },
 
   microActionItem: { flexDirection: 'row', alignItems: 'center', gap: 12, borderTopWidth: 1, borderTopColor: '#F0F1F5', paddingTop: 14, marginTop: 14 },
   maTitle:         { fontSize: 13, fontWeight: '700', color: '#111827', marginBottom: 2 },

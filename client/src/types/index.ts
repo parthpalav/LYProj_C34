@@ -36,6 +36,8 @@ export interface Transaction {
   timestamp:      string;
   isAnomaly?:     boolean;
   description?:   string;
+  type?:          'Need' | 'Want' | 'Investment';
+  confidenceScore?: number;
 }
 
 export interface FMIRecord {

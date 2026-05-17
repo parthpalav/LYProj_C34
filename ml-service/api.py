@@ -221,6 +221,20 @@ _SENTIMENT_META = {
     "negative": {"emoji": "🔴", "label": "Watch Out",    "verdict": "Discretionary spend — think before you pay!"},
 }
 
+# Map high-level spend types for each category
+_CATEGORY_TYPE: dict[str, str] = {
+    "Food": "Want",
+    "Travel": "Want",
+    "Entertainment": "Want",
+    "Shopping": "Want",
+    "Bills": "Need",
+    "Groceries": "Need",
+    "Health": "Investment",
+    "Party": "Want",
+    "Education": "Investment",
+    "Misc": "Need",
+}
+
 
 @app.post('/classify')
 def classify_expense():
@@ -287,6 +301,9 @@ def classify_expense():
         "sentiment_emoji": meta["emoji"],
         "sentiment_label": meta["label"],
         "verdict":         meta["verdict"],
+        # High-level type mapping and a normalized confidence score
+        "type":             _CATEGORY_TYPE.get(category, "Need"),
+        "confidenceScore":  confidence
     })
 
 

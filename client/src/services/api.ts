@@ -12,6 +12,8 @@ export interface NewTransaction {
   category:     string;
   sentiment?:   string;
   description?: string;
+  type?:        'Need' | 'Want' | 'Investment';
+  confidenceScore?: number;
 }
 
 export interface RegisterPayload {
@@ -261,10 +263,22 @@ export interface ClassifyResult {
   sentiment_label?: string;
   verdict?:        string;
   offline?:        boolean;
+  type?:           'Need' | 'Want' | 'Investment';
+  confidenceScore?: number;
 }
 
 export async function classifyExpense(text: string): Promise<ClassifyResult> {
   const { data } = await api.post('/api/classify', { text });
+  return data;
+}
+
+export async function getPacing(): Promise<{ Needs: { actual: number; limit: number }; Wants: { actual: number; limit: number }; Investments: { actual: number; limit: number } }> {
+  const { data } = await api.get('/api/reports/pacing');
+  return data;
+}
+
+export async function getHeatmap(): Promise<Array<{ date: string; totalAmount: number }>> {
+  const { data } = await api.get('/api/reports/heatmap');
   return data;
 }
 

@@ -132,6 +132,7 @@ export function AuthScreen({ onAuthSuccess }: Props): React.ReactElement {
       });
       onAuthSuccess();
     } catch (error: any) {
+      console.error('signup error', error);
       const errorMsg = error?.response?.data?.error || error?.message || 'Sign up failed. Please try again.';
       Alert.alert('Sign Up Failed', errorMsg);
     } finally {

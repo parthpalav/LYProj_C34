@@ -54,25 +54,30 @@ export interface NewIncomePayload {
 
 function getApiBaseUrl(): string {
   if (process.env.EXPO_PUBLIC_API_URL) return process.env.EXPO_PUBLIC_API_URL;
-
+  // Expo provides various host identifiers depending on environment and SDK.
+  // Try common fields (expoConfig.hostUri, expoGoConfig.debuggerHost, manifest.debuggerHost)
   const hostUri =
-    Constants.expoConfig?.hostUri ||
-    (Constants as { expoGoConfig?: { debuggerHost?: string } }).expoGoConfig?.debuggerHost;
-  const expoHost =
-    hostUri
-      ? hostUri
-          .replace(/^exp:\/\//, '')
-          .replace(/^http:\/\//, '')
-          .split(':')[0]
-      : undefined;
+    (Constants as any).expoConfig?.hostUri ||
+    (Constants as any).expoGoConfig?.debuggerHost ||
+    (Constants as any).manifest?.debuggerHost;
 
-  if (expoHost) return `http://${expoHost}:4000`;
+  if (hostUri && typeof hostUri === 'string') {
+    const expoHost = hostUri
+      .replace(/^exp:\/\//, '')
+      .replace(/^http:\/\//, '')
+      .split(':')[0];
+    if (expoHost && expoHost !== 'localhost') return `http://${expoHost}:4000`;
+  }
+
+  // Android emulator uses 10.0.2.2 to reach host machine
   if (Platform.OS === 'android') return 'http://10.0.2.2:4000';
+  // iOS simulator can use localhost
   if (Platform.OS === 'ios') return 'http://localhost:4000';
+  // default to localhost for web and other environments
   return 'http://localhost:4000';
 }
 
-const api = axios.create({ baseURL: getApiBaseUrl(), timeout: 8000 });
+const api = axios.create({ baseURL: getApiBaseUrl(), timeout: 10000 });
 
 // ── Dashboard ─────────────────────────────────────────────────
 export async function getDashboard(): Promise<DashboardData> {

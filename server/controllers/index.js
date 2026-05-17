@@ -53,6 +53,15 @@ router.post('/user/register', async (req, res, next) => {
     if (!email) {
       return res.status(400).json({ error: 'Email is required' });
     }
+    if (!payload.name) {
+      return res.status(400).json({ error: 'Name is required' });
+    }
+    if (!payload.password) {
+      return res.status(400).json({ error: 'Password is required' });
+    }
+    if (!payload.incomeType) {
+      return res.status(400).json({ error: 'Income type is required' });
+    }
     
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -89,9 +98,10 @@ router.post('/user/login', async (req, res, next) => {
     if (!isPasswordValid) {
       return res.status(401).json({ error: 'Incorrect password. Please try again.' });
     }
-    const derivedOnboardingComplete =
+    const derivedOnboardingComplete = Boolean(
       user.onboardingComplete === true ||
-      (user.dateOfBirth && user.retirementAge !== null && user.monthlyIncome !== null);
+      (user.dateOfBirth && user.retirementAge !== null && user.monthlyIncome !== null)
+    );
 
     res.json({
       id: user.id,

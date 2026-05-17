@@ -7,7 +7,34 @@ import { formatCurrency } from '../utils/format';
 import { TransactionEntryScreen } from './TransactionEntryScreen';
 import { updateTransaction, deleteTransaction } from '../services/api';
 
-const categories = ['all', 'food', 'travel', 'bills', 'shopping', 'others'];
+// Filter categories — must match the lowercase ml keys from TransactionEntryScreen
+const FILTER_CATEGORIES = [
+  { key: 'all',           label: 'All',           emoji: '📋' },
+  { key: 'food',          label: 'Food',          emoji: '🍕' },
+  { key: 'travel',        label: 'Travel',        emoji: '🚕' },
+  { key: 'entertainment', label: 'Entertainment', emoji: '🎬' },
+  { key: 'shopping',      label: 'Shopping',      emoji: '🛍️' },
+  { key: 'bills',         label: 'Bills',         emoji: '💡' },
+  { key: 'groceries',     label: 'Groceries',     emoji: '🥦' },
+  { key: 'health',        label: 'Health',        emoji: '💊' },
+  { key: 'party',         label: 'Party',         emoji: '🎉' },
+  { key: 'education',     label: 'Education',     emoji: '📚' },
+  { key: 'misc',          label: 'Misc',          emoji: '📦' },
+];
+
+// Map category key → emoji for transaction cards
+const CATEGORY_EMOJI: Record<string, string> = {
+  food:          '🍕',
+  travel:        '🚕',
+  entertainment: '🎬',
+  shopping:      '🛍️',
+  bills:         '💡',
+  groceries:     '🥦',
+  health:        '💊',
+  party:         '🎉',
+  education:     '📚',
+  misc:          '📦',
+};
 
 export function TransactionsScreen(): React.ReactElement {
   const { transactions, setTransactions } = useStore();
@@ -39,6 +66,28 @@ export function TransactionsScreen(): React.ReactElement {
   useEffect(() => {
     if (!showEntry && !editTx) fetchTransactions();
   }, [showEntry, editTx]);
+
+  const handleDelete = (tx: Transaction) => {
+    Alert.alert(
+      'Delete Transaction',
+      `Are you sure you want to delete "${tx.description || 'this transaction'}"?\n\nAmount: ${formatCurrency(Math.abs(tx.amount))}`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await deleteTransaction(tx.id);
+              fetchTransactions();
+            } catch (e) {
+              Alert.alert('Error', 'Failed to delete transaction');
+            }
+          }
+        }
+      ]
+    );
+  };
 
   const handleTxLongPress = (tx: Transaction) => {
     Alert.alert(
@@ -93,10 +142,10 @@ export function TransactionsScreen(): React.ReactElement {
     const isExpense = item.amount < 0;
     const sign = isExpense ? '-' : '+';
     const displayAmount = `${sign}${formatCurrency(Math.abs(item.amount))}`;
-    let icon = '🍔';
-    if (item.category === 'travel') icon = '🚕';
-    if (item.category === 'shopping') icon = '🛍️';
-    if (item.category === 'health') icon = '💊';
+
+    // Resolve emoji from category key (lowercase match)
+    const catKey = (item.category || '').toLowerCase();
+    const icon = CATEGORY_EMOJI[catKey] || '📦';
 
     let sentimentColor = '#D1D5DB';
     if (item.sentiment === 'positive') sentimentColor = '#34D399';
@@ -114,6 +163,16 @@ export function TransactionsScreen(): React.ReactElement {
         activeOpacity={0.7} 
         onLongPress={() => handleTxLongPress(item)}
       >
+        {/* Delete button — top-right corner */}
+        <TouchableOpacity
+          style={styles.deleteBtn}
+          onPress={() => handleDelete(item)}
+          activeOpacity={0.6}
+          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+        >
+          <Text style={styles.deleteBtnText}>✕</Text>
+        </TouchableOpacity>
+
         <View style={styles.iconBox}>
           <Text style={styles.iconText}>{icon}</Text>
         </View>
@@ -147,19 +206,25 @@ export function TransactionsScreen(): React.ReactElement {
     if (activeCategory === 'all') {
       return transactions;
     }
-    return transactions.filter((tx: Transaction) => tx.category === activeCategory);
+    // Compare lowercase to handle any casing differences
+    return transactions.filter((tx: Transaction) =>
+      (tx.category || '').toLowerCase() === activeCategory
+    );
   }, [activeCategory, transactions]);
 
   return (
     <View style={styles.container}>
+      {/* Filter chips — scrollable row */}
       <View style={styles.filters}>
-        {categories.map((cat) => (
+        {FILTER_CATEGORIES.map((cat) => (
           <Pressable
-            key={cat}
-            onPress={() => setActiveCategory(cat)}
-            style={[styles.filterChip, activeCategory === cat && styles.activeChip]}
+            key={cat.key}
+            onPress={() => setActiveCategory(cat.key)}
+            style={[styles.filterChip, activeCategory === cat.key && styles.activeChip]}
           >
-            <Text style={activeCategory === cat ? styles.activeText : styles.filterText}>{cat}</Text>
+            <Text style={activeCategory === cat.key ? styles.activeText : styles.filterText}>
+              {cat.emoji} {cat.label}
+            </Text>
           </Pressable>
         ))}
       </View>
@@ -231,8 +296,8 @@ const styles = StyleSheet.create({
   filters: { flexDirection: 'row', flexWrap: 'wrap', marginBottom: 12, gap: 8 },
   filterChip: { paddingVertical: 6, paddingHorizontal: 10, borderRadius: 999, backgroundColor: '#e2e8f0' },
   activeChip: { backgroundColor: '#0f766e' },
-  filterText: { color: '#334155' },
-  activeText: { color: '#ffffff' },
+  filterText: { color: '#334155', fontSize: 12 },
+  activeText: { color: '#ffffff', fontSize: 12 },
   card: {
     backgroundColor: '#ffffff',
     borderRadius: 16,
@@ -246,7 +311,27 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     elevation: 2,
     borderWidth: 1,
-    borderColor: '#f1f5f9'
+    borderColor: '#f1f5f9',
+    position: 'relative',
+  },
+  // Delete button positioned at top-right of card
+  deleteBtn: {
+    position: 'absolute',
+    top: 6,
+    right: 8,
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: '#FEE2E2',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 10,
+  },
+  deleteBtnText: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: '#EF4444',
+    lineHeight: 12,
   },
   iconBox: {
     width: 44,

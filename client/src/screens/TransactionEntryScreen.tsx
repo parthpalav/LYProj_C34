@@ -133,6 +133,7 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
         description: description.trim() || selectedCategory.label,
         type:        aiResult?.type ?? selectedType,
         confidenceScore: aiResult?.confidenceScore ?? aiResult?.confidence ?? 0,
+        timestamp:   new Date().toISOString(),
       });
       addToStore(newTx);
       setLogged(true);

@@ -14,6 +14,7 @@ export interface NewTransaction {
   description?: string;
   type?:        'Need' | 'Want' | 'Investment';
   confidenceScore?: number;
+  timestamp?:   string; // ISO-8601 device timestamp
 }
 
 export interface NewGoalPayload {

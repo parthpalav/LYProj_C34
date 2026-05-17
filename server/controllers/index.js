@@ -410,7 +410,7 @@ router.post('/transactions', async (req, res, next) => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: req.body.description || '' }),
-        signal: AbortSignal.timeout(5000),
+        signal: AbortSignal.timeout(3000),
       });
       if (resp.ok) {
         const d = await resp.json();
@@ -420,7 +420,12 @@ router.post('/transactions', async (req, res, next) => {
         mlData.confidenceScore = typeof d.confidenceScore === 'number' ? d.confidenceScore : (d.confidence || 0);
       }
     } catch (e) {
-      console.warn('[transactions] ML classify failed:', e.message || e);
+      console.warn('[transactions] ML classify failed, using keyword fallback:', e.message || e);
+      const fallback = classifyLocally(req.body.description || '');
+      mlData.category = fallback.category;
+      mlData.confidence = fallback.confidence;
+      mlData.type = fallback.type;
+      mlData.confidenceScore = fallback.confidenceScore;
     }
 
     let tx;
@@ -435,7 +440,7 @@ router.post('/transactions', async (req, res, next) => {
         confidenceScore: req.body.confidenceScore !== undefined ? Number(req.body.confidenceScore) : (mlData.confidenceScore || 0),
         tags:           tags,
         description:    req.body.description || 'manual input',
-        timestamp:      new Date()
+        timestamp:      req.body.timestamp ? new Date(req.body.timestamp) : new Date()
       });
     } catch (createError) {
       // revert user balance on create failure
@@ -1025,32 +1030,165 @@ router.get('/reports/weekly', async (req, res, next) => {
 });
 
 // ═══════════════════════════════════════════════════════════
-// ML EXPENSE CLASSIFIER  (proxies to Flask on port 5001)
+// ML EXPENSE CLASSIFIER  (proxies to Flask on port 5001, with keyword fallback)
 // ═══════════════════════════════════════════════════════════
+
+// Built-in keyword → category map (mirrors dataset.csv so classification
+// still works when the Python ML service is unreachable).
+const KEYWORD_CATEGORY_MAP = {
+  Food: [
+    'pizza','burger','biryani','pasta','noodles','sandwich','dosa','idli','paratha',
+    'chicken','mutton','fish','paneer','dal','rice','roti','sabzi','maggi','poha','upma',
+    'chai','coffee','tea','juice','smoothie','cold drink','coca cola','pepsi','drinks',
+    'beer','wine','whiskey','alcohol','snacks','chips','biscuits','chocolate','cake',
+    'ice cream','sweets','mithai','halwa','samosa','pav bhaji','vada pav','pani puri',
+    'chole bhature','rajma','khichdi','thali','dominos','pizza hut','mcdonalds','kfc',
+    'subway','zomato','swiggy','food delivery','restaurant','cafe','dhaba','mess bill',
+    'canteen','lunch','dinner','breakfast','evening snack','fast food','chinese food',
+    'sushi','tacos','meal','eating out','restaurant bill',
+  ],
+  Travel: [
+    'uber','ola','rapido','auto','taxi','cab','rickshaw','bus','train','metro',
+    'flight','airline','bus ticket','train ticket','petrol','diesel','fuel','toll',
+    'parking','bike rental','car rental','hotel','hostel','resort','airbnb','trip',
+    'tour','travel','vacation','holiday','road trip','irctc','redbus','makemytrip',
+    'goibibo','cleartrip','booking','uber ride','ola cab','metro card','bus pass',
+    'commute','ride home','ride back','taxi home','cab home',
+  ],
+  Entertainment: [
+    'movie','netflix','amazon prime','hotstar','spotify','youtube premium','gaming',
+    'video games','ps5','xbox','concert','stand up comedy','comedy show','show ticket',
+    'event ticket','amusement park','zoo','museum','theme park','bowling','pool',
+    'cricket match','ipl ticket','football match','streaming','ott','movie ticket',
+    'multiplex','pvr','inox','carnival','escape room','laser tag','arcade','board games',
+    'play station',
+  ],
+  Shopping: [
+    'dress','clothes','shirt','jeans','kurta','saree','shoes','sandals','heels',
+    'sneakers','bag','purse','wallet','accessories','jewellery','watch','sunglasses',
+    'perfume','makeup','cosmetics','lipstick','moisturizer','shampoo','amazon','flipkart',
+    'myntra','meesho','ajio','nykaa','gift','present','toy','gadget','phone','charger',
+    'earphones','headphones','laptop bag','stationery','notebook','pen','online shopping',
+  ],
+  Bills: [
+    'electricity bill','electricity','light bill','power bill','water bill','gas bill',
+    'internet','wifi bill','broadband','mobile recharge','phone bill','dth','cable tv',
+    'house rent','rent','emi','loan emi','insurance','subscription','maintenance',
+    'society charges','landlord','recharge','postpaid bill','prepaid recharge',
+  ],
+  Groceries: [
+    'vegetables','fruits','milk','eggs','bread','butter','curd','grocery','supermarket',
+    'dmart','big bazaar','reliance fresh','more supermarket','store','ration',
+    'weekly grocery','monthly grocery','flour','sugar','salt','cooking oil','spices',
+    'masala','lentils','pulses','cereal','oats','instant food','blinkit','zepto','instamart',
+  ],
+  Health: [
+    'doctor','hospital','clinic','medicine','pharmacy','tablets','pills','health checkup',
+    'blood test','lab test','pathlab','x-ray','scan','dentist','dental','eye doctor',
+    'optician','spectacles','gym','gym membership','yoga','physiotherapy','vaccination',
+    'vitamin','supplement','protein powder','mental health','therapy','counselling',
+  ],
+  Party: [
+    'party','birthday party','anniversary','celebration','club','nightclub','bar','pub',
+    'hookah','dj night','cocktails','mocktails','birthday cake','birthday gift','decorator',
+    'event planning','wedding','reception','get together','housewarming','farewell',
+    'bachelor party','kitty party',
+  ],
+  Education: [
+    'books','textbook','book','course','online course','udemy','coursera','upgrad',
+    'tuition','coaching','fees','college fees','school fees','exam fees','certification',
+    'workshop','seminar','study material','library','pen drive','laptop for study',
+  ],
+};
+
+// Category → spend-type and sentiment maps for the fallback classifier
+const CATEGORY_TYPE_MAP = {
+  Food: 'Want', Travel: 'Want', Entertainment: 'Want', Shopping: 'Want',
+  Bills: 'Need', Groceries: 'Need', Health: 'Investment',
+  Party: 'Want', Education: 'Investment', Misc: 'Need',
+};
+const CATEGORY_SENTIMENT_MAP = {
+  Food: 'negative', Travel: 'neutral', Entertainment: 'negative', Shopping: 'negative',
+  Bills: 'neutral', Groceries: 'neutral', Health: 'positive',
+  Party: 'negative', Education: 'positive', Misc: 'neutral',
+};
+
+function classifyLocally(rawText) {
+  const text = rawText.toLowerCase()
+    .replace(/[₹$]?\s*\d+(\.\d+)?\s*(rs\.?|inr)?/gi, ' ')   // strip amounts
+    .replace(/[^a-z\s]/g, ' ')                                 // strip punctuation
+    .replace(/\s+/g, ' ').trim();
+
+  let bestCategory = 'Misc';
+  let bestScore    = 0;
+
+  for (const [category, keywords] of Object.entries(KEYWORD_CATEGORY_MAP)) {
+    // Sort by length descending so longer (more-specific) phrases match first
+    const sorted = [...keywords].sort((a, b) => b.length - a.length);
+    for (const kw of sorted) {
+      if (text.includes(kw)) {
+        // Longer keyword matches are higher-confidence
+        const score = kw.length;
+        if (score > bestScore) {
+          bestScore    = score;
+          bestCategory = category;
+        }
+      }
+    }
+  }
+
+  const confidence = bestScore > 0 ? Math.min(0.95, 0.5 + bestScore * 0.03) : 0.1;
+  const sentiment  = CATEGORY_SENTIMENT_MAP[bestCategory] || 'neutral';
+  const type       = CATEGORY_TYPE_MAP[bestCategory] || 'Need';
+
+  const SENTIMENT_META = {
+    positive: { emoji: '💚', label: 'Good Spend',   verdict: 'This is a healthy investment in yourself!' },
+    neutral:  { emoji: '🔵', label: 'Neutral Spend', verdict: 'Necessary expense — keep it within budget.' },
+    negative: { emoji: '🔴', label: 'Watch Out',     verdict: 'Discretionary spend — think before you pay!' },
+  };
+  const meta = SENTIMENT_META[sentiment];
+
+  return {
+    category:        bestCategory,
+    confidence,
+    confidenceScore: confidence,
+    all_probs:       { [bestCategory]: confidence },
+    sentiment,
+    sentiment_emoji: meta.emoji,
+    sentiment_label: meta.label,
+    verdict:         meta.verdict,
+    type,
+    offline:         true,
+  };
+}
 
 router.post('/classify', async (req, res, next) => {
   try {
     const text = (req.body.text || '').trim();
     if (!text) return res.status(400).json({ error: 'text field is required' });
 
-    const response = await fetch(`${ML_SERVICE_URL}/classify`, {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ text }),
-      signal:  AbortSignal.timeout(5000),   // 5-second timeout
-    });
+    // Try the Flask ML service first (higher-quality TF-IDF + LogReg model)
+    try {
+      const response = await fetch(`${ML_SERVICE_URL}/classify`, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ text }),
+        signal:  AbortSignal.timeout(3000),
+      });
 
-    if (!response.ok) {
-      const err = await response.json().catch(() => ({}));
-      return res.status(response.status).json(err);
+      if (response.ok) {
+        const data = await response.json();
+        return res.json(data);
+      }
+    } catch (mlErr) {
+      console.warn('[classify] ML service unreachable, using keyword fallback:', mlErr.message);
     }
 
-    const data = await response.json();
-    return res.json(data);
+    // Fallback: keyword-based classifier (still accurate, just simpler)
+    return res.json(classifyLocally(text));
   } catch (err) {
-    // Flask is offline — return safe fallback so the app still works
-    console.warn('[classify] ML service unreachable:', err.message);
-    return res.json({ category: 'Misc', confidence: 0, all_probs: {}, offline: true });
+    console.error('[classify] error:', err);
+    return res.json(classifyLocally(req.body.text || ''));
   }
 });
 

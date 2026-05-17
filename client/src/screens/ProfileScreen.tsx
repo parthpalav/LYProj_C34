@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
-  Dimensions,
   Keyboard,
   KeyboardAvoidingView,
   Modal,
@@ -15,6 +14,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native';
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useStore } from '../store/useStore';
@@ -37,8 +37,6 @@ const TEXT_SECONDARY = '#6B7280';
 const TEXT_MUTED = '#9CA3AF';
 const BORDER = '#E8ECF2';
 
-const { width: SCREEN_W } = Dimensions.get('window');
-
 // ── Helpers ───────────────────────────────────────────────────
 function getInitials(name: string | undefined | null): string {
   if (!name) return '?';
@@ -52,29 +50,15 @@ function formatDOB(value: Date | string | null | undefined): string {
   return date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
 }
 
-function dobToInputString(value: Date | string | null | undefined): string {
-  if (!value) return '';
-  const date = value instanceof Date ? value : new Date(value);
-  if (Number.isNaN(date.getTime())) return '';
-  const d = String(date.getDate()).padStart(2, '0');
-  const m = String(date.getMonth() + 1).padStart(2, '0');
-  const y = date.getFullYear();
-  return `${d}/${m}/${y}`;
-}
-
-function parseDOBInput(text: string): Date | null {
-  const parts = text.split('/');
-  if (parts.length !== 3) return null;
-  const [d, m, y] = parts.map(Number);
-  if (!d || !m || !y || d < 1 || d > 31 || m < 1 || m > 12 || y < 1900 || y > 2025) return null;
-  const date = new Date(y, m - 1, d);
-  if (Number.isNaN(date.getTime())) return null;
-  return date;
-}
-
 function formatCurrency(value: number | null | undefined): string {
   if (value === null || value === undefined) return 'Not set';
   return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(value);
+}
+
+function toDate(value: Date | string | null | undefined): Date {
+  if (!value) return new Date(2000, 0, 1);
+  const d = value instanceof Date ? value : new Date(value);
+  return Number.isNaN(d.getTime()) ? new Date(2000, 0, 1) : d;
 }
 
 // ── Stat Pill ─────────────────────────────────────────────────
@@ -104,9 +88,7 @@ function InfoRow({ icon, label, value, isLast }: { icon: string; label: string; 
   const isSet = value !== 'Not set';
   return (
     <View style={[infoStyles.row, !isLast && infoStyles.rowBorder]}>
-      <View style={infoStyles.iconWrap}>
-        <Ionicons name={icon as any} size={18} color={BLUE} />
-      </View>
+      <View style={infoStyles.iconWrap}><Ionicons name={icon as any} size={18} color={BLUE} /></View>
       <View style={infoStyles.textCol}>
         <Text style={infoStyles.label}>{label}</Text>
         <Text style={[infoStyles.value, !isSet && infoStyles.valueMuted]}>{value}</Text>
@@ -125,55 +107,26 @@ const infoStyles = StyleSheet.create({
   valueMuted: { color: TEXT_MUTED, fontStyle: 'italic' },
 });
 
-// ── Edit Modal Field ──────────────────────────────────────────
-function EditField({ icon, label, value, onChangeText, placeholder, keyboardType, suffix }: {
-  icon: string; label: string; value: string; onChangeText: (t: string) => void;
-  placeholder: string; keyboardType?: 'default' | 'numeric'; suffix?: string;
-}) {
-  return (
-    <View style={editFieldStyles.wrap}>
-      <Text style={editFieldStyles.label}>{label}</Text>
-      <View style={editFieldStyles.inputRow}>
-        <View style={editFieldStyles.iconWrap}>
-          <Ionicons name={icon as any} size={16} color={BLUE} />
-        </View>
-        <TextInput
-          style={editFieldStyles.input}
-          value={value}
-          onChangeText={onChangeText}
-          placeholder={placeholder}
-          placeholderTextColor={TEXT_MUTED}
-          keyboardType={keyboardType || 'default'}
-        />
-        {suffix ? <Text style={editFieldStyles.suffix}>{suffix}</Text> : null}
-      </View>
-    </View>
-  );
-}
-const editFieldStyles = StyleSheet.create({
-  wrap: { marginBottom: 18 },
-  label: { fontSize: 13, fontWeight: '600', color: TEXT_PRIMARY, marginBottom: 8, marginLeft: 2 },
-  inputRow: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#F7F8FC', borderRadius: 14, borderWidth: 1.5, borderColor: BORDER, paddingHorizontal: 14, height: 52 },
-  iconWrap: { marginRight: 10 },
-  input: { flex: 1, fontSize: 15, color: TEXT_PRIMARY, paddingVertical: 0 },
-  suffix: { fontSize: 13, color: TEXT_MUTED, fontWeight: '500', marginLeft: 4 },
-});
-
 // ═══════════════════════════════════════════════════════════════
 // MAIN SCREEN
 // ═══════════════════════════════════════════════════════════════
 export function ProfileScreen(): React.ReactElement {
-  const user = useStore((state) => state.user);
-  const setUser = useStore((state) => state.setUser);
-  const logout = useAuthStore((state) => state.logout);
+  const user = useStore((s) => s.user);
+  const setUser = useStore((s) => s.setUser);
+  const logout = useAuthStore((s) => s.logout);
   const insets = useSafeAreaInsets();
 
-  // Edit modal state
+  // Edit modal
   const [editVisible, setEditVisible] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [editDOB, setEditDOB] = useState('');
+
+  // Typed edit state
+  const [editDOB, setEditDOB] = useState<Date>(new Date(2000, 0, 1));
   const [editRetAge, setEditRetAge] = useState('');
   const [editIncome, setEditIncome] = useState('');
+
+  // Date picker visibility (Android shows as dialog, iOS inline)
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const onboardingDone = user?.onboardingComplete ?? false;
   const statusColor = onboardingDone ? GREEN : AMBER;
@@ -181,42 +134,62 @@ export function ProfileScreen(): React.ReactElement {
   const statusIcon = onboardingDone ? 'checkmark-circle' : 'time';
 
   const openEditModal = () => {
-    setEditDOB(dobToInputString(user?.dateOfBirth));
-    setEditRetAge(user?.retirementAge ? String(user.retirementAge) : '');
-    setEditIncome(user?.monthlyIncome ? String(user.monthlyIncome) : '');
+    setEditDOB(toDate(user?.dateOfBirth));
+    setEditRetAge(user?.retirementAge != null ? String(user.retirementAge) : '');
+    setEditIncome(user?.monthlyIncome != null ? String(user.monthlyIncome) : '');
+    setShowDatePicker(false);
     setEditVisible(true);
+  };
+
+  const onDateChange = (_event: DateTimePickerEvent, selectedDate?: Date) => {
+    if (Platform.OS === 'android') setShowDatePicker(false);
+    if (selectedDate) setEditDOB(selectedDate);
   };
 
   const handleSave = async () => {
     if (!user?.id) return;
+
+    // Validate retirement age (integer)
+    const retAge = editRetAge.trim() ? parseInt(editRetAge, 10) : null;
+    if (editRetAge.trim() && (isNaN(retAge!) || retAge! < 40 || retAge! > 100)) {
+      Alert.alert('Invalid Age', 'Retirement age must be an integer between 40 and 100.');
+      return;
+    }
+
+    // Validate monthly income (float)
+    const income = editIncome.trim() ? parseFloat(editIncome) : null;
+    if (editIncome.trim() && (isNaN(income!) || income! < 0)) {
+      Alert.alert('Invalid Income', 'Please enter a valid positive number.');
+      return;
+    }
+
     setSaving(true);
     try {
-      // Update DOB
-      if (editDOB.trim()) {
-        const parsed = parseDOBInput(editDOB.trim());
-        if (!parsed) { Alert.alert('Invalid Date', 'Use DD/MM/YYYY format.'); setSaving(false); return; }
-        await updateUserDOB(user.id, parsed);
-        setUser({ ...user, dateOfBirth: parsed.toISOString() });
+      // Save DOB (Date type)
+      await updateUserDOB(user.id, editDOB);
+
+      // Save retirement age (integer)
+      if (retAge !== null) {
+        await updateUserRetirementAge(user.id, retAge);
       }
-      // Update retirement age
-      if (editRetAge.trim()) {
-        const age = parseInt(editRetAge, 10);
-        if (isNaN(age) || age < 40 || age > 100) { Alert.alert('Invalid Age', 'Must be between 40–100.'); setSaving(false); return; }
-        await updateUserRetirementAge(user.id, age);
-        setUser({ ...user, retirementAge: age });
-      }
-      // Update monthly income
-      if (editIncome.trim()) {
-        const income = parseFloat(editIncome);
-        if (isNaN(income) || income < 0) { Alert.alert('Invalid Income', 'Enter a valid amount.'); setSaving(false); return; }
+
+      // Save monthly income (float)
+      if (income !== null) {
         await updateUserMonthlyIncome(user.id, income);
-        setUser({ ...user, monthlyIncome: income });
       }
+
+      // Update local store so it reflects immediately everywhere
+      setUser({
+        ...user,
+        dateOfBirth: editDOB.toISOString(),
+        retirementAge: retAge ?? user.retirementAge,
+        monthlyIncome: income ?? user.monthlyIncome,
+      });
+
       setEditVisible(false);
       Alert.alert('Saved ✓', 'Your profile has been updated.');
     } catch (err: any) {
-      const msg = err?.response?.data?.error || err?.message || 'Could not save changes.';
-      Alert.alert('Error', msg);
+      Alert.alert('Error', err?.response?.data?.error || err?.message || 'Could not save changes.');
     } finally {
       setSaving(false);
     }
@@ -224,26 +197,20 @@ export function ProfileScreen(): React.ReactElement {
 
   return (
     <View style={s.screen}>
-      <ScrollView
-        contentContainerStyle={[s.scroll, { paddingBottom: 40 + insets.bottom }]}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* ── Hero Section ── */}
+      <ScrollView contentContainerStyle={[s.scroll, { paddingBottom: 40 + insets.bottom }]} showsVerticalScrollIndicator={false}>
+
+        {/* ── Hero ── */}
         <View style={s.hero}>
           <View style={s.blobTopRight} />
           <View style={s.blobBottomLeft} />
 
-          {/* Edit button — top right */}
           <TouchableOpacity style={s.editBtn} activeOpacity={0.75} onPress={openEditModal}>
             <Ionicons name="create-outline" size={18} color={BLUE} />
             <Text style={s.editBtnText}>Edit</Text>
           </TouchableOpacity>
 
-          {/* Avatar */}
           <View style={s.avatarOuter}>
-            <View style={s.avatar}>
-              <Text style={s.avatarText}>{getInitials(user?.name)}</Text>
-            </View>
+            <View style={s.avatar}><Text style={s.avatarText}>{getInitials(user?.name)}</Text></View>
             <View style={s.onlineDot} />
           </View>
 
@@ -273,27 +240,24 @@ export function ProfileScreen(): React.ReactElement {
           <InfoRow icon="hourglass-outline" label="Retirement Age" value={user?.retirementAge ? `${user.retirementAge} years` : 'Not set'} isLast />
         </View>
 
-        {/* ── Preferences Card ── */}
+        {/* ── Preferences ── */}
         <View style={s.sectionHeader}><Text style={s.sectionTitle}>Preferences</Text></View>
         <View style={s.card}>
           <TouchableOpacity style={s.prefRow} activeOpacity={0.7}>
             <View style={[infoStyles.iconWrap, { backgroundColor: '#F3E8FF' }]}><Ionicons name="color-palette-outline" size={18} color="#7C3AED" /></View>
-            <Text style={s.prefLabel}>Appearance</Text>
-            <Text style={s.prefValue}>System</Text>
+            <Text style={s.prefLabel}>Appearance</Text><Text style={s.prefValue}>System</Text>
             <Ionicons name="chevron-forward" size={16} color={TEXT_MUTED} />
           </TouchableOpacity>
           <View style={{ height: 1, backgroundColor: '#F3F4F6', marginLeft: 52 }} />
           <TouchableOpacity style={s.prefRow} activeOpacity={0.7}>
             <View style={[infoStyles.iconWrap, { backgroundColor: '#FEF3C7' }]}><Ionicons name="notifications-outline" size={18} color={AMBER} /></View>
-            <Text style={s.prefLabel}>Notifications</Text>
-            <Text style={s.prefValue}>On</Text>
+            <Text style={s.prefLabel}>Notifications</Text><Text style={s.prefValue}>On</Text>
             <Ionicons name="chevron-forward" size={16} color={TEXT_MUTED} />
           </TouchableOpacity>
           <View style={{ height: 1, backgroundColor: '#F3F4F6', marginLeft: 52 }} />
           <TouchableOpacity style={s.prefRow} activeOpacity={0.7}>
             <View style={[infoStyles.iconWrap, { backgroundColor: '#ECFDF5' }]}><Ionicons name="shield-checkmark-outline" size={18} color={GREEN} /></View>
-            <Text style={s.prefLabel}>Privacy</Text>
-            <Text style={s.prefValue}>Standard</Text>
+            <Text style={s.prefLabel}>Privacy</Text><Text style={s.prefValue}>Standard</Text>
             <Ionicons name="chevron-forward" size={16} color={TEXT_MUTED} />
           </TouchableOpacity>
         </View>
@@ -306,41 +270,99 @@ export function ProfileScreen(): React.ReactElement {
         <Text style={s.version}>Finaura v1.0.0</Text>
       </ScrollView>
 
-      {/* ═══ Edit Profile Modal ═══ */}
+      {/* ═══════ Edit Profile Modal ═══════ */}
       <Modal visible={editVisible} transparent animationType="slide" onRequestClose={() => setEditVisible(false)}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={m.overlay}>
-            <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={m.kwrap}>
-              <View style={m.sheet}>
-                {/* Handle bar */}
-                <View style={m.handle} />
+          <View style={modal.overlay}>
+            <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={modal.kwrap}>
+              <View style={modal.sheet}>
+                <View style={modal.handle} />
 
-                {/* Header */}
-                <View style={m.header}>
-                  <Text style={m.title}>Edit Profile</Text>
-                  <TouchableOpacity onPress={() => setEditVisible(false)} style={m.closeBtn}>
+                <View style={modal.header}>
+                  <Text style={modal.title}>Edit Profile</Text>
+                  <TouchableOpacity onPress={() => setEditVisible(false)} style={modal.closeBtn}>
                     <Ionicons name="close" size={22} color={TEXT_SECONDARY} />
                   </TouchableOpacity>
                 </View>
-                <Text style={m.subtitle}>Update your personal details below</Text>
+                <Text style={modal.subtitle}>Update your personal details below</Text>
 
-                <ScrollView showsVerticalScrollIndicator={false} style={{ marginTop: 20 }}>
-                  <EditField icon="calendar-outline" label="Date of Birth" value={editDOB} onChangeText={setEditDOB} placeholder="DD/MM/YYYY" />
-                  <EditField icon="hourglass-outline" label="Retirement Age" value={editRetAge} onChangeText={setEditRetAge} placeholder="e.g. 60" keyboardType="numeric" suffix="years" />
-                  <EditField icon="cash-outline" label="Monthly Income" value={editIncome} onChangeText={setEditIncome} placeholder="e.g. 50000" keyboardType="numeric" suffix="₹" />
+                <ScrollView showsVerticalScrollIndicator={false} style={{ marginTop: 20 }} keyboardShouldPersistTaps="handled">
+
+                  {/* ── DOB — Date picker ── */}
+                  <View style={ef.wrap}>
+                    <Text style={ef.label}>Date of Birth</Text>
+                    <TouchableOpacity style={ef.inputRow} activeOpacity={0.7} onPress={() => setShowDatePicker(true)}>
+                      <View style={ef.iconWrap}><Ionicons name="calendar-outline" size={16} color={BLUE} /></View>
+                      <Text style={[ef.displayText, !user?.dateOfBirth && { color: TEXT_MUTED }]}>
+                        {formatDOB(editDOB)}
+                      </Text>
+                      <Ionicons name="chevron-down" size={16} color={TEXT_MUTED} />
+                    </TouchableOpacity>
+
+                    {showDatePicker && (
+                      <View style={ef.pickerWrap}>
+                        <DateTimePicker
+                          value={editDOB}
+                          mode="date"
+                          display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+                          maximumDate={new Date()}
+                          minimumDate={new Date(1940, 0, 1)}
+                          onChange={onDateChange}
+                          themeVariant="light"
+                        />
+                        {Platform.OS === 'ios' && (
+                          <TouchableOpacity style={ef.doneBtn} onPress={() => setShowDatePicker(false)}>
+                            <Text style={ef.doneBtnText}>Done</Text>
+                          </TouchableOpacity>
+                        )}
+                      </View>
+                    )}
+                  </View>
+
+                  {/* ── Retirement Age — Integer ── */}
+                  <View style={ef.wrap}>
+                    <Text style={ef.label}>Retirement Age</Text>
+                    <View style={ef.inputRow}>
+                      <View style={ef.iconWrap}><Ionicons name="hourglass-outline" size={16} color={BLUE} /></View>
+                      <TextInput
+                        style={ef.input}
+                        value={editRetAge}
+                        onChangeText={(t) => setEditRetAge(t.replace(/[^0-9]/g, ''))}
+                        placeholder="e.g. 60"
+                        placeholderTextColor={TEXT_MUTED}
+                        keyboardType="number-pad"
+                        maxLength={3}
+                      />
+                      <Text style={ef.suffix}>years</Text>
+                    </View>
+                  </View>
+
+                  {/* ── Monthly Income — Float ── */}
+                  <View style={ef.wrap}>
+                    <Text style={ef.label}>Monthly Income</Text>
+                    <View style={ef.inputRow}>
+                      <View style={ef.iconWrap}><Ionicons name="cash-outline" size={16} color={BLUE} /></View>
+                      <Text style={ef.prefix}>₹</Text>
+                      <TextInput
+                        style={ef.input}
+                        value={editIncome}
+                        onChangeText={(t) => setEditIncome(t.replace(/[^0-9.]/g, ''))}
+                        placeholder="e.g. 50000.00"
+                        placeholderTextColor={TEXT_MUTED}
+                        keyboardType="decimal-pad"
+                      />
+                    </View>
+                  </View>
                 </ScrollView>
 
                 {/* Actions */}
-                <View style={m.actions}>
-                  <TouchableOpacity style={m.cancelBtn} onPress={() => setEditVisible(false)} activeOpacity={0.8}>
-                    <Text style={m.cancelText}>Cancel</Text>
+                <View style={modal.actions}>
+                  <TouchableOpacity style={modal.cancelBtn} onPress={() => setEditVisible(false)} activeOpacity={0.8}>
+                    <Text style={modal.cancelText}>Cancel</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={[m.saveBtn, saving && { opacity: 0.6 }]} onPress={handleSave} activeOpacity={0.85} disabled={saving}>
+                  <TouchableOpacity style={[modal.saveBtn, saving && { opacity: 0.6 }]} onPress={handleSave} activeOpacity={0.85} disabled={saving}>
                     {saving ? <ActivityIndicator color="#fff" size="small" /> : (
-                      <>
-                        <Ionicons name="checkmark-circle-outline" size={18} color="#fff" />
-                        <Text style={m.saveText}>Save Changes</Text>
-                      </>
+                      <><Ionicons name="checkmark-circle-outline" size={18} color="#fff" /><Text style={modal.saveText}>Save Changes</Text></>
                     )}
                   </TouchableOpacity>
                 </View>
@@ -357,42 +379,48 @@ export function ProfileScreen(): React.ReactElement {
 const s = StyleSheet.create({
   screen: { flex: 1, backgroundColor: BG },
   scroll: { paddingHorizontal: 16 },
-
   hero: { alignItems: 'center', paddingTop: 28, paddingBottom: 24, position: 'relative', overflow: 'hidden' },
   blobTopRight: { position: 'absolute', top: -30, right: -20, width: 120, height: 120, borderRadius: 60, backgroundColor: BLUE, opacity: 0.06 },
   blobBottomLeft: { position: 'absolute', bottom: -10, left: -20, width: 80, height: 80, borderRadius: 40, backgroundColor: BLUE, opacity: 0.04 },
-
   editBtn: { position: 'absolute', top: 12, right: 4, flexDirection: 'row', alignItems: 'center', gap: 5, backgroundColor: BLUE_LIGHT, paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20, borderWidth: 1, borderColor: BLUE + '30', zIndex: 10 },
   editBtnText: { fontSize: 13, fontWeight: '700', color: BLUE },
-
   avatarOuter: { position: 'relative', marginBottom: 16 },
   avatar: { width: 88, height: 88, borderRadius: 44, backgroundColor: BLUE, alignItems: 'center', justifyContent: 'center', shadowColor: BLUE, shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.35, shadowRadius: 14, elevation: 8 },
   avatarText: { fontSize: 32, fontWeight: '800', color: '#FFFFFF', letterSpacing: 1 },
   onlineDot: { position: 'absolute', bottom: 4, right: 4, width: 18, height: 18, borderRadius: 9, backgroundColor: GREEN, borderWidth: 3, borderColor: BG },
-
   name: { fontSize: 24, fontWeight: '800', color: TEXT_PRIMARY, letterSpacing: -0.3, marginBottom: 4 },
   email: { fontSize: 14, color: TEXT_SECONDARY, fontWeight: '500', marginBottom: 14 },
   statusBadge: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 14, paddingVertical: 6, borderRadius: 20, borderWidth: 1 },
   statusText: { fontSize: 12, fontWeight: '700' },
-
   statsRow: { flexDirection: 'row', gap: 12, marginBottom: 24 },
-
   sectionHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10, paddingHorizontal: 4 },
   sectionTitle: { fontSize: 16, fontWeight: '700', color: TEXT_PRIMARY, letterSpacing: -0.2 },
-
   card: { backgroundColor: CARD_BG, borderRadius: 20, paddingHorizontal: 16, borderWidth: 1, borderColor: BORDER, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 10, elevation: 3, marginBottom: 20 },
-
   prefRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 14, gap: 14 },
   prefLabel: { flex: 1, fontSize: 15, fontWeight: '600', color: TEXT_PRIMARY },
   prefValue: { fontSize: 13, color: TEXT_MUTED, fontWeight: '500', marginRight: 4 },
-
   logoutBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, height: 52, backgroundColor: '#FEF2F2', borderRadius: 16, borderWidth: 1.5, borderColor: '#FECACA', marginTop: 4 },
   logoutText: { color: '#DC2626', fontSize: 15, fontWeight: '700' },
   version: { textAlign: 'center', fontSize: 12, color: TEXT_MUTED, marginTop: 20, fontWeight: '500' },
 });
 
+// ── Edit Field Styles ─────────────────────────────────────────
+const ef = StyleSheet.create({
+  wrap: { marginBottom: 18 },
+  label: { fontSize: 13, fontWeight: '600', color: TEXT_PRIMARY, marginBottom: 8, marginLeft: 2 },
+  inputRow: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#F7F8FC', borderRadius: 14, borderWidth: 1.5, borderColor: BORDER, paddingHorizontal: 14, height: 52 },
+  iconWrap: { marginRight: 10 },
+  input: { flex: 1, fontSize: 15, color: TEXT_PRIMARY, paddingVertical: 0 },
+  displayText: { flex: 1, fontSize: 15, color: TEXT_PRIMARY, fontWeight: '500' },
+  suffix: { fontSize: 13, color: TEXT_MUTED, fontWeight: '500', marginLeft: 4 },
+  prefix: { fontSize: 16, color: TEXT_PRIMARY, fontWeight: '600', marginRight: 4 },
+  pickerWrap: { backgroundColor: '#F7F8FC', borderRadius: 14, borderWidth: 1, borderColor: BORDER, marginTop: 8, overflow: 'hidden' },
+  doneBtn: { alignItems: 'center', paddingVertical: 10, borderTopWidth: 1, borderTopColor: BORDER },
+  doneBtnText: { fontSize: 15, fontWeight: '700', color: BLUE },
+});
+
 // ── Modal Styles ──────────────────────────────────────────────
-const m = StyleSheet.create({
+const modal = StyleSheet.create({
   overlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.45)', justifyContent: 'flex-end' },
   kwrap: { justifyContent: 'flex-end' },
   sheet: { backgroundColor: '#fff', borderTopLeftRadius: 28, borderTopRightRadius: 28, paddingHorizontal: 24, paddingBottom: 32, maxHeight: '85%' },

@@ -10,6 +10,9 @@
     ],
     "ios": {
       "bundleIdentifier": "com.parth.lyproj"
-    }
+    },
+    "plugins": [
+      "@react-native-community/datetimepicker"
+    ]
   }
 }

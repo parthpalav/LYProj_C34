@@ -2,10 +2,12 @@ import React, { useState, useRef, useEffect } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet,
   KeyboardAvoidingView, Platform, Animated, Easing, ActivityIndicator,
-  Dimensions,
+  Dimensions, Image,
 } from 'react-native';
 import { useAuthStore } from '../store/useAuthStore';
 import { RegisterScreen } from './RegisterScreen';
+
+const finauraLogo = require('../assets/finaura_logo.png');
 
 const { width } = Dimensions.get('window');
 const BLUE = '#3B3BDE';
@@ -47,7 +49,7 @@ export function LoginScreen(): React.ReactElement {
       <Animated.View style={[styles.inner, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
         {/* Logo */}
         <Animated.View style={[styles.logoWrap, { transform: [{ scale: logoScale }] }]}>
-          <Text style={styles.logoIcon}>✨</Text>
+          <Image source={finauraLogo} style={styles.logoImage} resizeMode="contain" />
         </Animated.View>
 
         <Text style={styles.title}>FINAURA</Text>
@@ -143,7 +145,7 @@ const styles = StyleSheet.create({
     shadowRadius: 16,
     elevation: 8,
   },
-  logoIcon: { fontSize: 42 },
+  logoImage: { width: 58, height: 58, borderRadius: 29 },
   title: {
     fontSize: 32,
     fontWeight: '900',

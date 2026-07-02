@@ -2,8 +2,11 @@ import React, { useState, useRef, useEffect } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet,
   KeyboardAvoidingView, Platform, Animated, Easing, ActivityIndicator,
+  Image,
 } from 'react-native';
 import { useAuthStore } from '../store/useAuthStore';
+
+const finauraLogo = require('../assets/finaura_logo.png');
 
 const BLUE = '#3B3BDE';
 
@@ -41,7 +44,7 @@ export function RegisterScreen({ onBack }: Props): React.ReactElement {
       <Animated.View style={[styles.inner, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
         {/* Header */}
         <View style={styles.headerWrap}>
-          <Text style={styles.headerIcon}>🚀</Text>
+          <Image source={finauraLogo} style={styles.headerImage} resizeMode="contain" />
         </View>
         <Text style={styles.title}>Create Account</Text>
         <Text style={styles.subtitle}>Join FINAURA and take control of your finances</Text>
@@ -149,7 +152,7 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 6,
   },
-  headerIcon: { fontSize: 36 },
+  headerImage: { width: 52, height: 52, borderRadius: 26 },
   title: {
     fontSize: 26,
     fontWeight: '900',

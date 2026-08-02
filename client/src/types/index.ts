@@ -9,6 +9,13 @@ export interface MicroAction {
   impact:      string;
 }
 
+export interface WantsNeedsBreakdown {
+  needs:       { amount: number; pct: number };
+  wants:       { amount: number; pct: number };
+  investments: { amount: number; pct: number };
+  total:       number;
+}
+
 export interface DashboardData {
   fmiScore:      number;
   balance:       number;
@@ -24,6 +31,7 @@ export interface DashboardData {
   goals?:        Goal[];
   categoryBreakdown?: Array<{ label: string; pct: number }>;
   budgetMetrics?:     Array<{ label: string; val: number; color: string }>;
+  wantsNeedsBreakdown?: WantsNeedsBreakdown;
 }
 
 export interface Transaction {
@@ -45,6 +53,53 @@ export interface FMIRecord {
   factors:   string[];
   timestamp: string;
 }
+
+export interface FMIPillar {
+  score:  number;
+  weight: number;
+  detail: string;
+}
+
+export interface FMIAlert {
+  type:     'warning' | 'nudge' | 'critical';
+  severity: 'low' | 'medium' | 'high';
+  message:  string;
+}
+
+export interface FMIResponse {
+  requiredMonthlySaving:  number;
+  requiredThisMonth:      number;
+  totalSpent:             number;
+  totalSaved:             number;
+  predictedMonthlySpend:  number;
+  availableMoney:         number;
+  status:                 'above' | 'on_track' | 'below';
+  FMI:                    number;
+  score:                  number;
+  fmiLabel:               string;
+  pillars: {
+    D1_savingDiscipline: FMIPillar;
+    D2_spendingControl:  FMIPillar;
+    D3_behavioralRisk:   FMIPillar;
+  };
+  insights:  string[];
+  alerts:    FMIAlert[];
+  factors:   string[];
+  prediction: {
+    daysPassed:            number;
+    daysInMonth:           number;
+    avgDailySpend:         number;
+    predictedMonthlySpend: number;
+  };
+  goalDetail: {
+    retirementGoal:  number;
+    remainingGoal:   number;
+    monthsLeft:      number;
+    yearsLeft:       number;
+  };
+  timestamp: string;
+}
+
 
 export interface AlertItem {
   id:       string;

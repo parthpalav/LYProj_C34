@@ -8,7 +8,7 @@ function chunkArray<T>(arr: T[], size: number): T[][] {
   return out;
 }
 
-export function Heatmap(): React.ReactElement {
+export function Heatmap({ refreshKey }: { refreshKey?: number }): React.ReactElement {
   const [data, setData] = useState<Array<{ date: string; totalAmount: number }>>([]);
   const [loading, setLoading] = useState(true);
 
@@ -22,7 +22,7 @@ export function Heatmap(): React.ReactElement {
         setData([]);
       } finally { setLoading(false); }
     })();
-  }, []);
+  }, [refreshKey]);
 
   if (loading) return <ActivityIndicator style={{ margin: 12 }} />;
 

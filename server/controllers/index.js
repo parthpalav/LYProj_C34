@@ -484,107 +484,56 @@ router.delete('/transactions/:id', async (req, res, next) => {
 router.get('/fmi', async (req, res, next) => {
   try {
     const userId = req.user.id;
-    const incomes = await Income.find({ userId }).lean();
-    const totalInc = incomes.reduce((s, i) => s + i.amount, 0);
-    const txDocs = await Transaction.find({ userId }).sort({ timestamp: -1 }).lean();
-    const totalExp = txDocs.reduce((s, t) => s + t.amount, 0);
-    const currentBalance = totalInc - totalExp;
 
-    const annotated = annotateTransactions(txDocs.slice(0, 20));
-    const negativeRatio = annotated.length
-      ? annotated.filter((t) => t.sentiment === 'negative').length / annotated.length
-      : 0;
-    const impulseRatio = annotated.length
-      ? annotated.filter((t) => (t.tags || []).includes('impulse')).length / annotated.length
-      : 0;
-
-    // Derived factors
-    const avgSpend = totalExp / (txDocs.length || 1);
-    const deviation = txDocs.length > 1 
-      ? Math.sqrt(txDocs.reduce((s, t) => s + Math.pow(t.amount - avgSpend, 2), 0) / txDocs.length) / (avgSpend || 1)
-      : 0.5;
-
-    // Build ML profile for FMI prediction
+    // Fetch user profile
     const user = await User.findOne({ id: userId }).lean();
-    const envelopes = await Envelope.findOne({ userId }).lean();
     const goals = await Goal.find({ userId }).lean();
 
-    // Attempt to locate a retirement goal
+    // Get current month's transactions
+    const monthStart = new Date();
+    monthStart.setDate(1);
+    monthStart.setHours(0, 0, 0, 0);
+    const monthlyExpenses = await Transaction.find({
+      userId,
+      timestamp: { $gte: monthStart }
+    }).sort({ timestamp: -1 }).lean();
+
+    // Annotate transactions for behavioral analysis
+    const annotated = annotateTransactions(monthlyExpenses);
+
+    // Derive user age from dateOfBirth
+    const currentAge = user?.dateOfBirth
+      ? Math.max(18, new Date().getFullYear() - new Date(user.dateOfBirth).getFullYear())
+      : 25;
+
+    // Find retirement goal (or use fallback: monthlyIncome * 12 * 20)
     const retirementGoalObj = goals.find(g => /retire/i.test(g.name)) || null;
+    const monthlyIncome = Number(user?.monthlyIncome ?? 0);
+    const retirementGoal = retirementGoalObj?.targetAmount
+      || Math.round(monthlyIncome * 12 * 20);
 
-    const monthly_income = user?.monthlyIncome ?? totalInc;
-    const monthly_expenses = totalExp; // best-effort; assumes recent period
-    const monthly_savings = Math.max(0, (monthly_income || 0) - (monthly_expenses || 0));
-    const investment_contribution = retirementGoalObj?.monthlyContribution || 0;
-    const current_retirement_savings = retirementGoalObj?.savedAmount || (envelopes?.savings || 0);
-    const retirement_goal = retirementGoalObj?.targetAmount || Math.round((monthly_income || 0) * 12 * 20);
-    const age = user?.dateOfBirth ? Math.max(18, new Date().getFullYear() - new Date(user.dateOfBirth).getFullYear()) : 40;
-    const retirement_age = user?.retirementAge || 65;
-
-    const profile = {
-      age,
-      retirement_age,
-      years_to_retire: Math.max(1, retirement_age - age),
-      monthly_income,
-      monthly_expenses,
-      monthly_savings,
-      investment_contribution,
-      current_retirement_savings,
-      retirement_goal,
-      debt: 0,
-      savings_consistency: 0.75,
-      income_volatility: 0.2,
-      spend_volatility: Math.min(1, deviation),
-      food_spend_ratio: 0.2,
-      entertainment_spend_ratio: 0.05,
-      shopping_spend_ratio: 0.05,
-      essential_spend_ratio: 0.7
+    // Build the user profile for FMI calculation
+    const fmiUser = {
+      currentBalance:    Number(user?.currentBalance ?? 0),
+      monthlyIncome,
+      currentAge,
+      retirementAge:     Number(user?.retirementAge ?? 60),
+      retirementGoal,
+      previousShortfall: 0 // no historical shortfall tracking yet
     };
 
-    // Compute required monthly savings to reach retirement goal
-    const monthsToRetire = Math.max(1, (retirement_age - age) * 12);
-    const requiredMonthlySavings = monthsToRetire > 0
-      ? Math.max(0, (retirement_goal - current_retirement_savings) / monthsToRetire)
-      : 0;
+    // Calculate FMI (fully deterministic, no external service)
+    const computed = calculateFMI(fmiUser, annotated);
 
-    // Compute actual monthly investments from recent transactions (last 30 days)
-    const thirtyDaysAgo = new Date(); thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    const recentInvestmentTxs = txDocs.filter((t) => new Date(t.timestamp) > thirtyDaysAgo && (t.type === 'Investment' || (t.type && String(t.type).toLowerCase() === 'investment')));
-    const actualInvestmentMonthly = recentInvestmentTxs.reduce((s, t) => s + Math.abs(t.amount || 0), 0);
-
-    // Attach these to the profile to let the FMI engine see them if needed
-    profile.requiredMonthlySavings = requiredMonthlySavings;
-    profile.actualInvestmentMonthly = actualInvestmentMonthly;
-
-    const computed = await calculateFMI(profile);
-
-    // Adjust FMI score based on how actual investments compare to required monthly savings
-    try {
-      if (requiredMonthlySavings > 0) {
-        const ratio = actualInvestmentMonthly / requiredMonthlySavings;
-        let adjustment = 0;
-        if (ratio >= 1) {
-          adjustment = Math.min(5, (ratio - 1) * 5); // small positive bump
-        } else {
-          adjustment = -Math.min(10, (1 - ratio) * 10); // penalize up to -10
-        }
-        computed.score = Math.max(0, Math.min(100, Math.round((computed.score || 0) + adjustment)));
-        if (!computed.assumptions) computed.assumptions = {};
-        computed.assumptions.requiredMonthlySavings = requiredMonthlySavings;
-        computed.assumptions.actualInvestmentMonthly = actualInvestmentMonthly;
-        computed.assumptions.investment_ratio = ratio;
-      }
-    } catch (e) {
-      console.warn('[fmi] score adjustment failed:', e.message || e);
-    }
-
-    // Persist FMI snapshot
+    // Persist FMI snapshot for history/trends
     await FMIHistory.create({
       userId,
       score:     computed.score,
       factors:   computed.factors,
       timestamp: new Date()
     });
+
+    console.log(`✓ FMI calculated for ${userId}: score=${computed.FMI} (${computed.fmiLabel}), status=${computed.status}`);
 
     res.json({ ...computed, timestamp: new Date().toISOString() });
   } catch (error) { next(error); }
@@ -726,12 +675,32 @@ router.get('/dashboard', async (req, res, next) => {
       pct: Math.round((val / totalRecentExp) * 100)
     }));
 
-    // Budget Metrics
+    // ── Wants vs Needs vs Investment breakdown (current month) ──
+    const monthStart = new Date();
+    monthStart.setDate(1);
+    monthStart.setHours(0, 0, 0, 0);
+    const thisMonthTx = txDocs.filter((t) => new Date(t.timestamp) >= monthStart);
+
+    const typeMap = { Need: 0, Want: 0, Investment: 0 };
+    thisMonthTx.forEach((t) => {
+      const txType = t.type || 'Need';
+      if (typeMap[txType] !== undefined) typeMap[txType] += Math.abs(t.amount);
+      else typeMap.Need += Math.abs(t.amount);           // fallback
+    });
+    const totalTyped = typeMap.Need + typeMap.Want + typeMap.Investment || 1;
+    const wantsNeedsBreakdown = {
+      needs:      { amount: Math.round(typeMap.Need),       pct: Math.round((typeMap.Need / totalTyped) * 100) },
+      wants:      { amount: Math.round(typeMap.Want),       pct: Math.round((typeMap.Want / totalTyped) * 100) },
+      investments:{ amount: Math.round(typeMap.Investment), pct: Math.round((typeMap.Investment / totalTyped) * 100) },
+      total:      Math.round(totalTyped),
+    };
+
+    // Budget Metrics (now uses real type-based aggregation)
     const budgetMetrics = [
-      { label: 'Needs',   val: Math.round(totalRecentExp * 0.5), color: '#3B3BDE' },
-      { label: 'Wants',   val: Math.round(totalRecentExp * 0.3), color: '#3B3BDE' },
-      { label: 'Savings', val: envelopes?.savings || 0,        color: '#22C880' },
-      { label: 'Invest',  val: goals.reduce((s, g) => s + g.savedAmount, 0), color: '#22C880' },
+      { label: 'Needs',   val: typeMap.Need,                                    color: '#3B3BDE' },
+      { label: 'Wants',   val: typeMap.Want,                                    color: '#F59E0B' },
+      { label: 'Savings', val: envelopes?.savings || 0,                         color: '#22C880' },
+      { label: 'Invest',  val: typeMap.Investment || goals.reduce((s, g) => s + g.savedAmount, 0), color: '#7C3AED' },
     ];
 
     // Dynamic Insights
@@ -760,7 +729,8 @@ router.get('/dashboard', async (req, res, next) => {
       microActions,
       goals,
       categoryBreakdown,
-      budgetMetrics
+      budgetMetrics,
+      wantsNeedsBreakdown,
     });
   } catch (error) { next(error); }
 });

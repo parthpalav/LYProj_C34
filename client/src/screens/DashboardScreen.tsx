@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { getDashboard } from '../services/api';
 import { useStore } from '../store/useStore';
-import { DashboardData } from '../types';
+import { DashboardData, WantsNeedsBreakdown } from '../types';
 import { UpdateBalanceScreen } from './UpdateBalanceScreen';
 import { BudgetPacing } from '../components/BudgetPacing';
 import { Heatmap } from '../components/Heatmap';
@@ -74,20 +74,39 @@ const gStyles = StyleSheet.create({
 });
 
 // ═══════════════════════════════════════════════════════════
-// WANTS vs NEEDS  (vertical bars)
+// WANTS vs NEEDS  (vertical bars – driven by real tx data)
 // ═══════════════════════════════════════════════════════════
-function WantsNeedsChart({ fmiScore }: { fmiScore: number }) {
-  const wantsPct = Math.min(100, Math.round(100 - fmiScore * 0.4));
-  const needsPct = Math.min(100, Math.round(fmiScore * 0.5));
+function WantsNeedsChart({ breakdown }: { breakdown?: WantsNeedsBreakdown }) {
   const BAR_H = 110;
+
+  if (!breakdown || breakdown.total <= 0) {
+    return (
+      <View style={wnStyles.empty}>
+        <Text style={wnStyles.emptyIcon}>📊</Text>
+        <Text style={wnStyles.emptyText}>No transactions this month yet.</Text>
+        <Text style={wnStyles.emptyHint}>Add a transaction to see your Wants vs Needs breakdown.</Text>
+      </View>
+    );
+  }
+
+  const bars = [
+    { label: 'Needs',  pct: breakdown.needs.pct,       amount: breakdown.needs.amount,       color: GREEN },
+    { label: 'Wants',  pct: breakdown.wants.pct,       amount: breakdown.wants.amount,       color: AMBER },
+    { label: 'Invest', pct: breakdown.investments.pct, amount: breakdown.investments.amount, color: PURPLE },
+  ];
+
+  const fmt = (n: number) =>
+    new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(n);
+
   return (
     <View style={wnStyles.row}>
-      {[{ label: 'Wants', pct: wantsPct, color: BLUE }, { label: 'Needs', pct: needsPct, color: GREEN }].map((b) => (
+      {bars.map((b) => (
         <View key={b.label} style={wnStyles.col}>
           <View style={[wnStyles.track, { height: BAR_H }]}>
-            <View style={[wnStyles.bar, { height: (b.pct / 100) * BAR_H, backgroundColor: b.color }]} />
+            <View style={[wnStyles.bar, { height: Math.max((b.pct / 100) * BAR_H, 4), backgroundColor: b.color }]} />
           </View>
           <Text style={wnStyles.pct}>{b.pct}%</Text>
+          <Text style={wnStyles.amt}>{fmt(b.amount)}</Text>
           <Text style={wnStyles.lbl}>{b.label}</Text>
         </View>
       ))}
@@ -95,12 +114,17 @@ function WantsNeedsChart({ fmiScore }: { fmiScore: number }) {
   );
 }
 const wnStyles = StyleSheet.create({
-  row: { flexDirection: 'row', justifyContent: 'space-around', alignItems: 'flex-end', paddingTop: 4 },
-  col: { alignItems: 'center', gap: 4 },
-  track: { width: 52, backgroundColor: '#F0F1F5', borderRadius: 8, justifyContent: 'flex-end', overflow: 'hidden' },
-  bar: { width: '100%', borderRadius: 8 },
-  pct: { fontSize: 20, fontWeight: '800', color: '#111827', marginTop: 6 },
-  lbl: { fontSize: 12, color: '#6B7280', fontWeight: '500' },
+  row:   { flexDirection: 'row', justifyContent: 'space-around', alignItems: 'flex-end', paddingTop: 4 },
+  col:   { alignItems: 'center', gap: 3 },
+  track: { width: 48, backgroundColor: '#F0F1F5', borderRadius: 8, justifyContent: 'flex-end', overflow: 'hidden' },
+  bar:   { width: '100%', borderRadius: 8 },
+  pct:   { fontSize: 20, fontWeight: '800', color: '#111827', marginTop: 6 },
+  amt:   { fontSize: 11, color: '#6B7280', fontWeight: '600' },
+  lbl:   { fontSize: 12, color: '#6B7280', fontWeight: '500' },
+  empty:     { alignItems: 'center', paddingVertical: 18, gap: 6 },
+  emptyIcon: { fontSize: 28 },
+  emptyText: { fontSize: 13, fontWeight: '600', color: '#6B7280' },
+  emptyHint: { fontSize: 11, color: '#9CA3AF', textAlign: 'center', lineHeight: 16 },
 });
 
 // ═══════════════════════════════════════════════════════════
@@ -343,6 +367,7 @@ export function DashboardScreen(): React.ReactElement {
   const [refreshing,  setRefreshing] = useState(false);
   const [error,       setError]     = useState<string | null>(null);
   const [showUpdateBalance, setShowUpdateBalance] = useState(false);
+  const [refreshKey,  setRefreshKey] = useState(0);
 
   const fetchDashboard = useCallback(async (isRefresh = false) => {
     try {
@@ -351,6 +376,7 @@ export function DashboardScreen(): React.ReactElement {
       const data: DashboardData = await getDashboard();
       setDashboard(data);
       setError(null);
+      setRefreshKey((k) => k + 1);
     } catch {
       setError('Could not load dashboard. Is the server running?');
     } finally {
@@ -419,21 +445,21 @@ export function DashboardScreen(): React.ReactElement {
       {/* Budget Pacing + Heatmap (placed under Balance/FMI) */}
       <View style={s.visualsWrapper}>
         <Card title="Budget Pacing">
-          <BudgetPacing />
+          <BudgetPacing refreshKey={refreshKey} />
         </Card>
 
         <View style={{ height: 12 }} />
 
         <Card title="Spend Heatmap">
-          <Heatmap />
+          <Heatmap refreshKey={refreshKey} />
         </Card>
       </View>
 
       {/* Row 1 */}
       <View style={s.row}>
         <View style={{ flex: 1 }}>
-          <Card title="Wants vs Needs">
-            <WantsNeedsChart fmiScore={fmiScore} />
+          <Card title="Wants vs Needs" info>
+            <WantsNeedsChart breakdown={dashboard?.wantsNeedsBreakdown} />
           </Card>
         </View>
       </View>

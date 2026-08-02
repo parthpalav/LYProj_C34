@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, RefreshControl, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { getPacing } from '../services/api';
 
-export function BudgetPacing(): React.ReactElement {
+export function BudgetPacing({ refreshKey }: { refreshKey?: number }): React.ReactElement {
   const [data, setData] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
 
   const load = async () => {
     try {
@@ -19,13 +18,8 @@ export function BudgetPacing(): React.ReactElement {
     }
   };
 
-  useEffect(() => { load(); }, []);
-
-  const onRefresh = async () => {
-    setRefreshing(true);
-    await load();
-    setRefreshing(false);
-  };
+  // Re-fetch whenever refreshKey changes (parent pull-to-refresh) or on mount
+  useEffect(() => { load(); }, [refreshKey]);
 
   if (loading) return <ActivityIndicator style={{ margin: 12 }} />;
 
@@ -36,27 +30,25 @@ export function BudgetPacing(): React.ReactElement {
   ];
 
   return (
-    <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-      <View style={styles.container}>
-        {rows.map((r) => {
-          const actual = data?.[r.key]?.actual || 0;
-          const limit = data?.[r.key]?.limit || 0;
-          const pct = limit > 0 ? Math.min(1, actual / limit) : 0;
-          const over = actual > limit;
-          return (
-            <View key={r.key} style={styles.row}>
-              <View style={styles.rowHeader}>
-                <Text style={styles.label}>{r.label}</Text>
-                <Text style={styles.value}>₹{Math.round(actual)} / ₹{Math.round(limit)}</Text>
-              </View>
-              <View style={styles.track}>
-                <View style={[styles.fill, { width: `${pct * 100}%`, backgroundColor: over ? '#EF4444' : r.color }]} />
-              </View>
+    <View style={styles.container}>
+      {rows.map((r) => {
+        const actual = data?.[r.key]?.actual || 0;
+        const limit = data?.[r.key]?.limit || 0;
+        const pct = limit > 0 ? Math.min(1, actual / limit) : 0;
+        const over = actual > limit;
+        return (
+          <View key={r.key} style={styles.row}>
+            <View style={styles.rowHeader}>
+              <Text style={styles.label}>{r.label}</Text>
+              <Text style={styles.value}>₹{Math.round(actual)} / ₹{Math.round(limit)}</Text>
             </View>
-          );
-        })}
-      </View>
-    </ScrollView>
+            <View style={styles.track}>
+              <View style={[styles.fill, { width: `${pct * 100}%`, backgroundColor: over ? '#EF4444' : r.color }]} />
+            </View>
+          </View>
+        );
+      })}
+    </View>
   );
 }
 

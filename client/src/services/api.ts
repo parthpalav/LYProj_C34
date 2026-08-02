@@ -3,9 +3,10 @@ import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 import {
   AlertItem, BehaviorPattern, ChatMessage, DashboardData, EnvelopeData,
-  FISData, FMIRecord, Goal, IncomeFlowData, IncomeRecord,
+  FISData, FMIRecord, FMIResponse, Goal, IncomeFlowData, IncomeRecord,
   Transaction, WeeklyReport
 } from '../types';
+
 
 export interface NewTransaction {
   amount:       number;
@@ -87,7 +88,7 @@ export async function deleteTransaction(id: string): Promise<void> {
 }
 
 // ── FMI ──────────────────────────────────────────────────────
-export async function getFMI(): Promise<{ current: FMIRecord; history: FMIRecord[] }> {
+export async function getFMI(): Promise<{ current: FMIResponse; history: FMIRecord[] }> {
   const [currentRes, historyRes] = await Promise.all([
     api.get('/api/fmi'),
     api.get('/api/fmi/history')

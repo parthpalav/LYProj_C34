@@ -33,7 +33,7 @@ export function DashboardScreen(): React.ReactElement {
 
   return (
     <View style={[styles.root, { paddingTop: insets.top }]}>
-      <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 24 }} showsVerticalScrollIndicator={false}>
+      <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 100 }} showsVerticalScrollIndicator={false}>
         <View style={styles.balanceCard}>
           <Text style={styles.balanceLabel}>Current Balance</Text>
           <Text style={styles.balanceValue}>{formatCurrency(dashboard?.balance || 0)}</Text>

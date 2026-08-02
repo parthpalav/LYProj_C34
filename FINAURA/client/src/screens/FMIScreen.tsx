@@ -18,7 +18,7 @@ export function FMIScreen(): React.ReactElement {
 
   return (
     <View style={[styles.root, { paddingTop: insets.top }]}>
-      <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 24 }} showsVerticalScrollIndicator={false}>
+      <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 100 }} showsVerticalScrollIndicator={false}>
         <View style={styles.card}>
           <Text style={styles.title}>Financial Mood Index</Text>
           {fmi?.fmi ? (

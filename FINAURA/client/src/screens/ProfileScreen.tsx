@@ -408,7 +408,7 @@ export function ProfileScreen(): React.ReactElement {
 
 const styles = StyleSheet.create({
   rootContainer: { flex: 1, backgroundColor: '#F3F4F6' },
-  scrollContent: { paddingHorizontal: 20, paddingVertical: 16 },
+  scrollContent: { paddingHorizontal: 20, paddingTop: 16, paddingBottom: 100 },
   card: { backgroundColor: '#FFFFFF', borderRadius: 16, padding: 20, marginBottom: 16, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 8, elevation: 2 },
   headerRow: { flexDirection: 'row', alignItems: 'center' },
   avatarContainer: { width: 56, height: 56, borderRadius: 28, backgroundColor: '#2563EB', justifyContent: 'center', alignItems: 'center', marginRight: 16 },

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { View, TextInput, TouchableOpacity, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, TextInput, TouchableOpacity, Text, StyleSheet, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { sendChatMessage } from '../services/api';
 import { ChatBubble } from '../components/ChatBubble';
 
 export function ChatbotScreen(): React.ReactElement {
+  const insets = useSafeAreaInsets();
   const [messages, setMessages] = useState<Array<{ text: string; isUser: boolean }>>([]);
   const [input, setInput] = useState('');
 
@@ -17,27 +19,40 @@ export function ChatbotScreen(): React.ReactElement {
   };
 
   return (
-    <View style={styles.container}>
-      <ScrollView style={styles.chat} contentContainerStyle={{ paddingBottom: 12 }}>
-        {messages.map((m, i) => (
-          <ChatBubble key={i} message={m.text} isUser={m.isUser} />
-        ))}
-      </ScrollView>
-      <View style={styles.inputRow}>
-        <TextInput style={styles.input} placeholder="Ask about your finances..." value={input} onChangeText={setInput} />
-        <TouchableOpacity style={styles.btn} onPress={send}>
-          <Text style={styles.btnText}>Send</Text>
-        </TouchableOpacity>
-      </View>
+    <View style={[styles.root, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      >
+        <ScrollView style={styles.chat} contentContainerStyle={{ paddingBottom: 12 }} showsVerticalScrollIndicator={false}>
+          {messages.map((m, i) => (
+            <ChatBubble key={i} message={m.text} isUser={m.isUser} />
+          ))}
+        </ScrollView>
+        <View style={styles.inputRow}>
+          <TextInput
+            style={styles.input}
+            placeholder="Ask about your finances or profile..."
+            placeholderTextColor="#9CA3AF"
+            value={input}
+            onChangeText={setInput}
+            onSubmitEditing={send}
+          />
+          <TouchableOpacity style={styles.btn} onPress={send} activeOpacity={0.8}>
+            <Text style={styles.btnText}>Send</Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAvoidingView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F4F6FA', padding: 16 },
+  root: { flex: 1, backgroundColor: '#F3F4F6' },
+  container: { flex: 1, padding: 16 },
   chat: { flex: 1 },
-  inputRow: { flexDirection: 'row', gap: 8, alignItems: 'center' },
-  input: { flex: 1, height: 44, backgroundColor: '#fff', borderRadius: 10, borderWidth: 1, borderColor: '#E5E7EB', paddingHorizontal: 12 },
-  btn: { backgroundColor: '#3B3BDE', paddingHorizontal: 14, paddingVertical: 10, borderRadius: 10 },
-  btnText: { color: '#fff', fontWeight: '700' }
+  inputRow: { flexDirection: 'row', gap: 8, alignItems: 'center', marginTop: 8 },
+  input: { flex: 1, height: 48, backgroundColor: '#FFFFFF', borderRadius: 12, borderWidth: 1, borderColor: '#D1D5DB', paddingHorizontal: 14, fontSize: 15, color: '#111827' },
+  btn: { backgroundColor: '#2563EB', paddingHorizontal: 16, paddingVertical: 12, borderRadius: 12 },
+  btnText: { color: '#FFFFFF', fontWeight: '700', fontSize: 15 }
 });

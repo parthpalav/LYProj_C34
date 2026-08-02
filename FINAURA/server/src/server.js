@@ -3,6 +3,8 @@ import cors from 'cors';
 import morgan from 'morgan';
 import 'dotenv/config';
 import { connectDB } from './config/db.js';
+import { logger } from './utils/logger.js';
+import { errorHandler } from './middleware/errorHandler.js';
 
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
@@ -13,6 +15,23 @@ import dashboardRoutes from './routes/dashboardRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
+
+// Environment variables check on startup
+function validateEnv() {
+  const criticalEnvVars = ['MONGO_URI', 'JWT_SECRET', 'JWT_REFRESH_SECRET'];
+  const missing = criticalEnvVars.filter(v => !process.env[v]);
+  
+  if (missing.length > 0) {
+    if (process.env.NODE_ENV === 'production') {
+      logger.error(`CRITICAL ERROR: Missing environment variables in production: ${missing.join(', ')}`);
+      process.exit(1);
+    } else {
+      logger.warn(`Dev Warning: Missing environment variables: ${missing.join(', ')}. Default fallback keys in use.`);
+    }
+  }
+}
+
+validateEnv();
 
 app.use(cors());
 app.use(express.json({ limit: '1mb' }));
@@ -27,11 +46,10 @@ app.use('/api/fmi', fmiRoutes);
 app.use('/api/chatbot', chatbotRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 
-app.use((err, _req, res, _next) => {
-  console.error(err);
-  res.status(500).json({ message: 'Internal server error' });
-});
+// Centralized error middleware
+app.use(errorHandler);
 
+// Start server process
 async function start() {
   await connectDB();
   app.listen(PORT, () => console.log(`[server] running on :${PORT}`));

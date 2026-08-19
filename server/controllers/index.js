@@ -21,7 +21,9 @@ import {
   resendVerificationSchema
 } from '../validators/authValidator.js';
 import { logger } from '../utils/logger.js';
+import mongoose from 'mongoose';
 import User        from '../models/User.js';
+
 import Transaction from '../models/Transaction.js';
 import FMIHistory  from '../models/FMIHistory.js';
 import Alert       from '../models/Alert.js';
@@ -60,6 +62,14 @@ function normalizeEmail(email) {
 
 function publicUser(user) {
   return authService.stripUser(user);
+}
+
+// Build a safe $or filter for User.findOne — never passes a non-ObjectId string
+// into { _id } which causes Mongoose CastError.
+function userFilter(userId) {
+  const conditions = [{ id: userId }];
+  if (mongoose.isValidObjectId(userId)) conditions.push({ _id: userId });
+  return { $or: conditions };
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -317,9 +327,7 @@ router.use(authMiddleware);
 router.get('/auth/me', async (req, res, next) => {
   try {
     const userId = req.user.id || req.user._id;
-    const user = await User.findOne({
-      $or: [{ id: userId }, { _id: userId }]
-    });
+    const user = await User.findOne(userFilter(userId));
     if (!user) {
       return res.status(404).json({ success: false, error: 'User not found', message: 'User not found' });
     }
@@ -357,7 +365,7 @@ router.post('/user/onboarding', async (req, res, next) => {
     if (payload.dateOfBirth) updateFields.dateOfBirth = new Date(payload.dateOfBirth);
 
     const updated = await User.findOneAndUpdate(
-      { $or: [{ id: userId }, { _id: userId }] },
+      userFilter(userId),
       updateFields,
       { new: true }
     );
@@ -376,7 +384,7 @@ router.get('/user/profile', async (req, res, next) => {
   try {
     const userId = req.user.id || req.user._id;
     const user = await User.findOne({
-      $or: [{ id: userId }, { _id: userId }]
+      ...userFilter(userId)
     }).lean();
     if (!user) {
       return res.status(404).json({ success: false, error: 'User not found' });
@@ -409,7 +417,7 @@ router.put('/user/profile', async (req, res, next) => {
     if (payload.dateOfBirth) updateFields.dateOfBirth = new Date(payload.dateOfBirth);
 
     const updated = await User.findOneAndUpdate(
-      { $or: [{ id: userId }, { _id: userId }] },
+      userFilter(userId),
       updateFields,
       { new: true }
     );

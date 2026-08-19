@@ -9,6 +9,18 @@ import { analyzeSentiment, annotateTransactions } from '../services/SentimentSer
 import { detectBehavioralPatterns, calculateFIS, generateWeeklyReport } from '../services/BehaviorService.js';
 import { smoothIncomeFlow } from '../services/IncomeFlowService.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
+import * as authService from '../services/authService.js';
+import * as emailService from '../services/emailService.js';
+import { authRateLimiter, passwordResetRateLimiter } from '../middleware/rateLimiter.js';
+import {
+  validate,
+  registerSchema,
+  loginSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
+  resendVerificationSchema
+} from '../validators/authValidator.js';
+import { logger } from '../utils/logger.js';
 import User        from '../models/User.js';
 import Transaction from '../models/Transaction.js';
 import FMIHistory  from '../models/FMIHistory.js';
@@ -40,123 +52,376 @@ function normalizeFmi(item) {
   return { score: item.score, factors: item.factors, timestamp: item.timestamp };
 }
 
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
 const ML_SERVICE_URL = process.env.ML_SERVICE_URL || 'http://localhost:5001';
 
 function normalizeEmail(email) {
   return String(email || '').trim().toLowerCase();
 }
 
-function getJwtSecret() {
-  if (!process.env.JWT_SECRET) {
-    throw new Error('JWT_SECRET is not configured');
-  }
-  return process.env.JWT_SECRET;
-}
-
-function issueToken(user) {
-  return jwt.sign({ id: user.id, email: user.email }, getJwtSecret(), { expiresIn: JWT_EXPIRES_IN });
-}
-
-function deriveOnboardingComplete(user) {
-  return Boolean(
-    user.onboardingComplete === true ||
-    (user.dateOfBirth && user.retirementAge !== null && user.monthlyIncome !== null)
-  );
-}
-
 function publicUser(user) {
-  return {
-    id: user.id,
-    name: user.name,
-    email: user.email,
-    dateOfBirth: user.dateOfBirth,
-    retirementAge: user.retirementAge,
-    monthlyIncome: user.monthlyIncome,
-    onboardingComplete: deriveOnboardingComplete(user),
-    incomeType: user.incomeType,
-    goals: user.goals,
-    currentBalance: user.currentBalance
-  };
+  return authService.stripUser(user);
 }
 
 // ═══════════════════════════════════════════════════════════
-// USER
+// AUTHENTICATION (PUBLIC)
 // ═══════════════════════════════════════════════════════════
 
 async function handleRegister(req, res, next) {
   try {
-    const payload = req.body || {};
+    const payload = req.validatedBody || req.body || {};
     const email = normalizeEmail(payload.email);
 
-    if (!email) return res.status(400).json({ error: 'Email is required' });
-    if (!payload.name) return res.status(400).json({ error: 'Name is required' });
-    if (!payload.password) return res.status(400).json({ error: 'Password is required' });
+    if (!email) return res.status(400).json({ success: false, error: 'Email is required', message: 'Email is required' });
+    if (!payload.name) return res.status(400).json({ success: false, error: 'Name is required', message: 'Name is required' });
+    if (!payload.password) return res.status(400).json({ success: false, error: 'Password is required', message: 'Password is required' });
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(409).json({ error: 'Email already registered. Please sign in or use a different email.' });
+      return res.status(409).json({
+        success: false,
+        error: 'Email already registered. Please sign in or use a different email.',
+        message: 'An account with this email address already exists',
+        errors: { email: 'An account with this email address already exists' }
+      });
     }
 
+    const passwordHash = await authService.hashPassword(payload.password);
     const doc = await User.create({
       id: `u-${Date.now()}`,
-      name: payload.name,
+      name: payload.name.trim(),
       email,
-      password: payload.password,
+      password: passwordHash,
+      passwordHash,
       incomeType: payload.incomeType || 'salaried',
       goals: Array.isArray(payload.goals) ? payload.goals : []
     });
 
-    const token = issueToken(doc);
-    res.status(201).json({ token, user: publicUser(doc) });
+    const accessToken = authService.issueAccessToken(doc);
+    const refreshToken = await authService.issueRefreshToken(doc);
+
+    // Send verification email asynchronously
+    const verificationToken = await authService.createEmailVerificationToken(doc);
+    emailService.sendVerificationEmail(doc.email, verificationToken).catch(err => {
+      logger.error(`Failed to send verification email: ${err.message}`);
+    });
+
+    logger.info(`User registered successfully: ${doc.email}`);
+
+    res.status(201).json({
+      success: true,
+      message: 'Account created successfully',
+      token: accessToken,
+      accessToken,
+      refreshToken,
+      user: publicUser(doc)
+    });
   } catch (error) {
-    if (error?.message === 'JWT_SECRET is not configured') {
-      return res.status(500).json({ error: error.message });
-    }
     next(error);
   }
 }
 
 async function handleLogin(req, res, next) {
   try {
-    const { email: rawEmail, password } = req.body || {};
-    const email = normalizeEmail(rawEmail);
+    const payload = req.validatedBody || req.body || {};
+    const email = normalizeEmail(payload.email);
+    const password = payload.password;
+
     if (!email || !password) {
-      return res.status(400).json({ error: 'Email and password required' });
+      return res.status(400).json({ success: false, error: 'Email and password required', message: 'Email and password required' });
     }
 
-    const user = await User.findOne({ email }).select('+password');
+    const user = await User.findOne({ email }).select('+password +passwordHash');
     if (!user) {
-      return res.status(401).json({ error: 'Email not found. Please check your email or sign up.' });
-    }
-    const isPasswordValid = await user.comparePassword(password);
-    if (!isPasswordValid) {
-      return res.status(401).json({ error: 'Incorrect password. Please try again.' });
+      logger.warn(`Login failed: email not found (${email})`);
+      return res.status(401).json({ success: false, error: 'Email not found. Please check your email or sign up.', message: 'Invalid email or password' });
     }
 
-    const token = issueToken(user);
-    res.json({ token, user: publicUser(user) });
-  } catch (error) {
-    if (error?.message === 'JWT_SECRET is not configured') {
-      return res.status(500).json({ error: error.message });
+    // Check account lockout status
+    try {
+      await authService.checkAccountLockout(user);
+    } catch (lockError) {
+      return res.status(lockError.status || 423).json({
+        success: false,
+        error: lockError.message,
+        message: lockError.message
+      });
     }
+
+    const isPasswordValid = await authService.comparePassword(password, user.password || user.passwordHash);
+    if (!isPasswordValid) {
+      await authService.recordFailedLogin(user);
+      logger.warn(`Login failed: incorrect password for ${email}`);
+      return res.status(401).json({ success: false, error: 'Incorrect password. Please try again.', message: 'Invalid email or password' });
+    }
+
+    await authService.resetFailedLogin(user);
+
+    const accessToken = authService.issueAccessToken(user);
+    const refreshToken = await authService.issueRefreshToken(user);
+
+    logger.info(`User logged in successfully: ${user.email}`);
+
+    res.json({
+      success: true,
+      message: 'Signed in successfully',
+      token: accessToken,
+      accessToken,
+      refreshToken,
+      user: publicUser(user)
+    });
+  } catch (error) {
     next(error);
   }
 }
 
-router.post('/auth/register', handleRegister);
-router.post('/auth/login', handleLogin);
-router.post('/user/register', handleRegister);
-router.post('/user/login', handleLogin);
+// Public auth endpoints with rate limiting & schema validation
+router.post('/auth/register', authRateLimiter, validate(registerSchema), handleRegister);
+router.post('/auth/login', authRateLimiter, validate(loginSchema), handleLogin);
+router.post('/user/register', authRateLimiter, validate(registerSchema), handleRegister);
+router.post('/user/login', authRateLimiter, validate(loginSchema), handleLogin);
 
+router.post('/auth/refresh', async (req, res, next) => {
+  try {
+    const { refreshToken: rawRefreshToken } = req.body || {};
+    if (!rawRefreshToken) {
+      return res.status(400).json({ success: false, error: 'Refresh token is required', message: 'Refresh token is required' });
+    }
+
+    const { accessToken, refreshToken: newRefreshToken, user } = await authService.refreshTokens(rawRefreshToken);
+
+    return res.json({
+      success: true,
+      token: accessToken,
+      accessToken,
+      refreshToken: newRefreshToken,
+      user: publicUser(user)
+    });
+  } catch (error) {
+    return res.status(error.status || 401).json({
+      success: false,
+      error: error.message,
+      message: error.message
+    });
+  }
+});
+
+router.post('/auth/logout', async (req, res, next) => {
+  try {
+    const { refreshToken: rawRefreshToken } = req.body || {};
+    if (rawRefreshToken) {
+      await authService.revokeRefreshToken(rawRefreshToken);
+    }
+    logger.info(`User logged out`);
+    return res.json({ success: true, message: 'Logged out successfully' });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post('/auth/forgot-password', passwordResetRateLimiter, validate(forgotPasswordSchema), async (req, res, next) => {
+  try {
+    const { email } = req.validatedBody || req.body || {};
+    const user = await User.findOne({ email: normalizeEmail(email) });
+
+    if (user) {
+      const resetToken = await authService.createPasswordResetToken(user);
+      emailService.sendPasswordResetEmail(user.email, resetToken).catch(err => {
+        logger.error(`Error sending password reset email: ${err.message}`);
+      });
+    }
+
+    return res.json({
+      success: true,
+      message: 'If an account exists with that email address, password reset instructions have been sent.'
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post('/auth/reset-password', passwordResetRateLimiter, validate(resetPasswordSchema), async (req, res, next) => {
+  try {
+    const { token, password } = req.validatedBody || req.body || {};
+    await authService.verifyAndConsumePasswordResetToken(token, password);
+
+    return res.json({
+      success: true,
+      message: 'Password has been reset successfully. You can now sign in with your new password.'
+    });
+  } catch (error) {
+    return res.status(error.status || 400).json({
+      success: false,
+      error: error.message,
+      message: error.message
+    });
+  }
+});
+
+router.post('/auth/verify-email', async (req, res, next) => {
+  try {
+    const token = req.query.token || req.body.token;
+    if (!token) {
+      return res.status(400).json({ success: false, error: 'Verification token is required', message: 'Verification token is required' });
+    }
+
+    const user = await authService.verifyEmailToken(token);
+    return res.json({
+      success: true,
+      message: 'Email address successfully verified!',
+      user: publicUser(user)
+    });
+  } catch (error) {
+    return res.status(error.status || 400).json({
+      success: false,
+      error: error.message,
+      message: error.message
+    });
+  }
+});
+
+router.get('/auth/verify-email', async (req, res, next) => {
+  try {
+    const token = req.query.token;
+    if (!token) {
+      return res.status(400).send('<h3>Verification token is missing.</h3>');
+    }
+    await authService.verifyEmailToken(token);
+    return res.send('<h3>Email successfully verified! You can return to the FINAURA app.</h3>');
+  } catch (error) {
+    return res.status(400).send(`<h3>Verification failed: ${error.message}</h3>`);
+  }
+});
+
+router.post('/auth/resend-verification', passwordResetRateLimiter, validate(resendVerificationSchema), async (req, res, next) => {
+  try {
+    const { email } = req.validatedBody || req.body || {};
+    const user = await User.findOne({ email: normalizeEmail(email) });
+    if (user && !user.isEmailVerified) {
+      const verificationToken = await authService.createEmailVerificationToken(user);
+      await emailService.sendVerificationEmail(user.email, verificationToken);
+    }
+    return res.json({
+      success: true,
+      message: 'If an unverified account exists with that email address, a verification link has been sent.'
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// ═══════════════════════════════════════════════════════════
+// AUTHENTICATED ROUTES
+// ═══════════════════════════════════════════════════════════
 router.use(authMiddleware);
+
+router.get('/auth/me', async (req, res, next) => {
+  try {
+    const userId = req.user.id || req.user._id;
+    const user = await User.findOne({
+      $or: [{ id: userId }, { _id: userId }]
+    });
+    if (!user) {
+      return res.status(404).json({ success: false, error: 'User not found', message: 'User not found' });
+    }
+    return res.json({ success: true, user: publicUser(user) });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Onboarding submission endpoint (supports both modal & full onboarding screen)
+router.post('/user/onboarding', async (req, res, next) => {
+  try {
+    const userId = req.user.id || req.user._id;
+    const payload = req.body || {};
+
+    const updateFields = {
+      onboardingComplete: true,
+      onboardingCompleted: true
+    };
+
+    if (payload.age !== undefined) updateFields.age = Number(payload.age);
+    if (payload.income !== undefined) {
+      updateFields.income = Number(payload.income);
+      updateFields.monthlyIncome = Number(payload.income);
+    }
+    if (payload.monthlyIncome !== undefined) {
+      updateFields.monthlyIncome = Number(payload.monthlyIncome);
+      updateFields.income = Number(payload.monthlyIncome);
+    }
+    if (payload.incomeType) updateFields.incomeType = String(payload.incomeType).trim();
+    if (payload.retirementAge !== undefined) updateFields.retirementAge = Number(payload.retirementAge);
+    if (payload.retirementCorpusGoal !== undefined) updateFields.retirementCorpusGoal = Number(payload.retirementCorpusGoal);
+    if (payload.currentBalance !== undefined) updateFields.currentBalance = Number(payload.currentBalance);
+    if (Array.isArray(payload.fixedObligations)) updateFields.fixedObligations = payload.fixedObligations;
+    if (payload.dateOfBirth) updateFields.dateOfBirth = new Date(payload.dateOfBirth);
+
+    const updated = await User.findOneAndUpdate(
+      { $or: [{ id: userId }, { _id: userId }] },
+      updateFields,
+      { new: true }
+    );
+
+    if (!updated) {
+      return res.status(404).json({ success: false, error: 'User not found', message: 'User not found' });
+    }
+
+    return res.json({ success: true, user: publicUser(updated) });
+  } catch (error) {
+    next(error);
+  }
+});
 
 router.get('/user/profile', async (req, res, next) => {
   try {
-    const userId = req.user.id;
-    const user = await User.findOne({ id: userId }).lean();
-    res.json(user);
+    const userId = req.user.id || req.user._id;
+    const user = await User.findOne({
+      $or: [{ id: userId }, { _id: userId }]
+    }).lean();
+    if (!user) {
+      return res.status(404).json({ success: false, error: 'User not found' });
+    }
+    res.json(publicUser(user));
   } catch (error) { next(error); }
+});
+
+router.put('/user/profile', async (req, res, next) => {
+  try {
+    const userId = req.user.id || req.user._id;
+    const payload = req.body || {};
+
+    const updateFields = {};
+    if (payload.name !== undefined) updateFields.name = String(payload.name).trim();
+    if (payload.age !== undefined) updateFields.age = Number(payload.age);
+    if (payload.income !== undefined) {
+      updateFields.income = Number(payload.income);
+      updateFields.monthlyIncome = Number(payload.income);
+    }
+    if (payload.monthlyIncome !== undefined) {
+      updateFields.monthlyIncome = Number(payload.monthlyIncome);
+      updateFields.income = Number(payload.monthlyIncome);
+    }
+    if (payload.incomeType !== undefined) updateFields.incomeType = String(payload.incomeType).trim();
+    if (payload.retirementAge !== undefined) updateFields.retirementAge = Number(payload.retirementAge);
+    if (payload.retirementCorpusGoal !== undefined) updateFields.retirementCorpusGoal = Number(payload.retirementCorpusGoal);
+    if (payload.currentBalance !== undefined) updateFields.currentBalance = Number(payload.currentBalance);
+    if (Array.isArray(payload.fixedObligations)) updateFields.fixedObligations = payload.fixedObligations;
+    if (payload.dateOfBirth) updateFields.dateOfBirth = new Date(payload.dateOfBirth);
+
+    const updated = await User.findOneAndUpdate(
+      { $or: [{ id: userId }, { _id: userId }] },
+      updateFields,
+      { new: true }
+    );
+
+    if (!updated) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    return res.json({ success: true, message: 'Profile updated successfully', user: publicUser(updated) });
+  } catch (error) {
+    next(error);
+  }
 });
 
 router.put('/user/:id/dob', async (req, res, next) => {

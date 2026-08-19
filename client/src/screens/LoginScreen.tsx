@@ -6,18 +6,18 @@ import {
 } from 'react-native';
 import { useAuthStore } from '../store/useAuthStore';
 import { RegisterScreen } from './RegisterScreen';
+import { ForgotPasswordScreen } from './ForgotPasswordScreen';
 
 const finauraLogo = require('../assets/finaura_logo.png');
 
-const { width } = Dimensions.get('window');
 const BLUE = '#3B3BDE';
-const BLUE_DARK = '#2D2DB8';
 
 export function LoginScreen(): React.ReactElement {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showRegister, setShowRegister] = useState(false);
-  const { login, loading, error, clearError } = useAuthStore();
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const { login, loading, authError, fieldErrors, clearErrors } = useAuthStore();
 
   // Animations
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -33,11 +33,16 @@ export function LoginScreen(): React.ReactElement {
   }, [fadeAnim, slideAnim, logoScale]);
 
   if (showRegister) {
-    return <RegisterScreen onBack={() => { setShowRegister(false); clearError(); }} />;
+    return <RegisterScreen onBack={() => { setShowRegister(false); clearErrors(); }} />;
+  }
+
+  if (showForgotPassword) {
+    return <ForgotPasswordScreen onBack={() => { setShowForgotPassword(false); clearErrors(); }} />;
   }
 
   const handleLogin = () => {
     if (!email.trim() || !password.trim()) return;
+    clearErrors();
     login({ email: email.trim(), password });
   };
 
@@ -56,9 +61,9 @@ export function LoginScreen(): React.ReactElement {
         <Text style={styles.subtitle}>Your Autonomous Financial Digital Twin</Text>
 
         {/* Error Banner */}
-        {error ? (
+        {authError ? (
           <View style={styles.errorBanner}>
-            <Text style={styles.errorText}>{error}</Text>
+            <Text style={styles.errorText}>{authError}</Text>
           </View>
         ) : null}
 
@@ -66,7 +71,7 @@ export function LoginScreen(): React.ReactElement {
         <View style={styles.inputWrap}>
           <Text style={styles.inputLabel}>Email</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, fieldErrors.email && styles.inputError]}
             placeholder="you@example.com"
             placeholderTextColor="#9CA3AF"
             autoCapitalize="none"
@@ -76,13 +81,19 @@ export function LoginScreen(): React.ReactElement {
             onChangeText={setEmail}
             editable={!loading}
           />
+          {fieldErrors.email ? <Text style={styles.fieldError}>{fieldErrors.email}</Text> : null}
         </View>
 
         {/* Password */}
         <View style={styles.inputWrap}>
-          <Text style={styles.inputLabel}>Password</Text>
+          <View style={styles.passwordLabelRow}>
+            <Text style={styles.inputLabel}>Password</Text>
+            <TouchableOpacity onPress={() => { clearErrors(); setShowForgotPassword(true); }}>
+              <Text style={styles.forgotText}>Forgot?</Text>
+            </TouchableOpacity>
+          </View>
           <TextInput
-            style={styles.input}
+            style={[styles.input, fieldErrors.password && styles.inputError]}
             placeholder="••••••••"
             placeholderTextColor="#9CA3AF"
             secureTextEntry
@@ -91,6 +102,7 @@ export function LoginScreen(): React.ReactElement {
             editable={!loading}
             onSubmitEditing={handleLogin}
           />
+          {fieldErrors.password ? <Text style={styles.fieldError}>{fieldErrors.password}</Text> : null}
         </View>
 
         {/* Sign In Button */}
@@ -110,7 +122,7 @@ export function LoginScreen(): React.ReactElement {
         {/* Register Link */}
         <TouchableOpacity
           style={styles.linkWrap}
-          onPress={() => { clearError(); setShowRegister(true); }}
+          onPress={() => { clearErrors(); setShowRegister(true); }}
           disabled={loading}
         >
           <Text style={styles.linkText}>Don't have an account? </Text>
@@ -179,6 +191,17 @@ const styles = StyleSheet.create({
     width: '100%',
     marginBottom: 16,
   },
+  passwordLabelRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  forgotText: {
+    fontSize: 12,
+    color: BLUE,
+    fontWeight: '700',
+    marginBottom: 6,
+  },
   inputLabel: {
     fontSize: 12,
     fontWeight: '700',
@@ -201,6 +224,15 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.04,
     shadowRadius: 4,
     elevation: 2,
+  },
+  inputError: {
+    borderColor: '#EF4444',
+  },
+  fieldError: {
+    color: '#EF4444',
+    fontSize: 12,
+    marginTop: 4,
+    fontWeight: '500',
   },
   btn: {
     width: '100%',

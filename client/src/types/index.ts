@@ -100,7 +100,6 @@ export interface FMIResponse {
   timestamp: string;
 }
 
-
 export interface AlertItem {
   id:       string;
   message:  string;
@@ -121,8 +120,6 @@ export interface ChatMessage {
   content:   string;
   timestamp: string;
 }
-
-// ── New types ────────────────────────────────────────────────
 
 export interface Goal {
   id:                  string;
@@ -185,4 +182,29 @@ export interface WeeklyReport {
   savingsRate:    number;
   anomalyCount:   number;
   patterns:       BehaviorPattern[];
+}
+
+export interface FixedObligation {
+  label:  string;
+  amount: number;
+}
+
+export interface User {
+  id:                   string;
+  _id?:                 string;
+  name:                 string;
+  email:                string;
+  isEmailVerified?:     boolean;
+  dateOfBirth?:         string | null;
+  age?:                 number | null;
+  retirementAge?:       number | null;
+  monthlyIncome?:       number | null;
+  income?:              number;
+  incomeType?:          string;
+  retirementCorpusGoal?: number;
+  currentBalance?:      number;
+  fixedObligations?:    FixedObligation[];
+  goals?:               string[];
+  onboardingComplete?:  boolean;
+  onboardingCompleted?: boolean;
 }

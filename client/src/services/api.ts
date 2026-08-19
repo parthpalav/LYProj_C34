@@ -1,21 +1,21 @@
 import axios from 'axios';
 import Constants from 'expo-constants';
 import { Platform } from 'react-native';
+import { secureStorage } from '../utils/secureStorage';
 import {
   AlertItem, BehaviorPattern, ChatMessage, DashboardData, EnvelopeData,
   FISData, FMIRecord, FMIResponse, Goal, IncomeFlowData, IncomeRecord,
-  Transaction, WeeklyReport
+  Transaction, WeeklyReport, User
 } from '../types';
 
-
 export interface NewTransaction {
-  amount:       number;
-  category:     string;
-  sentiment?:   string;
-  description?: string;
-  type?:        'Need' | 'Want' | 'Investment';
+  amount:          number;
+  category:        string;
+  sentiment?:      string;
+  description?:    string;
+  type?:           'Need' | 'Want' | 'Investment';
   confidenceScore?: number;
-  timestamp?:   string; // ISO-8601 device timestamp
+  timestamp?:      string;
 }
 
 export interface NewGoalPayload {
@@ -36,8 +36,7 @@ export interface NewIncomePayload {
 
 function getApiBaseUrl(): string {
   if (process.env.EXPO_PUBLIC_API_URL) return process.env.EXPO_PUBLIC_API_URL;
-  // Expo provides various host identifiers depending on environment and SDK.
-  // Try common fields (expoConfig.hostUri, expoGoConfig.debuggerHost, manifest.debuggerHost)
+  
   const hostUri =
     (Constants as any).expoConfig?.hostUri ||
     (Constants as any).expoGoConfig?.debuggerHost ||
@@ -51,23 +50,199 @@ function getApiBaseUrl(): string {
     if (expoHost && expoHost !== 'localhost') return `http://${expoHost}:4000`;
   }
 
-  // Android emulator uses 10.0.2.2 to reach host machine
   if (Platform.OS === 'android') return 'http://10.0.2.2:4000';
-  // iOS simulator can use localhost
-  if (Platform.OS === 'ios') return 'http://localhost:4000';
-  // default to localhost for web and other environments
   return 'http://localhost:4000';
 }
 
-const api = axios.create({ baseURL: getApiBaseUrl(), timeout: 10000 });
+const BASE_URL = getApiBaseUrl();
 
-// ── Dashboard ─────────────────────────────────────────────────
+export const api = axios.create({ baseURL: BASE_URL, timeout: 10000 });
+
+export function setAuthToken(token?: string): void {
+  if (token) {
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  } else {
+    delete api.defaults.headers.common['Authorization'];
+  }
+}
+
+// ── 401 Refresh Token Queue Interceptor ────────────────────────
+let isRefreshing = false;
+let failedQueue: Array<{ resolve: (token: string) => void; reject: (err: any) => void }> = [];
+
+const processQueue = (error: any, token: string | null = null) => {
+  failedQueue.forEach((promise) => {
+    if (error) {
+      promise.reject(error);
+    } else if (token) {
+      promise.resolve(token);
+    }
+  });
+  failedQueue = [];
+};
+
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+
+    if (
+      error.response?.status === 401 &&
+      error.response?.data?.code === 'TOKEN_EXPIRED' &&
+      !originalRequest._retry
+    ) {
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        })
+          .then((token) => {
+            originalRequest.headers.Authorization = `Bearer ${token}`;
+            return api(originalRequest);
+          })
+          .catch((err) => Promise.reject(err));
+      }
+
+      originalRequest._retry = true;
+      isRefreshing = true;
+
+      try {
+        const storedRefreshToken = await secureStorage.getRefreshToken();
+        if (!storedRefreshToken) {
+          throw new Error('No refresh token available');
+        }
+
+        const { data } = await axios.post(`${BASE_URL}/api/auth/refresh`, {
+          refreshToken: storedRefreshToken
+        });
+        const accessToken = data.accessToken || data.token;
+        const newRefreshToken = data.refreshToken;
+
+        await secureStorage.saveTokens(accessToken, newRefreshToken);
+        setAuthToken(accessToken);
+
+        processQueue(null, accessToken);
+        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+        return api(originalRequest);
+      } catch (refreshErr) {
+        processQueue(refreshErr, null);
+        await secureStorage.clearTokens();
+        setAuthToken(undefined);
+        return Promise.reject(refreshErr);
+      } finally {
+        isRefreshing = false;
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
+
+// ── Auth Endpoints ───────────────────────────────────────────
+
+export async function loginUser(payload: { email: string; password: string }): Promise<{ token: string; accessToken: string; refreshToken: string; user: User }> {
+  const { data } = await api.post('/api/auth/login', payload);
+  return data;
+}
+
+export async function registerUser(payload: { name: string; email: string; password: string; incomeType?: string; goals?: string[] }): Promise<{ token: string; accessToken: string; refreshToken: string; user: User }> {
+  const { data } = await api.post('/api/auth/register', payload);
+  return data;
+}
+
+export async function logoutUser(refreshToken?: string): Promise<{ success: boolean }> {
+  const { data } = await api.post('/api/auth/logout', { refreshToken });
+  return data;
+}
+
+export async function forgotPasswordUser(email: string): Promise<{ success: boolean; message: string }> {
+  const { data } = await api.post('/api/auth/forgot-password', { email });
+  return data;
+}
+
+export async function resetPasswordUser(payload: { token: string; password: string }): Promise<{ success: boolean; message: string }> {
+  const { data } = await api.post('/api/auth/reset-password', payload);
+  return data;
+}
+
+export async function verifyEmailUser(token: string): Promise<{ success: boolean; message: string; user: User }> {
+  const { data } = await api.post('/api/auth/verify-email', { token });
+  return data;
+}
+
+export async function resendVerificationUser(email: string): Promise<{ success: boolean; message: string }> {
+  const { data } = await api.post('/api/auth/resend-verification', { email });
+  return data;
+}
+
+export async function getMeUser(): Promise<{ success: boolean; user: User }> {
+  const { data } = await api.get('/api/auth/me');
+  return data;
+}
+
+// ── Onboarding & Profile Endpoints ───────────────────────────
+
+export async function submitOnboarding(payload: Partial<User>): Promise<{ success: boolean; user: User }> {
+  const { data } = await api.post('/api/user/onboarding', payload);
+  return data;
+}
+
+export async function getUserProfile(): Promise<User> {
+  const { data } = await api.get('/api/user/profile');
+  return data;
+}
+
+export async function updateUserProfileApi(payload: Partial<User>): Promise<{ success: boolean; message?: string; user: User }> {
+  const { data } = await api.put('/api/user/profile', payload);
+  return data;
+}
+
+export async function updateUserDOB(userId: string, dateOfBirth: Date): Promise<{ success: boolean }> {
+  const { data } = await api.put(`/api/user/${userId}/dob`, { dateOfBirth });
+  return data;
+}
+
+export async function updateUserRetirementAge(userId: string, retirementAge: number): Promise<{ success: boolean }> {
+  const { data } = await api.put(`/api/user/${userId}/retirement-age`, { retirementAge });
+  return data;
+}
+
+export async function updateUserMonthlyIncome(userId: string, monthlyIncome: number): Promise<{ success: boolean }> {
+  const { data } = await api.put(`/api/user/${userId}/monthly-income`, { monthlyIncome });
+  return data;
+}
+
+export async function completeOnboarding(
+  userId: string,
+  dateOfBirth: Date,
+  retirementAge: number,
+  monthlyIncome: number
+): Promise<{ success: boolean; user: User }> {
+  const { data } = await api.put(`/api/user/${userId}/onboarding-complete`, {
+    dateOfBirth,
+    retirementAge,
+    monthlyIncome,
+  });
+  return data;
+}
+
+export async function updateCurrentBalance(
+  userId: string,
+  operation: 'credit' | 'debit',
+  amount: number
+): Promise<{ success: boolean; currentBalance: number }> {
+  const { data } = await api.put(`/api/user/${userId}/current-balance`, { operation, amount });
+  return data;
+}
+
+// ── Financial Dashboard ──────────────────────────────────────
+
 export async function getDashboard(): Promise<DashboardData> {
   const { data } = await api.get('/api/dashboard');
   return data;
 }
 
 // ── Transactions ──────────────────────────────────────────────
+
 export async function getTransactions(): Promise<Transaction[]> {
   const { data } = await api.get('/api/transactions');
   return data;
@@ -88,6 +263,7 @@ export async function deleteTransaction(id: string): Promise<void> {
 }
 
 // ── FMI ──────────────────────────────────────────────────────
+
 export async function getFMI(): Promise<{ current: FMIResponse; history: FMIRecord[] }> {
   const [currentRes, historyRes] = await Promise.all([
     api.get('/api/fmi'),
@@ -97,6 +273,7 @@ export async function getFMI(): Promise<{ current: FMIResponse; history: FMIReco
 }
 
 // ── Envelopes ─────────────────────────────────────────────────
+
 export async function getEnvelopes(): Promise<EnvelopeData> {
   const { data } = await api.get('/api/envelopes');
   return data;
@@ -113,12 +290,14 @@ export async function simulateMicroSavings(amount: number): Promise<{ message: s
 }
 
 // ── Alerts ────────────────────────────────────────────────────
+
 export async function getAlerts(): Promise<AlertItem[]> {
   const { data } = await api.get('/api/alerts');
   return data;
 }
 
-// ── Chat ──────────────────────────────────────────────────────
+// ── Chat (Gemini AI) ─────────────────────────────────────────
+
 export async function sendMessageToAgent(
   message: string,
   context: Record<string, unknown>
@@ -133,6 +312,7 @@ export async function getChatHistory(): Promise<ChatMessage[]> {
 }
 
 // ── Goals ─────────────────────────────────────────────────────
+
 export async function getGoals(): Promise<Goal[]> {
   const { data } = await api.get('/api/goals');
   return data;
@@ -153,6 +333,7 @@ export async function deleteGoal(id: string): Promise<void> {
 }
 
 // ── Income ────────────────────────────────────────────────────
+
 export async function getIncome(): Promise<IncomeRecord[]> {
   const { data } = await api.get('/api/income');
   return data;
@@ -178,74 +359,23 @@ export async function getIncomeFlow(): Promise<IncomeFlowData> {
 }
 
 // ── FIS ───────────────────────────────────────────────────────
+
 export async function getFIS(): Promise<FISData> {
   const { data } = await api.get('/api/fis');
   return data;
 }
 
 // ── Behavior ──────────────────────────────────────────────────
+
 export async function getBehaviorPatterns(): Promise<{ patterns: BehaviorPattern[]; analyzedCount: number }> {
   const { data } = await api.get('/api/behavior');
   return data;
 }
 
 // ── Reports ───────────────────────────────────────────────────
+
 export async function getWeeklyReport(): Promise<WeeklyReport> {
   const { data } = await api.get('/api/reports/weekly');
-  return data;
-}
-
-// ── User ──────────────────────────────────────────────────────
-export async function updateUserDOB(userId: string, dateOfBirth: Date): Promise<{ success: boolean }> {
-  const { data } = await api.put(`/api/user/${userId}/dob`, { dateOfBirth });
-  return data;
-}
-
-export async function updateUserRetirementAge(userId: string, retirementAge: number): Promise<{ success: boolean }> {
-  const { data } = await api.put(`/api/user/${userId}/retirement-age`, { retirementAge });
-  return data;
-}
-
-export async function updateUserMonthlyIncome(userId: string, monthlyIncome: number): Promise<{ success: boolean }> {
-  const { data } = await api.put(`/api/user/${userId}/monthly-income`, { monthlyIncome });
-  return data;
-}
-
-export async function completeOnboarding(
-  userId: string,
-  dateOfBirth: Date,
-  retirementAge: number,
-  monthlyIncome: number
-): Promise<{ success: boolean; user: any }> {
-  const { data } = await api.put(`/api/user/${userId}/onboarding-complete`, {
-    dateOfBirth,
-    retirementAge,
-    monthlyIncome,
-  });
-  return data;
-}
-
-export async function getUserProfile(): Promise<{ id: string; name: string; incomeType: string; goals: string[] }> {
-  const { data } = await api.get('/api/user/profile');
-  return data;
-}
-
-// ── ML Expense Classifier ─────────────────────────────────────
-export interface ClassifyResult {
-  category:        string;
-  confidence:      number;
-  all_probs:       Record<string, number>;
-  sentiment?:      string;
-  sentiment_emoji?: string;
-  sentiment_label?: string;
-  verdict?:        string;
-  offline?:        boolean;
-  type?:           'Need' | 'Want' | 'Investment';
-  confidenceScore?: number;
-}
-
-export async function classifyExpense(text: string): Promise<ClassifyResult> {
-  const { data } = await api.post('/api/classify', { text });
   return data;
 }
 
@@ -259,31 +389,22 @@ export async function getHeatmap(): Promise<Array<{ date: string; totalAmount: n
   return data;
 }
 
-export async function updateCurrentBalance(
-  userId: string,
-  operation: 'credit' | 'debit',
-  amount: number
-): Promise<{ success: boolean; currentBalance: number }> {
-  const { data } = await api.put(`/api/user/${userId}/current-balance`, { operation, amount });
-  return data;
+// ── ML Expense Classifier ─────────────────────────────────────
+
+export interface ClassifyResult {
+  category:         string;
+  confidence:       number;
+  all_probs:        Record<string, number>;
+  sentiment?:       string;
+  sentiment_emoji?: string;
+  sentiment_label?: string;
+  verdict?:         string;
+  offline?:         boolean;
+  type?:            'Need' | 'Want' | 'Investment';
+  confidenceScore?: number;
 }
 
-// ── Auth ──────────────────────────────────────────────────────
-
-export function setAuthToken(token?: string): void {
-  if (token) {
-    api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-  } else {
-    delete api.defaults.headers.common['Authorization'];
-  }
-}
-
-export async function loginUser(payload: { email: string; password: string }): Promise<{ token: string; user: any }> {
-  const { data } = await api.post('/api/auth/login', payload);
-  return data;
-}
-
-export async function registerUser(payload: { name: string; email: string; password: string }): Promise<{ token: string; user: any }> {
-  const { data } = await api.post('/api/auth/register', payload);
+export async function classifyExpense(text: string): Promise<ClassifyResult> {
+  const { data } = await api.post('/api/classify', { text });
   return data;
 }

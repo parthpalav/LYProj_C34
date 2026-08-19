@@ -2,9 +2,10 @@ import React, { useState, useRef, useEffect } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet,
   KeyboardAvoidingView, Platform, Animated, Easing, ActivityIndicator,
-  Image,
+  Image, ScrollView
 } from 'react-native';
 import { useAuthStore } from '../store/useAuthStore';
+import { evaluatePasswordStrength } from '../utils/authValidation';
 
 const finauraLogo = require('../assets/finaura_logo.png');
 
@@ -18,7 +19,10 @@ export function RegisterScreen({ onBack }: Props): React.ReactElement {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { register, loading, error, clearError } = useAuthStore();
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const { register, loading, authError, fieldErrors, clearErrors } = useAuthStore();
+
+  const strength = evaluatePasswordStrength(password);
 
   // Animations
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -33,7 +37,13 @@ export function RegisterScreen({ onBack }: Props): React.ReactElement {
 
   const handleRegister = () => {
     if (!name.trim() || !email.trim() || !password.trim()) return;
-    register({ name: name.trim(), email: email.trim(), password });
+    clearErrors();
+    register({
+      name: name.trim(),
+      email: email.trim(),
+      password,
+      confirmPassword
+    });
   };
 
   return (
@@ -41,89 +51,115 @@ export function RegisterScreen({ onBack }: Props): React.ReactElement {
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
-      <Animated.View style={[styles.inner, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
-        {/* Header */}
-        <View style={styles.headerWrap}>
-          <Image source={finauraLogo} style={styles.headerImage} resizeMode="contain" />
-        </View>
-        <Text style={styles.title}>Create Account</Text>
-        <Text style={styles.subtitle}>Join FINAURA and take control of your finances</Text>
-
-        {/* Error Banner */}
-        {error ? (
-          <View style={styles.errorBanner}>
-            <Text style={styles.errorText}>{error}</Text>
+      <ScrollView contentContainerStyle={styles.scrollContent} keyboardShouldPersistTaps="handled">
+        <Animated.View style={[styles.inner, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
+          {/* Header */}
+          <View style={styles.headerWrap}>
+            <Image source={finauraLogo} style={styles.headerImage} resizeMode="contain" />
           </View>
-        ) : null}
+          <Text style={styles.title}>Create Account</Text>
+          <Text style={styles.subtitle}>Join FINAURA and take control of your finances</Text>
 
-        {/* Name */}
-        <View style={styles.inputWrap}>
-          <Text style={styles.inputLabel}>Full Name</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Your name"
-            placeholderTextColor="#9CA3AF"
-            value={name}
-            onChangeText={setName}
-            editable={!loading}
-          />
-        </View>
+          {/* Error Banner */}
+          {authError ? (
+            <View style={styles.errorBanner}>
+              <Text style={styles.errorText}>{authError}</Text>
+            </View>
+          ) : null}
 
-        {/* Email */}
-        <View style={styles.inputWrap}>
-          <Text style={styles.inputLabel}>Email</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="you@example.com"
-            placeholderTextColor="#9CA3AF"
-            autoCapitalize="none"
-            autoCorrect={false}
-            keyboardType="email-address"
-            value={email}
-            onChangeText={setEmail}
-            editable={!loading}
-          />
-        </View>
+          {/* Name */}
+          <View style={styles.inputWrap}>
+            <Text style={styles.inputLabel}>Full Name</Text>
+            <TextInput
+              style={[styles.input, fieldErrors.name && styles.inputError]}
+              placeholder="Your full name"
+              placeholderTextColor="#9CA3AF"
+              value={name}
+              onChangeText={setName}
+              editable={!loading}
+            />
+            {fieldErrors.name ? <Text style={styles.fieldError}>{fieldErrors.name}</Text> : null}
+          </View>
 
-        {/* Password */}
-        <View style={styles.inputWrap}>
-          <Text style={styles.inputLabel}>Password</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Min. 6 characters"
-            placeholderTextColor="#9CA3AF"
-            secureTextEntry
-            value={password}
-            onChangeText={setPassword}
-            editable={!loading}
-            onSubmitEditing={handleRegister}
-          />
-        </View>
+          {/* Email */}
+          <View style={styles.inputWrap}>
+            <Text style={styles.inputLabel}>Email</Text>
+            <TextInput
+              style={[styles.input, fieldErrors.email && styles.inputError]}
+              placeholder="you@example.com"
+              placeholderTextColor="#9CA3AF"
+              autoCapitalize="none"
+              autoCorrect={false}
+              keyboardType="email-address"
+              value={email}
+              onChangeText={setEmail}
+              editable={!loading}
+            />
+            {fieldErrors.email ? <Text style={styles.fieldError}>{fieldErrors.email}</Text> : null}
+          </View>
 
-        {/* Register Button */}
-        <TouchableOpacity
-          style={[styles.btn, loading && styles.btnDisabled]}
-          activeOpacity={0.85}
-          onPress={handleRegister}
-          disabled={loading || !name.trim() || !email.trim() || !password.trim()}
-        >
-          {loading ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text style={styles.btnText}>Create Account</Text>
-          )}
-        </TouchableOpacity>
+          {/* Password */}
+          <View style={styles.inputWrap}>
+            <Text style={styles.inputLabel}>Password</Text>
+            <TextInput
+              style={[styles.input, fieldErrors.password && styles.inputError]}
+              placeholder="Min. 8 chars (upper, lower, num, sym)"
+              placeholderTextColor="#9CA3AF"
+              secureTextEntry
+              value={password}
+              onChangeText={setPassword}
+              editable={!loading}
+            />
+            {password ? (
+              <View style={styles.strengthContainer}>
+                <View style={[styles.strengthBar, { backgroundColor: strength.color, width: `${(strength.score / 4) * 100}%` }]} />
+                <Text style={[styles.strengthLabel, { color: strength.color }]}>{strength.label}</Text>
+              </View>
+            ) : null}
+            {fieldErrors.password ? <Text style={styles.fieldError}>{fieldErrors.password}</Text> : null}
+          </View>
 
-        {/* Back to Sign In */}
-        <TouchableOpacity
-          style={styles.linkWrap}
-          onPress={() => { clearError(); onBack?.(); }}
-          disabled={loading}
-        >
-          <Text style={styles.linkText}>Already have an account? </Text>
-          <Text style={styles.linkBold}>Sign In</Text>
-        </TouchableOpacity>
-      </Animated.View>
+          {/* Confirm Password */}
+          <View style={styles.inputWrap}>
+            <Text style={styles.inputLabel}>Confirm Password</Text>
+            <TextInput
+              style={[styles.input, fieldErrors.confirmPassword && styles.inputError]}
+              placeholder="Re-enter password"
+              placeholderTextColor="#9CA3AF"
+              secureTextEntry
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              editable={!loading}
+              onSubmitEditing={handleRegister}
+            />
+            {fieldErrors.confirmPassword ? <Text style={styles.fieldError}>{fieldErrors.confirmPassword}</Text> : null}
+          </View>
+
+          {/* Register Button */}
+          <TouchableOpacity
+            style={[styles.btn, loading && styles.btnDisabled]}
+            activeOpacity={0.85}
+            onPress={handleRegister}
+            disabled={loading || !name.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()}
+          >
+            {loading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={styles.btnText}>Create Account</Text>
+            )}
+          </TouchableOpacity>
+
+          {/* Back to Sign In */}
+          <TouchableOpacity
+            style={styles.linkWrap}
+            onPress={() => { clearErrors(); onBack?.(); }}
+            disabled={loading}
+          >
+            <Text style={styles.linkText}>Already have an account? </Text>
+            <Text style={styles.linkBold}>Sign In</Text>
+          </TouchableOpacity>
+        </Animated.View>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 }
@@ -132,8 +168,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F4F6FA',
+  },
+  scrollContent: {
+    flexGrow: 1,
     justifyContent: 'center',
     paddingHorizontal: 28,
+    paddingVertical: 32,
   },
   inner: {
     alignItems: 'center',
@@ -162,7 +202,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 13,
     color: '#6B7280',
-    marginBottom: 28,
+    marginBottom: 24,
     textAlign: 'center',
     paddingHorizontal: 12,
   },
@@ -208,6 +248,30 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.04,
     shadowRadius: 4,
     elevation: 2,
+  },
+  inputError: {
+    borderColor: '#EF4444',
+  },
+  fieldError: {
+    color: '#EF4444',
+    fontSize: 12,
+    marginTop: 4,
+    fontWeight: '500',
+  },
+  strengthContainer: {
+    marginTop: 6,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  strengthBar: {
+    height: 4,
+    borderRadius: 2,
+    flex: 1,
+  },
+  strengthLabel: {
+    fontSize: 11,
+    fontWeight: '700',
   },
   btn: {
     width: '100%',

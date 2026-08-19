@@ -1,21 +1,31 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, View, StyleSheet } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AppNavigator } from './src/navigation/AppNavigator';
 import { WelcomeOverlay } from './src/components/WelcomeOverlay';
 import { useStore } from './src/store/useStore';
 import { useAuthStore } from './src/store/useAuthStore';
 import { LoginScreen } from './src/screens/LoginScreen';
+import { OnboardingScreen } from './src/screens/OnboardingScreen';
 
 export default function App(): React.ReactElement {
-  const [welcomeDone, setWelcomeDone] = React.useState(false);
+  const [welcomeDone, setWelcomeDone] = useState(false);
   const token = useAuthStore((state) => state.token);
   const authUser = useAuthStore((state) => state.user);
+  const onboardingCompleted = useAuthStore((state) => state.onboardingCompleted);
+  const initializing = useAuthStore((state) => state.initializing);
+  const initAuth = useAuthStore((state) => state.initAuth);
   const setUser = useStore((state) => state.setUser);
 
+  // Initialize auth state from SecureStore on startup
+  useEffect(() => {
+    initAuth();
+  }, [initAuth]);
+
   // Sync auth user to the main app store so all screens can access it
-  React.useEffect(() => {
+  useEffect(() => {
     if (authUser) {
       setUser({
         id: authUser.id,
@@ -24,7 +34,7 @@ export default function App(): React.ReactElement {
         dateOfBirth: authUser.dateOfBirth,
         retirementAge: authUser.retirementAge,
         monthlyIncome: authUser.monthlyIncome,
-        onboardingComplete: authUser.onboardingComplete,
+        onboardingComplete: Boolean(authUser.onboardingComplete || authUser.onboardingCompleted),
         incomeType: authUser.incomeType,
         goals: authUser.goals,
         currentBalance: authUser.currentBalance,
@@ -34,7 +44,15 @@ export default function App(): React.ReactElement {
     }
   }, [authUser, setUser]);
 
-  // Not authenticated — show login
+  if (initializing) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#3B3BDE" />
+      </View>
+    );
+  }
+
+  // Not authenticated — show login flow
   if (!token) {
     return (
       <SafeAreaProvider>
@@ -44,7 +62,18 @@ export default function App(): React.ReactElement {
     );
   }
 
-  // Authenticated — show the app
+  // Authenticated but onboarding incomplete — show onboarding flow
+  const isComplete = Boolean(onboardingCompleted || authUser?.onboardingComplete || authUser?.onboardingCompleted);
+  if (!isComplete) {
+    return (
+      <SafeAreaProvider>
+        <StatusBar style="dark" />
+        <OnboardingScreen />
+      </SafeAreaProvider>
+    );
+  }
+
+  // Authenticated & onboarded — show the full app
   return (
     <SafeAreaProvider>
       <NavigationContainer>
@@ -55,3 +84,12 @@ export default function App(): React.ReactElement {
     </SafeAreaProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    backgroundColor: '#F4F6FA',
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
+});

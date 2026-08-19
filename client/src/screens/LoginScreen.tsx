@@ -43,7 +43,7 @@ export function LoginScreen(): React.ReactElement {
   const handleLogin = () => {
     if (!email.trim() || !password.trim()) return;
     clearErrors();
-    login({ email: email.trim(), password });
+    login({ email: email.trim().toLowerCase(), password });
   };
 
   return (

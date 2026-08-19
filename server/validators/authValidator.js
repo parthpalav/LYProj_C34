@@ -9,7 +9,7 @@ export const registerSchema = z.object({
     .max(50, { message: 'Name cannot exceed 50 characters' }),
   email: z.string()
     .trim()
-    .lowercase()
+    .toLowerCase()
     .email({ message: 'Invalid email address format' }),
   password: z.string()
     .min(8, { message: 'Password must be at least 8 characters long' })
@@ -24,7 +24,7 @@ export const registerSchema = z.object({
 export const loginSchema = z.object({
   email: z.string()
     .trim()
-    .lowercase()
+    .toLowerCase()
     .email({ message: 'Invalid email address format' }),
   password: z.string().min(1, { message: 'Password is required' })
 });
@@ -32,7 +32,7 @@ export const loginSchema = z.object({
 export const forgotPasswordSchema = z.object({
   email: z.string()
     .trim()
-    .lowercase()
+    .toLowerCase()
     .email({ message: 'Invalid email address format' })
 });
 
@@ -49,7 +49,7 @@ export const resetPasswordSchema = z.object({
 export const resendVerificationSchema = z.object({
   email: z.string()
     .trim()
-    .lowercase()
+    .toLowerCase()
     .email({ message: 'Invalid email address format' })
 });
 

@@ -6,3 +6,24 @@ __pycache__/
 .DS_Store
 .env
 node_modules
+
+# ML Models & Checkpoints
+ml-service/models/
+*.safetensors
+*.pt
+*.pth
+*.bin
+
+# ML Datasets & Cache
+ml-service/classifier/finaura_training_data.csv
+ml-service/classifier/finaura_validation_data.csv
+ml-service/classifier/finaura_test_set.csv
+ml-service/classifier/finaura_test_set_v2.csv
+ml-service/classifier/exp2_train_data.csv
+ml-service/classifier/exp2_val_data.csv
+ml-service/classifier/exp2_test_data.csv
+ml-service/classifier/dataset_analysis_cache/
+ml-service/classifier/__pycache__/
+ml-service/classifier/*.pyc
+.cache/
+

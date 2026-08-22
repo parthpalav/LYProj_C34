@@ -26,6 +26,10 @@ from predictor import detect_threshold_alerts
 from sentiment import score_sentiment
 from fmi_engine import calculate_fmi
 
+# ─── Configuration ────────────────────────────────────────────────────────────
+MODEL_BACKEND = os.getenv("MODEL_BACKEND", "legacy").lower()
+# Supported backends: 'legacy' (TF-IDF) | 'minilm' (transformer)
+
 # ─── App setup ────────────────────────────────────────────────────────────────
 app = Flask(__name__)
 CORS(app)  # allow Express server to call this service
@@ -72,10 +76,11 @@ def _clean_text(text: str) -> str:
 
 @app.get('/health')
 def health():
-    classifier_ready = _load_classifier()
+    classifier_ready = _load_classifier() if MODEL_BACKEND == 'legacy' else True
     return jsonify({
         'ok': True,
         'service': 'ml-service',
+        'model_backend': MODEL_BACKEND,
         'classifier_ready': classifier_ready
     })
 
@@ -253,18 +258,6 @@ def classify_expense():
       "verdict":        "Discretionary spend — think before you pay!"
     }
     """
-    if not _load_classifier():
-        return jsonify({
-            "error": "Model not trained yet. Run train_classifier.py first.",
-            "category": "Misc",
-            "confidence": 0.0,
-            "all_probs": {},
-            "sentiment": "neutral",
-            "sentiment_emoji": "🔵",
-            "sentiment_label": "Neutral Spend",
-            "verdict": "Could not classify."
-        }), 503
-
     payload = request.get_json(force=True)
     raw     = payload.get('text', '').strip()
 
@@ -280,12 +273,38 @@ def classify_expense():
             "verdict": "No input provided."
         }), 400
 
-    cleaned    = _clean_text(raw)
-    vec        = _vectorizer.transform([cleaned])
-    category   = _model.predict(vec)[0]
-    probs      = _model.predict_proba(vec)[0]
-    confidence = float(probs.max())
-    all_probs  = {cls: round(float(p), 4) for cls, p in zip(_model.classes_, probs)}
+    if MODEL_BACKEND == 'minilm':
+        try:
+            from classifier.minilm_inference import predict_transaction
+            result = predict_transaction(raw)
+            category = result["category"]
+            confidence = result["confidence"]
+            all_probs = {}  # omitted for minilm to save bandwidth, confidence is enough
+            flagged = result["flagged_for_review"]
+        except Exception as e:
+            log.exception('MiniLM inference failed: %s', e)
+            return jsonify({"error": "Inference failed"}), 500
+    else:
+        # Legacy TF-IDF
+        if not _load_classifier():
+            return jsonify({
+                "error": "Model not trained yet. Run train_classifier.py first.",
+                "category": "Misc",
+                "confidence": 0.0,
+                "all_probs": {},
+                "sentiment": "neutral",
+                "sentiment_emoji": "🔵",
+                "sentiment_label": "Neutral Spend",
+                "verdict": "Could not classify."
+            }), 503
+            
+        cleaned    = _clean_text(raw)
+        vec        = _vectorizer.transform([cleaned])
+        category   = _model.predict(vec)[0]
+        probs      = _model.predict_proba(vec)[0]
+        confidence = float(probs.max())
+        all_probs  = {cls: round(float(p), 4) for cls, p in zip(_model.classes_, probs)}
+        flagged    = False
 
     # Derive sentiment from predicted category
     sentiment    = _CATEGORY_SENTIMENT.get(category, "neutral")
@@ -303,11 +322,17 @@ def classify_expense():
         "verdict":         meta["verdict"],
         # High-level type mapping and a normalized confidence score
         "type":             _CATEGORY_TYPE.get(category, "Need"),
-        "confidenceScore":  confidence
+        "confidenceScore":  confidence,
+        "flagged_for_review": flagged
     })
 
 
 # ─── Run ──────────────────────────────────────────────────────────────────────
 if __name__ == '__main__':
-    _load_classifier()   # pre-load on startup
+    if MODEL_BACKEND == 'legacy':
+        _load_classifier()   # pre-load on startup
+    else:
+        from classifier.minilm_inference import classifier_instance
+        classifier_instance.load() # pre-load MiniLM on startup
+        
     app.run(host='0.0.0.0', port=5001, debug=True)

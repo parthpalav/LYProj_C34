@@ -1,0 +1,15 @@
+# ─── MiniLM classifier artifacts (do NOT commit) ─────────────
+models/
+classifier/finaura_training_data.csv
+classifier/finaura_validation_data.csv
+classifier/finaura_test_set.csv
+classifier/finaura_test_set_v2.csv
+classifier/exp2_train_data.csv
+classifier/exp2_val_data.csv
+classifier/exp2_test_data.csv
+classifier/dataset_analysis_cache/
+classifier/__pycache__/
+
+# ─── HuggingFace cache ────────────────────────────────────────
+.cache/
+

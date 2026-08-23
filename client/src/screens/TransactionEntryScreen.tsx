@@ -53,6 +53,9 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
   const [aiLoading,      setAiLoading]      = useState(false);
   const badgeAnim = useRef(new Animated.Value(0)).current;
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const requestIdRef = useRef(0);
+  const userOverrodeCategoryRef = useRef(false);
+  const userOverrodeTypeRef = useRef(false);
 
   useEffect(() => {
     const text = description.trim();
@@ -63,29 +66,43 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
     // Debounce: wait 600 ms after user stops typing
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(async () => {
+      const currentReqId = ++requestIdRef.current;
       setAiLoading(true);
       try {
         const result = await classifyExpense(amount ? `${amount} ${text}` : text);
+        // Guard against stale out-of-order responses
+        if (currentReqId !== requestIdRef.current) return;
+
         setAiResult(result);
-        const match = CATEGORIES.find(c => c.ml === result.category);
-        if (match) setSelectedCategory(match);
+
+        // ML suggests: only pre-select if user has not manually chosen category
+        if (!userOverrodeCategoryRef.current) {
+          const match = CATEGORIES.find(c => c.ml.toLowerCase() === (result.category || '').toLowerCase());
+          if (match) setSelectedCategory(match);
+        }
+
         // Animate badge in
         badgeAnim.setValue(0);
         Animated.spring(badgeAnim, { toValue: 1, useNativeDriver: true, tension: 120, friction: 8 }).start();
         
-        // Prefer explicit ML `type` if provided, otherwise fallback to sentiment mapping
-        if (result.type) {
-          // result.type comes as 'Need'|'Want'|'Investment'
-          setSelectedType(result.type as SpendType);
-        } else if (result.sentiment) {
-          if (result.sentiment === 'positive') setSelectedType('Investment');
-          else if (result.sentiment === 'negative') setSelectedType('Want');
-          else setSelectedType('Need');
+        // ML suggests: only pre-select if user has not manually chosen type
+        if (!userOverrodeTypeRef.current) {
+          if (result.type && (SPEND_TYPES as readonly string[]).includes(result.type)) {
+            setSelectedType(result.type as SpendType);
+          } else if (result.sentiment) {
+            if (result.sentiment === 'positive') setSelectedType('Investment');
+            else if (result.sentiment === 'negative') setSelectedType('Want');
+            else setSelectedType('Need');
+          }
         }
       } catch {
-        setAiResult(null);
+        if (currentReqId === requestIdRef.current) {
+          setAiResult(null);
+        }
       } finally {
-        setAiLoading(false);
+        if (currentReqId === requestIdRef.current) {
+          setAiLoading(false);
+        }
       }
     }, 600);
     return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
@@ -108,6 +125,16 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
     ? Math.round((transactions.filter(t => t.sentiment === 'negative').length / transactions.length) * 100)
     : 0;
 
+  const handleSelectCategoryManually = (cat: typeof CATEGORIES[number]) => {
+    userOverrodeCategoryRef.current = true;
+    setSelectedCategory(cat);
+    setShowCategoryModal(false);
+  };
+
+  const handleSelectTypeManually = (type: SpendType) => {
+    userOverrodeTypeRef.current = true;
+    setSelectedType(type);
+  };
 
   const handleLog = async () => {
     if (saving) return;
@@ -118,7 +145,7 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
     setSaving(true);
     try {
       // Map UI category + type → server fields
-      const categoryKey = selectedCategory.ml.toLowerCase();
+      const categoryKey = selectedCategory.ml;
       const sentimentMap: Record<string, 'positive' | 'neutral' | 'negative'> = {
         Need: 'neutral', Want: 'negative', Investment: 'positive',
       };
@@ -126,19 +153,20 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
         aiResult?.sentiment === 'positive' || aiResult?.sentiment === 'neutral' || aiResult?.sentiment === 'negative'
           ? aiResult.sentiment
           : sentimentMap[selectedType] ?? 'neutral';
+
+      // The user's selectedType is the single source of truth from the form
       const newTx = await addTransaction({
-        amount:      parsedAmount,
-        category:    categoryKey,
-        sentiment:   finalSentiment,
-        description: description.trim() || selectedCategory.label,
-        type:        aiResult?.type ?? selectedType,
+        amount:          parsedAmount,
+        category:        categoryKey,
+        sentiment:       finalSentiment,
+        description:     description.trim() || selectedCategory.label,
+        type:            selectedType,
         confidenceScore: aiResult?.confidenceScore ?? aiResult?.confidence ?? 0,
-        timestamp:   new Date().toISOString(),
+        timestamp:       new Date().toISOString(),
       });
       addToStore(newTx);
       setLogged(true);
-      // Show inferred type to the user briefly
-      Alert.alert('Saved', `Transaction logged. Inferred type: ${newTx.type || aiResult?.type || selectedType}`);
+      Alert.alert('Saved', `Transaction logged as ${newTx.type || selectedType} in ${newTx.category || categoryKey}.`);
       setTimeout(() => {
         setLogged(false);
         onClose?.();
@@ -275,7 +303,7 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
               <TouchableOpacity
                 key={type}
                 style={styles.radioItem}
-                onPress={() => setSelectedType(type)}
+                onPress={() => handleSelectTypeManually(type)}
                 activeOpacity={0.7}
               >
                 <View style={[styles.radioOuter, selectedType === type && styles.radioOuterActive]}>
@@ -349,10 +377,7 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
                     styles.modalItem,
                     selectedCategory.label === item.label && styles.modalItemActive,
                   ]}
-                  onPress={() => {
-                    setSelectedCategory(item);
-                    setShowCategoryModal(false);
-                  }}
+                  onPress={() => handleSelectCategoryManually(item)}
                   activeOpacity={0.7}
                 >
                   <Text style={styles.modalItemEmoji}>{item.emoji}</Text>

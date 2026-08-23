@@ -1,0 +1,145 @@
+text,category,type,input_style,ambiguity
+FAASOS TXN POS PURCHASE,Food,Want,bank_statement,clear
+paid for an online multiplayer game subscription,Entertainment,Want,natural_language,clear
+BYJU'S for a professional certification,Education,Investment,merchant,clear
+Faasos when there was nothing left in the fridge,Food,Need,merchant,context_dependent
+CARD PAYMENT KUVERA,Misc,Investment,bank_statement,clear
+UPI-BYJUS-BYJUS@ICICI,Education,Investment,upi,clear
+UPI/ANIGHTCLUB/PAYMENT/REF6675,Party,Want,upi,clear
+treated myself to Rapido to a concert across town,Travel,Want,natural_language,clear
+UPI/BSES/PAYMENT/REF2406,Bills,Need,upi,clear
+had no choice but to pay for Croma since it was for a work-from-home setup,Shopping,Need,semantic,context_dependent
+UPI-CROMA-STORE@SBI,Shopping,Want,upi,clear
+UPI-UPGRAD-UPGRAD@HDFC,Education,Investment,upi,clear
+"spent on Spotify more for enjoyment than necessity, for the monthly subscription renewal",Entertainment,Want,semantic,context_dependent
+UPI-BIGBASKET-987731@upi,Groceries,Need,upi,clear
+PharmEasy monthly medicine order,Health,Need,merchant,clear
+UPI/SPOTIFY/SUBSCRIPTION/REF6621,Entertainment,Want,upi,clear
+CARD PAYMENT RAPIDO,Travel,Want,bank_statement,clear
+treated myself to a lounge bar during a bachelor party night out,Party,Want,natural_language,clear
+BYJU'S as a personal hobby class,Education,Want,merchant,clear
+UPI-NETMEDS-NETMEDS@ICICI,Health,Need,upi,clear
+paid toll charges while commuting to work every day,Travel,Need,semantic,clear
+POS TRAVEL BOOKING,Travel,Want,bank_statement,clear
+had no choice but to pay for PharmEasy since it was after a doctor's referral,Health,Need,semantic,context_dependent
+"could have skipped upGrad, but chose to spend on it, purely for personal enrichment",Education,Want,semantic,context_dependent
+Zomato meal ordered during a late hospital visit,Food,Need,merchant,clear
+Swiggy because there was no time to cook,Food,Need,merchant,clear
+UPI-CROMA-CROMA@SBI,Shopping,Want,upi,clear
+UPI/RAPIDO/BIKE RIDE/REF3341,Travel,Need,upi,clear
+booked tickets to a music festival months in advance,Entertainment,Want,semantic,clear
+UPI-BSES-BSES@YBL,Bills,Need,upi,clear
+weekend flight for vacation,Travel,Want,natural_language,clear
+Croma for a work-from-home setup,Shopping,Need,merchant,clear
+paid for upGrad compulsory for the degree program,Education,Need,natural_language,clear
+electricity bill,Bills,Need,short_keyword,clear
+a nightclub for a friend's birthday celebration,Party,Want,merchant,clear
+PharmEasy to get a diagnostic test done,Health,Need,merchant,clear
+treated myself to a lounge bar for a New Year's party,Party,Want,natural_language,clear
+POS NETMEDS ONLINE,Health,Need,bank_statement,clear
+bought a fancy essential oil diffuser for relaxation,Health,Want,natural_language,clear
+UPI-ALOUNGEBAR-ALOUNGEBAR@PAYTM,Party,Want,upi,clear
+"the expense on Swiggy was unavoidable, because there was no time to cook",Food,Need,semantic,clear
+UPI-PHARMEASY-867197@upi,Health,Need,upi,clear
+took a flight for a spontaneous holiday with friends,Travel,Want,semantic,context_dependent
+booked Faasos while studying for an exam late at night,Food,Need,natural_language,context_dependent
+Faasos for a movie night at home,Food,Want,merchant,clear
+BYJU'S to learn a skill needed for my job,Education,Investment,merchant,clear
+indulged in Rapido for a solo backpacking trip,Travel,Want,natural_language,clear
+UPI-RAPIDO-780132@upi,Travel,Need,upi,clear
+POS THE LOUNGE BAR,Party,Want,bank_statement,clear
+indulged in Zomato with friends for a celebration,Food,Want,natural_language,clear
+Zomato with friends for a celebration,Food,Want,merchant,clear
+Croma just because I liked the design,Shopping,Want,merchant,clear
+Faasos while working late at the office,Food,Need,merchant,context_dependent
+"could have skipped PharmEasy, but chose to spend on it, to try a new wellness trend",Health,Need,semantic,context_dependent
+POS ZOMATO PAYMENT,Food,Want,bank_statement,clear
+POS ZOMATO ONLINE ORDER,Food,Want,bank_statement,clear
+"spent on Wow Momo more for enjoyment than necessity, for a Sunday brunch tradition",Food,Want,semantic,context_dependent
+"didn't really need Swiggy, but went ahead anyway, for a Sunday brunch tradition",Food,Want,semantic,clear
+UPI-FAASOS-859431@upi,Food,Need,upi,clear
+Swiggy midnight cravings order,Food,Want,merchant,clear
+"paid for Rapido purely out of necessity, to get to a work meeting",Travel,Need,semantic,context_dependent
+UPI-PHARMEASY-PHARMEASY@HDFC,Health,Need,upi,clear
+Zomato while working late at the office,Food,Need,merchant,context_dependent
+UPI-SWIGGY-853163@upi,Food,Need,upi,clear
+POS BYJU'S PAYMENT,Education,Investment,bank_statement,clear
+BSES TXN POS PURCHASE,Bills,Need,bank_statement,clear
+cover charge at a nightclub with colleagues,Party,Want,merchant,clear
+UPI-BIGBASKET-BIGBASKET@SBI,Groceries,Need,upi,clear
+POS BIGBASKET RETAIL,Groceries,Need,bank_statement,clear
+Netmeds to try a trending supplement,Health,Need,merchant,clear
+UPI/SWIGGY/PAYMENT/REF8827,Food,Need,upi,clear
+Wow Momo for a movie night at home,Food,Want,merchant,clear
+invested through upGrad to prepare for a job change,Education,Investment,natural_language,context_dependent
+a lounge bar for a New Year's party,Party,Want,merchant,clear
+Croma because the monsoon damaged the old one,Shopping,Need,merchant,clear
+POS PHARMEASY PAYMENT,Health,Need,bank_statement,clear
+POS SPOTIFY ONLINE,Entertainment,Want,bank_statement,clear
+paid the cover charge to enter a nightclub on a friend's birthday,Party,Want,semantic,clear
+POS KUVERA PAYMENT,Misc,Investment,bank_statement,clear
+UPI/ALOUNGEBAR/PAYMENT/REF4641,Party,Want,upi,clear
+UPI-SWIGGYFOOD-SWIGGY@ICICI,Food,Need,upi,clear
+CARD PAYMENT BYJU'S,Education,Investment,bank_statement,clear
+UPI/CLUBENTRY/BDAYPARTY/REF8821,Party,Want,upi,clear
+UPI-BIGBASKET-BIGBASKET@HDFC,Groceries,Need,upi,clear
+UPI-KUVERA-KUVERA@AXIS,Misc,Investment,upi,clear
+RAPIDO TXN POS PURCHASE,Travel,Need,bank_statement,clear
+paid the water bill for the apartment,Bills,Need,natural_language,clear
+POS UPGRAD ONLINE,Education,Investment,bank_statement,clear
+CARD PAYMENT A LOUNGE BAR,Party,Want,bank_statement,clear
+POS SWIGGY PAYMENT,Food,Need,bank_statement,clear
+a lounge bar for a friend's birthday celebration,Party,Want,merchant,clear
+Wow Momo expense when there was nothing left in the fridge,Food,Need,natural_language,context_dependent
+"could have skipped Netmeds, but chose to spend on it, for a skincare experiment",Health,Need,semantic,clear
+metro,Travel,Need,short_keyword,clear
+UPI-PHARMEASY-PHARMEASY@YBL,Health,Need,upi,clear
+CROMA TXN POS PURCHASE,Shopping,Want,bank_statement,clear
+went for PharmEasy to try a trending supplement,Health,Need,natural_language,clear
+Croma during a big sale,Shopping,Want,merchant,clear
+Zomato dinner order with friends,Food,Want,merchant,clear
+POS CROMA PAYMENT,Shopping,Want,bank_statement,clear
+POS SWIGGY ONLINE,Food,Need,bank_statement,clear
+CARD PAYMENT CROMA ELECTRONICS,Shopping,Want,bank_statement,clear
+Wow Momo to celebrate a promotion,Food,Want,merchant,clear
+put money into Kuvera for a corporate bond purchase,Misc,Investment,natural_language,clear
+"spent on Zomato more for enjoyment than necessity, for a movie night at home",Food,Want,semantic,context_dependent
+UPI-KUVERA-KUVERA@HDFC,Misc,Investment,upi,clear
+Rapido for a solo backpacking trip,Travel,Want,merchant,clear
+Wow Momo when there was nothing left in the fridge,Food,Need,merchant,context_dependent
+UPI/PHARMEASY/MEDICINE/REF4471,Health,Need,upi,clear
+WOW MOMO TXN POS PURCHASE,Food,Want,bank_statement,clear
+Croma to try out a new trend,Shopping,Want,merchant,clear
+paid for PharmEasy for a routine health checkup,Health,Need,natural_language,clear
+used Netmeds for a chronic condition follow-up,Health,Need,natural_language,clear
+indulged in Faasos for a weekend treat,Food,Want,natural_language,context_dependent
+UPI/NETMEDS/PAYMENT/REF8692,Health,Need,upi,clear
+had no choice but to pay for Swiggy since it was during a busy workday,Food,Need,semantic,context_dependent
+indulged in Spotify to unwind after a long week,Entertainment,Want,natural_language,context_dependent
+Rapido for a leisure vacation,Travel,Want,merchant,clear
+Zomato when there was nothing left in the fridge,Food,Need,merchant,context_dependent
+UPI-UPGRAD-818589@upi,Education,Investment,upi,clear
+BigBasket for a festive celebration at home,Groceries,Want,merchant,clear
+POS A NIGHTCLUB ONLINE,Party,Want,bank_statement,clear
+had no choice but to pay for Faasos since it was when there was nothing left in the fridge,Food,Need,semantic,context_dependent
+UPI/PHARMEASY/PAYMENT/REF1797,Health,Need,upi,clear
+CARD PAYMENT BSES,Bills,Need,bank_statement,clear
+SPOTIFY TXN POS PURCHASE,Entertainment,Want,bank_statement,clear
+CARD PAYMENT UPGRAD,Education,Investment,bank_statement,clear
+splurged on Wow Momo for a Sunday brunch tradition,Food,Want,natural_language,clear
+Swiggy lunch delivered to office,Food,Need,merchant,clear
+Wow Momo for a weekend treat,Food,Want,merchant,context_dependent
+Swiggy for a Sunday brunch tradition,Food,Want,merchant,clear
+club entry,Party,Want,short_keyword,ambiguous
+CARD PAYMENT NIGHTCLUB ENTRY,Party,Want,bank_statement,clear
+paid for Wow Momo to celebrate a promotion on a whim,Food,Want,natural_language,clear
+CARD PAYMENT BIGBASKET,Groceries,Need,bank_statement,clear
+invested through upGrad to switch to a new career track,Education,Investment,natural_language,clear
+UPI-ANIGHTCLUB-ANIGHTCLUB@HDFC,Party,Want,upi,clear
+POS BIGBASKET PAYMENT,Groceries,Need,bank_statement,clear
+bought a hobby painting class just for fun,Education,Want,semantic,context_dependent
+splurged on Zomato for a movie night at home,Food,Want,natural_language,clear
+UPI/KUVERA/PAYMENT/REF4727,Misc,Investment,upi,clear
+UPI-WOWMOMO-854739@upi,Food,Want,upi,clear
+UPI-SPOTIFY-726924@upi,Entertainment,Want,upi,clear
+POS NETMEDS PAYMENT,Health,Need,bank_statement,clear

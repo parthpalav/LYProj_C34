@@ -1,0 +1,144 @@
+text,category,type,input_style,ambiguity
+POS RETAIL PURCHASE,Shopping,Want,bank_statement,ambiguous
+paid for Great Learning as a casual weekend hobby on a whim,Education,Want,natural_language,context_dependent
+enrolled in a coding bootcamp to switch careers,Education,Investment,semantic,context_dependent
+UPI-HALDIRAMS-858434@upi,Food,Need,upi,clear
+UPI/ETMONEY/PAYMENT/REF6633,Misc,Investment,upi,clear
+had no choice but to pay for Snapdeal since it was required urgently for daily use,Shopping,Need,semantic,context_dependent
+Paytm Money for a recurring deposit,Misc,Investment,merchant,clear
+APOLLO PHARMACY TXN POS PURCHASE,Health,Need,bank_statement,clear
+UPI/SNAPDEAL/PAYMENT/REF6766,Shopping,Want,upi,clear
+POS BARBEQUE NATION PUNE,Food,Want,bank_statement,clear
+booked a cab late at night purely for convenience,Travel,Want,semantic,context_dependent
+"spent on JioCinema more for enjoyment than necessity, for a birthday movie marathon",Entertainment,Want,semantic,context_dependent
+"the expense on FASTag was unavoidable, to rush to the hospital",Travel,Need,semantic,context_dependent
+put money into Paytm Money for a monthly SIP,Misc,Investment,natural_language,clear
+UPI-MUNICIPALWAT-MUNICIPALWAT@AXIS,Bills,Need,upi,clear
+"could have skipped FASTag, but chose to spend on it, to attend a friend's party",Travel,Want,semantic,clear
+"booked a rooftop bar for a New Year's party, just for fun",Party,Want,natural_language,context_dependent
+Great Learning required to pass the course,Education,Investment,merchant,clear
+UPI-ZEE5-ZEE5@ICICI,Entertainment,Want,upi,clear
+CARD PAYMENT JIOMART,Groceries,Need,bank_statement,clear
+"paid for FASTag purely out of necessity, to reach the exam center",Travel,Need,semantic,context_dependent
+Ajio required urgently for daily use,Shopping,Need,merchant,clear
+"the expense on Haldiram's was unavoidable, while working late at the office",Food,Need,semantic,context_dependent
+UPI-FASTAG-FASTAG@ICICI,Travel,Want,upi,clear
+POS purchase,Misc,Want,short_keyword,ambiguous
+ate out at a fancy restaurant purely for the experience,Food,Want,semantic,context_dependent
+POS SNAPDEAL ONLINE,Shopping,Want,bank_statement,clear
+POS RELIANCE DIGITAL PAYMENT,Shopping,Want,bank_statement,clear
+UPI-AROOFTOPBAR-AROOFTOPBAR@AXIS,Party,Want,upi,clear
+splurged on Practo for a fitness experiment,Health,Want,natural_language,clear
+JioCinema for a weekend movie outing with friends,Entertainment,Want,merchant,clear
+treated myself to JioCinema for a birthday movie marathon,Entertainment,Want,natural_language,context_dependent
+Zee5 to catch a live concert,Entertainment,Want,merchant,clear
+"paid for Uber purely out of necessity, for a job interview across town",Travel,Need,semantic,context_dependent
+had to pay for Great Learning required to pass the course,Education,Investment,natural_language,clear
+FASTag to rush to the hospital,Travel,Need,merchant,context_dependent
+"paid for Haldiram's purely out of necessity, during a family emergency at home",Food,Need,semantic,context_dependent
+JioMart imported cheese and gourmet snacks,Groceries,Want,merchant,clear
+splurged on Zee5 for binge watching over the weekend,Entertainment,Want,natural_language,clear
+"paid for Reliance Digital purely out of necessity, required urgently for daily use",Shopping,Need,semantic,context_dependent
+FASTag to get to a work meeting,Travel,Need,merchant,clear
+"the expense on Uber was unavoidable, for a mandatory office trip",Travel,Need,semantic,clear
+cab fare,Travel,Want,short_keyword,ambiguous
+UPI-AJIO-781123@upi,Shopping,Want,upi,clear
+Uber ride to college,Travel,Need,merchant,clear
+POS PRACTO PAYMENT,Health,Need,bank_statement,clear
+FASTag expense to get to a work meeting,Travel,Need,natural_language,clear
+"didn't really need Haldiram's, but went ahead anyway, just out of a craving",Food,Want,semantic,context_dependent
+"spent on Practo more for enjoyment than necessity, for a fitness experiment",Health,Want,semantic,context_dependent
+had no choice but to pay for JioMart since it was for basic household supplies,Groceries,Need,semantic,context_dependent
+treated myself to Haldiram's just out of a craving,Food,Want,natural_language,context_dependent
+splurged on a rooftop bar for a farewell celebration,Party,Want,natural_language,clear
+Jio postpaid mobile bill,Bills,Need,merchant,clear
+"spent on Ajio more for enjoyment than necessity, as a small treat for myself",Shopping,Want,semantic,context_dependent
+POS JIOMART PAYMENT,Groceries,Need,bank_statement,clear
+UPI-SNAPDEAL-SNAPDEAL@HDFC,Shopping,Want,upi,clear
+"spent on Ajio more for enjoyment than necessity, as a birthday gift for myself",Shopping,Want,semantic,context_dependent
+UPI-APOLLOPHARMA-793571@upi,Health,Need,upi,clear
+"the expense on Snapdeal was unavoidable, to replace a broken item",Shopping,Want,semantic,clear
+Paytm Money for a fixed deposit renewal,Misc,Investment,merchant,clear
+CARD PAYMENT APOLLO PHARMACY,Health,Need,bank_statement,clear
+Barbeque Nation dinner for birthday,Food,Want,merchant,clear
+new shoes,Shopping,Want,short_keyword,ambiguous
+spent on Snapdeal to replace a broken item,Shopping,Want,natural_language,clear
+POS AJIO ONLINE,Shopping,Want,bank_statement,clear
+indulged in Reliance Digital as a small treat for myself,Shopping,Want,natural_language,clear
+hired a cab for a scenic weekend road trip,Travel,Want,semantic,clear
+indulged in Uber for a solo backpacking trip,Travel,Want,natural_language,clear
+Uber for a solo backpacking trip,Travel,Want,merchant,clear
+UPI-JIOMART-JIOMART@ICICI,Groceries,Need,upi,clear
+Ajio to try out a new trend,Shopping,Want,merchant,clear
+POS ACT FIBERNET ONLINE,Bills,Need,bank_statement,clear
+"could have skipped Practo, but chose to spend on it, as a lifestyle upgrade",Health,Want,semantic,clear
+Zee5 for binge watching over the weekend,Entertainment,Want,merchant,clear
+UPI/PAYTMMONEY/PAYMENT/REF7875,Misc,Investment,upi,clear
+bought a new umbrella since the old one broke,Shopping,Want,natural_language,clear
+Practo to get a diagnostic test done,Health,Need,merchant,clear
+POS FASTAG RECHARGE NHAI,Travel,Need,bank_statement,clear
+KUVERA TXN POS PURCHASE,Misc,Investment,bank_statement,clear
+Uber to a party,Travel,Want,merchant,clear
+contributed to ET Money for a stock market trade,Misc,Investment,natural_language,clear
+POS DECATHLON SPORTS,Shopping,Want,bank_statement,clear
+UPI-UBER-783707@upi,Travel,Want,upi,clear
+UPI-SNAPDEAL-884077@upi,Shopping,Want,upi,clear
+CARD PAYMENT JIOCINEMA,Entertainment,Want,bank_statement,clear
+Reliance Digital because everyone else already had it,Shopping,Want,merchant,context_dependent
+paid for Ajio because everyone else already had it on a whim,Shopping,Want,natural_language,context_dependent
+used Uber for a job interview across town,Travel,Need,natural_language,clear
+a rooftop bar for a spontaneous Friday night out,Party,Want,merchant,context_dependent
+Jio for the mobile recharge plan,Bills,Need,merchant,clear
+Ajio because everyone else already had it,Shopping,Want,merchant,context_dependent
+"spent on JioMart more for enjoyment than necessity, to try some gourmet imported items",Groceries,Want,semantic,context_dependent
+a rooftop bar during a bachelor party night out,Party,Want,merchant,clear
+UPI/JIOCINEMA/PAYMENT/REF9008,Entertainment,Want,upi,clear
+POS ZEE5 PAYMENT,Entertainment,Want,bank_statement,clear
+contributed to ET Money for a recurring deposit,Misc,Investment,natural_language,clear
+FASTag to attend a friend's party,Travel,Want,merchant,clear
+UPI/UBER/PAYMENT/REF7224,Travel,Need,upi,clear
+Paytm Money for a stock market trade,Misc,Investment,merchant,clear
+RELIANCE FRESH TXN POS PURCHASE,Groceries,Need,bank_statement,clear
+POS GREAT LEARNING ONLINE,Education,Investment,bank_statement,clear
+paid for JioMart to try some gourmet imported items on a whim,Groceries,Want,natural_language,clear
+HALDIRAM'S TXN POS PURCHASE,Food,Want,bank_statement,clear
+POS UBER TRIP MUMBAI,Travel,Need,bank_statement,clear
+went for Reliance Digital because everyone else already had it,Shopping,Want,natural_language,context_dependent
+"spent on Haldiram's more for enjoyment than necessity, for a Sunday brunch tradition",Food,Want,semantic,context_dependent
+Practo for ongoing medical treatment,Health,Need,merchant,clear
+UPI/HALDIRAMS/PAYMENT/REF7078,Food,Need,upi,clear
+UPI-PRACTO-846996@upi,Health,Need,upi,clear
+had no choice but to pay for Practo since it was to get a diagnostic test done,Health,Need,semantic,context_dependent
+indulged in Snapdeal just because I liked the design,Shopping,Want,natural_language,clear
+"spent on JioCinema more for enjoyment than necessity, to watch a new season with the family",Entertainment,Want,semantic,context_dependent
+"didn't really need JioCinema, but went ahead anyway, for a weekend movie outing with friends",Entertainment,Want,semantic,clear
+RELIANCE DIGITAL TXN POS PURCHASE,Shopping,Want,bank_statement,clear
+CARD PAYMENT A ROOFTOP BAR,Party,Want,bank_statement,clear
+replaced a broken laptop charger urgently before a meeting,Shopping,Need,semantic,clear
+ACT Fibernet for the broadband connection at home,Bills,Need,merchant,clear
+UPI-AROOFTOPBAR-AROOFTOPBAR@HDFC,Party,Want,upi,clear
+CARD PAYMENT JIO RECHARGE,Bills,Need,bank_statement,clear
+UPI-JIOMART-780445@upi,Groceries,Need,upi,clear
+paid for Jio for the mobile recharge plan,Bills,Need,natural_language,clear
+UPI-ACTFIBERNET-940050@upi,Bills,Need,upi,clear
+ET Money for a national pension scheme contribution,Misc,Investment,merchant,clear
+went for Practo as a lifestyle upgrade,Health,Want,natural_language,clear
+Apollo Pharmacy medicines,Health,Need,merchant,clear
+Reliance Digital expense required urgently for daily use,Shopping,Need,natural_language,clear
+bought protein supplements to try out a new diet trend,Health,Want,natural_language,clear
+Ajio festive sale shopping spree,Shopping,Want,merchant,clear
+JioCinema to watch a new season with the family,Entertainment,Want,merchant,clear
+CARD PAYMENT PAYTM MONEY,Misc,Investment,bank_statement,clear
+POS UBER ONLINE,Travel,Want,bank_statement,clear
+CARD PAYMENT GREAT LEARNING,Education,Investment,bank_statement,clear
+TATA SKY TXN POS PURCHASE,Bills,Need,bank_statement,clear
+contributed to Paytm Money for a national pension scheme contribution,Misc,Investment,natural_language,clear
+indulged in JioMart for a festive celebration at home,Groceries,Want,natural_language,clear
+Municipal Water Board expense for the water supply bill,Bills,Need,natural_language,clear
+POS ZEE5 ONLINE,Entertainment,Want,bank_statement,clear
+paid for Apollo Pharmacy for a routine health checkup,Health,Need,natural_language,clear
+POS ET MONEY PAYMENT,Misc,Investment,bank_statement,clear
+UPI-APOLLOPHARMACY,Health,Need,upi,clear
+spent on Jio for the mobile recharge plan,Bills,Need,natural_language,clear
+bought tickets for a live stand up comedy show,Entertainment,Want,natural_language,clear
+"could have skipped Great Learning, but chose to spend on it, purely for personal enrichment",Education,Want,semantic,context_dependent

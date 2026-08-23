@@ -46,7 +46,7 @@ const transactionSchema = new mongoose.Schema(
     isAnomaly: { type: Boolean, default: false },
     classificationSource: {
       type: String,
-      enum: ['ml', 'fallback', 'manual', 'unknown'],
+      enum: ['ml', 'merchant_rule', 'tfidf', 'fallback', 'manual', 'unknown'],
       default: 'unknown'
     }
   },

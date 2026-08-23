@@ -1,0 +1,653 @@
+original_text,original_category,original_type,original_ambiguity,action,new_category,new_type,new_ambiguity,reason
+UPI-UPSTOX-782577@upi,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+UPI-RELIANCEFRES-866213@upi,Groceries,Need,context_dependent,ambiguity_corrected,Groceries,Need,clear,ambiguity_to_clear
+FAASOS TXN POS PURCHASE,Food,Want,context_dependent,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+POS INOX ONLINE,Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+enrolled in a coding bootcamp to switch careers,Education,Investment,clear,ambiguity_corrected,Education,Investment,context_dependent,ambiguity_to_context_dependent
+UPI-HALDIRAMS-858434@upi,Food,Need,context_dependent,ambiguity_corrected,Food,Need,clear,ambiguity_to_clear
+BYJU'S for a professional certification,Education,Investment,context_dependent,ambiguity_corrected,Education,Investment,clear,ambiguity_to_clear
+UPI/ETMONEY/PAYMENT/REF6633,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+POS AMAZON RETAIL PURCHASE,Shopping,Want,ambiguous,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+Paytm Money for a recurring deposit,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+APOLLO PHARMACY TXN POS PURCHASE,Health,Want,context_dependent,relabelled_and_ambiguity_corrected,Health,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+CARD PAYMENT KUVERA,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+UPI/SNAPDEAL/PAYMENT/REF6766,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+"could have skipped Vijay Sales, but chose to spend on it, as a small treat for myself",Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+Nature's Basket for a festive celebration at home,Groceries,Want,context_dependent,ambiguity_corrected,Groceries,Want,clear,ambiguity_to_clear
+UPI/AMAZON/PAYMENT/REF5520,Shopping,Need,ambiguous,relabelled_and_ambiguity_corrected,Shopping,Want,clear,relabelled_type_to_want; ambiguity_to_clear
+set aside savings via Unacademy to boost my career prospects,Education,Investment,context_dependent,removed_unrealistic,,,,Nonsensical template combination or malformed verb-object pairing
+POS KFC PAYMENT,Food,Want,context_dependent,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+POS COIN BY ZERODHA ONLINE,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+treated myself to sushi after a stressful week,Food,Want,clear,ambiguity_corrected,Food,Want,context_dependent,ambiguity_to_context_dependent
+Fortis Hospital out of general curiosity,Health,Want,context_dependent,removed_unrealistic,,,,Nonsensical template combination or malformed verb-object pairing
+UPI/UDEMY/PAYMENT/REF3139,Education,Investment,context_dependent,ambiguity_corrected,Education,Investment,clear,ambiguity_to_clear
+POS MAX HEALTHCARE ONLINE,Health,Want,context_dependent,relabelled_and_ambiguity_corrected,Health,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+KFC TXN POS PURCHASE,Food,Need,context_dependent,ambiguity_corrected,Food,Need,clear,ambiguity_to_clear
+paid hospital bill for an emergency surgery,Health,Need,clear,ambiguity_corrected,Health,Need,context_dependent,ambiguity_to_context_dependent
+UPI-SHOPPINGORDER-REF1920,Shopping,Want,ambiguous,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+invested through Zerodha for a stock market trade,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+POS MUMBAI METRO PAYMENT,Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+CARD PAYMENT TATA CLIQ,Shopping,Need,ambiguous,relabelled_and_ambiguity_corrected,Shopping,Want,clear,relabelled_type_to_want; ambiguity_to_clear
+treated myself to MedPlus to try a trending supplement,Health,Want,context_dependent,relabelled_and_ambiguity_corrected,Health,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+POS ZEPTO ONLINE,Groceries,Want,context_dependent,relabelled_and_ambiguity_corrected,Groceries,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+UPI/MAXHEALTHCAR/PAYMENT/REF3390,Health,Want,ambiguous,relabelled_and_ambiguity_corrected,Health,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+Starbucks coffee with a client,Food,Want,context_dependent,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+UPI-BYJUS-BYJUS@ICICI,Education,Investment,context_dependent,ambiguity_corrected,Education,Investment,clear,ambiguity_to_clear
+UPI-CULT.FIT-963305@upi,Health,Need,context_dependent,ambiguity_corrected,Health,Need,clear,ambiguity_to_clear
+CARD PAYMENT HP GAS,Bills,Need,ambiguous,ambiguity_corrected,Bills,Need,clear,ambiguity_to_clear
+put money into Paytm Money for a monthly SIP,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+UPI/ANIGHTCLUB/PAYMENT/REF6675,Party,Want,ambiguous,ambiguity_corrected,Party,Want,clear,ambiguity_to_clear
+went for Flipkart as a birthday gift for myself,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+treated myself to Rapido to a concert across town,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+"could have skipped FASTag, but chose to spend on it, to attend a friend's party",Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+"didn't really need Netmeds, but went ahead anyway, out of general curiosity",Health,Want,context_dependent,removed_unrealistic,,,,Nonsensical template combination or malformed verb-object pairing
+POS NATURE'S BASKET PAYMENT,Groceries,Need,ambiguous,ambiguity_corrected,Groceries,Need,clear,ambiguity_to_clear
+UPI/SPENCERS/PAYMENT/REF7825,Groceries,Need,context_dependent,ambiguity_corrected,Groceries,Need,clear,ambiguity_to_clear
+set aside savings via Upstox for a gold bond purchase,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+POS VISTARA ONLINE,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+Great Learning required to pass the course,Education,Need,context_dependent,relabelled_and_ambiguity_corrected,Education,Investment,clear,relabelled_type_to_investment; ambiguity_to_clear
+Subway for a movie night at home,Food,Want,context_dependent,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+UPI/FRIEND/SPLITBILL/REF9911,Misc,Need,ambiguous,ambiguity_corrected,Misc,Need,clear,ambiguity_to_clear
+UPI-ZEE5-ZEE5@ICICI,Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+CARD PAYMENT JIOMART,Groceries,Want,ambiguous,relabelled_and_ambiguity_corrected,Groceries,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+UPI-MEDPLUS-796494@upi,Health,Want,ambiguous,relabelled_and_ambiguity_corrected,Health,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+UPI-CROMA-STORE@SBI,Shopping,Need,context_dependent,relabelled_and_ambiguity_corrected,Shopping,Want,clear,relabelled_type_to_want; ambiguity_to_clear
+Fortis Hospital for an emergency hospital visit,Health,Need,context_dependent,ambiguity_corrected,Health,Need,clear,ambiguity_to_clear
+UPI-UPGRAD-UPGRAD@HDFC,Education,Need,context_dependent,relabelled_and_ambiguity_corrected,Education,Investment,clear,relabelled_type_to_investment; ambiguity_to_clear
+Star Bazaar to try some gourmet imported items,Groceries,Want,context_dependent,ambiguity_corrected,Groceries,Want,clear,ambiguity_to_clear
+Ajio required urgently for daily use,Shopping,Need,context_dependent,ambiguity_corrected,Shopping,Need,clear,ambiguity_to_clear
+paid school fees for the new academic year,Education,Need,clear,relabelled,Education,Investment,clear,relabelled_type_to_investment
+BOX8 TXN POS PURCHASE,Food,Want,context_dependent,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+UPI/UNACADEMY/PAYMENT/REF3545,Education,Need,context_dependent,relabelled_and_ambiguity_corrected,Education,Investment,clear,relabelled_type_to_investment; ambiguity_to_clear
+UPI-FASTAG-FASTAG@ICICI,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+IRCTC train ticket booked for a family wedding trip,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+Cult.fit premium gym membership,Health,Want,context_dependent,ambiguity_corrected,Health,Want,clear,ambiguity_to_clear
+UPI/GOIBIBO/PAYMENT/REF6442,Travel,Need,ambiguous,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+took a cab home instead of waiting for the last bus,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+Zerodha for a recurring deposit,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+used More Supermarket for basic household supplies,Groceries,Need,context_dependent,ambiguity_corrected,Groceries,Need,clear,ambiguity_to_clear
+UPI-BIGBASKET-987731@upi,Groceries,Need,ambiguous,ambiguity_corrected,Groceries,Need,clear,ambiguity_to_clear
+IRCTC TXN POS PURCHASE,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+MakeMyTrip flight for an urgent family emergency,Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+UPI-STARBAZAAR-STARBAZAAR@PAYTM,Groceries,Need,context_dependent,ambiguity_corrected,Groceries,Need,clear,ambiguity_to_clear
+CARD PAYMENT RAPIDO,Travel,Want,ambiguous,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+"could have skipped Ola, but chose to spend on it, for a weekend getaway",Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+UPI-MAXHEALTHCAR-MAXHEALTHCAR@ICICI,Health,Want,ambiguous,relabelled_and_ambiguity_corrected,Health,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+treated myself to a lounge bar during a bachelor party night out,Party,Want,context_dependent,ambiguity_corrected,Party,Want,clear,ambiguity_to_clear
+paid for PVR to catch a live concert on a whim,Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+Delhi Metro for a mandatory office trip,Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+"didn't really need McDonald's, but went ahead anyway, with friends for a celebration",Food,Want,context_dependent,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+contributed to Groww for a monthly SIP,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+UPI-ZERODHA-867183@upi,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+UPI-AMAZONPRIMEV-763897@upi,Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+had to pay for MedPlus after a doctor's referral,Health,Need,context_dependent,ambiguity_corrected,Health,Need,clear,ambiguity_to_clear
+UPI/ZEPTO/PAYMENT/REF2311,Groceries,Want,context_dependent,relabelled_and_ambiguity_corrected,Groceries,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+BYJU'S as a personal hobby class,Education,Want,context_dependent,ambiguity_corrected,Education,Want,clear,ambiguity_to_clear
+POS MYNTRA ONLINE,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+ate out at a fancy restaurant purely for the experience,Food,Want,clear,ambiguity_corrected,Food,Want,context_dependent,ambiguity_to_context_dependent
+POS SNAPDEAL ONLINE,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+POS RELIANCE DIGITAL PAYMENT,Shopping,Want,ambiguous,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+UPI-AROOFTOPBAR-AROOFTOPBAR@AXIS,Party,Want,context_dependent,ambiguity_corrected,Party,Want,clear,ambiguity_to_clear
+VIJAY SALES TXN POS PURCHASE,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+splurged on Practo for a fitness experiment,Health,Want,context_dependent,ambiguity_corrected,Health,Want,clear,ambiguity_to_clear
+POS MEESHO ONLINE,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+digital payment,Misc,Want,ambiguous,ambiguity_corrected,Misc,Want,clear,ambiguity_to_clear
+JioCinema for a weekend movie outing with friends,Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+"didn't really need Tata 1mg, but went ahead anyway, for a fitness experiment",Health,Want,context_dependent,relabelled_and_ambiguity_corrected,Health,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+EatSure for a Sunday brunch tradition,Food,Want,context_dependent,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+UPI-BLUSMART-BLUSMART@PAYTM,Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+booked Myntra for a work-from-home setup,Shopping,Need,context_dependent,removed_unrealistic,,,,Nonsensical template combination or malformed verb-object pairing
+UPI-NETMEDS-NETMEDS@ICICI,Health,Want,context_dependent,relabelled_and_ambiguity_corrected,Health,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+CARD PAYMENT SONY LIV,Entertainment,Want,ambiguous,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+went for Lenskart to try out a new trend,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+POS CAFE COFFEE DAY MUMBAI,Food,Want,ambiguous,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+POS TRAVEL BOOKING,Travel,Want,ambiguous,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+had to pay for DMart to restock the kitchen essentials,Groceries,Need,context_dependent,ambiguity_corrected,Groceries,Need,clear,ambiguity_to_clear
+UPI-OLA-OLA@YBL,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+UPI-VISTARA-VISTARA@PAYTM,Travel,Want,ambiguous,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+ATM cash withdrawal,Misc,Need,ambiguous,ambiguity_corrected,Misc,Need,clear,ambiguity_to_clear
+Zomato meal ordered during a late hospital visit,Food,Need,context_dependent,ambiguity_corrected,Food,Need,clear,ambiguity_to_clear
+UPI/ETMONEY/PAYMENT/REF7581,Misc,Investment,context_dependent,removed_duplicate,,,,"Normalized duplicate of previously retained transaction: ""upi etmoney payment ref"""
+A BREWERY TXN POS PURCHASE,Party,Want,context_dependent,ambiguity_corrected,Party,Want,clear,ambiguity_to_clear
+UPI-STARBAZAAR-STARBAZAAR@HDFC,Groceries,Need,context_dependent,ambiguity_corrected,Groceries,Need,clear,ambiguity_to_clear
+"the expense on Cult.fit was unavoidable, to get a diagnostic test done",Health,Need,context_dependent,ambiguity_corrected,Health,Need,clear,ambiguity_to_clear
+UPI-INDIGO-INDIGO@YBL,Travel,Need,ambiguous,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+CARD PAYMENT MSEDCL,Bills,Need,ambiguous,ambiguity_corrected,Bills,Need,clear,ambiguity_to_clear
+Coin by Zerodha for a recurring deposit,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+Zee5 to catch a live concert,Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+Swiggy because there was no time to cook,Food,Need,context_dependent,ambiguity_corrected,Food,Need,clear,ambiguity_to_clear
+ICICI Direct for a monthly SIP,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+UPI-CROMA-CROMA@SBI,Shopping,Want,ambiguous,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+CARD PAYMENT CULT FIT,Health,Want,context_dependent,ambiguity_corrected,Health,Want,clear,ambiguity_to_clear
+UPI/RAPIDO/BIKE RIDE/REF3341,Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+CARD PAYMENT ZERODHA,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+UPI-TATACLIQ-TATACLIQ@HDFC,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+Ola cab for office commute,Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+"didn't really need Cult.fit, but went ahead anyway, to try a trending supplement",Health,Want,context_dependent,ambiguity_corrected,Health,Want,clear,ambiguity_to_clear
+a brewery during a bachelor party night out,Party,Want,context_dependent,ambiguity_corrected,Party,Want,clear,ambiguity_to_clear
+had to pay for Great Learning required to pass the course,Education,Need,context_dependent,relabelled_and_ambiguity_corrected,Education,Investment,clear,relabelled_type_to_investment; ambiguity_to_clear
+ordered food for a small get together at home,Food,Want,context_dependent,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+Meesho to try out a new trend,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+HOTSTAR TXN POS PURCHASE,Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+used DMart for daily cooking needs,Groceries,Need,context_dependent,ambiguity_corrected,Groceries,Need,clear,ambiguity_to_clear
+TATA CLIQ TXN POS PURCHASE,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+POS BLUSMART PAYMENT,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+put money into Groww for a recurring deposit,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+contributed to ICICI Direct for a fixed deposit renewal,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+UPI-AMAZON-766020@upi,Shopping,Want,ambiguous,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+POS SUBSCRIPTION CHARGE,Entertainment,Want,ambiguous,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+ICICI Direct for a stock market trade,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+POS INDIGO PAYMENT,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+IndiGo for a solo backpacking trip,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+ordered food online again even though groceries were at home,Food,Want,context_dependent,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+POS NATURES BASKET GOURMET,Groceries,Want,context_dependent,ambiguity_corrected,Groceries,Want,clear,ambiguity_to_clear
+POS UPI TRANSFER,Misc,Want,ambiguous,ambiguity_corrected,Misc,Want,clear,ambiguity_to_clear
+UPI-STARBAZAAR-902558@upi,Groceries,Want,context_dependent,relabelled_and_ambiguity_corrected,Groceries,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+booked Subway during a family emergency at home,Food,Need,context_dependent,removed_unrealistic,,,,Nonsensical template combination or malformed verb-object pairing
+CARD PAYMENT MUMBAI METRO,Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+JioMart imported cheese and gourmet snacks,Groceries,Want,context_dependent,ambiguity_corrected,Groceries,Want,clear,ambiguity_to_clear
+"didn't really need Amazon, but went ahead anyway, as a birthday gift for myself",Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+Croma for a work-from-home setup,Shopping,Need,context_dependent,ambiguity_corrected,Shopping,Need,clear,ambiguity_to_clear
+paid for upGrad compulsory for the degree program,Education,Need,context_dependent,ambiguity_corrected,Education,Need,clear,ambiguity_to_clear
+booked KFC between back to back lectures,Food,Need,context_dependent,ambiguity_corrected,Food,Need,clear,ambiguity_to_clear
+splurged on Zee5 for binge watching over the weekend,Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+paid for Amazon as a birthday gift for myself on a whim,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+Fortis Hospital for a skincare experiment,Health,Want,context_dependent,removed_unrealistic,,,,Nonsensical template combination or malformed verb-object pairing
+"spent on MedPlus more for enjoyment than necessity, for a skincare experiment",Health,Want,context_dependent,relabelled,Health,Need,context_dependent,relabelled_type_to_need
+treated myself to Unacademy as a personal hobby class,Education,Want,context_dependent,ambiguity_corrected,Education,Want,clear,ambiguity_to_clear
+indulged in Meru Cabs for a solo backpacking trip,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+UPI-CASHBACKAPP-REWARDS,Misc,Want,ambiguous,ambiguity_corrected,Misc,Want,clear,ambiguity_to_clear
+Spencer's to try some gourmet imported items,Groceries,Want,context_dependent,ambiguity_corrected,Groceries,Want,clear,ambiguity_to_clear
+Coin by Zerodha for a fixed deposit renewal,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+UPI-ICICIDIRECT-786506@upi,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+CARD PAYMENT MEESHO,Shopping,Need,context_dependent,relabelled_and_ambiguity_corrected,Shopping,Want,clear,relabelled_type_to_want; ambiguity_to_clear
+UPI/SUBWAY/PAYMENT/REF7267,Food,Want,context_dependent,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+a nightclub for a friend's birthday celebration,Party,Want,context_dependent,ambiguity_corrected,Party,Want,clear,ambiguity_to_clear
+PharmEasy to get a diagnostic test done,Health,Need,context_dependent,ambiguity_corrected,Health,Need,clear,ambiguity_to_clear
+UPI-MYNTRA-989058@upi,Shopping,Need,ambiguous,relabelled_and_ambiguity_corrected,Shopping,Want,clear,relabelled_type_to_want; ambiguity_to_clear
+treated myself to a lounge bar for a New Year's party,Party,Want,context_dependent,ambiguity_corrected,Party,Want,clear,ambiguity_to_clear
+food order,Food,Want,ambiguous,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+"could have skipped Goibibo, but chose to spend on it, to visit relatives during the holidays",Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+FASTag to get to a work meeting,Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+MAX HEALTHCARE TXN POS PURCHASE,Health,Need,context_dependent,ambiguity_corrected,Health,Need,clear,ambiguity_to_clear
+"the expense on Uber was unavoidable, for a mandatory office trip",Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+POS NETMEDS ONLINE,Health,Want,context_dependent,relabelled_and_ambiguity_corrected,Health,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+UPI-COURSERA-774538@upi,Education,Investment,context_dependent,ambiguity_corrected,Education,Investment,clear,ambiguity_to_clear
+Zepto to try some gourmet imported items,Groceries,Want,context_dependent,ambiguity_corrected,Groceries,Want,clear,ambiguity_to_clear
+UPI/FLIPKART/PAYMENT/REF1710,Shopping,Need,context_dependent,relabelled_and_ambiguity_corrected,Shopping,Want,clear,relabelled_type_to_want; ambiguity_to_clear
+UPI-AJIO-781123@upi,Shopping,Need,ambiguous,relabelled_and_ambiguity_corrected,Shopping,Want,clear,relabelled_type_to_want; ambiguity_to_clear
+"could have skipped IRCTC, but chose to spend on it, for a leisure vacation",Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+UPI-SERVICEPAYMENT-REF9303,Misc,Want,ambiguous,ambiguity_corrected,Misc,Want,clear,ambiguity_to_clear
+"the expense on Flipkart was unavoidable, for essential office supplies",Shopping,Need,context_dependent,relabelled_and_ambiguity_corrected,Shopping,Want,clear,relabelled_type_to_want; ambiguity_to_clear
+POS MERCHANT PAYMENT,Misc,Want,ambiguous,ambiguity_corrected,Misc,Want,clear,ambiguity_to_clear
+"decided to grow long term savings through upGrad, to switch to a new career track",Education,Investment,context_dependent,ambiguity_corrected,Education,Investment,clear,ambiguity_to_clear
+UPI-ALOCALPUB-ALOCALPUB@ICICI,Party,Want,ambiguous,ambiguity_corrected,Party,Want,clear,ambiguity_to_clear
+Uber ride to college,Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+POS PRACTO PAYMENT,Health,Need,context_dependent,ambiguity_corrected,Health,Need,clear,ambiguity_to_clear
+Tata Cliq required urgently for daily use,Shopping,Need,context_dependent,ambiguity_corrected,Shopping,Need,clear,ambiguity_to_clear
+POS COLLEGE FEE PAYMENT,Education,Need,clear,relabelled,Education,Investment,clear,relabelled_type_to_investment
+POS GOIBIBO ONLINE,Travel,Need,ambiguous,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+DMart for daily cooking needs,Groceries,Need,context_dependent,ambiguity_corrected,Groceries,Need,clear,ambiguity_to_clear
+UPI-SPICEJET-756834@upi,Travel,Want,ambiguous,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+booked Jio for the mobile recharge plan,Bills,Need,clear,removed_unrealistic,,,,Nonsensical template combination or malformed verb-object pairing
+"the expense on Goibibo was unavoidable, for a mandatory office trip",Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+POS SONY LIV ONLINE,Entertainment,Want,ambiguous,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+BLINKIT TXN POS PURCHASE,Groceries,Want,context_dependent,relabelled_and_ambiguity_corrected,Groceries,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+POS PAYTM WALLET LOAD,Misc,Need,ambiguous,ambiguity_corrected,Misc,Need,clear,ambiguity_to_clear
+POS YATRA PAYMENT,Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+UPI/DOMINOS/PIZZA ORDER/REF2291,Food,Want,context_dependent,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+UPI-ALOUNGEBAR-ALOUNGEBAR@PAYTM,Party,Want,context_dependent,ambiguity_corrected,Party,Want,clear,ambiguity_to_clear
+ration,Groceries,Need,clear,ambiguity_corrected,Groceries,Need,ambiguous,ambiguity_to_ambiguous
+"the expense on Swiggy was unavoidable, because there was no time to cook",Food,Need,context_dependent,ambiguity_corrected,Food,Need,clear,ambiguity_to_clear
+went for Star Bazaar to try some gourmet imported items,Groceries,Want,context_dependent,ambiguity_corrected,Groceries,Want,clear,ambiguity_to_clear
+"set money aside for the future via Upstox, for a corporate bond purchase",Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+UPI-PHARMEASY-867197@upi,Health,Need,ambiguous,ambiguity_corrected,Health,Need,clear,ambiguity_to_clear
+UPI-CHAIWALA-9821XXXXXX,Food,Need,context_dependent,ambiguity_corrected,Food,Need,clear,ambiguity_to_clear
+DELHI METRO TXN POS PURCHASE,Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+"set money aside for the future via ET Money, for a recurring deposit",Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+FASTag expense to get to a work meeting,Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+Cult.fit expense for an emergency hospital visit,Health,Need,context_dependent,ambiguity_corrected,Health,Need,clear,ambiguity_to_clear
+A LOCAL PUB TXN POS PURCHASE,Party,Want,context_dependent,ambiguity_corrected,Party,Want,clear,ambiguity_to_clear
+had to pay for Meru Cabs for a mandatory office trip,Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+CARD PAYMENT MAKEMYTRIP,Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+took a flight for a spontaneous holiday with friends,Travel,Want,clear,ambiguity_corrected,Travel,Want,context_dependent,ambiguity_to_context_dependent
+CARD PAYMENT CULT.FIT,Health,Need,context_dependent,removed_duplicate,,,,"Normalized duplicate of previously retained transaction: ""card payment cult fit"""
+UPI-MYNTRA-844187@upi,Shopping,Need,context_dependent,removed_duplicate,,,,"Normalized duplicate of previously retained transaction: ""upi myntra upi"""
+splurged on a rooftop bar for a farewell celebration,Party,Want,context_dependent,ambiguity_corrected,Party,Want,clear,ambiguity_to_clear
+UPI-RELIANCEFRES-926816@upi,Groceries,Want,ambiguous,removed_duplicate,,,,"Normalized duplicate of previously retained transaction: ""upi reliancefres upi"""
+Faasos for a movie night at home,Food,Want,context_dependent,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+Vijay Sales required urgently for daily use,Shopping,Need,context_dependent,ambiguity_corrected,Shopping,Need,clear,ambiguity_to_clear
+UPI/SKILLSHARE/PAYMENT/REF5456,Education,Need,context_dependent,relabelled_and_ambiguity_corrected,Education,Investment,clear,relabelled_type_to_investment; ambiguity_to_clear
+BYJU'S to learn a skill needed for my job,Education,Investment,context_dependent,ambiguity_corrected,Education,Investment,clear,ambiguity_to_clear
+POS JIOMART PAYMENT,Groceries,Need,context_dependent,ambiguity_corrected,Groceries,Need,clear,ambiguity_to_clear
+UPI-SNAPDEAL-SNAPDEAL@HDFC,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+Upstox for a stock market trade,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+Netflix for the monthly subscription renewal,Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+indulged in Rapido for a solo backpacking trip,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+booked BSES for this month's power bill,Bills,Need,clear,removed_unrealistic,,,,Nonsensical template combination or malformed verb-object pairing
+"decided to grow long term savings through Groww, for a gold bond purchase",Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+UPI-BEHROUZBIRYA-707169@upi,Food,Need,context_dependent,ambiguity_corrected,Food,Need,clear,ambiguity_to_clear
+UPI-RAPIDO-780132@upi,Travel,Need,ambiguous,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+UPI-APOLLOPHARMA-793571@upi,Health,Want,context_dependent,relabelled_and_ambiguity_corrected,Health,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+donated to a local charity drive,Misc,Want,ambiguous,ambiguity_corrected,Misc,Want,clear,ambiguity_to_clear
+POS COIN BY ZERODHA PAYMENT,Misc,Investment,ambiguous,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+PVR for binge watching over the weekend,Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+Amazon just because I liked the design,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+UPI-COURSERA-CERT@HDFC,Education,Investment,context_dependent,ambiguity_corrected,Education,Investment,clear,ambiguity_to_clear
+UPI-MCDONALDS-866816@upi,Food,Want,ambiguous,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+indulged in Zomato with friends for a celebration,Food,Want,context_dependent,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+UPI/IRCTC/PAYMENT/REF3697,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+Lenskart during a big sale,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+"the expense on Snapdeal was unavoidable, to replace a broken item",Shopping,Need,context_dependent,relabelled_and_ambiguity_corrected,Shopping,Want,clear,relabelled_type_to_want; ambiguity_to_clear
+UPI-WALLETTOPUP-REF8259,Misc,Want,ambiguous,ambiguity_corrected,Misc,Want,clear,ambiguity_to_clear
+UPI/MEESHO/PAYMENT/REF2013,Shopping,Need,context_dependent,relabelled_and_ambiguity_corrected,Shopping,Want,clear,relabelled_type_to_want; ambiguity_to_clear
+Zomato with friends for a celebration,Food,Want,context_dependent,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+UPI/INDIGO/PAYMENT/REF6279,Travel,Want,ambiguous,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+paid for a quick meal during the exam break,Food,Need,context_dependent,ambiguity_corrected,Food,Need,clear,ambiguity_to_clear
+UPI-BLUSMART-BLUSMART@HDFC,Travel,Want,ambiguous,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+Paytm Money for a fixed deposit renewal,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+UPI-ZOMATO-ZOMATO@PAYTM,Food,Want,ambiguous,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+UPI-MEDPLUS-MEDPLUS@PAYTM,Health,Want,context_dependent,relabelled_and_ambiguity_corrected,Health,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+POS NYKAA PAYMENT,Shopping,Need,ambiguous,relabelled_and_ambiguity_corrected,Shopping,Want,clear,relabelled_type_to_want; ambiguity_to_clear
+POS BOX8 PAYMENT,Food,Want,context_dependent,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+Coin by Zerodha for a stock market trade,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+CARD PAYMENT APOLLO PHARMACY,Health,Need,context_dependent,ambiguity_corrected,Health,Need,clear,ambiguity_to_clear
+SpiceJet for a leisure vacation,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+Zerodha for a stock market trade,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+contributed to ICICI Direct for a recurring deposit,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+Croma just because I liked the design,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+UPI-AJIO-921740@upi,Shopping,Want,context_dependent,removed_duplicate,,,,"Normalized duplicate of previously retained transaction: ""upi ajio upi"""
+indulged in Myntra as a small treat for myself,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+paid for Nature's Basket for a festive celebration at home on a whim,Groceries,Want,context_dependent,ambiguity_corrected,Groceries,Want,clear,ambiguity_to_clear
+CARD PAYMENT UNACADEMY,Education,Want,context_dependent,relabelled_and_ambiguity_corrected,Education,Investment,clear,relabelled_type_to_investment; ambiguity_to_clear
+NETFLIX TXN POS PURCHASE,Entertainment,Want,ambiguous,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+"could have skipped PharmEasy, but chose to spend on it, to try a new wellness trend",Health,Want,context_dependent,relabelled,Health,Need,context_dependent,relabelled_type_to_need
+UPI/INOX/PAYMENT/REF5742,Entertainment,Want,ambiguous,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+new shoes,Shopping,Need,ambiguous,relabelled,Shopping,Want,ambiguous,relabelled_type_to_want
+POS ZOMATO PAYMENT,Food,Want,context_dependent,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+1mg Diagnostics after a doctor's referral,Health,Need,context_dependent,ambiguity_corrected,Health,Need,clear,ambiguity_to_clear
+POS ZOMATO ONLINE ORDER,Food,Want,ambiguous,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+POS COURSERA ONLINE,Education,Need,context_dependent,relabelled_and_ambiguity_corrected,Education,Investment,clear,relabelled_type_to_investment; ambiguity_to_clear
+UPI-KFC-718821@upi,Food,Need,context_dependent,ambiguity_corrected,Food,Need,clear,ambiguity_to_clear
+UPI-VIJAYSALES-VIJAYSALES@YBL,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+UPI-ZEPTO-884842@upi,Groceries,Need,context_dependent,ambiguity_corrected,Groceries,Need,clear,ambiguity_to_clear
+"didn't really need Swiggy, but went ahead anyway, for a Sunday brunch tradition",Food,Want,context_dependent,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+"the expense on Yatra was unavoidable, to get to a work meeting",Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+booked Municipal Water Board for the water supply bill,Bills,Need,clear,removed_unrealistic,,,,Nonsensical template combination or malformed verb-object pairing
+UPI-FAASOS-859431@upi,Food,Need,context_dependent,ambiguity_corrected,Food,Need,clear,ambiguity_to_clear
+"decided to grow long term savings through Paytm Money, for a recurring deposit",Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+Box8 to celebrate a promotion,Food,Want,context_dependent,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+More Supermarket for daily cooking needs,Groceries,Need,context_dependent,ambiguity_corrected,Groceries,Need,clear,ambiguity_to_clear
+spent on Snapdeal to replace a broken item,Shopping,Need,context_dependent,relabelled_and_ambiguity_corrected,Shopping,Want,clear,relabelled_type_to_want; ambiguity_to_clear
+paid the exam registration fee for a competitive exam,Education,Need,clear,relabelled,Education,Investment,clear,relabelled_type_to_investment
+"could have skipped LinkedIn Learning, but chose to spend on it, as a personal hobby class",Education,Want,context_dependent,ambiguity_corrected,Education,Want,clear,ambiguity_to_clear
+CARD PAYMENT A LOCAL PUB,Party,Want,ambiguous,ambiguity_corrected,Party,Want,clear,ambiguity_to_clear
+POS MAKEMYTRIP ONLINE,Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+treated myself to Goibibo to a concert across town,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+POS AJIO ONLINE,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+indulged in Reliance Digital as a small treat for myself,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+BEST bus for a hospital appointment,Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+UPI/BEHROUZBIRYA/PAYMENT/REF8905,Food,Need,context_dependent,ambiguity_corrected,Food,Need,clear,ambiguity_to_clear
+UPI-IRCTCTICKET-REF9012,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+UPI-APPLEPAYMENT-REF5593,Shopping,Want,ambiguous,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+CARD PAYMENT COURSERA,Education,Investment,context_dependent,ambiguity_corrected,Education,Investment,clear,ambiguity_to_clear
+UPI-PHARMEASY-PHARMEASY@HDFC,Health,Want,context_dependent,relabelled_and_ambiguity_corrected,Health,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+UPI/ICICIDIRECT/PAYMENT/REF2215,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+indulged in Uber for a solo backpacking trip,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+Myntra for essential office supplies,Shopping,Need,context_dependent,relabelled_and_ambiguity_corrected,Shopping,Want,clear,relabelled_type_to_want; ambiguity_to_clear
+POS ACCOUNT DEBIT,Misc,Want,ambiguous,ambiguity_corrected,Misc,Want,clear,ambiguity_to_clear
+UPI-SWIGGY-853163@upi,Food,Need,ambiguous,ambiguity_corrected,Food,Need,clear,ambiguity_to_clear
+Uber for a solo backpacking trip,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+POS BYJU'S PAYMENT,Education,Investment,ambiguous,ambiguity_corrected,Education,Investment,clear,ambiguity_to_clear
+UPI/INOX/PAYMENT/REF3198,Entertainment,Want,context_dependent,removed_duplicate,,,,"Normalized duplicate of previously retained transaction: ""upi inox payment ref"""
+Groww for a monthly SIP,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+UPI-TATAPOWER-832477@upi,Bills,Need,ambiguous,ambiguity_corrected,Bills,Need,clear,ambiguity_to_clear
+Max Healthcare for an emergency hospital visit,Health,Need,context_dependent,ambiguity_corrected,Health,Need,clear,ambiguity_to_clear
+a brewery for a farewell celebration,Party,Want,context_dependent,ambiguity_corrected,Party,Want,clear,ambiguity_to_clear
+POS NET BANKING TRANSFER,Misc,Want,ambiguous,ambiguity_corrected,Misc,Want,clear,ambiguity_to_clear
+paid for Blinkit after running out of cooking essentials,Groceries,Need,context_dependent,ambiguity_corrected,Groceries,Need,clear,ambiguity_to_clear
+UPI-JIOMART-JIOMART@ICICI,Groceries,Need,context_dependent,ambiguity_corrected,Groceries,Need,clear,ambiguity_to_clear
+Ajio to try out a new trend,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+AMAZON PRIME VIDEO TXN POS PURCHASE,Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+POS ACT FIBERNET ONLINE,Bills,Need,ambiguous,ambiguity_corrected,Bills,Need,clear,ambiguity_to_clear
+UPI/FLIPKART/ORDER/REF5521,Shopping,Want,ambiguous,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+Zerodha for a systematic transfer plan,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+"could have skipped Practo, but chose to spend on it, as a lifestyle upgrade",Health,Want,context_dependent,ambiguity_corrected,Health,Want,clear,ambiguity_to_clear
+Blinkit for the week's meals,Groceries,Need,context_dependent,ambiguity_corrected,Groceries,Need,clear,ambiguity_to_clear
+"could have skipped INOX, but chose to spend on it, for binge watching over the weekend",Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+UPI-BIGBASKET-BIGBASKET@SBI,Groceries,Want,ambiguous,relabelled_and_ambiguity_corrected,Groceries,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+"could have skipped Goibibo, but chose to spend on it, to a concert across town",Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+UPI-YATRA-838403@upi,Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+spent on Udemy required to pass the course,Education,Need,context_dependent,relabelled_and_ambiguity_corrected,Education,Investment,clear,relabelled_type_to_investment; ambiguity_to_clear
+Zee5 for binge watching over the weekend,Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+POS MERU CABS ONLINE,Travel,Need,ambiguous,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+"didn't really need Ola, but went ahead anyway, for a solo backpacking trip",Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+UPI-MAKEMYTRIP-996341@upi,Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+UPI/PAYTMMONEY/PAYMENT/REF7875,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+CARD PAYMENT SUBWAY,Food,Need,context_dependent,ambiguity_corrected,Food,Need,clear,ambiguity_to_clear
+bought a new umbrella since the old one broke,Shopping,Need,clear,relabelled,Shopping,Want,clear,relabelled_type_to_want
+Netmeds to try a trending supplement,Health,Want,context_dependent,relabelled_and_ambiguity_corrected,Health,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+UPI-APOLLOPHARMA-733428@upi,Health,Need,ambiguous,removed_duplicate,,,,"Normalized duplicate of previously retained transaction: ""upi apollopharma upi"""
+UPI-MEDPLUS-956178@upi,Health,Want,context_dependent,removed_duplicate,,,,"Normalized duplicate of previously retained transaction: ""upi medplus upi"""
+Practo to get a diagnostic test done,Health,Need,context_dependent,ambiguity_corrected,Health,Need,clear,ambiguity_to_clear
+UPI-BOX8-BOX8@ICICI,Food,Need,context_dependent,ambiguity_corrected,Food,Need,clear,ambiguity_to_clear
+textbook,Education,Need,clear,ambiguity_corrected,Education,Need,ambiguous,ambiguity_to_ambiguous
+IndiGo for a weekend getaway,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+KUVERA TXN POS PURCHASE,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+UPI/SWIGGY/PAYMENT/REF8827,Food,Need,ambiguous,ambiguity_corrected,Food,Need,clear,ambiguity_to_clear
+booked Apollo Pharmacy after a doctor's referral,Health,Need,context_dependent,removed_unrealistic,,,,Nonsensical template combination or malformed verb-object pairing
+UPI/COLLEGEFEE/TUITION/REF3391,Education,Need,clear,relabelled,Education,Investment,clear,relabelled_type_to_investment
+UPI-TATA1MG-873152@upi,Health,Need,context_dependent,ambiguity_corrected,Health,Need,clear,ambiguity_to_clear
+Wow Momo for a movie night at home,Food,Want,context_dependent,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+put money into Upstox for a recurring deposit,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+a lounge bar for a New Year's party,Party,Want,context_dependent,ambiguity_corrected,Party,Want,clear,ambiguity_to_clear
+Fortis Hospital as prescribed by the doctor,Health,Need,context_dependent,ambiguity_corrected,Health,Need,clear,ambiguity_to_clear
+POS KFC ONLINE,Food,Need,ambiguous,ambiguity_corrected,Food,Need,clear,ambiguity_to_clear
+auto debit payment,Bills,Need,ambiguous,ambiguity_corrected,Bills,Need,clear,ambiguity_to_clear
+Croma because the monsoon damaged the old one,Shopping,Need,context_dependent,ambiguity_corrected,Shopping,Need,clear,ambiguity_to_clear
+POS CARD PAYMENT,Misc,Want,ambiguous,ambiguity_corrected,Misc,Want,clear,ambiguity_to_clear
+POS UPSTOX ONLINE,Misc,Investment,ambiguous,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+UPI-FLIPKARTORDER-REF5965,Shopping,Want,ambiguous,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+contributed to ET Money for a stock market trade,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+"didn't really need Delhi Metro, but went ahead anyway, for a weekend getaway",Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+POS DECATHLON SPORTS,Shopping,Need,context_dependent,relabelled_and_ambiguity_corrected,Shopping,Want,clear,relabelled_type_to_want; ambiguity_to_clear
+POS PHARMEASY PAYMENT,Health,Need,ambiguous,ambiguity_corrected,Health,Need,clear,ambiguity_to_clear
+POS SPOTIFY ONLINE,Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+LENSKART TXN POS PURCHASE,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+UPI-SPENCERS-SPENCERS@PAYTM,Groceries,Want,context_dependent,relabelled_and_ambiguity_corrected,Groceries,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+Mumbai Metro to attend a friend's party,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+UPI-AMAZONPURCHASE-REF1331,Shopping,Want,ambiguous,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+drinks,Party,Want,context_dependent,ambiguity_corrected,Party,Want,ambiguous,ambiguity_to_ambiguous
+UPI-UBER-783707@upi,Travel,Want,ambiguous,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+UPI-SNAPDEAL-884077@upi,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+Reliance Fresh for daily cooking needs,Groceries,Need,context_dependent,ambiguity_corrected,Groceries,Need,clear,ambiguity_to_clear
+UPI-ALOCALPUB-ALOCALPUB@YBL,Party,Want,context_dependent,ambiguity_corrected,Party,Want,clear,ambiguity_to_clear
+CARD PAYMENT JIOCINEMA,Entertainment,Want,ambiguous,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+CARD PAYMENT LENSKART,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+imported chocolates for movie night,Groceries,Want,clear,relabelled,Groceries,Need,clear,relabelled_type_to_need
+"didn't really need Meru Cabs, but went ahead anyway, to visit relatives during the holidays",Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+POS KUVERA PAYMENT,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+Apple payment,Misc,Want,ambiguous,ambiguity_corrected,Misc,Want,clear,ambiguity_to_clear
+UPI/ALOUNGEBAR/PAYMENT/REF4641,Party,Want,ambiguous,ambiguity_corrected,Party,Want,clear,ambiguity_to_clear
+UPI-PVR-849639@upi,Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+HP GAS TXN POS PURCHASE,Bills,Need,ambiguous,ambiguity_corrected,Bills,Need,clear,ambiguity_to_clear
+UPI-SWIGGYFOOD-SWIGGY@ICICI,Food,Need,ambiguous,ambiguity_corrected,Food,Need,clear,ambiguity_to_clear
+"didn't really need Max Healthcare, but went ahead anyway, to try a trending supplement",Health,Want,context_dependent,removed_unrealistic,,,,Nonsensical template combination or malformed verb-object pairing
+used Uber for a job interview across town,Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+POS CASH PAYMENT,Misc,Want,ambiguous,ambiguity_corrected,Misc,Want,clear,ambiguity_to_clear
+Ola for a leisure vacation,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+Unacademy as a personal hobby class,Education,Want,context_dependent,ambiguity_corrected,Education,Want,clear,ambiguity_to_clear
+stocked the pantry with snacks for a house party,Groceries,Want,context_dependent,relabelled_and_ambiguity_corrected,Groceries,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+OTT subscription,Entertainment,Want,clear,ambiguity_corrected,Entertainment,Want,ambiguous,ambiguity_to_ambiguous
+had to pay for BEST bus to reach college on time,Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+UPI-UDEMY-UDEMY@YBL,Education,Investment,ambiguous,ambiguity_corrected,Education,Investment,clear,ambiguity_to_clear
+LinkedIn Learning as a personal hobby class,Education,Want,context_dependent,ambiguity_corrected,Education,Want,clear,ambiguity_to_clear
+UPI-MERUCABS-MERUCABS@SBI,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+MYNTRA TXN POS PURCHASE,Shopping,Need,context_dependent,relabelled_and_ambiguity_corrected,Shopping,Want,clear,relabelled_type_to_want; ambiguity_to_clear
+POS EATSURE ONLINE,Food,Want,context_dependent,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+UPI-RELIANCEDIGI-941223@upi,Shopping,Need,ambiguous,relabelled_and_ambiguity_corrected,Shopping,Want,clear,relabelled_type_to_want; ambiguity_to_clear
+CARD PAYMENT BYJU'S,Education,Want,context_dependent,relabelled_and_ambiguity_corrected,Education,Investment,clear,relabelled_type_to_investment; ambiguity_to_clear
+booked Yatra to get to a work meeting,Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+Unacademy mandatory for the course curriculum,Education,Need,context_dependent,ambiguity_corrected,Education,Need,clear,ambiguity_to_clear
+"set money aside for the future via Zerodha, for a mutual fund purchase",Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+UPI-INDIGO-791240@upi,Travel,Need,ambiguous,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+CARD PAYMENT UDEMY COURSE,Education,Investment,context_dependent,ambiguity_corrected,Education,Investment,clear,ambiguity_to_clear
+UPI-BIGBASKET-BIGBASKET@HDFC,Groceries,Want,ambiguous,relabelled_and_ambiguity_corrected,Groceries,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+"the expense on IRCTC was unavoidable, to get to a work meeting",Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+CARD PAYMENT MORE SUPERMARKET,Groceries,Want,context_dependent,relabelled_and_ambiguity_corrected,Groceries,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+a rooftop bar during a bachelor party night out,Party,Want,context_dependent,ambiguity_corrected,Party,Want,clear,ambiguity_to_clear
+UPI-KUVERA-KUVERA@AXIS,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+UPI-BLUSMART-BLUSMART@AXIS,Travel,Want,ambiguous,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+booked SpiceJet to get to a work meeting,Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+POS STANDING INSTRUCTION DEBIT,Misc,Want,ambiguous,ambiguity_corrected,Misc,Want,clear,ambiguity_to_clear
+RAPIDO TXN POS PURCHASE,Travel,Need,ambiguous,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+UPI-FORTISHOSPIT-FORTISHOSPIT@AXIS,Health,Want,context_dependent,relabelled_and_ambiguity_corrected,Health,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+UPI/BESTBUS/PAYMENT/REF1672,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+UPI/DMART/PAYMENT/REF1713,Groceries,Want,context_dependent,relabelled_and_ambiguity_corrected,Groceries,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+Yatra to a concert across town,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+booked Adani Electricity for the electricity connection at home,Bills,Need,clear,removed_unrealistic,,,,Nonsensical template combination or malformed verb-object pairing
+POS NATURE'S BASKET ONLINE,Groceries,Need,context_dependent,ambiguity_corrected,Groceries,Need,clear,ambiguity_to_clear
+had to pay for BEST bus for a hospital appointment,Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+UPI/JIOCINEMA/PAYMENT/REF9008,Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+UPI-SNAPDEAL-780147@upi,Shopping,Need,ambiguous,removed_duplicate,,,,"Normalized duplicate of previously retained transaction: ""upi snapdeal upi"""
+CARD PAYMENT ICICI DIRECT,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+POS ZEE5 PAYMENT,Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+booked Meesho required urgently for daily use,Shopping,Need,context_dependent,removed_unrealistic,,,,Nonsensical template combination or malformed verb-object pairing
+"decided to grow long term savings through ICICI Direct, for a fixed deposit renewal",Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+UPI-SKILLSHARE-840909@upi,Education,Want,ambiguous,relabelled_and_ambiguity_corrected,Education,Investment,clear,relabelled_type_to_investment; ambiguity_to_clear
+spent on Skillshare compulsory for the degree program,Education,Need,context_dependent,ambiguity_corrected,Education,Need,clear,ambiguity_to_clear
+Star Bazaar expense for the week's meals,Groceries,Need,context_dependent,ambiguity_corrected,Groceries,Need,clear,ambiguity_to_clear
+POS UPGRAD ONLINE,Education,Investment,ambiguous,ambiguity_corrected,Education,Investment,clear,ambiguity_to_clear
+CARD PAYMENT A LOUNGE BAR,Party,Want,context_dependent,ambiguity_corrected,Party,Want,clear,ambiguity_to_clear
+invested through Zerodha for a national pension scheme contribution,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+UPI-NETFLIX-NETFLIX@SBI,Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+contributed to ET Money for a recurring deposit,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+used Unacademy mandatory for the course curriculum,Education,Need,context_dependent,ambiguity_corrected,Education,Need,clear,ambiguity_to_clear
+POS SWIGGY PAYMENT,Food,Need,context_dependent,ambiguity_corrected,Food,Need,clear,ambiguity_to_clear
+"could have skipped PVR, but chose to spend on it, for a weekend movie outing with friends",Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+CARD PAYMENT MCDONALD'S,Food,Need,context_dependent,ambiguity_corrected,Food,Need,clear,ambiguity_to_clear
+signed up for a recreational photography workshop,Education,Want,context_dependent,relabelled_and_ambiguity_corrected,Education,Investment,clear,relabelled_type_to_investment; ambiguity_to_clear
+FASTag to attend a friend's party,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+UDEMY TXN POS PURCHASE,Education,Investment,ambiguous,ambiguity_corrected,Education,Investment,clear,ambiguity_to_clear
+Sony LIV for the monthly subscription renewal,Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+UPI/UBER/PAYMENT/REF7224,Travel,Need,ambiguous,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+a lounge bar for a friend's birthday celebration,Party,Want,context_dependent,ambiguity_corrected,Party,Want,clear,ambiguity_to_clear
+Max Healthcare to try a new wellness trend,Health,Want,context_dependent,removed_unrealistic,,,,Nonsensical template combination or malformed verb-object pairing
+UPI-UDEMY-UDEMY@PAYTM,Education,Want,context_dependent,relabelled_and_ambiguity_corrected,Education,Investment,clear,relabelled_type_to_investment; ambiguity_to_clear
+"could have skipped Netmeds, but chose to spend on it, for a skincare experiment",Health,Want,context_dependent,relabelled_and_ambiguity_corrected,Health,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+Paytm Money for a stock market trade,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+"booked DMart for hosting a dinner party, just for fun",Groceries,Want,context_dependent,removed_unrealistic,,,,Nonsensical template combination or malformed verb-object pairing
+bill payment,Bills,Need,ambiguous,ambiguity_corrected,Bills,Need,clear,ambiguity_to_clear
+RELIANCE FRESH TXN POS PURCHASE,Groceries,Need,context_dependent,ambiguity_corrected,Groceries,Need,clear,ambiguity_to_clear
+POS GREAT LEARNING ONLINE,Education,Need,context_dependent,relabelled_and_ambiguity_corrected,Education,Investment,clear,relabelled_type_to_investment; ambiguity_to_clear
+SIP,Misc,Investment,clear,ambiguity_corrected,Misc,Investment,ambiguous,ambiguity_to_ambiguous
+paid for JioMart to try some gourmet imported items on a whim,Groceries,Want,context_dependent,ambiguity_corrected,Groceries,Want,clear,ambiguity_to_clear
+UPI-PHARMEASY-PHARMEASY@YBL,Health,Need,ambiguous,ambiguity_corrected,Health,Need,clear,ambiguity_to_clear
+Reliance Fresh after running out of cooking essentials,Groceries,Need,context_dependent,ambiguity_corrected,Groceries,Need,clear,ambiguity_to_clear
+Zepto for a festive celebration at home,Groceries,Want,context_dependent,ambiguity_corrected,Groceries,Want,clear,ambiguity_to_clear
+UPI-SUBWAY-833864@upi,Food,Want,ambiguous,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+UPI/GROWW/PAYMENT/REF4084,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+paid for Lenskart as a birthday gift for myself on a whim,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+CROMA TXN POS PURCHASE,Shopping,Want,ambiguous,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+UPI-GOIBIBO-GOIBIBO@SBI,Travel,Want,ambiguous,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+McDonald's between back to back lectures,Food,Need,context_dependent,ambiguity_corrected,Food,Need,clear,ambiguity_to_clear
+CARD PAYMENT GROWW,Misc,Investment,ambiguous,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+Tata 1mg for a routine health checkup,Health,Need,context_dependent,ambiguity_corrected,Health,Need,clear,ambiguity_to_clear
+UPI/MUMBAIMETRO/PAYMENT/REF6763,Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+SpiceJet for a hospital appointment,Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+went for PharmEasy to try a trending supplement,Health,Want,context_dependent,relabelled_and_ambiguity_corrected,Health,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+paid for 1mg Diagnostics after a doctor's referral,Health,Need,context_dependent,ambiguity_corrected,Health,Need,clear,ambiguity_to_clear
+splurged on INOX to watch a new season with the family,Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+Udemy web development course,Education,Investment,context_dependent,ambiguity_corrected,Education,Investment,clear,ambiguity_to_clear
+Croma during a big sale,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+HALDIRAM'S TXN POS PURCHASE,Food,Want,ambiguous,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+"didn't really need BookMyShow, but went ahead anyway, for the monthly subscription renewal",Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+UPI/COINBYZERODH/PAYMENT/REF9914,Misc,Investment,ambiguous,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+POS UBER TRIP MUMBAI,Travel,Need,ambiguous,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+Nykaa as a birthday gift for myself,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+POS CROMA PAYMENT,Shopping,Want,ambiguous,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+POS SWIGGY ONLINE,Food,Need,context_dependent,ambiguity_corrected,Food,Need,clear,ambiguity_to_clear
+UPI-UNACADEMY-922075@upi,Education,Investment,context_dependent,ambiguity_corrected,Education,Investment,clear,ambiguity_to_clear
+UPI-UPSTOX-793170@upi,Misc,Investment,context_dependent,removed_duplicate,,,,"Normalized duplicate of previously retained transaction: ""upi upstox upi"""
+CARD PAYMENT CROMA ELECTRONICS,Shopping,Need,ambiguous,relabelled_and_ambiguity_corrected,Shopping,Want,clear,relabelled_type_to_want; ambiguity_to_clear
+"the expense on MakeMyTrip was unavoidable, for the daily office commute",Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+Wow Momo to celebrate a promotion,Food,Want,context_dependent,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+put money into Kuvera for a corporate bond purchase,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+booked Vodafone Idea for the prepaid mobile recharge,Bills,Need,clear,removed_unrealistic,,,,Nonsensical template combination or malformed verb-object pairing
+POS MCDONALD'S PAYMENT,Food,Want,context_dependent,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+UPI/1MGDIAGNOSTI/PAYMENT/REF6347,Health,Want,context_dependent,relabelled_and_ambiguity_corrected,Health,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+"didn't really need BEST bus, but went ahead anyway, for a weekend getaway",Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+UPI/HOTSTAR/PAYMENT/REF7765,Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+UPI-KUVERA-KUVERA@HDFC,Misc,Investment,ambiguous,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+POS 1MG DIAGNOSTICS PAYMENT,Health,Need,context_dependent,ambiguity_corrected,Health,Need,clear,ambiguity_to_clear
+Rapido for a solo backpacking trip,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+UPI-1MGDIAGNOSTI-1MGDIAGNOSTI@PAYTM,Health,Want,context_dependent,relabelled_and_ambiguity_corrected,Health,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+bank charges deducted,Misc,Need,ambiguous,ambiguity_corrected,Misc,Need,clear,ambiguity_to_clear
+UPI-YATRA-YATRA@HDFC,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+Practo for ongoing medical treatment,Health,Need,context_dependent,ambiguity_corrected,Health,Need,clear,ambiguity_to_clear
+WOW MOMO TXN POS PURCHASE,Food,Want,ambiguous,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+splurged on KFC for a Sunday brunch tradition,Food,Want,context_dependent,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+UPI/HALDIRAMS/PAYMENT/REF7078,Food,Need,context_dependent,ambiguity_corrected,Food,Need,clear,ambiguity_to_clear
+"the expense on Blinkit was unavoidable, after running out of cooking essentials",Groceries,Need,context_dependent,ambiguity_corrected,Groceries,Need,clear,ambiguity_to_clear
+Lenskart for essential office supplies,Shopping,Need,context_dependent,relabelled_and_ambiguity_corrected,Shopping,Want,clear,relabelled_type_to_want; ambiguity_to_clear
+Croma to try out a new trend,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+UPI-PRACTO-846996@upi,Health,Need,ambiguous,ambiguity_corrected,Health,Need,clear,ambiguity_to_clear
+paid for PharmEasy for a routine health checkup,Health,Need,context_dependent,ambiguity_corrected,Health,Need,clear,ambiguity_to_clear
+Blinkit for basic household supplies,Groceries,Need,context_dependent,ambiguity_corrected,Groceries,Need,clear,ambiguity_to_clear
+used Netmeds for a chronic condition follow-up,Health,Need,context_dependent,ambiguity_corrected,Health,Need,clear,ambiguity_to_clear
+"set money aside for the future via Kuvera, for a systematic transfer plan",Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+had to pay for Skillshare required to pass the course,Education,Need,context_dependent,relabelled_and_ambiguity_corrected,Education,Investment,clear,relabelled_type_to_investment; ambiguity_to_clear
+UPI-SONYLIV-863042@upi,Entertainment,Want,ambiguous,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+UPI/BSES/PAYMENT/REF2599,Bills,Need,clear,removed_duplicate,,,,"Normalized duplicate of previously retained transaction: ""upi bses payment ref"""
+UPI/NETMEDS/PAYMENT/REF8692,Health,Need,context_dependent,ambiguity_corrected,Health,Need,clear,ambiguity_to_clear
+went for Lenskart just because I liked the design,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+UPI/MAXHEALTHCAR/PAYMENT/REF2430,Health,Need,ambiguous,removed_duplicate,,,,"Normalized duplicate of previously retained transaction: ""upi maxhealthcar payment ref"""
+FORTIS HOSPITAL TXN POS PURCHASE,Health,Need,context_dependent,ambiguity_corrected,Health,Need,clear,ambiguity_to_clear
+Upstox for a national pension scheme contribution,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+UPI-ICICIDIRECT-ICICIDIRECT@HDFC,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+indulged in Snapdeal just because I liked the design,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+a brewery for a New Year's party,Party,Want,context_dependent,ambiguity_corrected,Party,Want,clear,ambiguity_to_clear
+Flipkart as a birthday gift for myself,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+UPI/MORESUPERMAR/PAYMENT/REF7850,Groceries,Want,context_dependent,relabelled_and_ambiguity_corrected,Groceries,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+"the expense on MakeMyTrip was unavoidable, for a mandatory office trip",Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+CARD PAYMENT ZEPTO,Groceries,Want,context_dependent,relabelled_and_ambiguity_corrected,Groceries,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+Ola to get to a work meeting,Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+veggies,Groceries,Need,clear,ambiguity_corrected,Groceries,Need,ambiguous,ambiguity_to_ambiguous
+Box8 with friends for a celebration,Food,Want,context_dependent,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+UPI/COINBYZERODH/PAYMENT/REF8758,Misc,Investment,context_dependent,removed_duplicate,,,,"Normalized duplicate of previously retained transaction: ""upi coinbyzerodh payment ref"""
+"didn't really need JioCinema, but went ahead anyway, for a weekend movie outing with friends",Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+Coursera required to pass the course,Education,Need,context_dependent,relabelled_and_ambiguity_corrected,Education,Investment,clear,relabelled_type_to_investment; ambiguity_to_clear
+Reliance Fresh to try some gourmet imported items,Groceries,Want,context_dependent,ambiguity_corrected,Groceries,Want,clear,ambiguity_to_clear
+CARD PAYMENT DOMINOS PIZZA,Food,Want,ambiguous,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+UPI-VIJAYSALES-963667@upi,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+Udemy required to pass the course,Education,Need,context_dependent,relabelled_and_ambiguity_corrected,Education,Investment,clear,relabelled_type_to_investment; ambiguity_to_clear
+set aside savings via Upstox for a stock market trade,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+"decided to grow long term savings through Kuvera, for a stock market trade",Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+UPI-STOREPURCHASE-REF5414,Shopping,Want,ambiguous,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+booked Skillshare required for the current semester,Education,Need,context_dependent,removed_unrealistic,,,,Nonsensical template combination or malformed verb-object pairing
+UPI-RELIANCEFRES-RELIANCEFRES@SBI,Groceries,Need,context_dependent,ambiguity_corrected,Groceries,Need,clear,ambiguity_to_clear
+RELIANCE DIGITAL TXN POS PURCHASE,Shopping,Need,context_dependent,relabelled_and_ambiguity_corrected,Shopping,Want,clear,relabelled_type_to_want; ambiguity_to_clear
+CARD PAYMENT BURGER KING,Food,Want,context_dependent,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+"the expense on Meesho was unavoidable, for a work-from-home setup",Shopping,Need,context_dependent,ambiguity_corrected,Shopping,Need,clear,ambiguity_to_clear
+CARD PAYMENT A ROOFTOP BAR,Party,Want,context_dependent,ambiguity_corrected,Party,Want,clear,ambiguity_to_clear
+Amazon purchase of a new phone case out of boredom,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+Spencer's for daily cooking needs,Groceries,Need,context_dependent,ambiguity_corrected,Groceries,Need,clear,ambiguity_to_clear
+medicines,Health,Need,clear,ambiguity_corrected,Health,Need,ambiguous,ambiguity_to_ambiguous
+UPI/EATSURE/PAYMENT/REF7693,Food,Want,ambiguous,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+POS SUBWAY ONLINE,Food,Need,context_dependent,ambiguity_corrected,Food,Need,clear,ambiguity_to_clear
+indulged in BEST bus to a concert across town,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+Rapido for a leisure vacation,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+UPI/CULT.FIT/PAYMENT/REF5135,Health,Want,context_dependent,ambiguity_corrected,Health,Want,clear,ambiguity_to_clear
+UPI-AROOFTOPBAR-AROOFTOPBAR@HDFC,Party,Want,context_dependent,ambiguity_corrected,Party,Want,clear,ambiguity_to_clear
+UPI-UPGRAD-818589@upi,Education,Investment,context_dependent,ambiguity_corrected,Education,Investment,clear,ambiguity_to_clear
+POS DELHI METRO PAYMENT,Travel,Need,ambiguous,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+UPI-OLACABS-OLA@PAYTM,Travel,Want,ambiguous,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+paid for Hotstar for the monthly subscription renewal on a whim,Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+splurged on Ola for a leisure vacation,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+BigBasket for a festive celebration at home,Groceries,Want,context_dependent,ambiguity_corrected,Groceries,Want,clear,ambiguity_to_clear
+"didn't really need Fortis Hospital, but went ahead anyway, for a skincare experiment",Health,Want,context_dependent,removed_unrealistic,,,,Nonsensical template combination or malformed verb-object pairing
+UPI-GOIBIBO-GOIBIBO@ICICI,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+spent on Blinkit for the week's meals,Groceries,Need,context_dependent,ambiguity_corrected,Groceries,Need,clear,ambiguity_to_clear
+UPI-JIOMART-780445@upi,Groceries,Want,context_dependent,relabelled_and_ambiguity_corrected,Groceries,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+POS A NIGHTCLUB ONLINE,Party,Want,context_dependent,ambiguity_corrected,Party,Want,clear,ambiguity_to_clear
+went for INOX for a weekend movie outing with friends,Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+UPI-AMAZONPRIMEV-AMAZONPRIMEV@SBI,Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+MakeMyTrip for a mandatory office trip,Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+UPI/PHARMEASY/PAYMENT/REF1797,Health,Want,context_dependent,relabelled_and_ambiguity_corrected,Health,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+CARD PAYMENT VISTARA,Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+"decided to grow long term savings through BYJU'S, for a professional certification",Education,Investment,context_dependent,ambiguity_corrected,Education,Investment,clear,ambiguity_to_clear
+paid for Max Healthcare for a routine health checkup,Health,Need,context_dependent,ambiguity_corrected,Health,Need,clear,ambiguity_to_clear
+"didn't really need Tata 1mg, but went ahead anyway, out of general curiosity",Health,Want,context_dependent,removed_unrealistic,,,,Nonsensical template combination or malformed verb-object pairing
+ET Money for a national pension scheme contribution,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+BluSmart to attend a friend's party,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+UPI/MCDONALDS/PAYMENT/REF9903,Food,Need,context_dependent,ambiguity_corrected,Food,Need,clear,ambiguity_to_clear
+LinkedIn Learning required to pass the course,Education,Need,context_dependent,relabelled_and_ambiguity_corrected,Education,Investment,clear,relabelled_type_to_investment; ambiguity_to_clear
+"decided to grow long term savings through Zerodha, for a national pension scheme contribution",Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+went for Practo as a lifestyle upgrade,Health,Want,context_dependent,ambiguity_corrected,Health,Want,clear,ambiguity_to_clear
+SPOTIFY TXN POS PURCHASE,Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+IRCTC ticket for mandatory office relocation travel,Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+CARD PAYMENT UPGRAD,Education,Want,context_dependent,relabelled_and_ambiguity_corrected,Education,Investment,clear,relabelled_type_to_investment; ambiguity_to_clear
+"didn't really need Sony LIV, but went ahead anyway, for the monthly subscription renewal",Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+CARD PAYMENT MAKEMYTRIP FLIGHT,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+splurged on Wow Momo for a Sunday brunch tradition,Food,Want,context_dependent,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+Nature's Basket for the monthly household stock-up,Groceries,Need,context_dependent,ambiguity_corrected,Groceries,Need,clear,ambiguity_to_clear
+Reliance Digital expense required urgently for daily use,Shopping,Need,context_dependent,ambiguity_corrected,Shopping,Need,clear,ambiguity_to_clear
+Cult.fit for a routine health checkup,Health,Need,context_dependent,ambiguity_corrected,Health,Need,clear,ambiguity_to_clear
+purchased work formals for the new job,Shopping,Need,clear,relabelled,Shopping,Want,clear,relabelled_type_to_want
+POS IRCTC RAIL TICKET,Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+put money into Zerodha for a mutual fund purchase,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+ordered biryani since the mess food was over for the day,Food,Need,context_dependent,ambiguity_corrected,Food,Need,clear,ambiguity_to_clear
+Swiggy lunch delivered to office,Food,Need,context_dependent,ambiguity_corrected,Food,Need,clear,ambiguity_to_clear
+transferred money to a friend to split a bill,Misc,Need,ambiguous,ambiguity_corrected,Misc,Need,clear,ambiguity_to_clear
+"set money aside for the future via Paytm Money, for a national pension scheme contribution",Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+bought protein supplements to try out a new diet trend,Health,Want,context_dependent,ambiguity_corrected,Health,Want,clear,ambiguity_to_clear
+BLUSMART TXN POS PURCHASE,Travel,Want,ambiguous,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+Swiggy for a Sunday brunch tradition,Food,Want,context_dependent,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+"booked More Supermarket for a festive celebration at home, just for fun",Groceries,Want,context_dependent,removed_unrealistic,,,,Nonsensical template combination or malformed verb-object pairing
+VISTARA TXN POS PURCHASE,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+club entry,Party,Want,clear,ambiguity_corrected,Party,Want,ambiguous,ambiguity_to_ambiguous
+FLIPKART TXN POS PURCHASE,Shopping,Need,context_dependent,relabelled_and_ambiguity_corrected,Shopping,Want,clear,relabelled_type_to_want; ambiguity_to_clear
+splurged on MedPlus to try a new wellness trend,Health,Want,context_dependent,relabelled,Health,Need,context_dependent,relabelled_type_to_need
+Ola for a mandatory office trip,Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+UPI/SONYLIV/PAYMENT/REF7121,Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+Vijay Sales during a big sale,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+paid for Wow Momo to celebrate a promotion on a whim,Food,Want,context_dependent,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+JioCinema to watch a new season with the family,Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+CARD PAYMENT PAYTM MONEY,Misc,Investment,ambiguous,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+Lenskart just because I liked the design,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+Netflix to catch a live concert,Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+indulged in Amazon to try out a new trend,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+Flipkart new formal shoes for the office,Shopping,Need,context_dependent,relabelled_and_ambiguity_corrected,Shopping,Want,clear,relabelled_type_to_want; ambiguity_to_clear
+"spent on MedPlus more for enjoyment than necessity, to try a new wellness trend",Health,Want,context_dependent,relabelled,Health,Need,context_dependent,relabelled_type_to_need
+renewed a streaming subscription mostly out of habit,Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+CARD PAYMENT VIJAY SALES,Shopping,Need,context_dependent,relabelled_and_ambiguity_corrected,Shopping,Want,clear,relabelled_type_to_want; ambiguity_to_clear
+CARD PAYMENT BIGBASKET,Groceries,Want,context_dependent,relabelled_and_ambiguity_corrected,Groceries,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+UPI-RAPIDO-924622@upi,Travel,Need,context_dependent,removed_duplicate,,,,"Normalized duplicate of previously retained transaction: ""upi rapido upi"""
+invested through upGrad to switch to a new career track,Education,Investment,context_dependent,ambiguity_corrected,Education,Investment,clear,ambiguity_to_clear
+UPI-ABREWERY-828862@upi,Party,Want,ambiguous,ambiguity_corrected,Party,Want,clear,ambiguity_to_clear
+wallet recharge,Misc,Want,ambiguous,ambiguity_corrected,Misc,Want,clear,ambiguity_to_clear
+UPI-LINKEDINLEAR-LINKEDINLEAR@ICICI,Education,Investment,ambiguous,ambiguity_corrected,Education,Investment,clear,ambiguity_to_clear
+went for DMart for a festive celebration at home,Groceries,Want,context_dependent,ambiguity_corrected,Groceries,Want,clear,ambiguity_to_clear
+Groww for a systematic transfer plan,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+UPI-SPENCERS-828386@upi,Groceries,Need,context_dependent,ambiguity_corrected,Groceries,Need,clear,ambiguity_to_clear
+POS UBER ONLINE,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+CARD PAYMENT GREAT LEARNING,Education,Need,context_dependent,relabelled_and_ambiguity_corrected,Education,Investment,clear,relabelled_type_to_investment; ambiguity_to_clear
+UPI-BESTBUS-BESTBUS@AXIS,Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+CARD PAYMENT BEHROUZ BIRYANI,Food,Want,ambiguous,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+UPI/EATSURE/PAYMENT/REF4697,Food,Want,context_dependent,removed_duplicate,,,,"Normalized duplicate of previously retained transaction: ""upi eatsure payment ref"""
+UPI-ANIGHTCLUB-ANIGHTCLUB@HDFC,Party,Want,context_dependent,ambiguity_corrected,Party,Want,clear,ambiguity_to_clear
+went out for an expensive dinner just for fun,Food,Want,clear,ambiguity_corrected,Food,Want,context_dependent,ambiguity_to_context_dependent
+POS CULT.FIT PAYMENT,Health,Need,ambiguous,ambiguity_corrected,Health,Need,clear,ambiguity_to_clear
+contributed to Paytm Money for a national pension scheme contribution,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+indulged in JioMart for a festive celebration at home,Groceries,Want,context_dependent,ambiguity_corrected,Groceries,Want,clear,ambiguity_to_clear
+UPI-TATACLIQ-862650@upi,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+POS BIGBASKET PAYMENT,Groceries,Need,context_dependent,ambiguity_corrected,Groceries,Need,clear,ambiguity_to_clear
+"could have skipped Myntra, but chose to spend on it, to try out a new trend",Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+POS ZEE5 ONLINE,Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+UPI/UBER/PAYMENT/REF8527,Travel,Need,context_dependent,removed_duplicate,,,,"Normalized duplicate of previously retained transaction: ""upi uber payment ref"""
+used Blinkit for basic household supplies,Groceries,Need,context_dependent,ambiguity_corrected,Groceries,Need,clear,ambiguity_to_clear
+CARD PAYMENT FORTIS HOSPITAL,Health,Want,context_dependent,relabelled_and_ambiguity_corrected,Health,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+paid for Apollo Pharmacy for a routine health checkup,Health,Need,context_dependent,ambiguity_corrected,Health,Need,clear,ambiguity_to_clear
+POS STAR BAZAAR PAYMENT,Groceries,Want,ambiguous,relabelled_and_ambiguity_corrected,Groceries,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+CARD PAYMENT COIN BY ZERODHA,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+ordered dessert along with the regular dinner,Food,Want,context_dependent,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+POS SKILLSHARE ONLINE,Education,Need,context_dependent,relabelled_and_ambiguity_corrected,Education,Investment,clear,relabelled_type_to_investment; ambiguity_to_clear
+"booked Spotify to catch a live concert, just for fun",Entertainment,Want,context_dependent,removed_unrealistic,,,,Nonsensical template combination or malformed verb-object pairing
+splurged on Zomato for a movie night at home,Food,Want,context_dependent,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+POS TATA 1MG ONLINE,Health,Want,context_dependent,relabelled_and_ambiguity_corrected,Health,Need,clear,relabelled_type_to_need; ambiguity_to_clear
+UPI/KUVERA/PAYMENT/REF4727,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+POS ET MONEY PAYMENT,Misc,Investment,context_dependent,ambiguity_corrected,Misc,Investment,clear,ambiguity_to_clear
+rent,Bills,Need,clear,ambiguity_corrected,Bills,Need,ambiguous,ambiguity_to_ambiguous
+treated myself to PVR for binge watching over the weekend,Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+Vistara for a weekend getaway,Travel,Want,context_dependent,ambiguity_corrected,Travel,Want,clear,ambiguity_to_clear
+UPI-WOWMOMO-854739@upi,Food,Want,context_dependent,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+CARD PAYMENT SPICEJET,Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+UPI-TATAPOWER-951257@upi,Bills,Need,clear,removed_duplicate,,,,"Normalized duplicate of previously retained transaction: ""upi tatapower upi"""
+UPI-BOX8-928529@upi,Food,Want,context_dependent,ambiguity_corrected,Food,Want,clear,ambiguity_to_clear
+Flipkart expense because the monsoon damaged the old one,Shopping,Need,context_dependent,ambiguity_corrected,Shopping,Need,clear,ambiguity_to_clear
+POS TATA CLIQ PAYMENT,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+splurged on Flipkart during a big sale,Shopping,Want,context_dependent,ambiguity_corrected,Shopping,Want,clear,ambiguity_to_clear
+UPI-SPOTIFY-726924@upi,Entertainment,Want,context_dependent,ambiguity_corrected,Entertainment,Want,clear,ambiguity_to_clear
+MCDONALD'S TXN POS PURCHASE,Food,Need,context_dependent,ambiguity_corrected,Food,Need,clear,ambiguity_to_clear
+POS IRCTC PAYMENT,Travel,Need,context_dependent,ambiguity_corrected,Travel,Need,clear,ambiguity_to_clear
+POS NETMEDS PAYMENT,Health,Need,context_dependent,ambiguity_corrected,Health,Need,clear,ambiguity_to_clear

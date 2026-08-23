@@ -234,12 +234,15 @@ _CATEGORY_TYPE: dict[str, str] = {
     "Shopping": "Want",
     "Bills": "Need",
     "Groceries": "Need",
-    "Health": "Investment",
+    "Health": "Need",
     "Party": "Want",
     "Education": "Investment",
     "Misc": "Need",
 }
 
+from classifier.hybrid_pipeline import HybridClassifier
+
+_hybrid_classifier = HybridClassifier(BASE_DIR)
 
 @app.post('/classify')
 def classify_expense():
@@ -249,13 +252,18 @@ def classify_expense():
 
     Response:
     {
-      "category":       "Food",
-      "confidence":     0.92,
-      "all_probs":      { "Food": 0.92, "Travel": 0.02, ... },
-      "sentiment":      "negative",
-      "sentiment_emoji": "🔴",
-      "sentiment_label": "Watch Out",
-      "verdict":        "Discretionary spend — think before you pay!"
+      "category":             "Food",
+      "type":                 "Want",
+      "confidence":           0.95,
+      "confidenceScore":      0.95,
+      "all_probs":            { "Food": 0.95, ... },
+      "classificationSource": "merchant_rule",
+      "needsReview":          false,
+      "flagged_for_review":   false,
+      "sentiment":            "negative",
+      "sentiment_emoji":      "🔴",
+      "sentiment_label":      "Watch Out",
+      "verdict":              "Discretionary spend — think before you pay!"
     }
     """
     payload = request.get_json(force=True)
@@ -265,8 +273,13 @@ def classify_expense():
         return jsonify({
             "error": "No text provided",
             "category": "Misc",
+            "type": "Need",
             "confidence": 0.0,
+            "confidenceScore": 0.0,
             "all_probs": {},
+            "classificationSource": "fallback",
+            "needsReview": True,
+            "flagged_for_review": True,
             "sentiment": "neutral",
             "sentiment_emoji": "🔵",
             "sentiment_label": "Neutral Spend",
@@ -279,60 +292,40 @@ def classify_expense():
             result = predict_transaction(raw)
             category = result["category"]
             confidence = result["confidence"]
-            all_probs = {}  # omitted for minilm to save bandwidth, confidence is enough
+            all_probs = {}
             flagged = result["flagged_for_review"]
+            sentiment = _CATEGORY_SENTIMENT.get(category, "neutral")
+            meta = _SENTIMENT_META[sentiment]
+            return jsonify({
+                "category":             category,
+                "type":                 _CATEGORY_TYPE.get(category, "Need"),
+                "confidence":           confidence,
+                "confidenceScore":      confidence,
+                "all_probs":            all_probs,
+                "classificationSource": "minilm",
+                "needsReview":          flagged,
+                "flagged_for_review":   flagged,
+                "sentiment":            sentiment,
+                "sentiment_emoji":      meta["emoji"],
+                "sentiment_label":      meta["label"],
+                "verdict":              meta["verdict"],
+            })
         except Exception as e:
             log.exception('MiniLM inference failed: %s', e)
             return jsonify({"error": "Inference failed"}), 500
     else:
-        # Legacy TF-IDF
-        if not _load_classifier():
-            return jsonify({
-                "error": "Model not trained yet. Run train_classifier.py first.",
-                "category": "Misc",
-                "confidence": 0.0,
-                "all_probs": {},
-                "sentiment": "neutral",
-                "sentiment_emoji": "🔵",
-                "sentiment_label": "Neutral Spend",
-                "verdict": "Could not classify."
-            }), 503
-            
-        cleaned    = _clean_text(raw)
-        vec        = _vectorizer.transform([cleaned])
-        category   = _model.predict(vec)[0]
-        probs      = _model.predict_proba(vec)[0]
-        confidence = float(probs.max())
-        all_probs  = {cls: round(float(p), 4) for cls, p in zip(_model.classes_, probs)}
-        flagged    = False
-
-    # Derive sentiment from predicted category
-    sentiment    = _CATEGORY_SENTIMENT.get(category, "neutral")
-    meta         = _SENTIMENT_META[sentiment]
-
-    log.info(f"classify: '{raw}' -> {category} ({confidence*100:.0f}%) | sentiment: {sentiment}")
-
-    return jsonify({
-        "category":        category,
-        "confidence":      confidence,
-        "all_probs":       all_probs,
-        "sentiment":       sentiment,
-        "sentiment_emoji": meta["emoji"],
-        "sentiment_label": meta["label"],
-        "verdict":         meta["verdict"],
-        # High-level type mapping and a normalized confidence score
-        "type":             _CATEGORY_TYPE.get(category, "Need"),
-        "confidenceScore":  confidence,
-        "flagged_for_review": flagged
-    })
+        # Unified Hybrid Pipeline (Merchant Rules -> TF-IDF + LogReg Fallback)
+        result = _hybrid_classifier.classify(raw)
+        return jsonify(result)
 
 
 # ─── Run ──────────────────────────────────────────────────────────────────────
 if __name__ == '__main__':
     if MODEL_BACKEND == 'legacy':
-        _load_classifier()   # pre-load on startup
+        _hybrid_classifier.load_tfidf()   # pre-load on startup
     else:
         from classifier.minilm_inference import classifier_instance
         classifier_instance.load() # pre-load MiniLM on startup
         
     app.run(host='0.0.0.0', port=5001, debug=True)
+

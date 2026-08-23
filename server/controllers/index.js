@@ -683,7 +683,7 @@ router.post('/transactions', async (req, res, next) => {
 
     // Call sentiment analyzer and ML classifier (graceful fallback if ML is offline)
     const sentimentResult = analyzeSentiment(req.body.description, new Date());
-    let classificationSource = 'manual';
+    let classificationSource = req.body.classificationSource || 'manual';
     let mlData = { category: null, confidence: 0, type: 'Need', confidenceScore: 0 };
 
     // Only run ML/fallback classification if the client did NOT provide an explicit category
@@ -701,7 +701,7 @@ router.post('/transactions', async (req, res, next) => {
           mlData.confidence = typeof d.confidence === 'number' ? d.confidence : (d.confidenceScore || 0);
           mlData.type = d.type || 'Need';
           mlData.confidenceScore = typeof d.confidenceScore === 'number' ? d.confidenceScore : (d.confidence || 0);
-          classificationSource = 'ml';
+          classificationSource = d.classificationSource || 'ml';
         }
       } catch (e) {
         console.warn('[transactions] ML classify failed, using keyword fallback:', e.message || e);
@@ -1442,7 +1442,7 @@ const KEYWORD_CATEGORY_MAP = {
 // Category → spend-type and sentiment maps for the fallback classifier
 const CATEGORY_TYPE_MAP = {
   Food: 'Want', Travel: 'Want', Entertainment: 'Want', Shopping: 'Want',
-  Bills: 'Need', Groceries: 'Need', Health: 'Investment',
+  Bills: 'Need', Groceries: 'Need', Health: 'Need',
   Party: 'Want', Education: 'Investment', Misc: 'Need',
 };
 const CATEGORY_SENTIMENT_MAP = {
@@ -1478,6 +1478,7 @@ function classifyLocally(rawText) {
   const confidence = bestScore > 0 ? Math.min(0.95, 0.5 + bestScore * 0.03) : 0.1;
   const sentiment  = CATEGORY_SENTIMENT_MAP[bestCategory] || 'neutral';
   const type       = CATEGORY_TYPE_MAP[bestCategory] || 'Need';
+  const needsReview = confidence < 0.60;
 
   const SENTIMENT_META = {
     positive: { emoji: '💚', label: 'Good Spend',   verdict: 'This is a healthy investment in yourself!' },
@@ -1487,16 +1488,19 @@ function classifyLocally(rawText) {
   const meta = SENTIMENT_META[sentiment];
 
   return {
-    category:        bestCategory,
-    confidence,
-    confidenceScore: confidence,
-    all_probs:       { [bestCategory]: confidence },
-    sentiment,
-    sentiment_emoji: meta.emoji,
-    sentiment_label: meta.label,
-    verdict:         meta.verdict,
+    category:             bestCategory,
     type,
-    offline:         true,
+    confidence:           Math.round(confidence * 100) / 100,
+    confidenceScore:      Math.round(confidence * 100) / 100,
+    all_probs:            { [bestCategory]: Math.round(confidence * 100) / 100 },
+    classificationSource: 'fallback',
+    needsReview,
+    flagged_for_review:   needsReview,
+    sentiment,
+    sentiment_emoji:      meta.emoji,
+    sentiment_label:      meta.label,
+    verdict:              meta.verdict,
+    offline:              true,
   };
 }
 

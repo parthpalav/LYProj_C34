@@ -1,0 +1,30 @@
+text,expected_category,expected_type,style
+Zomato,Food,Want,merchant
+DMart,Groceries,Need,merchant
+Mumbai Metro,Travel,Need,merchant
+Netflix,Entertainment,Want,merchant
+Apollo Pharmacy,Health,Need,merchant
+Zerodha,Misc,Investment,merchant
+Uber,Travel,Want,merchant
+ordered dinner after college,Food,Want,short_nl
+paid electricity bill,Bills,Need,short_nl
+bought textbooks for semester,Education,Investment,short_nl
+movie with friends,Entertainment,Want,short_nl
+monthly SIP investment,Misc,Investment,short_nl
+got fuel for bike,Travel,Need,short_nl
+bought medicines after visiting the doctor,Health,Need,semantic
+ordered food because I did not cook tonight,Food,Want,semantic
+purchased headphones during an online sale,Shopping,Want,semantic
+paid for the train pass I use every day,Travel,Need,semantic
+transferred money into my monthly mutual fund SIP,Misc,Investment,semantic
+Amazon purchase,Shopping,Want,ambiguous
+payment to Apple,Shopping,Want,ambiguous
+online payment,Misc,Need,ambiguous
+subscription,Entertainment,Want,ambiguous
+shopping,Shopping,Want,ambiguous
+food,Food,Want,ambiguous
+UPI-ZOMATO-ZOMATO@PAYTM,Food,Want,noisy
+UBER INDIA SYSTEMS PVT LTD,Travel,Want,noisy
+AMZN Mktp IN,Shopping,Want,noisy
+NETFLIX.COM,Entertainment,Want,noisy
+UPI DMART READY,Groceries,Need,noisy

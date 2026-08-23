@@ -1,0 +1,958 @@
+text,category,type,input_style,ambiguity,group_id,split
+UPI-UPSTOX-782577@upi,Misc,Investment,upi,clear,misc_upstox,train
+gym,Health,Want,short_keyword,ambiguous,health_cult_fit,train
+UPI-RELIANCEFRES-866213@upi,Groceries,Need,upi,clear,scenario_groceries_residual,train
+FAASOS TXN POS PURCHASE,Food,Want,bank_statement,clear,food_faasos,test
+POS RETAIL PURCHASE,Shopping,Want,bank_statement,ambiguous,shopping_general_retail,validation
+paid for Great Learning as a casual weekend hobby on a whim,Education,Want,natural_language,context_dependent,education_great_learning,validation
+POS INOX ONLINE,Entertainment,Want,bank_statement,clear,entertainment_inox,train
+paid for an online multiplayer game subscription,Entertainment,Want,natural_language,clear,entertainment_multiplayer,test
+enrolled in a coding bootcamp to switch careers,Education,Investment,semantic,context_dependent,education_bootcamp,validation
+UPI-HALDIRAMS-858434@upi,Food,Need,upi,clear,food_haldiram,validation
+BYJU'S for a professional certification,Education,Investment,merchant,clear,education_byju,test
+booked Meru Cabs to rush to the hospital,Travel,Need,natural_language,context_dependent,travel_meru,train
+UPI/ETMONEY/PAYMENT/REF6633,Misc,Investment,upi,clear,misc_etmoney,validation
+POS AMAZON RETAIL PURCHASE,Shopping,Want,bank_statement,clear,shopping_amazon,train
+had no choice but to pay for Snapdeal since it was required urgently for daily use,Shopping,Need,semantic,context_dependent,shopping_snapdeal,validation
+Faasos when there was nothing left in the fridge,Food,Need,merchant,context_dependent,food_faasos,test
+Paytm Money for a recurring deposit,Misc,Investment,merchant,clear,misc_paytm_money,validation
+"paid for Unacademy purely out of necessity, required for the current semester",Education,Need,semantic,context_dependent,bills_rent,train
+BigBasket for hosting a dinner party,Groceries,Want,merchant,context_dependent,food_general_dining,train
+APOLLO PHARMACY TXN POS PURCHASE,Health,Need,bank_statement,clear,health_apollo,validation
+recurring deposit for savings,Misc,Investment,natural_language,clear,bills_vodafone,train
+CARD PAYMENT KUVERA,Misc,Investment,bank_statement,clear,misc_kuvera,test
+UPI/SNAPDEAL/PAYMENT/REF6766,Shopping,Want,upi,clear,shopping_snapdeal,validation
+booked a bus ticket to attend a mandatory office training,Travel,Need,semantic,context_dependent,travel_bus_general,train
+"could have skipped Vijay Sales, but chose to spend on it, as a small treat for myself",Shopping,Want,semantic,clear,bills_vodafone,train
+POS BARBEQUE NATION PUNE,Food,Want,bank_statement,clear,food_barbeque_nation,validation
+Nature's Basket for a festive celebration at home,Groceries,Want,merchant,clear,groceries_natures_basket,train
+UPI/AMAZON/PAYMENT/REF5520,Shopping,Want,upi,clear,shopping_amazon,train
+booked a cab late at night purely for convenience,Travel,Want,semantic,context_dependent,travel_cab_general,validation
+POS BOOKMYSHOW TICKETS,Entertainment,Want,bank_statement,clear,entertainment_bookmyshow,train
+POS KFC PAYMENT,Food,Want,bank_statement,clear,food_kfc,train
+POS COIN BY ZERODHA ONLINE,Misc,Investment,bank_statement,clear,misc_zerodha,train
+treated myself to sushi after a stressful week,Food,Want,natural_language,context_dependent,food_sushi,train
+UPI/UDEMY/PAYMENT/REF3139,Education,Investment,upi,clear,education_udemy,train
+Chai tapri near office,Food,Need,merchant,clear,food_chai_tapri,train
+POS MAX HEALTHCARE ONLINE,Health,Need,bank_statement,clear,health_max_healthcare,train
+KFC TXN POS PURCHASE,Food,Need,bank_statement,clear,food_kfc,train
+paid hospital bill for an emergency surgery,Health,Need,semantic,context_dependent,health_hospital_surgery,train
+"spent on BEST bus more for enjoyment than necessity, to visit relatives during the holidays",Travel,Want,semantic,context_dependent,travel_best_bus,train
+"could have skipped Box8, but chose to spend on it, for a weekend treat",Food,Want,semantic,context_dependent,food_box8,train
+invested through Coursera to boost my career prospects,Education,Investment,natural_language,context_dependent,education_coursera,train
+"spent on JioCinema more for enjoyment than necessity, for a birthday movie marathon",Entertainment,Want,semantic,context_dependent,bills_jio,validation
+UPI-SHOPPINGORDER-REF1920,Shopping,Want,upi,clear,scenario_shopping_residual,train
+used Housing Society for monthly maintenance charges,Bills,Need,natural_language,clear,bills_housing_society,train
+invested through Zerodha for a stock market trade,Misc,Investment,natural_language,clear,misc_zerodha,train
+POS MUMBAI METRO PAYMENT,Travel,Need,bank_statement,clear,travel_mumbai_metro,train
+CARD PAYMENT TATA CLIQ,Shopping,Want,bank_statement,clear,shopping_tata_cliq,train
+treated myself to MedPlus to try a trending supplement,Health,Need,natural_language,clear,health_medplus,train
+POS ZEPTO ONLINE,Groceries,Need,bank_statement,clear,groceries_zepto,train
+"the expense on FASTag was unavoidable, to rush to the hospital",Travel,Need,semantic,context_dependent,travel_fastag,validation
+UPI/MAXHEALTHCAR/PAYMENT/REF3390,Health,Need,upi,clear,health_max_healthcare,train
+Starbucks coffee with a client,Food,Want,merchant,clear,scenario_food_residual,train
+"spent on LinkedIn Learning more for enjoyment than necessity, as a casual weekend hobby",Education,Want,semantic,context_dependent,education_linkedin_learning,train
+"could have skipped Amazon Prime Video, but chose to spend on it, to unwind after a long week",Entertainment,Want,semantic,context_dependent,bills_vodafone,train
+"paid for Delhi Metro purely out of necessity, to rush to the hospital",Travel,Need,semantic,context_dependent,travel_delhi_metro,train
+UPI-BYJUS-BYJUS@ICICI,Education,Investment,upi,clear,education_byju,test
+UPI-CULT.FIT-963305@upi,Health,Need,upi,clear,health_cult_fit,train
+CARD PAYMENT HP GAS,Bills,Need,bank_statement,clear,bills_hp_gas,train
+put money into Paytm Money for a monthly SIP,Misc,Investment,natural_language,clear,misc_paytm_money,validation
+UPI/ANIGHTCLUB/PAYMENT/REF6675,Party,Want,upi,clear,party_nightclub,test
+went for Flipkart as a birthday gift for myself,Shopping,Want,natural_language,clear,shopping_flipkart,train
+indulged in LinkedIn Learning as a casual weekend hobby,Education,Want,natural_language,context_dependent,education_linkedin_learning,train
+UPI-MUNICIPALWAT-MUNICIPALWAT@AXIS,Bills,Need,upi,clear,bills_municipal_water,validation
+treated myself to Rapido to a concert across town,Travel,Want,natural_language,clear,travel_rapido,test
+"could have skipped FASTag, but chose to spend on it, to attend a friend's party",Travel,Want,semantic,clear,travel_fastag,validation
+had no choice but to pay for BluSmart since it was to get to a work meeting,Travel,Need,semantic,context_dependent,travel_blusmart,train
+"booked a rooftop bar for a New Year's party, just for fun",Party,Want,natural_language,context_dependent,party_rooftop_bar,validation
+POS NATURE'S BASKET PAYMENT,Groceries,Need,bank_statement,clear,groceries_natures_basket,train
+UPI/SPENCERS/PAYMENT/REF7825,Groceries,Need,upi,clear,groceries_spencer,train
+UPI/BSES/PAYMENT/REF2406,Bills,Need,upi,clear,bills_bses,test
+set aside savings via Upstox for a gold bond purchase,Misc,Investment,natural_language,clear,bills_vodafone,train
+had no choice but to pay for Croma since it was for a work-from-home setup,Shopping,Need,semantic,context_dependent,shopping_croma,test
+POS VISTARA ONLINE,Travel,Want,bank_statement,clear,bills_vodafone,train
+Great Learning required to pass the course,Education,Investment,merchant,clear,education_great_learning,validation
+Subway for a movie night at home,Food,Want,merchant,clear,food_subway,train
+had no choice but to pay for Mumbai Metro since it was to reach college on time,Travel,Need,semantic,context_dependent,travel_mumbai_metro,train
+UPI/FRIEND/SPLITBILL/REF9911,Misc,Need,upi,clear,misc_friend_split,train
+UPI-ZEE5-ZEE5@ICICI,Entertainment,Want,upi,clear,entertainment_zee5,validation
+CARD PAYMENT JIOMART,Groceries,Need,bank_statement,clear,bills_jio,validation
+Star Bazaar for an elaborate weekend cooking project,Groceries,Want,merchant,context_dependent,groceries_star_bazaar,train
+"booked INOX for binge watching over the weekend, just for fun",Entertainment,Want,natural_language,context_dependent,entertainment_inox,train
+UPI-MEDPLUS-796494@upi,Health,Need,upi,clear,health_medplus,train
+UPI-CROMA-STORE@SBI,Shopping,Want,upi,clear,shopping_croma,test
+Fortis Hospital for an emergency hospital visit,Health,Need,merchant,clear,bills_vodafone,train
+"paid for FASTag purely out of necessity, to reach the exam center",Travel,Need,semantic,context_dependent,travel_fastag,validation
+Nykaa because everyone else already had it,Shopping,Want,merchant,context_dependent,shopping_nykaa,train
+UPI-TATASKY-810036@upi,Bills,Need,upi,clear,scenario_bills_residual,train
+UPI-UPGRAD-UPGRAD@HDFC,Education,Investment,upi,clear,education_upgrad,test
+Star Bazaar to try some gourmet imported items,Groceries,Want,merchant,clear,groceries_star_bazaar,train
+"spent on Spotify more for enjoyment than necessity, for the monthly subscription renewal",Entertainment,Want,semantic,context_dependent,entertainment_spotify,test
+Ajio required urgently for daily use,Shopping,Need,merchant,clear,bills_jio,validation
+paid school fees for the new academic year,Education,Investment,natural_language,clear,scenario_education_residual,train
+BOX8 TXN POS PURCHASE,Food,Want,bank_statement,clear,food_box8,train
+UPI/UNACADEMY/PAYMENT/REF3545,Education,Investment,upi,clear,education_unacademy,train
+"the expense on Haldiram's was unavoidable, while working late at the office",Food,Need,semantic,context_dependent,food_haldiram,validation
+UPI-FASTAG-FASTAG@ICICI,Travel,Want,upi,clear,travel_fastag,validation
+IRCTC train ticket booked for a family wedding trip,Travel,Want,merchant,clear,travel_irctc,train
+bought new spectacles as the old prescription was outdated,Shopping,Need,semantic,context_dependent,health_spectacles,train
+Cult.fit premium gym membership,Health,Want,merchant,clear,health_cult_fit,train
+UPI/GOIBIBO/PAYMENT/REF6442,Travel,Need,upi,clear,travel_goibibo,train
+took a cab home instead of waiting for the last bus,Travel,Want,natural_language,clear,travel_bus_general,train
+Zerodha for a recurring deposit,Misc,Investment,merchant,clear,misc_zerodha,train
+used More Supermarket for basic household supplies,Groceries,Need,natural_language,clear,groceries_more_supermarket,train
+UPI-BIGBASKET-987731@upi,Groceries,Need,upi,clear,groceries_bigbasket,test
+IRCTC TXN POS PURCHASE,Travel,Want,bank_statement,clear,travel_irctc,train
+PharmEasy monthly medicine order,Health,Need,merchant,clear,health_pharmeasy,test
+MakeMyTrip flight for an urgent family emergency,Travel,Need,merchant,clear,travel_makemytrip,train
+UPI-GROWW-INVESTMENT,Misc,Investment,upi,clear,misc_groww,train
+UPI-STARBAZAAR-STARBAZAAR@PAYTM,Groceries,Need,upi,clear,groceries_star_bazaar,train
+UPI/SPOTIFY/SUBSCRIPTION/REF6621,Entertainment,Want,upi,clear,entertainment_spotify,test
+Amazon because the old one stopped working,Shopping,Need,merchant,context_dependent,shopping_amazon,train
+CARD PAYMENT RAPIDO,Travel,Want,bank_statement,clear,travel_rapido,test
+POS purchase,Misc,Want,short_keyword,ambiguous,shopping_general_retail,validation
+"could have skipped Ola, but chose to spend on it, for a weekend getaway",Travel,Want,semantic,clear,travel_ola,train
+UPI-MAXHEALTHCAR-MAXHEALTHCAR@ICICI,Health,Need,upi,clear,health_max_healthcare,train
+"paid for Behrouz Biryani purely out of necessity, while working late at the office",Food,Need,semantic,context_dependent,food_behrouz,train
+treated myself to a lounge bar during a bachelor party night out,Party,Want,natural_language,clear,party_lounge_bar,test
+bought a required lab manual for the semester,Education,Need,natural_language,clear,education_academic_general,train
+paid for PVR to catch a live concert on a whim,Entertainment,Want,natural_language,clear,entertainment_pvr,train
+McDonald's while studying for an exam late at night,Food,Need,merchant,context_dependent,food_mcdonald,train
+put money into LinkedIn Learning to boost my career prospects,Education,Investment,natural_language,context_dependent,education_linkedin_learning,train
+Delhi Metro for a mandatory office trip,Travel,Need,merchant,clear,travel_delhi_metro,train
+"didn't really need McDonald's, but went ahead anyway, with friends for a celebration",Food,Want,semantic,clear,food_mcdonald,train
+contributed to Groww for a monthly SIP,Misc,Investment,natural_language,clear,misc_groww,train
+UPI-ZERODHA-867183@upi,Misc,Investment,upi,clear,misc_zerodha,train
+UPI-AMAZONPRIMEV-763897@upi,Entertainment,Want,upi,clear,shopping_amazon,train
+had to pay for MedPlus after a doctor's referral,Health,Need,natural_language,clear,health_medplus,train
+society maintenance charges for the month,Bills,Need,natural_language,clear,bills_housing_society,train
+UPI/ZEPTO/PAYMENT/REF2311,Groceries,Need,upi,clear,groceries_zepto,train
+BYJU'S as a personal hobby class,Education,Want,merchant,clear,education_byju,test
+POS MYNTRA ONLINE,Shopping,Want,bank_statement,clear,shopping_myntra,train
+ate out at a fancy restaurant purely for the experience,Food,Want,semantic,context_dependent,food_fancy_restaurant,validation
+POS SNAPDEAL ONLINE,Shopping,Want,bank_statement,clear,shopping_snapdeal,validation
+POS RELIANCE DIGITAL PAYMENT,Shopping,Want,bank_statement,clear,shopping_reliance_digital,validation
+UPI-AROOFTOPBAR-AROOFTOPBAR@AXIS,Party,Want,upi,clear,party_rooftop_bar,validation
+VIJAY SALES TXN POS PURCHASE,Shopping,Want,bank_statement,clear,bills_vodafone,train
+movie,Entertainment,Want,short_keyword,ambiguous,bills_vodafone,train
+splurged on Practo for a fitness experiment,Health,Want,natural_language,clear,health_practo,validation
+POS MEESHO ONLINE,Shopping,Want,bank_statement,clear,shopping_meesho,train
+digital payment,Misc,Want,natural_language,clear,misc_general_banking,train
+JioCinema for a weekend movie outing with friends,Entertainment,Want,merchant,clear,bills_jio,validation
+"spent on EatSure more for enjoyment than necessity, for a Sunday brunch tradition",Food,Want,semantic,context_dependent,food_eatsure,train
+"didn't really need Tata 1mg, but went ahead anyway, for a fitness experiment",Health,Need,semantic,clear,health_1mg,train
+EatSure for a Sunday brunch tradition,Food,Want,merchant,clear,food_eatsure,train
+UPI-BLUSMART-BLUSMART@PAYTM,Travel,Need,upi,clear,travel_blusmart,train
+UPI-NETMEDS-NETMEDS@ICICI,Health,Need,upi,clear,health_netmeds,test
+CARD PAYMENT SONY LIV,Entertainment,Want,bank_statement,clear,entertainment_sonyliv,train
+paid toll charges while commuting to work every day,Travel,Need,semantic,clear,travel_toll,test
+went for Lenskart to try out a new trend,Shopping,Want,natural_language,clear,shopping_lenskart,train
+treated myself to JioCinema for a birthday movie marathon,Entertainment,Want,natural_language,context_dependent,bills_jio,validation
+POS CAFE COFFEE DAY MUMBAI,Food,Want,bank_statement,clear,scenario_food_residual,train
+Tata Sky for the DTH subscription recharge,Bills,Need,merchant,clear,scenario_bills_residual,train
+POS TRAVEL BOOKING,Travel,Want,bank_statement,clear,scenario_travel_residual,test
+stock investment,Misc,Investment,natural_language,clear,scenario_misc_residual,train
+had to pay for DMart to restock the kitchen essentials,Groceries,Need,natural_language,clear,groceries_dmart,train
+"paid for Ola purely out of necessity, to get to a work meeting",Travel,Need,semantic,context_dependent,travel_ola,train
+used EatSure during a family emergency at home,Food,Need,natural_language,context_dependent,food_eatsure,train
+UPI-OLA-OLA@YBL,Travel,Want,upi,clear,travel_ola,train
+paid for KFC during a family emergency at home,Food,Need,natural_language,context_dependent,food_kfc,train
+Upstox stock trade,Misc,Investment,merchant,clear,misc_upstox,train
+had no choice but to pay for PharmEasy since it was after a doctor's referral,Health,Need,semantic,context_dependent,health_pharmeasy,test
+"paid for Yatra purely out of necessity, for a mandatory office trip",Travel,Need,semantic,context_dependent,travel_yatra,train
+gold ETF purchase for long term saving,Misc,Investment,semantic,clear,bills_vodafone,train
+UPI-VISTARA-VISTARA@PAYTM,Travel,Want,upi,clear,bills_vodafone,train
+"could have skipped upGrad, but chose to spend on it, purely for personal enrichment",Education,Want,semantic,context_dependent,education_upgrad,test
+ATM cash withdrawal,Misc,Need,bank_statement,clear,misc_atm_cash,train
+Zomato meal ordered during a late hospital visit,Food,Need,merchant,clear,food_zomato,test
+treated myself to Netflix to unwind after a long week,Entertainment,Want,natural_language,context_dependent,entertainment_netflix,train
+A BREWERY TXN POS PURCHASE,Party,Want,bank_statement,clear,party_brewery,train
+bought a monthly local train pass for office,Travel,Need,natural_language,clear,travel_irctc,train
+UPI-STARBAZAAR-STARBAZAAR@HDFC,Groceries,Need,upi,clear,groceries_star_bazaar,train
+"the expense on Cult.fit was unavoidable, to get a diagnostic test done",Health,Need,semantic,clear,health_cult_fit,train
+UPI-INDIGO-INDIGO@YBL,Travel,Need,upi,clear,travel_indigo,train
+CARD PAYMENT MSEDCL,Bills,Need,bank_statement,clear,bills_msedcl,train
+Coin by Zerodha for a recurring deposit,Misc,Investment,merchant,clear,misc_zerodha,train
+Zee5 to catch a live concert,Entertainment,Want,merchant,clear,entertainment_zee5,validation
+had no choice but to pay for Tata 1mg since it was for an emergency hospital visit,Health,Need,semantic,context_dependent,bills_vodafone,train
+Swiggy because there was no time to cook,Food,Need,merchant,clear,food_swiggy,test
+bought alcohol for a house party,Party,Want,natural_language,clear,party_house_party,train
+ICICI Direct for a monthly SIP,Misc,Investment,merchant,clear,scenario_misc_residual,train
+UPI-CROMA-CROMA@SBI,Shopping,Want,upi,clear,shopping_croma,test
+UPI/RENT/LANDLORD/REF1123,Bills,Need,upi,clear,bills_rent,train
+CARD PAYMENT CULT FIT,Health,Want,bank_statement,clear,health_cult_fit,train
+UPI/RAPIDO/BIKE RIDE/REF3341,Travel,Need,upi,clear,travel_rapido,test
+CARD PAYMENT ZERODHA,Misc,Investment,bank_statement,clear,misc_zerodha,train
+UPI-TATACLIQ-TATACLIQ@HDFC,Shopping,Want,upi,clear,shopping_tata_cliq,train
+booked tickets to a music festival months in advance,Entertainment,Want,semantic,clear,entertainment_music_fest,test
+"paid for Uber purely out of necessity, for a job interview across town",Travel,Need,semantic,context_dependent,travel_uber,validation
+spent on Burger King during a busy workday,Food,Need,natural_language,context_dependent,food_burger_king,train
+UPI-MSEDCL-BILLPAY@SBI,Bills,Need,upi,clear,bills_msedcl,train
+Ola cab for office commute,Travel,Need,merchant,clear,travel_ola,train
+"didn't really need Cult.fit, but went ahead anyway, to try a trending supplement",Health,Want,semantic,clear,health_cult_fit,train
+a brewery during a bachelor party night out,Party,Want,merchant,clear,party_brewery,train
+had to pay for Great Learning required to pass the course,Education,Investment,natural_language,clear,education_great_learning,validation
+ordered food for a small get together at home,Food,Want,natural_language,clear,scenario_food_residual,train
+UPI-BSES-BSES@YBL,Bills,Need,upi,clear,bills_bses,test
+POS TATA 1MG DIAGNOSTICS,Health,Need,bank_statement,clear,health_1mg,train
+Meesho to try out a new trend,Shopping,Want,merchant,clear,shopping_meesho,train
+HOTSTAR TXN POS PURCHASE,Entertainment,Want,bank_statement,clear,entertainment_hotstar,train
+used DMart for daily cooking needs,Groceries,Need,natural_language,clear,groceries_dmart,train
+TATA CLIQ TXN POS PURCHASE,Shopping,Want,bank_statement,clear,shopping_tata_cliq,train
+POS BLUSMART PAYMENT,Travel,Want,bank_statement,clear,travel_blusmart,train
+put money into Groww for a recurring deposit,Misc,Investment,natural_language,clear,misc_groww,train
+contributed to ICICI Direct for a fixed deposit renewal,Misc,Investment,natural_language,clear,misc_fixed_deposit,train
+FASTag to rush to the hospital,Travel,Need,merchant,context_dependent,travel_fastag,validation
+UPI-AMAZON-766020@upi,Shopping,Want,upi,clear,shopping_amazon,train
+POS SUBSCRIPTION CHARGE,Entertainment,Want,bank_statement,clear,scenario_entertainment_residual,train
+ICICI Direct for a stock market trade,Misc,Investment,merchant,clear,scenario_misc_residual,train
+POS INDIGO PAYMENT,Travel,Want,bank_statement,clear,travel_indigo,train
+IndiGo for a solo backpacking trip,Travel,Want,merchant,clear,travel_indigo,train
+weekend flight for vacation,Travel,Want,natural_language,clear,scenario_travel_residual,test
+ordered food online again even though groceries were at home,Food,Want,semantic,clear,groceries_ration_general,train
+POS NATURES BASKET GOURMET,Groceries,Want,bank_statement,clear,groceries_natures_basket,train
+"didn't really need Subway, but went ahead anyway, for a weekend treat",Food,Want,semantic,context_dependent,food_subway,train
+EMI,Bills,Need,short_keyword,ambiguous,scenario_bills_residual,train
+POS UPI TRANSFER,Misc,Want,bank_statement,clear,misc_general_banking,train
+ordered dinner because I got home too late to cook,Food,Need,semantic,clear,food_general_dining,train
+UPI-STARBAZAAR-902558@upi,Groceries,Need,upi,clear,groceries_star_bazaar,train
+POS VODAFONE IDEA PAYMENT,Bills,Need,bank_statement,clear,bills_vodafone,train
+"paid for Haldiram's purely out of necessity, during a family emergency at home",Food,Need,semantic,context_dependent,food_haldiram,validation
+"booked Unacademy purely for personal enrichment, just for fun",Education,Want,natural_language,context_dependent,education_unacademy,train
+"paid for Burger King purely out of necessity, during a busy workday",Food,Need,semantic,context_dependent,food_burger_king,train
+"spent on BluSmart more for enjoyment than necessity, to explore a new city",Travel,Want,semantic,context_dependent,travel_blusmart,train
+PPF deposit,Misc,Investment,natural_language,clear,scenario_misc_residual,train
+CARD PAYMENT MUMBAI METRO,Travel,Need,bank_statement,clear,travel_mumbai_metro,train
+JioMart imported cheese and gourmet snacks,Groceries,Want,merchant,clear,bills_jio,validation
+"didn't really need Amazon, but went ahead anyway, as a birthday gift for myself",Shopping,Want,semantic,clear,shopping_amazon,train
+Croma for a work-from-home setup,Shopping,Need,merchant,clear,shopping_croma,test
+paid for upGrad compulsory for the degree program,Education,Need,natural_language,clear,education_upgrad,test
+booked KFC between back to back lectures,Food,Need,natural_language,clear,food_kfc,train
+electricity bill,Bills,Need,short_keyword,clear,bills_electricity_general,test
+splurged on Zee5 for binge watching over the weekend,Entertainment,Want,natural_language,clear,entertainment_zee5,validation
+Adani Electricity bill payment,Bills,Need,merchant,clear,bills_adani_electricity,train
+paid for Amazon as a birthday gift for myself on a whim,Shopping,Want,natural_language,clear,shopping_amazon,train
+"spent on MedPlus more for enjoyment than necessity, for a skincare experiment",Health,Need,semantic,context_dependent,health_medplus,train
+UPI/BLINKIT/GROCERY/REF7712,Groceries,Need,upi,clear,groceries_blinkit,train
+treated myself to Unacademy as a personal hobby class,Education,Want,natural_language,clear,education_unacademy,train
+indulged in Meru Cabs for a solo backpacking trip,Travel,Want,natural_language,clear,travel_meru,train
+UPI-CASHBACKAPP-REWARDS,Misc,Want,upi,clear,misc_cashback_rewards,train
+Spencer's to try some gourmet imported items,Groceries,Want,merchant,clear,groceries_spencer,train
+UPI-VODAFONEIDEA-VODAFONEIDEA@PAYTM,Bills,Need,upi,clear,bills_vodafone,train
+Coin by Zerodha for a fixed deposit renewal,Misc,Investment,merchant,clear,misc_zerodha,train
+UPI-ICICIDIRECT-786506@upi,Misc,Investment,upi,clear,scenario_misc_residual,train
+VODAFONE IDEA TXN POS PURCHASE,Bills,Need,bank_statement,clear,bills_vodafone,train
+CARD PAYMENT MEESHO,Shopping,Want,bank_statement,clear,shopping_meesho,train
+booked MakeMyTrip to rush to the hospital,Travel,Need,natural_language,context_dependent,travel_makemytrip,train
+UPI/SUBWAY/PAYMENT/REF7267,Food,Want,upi,clear,food_subway,train
+bought a designer bag just because I liked it,Shopping,Want,natural_language,clear,scenario_shopping_residual,train
+a nightclub for a friend's birthday celebration,Party,Want,merchant,clear,party_nightclub,test
+PharmEasy to get a diagnostic test done,Health,Need,merchant,clear,health_pharmeasy,test
+UPI-MYNTRA-989058@upi,Shopping,Want,upi,clear,shopping_myntra,train
+treated myself to a lounge bar for a New Year's party,Party,Want,natural_language,clear,party_lounge_bar,test
+"paid for Reliance Digital purely out of necessity, required urgently for daily use",Shopping,Need,semantic,context_dependent,shopping_reliance_digital,validation
+food order,Food,Want,natural_language,clear,scenario_food_residual,train
+"could have skipped Goibibo, but chose to spend on it, to visit relatives during the holidays",Travel,Want,semantic,clear,travel_goibibo,train
+FASTag to get to a work meeting,Travel,Need,merchant,clear,travel_fastag,validation
+MAX HEALTHCARE TXN POS PURCHASE,Health,Need,bank_statement,clear,health_max_healthcare,train
+"the expense on Uber was unavoidable, for a mandatory office trip",Travel,Need,semantic,clear,travel_uber,validation
+POS NETMEDS ONLINE,Health,Need,bank_statement,clear,health_netmeds,test
+POS HP GAS PAYMENT,Bills,Need,bank_statement,clear,bills_hp_gas,train
+brunch,Food,Want,short_keyword,ambiguous,scenario_food_residual,train
+UPI-COURSERA-774538@upi,Education,Investment,upi,clear,education_coursera,train
+cab fare,Travel,Want,short_keyword,ambiguous,travel_cab_general,validation
+Ola outstation trip for a weekend getaway,Travel,Want,merchant,clear,travel_ola,train
+Zepto to try some gourmet imported items,Groceries,Want,merchant,clear,groceries_zepto,train
+UPI/FLIPKART/PAYMENT/REF1710,Shopping,Want,upi,clear,shopping_flipkart,train
+flew business class for a personal vacation,Travel,Want,natural_language,clear,travel_bus_general,train
+UPI-AJIO-781123@upi,Shopping,Want,upi,clear,bills_jio,validation
+"could have skipped IRCTC, but chose to spend on it, for a leisure vacation",Travel,Want,semantic,clear,travel_irctc,train
+UPI-SERVICEPAYMENT-REF9303,Misc,Want,upi,clear,bills_vodafone,train
+"the expense on Flipkart was unavoidable, for essential office supplies",Shopping,Want,semantic,clear,shopping_flipkart,train
+POS MERCHANT PAYMENT,Misc,Want,bank_statement,clear,scenario_misc_residual,train
+"decided to grow long term savings through upGrad, to switch to a new career track",Education,Investment,semantic,clear,bills_vodafone,train
+UPI-ALOCALPUB-ALOCALPUB@ICICI,Party,Want,upi,clear,party_local_pub,train
+BookMyShow to unwind after a long week,Entertainment,Want,merchant,context_dependent,entertainment_bookmyshow,train
+Uber ride to college,Travel,Need,merchant,clear,travel_uber,validation
+POS PRACTO PAYMENT,Health,Need,bank_statement,clear,health_practo,validation
+Tata Cliq required urgently for daily use,Shopping,Need,merchant,clear,shopping_tata_cliq,train
+POS COLLEGE FEE PAYMENT,Education,Investment,bank_statement,clear,education_academic_general,train
+POS GOIBIBO ONLINE,Travel,Need,bank_statement,clear,travel_goibibo,train
+DMart for daily cooking needs,Groceries,Need,merchant,clear,groceries_dmart,train
+"didn't really need Hotstar, but went ahead anyway, to unwind after a long week",Entertainment,Want,semantic,context_dependent,entertainment_hotstar,train
+UPI-SPICEJET-756834@upi,Travel,Want,upi,clear,travel_spicejet,train
+booked an auto because it was raining heavily on the way to work,Travel,Need,natural_language,context_dependent,travel_auto,train
+bought a professional certification exam voucher,Education,Investment,natural_language,clear,scenario_education_residual,train
+"spent on Tata Cliq more for enjoyment than necessity, to try out a new trend",Shopping,Want,semantic,context_dependent,shopping_tata_cliq,train
+POS MSEDCL BILL PAYMENT,Bills,Need,bank_statement,clear,bills_msedcl,train
+UPI-MSEDCL-852741@upi,Bills,Need,upi,clear,bills_msedcl,train
+Burger King for a weekend treat,Food,Want,merchant,context_dependent,food_burger_king,train
+"the expense on Goibibo was unavoidable, for a mandatory office trip",Travel,Need,semantic,clear,travel_goibibo,train
+POS SONY LIV ONLINE,Entertainment,Want,bank_statement,clear,entertainment_sonyliv,train
+BLINKIT TXN POS PURCHASE,Groceries,Need,bank_statement,clear,groceries_blinkit,train
+POS PAYTM WALLET LOAD,Misc,Need,bank_statement,clear,misc_general_banking,train
+bought a fancy essential oil diffuser for relaxation,Health,Want,natural_language,clear,health_diffuser,test
+POS YATRA PAYMENT,Travel,Need,bank_statement,clear,travel_yatra,train
+UPI/DOMINOS/PIZZA ORDER/REF2291,Food,Want,upi,clear,food_domino,train
+UPI-ALOUNGEBAR-ALOUNGEBAR@PAYTM,Party,Want,upi,clear,party_lounge_bar,test
+Tata Power for the monthly electricity bill,Bills,Need,merchant,clear,bills_tata_power,train
+Tata Power expense for the monthly electricity bill,Bills,Need,natural_language,clear,bills_tata_power,train
+ration,Groceries,Need,short_keyword,ambiguous,groceries_ration_general,train
+splurged on DMart for an elaborate weekend cooking project,Groceries,Want,natural_language,context_dependent,groceries_dmart,train
+"the expense on Swiggy was unavoidable, because there was no time to cook",Food,Need,semantic,clear,food_swiggy,test
+went for Star Bazaar to try some gourmet imported items,Groceries,Want,natural_language,clear,groceries_star_bazaar,train
+"set money aside for the future via Upstox, for a corporate bond purchase",Misc,Investment,semantic,clear,bills_vodafone,train
+subscription renewal,Entertainment,Want,short_keyword,ambiguous,scenario_entertainment_residual,train
+bought vegetables and daily essentials,Groceries,Need,natural_language,clear,groceries_ration_general,train
+UPI-PHARMEASY-867197@upi,Health,Need,upi,clear,health_pharmeasy,test
+UPI-CHAIWALA-9821XXXXXX,Food,Need,upi,clear,food_chai_tapri,train
+DELHI METRO TXN POS PURCHASE,Travel,Need,bank_statement,clear,travel_delhi_metro,train
+"set money aside for the future via ET Money, for a recurring deposit",Misc,Investment,semantic,clear,bills_vodafone,train
+FASTag expense to get to a work meeting,Travel,Need,natural_language,clear,travel_fastag,validation
+Cult.fit expense for an emergency hospital visit,Health,Need,natural_language,clear,bills_vodafone,train
+A LOCAL PUB TXN POS PURCHASE,Party,Want,bank_statement,clear,party_local_pub,train
+"didn't really need Haldiram's, but went ahead anyway, just out of a craving",Food,Want,semantic,context_dependent,food_haldiram,validation
+had to pay for Meru Cabs for a mandatory office trip,Travel,Need,natural_language,clear,travel_meru,train
+"spent on Practo more for enjoyment than necessity, for a fitness experiment",Health,Want,semantic,context_dependent,health_practo,validation
+spent on KFC when there was nothing left in the fridge,Food,Need,natural_language,context_dependent,food_kfc,train
+had no choice but to pay for JioMart since it was for basic household supplies,Groceries,Need,semantic,context_dependent,bills_jio,validation
+Netflix monthly subscription,Entertainment,Want,merchant,clear,entertainment_netflix,train
+CARD PAYMENT MAKEMYTRIP,Travel,Need,bank_statement,clear,travel_makemytrip,train
+"paid for 1mg Diagnostics purely out of necessity, as prescribed by the doctor",Health,Need,semantic,context_dependent,health_1mg,train
+treated myself to Haldiram's just out of a craving,Food,Want,natural_language,context_dependent,food_haldiram,validation
+took a flight for a spontaneous holiday with friends,Travel,Want,semantic,context_dependent,scenario_travel_residual,test
+booked Faasos while studying for an exam late at night,Food,Need,natural_language,context_dependent,food_faasos,test
+splurged on a rooftop bar for a farewell celebration,Party,Want,natural_language,clear,party_rooftop_bar,validation
+Jio postpaid mobile bill,Bills,Need,merchant,clear,bills_jio,validation
+Faasos for a movie night at home,Food,Want,merchant,clear,food_faasos,test
+UPI/AIRTEL/PAYMENT/REF4053,Bills,Need,upi,clear,bills_airtel,train
+Blinkit quick grocery top up,Groceries,Need,merchant,clear,groceries_blinkit,train
+Vijay Sales required urgently for daily use,Shopping,Need,merchant,clear,bills_vodafone,train
+UPI/SKILLSHARE/PAYMENT/REF5456,Education,Investment,upi,clear,education_skillshare,train
+"spent on Ajio more for enjoyment than necessity, as a small treat for myself",Shopping,Want,semantic,context_dependent,bills_jio,validation
+BYJU'S to learn a skill needed for my job,Education,Investment,merchant,clear,education_byju,test
+"didn't really need PVR, but went ahead anyway, for a birthday movie marathon",Entertainment,Want,semantic,context_dependent,bills_vodafone,train
+POS JIOMART PAYMENT,Groceries,Need,bank_statement,clear,bills_jio,validation
+bought breakfast on the way to the office,Food,Need,natural_language,clear,food_general_dining,train
+UPI-SNAPDEAL-SNAPDEAL@HDFC,Shopping,Want,upi,clear,shopping_snapdeal,validation
+Upstox for a stock market trade,Misc,Investment,merchant,clear,misc_upstox,train
+Netflix for the monthly subscription renewal,Entertainment,Want,merchant,clear,entertainment_netflix,train
+indulged in Rapido for a solo backpacking trip,Travel,Want,natural_language,clear,travel_rapido,test
+Subway while working late at the office,Food,Need,merchant,context_dependent,food_subway,train
+"spent on Ajio more for enjoyment than necessity, as a birthday gift for myself",Shopping,Want,semantic,context_dependent,bills_jio,validation
+"didn't really need Amazon Prime Video, but went ahead anyway, for a birthday movie marathon",Entertainment,Want,semantic,context_dependent,bills_vodafone,train
+"spent on Amazon Prime Video more for enjoyment than necessity, for the monthly subscription renewal",Entertainment,Want,semantic,context_dependent,bills_vodafone,train
+Mumbai Metro monthly recharge,Travel,Need,merchant,clear,travel_mumbai_metro,train
+"decided to grow long term savings through Groww, for a gold bond purchase",Misc,Investment,semantic,clear,bills_vodafone,train
+UPI-BEHROUZBIRYA-707169@upi,Food,Need,upi,clear,food_behrouz,train
+UPI-RAPIDO-780132@upi,Travel,Need,upi,clear,travel_rapido,test
+"could have skipped Blinkit, but chose to spend on it, for hosting a dinner party",Groceries,Want,semantic,context_dependent,food_general_dining,train
+splurged on Hotstar to unwind after a long week,Entertainment,Want,natural_language,context_dependent,entertainment_hotstar,train
+bought a new phone even though the old one worked fine,Shopping,Want,natural_language,clear,scenario_shopping_residual,train
+UPI-APOLLOPHARMA-793571@upi,Health,Need,upi,clear,health_apollo,validation
+POS TATA SKY PAYMENT,Bills,Need,bank_statement,clear,scenario_bills_residual,train
+donated to a local charity drive,Misc,Want,natural_language,clear,scenario_misc_residual,train
+POS COIN BY ZERODHA PAYMENT,Misc,Investment,bank_statement,clear,misc_zerodha,train
+PVR for binge watching over the weekend,Entertainment,Want,merchant,clear,entertainment_pvr,train
+POS THE LOUNGE BAR,Party,Want,bank_statement,clear,party_lounge_bar,test
+Amazon just because I liked the design,Shopping,Want,merchant,clear,shopping_amazon,train
+UPI-COURSERA-CERT@HDFC,Education,Investment,upi,clear,education_coursera,train
+UPI-MCDONALDS-866816@upi,Food,Want,upi,clear,food_mcdonald,train
+indulged in Zomato with friends for a celebration,Food,Want,natural_language,clear,food_zomato,test
+UPI/IRCTC/PAYMENT/REF3697,Travel,Want,upi,clear,travel_irctc,train
+Tata 1mg diagnostic test booking,Health,Need,merchant,clear,health_1mg,train
+Lenskart during a big sale,Shopping,Want,merchant,clear,shopping_lenskart,train
+"the expense on Snapdeal was unavoidable, to replace a broken item",Shopping,Want,semantic,clear,shopping_snapdeal,validation
+UPI-WALLETTOPUP-REF8259,Misc,Want,upi,clear,scenario_misc_residual,train
+UPI/MEESHO/PAYMENT/REF2013,Shopping,Want,upi,clear,shopping_meesho,train
+paid the annual insurance premium for the car,Bills,Need,semantic,clear,scenario_bills_residual,train
+Zomato with friends for a celebration,Food,Want,merchant,clear,food_zomato,test
+UPI/INDIGO/PAYMENT/REF6279,Travel,Want,upi,clear,travel_indigo,train
+paid for a quick meal during the exam break,Food,Need,natural_language,clear,food_general_dining,train
+UPI-BLUSMART-BLUSMART@HDFC,Travel,Want,upi,clear,travel_blusmart,train
+Paytm Money for a fixed deposit renewal,Misc,Investment,merchant,clear,misc_paytm_money,validation
+"could have skipped Star Bazaar, but chose to spend on it, for hosting a dinner party",Groceries,Want,semantic,context_dependent,food_general_dining,train
+Burger King to try a new outlet everyone was talking about,Food,Want,merchant,context_dependent,food_burger_king,train
+UPI-MEDPLUS-MEDPLUS@PAYTM,Health,Need,upi,clear,health_medplus,train
+POS NYKAA PAYMENT,Shopping,Want,bank_statement,clear,shopping_nykaa,train
+POS BOX8 PAYMENT,Food,Want,bank_statement,clear,food_box8,train
+Coin by Zerodha for a stock market trade,Misc,Investment,merchant,clear,misc_zerodha,train
+CARD PAYMENT APOLLO PHARMACY,Health,Need,bank_statement,clear,health_apollo,validation
+SpiceJet for a leisure vacation,Travel,Want,merchant,clear,travel_spicejet,train
+Zerodha for a stock market trade,Misc,Investment,merchant,clear,misc_zerodha,train
+Barbeque Nation dinner for birthday,Food,Want,merchant,clear,food_barbeque_nation,validation
+visited the dentist for a routine checkup,Health,Need,natural_language,clear,bills_vodafone,train
+contributed to ICICI Direct for a recurring deposit,Misc,Investment,natural_language,clear,misc_recurring_deposit,train
+Croma just because I liked the design,Shopping,Want,merchant,clear,shopping_croma,test
+Faasos while working late at the office,Food,Need,merchant,context_dependent,food_faasos,test
+indulged in Myntra as a small treat for myself,Shopping,Want,natural_language,clear,shopping_myntra,train
+paid for Nature's Basket for a festive celebration at home on a whim,Groceries,Want,natural_language,clear,groceries_natures_basket,train
+CARD PAYMENT UNACADEMY,Education,Investment,bank_statement,clear,education_unacademy,train
+"paid for Nature's Basket purely out of necessity, for the monthly household stock-up",Groceries,Need,semantic,context_dependent,groceries_natures_basket,train
+NETFLIX TXN POS PURCHASE,Entertainment,Want,bank_statement,clear,entertainment_netflix,train
+"could have skipped PharmEasy, but chose to spend on it, to try a new wellness trend",Health,Need,semantic,context_dependent,health_pharmeasy,test
+UPI/INOX/PAYMENT/REF5742,Entertainment,Want,upi,clear,entertainment_inox,train
+new shoes,Shopping,Want,short_keyword,ambiguous,shopping_general_retail,validation
+POS ZOMATO PAYMENT,Food,Want,bank_statement,clear,food_zomato,test
+1mg Diagnostics after a doctor's referral,Health,Need,merchant,clear,health_1mg,train
+POS ZOMATO ONLINE ORDER,Food,Want,bank_statement,clear,food_zomato,test
+dinner order,Food,Want,short_keyword,ambiguous,food_general_dining,train
+Zepto instant grocery delivery,Groceries,Need,merchant,clear,groceries_zepto,train
+POS COURSERA ONLINE,Education,Investment,bank_statement,clear,education_coursera,train
+"spent on Wow Momo more for enjoyment than necessity, for a Sunday brunch tradition",Food,Want,semantic,context_dependent,food_wowmomo,test
+Airtel for the postpaid mobile bill,Bills,Need,merchant,clear,bills_airtel,train
+Zerodha equity purchase,Misc,Investment,merchant,clear,misc_zerodha,train
+UPI-KFC-718821@upi,Food,Need,upi,clear,food_kfc,train
+MakeMyTrip flight booked for a leisure holiday,Travel,Want,merchant,clear,travel_makemytrip,train
+UPI-VIJAYSALES-VIJAYSALES@YBL,Shopping,Want,upi,clear,bills_vodafone,train
+UPI-ZEPTO-884842@upi,Groceries,Need,upi,clear,groceries_zepto,train
+UPI/HPGAS/PAYMENT/REF7965,Bills,Need,upi,clear,bills_hp_gas,train
+"didn't really need Swiggy, but went ahead anyway, for a Sunday brunch tradition",Food,Want,semantic,clear,food_swiggy,test
+"the expense on Yatra was unavoidable, to get to a work meeting",Travel,Need,semantic,clear,travel_yatra,train
+UPI-FAASOS-859431@upi,Food,Need,upi,clear,food_faasos,test
+Delhi Metro to reach the exam center,Travel,Need,merchant,context_dependent,travel_delhi_metro,train
+"spent on IndiGo more for enjoyment than necessity, for a spontaneous road trip",Travel,Want,semantic,context_dependent,travel_indigo,train
+"decided to grow long term savings through Paytm Money, for a recurring deposit",Misc,Investment,semantic,clear,bills_vodafone,train
+Box8 to celebrate a promotion,Food,Want,merchant,clear,food_box8,train
+More Supermarket for daily cooking needs,Groceries,Need,merchant,clear,groceries_more_supermarket,train
+weekly vegetable and fruit shopping from the local market,Groceries,Need,semantic,clear,groceries_ration_general,train
+spent on Snapdeal to replace a broken item,Shopping,Want,natural_language,clear,shopping_snapdeal,validation
+paid the exam registration fee for a competitive exam,Education,Investment,natural_language,clear,groceries_ration_general,train
+"could have skipped LinkedIn Learning, but chose to spend on it, as a personal hobby class",Education,Want,semantic,clear,education_linkedin_learning,train
+spent on Airtel for the postpaid mobile bill,Bills,Need,natural_language,clear,bills_airtel,train
+CARD PAYMENT A LOCAL PUB,Party,Want,bank_statement,clear,party_local_pub,train
+POS MAKEMYTRIP ONLINE,Travel,Need,bank_statement,clear,travel_makemytrip,train
+treated myself to Goibibo to a concert across town,Travel,Want,natural_language,clear,travel_goibibo,train
+UPI/TATAPOWER/PAYMENT/REF7853,Bills,Need,upi,clear,bills_tata_power,train
+Hotstar for a birthday movie marathon,Entertainment,Want,merchant,context_dependent,bills_vodafone,train
+POS AJIO ONLINE,Shopping,Want,bank_statement,clear,bills_jio,validation
+Swiggy midnight cravings order,Food,Want,merchant,clear,food_swiggy,test
+indulged in Reliance Digital as a small treat for myself,Shopping,Want,natural_language,clear,shopping_reliance_digital,validation
+"paid for Rapido purely out of necessity, to get to a work meeting",Travel,Need,semantic,context_dependent,travel_rapido,test
+BEST bus for a hospital appointment,Travel,Need,merchant,clear,travel_best_bus,train
+hired a cab for a scenic weekend road trip,Travel,Want,semantic,clear,travel_cab_general,validation
+had no choice but to pay for Skillshare since it was compulsory for the degree program,Education,Need,semantic,context_dependent,education_skillshare,train
+DMart monthly household shopping,Groceries,Need,merchant,clear,groceries_dmart,train
+UPI/BEHROUZBIRYA/PAYMENT/REF8905,Food,Need,upi,clear,food_behrouz,train
+"the expense on KFC was unavoidable, during a family emergency at home",Food,Need,semantic,context_dependent,food_kfc,train
+UPI-IRCTCTICKET-REF9012,Travel,Want,upi,clear,travel_irctc,train
+UPI-APPLEPAYMENT-REF5593,Shopping,Want,upi,clear,scenario_shopping_residual,train
+premium wellness subscription,Health,Want,natural_language,clear,scenario_health_residual,train
+CARD PAYMENT COURSERA,Education,Investment,bank_statement,clear,education_coursera,train
+UPI-ZERODHA-INVESTMENT,Misc,Investment,upi,clear,misc_zerodha,train
+UPI-PHARMEASY-PHARMEASY@HDFC,Health,Need,upi,clear,health_pharmeasy,test
+UPI/ICICIDIRECT/PAYMENT/REF2215,Misc,Investment,upi,clear,scenario_misc_residual,train
+Zomato while working late at the office,Food,Need,merchant,context_dependent,food_zomato,test
+indulged in Uber for a solo backpacking trip,Travel,Want,natural_language,clear,travel_uber,validation
+Myntra for essential office supplies,Shopping,Want,merchant,clear,shopping_myntra,train
+POS ACCOUNT DEBIT,Misc,Want,bank_statement,clear,scenario_misc_residual,train
+UPI-SWIGGY-853163@upi,Food,Need,upi,clear,food_swiggy,test
+Uber for a solo backpacking trip,Travel,Want,merchant,clear,travel_uber,validation
+POS BYJU'S PAYMENT,Education,Investment,bank_statement,clear,education_byju,test
+POS PVR CINEMAS,Entertainment,Want,bank_statement,clear,entertainment_pvr,train
+Groww for a monthly SIP,Misc,Investment,merchant,clear,misc_groww,train
+BSES TXN POS PURCHASE,Bills,Need,bank_statement,clear,bills_bses,test
+UPI-TATAPOWER-832477@upi,Bills,Need,upi,clear,bills_tata_power,train
+cover charge at a nightclub with colleagues,Party,Want,merchant,clear,party_nightclub,test
+Max Healthcare for an emergency hospital visit,Health,Need,merchant,clear,bills_vodafone,train
+a brewery for a farewell celebration,Party,Want,merchant,clear,party_brewery,train
+POS NET BANKING TRANSFER,Misc,Want,bank_statement,clear,misc_general_banking,train
+paid for Blinkit after running out of cooking essentials,Groceries,Need,natural_language,clear,groceries_blinkit,train
+UPI-JIOMART-JIOMART@ICICI,Groceries,Need,upi,clear,bills_jio,validation
+Ajio to try out a new trend,Shopping,Want,merchant,clear,bills_jio,validation
+AMAZON PRIME VIDEO TXN POS PURCHASE,Entertainment,Want,bank_statement,clear,bills_vodafone,train
+POS ACT FIBERNET ONLINE,Bills,Need,bank_statement,clear,bills_act_fibernet,validation
+UPI/FLIPKART/ORDER/REF5521,Shopping,Want,upi,clear,shopping_flipkart,train
+MakeMyTrip for a spontaneous road trip,Travel,Want,merchant,context_dependent,travel_makemytrip,train
+Zerodha for a systematic transfer plan,Misc,Investment,merchant,clear,misc_zerodha,train
+had no choice but to pay for MakeMyTrip since it was for a hospital appointment,Travel,Need,semantic,context_dependent,travel_makemytrip,train
+"could have skipped Practo, but chose to spend on it, as a lifestyle upgrade",Health,Want,semantic,clear,health_practo,validation
+treated myself to Nykaa because everyone else already had it,Shopping,Want,natural_language,context_dependent,shopping_nykaa,train
+Blinkit for the week's meals,Groceries,Need,merchant,clear,food_general_dining,train
+"could have skipped INOX, but chose to spend on it, for binge watching over the weekend",Entertainment,Want,semantic,clear,entertainment_inox,train
+UPI-BIGBASKET-BIGBASKET@SBI,Groceries,Need,upi,clear,groceries_bigbasket,test
+"could have skipped Goibibo, but chose to spend on it, to a concert across town",Travel,Want,semantic,clear,travel_goibibo,train
+POS BIGBASKET RETAIL,Groceries,Need,bank_statement,clear,groceries_bigbasket,test
+"could have skipped BigBasket, but chose to spend on it, for hosting a dinner party",Groceries,Want,semantic,context_dependent,food_general_dining,train
+UPI-YATRA-838403@upi,Travel,Need,upi,clear,travel_yatra,train
+spent on Udemy required to pass the course,Education,Investment,natural_language,clear,education_udemy,train
+Zee5 for binge watching over the weekend,Entertainment,Want,merchant,clear,entertainment_zee5,validation
+POS MERU CABS ONLINE,Travel,Need,bank_statement,clear,travel_meru,train
+paid for Nykaa because the old one stopped working,Shopping,Need,natural_language,context_dependent,shopping_nykaa,train
+"didn't really need Ola, but went ahead anyway, for a solo backpacking trip",Travel,Want,semantic,clear,travel_ola,train
+UPI-MAKEMYTRIP-996341@upi,Travel,Need,upi,clear,travel_makemytrip,train
+UPI/PAYTMMONEY/PAYMENT/REF7875,Misc,Investment,upi,clear,misc_paytm_money,validation
+CARD PAYMENT SUBWAY,Food,Need,bank_statement,clear,food_subway,train
+bought a new umbrella since the old one broke,Shopping,Want,natural_language,clear,shopping_general_retail,validation
+prescribed medicines,Health,Need,natural_language,clear,health_medical_general,train
+cleared the credit card EMI for this month,Bills,Need,semantic,clear,scenario_bills_residual,train
+Netmeds to try a trending supplement,Health,Need,merchant,clear,health_netmeds,test
+Practo to get a diagnostic test done,Health,Need,merchant,clear,health_practo,validation
+UPI-BOX8-BOX8@ICICI,Food,Need,upi,clear,food_box8,train
+textbook,Education,Need,short_keyword,ambiguous,education_academic_general,train
+IndiGo for a weekend getaway,Travel,Want,merchant,clear,travel_indigo,train
+POS FASTAG RECHARGE NHAI,Travel,Need,bank_statement,clear,travel_fastag,validation
+KUVERA TXN POS PURCHASE,Misc,Investment,bank_statement,clear,shopping_general_retail,validation
+UPI/SWIGGY/PAYMENT/REF8827,Food,Need,upi,clear,food_swiggy,test
+Uber to a party,Travel,Want,merchant,clear,travel_uber,validation
+POS TATA POWER BILLDESK,Bills,Need,bank_statement,clear,bills_tata_power,train
+UPI/COLLEGEFEE/TUITION/REF3391,Education,Investment,upi,clear,education_academic_general,train
+"the expense on Yatra was unavoidable, to rush to the hospital",Travel,Need,semantic,context_dependent,travel_yatra,train
+BEST bus pass for daily commute,Travel,Need,merchant,clear,travel_best_bus,train
+UPI-TATA1MG-873152@upi,Health,Need,upi,clear,health_1mg,train
+Wow Momo for a movie night at home,Food,Want,merchant,clear,food_wowmomo,test
+invested through upGrad to prepare for a job change,Education,Investment,natural_language,context_dependent,education_upgrad,test
+put money into Upstox for a recurring deposit,Misc,Investment,natural_language,clear,misc_upstox,train
+a lounge bar for a New Year's party,Party,Want,merchant,clear,party_lounge_bar,test
+paid for a routine annual health checkup,Health,Need,semantic,clear,scenario_health_residual,train
+Fortis Hospital as prescribed by the doctor,Health,Need,merchant,clear,health_fortis,train
+bought a premium multivitamin subscription out of curiosity,Health,Want,semantic,context_dependent,bills_vodafone,train
+POS KFC ONLINE,Food,Need,bank_statement,clear,food_kfc,train
+auto debit payment,Bills,Need,short_keyword,clear,travel_auto,train
+Domino's pizza party order,Food,Want,merchant,clear,food_domino,train
+used HP Gas for the LPG cylinder refill,Bills,Need,natural_language,clear,bills_hp_gas,train
+Croma because the monsoon damaged the old one,Shopping,Need,merchant,clear,shopping_croma,test
+POS CARD PAYMENT,Misc,Want,bank_statement,clear,scenario_misc_residual,train
+POS UPSTOX ONLINE,Misc,Investment,bank_statement,clear,misc_upstox,train
+"spent on Meru Cabs more for enjoyment than necessity, for a spontaneous road trip",Travel,Want,semantic,context_dependent,travel_meru,train
+UPI-FLIPKARTORDER-REF5965,Shopping,Want,upi,clear,shopping_flipkart,train
+contributed to ET Money for a stock market trade,Misc,Investment,natural_language,clear,misc_etmoney,validation
+"didn't really need Delhi Metro, but went ahead anyway, for a weekend getaway",Travel,Want,semantic,clear,travel_delhi_metro,train
+POS DECATHLON SPORTS,Shopping,Want,bank_statement,clear,shopping_decathlon,validation
+splurged on Amazon because everyone else already had it,Shopping,Want,natural_language,context_dependent,shopping_amazon,train
+POS PHARMEASY PAYMENT,Health,Need,bank_statement,clear,health_pharmeasy,test
+UPI-AIRTELBROADBAND-AIRTEL@ICICI,Bills,Need,upi,clear,bills_airtel,train
+POS SPOTIFY ONLINE,Entertainment,Want,bank_statement,clear,entertainment_spotify,test
+LENSKART TXN POS PURCHASE,Shopping,Want,bank_statement,clear,shopping_lenskart,train
+Behrouz Biryani expense while working late at the office,Food,Need,natural_language,context_dependent,food_behrouz,train
+UPI-SPENCERS-SPENCERS@PAYTM,Groceries,Need,upi,clear,groceries_spencer,train
+bar tab after work celebration,Party,Want,natural_language,clear,party_general_drinks,train
+paid the cover charge to enter a nightclub on a friend's birthday,Party,Want,semantic,clear,party_nightclub,test
+Mumbai Metro to attend a friend's party,Travel,Want,merchant,clear,travel_mumbai_metro,train
+mutual fund contribution,Misc,Investment,natural_language,clear,scenario_misc_residual,train
+UPI-AMAZONPURCHASE-REF1331,Shopping,Want,upi,clear,shopping_amazon,train
+drinks,Party,Want,short_keyword,ambiguous,party_general_drinks,train
+UPI-UBER-783707@upi,Travel,Want,upi,clear,travel_uber,validation
+UPI-SNAPDEAL-884077@upi,Shopping,Want,upi,clear,shopping_snapdeal,validation
+Reliance Fresh for daily cooking needs,Groceries,Need,merchant,clear,scenario_groceries_residual,train
+UPI-ALOCALPUB-ALOCALPUB@YBL,Party,Want,upi,clear,party_local_pub,train
+CARD PAYMENT JIOCINEMA,Entertainment,Want,bank_statement,clear,bills_jio,validation
+CARD PAYMENT LENSKART,Shopping,Want,bank_statement,clear,shopping_lenskart,train
+Reliance Digital because everyone else already had it,Shopping,Want,merchant,context_dependent,shopping_reliance_digital,validation
+imported chocolates for movie night,Groceries,Need,natural_language,clear,travel_ola,train
+"didn't really need Meru Cabs, but went ahead anyway, to visit relatives during the holidays",Travel,Want,semantic,clear,travel_meru,train
+POS KUVERA PAYMENT,Misc,Investment,bank_statement,clear,misc_kuvera,test
+Apple payment,Misc,Want,merchant,clear,scenario_misc_residual,train
+UPI/ALOUNGEBAR/PAYMENT/REF4641,Party,Want,upi,clear,party_lounge_bar,test
+UPI-PVR-849639@upi,Entertainment,Want,upi,clear,entertainment_pvr,train
+Myntra new outfit for a wedding,Shopping,Want,merchant,clear,shopping_myntra,train
+had no choice but to pay for Tata Cliq since it was for a work-from-home setup,Shopping,Need,semantic,context_dependent,shopping_tata_cliq,train
+HP GAS TXN POS PURCHASE,Bills,Need,bank_statement,clear,bills_hp_gas,train
+UPI-SWIGGYFOOD-SWIGGY@ICICI,Food,Need,upi,clear,food_swiggy,test
+paid for Ajio because everyone else already had it on a whim,Shopping,Want,natural_language,context_dependent,bills_jio,validation
+required college textbook,Education,Need,natural_language,clear,education_academic_general,train
+groceries,Groceries,Need,short_keyword,ambiguous,groceries_ration_general,train
+used Uber for a job interview across town,Travel,Need,natural_language,clear,travel_uber,validation
+a rooftop bar for a spontaneous Friday night out,Party,Want,merchant,context_dependent,party_rooftop_bar,validation
+POS CASH PAYMENT,Misc,Want,bank_statement,clear,scenario_misc_residual,train
+Ola for a leisure vacation,Travel,Want,merchant,clear,travel_ola,train
+Unacademy as a personal hobby class,Education,Want,merchant,clear,education_unacademy,train
+POS DMART MUMBAI,Groceries,Need,bank_statement,clear,groceries_dmart,train
+stocked the pantry with snacks for a house party,Groceries,Need,semantic,clear,party_house_party,train
+OTT subscription,Entertainment,Want,short_keyword,ambiguous,scenario_entertainment_residual,train
+had to pay for BEST bus to reach college on time,Travel,Need,natural_language,clear,travel_best_bus,train
+bought tiffin service for the month,Food,Need,natural_language,clear,bills_vodafone,train
+Tata Sky expense for the DTH subscription recharge,Bills,Need,natural_language,clear,scenario_bills_residual,train
+UPI-UDEMY-UDEMY@YBL,Education,Investment,upi,clear,education_udemy,train
+LinkedIn Learning as a personal hobby class,Education,Want,merchant,clear,education_linkedin_learning,train
+treated myself to EatSure to try a new outlet everyone was talking about,Food,Want,natural_language,context_dependent,food_eatsure,train
+UPI-MERUCABS-MERUCABS@SBI,Travel,Want,upi,clear,travel_meru,train
+MYNTRA TXN POS PURCHASE,Shopping,Want,bank_statement,clear,shopping_myntra,train
+POS EATSURE ONLINE,Food,Want,bank_statement,clear,food_eatsure,train
+UPI-RELIANCEDIGI-941223@upi,Shopping,Want,upi,clear,scenario_shopping_residual,train
+Burger King just out of a craving,Food,Want,merchant,context_dependent,food_burger_king,train
+Jio for the mobile recharge plan,Bills,Need,merchant,clear,bills_jio,validation
+IndiGo to rush to the hospital,Travel,Need,merchant,context_dependent,travel_indigo,train
+CARD PAYMENT BYJU'S,Education,Investment,bank_statement,clear,education_byju,test
+booked Yatra to get to a work meeting,Travel,Need,natural_language,clear,travel_yatra,train
+Ajio because everyone else already had it,Shopping,Want,merchant,context_dependent,bills_jio,validation
+Unacademy mandatory for the course curriculum,Education,Need,merchant,clear,education_unacademy,train
+"set money aside for the future via Zerodha, for a mutual fund purchase",Misc,Investment,semantic,clear,bills_vodafone,train
+online order,Shopping,Want,short_keyword,ambiguous,scenario_shopping_residual,train
+UPI-INDIGO-791240@upi,Travel,Need,upi,clear,travel_indigo,train
+paid for Tata Power for the monthly electricity bill,Bills,Need,natural_language,clear,bills_tata_power,train
+paid for an online certification to improve my programming skills,Education,Investment,semantic,clear,scenario_education_residual,train
+UPI/CLUBENTRY/BDAYPARTY/REF8821,Party,Want,upi,clear,party_nightclub,test
+CARD PAYMENT UDEMY COURSE,Education,Investment,bank_statement,clear,education_udemy,train
+UPI-BIGBASKET-BIGBASKET@HDFC,Groceries,Need,upi,clear,groceries_bigbasket,test
+"booked a local pub for a New Year's party, just for fun",Party,Want,natural_language,context_dependent,party_local_pub,train
+"spent on JioMart more for enjoyment than necessity, to try some gourmet imported items",Groceries,Want,semantic,context_dependent,bills_jio,validation
+"the expense on IRCTC was unavoidable, to get to a work meeting",Travel,Need,semantic,clear,travel_irctc,train
+"spent on Amazon more for enjoyment than necessity, to try out a new trend",Shopping,Want,semantic,context_dependent,shopping_amazon,train
+CARD PAYMENT MORE SUPERMARKET,Groceries,Need,bank_statement,clear,groceries_more_supermarket,train
+a rooftop bar during a bachelor party night out,Party,Want,merchant,clear,party_rooftop_bar,validation
+renewed the family OTT subscription for the year,Entertainment,Want,natural_language,clear,scenario_entertainment_residual,train
+UPI-KUVERA-KUVERA@AXIS,Misc,Investment,upi,clear,misc_kuvera,test
+UPI-BLUSMART-BLUSMART@AXIS,Travel,Want,upi,clear,travel_blusmart,train
+booked SpiceJet to get to a work meeting,Travel,Need,natural_language,clear,travel_spicejet,train
+POS STANDING INSTRUCTION DEBIT,Misc,Want,bank_statement,clear,scenario_misc_residual,train
+RAPIDO TXN POS PURCHASE,Travel,Need,bank_statement,clear,travel_rapido,test
+went for BookMyShow for a birthday movie marathon,Entertainment,Want,natural_language,context_dependent,bills_vodafone,train
+UPI-FORTISHOSPIT-FORTISHOSPIT@AXIS,Health,Need,upi,clear,health_fortis,train
+Adani Electricity for the electricity connection at home,Bills,Need,merchant,clear,bills_adani_electricity,train
+UPI/BESTBUS/PAYMENT/REF1672,Travel,Want,upi,clear,travel_best_bus,train
+UPI/DMART/PAYMENT/REF1713,Groceries,Need,upi,clear,groceries_dmart,train
+Yatra to a concert across town,Travel,Want,merchant,clear,travel_yatra,train
+POS NATURE'S BASKET ONLINE,Groceries,Need,bank_statement,clear,groceries_natures_basket,train
+had to pay for BEST bus for a hospital appointment,Travel,Need,natural_language,clear,travel_best_bus,train
+UPI/JIOCINEMA/PAYMENT/REF9008,Entertainment,Want,upi,clear,bills_jio,validation
+Hotstar annual subscription for cricket season,Entertainment,Want,merchant,clear,entertainment_hotstar,train
+Airtel broadband bill payment,Bills,Need,merchant,clear,bills_airtel,train
+paid the water bill for the apartment,Bills,Need,natural_language,clear,bills_water_general,test
+CARD PAYMENT ICICI DIRECT,Misc,Investment,bank_statement,clear,scenario_misc_residual,train
+POS ZEE5 PAYMENT,Entertainment,Want,bank_statement,clear,entertainment_zee5,validation
+"spent on BookMyShow more for enjoyment than necessity, for binge watching over the weekend",Entertainment,Want,semantic,context_dependent,entertainment_bookmyshow,train
+"decided to grow long term savings through ICICI Direct, for a fixed deposit renewal",Misc,Investment,semantic,clear,bills_vodafone,train
+Udemy to boost my career prospects,Education,Investment,merchant,context_dependent,education_udemy,train
+UPI-SKILLSHARE-840909@upi,Education,Investment,upi,clear,education_skillshare,train
+spent on Skillshare compulsory for the degree program,Education,Need,natural_language,clear,education_skillshare,train
+Star Bazaar expense for the week's meals,Groceries,Need,natural_language,clear,food_general_dining,train
+POS UPGRAD ONLINE,Education,Investment,bank_statement,clear,education_upgrad,test
+CARD PAYMENT A LOUNGE BAR,Party,Want,bank_statement,clear,party_lounge_bar,test
+invested through Zerodha for a national pension scheme contribution,Misc,Investment,natural_language,clear,misc_zerodha,train
+UPI-NETFLIX-NETFLIX@SBI,Entertainment,Want,upi,clear,entertainment_netflix,train
+contributed to ET Money for a recurring deposit,Misc,Investment,natural_language,clear,misc_etmoney,validation
+Vodafone Idea for the prepaid mobile recharge,Bills,Need,merchant,clear,bills_vodafone,train
+used Unacademy mandatory for the course curriculum,Education,Need,natural_language,clear,education_unacademy,train
+recharge,Bills,Need,short_keyword,ambiguous,scenario_bills_residual,train
+"set money aside for the future via LinkedIn Learning, to stay competitive at work",Education,Investment,semantic,context_dependent,bills_vodafone,train
+POS SWIGGY PAYMENT,Food,Need,bank_statement,clear,food_swiggy,test
+UPI/HOUSINGSOCIE/PAYMENT/REF7286,Bills,Need,upi,clear,scenario_bills_residual,train
+"could have skipped PVR, but chose to spend on it, for a weekend movie outing with friends",Entertainment,Want,semantic,clear,bills_vodafone,train
+Skillshare purely for personal enrichment,Education,Want,merchant,context_dependent,education_skillshare,train
+CARD PAYMENT MCDONALD'S,Food,Need,bank_statement,clear,food_mcdonald,train
+signed up for a recreational photography workshop,Education,Investment,natural_language,clear,scenario_education_residual,train
+FASTag to attend a friend's party,Travel,Want,merchant,clear,travel_fastag,validation
+UPI-MYNTRA-MYNTRA@ICICI,Shopping,Want,upi,clear,shopping_myntra,train
+UDEMY TXN POS PURCHASE,Education,Investment,bank_statement,clear,education_udemy,train
+bought decorations and drinks for a New Year house party,Party,Want,semantic,clear,party_house_party,train
+Sony LIV for the monthly subscription renewal,Entertainment,Want,merchant,clear,entertainment_sonyliv,train
+UPI/UBER/PAYMENT/REF7224,Travel,Need,upi,clear,travel_uber,validation
+a lounge bar for a friend's birthday celebration,Party,Want,merchant,clear,party_lounge_bar,test
+CARD PAYMENT NETFLIX.COM,Entertainment,Want,bank_statement,clear,entertainment_netflix,train
+Wow Momo expense when there was nothing left in the fridge,Food,Need,natural_language,context_dependent,food_wowmomo,test
+UPI-UDEMY-UDEMY@PAYTM,Education,Investment,upi,clear,education_udemy,train
+"could have skipped Netmeds, but chose to spend on it, for a skincare experiment",Health,Need,semantic,clear,health_netmeds,test
+MSEDCL TXN POS PURCHASE,Bills,Need,bank_statement,clear,bills_msedcl,train
+"booked Delhi Metro to explore a new city, just for fun",Travel,Want,natural_language,context_dependent,travel_delhi_metro,train
+Paytm Money for a stock market trade,Misc,Investment,merchant,clear,misc_paytm_money,validation
+had to pay for Vodafone Idea for the prepaid mobile recharge,Bills,Need,natural_language,clear,bills_vodafone,train
+BluSmart to rush to the hospital,Travel,Need,merchant,context_dependent,travel_blusmart,train
+bill payment,Bills,Need,natural_language,clear,scenario_bills_residual,train
+RELIANCE FRESH TXN POS PURCHASE,Groceries,Need,bank_statement,clear,shopping_general_retail,validation
+POS GREAT LEARNING ONLINE,Education,Investment,bank_statement,clear,education_great_learning,validation
+SIP,Misc,Investment,short_keyword,ambiguous,scenario_misc_residual,train
+paid for JioMart to try some gourmet imported items on a whim,Groceries,Want,natural_language,clear,bills_jio,validation
+metro,Travel,Need,short_keyword,clear,scenario_travel_residual,test
+UPI-PHARMEASY-PHARMEASY@YBL,Health,Need,upi,clear,health_pharmeasy,test
+spent on McDonald's while studying for an exam late at night,Food,Need,natural_language,context_dependent,food_mcdonald,train
+Reliance Fresh after running out of cooking essentials,Groceries,Need,merchant,clear,scenario_groceries_residual,train
+Zepto for a festive celebration at home,Groceries,Want,merchant,clear,groceries_zepto,train
+UPI-SUBWAY-833864@upi,Food,Want,upi,clear,food_subway,train
+UPI/GROWW/PAYMENT/REF4084,Misc,Investment,upi,clear,misc_groww,train
+paid for Lenskart as a birthday gift for myself on a whim,Shopping,Want,natural_language,clear,shopping_lenskart,train
+CROMA TXN POS PURCHASE,Shopping,Want,bank_statement,clear,shopping_croma,test
+UPI-GOIBIBO-GOIBIBO@SBI,Travel,Want,upi,clear,travel_goibibo,train
+McDonald's between back to back lectures,Food,Need,merchant,clear,food_mcdonald,train
+CARD PAYMENT GROWW,Misc,Investment,bank_statement,clear,misc_groww,train
+Tata 1mg for a routine health checkup,Health,Need,merchant,clear,health_1mg,train
+UPI/MUMBAIMETRO/PAYMENT/REF6763,Travel,Need,upi,clear,travel_mumbai_metro,train
+SpiceJet for a hospital appointment,Travel,Need,merchant,clear,travel_spicejet,train
+went for PharmEasy to try a trending supplement,Health,Need,natural_language,clear,health_pharmeasy,test
+paid for 1mg Diagnostics after a doctor's referral,Health,Need,natural_language,clear,health_1mg,train
+splurged on INOX to watch a new season with the family,Entertainment,Want,natural_language,clear,entertainment_inox,train
+Udemy web development course,Education,Investment,merchant,clear,education_udemy,train
+Croma during a big sale,Shopping,Want,merchant,clear,shopping_croma,test
+HALDIRAM'S TXN POS PURCHASE,Food,Want,bank_statement,clear,food_haldiram,validation
+IRCTC for a spontaneous road trip,Travel,Want,merchant,context_dependent,travel_irctc,train
+DMart for an elaborate weekend cooking project,Groceries,Want,merchant,context_dependent,groceries_dmart,train
+"didn't really need BookMyShow, but went ahead anyway, for the monthly subscription renewal",Entertainment,Want,semantic,clear,entertainment_bookmyshow,train
+UPI/COINBYZERODH/PAYMENT/REF9914,Misc,Investment,upi,clear,misc_zerodha,train
+POS UBER TRIP MUMBAI,Travel,Need,bank_statement,clear,travel_uber,validation
+Zomato dinner order with friends,Food,Want,merchant,clear,food_zomato,test
+Nykaa as a birthday gift for myself,Shopping,Want,merchant,clear,shopping_nykaa,train
+POS CROMA PAYMENT,Shopping,Want,bank_statement,clear,shopping_croma,test
+lunch,Food,Need,short_keyword,ambiguous,food_general_dining,train
+POS SWIGGY ONLINE,Food,Need,bank_statement,clear,food_swiggy,test
+had no choice but to pay for Udemy since it was compulsory for the degree program,Education,Need,semantic,context_dependent,education_udemy,train
+UPI-UNACADEMY-922075@upi,Education,Investment,upi,clear,education_unacademy,train
+HOUSING SOCIETY TXN POS PURCHASE,Bills,Need,bank_statement,clear,bills_housing_society,train
+MSEDCL for this month's electricity usage,Bills,Need,merchant,clear,bills_msedcl,train
+CARD PAYMENT CROMA ELECTRONICS,Shopping,Want,bank_statement,clear,shopping_croma,test
+"the expense on MakeMyTrip was unavoidable, for the daily office commute",Travel,Need,semantic,clear,travel_makemytrip,train
+"booked a brewery for a spontaneous Friday night out, just for fun",Party,Want,natural_language,context_dependent,party_brewery,train
+Wow Momo to celebrate a promotion,Food,Want,merchant,clear,food_wowmomo,test
+paid for fuel while driving to work every day,Travel,Need,natural_language,clear,bills_vodafone,train
+put money into Kuvera for a corporate bond purchase,Misc,Investment,natural_language,clear,misc_kuvera,test
+went for Reliance Digital because everyone else already had it,Shopping,Want,natural_language,context_dependent,shopping_reliance_digital,validation
+POS MCDONALD'S PAYMENT,Food,Want,bank_statement,clear,food_mcdonald,train
+paid for the train pass I use every day to travel to college,Travel,Need,semantic,clear,travel_irctc,train
+UPI/1MGDIAGNOSTI/PAYMENT/REF6347,Health,Need,upi,clear,health_1mg,train
+"spent on Zomato more for enjoyment than necessity, for a movie night at home",Food,Want,semantic,context_dependent,food_zomato,test
+"didn't really need BEST bus, but went ahead anyway, for a weekend getaway",Travel,Want,semantic,clear,travel_best_bus,train
+UPI/HOTSTAR/PAYMENT/REF7765,Entertainment,Want,upi,clear,entertainment_hotstar,train
+UPI-KUVERA-KUVERA@HDFC,Misc,Investment,upi,clear,misc_kuvera,test
+course fee,Education,Investment,short_keyword,ambiguous,scenario_education_residual,train
+"spent on Haldiram's more for enjoyment than necessity, for a Sunday brunch tradition",Food,Want,semantic,context_dependent,food_haldiram,validation
+POS 1MG DIAGNOSTICS PAYMENT,Health,Need,bank_statement,clear,health_1mg,train
+Rapido for a solo backpacking trip,Travel,Want,merchant,clear,travel_rapido,test
+UPI-1MGDIAGNOSTI-1MGDIAGNOSTI@PAYTM,Health,Need,upi,clear,health_1mg,train
+bank charges deducted,Misc,Need,bank_statement,clear,misc_bank_charges,train
+UPI-YATRA-YATRA@HDFC,Travel,Want,upi,clear,travel_yatra,train
+Wow Momo when there was nothing left in the fridge,Food,Need,merchant,context_dependent,food_wowmomo,test
+Practo for ongoing medical treatment,Health,Need,merchant,clear,health_practo,validation
+UPI/PHARMEASY/MEDICINE/REF4471,Health,Need,upi,clear,health_pharmeasy,test
+WOW MOMO TXN POS PURCHASE,Food,Want,bank_statement,clear,food_wowmomo,test
+splurged on KFC for a Sunday brunch tradition,Food,Want,natural_language,clear,food_kfc,train
+UPI/HALDIRAMS/PAYMENT/REF7078,Food,Need,upi,clear,food_haldiram,validation
+purchased medicine prescribed by the doctor,Health,Need,natural_language,clear,health_hospital_surgery,train
+"the expense on Blinkit was unavoidable, after running out of cooking essentials",Groceries,Need,semantic,clear,groceries_blinkit,train
+grabbed a quick sandwich between back to back meetings,Food,Need,semantic,clear,scenario_food_residual,train
+"bought milk, bread and eggs for the house",Groceries,Need,semantic,clear,scenario_groceries_residual,train
+Lenskart for essential office supplies,Shopping,Want,merchant,clear,shopping_lenskart,train
+Croma to try out a new trend,Shopping,Want,merchant,clear,shopping_croma,test
+UPI-PRACTO-846996@upi,Health,Need,upi,clear,health_practo,validation
+paid for PharmEasy for a routine health checkup,Health,Need,natural_language,clear,health_pharmeasy,test
+Blinkit for basic household supplies,Groceries,Need,merchant,clear,groceries_blinkit,train
+"decided to grow long term savings through Skillshare, to boost my career prospects",Education,Investment,semantic,context_dependent,bills_vodafone,train
+used Netmeds for a chronic condition follow-up,Health,Need,natural_language,clear,health_netmeds,test
+"set money aside for the future via Kuvera, for a systematic transfer plan",Misc,Investment,semantic,clear,bills_vodafone,train
+"booked Burger King for a movie night at home, just for fun",Food,Want,natural_language,context_dependent,food_burger_king,train
+had to pay for Skillshare required to pass the course,Education,Investment,natural_language,clear,education_skillshare,train
+UPI-SONYLIV-863042@upi,Entertainment,Want,upi,clear,entertainment_sonyliv,train
+indulged in Faasos for a weekend treat,Food,Want,natural_language,context_dependent,food_faasos,test
+UPI/NETMEDS/PAYMENT/REF8692,Health,Need,upi,clear,health_netmeds,test
+went for Lenskart just because I liked the design,Shopping,Want,natural_language,clear,shopping_lenskart,train
+UPI-ADANIELECTRI-ADANIELECTRI@AXIS,Bills,Need,upi,clear,scenario_bills_residual,train
+FORTIS HOSPITAL TXN POS PURCHASE,Health,Need,bank_statement,clear,health_fortis,train
+Upstox for a national pension scheme contribution,Misc,Investment,merchant,clear,misc_upstox,train
+"booked SpiceJet for a spontaneous road trip, just for fun",Travel,Want,natural_language,context_dependent,travel_spicejet,train
+had no choice but to pay for Practo since it was to get a diagnostic test done,Health,Need,semantic,context_dependent,health_practo,validation
+invested through LinkedIn Learning to stay competitive at work,Education,Investment,natural_language,context_dependent,education_linkedin_learning,train
+UPI-ICICIDIRECT-ICICIDIRECT@HDFC,Misc,Investment,upi,clear,scenario_misc_residual,train
+"could have skipped Spotify, but chose to spend on it, for a birthday movie marathon",Entertainment,Want,semantic,context_dependent,bills_vodafone,train
+indulged in Snapdeal just because I liked the design,Shopping,Want,natural_language,clear,shopping_snapdeal,validation
+a brewery for a New Year's party,Party,Want,merchant,clear,party_brewery,train
+Flipkart as a birthday gift for myself,Shopping,Want,merchant,clear,shopping_flipkart,train
+"spent on JioCinema more for enjoyment than necessity, to watch a new season with the family",Entertainment,Want,semantic,context_dependent,bills_jio,validation
+UPI/MORESUPERMAR/PAYMENT/REF7850,Groceries,Need,upi,clear,scenario_groceries_residual,train
+splurged on an expensive tasting menu just to celebrate,Food,Want,semantic,clear,scenario_food_residual,train
+"the expense on MakeMyTrip was unavoidable, for a mandatory office trip",Travel,Need,semantic,clear,travel_makemytrip,train
+CARD PAYMENT ZEPTO,Groceries,Need,bank_statement,clear,groceries_zepto,train
+Ola to get to a work meeting,Travel,Need,merchant,clear,travel_ola,train
+veggies,Groceries,Need,short_keyword,ambiguous,scenario_groceries_residual,train
+local kirana store monthly ration,Groceries,Need,merchant,clear,groceries_ration_general,train
+Box8 with friends for a celebration,Food,Want,merchant,clear,food_box8,train
+had no choice but to pay for Swiggy since it was during a busy workday,Food,Need,semantic,context_dependent,food_swiggy,test
+went for Burger King to try a new outlet everyone was talking about,Food,Want,natural_language,context_dependent,food_burger_king,train
+"didn't really need JioCinema, but went ahead anyway, for a weekend movie outing with friends",Entertainment,Want,semantic,clear,bills_jio,validation
+PVR movie tickets with friends,Entertainment,Want,merchant,clear,bills_vodafone,train
+Coursera required to pass the course,Education,Investment,merchant,clear,education_coursera,train
+Reliance Fresh to try some gourmet imported items,Groceries,Want,merchant,clear,scenario_groceries_residual,train
+CARD PAYMENT DOMINOS PIZZA,Food,Want,bank_statement,clear,food_domino,train
+UPI-VIJAYSALES-963667@upi,Shopping,Want,upi,clear,bills_vodafone,train
+Udemy required to pass the course,Education,Investment,merchant,clear,education_udemy,train
+Sony LIV for a birthday movie marathon,Entertainment,Want,merchant,context_dependent,bills_vodafone,train
+set aside savings via Upstox for a stock market trade,Misc,Investment,natural_language,clear,bills_vodafone,train
+"decided to grow long term savings through Kuvera, for a stock market trade",Misc,Investment,semantic,clear,bills_vodafone,train
+UPI-STOREPURCHASE-REF5414,Shopping,Want,upi,clear,scenario_shopping_residual,train
+UPI-RELIANCEFRES-RELIANCEFRES@SBI,Groceries,Need,upi,clear,scenario_groceries_residual,train
+RELIANCE DIGITAL TXN POS PURCHASE,Shopping,Want,bank_statement,clear,shopping_reliance_digital,validation
+CARD PAYMENT BURGER KING,Food,Want,bank_statement,clear,food_burger_king,train
+"the expense on Meesho was unavoidable, for a work-from-home setup",Shopping,Need,semantic,clear,shopping_meesho,train
+CARD PAYMENT A ROOFTOP BAR,Party,Want,bank_statement,clear,party_rooftop_bar,validation
+Amazon purchase of a new phone case out of boredom,Shopping,Want,merchant,clear,shopping_amazon,train
+paid for physiotherapy sessions after an injury,Health,Need,natural_language,clear,scenario_health_residual,train
+UPI-DMART-DMART@HDFC,Groceries,Need,upi,clear,groceries_dmart,train
+indulged in Spotify to unwind after a long week,Entertainment,Want,natural_language,context_dependent,entertainment_spotify,test
+Spencer's for daily cooking needs,Groceries,Need,merchant,clear,groceries_spencer,train
+went to a movie with friends,Entertainment,Want,natural_language,clear,bills_vodafone,train
+replaced a broken laptop charger urgently before a meeting,Shopping,Need,semantic,clear,shopping_wfh_gear,validation
+medicines,Health,Need,short_keyword,ambiguous,health_medical_general,train
+Blinkit for hosting a dinner party,Groceries,Want,merchant,context_dependent,food_general_dining,train
+UPI/EATSURE/PAYMENT/REF7693,Food,Want,upi,clear,food_eatsure,train
+POS SUBWAY ONLINE,Food,Need,bank_statement,clear,food_subway,train
+ACT Fibernet for the broadband connection at home,Bills,Need,merchant,clear,bills_act_fibernet,validation
+indulged in BEST bus to a concert across town,Travel,Want,natural_language,clear,travel_best_bus,train
+Rapido for a leisure vacation,Travel,Want,merchant,clear,travel_rapido,test
+UPI/CULT.FIT/PAYMENT/REF5135,Health,Want,upi,clear,health_cult_fit,train
+Zomato when there was nothing left in the fridge,Food,Need,merchant,context_dependent,food_zomato,test
+UPI-AROOFTOPBAR-AROOFTOPBAR@HDFC,Party,Want,upi,clear,party_rooftop_bar,validation
+spent on MSEDCL for this month's electricity usage,Bills,Need,natural_language,clear,bills_msedcl,train
+CARD PAYMENT JIO RECHARGE,Bills,Need,bank_statement,clear,bills_jio,validation
+UPI-UPGRAD-818589@upi,Education,Investment,upi,clear,education_upgrad,test
+POS DELHI METRO PAYMENT,Travel,Need,bank_statement,clear,travel_delhi_metro,train
+UPI-OLACABS-OLA@PAYTM,Travel,Want,upi,clear,travel_ola,train
+paid for Hotstar for the monthly subscription renewal on a whim,Entertainment,Want,natural_language,clear,entertainment_hotstar,train
+splurged on Ola for a leisure vacation,Travel,Want,natural_language,clear,travel_ola,train
+BigBasket for a festive celebration at home,Groceries,Want,merchant,clear,groceries_bigbasket,test
+"booked Box8 for a weekend treat, just for fun",Food,Want,natural_language,context_dependent,food_box8,train
+UPI-GOIBIBO-GOIBIBO@ICICI,Travel,Want,upi,clear,travel_goibibo,train
+Tata Power monthly electricity bill,Bills,Need,merchant,clear,bills_tata_power,train
+spent on Blinkit for the week's meals,Groceries,Need,natural_language,clear,food_general_dining,train
+UPI-JIOMART-780445@upi,Groceries,Need,upi,clear,bills_jio,validation
+bought arcade tokens during a mall visit,Entertainment,Want,semantic,clear,bills_vodafone,train
+paid for Jio for the mobile recharge plan,Bills,Need,natural_language,clear,bills_jio,validation
+POS A NIGHTCLUB ONLINE,Party,Want,bank_statement,clear,party_nightclub,test
+went for INOX for a weekend movie outing with friends,Entertainment,Want,natural_language,clear,bills_vodafone,train
+UPI-BESTBUS-MUMBAI,Travel,Need,upi,clear,travel_best_bus,train
+UPI-ACTFIBERNET-940050@upi,Bills,Need,upi,clear,bills_act_fibernet,validation
+UPI-AMAZONPRIMEV-AMAZONPRIMEV@SBI,Entertainment,Want,upi,clear,shopping_amazon,train
+had no choice but to pay for Faasos since it was when there was nothing left in the fridge,Food,Need,semantic,context_dependent,food_faasos,test
+MakeMyTrip for a mandatory office trip,Travel,Need,merchant,clear,travel_makemytrip,train
+Nature's Basket to try imported snacks out of curiosity,Groceries,Want,merchant,context_dependent,groceries_natures_basket,train
+UPI/PHARMEASY/PAYMENT/REF1797,Health,Need,upi,clear,health_pharmeasy,test
+CARD PAYMENT VISTARA,Travel,Need,bank_statement,clear,bills_vodafone,train
+"decided to grow long term savings through BYJU'S, for a professional certification",Education,Investment,semantic,clear,bills_vodafone,train
+paid for Max Healthcare for a routine health checkup,Health,Need,natural_language,clear,health_max_healthcare,train
+monthly house rent payment,Bills,Need,natural_language,clear,bills_rent,train
+replacement charger required for work,Shopping,Need,semantic,clear,scenario_shopping_residual,train
+"stocked up on rice, dal and cooking oil",Groceries,Need,natural_language,clear,scenario_groceries_residual,train
+KFC when there was nothing left in the fridge,Food,Need,merchant,context_dependent,food_kfc,train
+ET Money for a national pension scheme contribution,Misc,Investment,merchant,clear,misc_etmoney,validation
+BluSmart to attend a friend's party,Travel,Want,merchant,clear,travel_blusmart,train
+UPI/MCDONALDS/PAYMENT/REF9903,Food,Need,upi,clear,food_mcdonald,train
+Groww mutual fund SIP,Misc,Investment,merchant,clear,misc_groww,train
+LinkedIn Learning required to pass the course,Education,Investment,merchant,clear,education_linkedin_learning,train
+"decided to grow long term savings through Zerodha, for a national pension scheme contribution",Misc,Investment,semantic,clear,bills_vodafone,train
+CARD PAYMENT BSES,Bills,Need,bank_statement,clear,bills_bses,test
+went for Practo as a lifestyle upgrade,Health,Want,natural_language,clear,health_practo,validation
+SPOTIFY TXN POS PURCHASE,Entertainment,Want,bank_statement,clear,entertainment_spotify,test
+IRCTC ticket for mandatory office relocation travel,Travel,Need,merchant,clear,travel_irctc,train
+CARD PAYMENT UPGRAD,Education,Investment,bank_statement,clear,education_upgrad,test
+"didn't really need Sony LIV, but went ahead anyway, for the monthly subscription renewal",Entertainment,Want,semantic,clear,entertainment_sonyliv,train
+CARD PAYMENT MAKEMYTRIP FLIGHT,Travel,Want,bank_statement,clear,travel_makemytrip,train
+Apollo Pharmacy medicines,Health,Need,merchant,clear,health_apollo,validation
+splurged on Wow Momo for a Sunday brunch tradition,Food,Want,natural_language,clear,food_wowmomo,test
+Nature's Basket for the monthly household stock-up,Groceries,Need,merchant,clear,groceries_natures_basket,train
+Reliance Digital expense required urgently for daily use,Shopping,Need,natural_language,clear,shopping_reliance_digital,validation
+Cult.fit for a routine health checkup,Health,Need,merchant,clear,health_cult_fit,train
+purchased work formals for the new job,Shopping,Want,natural_language,clear,scenario_shopping_residual,train
+POS IRCTC RAIL TICKET,Travel,Need,bank_statement,clear,travel_irctc,train
+put money into Zerodha for a mutual fund purchase,Misc,Investment,natural_language,clear,misc_zerodha,train
+ordered biryani since the mess food was over for the day,Food,Need,semantic,clear,scenario_food_residual,train
+Swiggy lunch delivered to office,Food,Need,merchant,clear,food_swiggy,test
+transferred money to a friend to split a bill,Misc,Need,semantic,clear,misc_friend_split,train
+"spent on Goibibo more for enjoyment than necessity, to attend a friend's party",Travel,Want,semantic,context_dependent,travel_goibibo,train
+"set money aside for the future via Paytm Money, for a national pension scheme contribution",Misc,Investment,semantic,clear,bills_vodafone,train
+Spencer's to try imported snacks out of curiosity,Groceries,Want,merchant,context_dependent,groceries_spencer,train
+paid semester college tuition fees,Education,Need,natural_language,clear,education_academic_general,train
+Wow Momo for a weekend treat,Food,Want,merchant,context_dependent,food_wowmomo,test
+miscellaneous charge,Misc,Want,short_keyword,ambiguous,scenario_misc_residual,train
+takeaway,Food,Want,short_keyword,ambiguous,scenario_food_residual,train
+bought protein supplements to try out a new diet trend,Health,Want,natural_language,clear,health_protein,validation
+BLUSMART TXN POS PURCHASE,Travel,Want,bank_statement,clear,travel_blusmart,train
+Swiggy for a Sunday brunch tradition,Food,Want,merchant,clear,food_swiggy,test
+VISTARA TXN POS PURCHASE,Travel,Want,bank_statement,clear,bills_vodafone,train
+club entry,Party,Want,short_keyword,ambiguous,party_nightclub,test
+FLIPKART TXN POS PURCHASE,Shopping,Want,bank_statement,clear,shopping_flipkart,train
+splurged on MedPlus to try a new wellness trend,Health,Need,natural_language,context_dependent,health_medplus,train
+Ola for a mandatory office trip,Travel,Need,merchant,clear,travel_ola,train
+UPI/SONYLIV/PAYMENT/REF7121,Entertainment,Want,upi,clear,entertainment_sonyliv,train
+UPI-BARTAB-PUBNIGHT@HDFC,Party,Want,upi,clear,party_local_pub,train
+Vijay Sales during a big sale,Shopping,Want,merchant,clear,bills_vodafone,train
+CARD PAYMENT NIGHTCLUB ENTRY,Party,Want,bank_statement,clear,party_nightclub,test
+paid for Wow Momo to celebrate a promotion on a whim,Food,Want,natural_language,clear,food_wowmomo,test
+Ajio festive sale shopping spree,Shopping,Want,merchant,clear,bills_jio,validation
+JioCinema to watch a new season with the family,Entertainment,Want,merchant,clear,bills_jio,validation
+CARD PAYMENT PAYTM MONEY,Misc,Investment,bank_statement,clear,misc_paytm_money,validation
+had no choice but to pay for Meru Cabs since it was for a mandatory office trip,Travel,Need,semantic,context_dependent,travel_meru,train
+POS MYNTRA DESIGNS,Shopping,Want,bank_statement,clear,shopping_myntra,train
+Lenskart just because I liked the design,Shopping,Want,merchant,clear,shopping_lenskart,train
+Netflix to catch a live concert,Entertainment,Want,merchant,clear,entertainment_netflix,train
+indulged in Amazon to try out a new trend,Shopping,Want,natural_language,clear,shopping_amazon,train
+Flipkart new formal shoes for the office,Shopping,Want,merchant,clear,shopping_flipkart,train
+"spent on MedPlus more for enjoyment than necessity, to try a new wellness trend",Health,Need,semantic,context_dependent,health_medplus,train
+Great Learning required for the current semester,Education,Need,merchant,context_dependent,bills_rent,train
+renewed a streaming subscription mostly out of habit,Entertainment,Want,semantic,clear,scenario_entertainment_residual,train
+splurged on More Supermarket to try imported snacks out of curiosity,Groceries,Want,natural_language,context_dependent,groceries_more_supermarket,train
+CARD PAYMENT VIJAY SALES,Shopping,Want,bank_statement,clear,bills_vodafone,train
+CARD PAYMENT BIGBASKET,Groceries,Need,bank_statement,clear,groceries_bigbasket,test
+invested through upGrad to switch to a new career track,Education,Investment,natural_language,clear,education_upgrad,test
+UPI-ABREWERY-828862@upi,Party,Want,upi,clear,party_brewery,train
+wallet recharge,Misc,Want,natural_language,clear,scenario_misc_residual,train
+Housing Society for monthly maintenance charges,Bills,Need,merchant,clear,bills_housing_society,train
+had no choice but to pay for EatSure since it was during a family emergency at home,Food,Need,semantic,context_dependent,food_eatsure,train
+"booked a local pub for a farewell celebration, just for fun",Party,Want,natural_language,context_dependent,party_local_pub,train
+UPI-LINKEDINLEAR-LINKEDINLEAR@ICICI,Education,Investment,upi,clear,scenario_education_residual,train
+went for DMart for a festive celebration at home,Groceries,Want,natural_language,clear,groceries_dmart,train
+Groww for a systematic transfer plan,Misc,Investment,merchant,clear,misc_groww,train
+UPI-SPENCERS-828386@upi,Groceries,Need,upi,clear,groceries_spencer,train
+Coursera data science specialization,Education,Investment,merchant,clear,education_coursera,train
+bought the medicine the doctor prescribed yesterday,Health,Need,semantic,clear,health_hospital_surgery,train
+More Supermarket to try imported snacks out of curiosity,Groceries,Want,merchant,context_dependent,groceries_more_supermarket,train
+"didn't really need Subway, but went ahead anyway, to try a new outlet everyone was talking about",Food,Want,semantic,context_dependent,food_subway,train
+POS UBER ONLINE,Travel,Want,bank_statement,clear,travel_uber,validation
+CARD PAYMENT GREAT LEARNING,Education,Investment,bank_statement,clear,education_great_learning,validation
+TATA SKY TXN POS PURCHASE,Bills,Need,bank_statement,clear,shopping_general_retail,validation
+UPI-BESTBUS-BESTBUS@AXIS,Travel,Need,upi,clear,travel_best_bus,train
+CARD PAYMENT BEHROUZ BIRYANI,Food,Want,bank_statement,clear,food_behrouz,train
+UPI-ANIGHTCLUB-ANIGHTCLUB@HDFC,Party,Want,upi,clear,party_nightclub,test
+indulged in Spencer's for an elaborate weekend cooking project,Groceries,Want,natural_language,context_dependent,groceries_spencer,train
+UPI-HOUSINGSOCIE-936454@upi,Bills,Need,upi,clear,scenario_bills_residual,train
+went out for an expensive dinner just for fun,Food,Want,natural_language,context_dependent,food_general_dining,train
+POS CULT.FIT PAYMENT,Health,Need,bank_statement,clear,health_cult_fit,train
+treated myself to Zepto to try imported snacks out of curiosity,Groceries,Want,natural_language,context_dependent,groceries_zepto,train
+contributed to Paytm Money for a national pension scheme contribution,Misc,Investment,natural_language,clear,misc_paytm_money,validation
+indulged in JioMart for a festive celebration at home,Groceries,Want,natural_language,clear,bills_jio,validation
+Municipal Water Board expense for the water supply bill,Bills,Need,natural_language,clear,bills_municipal_water,validation
+UPI-TATACLIQ-862650@upi,Shopping,Want,upi,clear,shopping_tata_cliq,train
+basic groceries for the week,Groceries,Need,natural_language,clear,groceries_ration_general,train
+POS BIGBASKET PAYMENT,Groceries,Need,bank_statement,clear,groceries_bigbasket,test
+"could have skipped Myntra, but chose to spend on it, to try out a new trend",Shopping,Want,semantic,clear,shopping_myntra,train
+POS ZEE5 ONLINE,Entertainment,Want,bank_statement,clear,entertainment_zee5,validation
+used Blinkit for basic household supplies,Groceries,Need,natural_language,clear,groceries_blinkit,train
+CARD PAYMENT FORTIS HOSPITAL,Health,Need,bank_statement,clear,health_fortis,train
+paid for Delhi Metro to rush to the hospital,Travel,Need,natural_language,context_dependent,travel_delhi_metro,train
+snacks,Food,Want,short_keyword,ambiguous,scenario_food_residual,train
+paid for Apollo Pharmacy for a routine health checkup,Health,Need,natural_language,clear,health_apollo,validation
+Zepto for an elaborate weekend cooking project,Groceries,Want,merchant,context_dependent,groceries_zepto,train
+POS STAR BAZAAR PAYMENT,Groceries,Need,bank_statement,clear,groceries_star_bazaar,train
+"didn't really need Mumbai Metro, but went ahead anyway, to explore a new city",Travel,Want,semantic,context_dependent,travel_mumbai_metro,train
+paid MSEDCL electricity bill,Bills,Need,natural_language,clear,bills_msedcl,train
+CARD PAYMENT COIN BY ZERODHA,Misc,Investment,bank_statement,clear,misc_zerodha,train
+"spent on Meesho more for enjoyment than necessity, as a birthday gift for myself",Shopping,Want,semantic,context_dependent,shopping_meesho,train
+ordered dessert along with the regular dinner,Food,Want,natural_language,clear,food_general_dining,train
+POS SKILLSHARE ONLINE,Education,Investment,bank_statement,clear,education_skillshare,train
+bought a hobby painting class just for fun,Education,Want,semantic,context_dependent,education_painting_hobby,test
+INOX weekend movie outing,Entertainment,Want,merchant,clear,bills_vodafone,train
+monthly SIP,Misc,Investment,natural_language,clear,scenario_misc_residual,train
+NPS contribution,Misc,Investment,natural_language,clear,misc_nps,train
+ordered food because I had no time to cook after work,Food,Need,natural_language,clear,scenario_food_residual,train
+splurged on Zomato for a movie night at home,Food,Want,natural_language,clear,food_zomato,test
+POS TATA 1MG ONLINE,Health,Need,bank_statement,clear,health_1mg,train
+UPI/KUVERA/PAYMENT/REF4727,Misc,Investment,upi,clear,misc_kuvera,test
+AIRTEL TXN POS PURCHASE,Bills,Need,bank_statement,clear,bills_airtel,train
+POS ET MONEY PAYMENT,Misc,Investment,bank_statement,clear,misc_etmoney,validation
+UPI-APOLLOPHARMACY,Health,Need,upi,clear,health_apollo,validation
+rent,Bills,Need,short_keyword,ambiguous,bills_rent,train
+treated myself to PVR for binge watching over the weekend,Entertainment,Want,natural_language,clear,entertainment_pvr,train
+Vistara for a weekend getaway,Travel,Want,merchant,clear,bills_vodafone,train
+UPI-WOWMOMO-854739@upi,Food,Want,upi,clear,food_wowmomo,test
+spent on Jio for the mobile recharge plan,Bills,Need,natural_language,clear,bills_jio,validation
+CARD PAYMENT SPICEJET,Travel,Need,bank_statement,clear,travel_spicejet,train
+bought tickets for a live stand up comedy show,Entertainment,Want,natural_language,clear,entertainment_standup,validation
+"spent on Spencer's more for enjoyment than necessity, to try imported snacks out of curiosity",Groceries,Want,semantic,context_dependent,groceries_spencer,train
+UPI-BOX8-928529@upi,Food,Want,upi,clear,food_box8,train
+"could have skipped Great Learning, but chose to spend on it, purely for personal enrichment",Education,Want,semantic,context_dependent,education_great_learning,validation
+Flipkart expense because the monsoon damaged the old one,Shopping,Need,natural_language,clear,shopping_flipkart,train
+POS TATA CLIQ PAYMENT,Shopping,Want,bank_statement,clear,shopping_tata_cliq,train
+splurged on Flipkart during a big sale,Shopping,Want,natural_language,clear,shopping_flipkart,train
+UPI-SPOTIFY-726924@upi,Entertainment,Want,upi,clear,entertainment_spotify,test
+MCDONALD'S TXN POS PURCHASE,Food,Need,bank_statement,clear,food_mcdonald,train
+paid for BluSmart to rush to the hospital,Travel,Need,natural_language,context_dependent,travel_blusmart,train
+medical payment,Health,Need,natural_language,ambiguous,health_medical_general,train
+POS IRCTC PAYMENT,Travel,Need,bank_statement,clear,travel_irctc,train
+Nature's Basket premium ingredients for a dinner party,Groceries,Want,merchant,clear,food_general_dining,train
+POS NETMEDS PAYMENT,Health,Need,bank_statement,clear,health_netmeds,test

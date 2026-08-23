@@ -27,3 +27,5 @@ ml-service/classifier/__pycache__/
 ml-service/classifier/*.pyc
 .cache/
 
+# Database backups
+.backup/

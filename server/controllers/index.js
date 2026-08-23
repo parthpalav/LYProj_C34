@@ -24,7 +24,7 @@ import { logger } from '../utils/logger.js';
 import mongoose from 'mongoose';
 import User        from '../models/User.js';
 
-import Transaction from '../models/Transaction.js';
+import Transaction, { VALID_CATEGORIES, VALID_TYPES } from '../models/Transaction.js';
 import FMIHistory  from '../models/FMIHistory.js';
 import Alert       from '../models/Alert.js';
 import Envelope    from '../models/Envelope.js';
@@ -37,16 +37,21 @@ const router = Router();
 // ── Helpers ──────────────────────────────────────────────────
 function normalizeTransaction(tx) {
   return {
-    id:          tx.id,
-    userId:      tx.userId,
-    amount:      tx.amount,
-    category:    tx.category,
-    sentiment:   tx.sentiment,
-    sentimentScore: tx.sentimentScore,
-    tags:        tx.tags || [],
-    description: tx.description,
-    timestamp:   tx.timestamp,
-    isAnomaly:   tx.isAnomaly
+    id:                  tx.id,
+    userId:              tx.userId,
+    amount:              tx.amount,
+    category:            tx.category,
+    type:                tx.type,
+    sentiment:           tx.sentiment,
+    sentimentScore:      tx.sentimentScore ?? 0,
+    confidenceScore:     tx.confidenceScore ?? 0,
+    classificationSource: tx.classificationSource ?? 'unknown',
+    tags:                tx.tags || [],
+    description:         tx.description,
+    timestamp:           tx.timestamp,
+    isAnomaly:           tx.isAnomaly ?? false,
+    createdAt:           tx.createdAt,
+    updatedAt:           tx.updatedAt
   };
 }
 
@@ -657,10 +662,11 @@ router.get('/transactions', async (req, res, next) => {
 
 router.post('/transactions', async (req, res, next) => {
   try {
+    // Always use the authenticated user's ID — never accept userId from body
     const userId = req.user.id;
     const amount = parseFloat(req.body.amount);
-    if (isNaN(amount) || amount <= 0) {
-      return res.status(400).json({ error: 'Transaction amount must be a positive number' });
+    if (isNaN(amount) || !Number.isFinite(amount) || amount <= 0) {
+      return res.status(400).json({ error: 'Transaction amount must be a finite positive number' });
     }
 
     const debitAmount = Math.abs(amount);
@@ -676,44 +682,81 @@ router.post('/transactions', async (req, res, next) => {
     }
 
     // Call sentiment analyzer and ML classifier (graceful fallback if ML is offline)
-    const { sentiment, tags } = analyzeSentiment(req.body.description, new Date());
+    const sentimentResult = analyzeSentiment(req.body.description, new Date());
+    let classificationSource = 'manual';
     let mlData = { category: null, confidence: 0, type: 'Need', confidenceScore: 0 };
-    try {
-      const resp = await fetch(`${ML_SERVICE_URL}/classify`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: req.body.description || '' }),
-        signal: AbortSignal.timeout(3000),
-      });
-      if (resp.ok) {
-        const d = await resp.json();
-        mlData.category = d.category || null;
-        mlData.confidence = typeof d.confidence === 'number' ? d.confidence : (d.confidenceScore || 0);
-        mlData.type = d.type || (d.sentiment === 'positive' ? 'Investment' : (d.sentiment === 'negative' ? 'Want' : 'Need'));
-        mlData.confidenceScore = typeof d.confidenceScore === 'number' ? d.confidenceScore : (d.confidence || 0);
+
+    // Only run ML/fallback classification if the client did NOT provide an explicit category
+    if (!req.body.category) {
+      try {
+        const resp = await fetch(`${ML_SERVICE_URL}/classify`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: req.body.description || '' }),
+          signal: AbortSignal.timeout(3000),
+        });
+        if (resp.ok) {
+          const d = await resp.json();
+          mlData.category = d.category || null;
+          mlData.confidence = typeof d.confidence === 'number' ? d.confidence : (d.confidenceScore || 0);
+          mlData.type = d.type || 'Need';
+          mlData.confidenceScore = typeof d.confidenceScore === 'number' ? d.confidenceScore : (d.confidence || 0);
+          classificationSource = 'ml';
+        }
+      } catch (e) {
+        console.warn('[transactions] ML classify failed, using keyword fallback:', e.message || e);
+        const fallback = classifyLocally(req.body.description || '');
+        mlData.category = fallback.category;
+        mlData.confidence = fallback.confidence;
+        mlData.type = fallback.type;
+        mlData.confidenceScore = fallback.confidenceScore;
+        classificationSource = 'fallback';
       }
-    } catch (e) {
-      console.warn('[transactions] ML classify failed, using keyword fallback:', e.message || e);
-      const fallback = classifyLocally(req.body.description || '');
-      mlData.category = fallback.category;
-      mlData.confidence = fallback.confidence;
-      mlData.type = fallback.type;
-      mlData.confidenceScore = fallback.confidenceScore;
+    }
+
+    // Resolve final category — validate against allowed values
+    let finalCategory = req.body.category || mlData.category || 'Misc';
+    // Normalize casing: capitalize first letter to match enum (e.g. 'food' → 'Food')
+    finalCategory = finalCategory.charAt(0).toUpperCase() + finalCategory.slice(1).toLowerCase();
+    // Special-case multi-word: fix 'misc' → 'Misc', but keep valid values
+    if (!VALID_CATEGORIES.includes(finalCategory)) {
+      // Try exact match before rejecting
+      const exactMatch = VALID_CATEGORIES.find(c => c.toLowerCase() === finalCategory.toLowerCase());
+      finalCategory = exactMatch || 'Misc';
+    }
+
+    // Resolve final type — validate against allowed values
+    let finalType = req.body.type || mlData.type || 'Need';
+    if (!VALID_TYPES.includes(finalType)) {
+      finalType = 'Need';
+    }
+
+    // Resolve final confidenceScore
+    let finalConfidence = 0;
+    if (req.body.confidenceScore !== undefined) {
+      finalConfidence = Number(req.body.confidenceScore);
+      if (!Number.isFinite(finalConfidence) || finalConfidence < 0 || finalConfidence > 1) {
+        finalConfidence = 0;
+      }
+    } else {
+      finalConfidence = mlData.confidenceScore || 0;
     }
 
     let tx;
     try {
       tx = await Transaction.create({
-        id:             `t-${Date.now()}`,
-        userId:         userId,
-        amount:         debitAmount,
-        category:       req.body.category || (mlData.category ? mlData.category.toLowerCase() : 'shopping'),
-        sentiment:      req.body.sentiment || sentiment,
-        type:           req.body.type || mlData.type,
-        confidenceScore: req.body.confidenceScore !== undefined ? Number(req.body.confidenceScore) : (mlData.confidenceScore || 0),
-        tags:           tags,
-        description:    req.body.description || 'manual input',
-        timestamp:      req.body.timestamp ? new Date(req.body.timestamp) : new Date()
+        id:                  `t-${Date.now()}`,
+        userId:              userId,
+        amount:              debitAmount,
+        category:            finalCategory,
+        sentiment:           req.body.sentiment || sentimentResult.sentiment,
+        sentimentScore:      sentimentResult.score || 0,
+        type:                finalType,
+        confidenceScore:     finalConfidence,
+        classificationSource,
+        tags:                sentimentResult.tags || [],
+        description:         req.body.description || 'manual input',
+        timestamp:           req.body.timestamp ? new Date(req.body.timestamp) : new Date()
       });
     } catch (createError) {
       // revert user balance on create failure
@@ -731,10 +774,62 @@ router.post('/transactions', async (req, res, next) => {
 router.put('/transactions/:id', async (req, res, next) => {
   try {
     const userId = req.user.id;
+
+    // Allowlist: only these fields may be modified by the client.
+    // userId, id, createdAt, updatedAt are explicitly blocked.
+    const EDITABLE_FIELDS = ['amount', 'category', 'type', 'description', 'sentiment', 'confidenceScore', 'timestamp', 'tags'];
+    const sanitized = {};
+    for (const field of EDITABLE_FIELDS) {
+      if (req.body[field] !== undefined) {
+        sanitized[field] = req.body[field];
+      }
+    }
+
+    // Validate category if provided
+    if (sanitized.category && !VALID_CATEGORIES.includes(sanitized.category)) {
+      return res.status(400).json({ error: `Invalid category. Must be one of: ${VALID_CATEGORIES.join(', ')}` });
+    }
+
+    // Validate type if provided
+    if (sanitized.type && !VALID_TYPES.includes(sanitized.type)) {
+      return res.status(400).json({ error: `Invalid type. Must be one of: ${VALID_TYPES.join(', ')}` });
+    }
+
+    // Validate amount if provided
+    if (sanitized.amount !== undefined) {
+      const amt = parseFloat(sanitized.amount);
+      if (isNaN(amt) || !Number.isFinite(amt) || amt <= 0) {
+        return res.status(400).json({ error: 'Amount must be a finite positive number' });
+      }
+      sanitized.amount = Math.abs(amt);
+    }
+
+    // Validate confidenceScore if provided
+    if (sanitized.confidenceScore !== undefined) {
+      const cs = Number(sanitized.confidenceScore);
+      if (!Number.isFinite(cs) || cs < 0 || cs > 1) {
+        return res.status(400).json({ error: 'confidenceScore must be between 0 and 1' });
+      }
+      sanitized.confidenceScore = cs;
+    }
+
+    // Validate timestamp if provided
+    if (sanitized.timestamp !== undefined) {
+      const ts = new Date(sanitized.timestamp);
+      if (isNaN(ts.getTime())) {
+        return res.status(400).json({ error: 'Invalid timestamp' });
+      }
+      sanitized.timestamp = ts;
+    }
+
+    if (Object.keys(sanitized).length === 0) {
+      return res.status(400).json({ error: 'No editable fields provided' });
+    }
+
     const updated = await Transaction.findOneAndUpdate(
       { id: req.params.id, userId },
-      req.body,
-      { new: true }
+      { $set: sanitized },
+      { new: true, runValidators: true }
     ).lean();
     if (!updated) return res.status(404).json({ error: 'Transaction not found' });
     res.json(normalizeTransaction(updated));

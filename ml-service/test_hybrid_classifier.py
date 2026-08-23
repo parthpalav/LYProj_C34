@@ -26,7 +26,6 @@ class TestHybridClassifier(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.classifier = HybridClassifier(BASE_DIR)
-        cls.classifier.load_tfidf()
 
     def test_merchant_rules_food(self):
         cases = [
@@ -100,7 +99,7 @@ class TestHybridClassifier(unittest.TestCase):
 
         # Hybrid pipeline should evaluate it with TF-IDF
         res = self.classifier.classify(ambiguous_text)
-        self.assertEqual(res["classificationSource"], "tfidf")
+        self.assertEqual(res["classificationSource"], "tfidf_v2")
         self.assertIn("category", res)
         self.assertIn("confidence", res)
         self.assertIn("all_probs", res)

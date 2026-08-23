@@ -46,9 +46,14 @@ const transactionSchema = new mongoose.Schema(
     isAnomaly: { type: Boolean, default: false },
     classificationSource: {
       type: String,
-      enum: ['ml', 'merchant_rule', 'tfidf', 'fallback', 'manual', 'unknown'],
+      enum: ['ml', 'merchant_rule', 'tfidf', 'tfidf_v2', 'minilm', 'fallback', 'manual', 'unknown'],
       default: 'unknown'
-    }
+    },
+    categorySource: { type: String, default: 'unknown' },
+    typeSource: { type: String, default: 'unknown' },
+    categoryConfidence: { type: Number, default: 0 },
+    typeConfidence: { type: Number, default: 0 },
+    needsReview: { type: Boolean, default: false }
   },
   { timestamps: true, versionKey: false }
 );

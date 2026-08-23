@@ -51,6 +51,7 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
   // ── AI Classifier state ─────────────────────────────────────
   const [aiResult,       setAiResult]       = useState<ClassifyResult | null>(null);
   const [aiLoading,      setAiLoading]      = useState(false);
+  const [typeConfirmed,  setTypeConfirmed]  = useState(true);
   const badgeAnim = useRef(new Animated.Value(0)).current;
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const requestIdRef = useRef(0);
@@ -61,8 +62,12 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
     const text = description.trim();
     if (!text || text.length < 3) {
       setAiResult(null);
+      setTypeConfirmed(true);
       return;
     }
+    // Clear old AI results and reset type confirmation while waiting for debounced query
+    setAiResult(null);
+    setTypeConfirmed(true);
     // Debounce: wait 600 ms after user stops typing
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(async () => {
@@ -94,6 +99,14 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
             else if (result.sentiment === 'negative') setSelectedType('Want');
             else setSelectedType('Need');
           }
+          
+          if (result.needsReview) {
+            setTypeConfirmed(false);
+          } else {
+            setTypeConfirmed(true);
+          }
+        } else {
+          setTypeConfirmed(true);
         }
       } catch {
         if (currentReqId === requestIdRef.current) {
@@ -134,12 +147,21 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
   const handleSelectTypeManually = (type: SpendType) => {
     userOverrodeTypeRef.current = true;
     setSelectedType(type);
+    setTypeConfirmed(true);
   };
 
   const handleLog = async () => {
     if (saving) return;
+    if (aiLoading) {
+      Alert.alert('AI Classifying', 'Please wait for AI classification to complete.');
+      return;
+    }
     if (parsedAmount <= 0) {
       Alert.alert('Invalid Amount', 'Please enter a valid amount greater than 0.');
+      return;
+    }
+    if (!typeConfirmed) {
+      Alert.alert('Confirmation Required', 'Please confirm or select the correct transaction type.');
       return;
     }
     setSaving(true);
@@ -156,13 +178,18 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
 
       // The user's selectedType is the single source of truth from the form
       const newTx = await addTransaction({
-        amount:          parsedAmount,
-        category:        categoryKey,
-        sentiment:       finalSentiment,
-        description:     description.trim() || selectedCategory.label,
-        type:            selectedType,
-        confidenceScore: aiResult?.confidenceScore ?? aiResult?.confidence ?? 0,
-        timestamp:       new Date().toISOString(),
+        amount:              parsedAmount,
+        category:            categoryKey,
+        sentiment:           finalSentiment,
+        description:         description.trim() || selectedCategory.label,
+        type:                selectedType,
+        confidenceScore:     aiResult?.confidenceScore ?? aiResult?.confidence ?? 0,
+        categorySource:      userOverrodeCategoryRef.current ? 'manual' : aiResult?.categorySource,
+        typeSource:          userOverrodeTypeRef.current ? 'manual' : aiResult?.typeSource,
+        categoryConfidence:  userOverrodeCategoryRef.current ? 1.0 : aiResult?.categoryConfidence,
+        typeConfidence:      userOverrodeTypeRef.current ? 1.0 : aiResult?.typeConfidence,
+        needsReview:         aiResult?.needsReview,
+        timestamp:           new Date().toISOString(),
       });
       addToStore(newTx);
       setLogged(true);
@@ -313,6 +340,18 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
               </TouchableOpacity>
             ))}
           </View>
+
+          {/* AI Type Confirmation Banner */}
+          {!typeConfirmed && aiResult && (
+            <View style={styles.aiConfirmationBanner}>
+              <Text style={styles.aiConfirmationText}>
+                ⚠️ AI suggested: <Text style={{ fontWeight: '700' }}>{selectedType}</Text> (Low Confidence)
+              </Text>
+              <TouchableOpacity style={styles.aiConfirmButton} onPress={() => setTypeConfirmed(true)} activeOpacity={0.7}>
+                <Text style={styles.aiConfirmButtonText}>Confirm Suggestion</Text>
+              </TouchableOpacity>
+            </View>
+          )}
 
           {/* Log Button */}
           <TouchableOpacity
@@ -787,5 +826,34 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#1A202C',
     flex: 1,
+  },
+  aiConfirmationBanner: {
+    backgroundColor: '#FFFBEB',
+    borderColor: '#FCD34D',
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 12,
+    marginTop: 8,
+    marginBottom: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 8,
+  },
+  aiConfirmationText: {
+    fontSize: 12,
+    color: '#92400E',
+    flex: 1,
+  },
+  aiConfirmButton: {
+    backgroundColor: '#F59E0B',
+    borderRadius: 6,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+  },
+  aiConfirmButtonText: {
+    color: '#FFFFFF',
+    fontSize: 11,
+    fontWeight: '700',
   },
 });

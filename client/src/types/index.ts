@@ -46,6 +46,11 @@ export interface Transaction {
   description?:   string;
   type?:          'Need' | 'Want' | 'Investment';
   confidenceScore?: number;
+  categorySource?:   string;
+  typeSource?:       string;
+  categoryConfidence?: number;
+  typeConfidence?:   number;
+  needsReview?:      boolean;
 }
 
 export interface FMIRecord {

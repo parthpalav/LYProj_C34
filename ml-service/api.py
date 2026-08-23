@@ -286,46 +286,14 @@ def classify_expense():
             "verdict": "No input provided."
         }), 400
 
-    if MODEL_BACKEND == 'minilm':
-        try:
-            from classifier.minilm_inference import predict_transaction
-            result = predict_transaction(raw)
-            category = result["category"]
-            confidence = result["confidence"]
-            all_probs = {}
-            flagged = result["flagged_for_review"]
-            sentiment = _CATEGORY_SENTIMENT.get(category, "neutral")
-            meta = _SENTIMENT_META[sentiment]
-            return jsonify({
-                "category":             category,
-                "type":                 _CATEGORY_TYPE.get(category, "Need"),
-                "confidence":           confidence,
-                "confidenceScore":      confidence,
-                "all_probs":            all_probs,
-                "classificationSource": "minilm",
-                "needsReview":          flagged,
-                "flagged_for_review":   flagged,
-                "sentiment":            sentiment,
-                "sentiment_emoji":      meta["emoji"],
-                "sentiment_label":      meta["label"],
-                "verdict":              meta["verdict"],
-            })
-        except Exception as e:
-            log.exception('MiniLM inference failed: %s', e)
-            return jsonify({"error": "Inference failed"}), 500
-    else:
-        # Unified Hybrid Pipeline (Merchant Rules -> TF-IDF + LogReg Fallback)
-        result = _hybrid_classifier.classify(raw)
-        return jsonify(result)
+    # Unified Hybrid Pipeline (Merchant Rules -> TF-IDF Category + MiniLM Type)
+    result = _hybrid_classifier.classify(raw)
+    return jsonify(result)
 
 
 # ─── Run ──────────────────────────────────────────────────────────────────────
 if __name__ == '__main__':
-    if MODEL_BACKEND == 'legacy':
-        _hybrid_classifier.load_tfidf()   # pre-load on startup
-    else:
-        from classifier.minilm_inference import classifier_instance
-        classifier_instance.load() # pre-load MiniLM on startup
-        
+    _hybrid_classifier.load_category()   # pre-load on startup
+    _hybrid_classifier.load_type()       # pre-load on startup
     app.run(host='0.0.0.0', port=5001, debug=True)
 

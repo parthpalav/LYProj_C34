@@ -46,6 +46,11 @@ function normalizeTransaction(tx) {
     sentimentScore:      tx.sentimentScore ?? 0,
     confidenceScore:     tx.confidenceScore ?? 0,
     classificationSource: tx.classificationSource ?? 'unknown',
+    categorySource:      tx.categorySource ?? 'unknown',
+    typeSource:          tx.typeSource ?? 'unknown',
+    categoryConfidence:  tx.categoryConfidence ?? 0,
+    typeConfidence:      tx.typeConfidence ?? 0,
+    needsReview:         tx.needsReview ?? false,
     tags:                tx.tags || [],
     description:         tx.description,
     timestamp:           tx.timestamp,
@@ -684,7 +689,17 @@ router.post('/transactions', async (req, res, next) => {
     // Call sentiment analyzer and ML classifier (graceful fallback if ML is offline)
     const sentimentResult = analyzeSentiment(req.body.description, new Date());
     let classificationSource = req.body.classificationSource || 'manual';
-    let mlData = { category: null, confidence: 0, type: 'Need', confidenceScore: 0 };
+    let mlData = {
+      category: null,
+      confidence: 0,
+      type: 'Need',
+      confidenceScore: 0,
+      categorySource: 'unknown',
+      typeSource: 'unknown',
+      categoryConfidence: 0,
+      typeConfidence: 0,
+      needsReview: false
+    };
 
     // Only run ML/fallback classification if the client did NOT provide an explicit category
     if (!req.body.category) {
@@ -702,6 +717,11 @@ router.post('/transactions', async (req, res, next) => {
           mlData.type = d.type || 'Need';
           mlData.confidenceScore = typeof d.confidenceScore === 'number' ? d.confidenceScore : (d.confidence || 0);
           classificationSource = d.classificationSource || 'ml';
+          mlData.categorySource = d.categorySource || d.classificationSource || 'ml';
+          mlData.typeSource = d.typeSource || d.classificationSource || 'ml';
+          mlData.categoryConfidence = typeof d.categoryConfidence === 'number' ? d.categoryConfidence : mlData.confidence;
+          mlData.typeConfidence = typeof d.typeConfidence === 'number' ? d.typeConfidence : mlData.confidence;
+          mlData.needsReview = typeof d.needsReview === 'boolean' ? d.needsReview : false;
         }
       } catch (e) {
         console.warn('[transactions] ML classify failed, using keyword fallback:', e.message || e);
@@ -711,6 +731,11 @@ router.post('/transactions', async (req, res, next) => {
         mlData.type = fallback.type;
         mlData.confidenceScore = fallback.confidenceScore;
         classificationSource = 'fallback';
+        mlData.categorySource = 'fallback';
+        mlData.typeSource = 'fallback';
+        mlData.categoryConfidence = fallback.categoryConfidence;
+        mlData.typeConfidence = fallback.typeConfidence;
+        mlData.needsReview = fallback.needsReview;
       }
     }
 
@@ -742,6 +767,13 @@ router.post('/transactions', async (req, res, next) => {
       finalConfidence = mlData.confidenceScore || 0;
     }
 
+    // Map source and confidence metadata
+    let categorySource = req.body.categorySource || (req.body.category ? 'manual' : mlData.categorySource || 'unknown');
+    let typeSource = req.body.typeSource || (req.body.type ? 'manual' : mlData.typeSource || 'unknown');
+    let categoryConfidence = req.body.categoryConfidence !== undefined ? Number(req.body.categoryConfidence) : (req.body.category ? 1.0 : mlData.categoryConfidence || 0);
+    let typeConfidence = req.body.typeConfidence !== undefined ? Number(req.body.typeConfidence) : (req.body.type ? 1.0 : mlData.typeConfidence || 0);
+    let needsReview = req.body.needsReview !== undefined ? (req.body.needsReview === true) : (req.body.category && req.body.type ? false : mlData.needsReview || false);
+
     let tx;
     try {
       tx = await Transaction.create({
@@ -754,6 +786,11 @@ router.post('/transactions', async (req, res, next) => {
         type:                finalType,
         confidenceScore:     finalConfidence,
         classificationSource,
+        categorySource,
+        typeSource,
+        categoryConfidence,
+        typeConfidence,
+        needsReview,
         tags:                sentimentResult.tags || [],
         description:         req.body.description || 'manual input',
         timestamp:           req.body.timestamp ? new Date(req.body.timestamp) : new Date()
@@ -777,7 +814,11 @@ router.put('/transactions/:id', async (req, res, next) => {
 
     // Allowlist: only these fields may be modified by the client.
     // userId, id, createdAt, updatedAt are explicitly blocked.
-    const EDITABLE_FIELDS = ['amount', 'category', 'type', 'description', 'sentiment', 'confidenceScore', 'timestamp', 'tags'];
+    const EDITABLE_FIELDS = [
+      'amount', 'category', 'type', 'description', 'sentiment', 'confidenceScore', 
+      'timestamp', 'tags', 'categorySource', 'typeSource', 'categoryConfidence', 
+      'typeConfidence', 'needsReview'
+    ];
     const sanitized = {};
     for (const field of EDITABLE_FIELDS) {
       if (req.body[field] !== undefined) {
@@ -793,6 +834,19 @@ router.put('/transactions/:id', async (req, res, next) => {
     // Validate type if provided
     if (sanitized.type && !VALID_TYPES.includes(sanitized.type)) {
       return res.status(400).json({ error: `Invalid type. Must be one of: ${VALID_TYPES.join(', ')}` });
+    }
+
+    // Auto-set sources if fields are updated manually
+    if (sanitized.category && !sanitized.categorySource) {
+      sanitized.categorySource = 'manual';
+      sanitized.categoryConfidence = 1.0;
+    }
+    if (sanitized.type && !sanitized.typeSource) {
+      sanitized.typeSource = 'manual';
+      sanitized.typeConfidence = 1.0;
+    }
+    if ((sanitized.category || sanitized.type) && sanitized.needsReview === undefined) {
+      sanitized.needsReview = false;
     }
 
     // Validate amount if provided
@@ -1492,8 +1546,12 @@ function classifyLocally(rawText) {
     type,
     confidence:           Math.round(confidence * 100) / 100,
     confidenceScore:      Math.round(confidence * 100) / 100,
+    categoryConfidence:   Math.round(confidence * 100) / 100,
+    typeConfidence:       Math.round(confidence * 100) / 100,
     all_probs:            { [bestCategory]: Math.round(confidence * 100) / 100 },
     classificationSource: 'fallback',
+    categorySource:      'fallback',
+    typeSource:          'fallback',
     needsReview,
     flagged_for_review:   needsReview,
     sentiment,

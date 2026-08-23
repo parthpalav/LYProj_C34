@@ -15,6 +15,11 @@ export interface NewTransaction {
   description?:    string;
   type?:           'Need' | 'Want' | 'Investment';
   confidenceScore?: number;
+  categorySource?:   string;
+  typeSource?:       string;
+  categoryConfidence?: number;
+  typeConfidence?:   number;
+  needsReview?:      boolean;
   timestamp?:      string;
 }
 
@@ -402,6 +407,11 @@ export interface ClassifyResult {
   offline?:         boolean;
   type?:            'Need' | 'Want' | 'Investment';
   confidenceScore?: number;
+  categorySource?:   string;
+  typeSource?:       string;
+  categoryConfidence?: number;
+  typeConfidence?:   number;
+  needsReview?:      boolean;
 }
 
 export async function classifyExpense(text: string): Promise<ClassifyResult> {

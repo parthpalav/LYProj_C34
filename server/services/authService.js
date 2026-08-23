@@ -47,7 +47,6 @@ export function stripUser(user) {
     incomeType: user.incomeType || 'salaried',
     retirementCorpusGoal: user.retirementCorpusGoal || 0,
     currentBalance: user.currentBalance || 0,
-    fixedObligations: user.fixedObligations || [],
     goals: user.goals || [],
     onboardingComplete: isComplete,
     onboardingCompleted: isComplete

@@ -32,10 +32,6 @@ export function OnboardingScreen(): React.ReactElement {
   const [retirementCorpusGoal, setRetirementCorpusGoal] = useState(user?.retirementCorpusGoal ? String(user.retirementCorpusGoal) : '');
   const [currentBalance, setCurrentBalance] = useState(user?.currentBalance ? String(user.currentBalance) : '');
   const [incomeType, setIncomeType] = useState(user?.incomeType || 'salaried');
-  const [rent, setRent] = useState('');
-  const [emi, setEmi] = useState('');
-  const [bills, setBills] = useState('');
-  const [family, setFamily] = useState('');
 
   const [focusedField, setFocusedField] = useState<string | null>(null);
 
@@ -43,13 +39,6 @@ export function OnboardingScreen(): React.ReactElement {
     if (submitting) return;
     setSubmitting(true);
     try {
-      const fixedObligations = [
-        { label: 'Rent', amount: Number(rent || 0) },
-        { label: 'EMI', amount: Number(emi || 0) },
-        { label: 'Bills', amount: Number(bills || 0) },
-        { label: 'Family', amount: Number(family || 0) },
-      ].filter((o) => o.amount > 0);
-
       await completeOnboarding({
         age: Number(age) || 25,
         income: Number(income) || 0,
@@ -57,8 +46,7 @@ export function OnboardingScreen(): React.ReactElement {
         incomeType,
         retirementAge: Number(retirementAge) || 60,
         retirementCorpusGoal: Number(retirementCorpusGoal) || 0,
-        currentBalance: Number(currentBalance) || 0,
-        fixedObligations
+        currentBalance: Number(currentBalance) || 0
       });
     } catch (error) {
       console.error('Error submitting onboarding:', error);
@@ -190,72 +178,6 @@ export function OnboardingScreen(): React.ReactElement {
                 onFocus={() => setFocusedField('corpus')}
                 onBlur={() => setFocusedField(null)}
               />
-            </View>
-          </View>
-
-          {/* Section 3: Monthly Fixed Obligations */}
-          <View style={styles.card}>
-            <Text style={styles.sectionHeader}>Monthly Fixed Obligations</Text>
-            <Text style={styles.sectionSub}>Used to calculate your true disposable income and risk coverage.</Text>
-
-            <View style={styles.row}>
-              <View style={[styles.inputGroup, { flex: 1, marginRight: 8 }]}>
-                <Text style={styles.label}>Rent (₹)</Text>
-                <TextInput
-                  style={[styles.input, focusedField === 'rent' && styles.inputFocused]}
-                  placeholder="e.g. 20000"
-                  placeholderTextColor="#9CA3AF"
-                  keyboardType="number-pad"
-                  value={rent}
-                  onChangeText={setRent}
-                  onFocus={() => setFocusedField('rent')}
-                  onBlur={() => setFocusedField(null)}
-                />
-              </View>
-
-              <View style={[styles.inputGroup, { flex: 1, marginLeft: 8 }]}>
-                <Text style={styles.label}>Loans / EMI (₹)</Text>
-                <TextInput
-                  style={[styles.input, focusedField === 'emi' && styles.inputFocused]}
-                  placeholder="e.g. 12000"
-                  placeholderTextColor="#9CA3AF"
-                  keyboardType="number-pad"
-                  value={emi}
-                  onChangeText={setEmi}
-                  onFocus={() => setFocusedField('emi')}
-                  onBlur={() => setFocusedField(null)}
-                />
-              </View>
-            </View>
-
-            <View style={styles.row}>
-              <View style={[styles.inputGroup, { flex: 1, marginRight: 8 }]}>
-                <Text style={styles.label}>Utility Bills (₹)</Text>
-                <TextInput
-                  style={[styles.input, focusedField === 'bills' && styles.inputFocused]}
-                  placeholder="e.g. 4000"
-                  placeholderTextColor="#9CA3AF"
-                  keyboardType="number-pad"
-                  value={bills}
-                  onChangeText={setBills}
-                  onFocus={() => setFocusedField('bills')}
-                  onBlur={() => setFocusedField(null)}
-                />
-              </View>
-
-              <View style={[styles.inputGroup, { flex: 1, marginLeft: 8 }]}>
-                <Text style={styles.label}>Family Support (₹)</Text>
-                <TextInput
-                  style={[styles.input, focusedField === 'family' && styles.inputFocused]}
-                  placeholder="e.g. 5000"
-                  placeholderTextColor="#9CA3AF"
-                  keyboardType="number-pad"
-                  value={family}
-                  onChangeText={setFamily}
-                  onFocus={() => setFocusedField('family')}
-                  onBlur={() => setFocusedField(null)}
-                />
-              </View>
             </View>
           </View>
 

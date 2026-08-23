@@ -418,3 +418,25 @@ export async function classifyExpense(text: string): Promise<ClassifyResult> {
   const { data } = await api.post('/api/classify', { text });
   return data;
 }
+
+// ── Liabilities ───────────────────────────────────────────────
+
+export async function getLiabilities(): Promise<any[]> {
+  const { data } = await api.get('/api/liabilities');
+  return data.data;
+}
+
+export async function createLiability(payload: any): Promise<any> {
+  const { data } = await api.post('/api/liabilities', payload);
+  return data.data;
+}
+
+export async function updateLiability(id: string, payload: any): Promise<any> {
+  const { data } = await api.put(`/api/liabilities/${id}`, payload);
+  return data.data;
+}
+
+export async function deleteLiability(id: string): Promise<any> {
+  const { data } = await api.delete(`/api/liabilities/${id}`);
+  return data;
+}

@@ -189,11 +189,6 @@ export interface WeeklyReport {
   patterns:       BehaviorPattern[];
 }
 
-export interface FixedObligation {
-  label:  string;
-  amount: number;
-}
-
 export interface User {
   id:                   string;
   _id?:                 string;
@@ -208,7 +203,6 @@ export interface User {
   incomeType?:          string;
   retirementCorpusGoal?: number;
   currentBalance?:      number;
-  fixedObligations?:    FixedObligation[];
   goals?:               string[];
   onboardingComplete?:  boolean;
   onboardingCompleted?: boolean;

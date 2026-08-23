@@ -4,6 +4,7 @@ import 'dotenv/config';
 
 import routes from './routes/index.js';
 import { connectDB } from './config/db.js';
+import { startScheduler } from './services/LiabilityScheduler.js';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -24,6 +25,7 @@ app.use('/api', routes);
 async function startServer() {
   try {
     await connectDB();
+    startScheduler();
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });

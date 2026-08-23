@@ -371,7 +371,6 @@ router.post('/user/onboarding', async (req, res, next) => {
     if (payload.retirementAge !== undefined) updateFields.retirementAge = Number(payload.retirementAge);
     if (payload.retirementCorpusGoal !== undefined) updateFields.retirementCorpusGoal = Number(payload.retirementCorpusGoal);
     if (payload.currentBalance !== undefined) updateFields.currentBalance = Number(payload.currentBalance);
-    if (Array.isArray(payload.fixedObligations)) updateFields.fixedObligations = payload.fixedObligations;
     if (payload.dateOfBirth) updateFields.dateOfBirth = new Date(payload.dateOfBirth);
 
     const updated = await User.findOneAndUpdate(
@@ -423,7 +422,6 @@ router.put('/user/profile', async (req, res, next) => {
     if (payload.retirementAge !== undefined) updateFields.retirementAge = Number(payload.retirementAge);
     if (payload.retirementCorpusGoal !== undefined) updateFields.retirementCorpusGoal = Number(payload.retirementCorpusGoal);
     if (payload.currentBalance !== undefined) updateFields.currentBalance = Number(payload.currentBalance);
-    if (Array.isArray(payload.fixedObligations)) updateFields.fixedObligations = payload.fixedObligations;
     if (payload.dateOfBirth) updateFields.dateOfBirth = new Date(payload.dateOfBirth);
 
     const updated = await User.findOneAndUpdate(

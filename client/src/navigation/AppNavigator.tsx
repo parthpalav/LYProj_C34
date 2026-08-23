@@ -8,6 +8,7 @@ import { DashboardScreen } from '../screens/DashboardScreen';
 import { EnvelopesScreen } from '../screens/EnvelopesScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
 import { TransactionsScreen } from '../screens/TransactionsScreen';
+import { LiabilitiesScreen } from '../screens/LiabilitiesScreen';
 
 export type RootTabParamList = {
   Envelopes: undefined;
@@ -15,6 +16,7 @@ export type RootTabParamList = {
   Dashboard: undefined;
   Chat: undefined;
   Profile: undefined;
+  Liabilities: undefined;
 };
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
@@ -23,6 +25,7 @@ function tabIconName(routeName: keyof RootTabParamList, focused: boolean): React
   if (routeName === 'Envelopes') return focused ? 'wallet' : 'wallet-outline';
   if (routeName === 'Transactions') return focused ? 'swap-horizontal' : 'swap-horizontal-outline';
   if (routeName === 'Dashboard') return focused ? 'home' : 'home-outline';
+  if (routeName === 'Liabilities') return focused ? 'calendar' : 'calendar-outline';
   if (routeName === 'Chat') return focused ? 'sparkles' : 'sparkles-outline';
   return focused ? 'person-circle' : 'person-circle-outline';
 }
@@ -71,6 +74,7 @@ export function AppNavigator(): React.ReactElement {
           tabBarItemStyle: styles.homeItem,
         }}
       />
+      <Tab.Screen name="Liabilities" component={LiabilitiesScreen} />
       <Tab.Screen name="Chat" component={ChatScreen} options={{ title: 'AI' }} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>

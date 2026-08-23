@@ -1,13 +1,7 @@
 import mongoose from 'mongoose';
 import bcryptjs from 'bcryptjs';
 
-const obligationSchema = new mongoose.Schema(
-  {
-    label: { type: String, required: true },
-    amount: { type: Number, required: true }
-  },
-  { _id: false }
-);
+
 
 const userSchema = new mongoose.Schema(
   {
@@ -27,7 +21,6 @@ const userSchema = new mongoose.Schema(
     incomeType: { type: String, default: 'salaried' },
     retirementCorpusGoal: { type: Number, default: 0 },
     currentBalance: { type: Number, default: 0 },
-    fixedObligations: { type: [obligationSchema], default: [] },
     goals: { type: [String], default: [] },
     onboardingComplete: { type: Boolean, default: false },
     onboardingCompleted: { type: Boolean, default: false }

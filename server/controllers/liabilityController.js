@@ -1,5 +1,6 @@
 import crypto from 'crypto';
 import Liability from '../models/Liability.js';
+import Transaction from '../models/Transaction.js';
 import { logger } from '../utils/logger.js';
 
 function userFilter(userId) {
@@ -129,6 +130,133 @@ export const deleteLiability = async (req, res, next) => {
     await liability.save();
 
     res.json({ success: true, message: 'Liability deleted' });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getLiabilitiesPaymentsSummary = async (req, res, next) => {
+  try {
+    const userId = req.user.id || req.user._id;
+    const summaries = await Transaction.aggregate([
+      {
+        $match: {
+          userId: String(userId),
+          liabilityId: { $exists: true, $ne: null }
+        }
+      },
+      { $sort: { timestamp: -1 } },
+      {
+        $group: {
+          _id: '$liabilityId',
+          paymentCount: { $sum: 1 },
+          totalPaid: { $sum: '$amount' },
+          lastPaymentAmount: { $first: '$amount' },
+          lastPaymentDate: { $first: '$timestamp' }
+        }
+      }
+    ]);
+
+    const summaryMap = {};
+    for (const s of summaries) {
+      if (s._id) {
+        summaryMap[s._id] = {
+          paymentCount: s.paymentCount,
+          totalPaid: s.totalPaid,
+          lastPaymentAmount: s.lastPaymentAmount,
+          lastPaymentDate: s.lastPaymentDate
+        };
+      }
+    }
+
+    res.json({ success: true, data: summaryMap });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getLiabilityTransactions = async (req, res, next) => {
+  try {
+    const userId = req.user.id || req.user._id;
+    const { id } = req.params;
+
+    // Verify liability belongs to the authenticated user (including soft-deleted)
+    const liability = await Liability.findOne({ id, ...userFilter(userId) });
+    if (!liability) {
+      return res.status(404).json({ success: false, message: 'Liability not found' });
+    }
+
+    const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit, 10) || 20));
+    const skip = (page - 1) * limit;
+
+    const [transactions, totalCount, summaryAgg] = await Promise.all([
+      Transaction.find({ userId: String(userId), liabilityId: id })
+        .sort({ timestamp: -1 })
+        .skip(skip)
+        .limit(limit)
+        .lean(),
+      Transaction.countDocuments({ userId: String(userId), liabilityId: id }),
+      Transaction.aggregate([
+        { $match: { userId: String(userId), liabilityId: id } },
+        { $sort: { timestamp: -1 } },
+        {
+          $group: {
+            _id: null,
+            totalPaid: { $sum: '$amount' },
+            paymentCount: { $sum: 1 },
+            lastPaymentAmount: { $first: '$amount' },
+            lastPaymentDate: { $first: '$timestamp' }
+          }
+        }
+      ])
+    ]);
+
+    const summary = summaryAgg.length > 0 ? {
+      totalPaid: summaryAgg[0].totalPaid,
+      paymentCount: summaryAgg[0].paymentCount,
+      lastPaymentAmount: summaryAgg[0].lastPaymentAmount,
+      lastPaymentDate: summaryAgg[0].lastPaymentDate
+    } : {
+      totalPaid: 0,
+      paymentCount: 0,
+      lastPaymentAmount: null,
+      lastPaymentDate: null
+    };
+
+    res.json({
+      success: true,
+      data: {
+        liability: {
+          id: liability.id,
+          name: liability.name,
+          amount: liability.amount,
+          category: liability.category,
+          type: liability.type,
+          frequency: liability.frequency,
+          autoDeduct: liability.autoDeduct,
+          status: liability.status
+        },
+        transactions: transactions.map(tx => ({
+          id: tx.id,
+          amount: tx.amount,
+          category: tx.category,
+          type: tx.type,
+          description: tx.description,
+          timestamp: tx.timestamp,
+          classificationSource: tx.classificationSource,
+          liabilityId: tx.liabilityId,
+          scheduledFor: tx.scheduledFor
+        })),
+        summary,
+        pagination: {
+          page,
+          limit,
+          total: totalCount,
+          totalPages: Math.ceil(totalCount / limit)
+        }
+      }
+    });
   } catch (error) {
     next(error);
   }

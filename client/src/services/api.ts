@@ -5,7 +5,8 @@ import { secureStorage } from '../utils/secureStorage';
 import {
   AlertItem, BehaviorPattern, ChatMessage, DashboardData, EnvelopeData,
   FISData, FMIRecord, FMIResponse, Goal, IncomeFlowData, IncomeRecord,
-  Transaction, WeeklyReport, User
+  Transaction, WeeklyReport, User, Liability, LiabilityPaymentSummary,
+  LiabilityPaymentHistoryResponse
 } from '../types';
 
 export interface NewTransaction {
@@ -421,22 +422,38 @@ export async function classifyExpense(text: string): Promise<ClassifyResult> {
 
 // ── Liabilities ───────────────────────────────────────────────
 
-export async function getLiabilities(): Promise<any[]> {
+export async function getLiabilities(): Promise<Liability[]> {
   const { data } = await api.get('/api/liabilities');
   return data.data;
 }
 
-export async function createLiability(payload: any): Promise<any> {
+export async function getLiabilitiesPaymentsSummary(): Promise<Record<string, LiabilityPaymentSummary>> {
+  const { data } = await api.get('/api/liabilities/payments-summary');
+  return data.data;
+}
+
+export async function getLiabilityTransactions(
+  id: string,
+  page: number = 1,
+  limit: number = 20
+): Promise<LiabilityPaymentHistoryResponse> {
+  const { data } = await api.get(`/api/liabilities/${id}/transactions`, {
+    params: { page, limit }
+  });
+  return data.data;
+}
+
+export async function createLiability(payload: Partial<Liability>): Promise<Liability> {
   const { data } = await api.post('/api/liabilities', payload);
   return data.data;
 }
 
-export async function updateLiability(id: string, payload: any): Promise<any> {
+export async function updateLiability(id: string, payload: Partial<Liability>): Promise<Liability> {
   const { data } = await api.put(`/api/liabilities/${id}`, payload);
   return data.data;
 }
 
-export async function deleteLiability(id: string): Promise<any> {
+export async function deleteLiability(id: string): Promise<{ success: boolean; message: string }> {
   const { data } = await api.delete(`/api/liabilities/${id}`);
   return data;
 }

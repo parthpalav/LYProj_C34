@@ -55,6 +55,8 @@ function normalizeTransaction(tx) {
     description:         tx.description,
     timestamp:           tx.timestamp,
     isAnomaly:           tx.isAnomaly ?? false,
+    liabilityId:         tx.liabilityId,
+    scheduledFor:        tx.scheduledFor,
     createdAt:           tx.createdAt,
     updatedAt:           tx.updatedAt
   };

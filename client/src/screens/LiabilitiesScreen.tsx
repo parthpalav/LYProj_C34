@@ -1,14 +1,16 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Alert, TextInput, Switch, KeyboardAvoidingView, Platform, Modal } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Alert, TextInput, Switch, KeyboardAvoidingView, Platform, Modal, FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { getLiabilities, createLiability, updateLiability, deleteLiability } from '../services/api';
+import { getLiabilities, createLiability, updateLiability, deleteLiability, getLiabilitiesPaymentsSummary, getLiabilityTransactions } from '../services/api';
+import { Liability, LiabilityPaymentSummary, LiabilityPaymentHistoryResponse, Transaction } from '../types';
 
 const VALID_CATEGORIES = ['Food', 'Travel', 'Entertainment', 'Shopping', 'Bills', 'Groceries', 'Health', 'Party', 'Education', 'Misc'];
-const VALID_TYPES = ['Need', 'Want', 'Investment'];
+const VALID_TYPES: ('Need' | 'Want' | 'Investment')[] = ['Need', 'Want', 'Investment'];
 const FREQUENCIES = ['daily', 'weekly', 'monthly', 'yearly'];
 
 export function LiabilitiesScreen() {
-  const [liabilities, setLiabilities] = useState<any[]>([]);
+  const [liabilities, setLiabilities] = useState<Liability[]>([]);
+  const [paymentSummaries, setPaymentSummaries] = useState<Record<string, LiabilityPaymentSummary>>({});
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -17,19 +19,32 @@ export function LiabilitiesScreen() {
   const [name, setName] = useState('');
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState('Bills');
-  const [type, setType] = useState('Need');
+  const [type, setType] = useState<'Need' | 'Want' | 'Investment'>('Need');
   const [autoDeduct, setAutoDeduct] = useState(false);
-  const [frequency, setFrequency] = useState('monthly');
+  const [frequency, setFrequency] = useState<'daily' | 'weekly' | 'monthly' | 'yearly'>('monthly');
   const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
   const [dayOfWeek, setDayOfWeek] = useState('0');
   const [dayOfMonth, setDayOfMonth] = useState('1');
   const [monthOfYear, setMonthOfYear] = useState('1');
 
+  // Payment History Modal State
+  const [historyModalVisible, setHistoryModalVisible] = useState(false);
+  const [selectedLiabilityForHistory, setSelectedLiabilityForHistory] = useState<Liability | null>(null);
+  const [historyData, setHistoryData] = useState<LiabilityPaymentHistoryResponse | null>(null);
+  const [historyLoading, setHistoryLoading] = useState(false);
+  const [historyError, setHistoryError] = useState<string | null>(null);
+  const [historyPage, setHistoryPage] = useState(1);
+  const [loadingMore, setLoadingMore] = useState(false);
+
   const fetchData = async () => {
     try {
       setLoading(true);
-      const data = await getLiabilities();
-      setLiabilities(data);
+      const [liabilitiesData, summariesData] = await Promise.all([
+        getLiabilities(),
+        getLiabilitiesPaymentsSummary().catch(() => ({}))
+      ]);
+      setLiabilities(liabilitiesData);
+      setPaymentSummaries(summariesData || {});
     } catch (e) {
       console.error(e);
       Alert.alert('Error', 'Failed to fetch liabilities');
@@ -57,7 +72,7 @@ export function LiabilitiesScreen() {
     setModalVisible(true);
   };
 
-  const openEditModal = (liability: any) => {
+  const openEditModal = (liability: Liability) => {
     setEditingId(liability.id);
     setName(liability.name);
     setAmount(String(liability.amount));
@@ -65,7 +80,7 @@ export function LiabilitiesScreen() {
     setType(liability.type);
     setAutoDeduct(liability.autoDeduct);
     setFrequency(liability.frequency);
-    setStartDate(liability.startDate.split('T')[0]);
+    setStartDate(liability.startDate ? liability.startDate.split('T')[0] : new Date().toISOString().split('T')[0]);
     setDayOfWeek(String(liability.dayOfWeek || 0));
     setDayOfMonth(String(liability.dayOfMonth || 1));
     setMonthOfYear(String(liability.monthOfYear || 1));
@@ -78,7 +93,7 @@ export function LiabilitiesScreen() {
       return;
     }
 
-    const payload: any = {
+    const payload: Partial<Liability> = {
       name,
       amount: Number(amount),
       category,
@@ -129,6 +144,54 @@ export function LiabilitiesScreen() {
   };
 
   // -------------------------------------------------------------
+  // History Modal Logic
+  // -------------------------------------------------------------
+
+  const openHistoryModal = async (liability: Liability) => {
+    setSelectedLiabilityForHistory(liability);
+    setHistoryModalVisible(true);
+    setHistoryPage(1);
+    setHistoryData(null);
+    setHistoryError(null);
+    loadHistory(liability.id, 1);
+  };
+
+  const loadHistory = async (id: string, page: number = 1) => {
+    try {
+      if (page === 1) {
+        setHistoryLoading(true);
+      } else {
+        setLoadingMore(true);
+      }
+      setHistoryError(null);
+
+      const res = await getLiabilityTransactions(id, page, 20);
+      if (page === 1) {
+        setHistoryData(res);
+      } else {
+        setHistoryData(prev => prev ? {
+          ...res,
+          transactions: [...prev.transactions, ...res.transactions]
+        } : res);
+      }
+      setHistoryPage(page);
+    } catch (e: any) {
+      console.error('Error fetching liability history:', e);
+      setHistoryError(e?.response?.data?.message || 'Failed to load payment history');
+    } finally {
+      setHistoryLoading(false);
+      setLoadingMore(false);
+    }
+  };
+
+  const loadMoreHistory = () => {
+    if (!selectedLiabilityForHistory || !historyData || loadingMore) return;
+    if (historyData.pagination.page < historyData.pagination.totalPages) {
+      loadHistory(selectedLiabilityForHistory.id, historyPage + 1);
+    }
+  };
+
+  // -------------------------------------------------------------
   // Derivations for the Overview
   // -------------------------------------------------------------
 
@@ -153,7 +216,7 @@ export function LiabilitiesScreen() {
   const autoDeductLiabilities = useMemo(() => {
     return activeLiabilities
       .filter(l => l.autoDeduct && l.nextDueDate)
-      .sort((a, b) => new Date(a.nextDueDate).getTime() - new Date(b.nextDueDate).getTime());
+      .sort((a, b) => new Date(a.nextDueDate!).getTime() - new Date(b.nextDueDate!).getTime());
   }, [activeLiabilities]);
 
   const nextAutoDeduct = autoDeductLiabilities.length > 0 ? autoDeductLiabilities[0] : null;
@@ -231,7 +294,7 @@ export function LiabilitiesScreen() {
                 </View>
                 <View style={{ alignItems: 'flex-end' }}>
                   <Text style={styles.nextDeductDate}>
-                    {new Date(nextAutoDeduct.nextDueDate).toLocaleDateString(undefined, { day: 'numeric', month: 'long' })}
+                    {new Date(nextAutoDeduct.nextDueDate!).toLocaleDateString(undefined, { day: 'numeric', month: 'long' })}
                   </Text>
                 </View>
               </View>
@@ -251,7 +314,7 @@ export function LiabilitiesScreen() {
                       <View style={{ flex: 1 }}>
                         <Text style={styles.upcomingName}>{item.name}</Text>
                         <Text style={styles.upcomingMeta}>
-                          {new Date(item.nextDueDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} • {item.frequency}
+                          {new Date(item.nextDueDate!).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} • {item.frequency}
                         </Text>
                       </View>
                       <Text style={styles.upcomingAmount}>₹{item.amount.toLocaleString()}</Text>
@@ -278,61 +341,95 @@ export function LiabilitiesScreen() {
 
             {/* Liability List */}
             <Text style={styles.sectionTitle}>Your Liabilities</Text>
-            {activeLiabilities.map((item) => (
-              <View key={item.id} style={[styles.card, item.autoDeduct && styles.cardAutoDeduct]}>
-                <View style={styles.cardHeader}>
-                  <Text style={styles.cardName}>{item.name}</Text>
-                  <Text style={styles.cardAmount}>₹{item.amount.toLocaleString()}</Text>
-                </View>
-                <Text style={styles.cardMeta}>{item.category} • {item.type}</Text>
-                
-                <View style={styles.scheduleRow}>
-                  <Ionicons name="repeat" size={16} color="#6B7280" />
-                  <Text style={styles.scheduleText}>
-                    {item.frequency} 
-                  </Text>
-                </View>
-                
-                <View style={styles.scheduleRow}>
-                  {item.autoDeduct ? (
-                    <>
-                      <Ionicons name="flash" size={16} color="#059669" />
-                      <Text style={[styles.scheduleText, { color: '#059669', fontWeight: '600' }]}>Auto Deduct ON</Text>
-                    </>
-                  ) : (
-                    <>
-                      <Ionicons name="flash-off" size={16} color="#9CA3AF" />
-                      <Text style={[styles.scheduleText, { color: '#6B7280' }]}>Auto Deduct OFF</Text>
-                    </>
-                  )}
-                </View>
+            {activeLiabilities.map((item) => {
+              const summary = paymentSummaries[item.id];
+              const hasPayments = summary && summary.paymentCount > 0;
 
-                {item.autoDeduct && item.nextDueDate && (
+              return (
+                <View key={item.id} style={[styles.card, item.autoDeduct && styles.cardAutoDeduct]}>
+                  <View style={styles.cardHeader}>
+                    <Text style={styles.cardName}>{item.name}</Text>
+                    <Text style={styles.cardAmount}>₹{item.amount.toLocaleString()}</Text>
+                  </View>
+                  <Text style={styles.cardMeta}>{item.category} • {item.type}</Text>
+
+                  {/* Recurrence Schedule */}
                   <View style={styles.scheduleRow}>
-                    <Ionicons name="calendar" size={16} color="#3B3BDE" />
-                    <Text style={[styles.scheduleText, { color: '#3B3BDE', fontWeight: '600' }]}>
-                      Next Due: {new Date(item.nextDueDate).toLocaleDateString()}
+                    <Ionicons name="repeat" size={16} color="#6B7280" />
+                    <Text style={styles.scheduleText}>
+                      {item.frequency}
                     </Text>
                   </View>
-                )}
 
-                <View style={styles.cardActions}>
-                  <TouchableOpacity style={styles.actionBtn} onPress={() => openEditModal(item)}>
-                    <Ionicons name="pencil" size={16} color="#4B5563" />
-                    <Text style={styles.actionText}>Edit</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.actionBtn} onPress={() => handleDelete(item.id)}>
-                    <Ionicons name="trash" size={16} color="#EF4444" />
-                    <Text style={[styles.actionText, { color: '#EF4444' }]}>Delete</Text>
-                  </TouchableOpacity>
+                  {/* Auto Deduct Status */}
+                  <View style={styles.scheduleRow}>
+                    {item.autoDeduct ? (
+                      <>
+                        <Ionicons name="flash" size={16} color="#059669" />
+                        <Text style={[styles.scheduleText, { color: '#059669', fontWeight: '600' }]}>Auto Deduct ON</Text>
+                      </>
+                    ) : (
+                      <>
+                        <Ionicons name="flash-off" size={16} color="#9CA3AF" />
+                        <Text style={[styles.scheduleText, { color: '#6B7280' }]}>Auto Deduct OFF</Text>
+                      </>
+                    )}
+                  </View>
+
+                  {/* Payment Visibility: Last Paid vs Next Due */}
+                  <View style={styles.paymentSummaryBox}>
+                    {hasPayments ? (
+                      <View style={styles.paymentStatRow}>
+                        <Ionicons name="checkmark-circle-outline" size={16} color="#059669" />
+                        <Text style={styles.lastPaidText}>
+                          Last paid: ₹{summary.lastPaymentAmount?.toLocaleString()} · {new Date(summary.lastPaymentDate!).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })}
+                        </Text>
+                        <Text style={styles.paymentCountBadge}>
+                          {summary.paymentCount} {summary.paymentCount === 1 ? 'payment' : 'payments'}
+                        </Text>
+                      </View>
+                    ) : (
+                      <View style={styles.paymentStatRow}>
+                        <Ionicons name="time-outline" size={16} color="#9CA3AF" />
+                        <Text style={styles.noPaymentText}>No payments recorded yet</Text>
+                      </View>
+                    )}
+
+                    {item.autoDeduct && item.nextDueDate && (
+                      <View style={[styles.paymentStatRow, { marginTop: 4 }]}>
+                        <Ionicons name="calendar-outline" size={16} color="#3B3BDE" />
+                        <Text style={[styles.scheduleText, { color: '#3B3BDE', fontWeight: '600' }]}>
+                          Next deduction: ₹{item.amount.toLocaleString()} · {new Date(item.nextDueDate).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })}
+                        </Text>
+                      </View>
+                    )}
+                  </View>
+
+                  <View style={styles.cardActions}>
+                    <TouchableOpacity style={styles.historyActionBtn} onPress={() => openHistoryModal(item)}>
+                      <Ionicons name="receipt-outline" size={16} color="#3B3BDE" />
+                      <Text style={styles.historyActionText}>View Payment History</Text>
+                    </TouchableOpacity>
+
+                    <View style={styles.rightActions}>
+                      <TouchableOpacity style={styles.actionBtn} onPress={() => openEditModal(item)}>
+                        <Ionicons name="pencil" size={16} color="#4B5563" />
+                        <Text style={styles.actionText}>Edit</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.actionBtn} onPress={() => handleDelete(item.id)}>
+                        <Ionicons name="trash" size={16} color="#EF4444" />
+                        <Text style={[styles.actionText, { color: '#EF4444' }]}>Delete</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
                 </View>
-              </View>
-            ))}
+              );
+            })}
           </>
         )}
       </ScrollView>
 
-      {/* Shared Modal Logic */}
+      {/* Shared Add/Edit Modal */}
       <Modal visible={modalVisible} animationType="slide" presentationStyle="pageSheet">
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={{ flex: 1 }}>
           <ScrollView contentContainerStyle={styles.modalContent} showsVerticalScrollIndicator={false}>
@@ -391,7 +488,7 @@ export function LiabilitiesScreen() {
               <Text style={styles.label}>Frequency</Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 {FREQUENCIES.map(f => (
-                  <TouchableOpacity key={f} style={[styles.chip, frequency === f && styles.chipActive]} onPress={() => setFrequency(f)}>
+                  <TouchableOpacity key={f} style={[styles.chip, frequency === f && styles.chipActive]} onPress={() => setFrequency(f as any)}>
                     <Text style={[styles.chipText, frequency === f && styles.chipTextActive]}>{f}</Text>
                   </TouchableOpacity>
                 ))}
@@ -429,6 +526,120 @@ export function LiabilitiesScreen() {
             </TouchableOpacity>
           </ScrollView>
         </KeyboardAvoidingView>
+      </Modal>
+
+      {/* Dedicated Payment History Modal */}
+      <Modal visible={historyModalVisible} animationType="slide" presentationStyle="pageSheet">
+        <View style={styles.historyModalContainer}>
+          <View style={styles.historyModalHeader}>
+            <View>
+              <Text style={styles.historyModalTitle}>{selectedLiabilityForHistory?.name || 'Liability'}</Text>
+              <Text style={styles.historyModalSubtitle}>Payment History</Text>
+            </View>
+            <TouchableOpacity onPress={() => setHistoryModalVisible(false)} style={styles.closeBtn}>
+              <Ionicons name="close" size={26} color="#111827" />
+            </TouchableOpacity>
+          </View>
+
+          {historyLoading && !historyData ? (
+            <View style={styles.historyCenter}>
+              <ActivityIndicator size="large" color="#3B3BDE" />
+              <Text style={styles.historyLoadingText}>Loading payments...</Text>
+            </View>
+          ) : historyError ? (
+            <View style={styles.historyCenter}>
+              <Ionicons name="alert-circle-outline" size={48} color="#EF4444" />
+              <Text style={styles.historyErrorText}>{historyError}</Text>
+              <TouchableOpacity
+                style={styles.retryBtn}
+                onPress={() => selectedLiabilityForHistory && loadHistory(selectedLiabilityForHistory.id, 1)}
+              >
+                <Text style={styles.retryBtnText}>Retry</Text>
+              </TouchableOpacity>
+            </View>
+          ) : historyData ? (
+            <ScrollView
+              contentContainerStyle={styles.historyContent}
+              showsVerticalScrollIndicator={false}
+            >
+              {/* Top Historical Summary */}
+              <View style={styles.historySummaryCard}>
+                <View style={styles.historySummaryCol}>
+                  <Text style={styles.historySummaryLabel}>Total Paid</Text>
+                  <Text style={styles.historySummaryValue}>
+                    ₹{Math.round(historyData.summary.totalPaid).toLocaleString()}
+                  </Text>
+                </View>
+                <View style={styles.historySummaryDivider} />
+                <View style={styles.historySummaryCol}>
+                  <Text style={styles.historySummaryLabel}>Payments</Text>
+                  <Text style={styles.historySummaryValue}>
+                    {historyData.summary.paymentCount}
+                  </Text>
+                </View>
+                <View style={styles.historySummaryDivider} />
+                <View style={styles.historySummaryCol}>
+                  <Text style={styles.historySummaryLabel}>Last Payment</Text>
+                  <Text style={styles.historySummaryValue}>
+                    {historyData.summary.lastPaymentDate
+                      ? new Date(historyData.summary.lastPaymentDate).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })
+                      : '—'}
+                  </Text>
+                </View>
+              </View>
+
+              <Text style={styles.historyListTitle}>Recorded Transactions</Text>
+
+              {historyData.transactions.length === 0 ? (
+                <View style={styles.emptyHistoryBox}>
+                  <Ionicons name="receipt-outline" size={40} color="#9CA3AF" />
+                  <Text style={styles.emptyHistoryTitle}>No payments recorded yet</Text>
+                  <Text style={styles.emptyHistoryDesc}>
+                    When automatic or scheduled deductions execute, linked transactions will appear here.
+                  </Text>
+                </View>
+              ) : (
+                <>
+                  {historyData.transactions.map((tx: Transaction) => (
+                    <View key={tx.id} style={styles.historyTxRow}>
+                      <View style={styles.historyTxLeft}>
+                        <View style={styles.historyTxTopLine}>
+                          <Text style={styles.historyTxDate}>
+                            {new Date(tx.timestamp).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })}
+                          </Text>
+                          {tx.classificationSource === 'liability' && (
+                            <View style={styles.autoDeductBadge}>
+                              <Ionicons name="flash" size={10} color="#059669" />
+                              <Text style={styles.autoDeductBadgeText}>Auto Deduct</Text>
+                            </View>
+                          )}
+                        </View>
+                        <Text style={styles.historyTxMeta}>
+                          {tx.category} • {tx.type || 'Need'}
+                        </Text>
+                      </View>
+                      <Text style={styles.historyTxAmount}>₹{tx.amount.toLocaleString()}</Text>
+                    </View>
+                  ))}
+
+                  {historyData.pagination.page < historyData.pagination.totalPages && (
+                    <TouchableOpacity
+                      style={styles.loadMoreBtn}
+                      onPress={loadMoreHistory}
+                      disabled={loadingMore}
+                    >
+                      {loadingMore ? (
+                        <ActivityIndicator size="small" color="#3B3BDE" />
+                      ) : (
+                        <Text style={styles.loadMoreText}>Load More Payments</Text>
+                      )}
+                    </TouchableOpacity>
+                  )}
+                </>
+              )}
+            </ScrollView>
+          ) : null}
+        </View>
       </Modal>
     </View>
   );
@@ -477,19 +688,30 @@ const styles = StyleSheet.create({
   breakdownAmt: { fontSize: 14, color: '#111827', fontWeight: '800' },
 
   // Standard Liability Card
-  card: { backgroundColor: '#fff', borderRadius: 16, padding: 16, marginBottom: 12, borderWidth: 1, borderColor: '#F0F1F5', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.04, shadowRadius: 6, elevation: 2 },
-  cardAutoDeduct: { borderColor: '#E0E7FF', backgroundColor: '#FDFDFF' }, // Subtle tint for auto deduct
+  card: { backgroundColor: '#fff', borderRadius: 16, padding: 16, marginBottom: 14, borderWidth: 1, borderColor: '#F0F1F5', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.04, shadowRadius: 6, elevation: 2 },
+  cardAutoDeduct: { borderColor: '#E0E7FF', backgroundColor: '#FDFDFF' },
   cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 4 },
   cardName: { fontSize: 16, fontWeight: '700', color: '#111827', flex: 1 },
   cardAmount: { fontSize: 18, fontWeight: '800', color: '#111827' },
-  cardMeta: { fontSize: 13, color: '#6B7280', marginBottom: 12 },
+  cardMeta: { fontSize: 13, color: '#6B7280', marginBottom: 10 },
   scheduleRow: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 6 },
   scheduleText: { fontSize: 13, color: '#4B5563', textTransform: 'capitalize' },
-  cardActions: { flexDirection: 'row', marginTop: 12, paddingTop: 12, borderTopWidth: 1, borderTopColor: '#F3F4F6', gap: 16 },
+
+  // Payment Summary Box in Card
+  paymentSummaryBox: { backgroundColor: '#F9FAFB', borderRadius: 10, padding: 10, marginTop: 8, marginBottom: 8, borderWidth: 1, borderColor: '#F3F4F6' },
+  paymentStatRow: { flexDirection: 'row', alignItems: 'center', gap: 6, flexWrap: 'wrap' },
+  lastPaidText: { fontSize: 13, color: '#111827', fontWeight: '600' },
+  paymentCountBadge: { fontSize: 11, color: '#059669', backgroundColor: '#ECFDF5', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6, fontWeight: '700', marginLeft: 'auto' },
+  noPaymentText: { fontSize: 12, color: '#9CA3AF', fontStyle: 'italic' },
+
+  cardActions: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 10, paddingTop: 10, borderTopWidth: 1, borderTopColor: '#F3F4F6' },
+  historyActionBtn: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingVertical: 4, paddingHorizontal: 6 },
+  historyActionText: { fontSize: 13, fontWeight: '700', color: '#3B3BDE' },
+  rightActions: { flexDirection: 'row', alignItems: 'center', gap: 14 },
   actionBtn: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   actionText: { fontSize: 13, fontWeight: '600', color: '#4B5563' },
-  
-  // Modal
+
+  // Add/Edit Modal
   modalContent: { padding: 20, paddingBottom: 60 },
   modalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 },
   modalTitle: { fontSize: 22, fontWeight: '800', color: '#111827' },
@@ -504,5 +726,43 @@ const styles = StyleSheet.create({
   chipTextActive: { color: '#3B3BDE' },
   switchGroup: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, padding: 12, backgroundColor: '#F9FAFB', borderRadius: 12, borderWidth: 1, borderColor: '#F3F4F6' },
   saveBtn: { backgroundColor: '#3B3BDE', height: 52, borderRadius: 14, justifyContent: 'center', alignItems: 'center', marginTop: 24 },
-  saveBtnText: { color: '#fff', fontSize: 16, fontWeight: '700' }
+  saveBtnText: { color: '#fff', fontSize: 16, fontWeight: '700' },
+
+  // History Modal Styles
+  historyModalContainer: { flex: 1, backgroundColor: '#F9FAFB' },
+  historyModalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 20, borderBottomWidth: 1, borderBottomColor: '#E5E7EB', backgroundColor: '#fff' },
+  historyModalTitle: { fontSize: 20, fontWeight: '800', color: '#111827' },
+  historyModalSubtitle: { fontSize: 13, color: '#6B7280', fontWeight: '500', marginTop: 2 },
+  closeBtn: { padding: 4 },
+  historyCenter: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 },
+  historyLoadingText: { marginTop: 12, fontSize: 14, color: '#6B7280', fontWeight: '500' },
+  historyErrorText: { marginTop: 12, fontSize: 14, color: '#EF4444', textAlign: 'center', marginBottom: 16 },
+  retryBtn: { backgroundColor: '#3B3BDE', paddingHorizontal: 18, paddingVertical: 8, borderRadius: 10 },
+  retryBtnText: { color: '#fff', fontWeight: '700', fontSize: 14 },
+  historyContent: { padding: 16, paddingBottom: 40 },
+
+  // Historical Summary Card
+  historySummaryCard: { flexDirection: 'row', backgroundColor: '#fff', borderRadius: 16, padding: 16, marginBottom: 20, borderWidth: 1, borderColor: '#E5E7EB', shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.04, shadowRadius: 4, elevation: 1 },
+  historySummaryCol: { flex: 1, alignItems: 'center' },
+  historySummaryLabel: { fontSize: 11, fontWeight: '600', color: '#6B7280', textTransform: 'uppercase', marginBottom: 4, letterSpacing: 0.5 },
+  historySummaryValue: { fontSize: 16, fontWeight: '800', color: '#111827' },
+  historySummaryDivider: { width: 1, backgroundColor: '#E5E7EB', marginVertical: 4 },
+
+  historyListTitle: { fontSize: 16, fontWeight: '800', color: '#111827', marginBottom: 12 },
+
+  emptyHistoryBox: { backgroundColor: '#fff', padding: 28, borderRadius: 16, alignItems: 'center', borderWidth: 1, borderColor: '#E5E7EB', marginTop: 8 },
+  emptyHistoryTitle: { fontSize: 16, fontWeight: '700', color: '#374151', marginTop: 12, marginBottom: 6 },
+  emptyHistoryDesc: { fontSize: 13, color: '#6B7280', textAlign: 'center', lineHeight: 18 },
+
+  historyTxRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#fff', padding: 14, borderRadius: 14, marginBottom: 8, borderWidth: 1, borderColor: '#F0F1F5' },
+  historyTxLeft: { flex: 1 },
+  historyTxTopLine: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 2 },
+  historyTxDate: { fontSize: 14, fontWeight: '700', color: '#111827' },
+  autoDeductBadge: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#ECFDF5', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6, gap: 2 },
+  autoDeductBadgeText: { fontSize: 10, color: '#059669', fontWeight: '700' },
+  historyTxMeta: { fontSize: 12, color: '#6B7280' },
+  historyTxAmount: { fontSize: 15, fontWeight: '800', color: '#111827' },
+
+  loadMoreBtn: { backgroundColor: '#EFF6FF', paddingVertical: 12, borderRadius: 12, alignItems: 'center', marginTop: 12, borderWidth: 1, borderColor: '#DBEAFE' },
+  loadMoreText: { fontSize: 13, fontWeight: '700', color: '#2563EB' }
 });

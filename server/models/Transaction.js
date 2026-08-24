@@ -66,6 +66,9 @@ transactionSchema.index({ timestamp: 1, type: 1 });
 // Sparse unique compound index to guarantee idempotency for scheduled auto-deduct transactions
 transactionSchema.index({ liabilityId: 1, scheduledFor: 1 }, { unique: true, sparse: true });
 
+// Compound index to support fast liability payment history and summary queries
+transactionSchema.index({ userId: 1, liabilityId: 1, timestamp: -1 });
+
 // Export schema constants for use in controllers/validators
 export { VALID_CATEGORIES, VALID_TYPES };
 export default mongoose.model('Transaction', transactionSchema);

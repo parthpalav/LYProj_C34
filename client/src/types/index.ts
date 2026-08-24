@@ -46,11 +46,52 @@ export interface Transaction {
   description?:   string;
   type?:          'Need' | 'Want' | 'Investment';
   confidenceScore?: number;
+  classificationSource?: string;
   categorySource?:   string;
   typeSource?:       string;
   categoryConfidence?: number;
   typeConfidence?:   number;
   needsReview?:      boolean;
+  liabilityId?:      string;
+  scheduledFor?:     string;
+}
+
+export interface Liability {
+  id: string;
+  userId?: string;
+  name: string;
+  amount: number;
+  category: string;
+  type: 'Need' | 'Want' | 'Investment';
+  autoDeduct: boolean;
+  frequency: 'daily' | 'weekly' | 'monthly' | 'yearly';
+  startDate: string;
+  dayOfWeek?: number | null;
+  dayOfMonth?: number | null;
+  monthOfYear?: number | null;
+  nextDueDate?: string | null;
+  status: 'active' | 'deleted';
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface LiabilityPaymentSummary {
+  paymentCount: number;
+  totalPaid: number;
+  lastPaymentAmount: number | null;
+  lastPaymentDate: string | null;
+}
+
+export interface LiabilityPaymentHistoryResponse {
+  liability: Partial<Liability>;
+  transactions: Transaction[];
+  summary: LiabilityPaymentSummary;
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
 }
 
 export interface FMIRecord {

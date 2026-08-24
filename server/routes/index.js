@@ -9,6 +9,8 @@ router.use(controllerRouter);
 
 // Liability routes
 router.get('/liabilities', authMiddleware, liabilityController.getLiabilities);
+router.get('/liabilities/payments-summary', authMiddleware, liabilityController.getLiabilitiesPaymentsSummary);
+router.get('/liabilities/:id/transactions', authMiddleware, liabilityController.getLiabilityTransactions);
 router.post('/liabilities', authMiddleware, liabilityController.createLiability);
 router.put('/liabilities/:id', authMiddleware, liabilityController.updateLiability);
 router.delete('/liabilities/:id', authMiddleware, liabilityController.deleteLiability);

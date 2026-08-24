@@ -10,6 +10,8 @@ import {
   RefreshControl,
   Modal,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 import { getDashboard } from '../services/api';
 import { useStore } from '../store/useStore';
 import { DashboardData, WantsNeedsBreakdown } from '../types';
@@ -362,6 +364,7 @@ const balStyles = StyleSheet.create({
 // MAIN DASHBOARD SCREEN
 // ═══════════════════════════════════════════════════════════
 export function DashboardScreen(): React.ReactElement {
+  const navigation = useNavigation();
   const { dashboard, setDashboard } = useStore();
   const [loading,     setLoading]   = useState(!dashboard);
   const [refreshing,  setRefreshing] = useState(false);
@@ -441,6 +444,29 @@ export function DashboardScreen(): React.ReactElement {
       <Card title="FMI Score" info>
         <SavingsGauge score={fmiScore} max={100} />
       </Card>
+
+      {/* Financial Outlook Entry Card */}
+      <TouchableOpacity
+        style={s.outlookCard}
+        activeOpacity={0.85}
+        onPress={() => (navigation as any).navigate('FinancialOutlook')}
+      >
+        <View style={s.outlookIconWrap}>
+          <Ionicons name="compass-outline" size={24} color={BLUE} />
+        </View>
+        <View style={{ flex: 1 }}>
+          <View style={s.outlookTitleRow}>
+            <Text style={s.outlookTitle}>Financial Outlook</Text>
+            <View style={s.outlookBadge}>
+              <Text style={s.outlookBadgeText}>FIRE & Projections</Text>
+            </View>
+          </View>
+          <Text style={s.outlookSubtitle}>
+            View your projected retirement corpus, emergency runway & resilience.
+          </Text>
+        </View>
+        <Ionicons name="chevron-forward" size={18} color="#9CA3AF" />
+      </TouchableOpacity>
 
       {/* Budget Pacing + Heatmap (placed under Balance/FMI) */}
       <View style={s.visualsWrapper}>
@@ -589,5 +615,56 @@ const s = StyleSheet.create({
     fontSize: 28,
     color: '#fff',
     fontWeight: '700',
+  },
+  outlookCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+    elevation: 2,
+  },
+  outlookIconWrap: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#EEF2FF',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  outlookTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 4,
+  },
+  outlookTitle: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#111827',
+    letterSpacing: -0.2,
+  },
+  outlookBadge: {
+    backgroundColor: '#F3E8FF',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 6,
+  },
+  outlookBadgeText: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: '#7C3AED',
+  },
+  outlookSubtitle: {
+    fontSize: 12,
+    color: '#6B7280',
+    lineHeight: 16,
   },
 });

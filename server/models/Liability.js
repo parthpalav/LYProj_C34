@@ -41,7 +41,31 @@ const liabilitySchema = new mongoose.Schema(
     dayOfMonth: { type: Number, min: 1, max: 31, default: null },
     monthOfYear: { type: Number, min: 1, max: 12, default: null }, // 1 (Jan) to 12 (Dec)
     nextDueDate: { type: Date, default: null },
-    status: { type: String, enum: ['active', 'deleted'], default: 'active' } // Soft delete
+    status: { type: String, enum: ['active', 'deleted'], default: 'active' }, // Soft delete
+    outstandingBalance: {
+      type: Number,
+      default: null,
+      validate: {
+        validator: (v) => v === null || (Number.isFinite(v) && v >= 0),
+        message: 'Outstanding balance must be a non-negative finite number'
+      }
+    },
+    interestRate: {
+      type: Number,
+      default: null,
+      validate: {
+        validator: (v) => v === null || (Number.isFinite(v) && v >= 0 && v <= 1),
+        message: 'Interest rate must be a decimal fraction between 0 and 1'
+      }
+    },
+    remainingTermMonths: {
+      type: Number,
+      default: null,
+      validate: {
+        validator: (v) => v === null || (Number.isInteger(v) && v >= 0),
+        message: 'Remaining term months must be a non-negative integer'
+      }
+    }
   },
   { timestamps: true, versionKey: false }
 );

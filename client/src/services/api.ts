@@ -6,7 +6,7 @@ import {
   AlertItem, BehaviorPattern, ChatMessage, DashboardData, EnvelopeData,
   FISData, FMIRecord, FMIResponse, Goal, IncomeFlowData, IncomeRecord,
   Transaction, WeeklyReport, User, Liability, LiabilityPaymentSummary,
-  LiabilityPaymentHistoryResponse
+  LiabilityPaymentHistoryResponse, PredictabilitySnapshot, PredictabilityResponse
 } from '../types';
 
 export interface NewTransaction {
@@ -23,6 +23,7 @@ export interface NewTransaction {
   needsReview?:      boolean;
   timestamp?:      string;
   liabilityId?:    string;
+  expectedScheduledFor?: string;
 }
 
 export interface NewGoalPayload {
@@ -457,4 +458,11 @@ export async function updateLiability(id: string, payload: Partial<Liability>): 
 export async function deleteLiability(id: string): Promise<{ success: boolean; message: string }> {
   const { data } = await api.delete(`/api/liabilities/${id}`);
   return data;
+}
+
+// ── Predictability Engine ─────────────────────────────────────
+
+export async function getPredictability(): Promise<PredictabilitySnapshot> {
+  const { data } = await api.get<PredictabilityResponse>('/api/predictability');
+  return data.data;
 }

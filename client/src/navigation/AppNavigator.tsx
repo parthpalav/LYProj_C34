@@ -1,4 +1,5 @@
 import { BottomTabBarButtonProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -9,6 +10,7 @@ import { EnvelopesScreen } from '../screens/EnvelopesScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
 import { TransactionsScreen } from '../screens/TransactionsScreen';
 import { LiabilitiesScreen } from '../screens/LiabilitiesScreen';
+import { FinancialOutlookScreen } from '../screens/FinancialOutlookScreen';
 
 export type RootTabParamList = {
   Envelopes: undefined;
@@ -19,7 +21,13 @@ export type RootTabParamList = {
   Liabilities: undefined;
 };
 
+export type RootStackParamList = {
+  MainTabs: undefined;
+  FinancialOutlook: undefined;
+};
+
 const Tab = createBottomTabNavigator<RootTabParamList>();
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function tabIconName(routeName: keyof RootTabParamList, focused: boolean): React.ComponentProps<typeof Ionicons>['name'] {
   if (routeName === 'Envelopes') return focused ? 'wallet' : 'wallet-outline';
@@ -39,7 +47,7 @@ function HomeTabButton({ children, onPress, accessibilityState }: BottomTabBarBu
   );
 }
 
-export function AppNavigator(): React.ReactElement {
+function MainTabNavigator(): React.ReactElement {
   const insets = useSafeAreaInsets();
 
   return (
@@ -80,6 +88,23 @@ export function AppNavigator(): React.ReactElement {
     </Tab.Navigator>
   );
 }
+
+export function AppNavigator(): React.ReactElement {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="MainTabs" component={MainTabNavigator} />
+      <Stack.Screen
+        name="FinancialOutlook"
+        component={FinancialOutlookScreen}
+        options={{
+          headerShown: false,
+          animation: 'slide_from_right',
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
+
 
 const styles = StyleSheet.create({
   tabBar: {

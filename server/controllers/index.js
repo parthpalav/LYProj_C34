@@ -26,6 +26,7 @@ import User        from '../models/User.js';
 
 import Transaction, { VALID_CATEGORIES, VALID_TYPES } from '../models/Transaction.js';
 import Liability   from '../models/Liability.js';
+import { calculateNextDueDate } from './liabilityController.js';
 import FMIHistory  from '../models/FMIHistory.js';
 import Alert       from '../models/Alert.js';
 import Envelope    from '../models/Envelope.js';
@@ -677,13 +678,8 @@ router.post('/transactions', async (req, res, next) => {
 
     const debitAmount = Math.abs(amount);
 
-    const updatedUser = await User.findOneAndUpdate(
-      { id: userId },
-      { $inc: { currentBalance: -debitAmount } },
-      { new: true }
-    ).lean();
-
-    if (!updatedUser) {
+    const userExists = await User.findOne({ id: userId });
+    if (!userExists) {
       return res.status(404).json({ error: 'User not found' });
     }
 
@@ -777,6 +773,9 @@ router.post('/transactions', async (req, res, next) => {
 
     // Validate optional liabilityId if supplied by user
     let validatedLiabilityId = null;
+    let scheduledFor = null;
+    let expectedNextDueDate = null;
+
     if (req.body.liabilityId) {
       const liability = await Liability.findOne({
         id: String(req.body.liabilityId),
@@ -787,7 +786,29 @@ router.post('/transactions', async (req, res, next) => {
         return res.status(400).json({ error: 'Invalid or inactive liability' });
       }
       validatedLiabilityId = liability.id;
+
+      if (req.body.expectedScheduledFor) {
+        if (!liability.autoDeduct || !liability.nextDueDate) {
+          return res.status(400).json({ error: 'Cannot mark payment as paid for a liability without auto-deduct enabled or a valid scheduled date.' });
+        }
+
+        const expectedTime = new Date(req.body.expectedScheduledFor).getTime();
+        const nextDueTime = liability.nextDueDate.getTime();
+
+        if (isNaN(expectedTime) || expectedTime !== nextDueTime) {
+          return res.status(409).json({ error: 'The scheduled payment date has changed. Please refresh and try again.' });
+        }
+
+        scheduledFor = liability.nextDueDate;
+        expectedNextDueDate = liability.nextDueDate;
+      }
     }
+
+    // Deduct current balance only after all validations pass
+    await User.findOneAndUpdate(
+      { id: userId },
+      { $inc: { currentBalance: -debitAmount } }
+    );
 
     let tx;
     try {
@@ -807,11 +828,41 @@ router.post('/transactions', async (req, res, next) => {
         typeConfidence,
         needsReview,
         liabilityId:         validatedLiabilityId,
+        scheduledFor:        scheduledFor,
         tags:                sentimentResult.tags || [],
         description:         req.body.description || 'manual input',
         timestamp:           req.body.timestamp ? new Date(req.body.timestamp) : new Date()
       });
+
+      // Advance the liability's nextDueDate if this transaction fulfilled an occurrence
+      if (scheduledFor && expectedNextDueDate) {
+        try {
+          const liability = await Liability.findOne({ id: validatedLiabilityId });
+          if (liability) {
+            const nextDate = calculateNextDueDate(liability, expectedNextDueDate);
+            const updated = await Liability.findOneAndUpdate(
+              { id: validatedLiabilityId, nextDueDate: expectedNextDueDate },
+              { $set: { nextDueDate: nextDate } },
+              { new: true }
+            );
+            if (!updated) {
+              logger.warn(`Liability nextDueDate was modified concurrently for ${validatedLiabilityId}. Idempotent transaction with scheduledFor=${scheduledFor} protects against duplicate auto-deduction.`);
+            }
+          }
+        } catch (schedErr) {
+          logger.error(`Failed to advance nextDueDate for liability ${validatedLiabilityId}:`, schedErr);
+        }
+      }
     } catch (createError) {
+      if (createError.code === 11000 && createError.keyPattern && createError.keyPattern.liabilityId && createError.keyPattern.scheduledFor) {
+         // Revert user balance on concurrency failure
+         await User.findOneAndUpdate(
+           { id: userId },
+           { $inc: { currentBalance: debitAmount } }
+         );
+         return res.status(409).json({ error: 'The scheduled payment was just fulfilled by another transaction. Please try again.' });
+      }
+
       // revert user balance on create failure
       await User.findOneAndUpdate(
         { id: userId },
@@ -1305,14 +1356,42 @@ router.post('/income', async (req, res, next) => {
   try {
     const userId = req.user.id;
     const { amount, source, description } = req.body;
-    const income = await Income.create({
-      id:          `i-${Date.now()}`,
-      userId:      userId,
-      amount:      Number(amount),
-      source:      source || 'salary',
-      description: description || '',
-      timestamp:   new Date()
-    });
+    const numericAmount = Number(amount);
+
+    if (isNaN(numericAmount) || !Number.isFinite(numericAmount) || numericAmount <= 0) {
+      return res.status(400).json({ error: 'Income amount must be a finite positive number' });
+    }
+
+    const userExists = await User.findOne({ id: userId });
+    if (!userExists) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Increment user balance first (safe fallback query approach)
+    await User.findOneAndUpdate(
+      { id: userId },
+      { $inc: { currentBalance: numericAmount } }
+    );
+
+    let income;
+    try {
+      income = await Income.create({
+        id:          `i-${Date.now()}`,
+        userId:      userId,
+        amount:      numericAmount,
+        source:      source || 'salary',
+        description: description || '',
+        timestamp:   new Date()
+      });
+    } catch (createErr) {
+      // Revert currentBalance on creation failure
+      await User.findOneAndUpdate(
+        { id: userId },
+        { $inc: { currentBalance: -numericAmount } }
+      );
+      throw createErr;
+    }
+
     res.status(201).json(income);
   } catch (error) { next(error); }
 });
@@ -1322,12 +1401,42 @@ router.put('/income/:id', async (req, res, next) => {
     const userId = req.user.id;
     const { amount, source, description } = req.body;
     const update = {};
-    if (amount !== undefined) update.amount = Number(amount);
     if (source !== undefined) update.source = source;
     if (description !== undefined) update.description = description;
 
-    const income = await Income.findOneAndUpdate({ id: req.params.id, userId }, update, { new: true }).lean();
-    if (!income) return res.status(404).json({ message: 'Income not found' });
+    let income;
+    if (amount !== undefined) {
+      const numericAmount = Number(amount);
+      if (isNaN(numericAmount) || !Number.isFinite(numericAmount) || numericAmount <= 0) {
+        return res.status(400).json({ error: 'Income amount must be a finite positive number' });
+      }
+
+      const oldIncome = await Income.findOne({ id: req.params.id, userId }).lean();
+      if (!oldIncome) return res.status(404).json({ message: 'Income not found' });
+
+      const delta = numericAmount - oldIncome.amount;
+      update.amount = numericAmount;
+
+      // Adjust user balance
+      await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: delta } });
+
+      try {
+        income = await Income.findOneAndUpdate({ id: req.params.id, userId }, update, { new: true }).lean();
+        if (!income) {
+          // Revert balance adjustment if update fails
+          await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: -delta } });
+          return res.status(404).json({ message: 'Income not found' });
+        }
+      } catch (err) {
+        // Revert balance adjustment
+        await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: -delta } });
+        throw err;
+      }
+    } else {
+      income = await Income.findOneAndUpdate({ id: req.params.id, userId }, update, { new: true }).lean();
+      if (!income) return res.status(404).json({ message: 'Income not found' });
+    }
+
     res.json(income);
   } catch (error) { next(error); }
 });
@@ -1335,8 +1444,25 @@ router.put('/income/:id', async (req, res, next) => {
 router.delete('/income/:id', async (req, res, next) => {
   try {
     const userId = req.user.id;
-    const deleted = await Income.findOneAndDelete({ id: req.params.id, userId }).lean();
-    if (!deleted) return res.status(404).json({ message: 'Income not found' });
+    const oldIncome = await Income.findOne({ id: req.params.id, userId }).lean();
+    if (!oldIncome) return res.status(404).json({ message: 'Income not found' });
+
+    // Deduct user balance
+    await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: -oldIncome.amount } });
+
+    try {
+      const deleted = await Income.findOneAndDelete({ id: req.params.id, userId }).lean();
+      if (!deleted) {
+        // Revert balance deduction if delete fails
+        await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: oldIncome.amount } });
+        return res.status(404).json({ message: 'Income not found' });
+      }
+    } catch (err) {
+      // Revert balance deduction
+      await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: oldIncome.amount } });
+      throw err;
+    }
+
     res.json({ success: true, id: req.params.id });
   } catch (error) { next(error); }
 });

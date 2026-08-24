@@ -141,9 +141,14 @@ export function TransactionsScreen(): React.ReactElement {
 
   // ── Edit / Delete handlers ─────────────────────────────────────────────
   const handleDelete = (tx: Transaction) => {
+    const isScheduledPayment = tx.liabilityId && tx.scheduledFor;
+    const msg = isScheduledPayment
+      ? `Delete "${tx.description || 'this transaction'}"?\n\nAmount: ${formatCurrency(Math.abs(tx.amount))}\n\n⚠️ Note: This payment satisfied a scheduled liability occurrence. Deleting it will not restore/rewind the Auto Deduct date.`
+      : `Delete "${tx.description || 'this transaction'}"?\n\nAmount: ${formatCurrency(Math.abs(tx.amount))}`;
+
     Alert.alert(
       'Delete Transaction',
-      `Delete "${tx.description || 'this transaction'}"?\n\nAmount: ${formatCurrency(Math.abs(tx.amount))}`,
+      msg,
       [
         { text: 'Cancel', style: 'cancel' },
         {
@@ -180,11 +185,34 @@ export function TransactionsScreen(): React.ReactElement {
           text: 'Delete',
           style: 'destructive',
           onPress: async () => {
-            try {
-              await deleteTransaction(tx.id);
-              fetchTransactions();
-            } catch {
-              Alert.alert('Error', 'Failed to delete transaction');
+            const isScheduledPayment = tx.liabilityId && tx.scheduledFor;
+            if (isScheduledPayment) {
+              Alert.alert(
+                'Delete Scheduled Payment',
+                `Deleting this payment will not restore/rewind the Auto Deduct date for "${tx.description}". Do you still want to delete it?`,
+                [
+                  { text: 'Cancel', style: 'cancel' },
+                  {
+                    text: 'Delete',
+                    style: 'destructive',
+                    onPress: async () => {
+                      try {
+                        await deleteTransaction(tx.id);
+                        fetchTransactions();
+                      } catch {
+                        Alert.alert('Error', 'Failed to delete transaction');
+                      }
+                    }
+                  }
+                ]
+              );
+            } else {
+              try {
+                await deleteTransaction(tx.id);
+                fetchTransactions();
+              } catch {
+                Alert.alert('Error', 'Failed to delete transaction');
+              }
             }
           },
         },

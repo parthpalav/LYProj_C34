@@ -248,3 +248,123 @@ export interface User {
   onboardingComplete?:  boolean;
   onboardingCompleted?: boolean;
 }
+
+export interface PredictabilitySnapshot {
+  generatedAt: string;
+  dataQuality: {
+    incomeDataQuality: {
+      dataQualityLevel: 'INSUFFICIENT' | 'VERY_LOW' | 'LOW' | 'MODERATE' | 'HIGH';
+      monthsObserved: number;
+      limitations: string[];
+    };
+    transactionMonthsObserved: number;
+    assetsRecorded: number;
+    liabilitiesRecorded: number;
+  };
+  currentState: {
+    currentBalance: number;
+    averageMonthlyNeeds: number;
+    averageMonthlyWants: number;
+    needsConsumption: number;
+    liabilityService: number;
+    totalEssentialSpending: number;
+    observedAverageMonthlyInvestment: number;
+  };
+  income: {
+    meanMonthlyIncome: number;
+    medianMonthlyIncome: number;
+    reliableMonthlyIncome: number;
+    percentileUsed: number;
+    standardDeviation: number;
+    coefficientOfVariation: number | null;
+    zeroIncomeMonthsCount: number;
+    zeroIncomeMonthRatio: number;
+    longestConsecutiveZeroIncomeMonths: number;
+    worstRollingQuarter: {
+      available: boolean;
+      amount: number | null;
+      startMonth?: string | null;
+      endMonth?: string | null;
+    };
+    gapAnalysis: {
+      numberOfIncomeEvents: number;
+      averageGapDays: number | null;
+      medianGapDays: number | null;
+      longestGapDays: number | null;
+      gapStdDevDays: number | null;
+    };
+  };
+  resilience: {
+    essentialCoverageRatio: number | null;
+    isCoverageAdequate: boolean | null;
+    bufferRunwayMonths: number | null;
+    liquidBuffer: number;
+  };
+  assets: {
+    totalAssetValue: number;
+    fireInvestableCorpus: number;
+    liquidBuffer: number;
+    knownNetWorth: number;
+    includedCount: number;
+    excludedCount: number;
+    includedAssets: any[];
+    excludedAssets: any[];
+  };
+  liabilities: {
+    activeCount: number;
+    monthlyLiabilityService: number;
+    knownOutstandingPrincipal: number;
+    unknownPrincipalCount: number;
+    liabilitiesSummary: any[];
+  };
+  emergencyFund: {
+    targetMonths: number;
+    targetAmount: number;
+    knownLiquidEmergencyAssets: number;
+    coverageMonths: number | null;
+    fundingGap: number;
+  };
+  retirement: {
+    currentAge: number | null;
+    retirementAge: number | null;
+    monthsUntilRetirement: number | null;
+    assumptions: {
+      nominalReturn: number;
+      inflation: number;
+      realReturn: number;
+      withdrawalRate: number;
+      lifestyleAdjustmentRatio: number;
+      contributionMode: string;
+    };
+    currentAnnualLifestyleSpending: number;
+    estimatedFireCorpus: number;
+    userGoalCorpus: number;
+    goalDifference: {
+      userGoalCorpus: number;
+      estimatedFireCorpus: number;
+      difference: number;
+      percentageDifference: number;
+    } | null;
+    monthlyContributionUsed: number;
+    projectedCorpusAtRetirement: number | null;
+    requiredMonthlyContributionForEstimatedFire: number | null;
+    requiredMonthlyContributionForUserGoal: number | null;
+    contributionGap: number | null;
+    projectedFire: {
+      reached: boolean;
+      months: number | null;
+      projectedAge: number | null;
+    };
+  };
+  explanationFacts: Array<{
+    code: string;
+    metric: string;
+    value: number;
+  }>;
+  limitations: string[];
+}
+
+export interface PredictabilityResponse {
+  success: boolean;
+  data: PredictabilitySnapshot;
+}

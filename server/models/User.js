@@ -1,5 +1,12 @@
 import mongoose from 'mongoose';
 import bcryptjs from 'bcryptjs';
+import {
+  DEFAULT_RETURN_RATE,
+  DEFAULT_INFLATION_RATE,
+  DEFAULT_WITHDRAWAL_RATE,
+  DEFAULT_LIFESTYLE_RATIO,
+  DEFAULT_EMERGENCY_MONTHS
+} from '../config/financialRules.js';
 
 
 
@@ -21,6 +28,46 @@ const userSchema = new mongoose.Schema(
     incomeType: { type: String, default: 'salaried' },
     retirementCorpusGoal: { type: Number, default: 0 },
     currentBalance: { type: Number, default: 0 },
+    expectedReturnRate: {
+      type: Number,
+      default: DEFAULT_RETURN_RATE,
+      validate: {
+        validator: (v) => Number.isFinite(v) && v >= 0 && v <= 1,
+        message: 'Expected return rate must be a decimal fraction between 0 and 1'
+      }
+    },
+    expectedInflationRate: {
+      type: Number,
+      default: DEFAULT_INFLATION_RATE,
+      validate: {
+        validator: (v) => Number.isFinite(v) && v >= 0 && v <= 1,
+        message: 'Expected inflation rate must be a decimal fraction between 0 and 1'
+      }
+    },
+    expectedWithdrawalRate: {
+      type: Number,
+      default: DEFAULT_WITHDRAWAL_RATE,
+      validate: {
+        validator: (v) => Number.isFinite(v) && v >= 0 && v <= 1,
+        message: 'Expected withdrawal rate must be a decimal fraction between 0 and 1'
+      }
+    },
+    lifestyleAdjustmentRatio: {
+      type: Number,
+      default: DEFAULT_LIFESTYLE_RATIO,
+      validate: {
+        validator: (v) => Number.isFinite(v) && v >= 0 && v <= 2,
+        message: 'Lifestyle adjustment ratio must be a decimal fraction between 0 and 2'
+      }
+    },
+    emergencyFundTargetMonths: {
+      type: Number,
+      default: DEFAULT_EMERGENCY_MONTHS,
+      validate: {
+        validator: (v) => Number.isInteger(v) && v >= 0 && v <= 36,
+        message: 'Emergency fund target months must be an integer between 0 and 36'
+      }
+    },
     goals: { type: [String], default: [] },
     onboardingComplete: { type: Boolean, default: false },
     onboardingCompleted: { type: Boolean, default: false }

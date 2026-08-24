@@ -51,6 +51,7 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
   const [liabilities, setLiabilities] = useState<Liability[]>([]);
   const [selectedLiability, setSelectedLiability] = useState<Liability | null>(null);
   const [showLiabilityModal, setShowLiabilityModal] = useState(false);
+  const [markAsPaid, setMarkAsPaid] = useState(true);
   const { transactions, addTransaction: addToStore } = useStore();
 
   useEffect(() => {
@@ -207,6 +208,7 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
         typeConfidence:      userOverrodeTypeRef.current ? 1.0 : aiResult?.typeConfidence,
         needsReview:         aiResult?.needsReview,
         liabilityId:         selectedLiability ? selectedLiability.id : undefined,
+        expectedScheduledFor: selectedLiability && selectedLiability.autoDeduct && markAsPaid && selectedLiability.nextDueDate ? selectedLiability.nextDueDate.toString() : undefined,
         timestamp:           new Date().toISOString(),
       });
       addToStore(newTx);
@@ -414,13 +416,26 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
                 </View>
               )}
 
-              {/* Informational note for Auto Deduct liabilities */}
-              {selectedLiability && selectedLiability.autoDeduct && (
-                <View style={styles.autoDeductInfoNote}>
-                  <Ionicons name="information-circle-outline" size={14} color="#4338CA" />
-                  <Text style={styles.autoDeductInfoNoteText}>
-                    Added to payment history. Next Auto Deduct date remains unchanged.
-                  </Text>
+              {/* Informational note & Toggle for Auto Deduct liabilities */}
+              {selectedLiability && selectedLiability.autoDeduct && selectedLiability.nextDueDate && (
+                <View style={styles.autoDeductControlContainer}>
+                  <TouchableOpacity
+                    style={styles.markAsPaidToggle}
+                    activeOpacity={0.7}
+                    onPress={() => setMarkAsPaid(!markAsPaid)}
+                  >
+                    <View style={[styles.checkbox, markAsPaid && styles.checkboxActive]}>
+                      {markAsPaid && <Ionicons name="checkmark" size={12} color="#FFFFFF" />}
+                    </View>
+                    <View style={{ flex: 1, marginLeft: 8 }}>
+                      <Text style={styles.markAsPaidTitle}>Mark next scheduled payment as paid</Text>
+                      <Text style={styles.markAsPaidDesc}>
+                        {markAsPaid
+                          ? `Satisfies payment due ${new Date(selectedLiability.nextDueDate).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })} and prevents duplicate auto-deduction.`
+                          : 'Added to payment history. Next Auto Deduct date remains unchanged.'}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
                 </View>
               )}
             </View>
@@ -1078,21 +1093,39 @@ const styles = StyleSheet.create({
     padding: 4,
     marginLeft: 8,
   },
-  autoDeductInfoNote: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
+  autoDeductControlContainer: {
     backgroundColor: '#EEF2FF',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
     borderRadius: 8,
     marginTop: 6,
+    overflow: 'hidden',
   },
-  autoDeductInfoNoteText: {
+  markAsPaidToggle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+  },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderRadius: 4,
+    borderWidth: 1.5,
+    borderColor: BRAND_BLUE,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+  },
+  checkboxActive: {
+    backgroundColor: BRAND_BLUE,
+  },
+  markAsPaidTitle: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#1A202C',
+    marginBottom: 2,
+  },
+  markAsPaidDesc: {
     fontSize: 11,
     color: '#4338CA',
-    flex: 1,
-    fontWeight: '500',
   },
   modalSubtitle: {
     fontSize: 12,

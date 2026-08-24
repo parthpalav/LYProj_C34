@@ -25,6 +25,7 @@ import mongoose from 'mongoose';
 import User        from '../models/User.js';
 
 import Transaction, { VALID_CATEGORIES, VALID_TYPES } from '../models/Transaction.js';
+import Liability   from '../models/Liability.js';
 import FMIHistory  from '../models/FMIHistory.js';
 import Alert       from '../models/Alert.js';
 import Envelope    from '../models/Envelope.js';
@@ -774,6 +775,20 @@ router.post('/transactions', async (req, res, next) => {
     let typeConfidence = req.body.typeConfidence !== undefined ? Number(req.body.typeConfidence) : (req.body.type ? 1.0 : mlData.typeConfidence || 0);
     let needsReview = req.body.needsReview !== undefined ? (req.body.needsReview === true) : (req.body.category && req.body.type ? false : mlData.needsReview || false);
 
+    // Validate optional liabilityId if supplied by user
+    let validatedLiabilityId = null;
+    if (req.body.liabilityId) {
+      const liability = await Liability.findOne({
+        id: String(req.body.liabilityId),
+        userId: String(userId),
+        status: 'active'
+      });
+      if (!liability) {
+        return res.status(400).json({ error: 'Invalid or inactive liability' });
+      }
+      validatedLiabilityId = liability.id;
+    }
+
     let tx;
     try {
       tx = await Transaction.create({
@@ -791,6 +806,7 @@ router.post('/transactions', async (req, res, next) => {
         categoryConfidence,
         typeConfidence,
         needsReview,
+        liabilityId:         validatedLiabilityId,
         tags:                sentimentResult.tags || [],
         description:         req.body.description || 'manual input',
         timestamp:           req.body.timestamp ? new Date(req.body.timestamp) : new Date()
@@ -817,12 +833,29 @@ router.put('/transactions/:id', async (req, res, next) => {
     const EDITABLE_FIELDS = [
       'amount', 'category', 'type', 'description', 'sentiment', 'confidenceScore', 
       'timestamp', 'tags', 'categorySource', 'typeSource', 'categoryConfidence', 
-      'typeConfidence', 'needsReview'
+      'typeConfidence', 'needsReview', 'liabilityId'
     ];
     const sanitized = {};
     for (const field of EDITABLE_FIELDS) {
       if (req.body[field] !== undefined) {
         sanitized[field] = req.body[field];
+      }
+    }
+
+    // Validate liabilityId if provided
+    if (sanitized.liabilityId !== undefined) {
+      if (sanitized.liabilityId === null || sanitized.liabilityId === '') {
+        sanitized.liabilityId = null;
+      } else {
+        const liability = await Liability.findOne({
+          id: String(sanitized.liabilityId),
+          userId: String(userId),
+          status: 'active'
+        });
+        if (!liability) {
+          return res.status(400).json({ error: 'Invalid or inactive liability' });
+        }
+        sanitized.liabilityId = liability.id;
       }
     }
 

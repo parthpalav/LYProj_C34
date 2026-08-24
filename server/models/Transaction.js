@@ -63,8 +63,17 @@ const transactionSchema = new mongoose.Schema(
 // Compound index to support time-series by type queries
 transactionSchema.index({ timestamp: 1, type: 1 });
 
-// Sparse unique compound index to guarantee idempotency for scheduled auto-deduct transactions
-transactionSchema.index({ liabilityId: 1, scheduledFor: 1 }, { unique: true, sparse: true });
+// Unique compound index with partial filter to guarantee idempotency for scheduled auto-deduct transactions
+transactionSchema.index(
+  { liabilityId: 1, scheduledFor: 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      liabilityId: { $exists: true },
+      scheduledFor: { $type: 'date' }
+    }
+  }
+);
 
 // Compound index to support fast liability payment history and summary queries
 transactionSchema.index({ userId: 1, liabilityId: 1, timestamp: -1 });

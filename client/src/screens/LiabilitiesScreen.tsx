@@ -607,10 +607,15 @@ export function LiabilitiesScreen() {
                           <Text style={styles.historyTxDate}>
                             {new Date(tx.timestamp).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })}
                           </Text>
-                          {tx.classificationSource === 'liability' && (
+                          {tx.classificationSource === 'liability' ? (
                             <View style={styles.autoDeductBadge}>
                               <Ionicons name="flash" size={10} color="#059669" />
                               <Text style={styles.autoDeductBadgeText}>Auto Deduct</Text>
+                            </View>
+                          ) : (
+                            <View style={styles.manualPaymentBadge}>
+                              <Ionicons name="hand-left-outline" size={10} color="#4338CA" />
+                              <Text style={styles.manualPaymentBadgeText}>Manual Payment</Text>
                             </View>
                           )}
                         </View>
@@ -760,6 +765,8 @@ const styles = StyleSheet.create({
   historyTxDate: { fontSize: 14, fontWeight: '700', color: '#111827' },
   autoDeductBadge: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#ECFDF5', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6, gap: 2 },
   autoDeductBadgeText: { fontSize: 10, color: '#059669', fontWeight: '700' },
+  manualPaymentBadge: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#EEF2FF', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6, gap: 2 },
+  manualPaymentBadgeText: { fontSize: 10, color: '#4338CA', fontWeight: '700' },
   historyTxMeta: { fontSize: 12, color: '#6B7280' },
   historyTxAmount: { fontSize: 15, fontWeight: '800', color: '#111827' },
 

@@ -15,8 +15,10 @@ import {
   Animated,
   Keyboard,
 } from 'react-native';
-import { addTransaction, classifyExpense, ClassifyResult } from '../services/api';
+import { Ionicons } from '@expo/vector-icons';
+import { addTransaction, classifyExpense, ClassifyResult, getLiabilities } from '../services/api';
 import { useStore } from '../store/useStore';
+import { Liability } from '../types';
 
 const CATEGORIES = [
   { label: 'Food',          emoji: '🍕', ml: 'Food'          },
@@ -46,7 +48,22 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [logged,   setLogged]   = useState(false);
   const [saving,   setSaving]   = useState(false);
+  const [liabilities, setLiabilities] = useState<Liability[]>([]);
+  const [selectedLiability, setSelectedLiability] = useState<Liability | null>(null);
+  const [showLiabilityModal, setShowLiabilityModal] = useState(false);
   const { transactions, addTransaction: addToStore } = useStore();
+
+  useEffect(() => {
+    let mounted = true;
+    getLiabilities()
+      .then(data => {
+        if (mounted) setLiabilities(data.filter(l => l.status === 'active' || !l.status));
+      })
+      .catch(() => {
+        if (mounted) setLiabilities([]);
+      });
+    return () => { mounted = false; };
+  }, []);
 
   // ── AI Classifier state ─────────────────────────────────────
   const [aiResult,       setAiResult]       = useState<ClassifyResult | null>(null);
@@ -189,6 +206,7 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
         categoryConfidence:  userOverrodeCategoryRef.current ? 1.0 : aiResult?.categoryConfidence,
         typeConfidence:      userOverrodeTypeRef.current ? 1.0 : aiResult?.typeConfidence,
         needsReview:         aiResult?.needsReview,
+        liabilityId:         selectedLiability ? selectedLiability.id : undefined,
         timestamp:           new Date().toISOString(),
       });
       addToStore(newTx);
@@ -353,6 +371,61 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
             </View>
           )}
 
+          {/* Optional Liability Linking */}
+          {liabilities.length > 0 && (
+            <View style={styles.liabilitySection}>
+              <Text style={styles.fieldLabel}>Link to Liability (Optional)</Text>
+              {!selectedLiability ? (
+                <TouchableOpacity
+                  style={styles.linkLiabilityBtn}
+                  onPress={() => setShowLiabilityModal(true)}
+                  activeOpacity={0.7}
+                >
+                  <Ionicons name="link-outline" size={16} color={BRAND_BLUE} />
+                  <Text style={styles.linkLiabilityBtnText}>+ Select a liability to link</Text>
+                </TouchableOpacity>
+              ) : (
+                <View style={styles.linkedLiabilityCard}>
+                  <TouchableOpacity
+                    style={styles.linkedLiabilityInfo}
+                    onPress={() => setShowLiabilityModal(true)}
+                    activeOpacity={0.8}
+                  >
+                    <View style={styles.linkedIconWrap}>
+                      <Ionicons name="calendar" size={18} color={BRAND_BLUE} />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.linkedLiabilityName} numberOfLines={1}>
+                        {selectedLiability.name}
+                      </Text>
+                      <Text style={styles.linkedLiabilityMeta}>
+                        ₹{selectedLiability.amount.toLocaleString()} · {selectedLiability.category} · {selectedLiability.type}
+                        {selectedLiability.autoDeduct ? ' · Auto Deduct' : ''}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.unlinkBtn}
+                    onPress={() => setSelectedLiability(null)}
+                    hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                  >
+                    <Ionicons name="close-circle" size={20} color="#94A3B8" />
+                  </TouchableOpacity>
+                </View>
+              )}
+
+              {/* Informational note for Auto Deduct liabilities */}
+              {selectedLiability && selectedLiability.autoDeduct && (
+                <View style={styles.autoDeductInfoNote}>
+                  <Ionicons name="information-circle-outline" size={14} color="#4338CA" />
+                  <Text style={styles.autoDeductInfoNoteText}>
+                    Added to payment history. Next Auto Deduct date remains unchanged.
+                  </Text>
+                </View>
+              )}
+            </View>
+          )}
+
           {/* Log Button */}
           <TouchableOpacity
             style={[styles.logButton, logged && styles.logButtonSuccess]}
@@ -433,6 +506,94 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
                   )}
                 </TouchableOpacity>
               )}
+            />
+          </View>
+        </TouchableOpacity>
+      </Modal>
+
+      {/* Liability Picker Modal */}
+      <Modal
+        visible={showLiabilityModal}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setShowLiabilityModal(false)}
+      >
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setShowLiabilityModal(false)}
+        >
+          <View style={styles.modalSheet}>
+            <View style={styles.dragHandle} />
+            <Text style={styles.modalTitle}>Link to Liability</Text>
+            <Text style={styles.modalSubtitle}>Record this transaction against a tracked commitment</Text>
+
+            <FlatList
+              data={liabilities}
+              keyExtractor={(item) => item.id}
+              ListHeaderComponent={
+                <TouchableOpacity
+                  style={[
+                    styles.liabilityModalItem,
+                    selectedLiability === null && styles.modalItemActive,
+                  ]}
+                  onPress={() => {
+                    setSelectedLiability(null);
+                    setShowLiabilityModal(false);
+                  }}
+                  activeOpacity={0.7}
+                >
+                  <View style={styles.unlinkedIconBox}>
+                    <Ionicons name="remove-circle-outline" size={20} color="#64748B" />
+                  </View>
+                  <View style={{ flex: 1 }}>
+                    <Text style={styles.modalItemText}>None (Do not link)</Text>
+                    <Text style={styles.liabilityItemSub}>Standard standalone transaction</Text>
+                  </View>
+                  {selectedLiability === null && (
+                    <Text style={styles.checkmark}>✓</Text>
+                  )}
+                </TouchableOpacity>
+              }
+              renderItem={({ item }) => {
+                const isSelected = selectedLiability?.id === item.id;
+                return (
+                  <TouchableOpacity
+                    style={[
+                      styles.liabilityModalItem,
+                      isSelected && styles.modalItemActive,
+                    ]}
+                    onPress={() => {
+                      setSelectedLiability(item);
+                      setShowLiabilityModal(false);
+                    }}
+                    activeOpacity={0.7}
+                  >
+                    <View style={styles.liabilityIconBox}>
+                      <Ionicons name="calendar-outline" size={20} color={BRAND_BLUE} />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                        <Text style={[styles.modalItemText, isSelected && styles.modalItemTextActive]}>
+                          {item.name}
+                        </Text>
+                        {item.autoDeduct && (
+                          <View style={styles.autoDeductPill}>
+                            <Ionicons name="flash" size={9} color="#059669" />
+                            <Text style={styles.autoDeductPillText}>Auto</Text>
+                          </View>
+                        )}
+                      </View>
+                      <Text style={styles.liabilityItemSub}>
+                        ₹{item.amount.toLocaleString()} · {item.category} · {item.type} · {item.frequency}
+                      </Text>
+                    </View>
+                    {isSelected && (
+                      <Text style={styles.checkmark}>✓</Text>
+                    )}
+                  </TouchableOpacity>
+                );
+              }}
             />
           </View>
         </TouchableOpacity>
@@ -854,6 +1015,134 @@ const styles = StyleSheet.create({
   aiConfirmButtonText: {
     color: '#FFFFFF',
     fontSize: 11,
+    fontWeight: '700',
+  },
+
+  // ── Liability Linking styles ──────────────────────────────
+  liabilitySection: {
+    marginVertical: 12,
+  },
+  linkLiabilityBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    paddingVertical: 12,
+    paddingHorizontal: 14,
+    borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: '#DDE0FF',
+    borderStyle: 'dashed',
+    backgroundColor: '#F8FAFF',
+  },
+  linkLiabilityBtnText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: BRAND_BLUE,
+  },
+  linkedLiabilityCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 12,
+    borderRadius: 12,
+    borderWidth: 1.5,
+    borderColor: '#C7C7FF',
+    backgroundColor: '#F0F0FF',
+  },
+  linkedLiabilityInfo: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  linkedIconWrap: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#DBEAFE',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  linkedLiabilityName: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#1A202C',
+  },
+  linkedLiabilityMeta: {
+    fontSize: 12,
+    color: '#4B5563',
+    marginTop: 2,
+  },
+  unlinkBtn: {
+    padding: 4,
+    marginLeft: 8,
+  },
+  autoDeductInfoNote: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: '#EEF2FF',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 8,
+    marginTop: 6,
+  },
+  autoDeductInfoNoteText: {
+    fontSize: 11,
+    color: '#4338CA',
+    flex: 1,
+    fontWeight: '500',
+  },
+  modalSubtitle: {
+    fontSize: 12,
+    color: '#64748B',
+    textAlign: 'center',
+    marginBottom: 14,
+    paddingHorizontal: 24,
+  },
+  liabilityModalItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    gap: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F1F5F9',
+  },
+  liabilityIconBox: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#EEF2FF',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  unlinkedIconBox: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#F1F5F9',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  liabilityItemSub: {
+    fontSize: 12,
+    color: '#64748B',
+    marginTop: 2,
+  },
+  autoDeductPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#ECFDF5',
+    paddingHorizontal: 5,
+    paddingVertical: 1,
+    borderRadius: 4,
+    gap: 2,
+  },
+  autoDeductPillText: {
+    fontSize: 9,
+    color: '#059669',
     fontWeight: '700',
   },
 });

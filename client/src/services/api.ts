@@ -22,6 +22,7 @@ export interface NewTransaction {
   typeConfidence?:   number;
   needsReview?:      boolean;
   timestamp?:      string;
+  liabilityId?:    string;
 }
 
 export interface NewGoalPayload {

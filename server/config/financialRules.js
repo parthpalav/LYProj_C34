@@ -58,3 +58,22 @@ export const VOLATILITY_SLOPE = 2.0;
 export const VOLATILITY_MIN = 0.06;
 export const VOLATILITY_MAX = 0.22;
 export const DEFAULT_PORTFOLIO_VOLATILITY = 0.12; // Corresponding to DEFAULT_RETURN_RATE = 0.08: clamp(-0.04 + 2 * 0.08, 0.06, 0.22) = 0.12
+
+// Contribution Recommendation Feasibility Bands (Product Heuristics)
+export const FEASIBILITY_STATUS = Object.freeze({
+  MANAGEABLE: 'MANAGEABLE',
+  AGGRESSIVE: 'AGGRESSIVE',
+  VERY_AGGRESSIVE: 'VERY_AGGRESSIVE',
+  IMPRACTICAL: 'IMPRACTICAL',
+  UNKNOWN: 'UNKNOWN'
+});
+
+export const FEASIBILITY_THRESHOLDS = Object.freeze({
+  MANAGEABLE_MAX: 0.30,      // <= 30% of reliable monthly income
+  AGGRESSIVE_MAX: 0.50,      // > 30% and <= 50%
+  VERY_AGGRESSIVE_MAX: 0.80  // > 50% and <= 80%; > 80% is IMPRACTICAL
+});
+
+// Retirement-Age Alternative Scenarios Configuration
+export const DEFAULT_ALTERNATIVE_AGE_OFFSETS = Object.freeze([2, 5, 10]); // +2y, +5y, +10y
+export const MAX_RETIREMENT_ALTERNATIVE_AGE = 90; // Technical ceiling for alternative scenario evaluation

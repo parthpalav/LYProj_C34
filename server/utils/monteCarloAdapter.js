@@ -9,7 +9,11 @@ import {
   VOLATILITY_INTERCEPT,
   VOLATILITY_SLOPE,
   VOLATILITY_MIN,
-  VOLATILITY_MAX
+  VOLATILITY_MAX,
+  FEASIBILITY_STATUS,
+  FEASIBILITY_THRESHOLDS,
+  DEFAULT_ALTERNATIVE_AGE_OFFSETS,
+  MAX_RETIREMENT_ALTERNATIVE_AGE
 } from '../config/financialRules.js';
 import { logger } from './logger.js';
 
@@ -279,14 +283,217 @@ export function validateMonteCarloResponse(data) {
 }
 
 /**
+ * Evaluates product feasibility heuristic for contribution recommendations.
+ *
+ * Bands:
+ *  - UNKNOWN: reliableMonthlyIncome is missing, non-finite, or <= 0
+ *  - MANAGEABLE: recommendedContributionRatio <= 0.30 (<= 30%)
+ *  - AGGRESSIVE: > 0.30 and <= 0.50 (30% - 50%)
+ *  - VERY_AGGRESSIVE: > 0.50 and <= 0.80 (50% - 80%)
+ *  - IMPRACTICAL: > 0.80 (> 80%)
+ *
+ * @param {number|null} recommendedMonthlyContribution
+ * @param {number|null} additionalMonthlyContributionRequired
+ * @param {number|null} reliableMonthlyIncome
+ * @returns {Object} { status, recommendedContributionRatio, additionalContributionRatio, reliableMonthlyIncome }
+ */
+export function evaluateContributionFeasibility(
+  recommendedMonthlyContribution,
+  additionalMonthlyContributionRequired,
+  reliableMonthlyIncome
+) {
+  if (
+    reliableMonthlyIncome === null ||
+    reliableMonthlyIncome === undefined ||
+    typeof reliableMonthlyIncome !== 'number' ||
+    !Number.isFinite(reliableMonthlyIncome) ||
+    reliableMonthlyIncome <= 0
+  ) {
+    return {
+      status: FEASIBILITY_STATUS.UNKNOWN,
+      recommendedContributionRatio: null,
+      additionalContributionRatio: null,
+      reliableMonthlyIncome: null
+    };
+  }
+
+  const rec = Number(recommendedMonthlyContribution);
+  const add = Number(additionalMonthlyContributionRequired);
+
+  if (!Number.isFinite(rec) || rec < 0) {
+    return {
+      status: FEASIBILITY_STATUS.UNKNOWN,
+      recommendedContributionRatio: null,
+      additionalContributionRatio: null,
+      reliableMonthlyIncome
+    };
+  }
+
+  const recRatio = rec / reliableMonthlyIncome;
+  const addRatio = Number.isFinite(add) && add >= 0 ? add / reliableMonthlyIncome : 0;
+
+  let status = FEASIBILITY_STATUS.MANAGEABLE;
+  if (recRatio > FEASIBILITY_THRESHOLDS.VERY_AGGRESSIVE_MAX) {
+    status = FEASIBILITY_STATUS.IMPRACTICAL;
+  } else if (recRatio > FEASIBILITY_THRESHOLDS.AGGRESSIVE_MAX) {
+    status = FEASIBILITY_STATUS.VERY_AGGRESSIVE;
+  } else if (recRatio > FEASIBILITY_THRESHOLDS.MANAGEABLE_MAX) {
+    status = FEASIBILITY_STATUS.AGGRESSIVE;
+  } else {
+    status = FEASIBILITY_STATUS.MANAGEABLE;
+  }
+
+  return {
+    status,
+    recommendedContributionRatio: Math.round(recRatio * 10000) / 10000,
+    additionalContributionRatio: Math.round(addRatio * 10000) / 10000,
+    reliableMonthlyIncome
+  };
+}
+
+/**
+ * Evaluates comparative retirement-age alternative scenarios (+2y, +5y, +10y).
+ *
+ * CRN Policy:
+ *  - Reuses the BASE forecast's Monte Carlo seed (basePayload.seed) for all alternative horizons
+ *    to preserve Common Random Numbers across comparative scenarios.
+ *
+ * Minimal Payload:
+ *  - includeSimulation = true
+ *  - includeContributionSolver = true
+ *  - includeFundedAgeSolver = false
+ *
+ * Resilience:
+ *  - Uses Promise.allSettled so single alternative failures do not fail other alternatives
+ *    or the parent snapshot.
+ *
+ * @param {Object} resolved - Resolved inputs from forecastResolver
+ * @param {Object} options - Options
+ * @param {Object} basePayload - Normal base Monte Carlo request payload
+ * @param {Object} baseSnapshot - Deterministic snapshot
+ * @param {number|null} reliableMonthlyIncome - Authoritative reliable monthly income
+ * @returns {Promise<Array<Object>|null>} Array of alternative scenarios or null
+ */
+export async function calculateRetirementAlternatives(
+  resolved,
+  options,
+  basePayload,
+  baseSnapshot,
+  reliableMonthlyIncome
+) {
+  const currentAge = Number(resolved.currentAge ?? resolved.user?.age);
+  const baseRetAge = Number(resolved.retirementAge ?? resolved.user?.retirementAge ?? 60);
+
+  if (!Number.isFinite(currentAge) || !Number.isFinite(baseRetAge) || currentAge >= baseRetAge) {
+    return null;
+  }
+
+  const offsets = options.alternativeAgeOffsets || DEFAULT_ALTERNATIVE_AGE_OFFSETS;
+  const maxAltAge = Math.min(MAX_RETIREMENT_ALTERNATIVE_AGE, options.maxSearchAge || 90);
+
+  // Generate unique valid target ages within supported limits
+  const targetAges = [];
+  const seenAges = new Set([baseRetAge]);
+
+  for (const offset of offsets) {
+    const candidateAge = baseRetAge + offset;
+    if (candidateAge <= maxAltAge && !seenAges.has(candidateAge)) {
+      seenAges.add(candidateAge);
+      targetAges.push({
+        targetAge: candidateAge,
+        yearsExtended: offset,
+        monthsUntilRetirement: Math.round((candidateAge - currentAge) * 12)
+      });
+    }
+  }
+
+  if (targetAges.length === 0) {
+    return null;
+  }
+
+  // Build minimal payload for each alternative using Common Random Numbers (basePayload.seed)
+  const alternativePromises = targetAges.map(async (alt) => {
+    const altPayload = {
+      startingCorpus: basePayload.startingCorpus,
+      monthlyContribution: basePayload.monthlyContribution,
+      expectedReturnRate: basePayload.expectedReturnRate,
+      expectedInflationRate: basePayload.expectedInflationRate,
+      portfolioVolatility: basePayload.portfolioVolatility,
+      volatilitySource: basePayload.volatilitySource,
+      estimatedFireCorpus: basePayload.estimatedFireCorpus,
+      userGoalCorpus: null,
+      monthsUntilRetirement: alt.monthsUntilRetirement,
+      contributionMode: basePayload.contributionMode,
+      simulationCount: basePayload.simulationCount,
+      seed: basePayload.seed, // CRITICAL: Reuse BASE forecast seed for CRN cross-horizon comparison
+      includeSimulation: true,
+      includeContributionSolver: true,
+      includeFundedAgeSolver: false, // Minimal simulation: omit funded age
+      solverTargetProbability: basePayload.solverTargetProbability || DEFAULT_SOLVER_TARGET_PROBABILITY
+    };
+
+    const rawData = await callMonteCarloSimulation(altPayload, options);
+    const isValid = validateMonteCarloResponse(rawData);
+    if (!isValid) {
+      throw new Error(`Invalid simulation response for alternative age ${alt.targetAge}`);
+    }
+
+    const sim = rawData.simulation || {};
+    const solver = rawData.contributionSolver || {};
+
+    const recContribution = solver.recommendedMonthlyContribution ?? null;
+    const addContribution = solver.additionalMonthlyContributionRequired ?? 0;
+    const feasibility = evaluateContributionFeasibility(
+      recContribution,
+      addContribution,
+      reliableMonthlyIncome
+    );
+
+    return {
+      targetAge: alt.targetAge,
+      yearsExtended: alt.yearsExtended,
+      monthsUntilRetirement: alt.monthsUntilRetirement,
+      probabilityFundedAtTargetAge: sim.probabilityFundedAtTargetAge ?? null,
+      recommendedMonthlyContribution: recContribution,
+      additionalMonthlyContributionRequired: addContribution,
+      achievedProbabilityFunded: solver.achievedProbabilityFunded ?? null,
+      targetProbability: solver.targetProbability ?? (basePayload.solverTargetProbability || DEFAULT_SOLVER_TARGET_PROBABILITY),
+      solved: solver.solved ?? false,
+      feasibility
+    };
+  });
+
+  const results = await Promise.allSettled(alternativePromises);
+  const successfulAlternatives = [];
+
+  for (let i = 0; i < results.length; i++) {
+    const res = results[i];
+    if (res.status === 'fulfilled' && res.value) {
+      successfulAlternatives.push(res.value);
+    } else {
+      logger.warn(`[PredictabilityService] Alternative scenario +${targetAges[i].yearsExtended}y (age ${targetAges[i].targetAge}) failed:`, res.reason?.message || res.reason);
+    }
+  }
+
+  if (successfulAlternatives.length === 0) {
+    return null;
+  }
+
+  // Sort by targetAge ascending
+  return successfulAlternatives.sort((a, b) => a.targetAge - b.targetAge);
+}
+
+/**
  * Transform validated Python simulation response into public additive probabilistic section.
  * 
  * @param {Object} data - Validated response from Python service
  * @param {Object} payload - Sent request payload (contains assumptions and targets)
  * @param {string} dataQuality - PW-1 data quality level ('HIGH' | 'MEDIUM' | 'LOW')
+ * @param {Object|null} feasibility - Evaluated contribution recommendation feasibility
+ * @param {Array<Object>|null} retirementAlternatives - Comparative retirement age alternatives
  * @returns {Object} Clean public probabilistic response contract
  */
-export function mapMonteCarloResponse(data, payload, dataQuality = 'MEDIUM') {
+export function mapMonteCarloResponse(data, payload, dataQuality = 'MEDIUM', feasibility = null, retirementAlternatives = null) {
   const sim = data.simulation || {};
   const solver = data.contributionSolver || null;
   const fundedAge = data.fundedAge || null;
@@ -329,8 +536,10 @@ export function mapMonteCarloResponse(data, payload, dataQuality = 'MEDIUM') {
       recommendedMonthlyContribution: solver.recommendedMonthlyContribution,
       additionalMonthlyContributionRequired: solver.additionalMonthlyContributionRequired,
       achievedProbabilityFunded: solver.achievedProbabilityFunded,
-      recommendationIncrement: solver.recommendationIncrement
-    } : null
+      recommendationIncrement: solver.recommendationIncrement,
+      feasibility: feasibility ?? null
+    } : null,
+    retirementAlternatives: retirementAlternatives || null
   };
 }
 
@@ -392,10 +601,66 @@ export async function attachMonteCarloSimulation(snapshot, resolved, options = {
       return snapshot;
     }
 
-    // 6. Map to clean public contract
-    snapshot.probabilistic = mapMonteCarloResponse(rawData, payload, snapshot.forecastStatus?.dataQuality);
+    // 6. Evaluate reliable monthly income & contribution feasibility
+    const reliableMonthlyIncome = (
+      typeof snapshot.income?.reliableMonthlyIncome === 'number' && snapshot.income.reliableMonthlyIncome > 0
+    ) ? snapshot.income.reliableMonthlyIncome : (
+      typeof snapshot.income?.meanMonthlyIncome === 'number' && snapshot.income.meanMonthlyIncome > 0
+    ) ? snapshot.income.meanMonthlyIncome : (
+      typeof resolved.user?.monthlyIncome === 'number' && resolved.user.monthlyIncome > 0
+    ) ? resolved.user.monthlyIncome : null;
 
-    // 7. Add machine-readable explanation facts
+    const solver = rawData.contributionSolver;
+    let baseFeasibility = null;
+    if (solver && solver.solved) {
+      baseFeasibility = evaluateContributionFeasibility(
+        solver.recommendedMonthlyContribution,
+        solver.additionalMonthlyContributionRequired,
+        reliableMonthlyIncome
+      );
+    }
+
+    // 7. Evaluate retirement alternatives if appropriate
+    let retirementAlternatives = null;
+    const shouldCalculateAlternatives = (
+      options.skipAlternatives !== true &&
+      solver &&
+      solver.solved === true &&
+      solver.additionalMonthlyContributionRequired > 0 &&
+      baseFeasibility &&
+      (
+        baseFeasibility.status === FEASIBILITY_STATUS.AGGRESSIVE ||
+        baseFeasibility.status === FEASIBILITY_STATUS.VERY_AGGRESSIVE ||
+        baseFeasibility.status === FEASIBILITY_STATUS.IMPRACTICAL ||
+        options.forceAlternatives === true
+      )
+    );
+
+    if (shouldCalculateAlternatives) {
+      try {
+        retirementAlternatives = await calculateRetirementAlternatives(
+          resolved,
+          options,
+          payload,
+          snapshot,
+          reliableMonthlyIncome
+        );
+      } catch (altErr) {
+        logger.warn('[PredictabilityService] Error calculating retirement alternatives, omitting alternatives:', altErr.message || altErr);
+        retirementAlternatives = null;
+      }
+    }
+
+    // 8. Map to clean public contract
+    snapshot.probabilistic = mapMonteCarloResponse(
+      rawData,
+      payload,
+      snapshot.forecastStatus?.dataQuality,
+      baseFeasibility,
+      retirementAlternatives
+    );
+
+    // 9. Add machine-readable explanation facts
     snapshot.explanationFacts.push({
       code: 'MONTE_CARLO_AVAILABLE',
       value: true
@@ -425,7 +690,7 @@ export async function attachMonteCarloSimulation(snapshot, resolved, options = {
 
     return snapshot;
   } catch (err) {
-    // 8. Graceful error handling (distinguish 400 client rejection vs network/500 failure)
+    // 10. Graceful error handling (distinguish 400 client rejection vs network/500 failure)
     const reason = err.code || 'SIMULATION_SERVICE_UNAVAILABLE';
     if (err.code === 'SIMULATION_INPUT_REJECTED') {
       logger.error('[PredictabilityService] Monte Carlo input rejected by Python microservice (HTTP 400):', err.message || err);

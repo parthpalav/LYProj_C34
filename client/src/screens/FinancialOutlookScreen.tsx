@@ -35,13 +35,13 @@ const { width: SCREEN_W } = Dimensions.get('window');
 const PRIMARY = '#3B3BDE';
 const SUCCESS = '#10B981';
 const WARNING = '#F59E0B';
-const PURPLE  = '#7C3AED';
-const SLATE   = '#64748B';
-const DARK    = '#0F172A';
-const MUTED   = '#6B7280';
-const BORDER  = '#E2E8F0';
+const PURPLE = '#7C3AED';
+const SLATE = '#64748B';
+const DARK = '#0F172A';
+const MUTED = '#6B7280';
+const BORDER = '#E2E8F0';
 const CARD_BG = '#FFFFFF';
-const APP_BG  = '#F8FAFC';
+const APP_BG = '#F8FAFC';
 
 // ── Indian Currency Formatter ──────────────────────────────────
 function formatCurrency(amount: number | null | undefined, compact = false): string {
@@ -82,6 +82,33 @@ function formatAge(ageYears: number | null | undefined): string {
   }
   return `Age ${wholeYears}y ${months}m`;
 }
+
+function formatFundedAge(point: { reached?: boolean; ageYears?: number | null } | null | undefined): { headline: string; note?: string; color?: string } {
+  if (!point || !point.reached || point.ageYears === null || point.ageYears === undefined || !Number.isFinite(point.ageYears)) {
+    return { headline: 'Not reached in forecast horizon', color: SLATE };
+  }
+  const ageYears = point.ageYears;
+  const wholeYears = Math.floor(ageYears);
+  const months = Math.round((ageYears - wholeYears) * 12);
+  const formattedExact = (months === 0 || months === 12)
+    ? `Age ${months === 12 ? wholeYears + 1 : wholeYears}`
+    : `Age ${wholeYears}y ${months}m`;
+
+  if (ageYears <= 70) {
+    return { headline: formattedExact, color: PRIMARY };
+  } else if (ageYears <= 75) {
+    return { headline: formattedExact, note: 'Later career horizon', color: PRIMARY };
+  } else if (ageYears <= 85) {
+    return { headline: formattedExact, note: 'Beyond typical retirement horizon', color: WARNING };
+  } else {
+    return {
+      headline: 'Not reached within a typical retirement horizon',
+      note: `Modeled: ${formattedExact}`,
+      color: MUTED
+    };
+  }
+}
+
 
 // ── Human Explanation Facts Mapping ────────────────────────────
 function mapFactToMessage(code: string, value?: any): { title: string; desc: string; icon: keyof typeof Ionicons.glyphMap; color: string } {
@@ -587,19 +614,33 @@ export function FinancialOutlookScreen(): React.ReactElement {
               <View style={styles.mcTimingBlock}>
                 <Text style={styles.mcBlockHeader}>Probabilistic Target Timing</Text>
                 <View style={styles.detailList}>
-                  <View style={styles.detailRow}>
-                    <Text style={styles.detailLabel}>50% Funded-Probability Age</Text>
-                    <Text style={[styles.detailValue, { fontWeight: '700', color: ef.fundedAge50?.reached ? PRIMARY : SLATE }]}>
-                      {ef.fundedAge50?.reached ? formatAge(ef.fundedAge50.ageYears) : 'Not reached in forecast horizon'}
-                    </Text>
-                  </View>
+                  {(() => {
+                    const f50 = formatFundedAge(ef.fundedAge50);
+                    const f75 = formatFundedAge(ef.fundedAge75);
+                    return (
+                      <>
+                        <View style={styles.detailRow}>
+                          <Text style={styles.detailLabel}>50% Funded-Probability Age</Text>
+                          <View style={{ alignItems: 'flex-end' }}>
+                            <Text style={[styles.detailValue, { fontWeight: '700', color: f50.color || PRIMARY }]}>
+                              {f50.headline}
+                            </Text>
+                            {f50.note ? <Text style={styles.timingSubNote}>{f50.note}</Text> : null}
+                          </View>
+                        </View>
 
-                  <View style={styles.detailRow}>
-                    <Text style={styles.detailLabel}>75% Funded-Probability Age</Text>
-                    <Text style={[styles.detailValue, { fontWeight: '700', color: ef.fundedAge75?.reached ? SUCCESS : SLATE }]}>
-                      {ef.fundedAge75?.reached ? formatAge(ef.fundedAge75.ageYears) : 'Not reached in forecast horizon'}
-                    </Text>
-                  </View>
+                        <View style={styles.detailRow}>
+                          <Text style={styles.detailLabel}>75% Funded-Probability Age</Text>
+                          <View style={{ alignItems: 'flex-end' }}>
+                            <Text style={[styles.detailValue, { fontWeight: '700', color: f75.color || SUCCESS }]}>
+                              {f75.headline}
+                            </Text>
+                            {f75.note ? <Text style={styles.timingSubNote}>{f75.note}</Text> : null}
+                          </View>
+                        </View>
+                      </>
+                    );
+                  })()}
                 </View>
               </View>
 
@@ -607,8 +648,32 @@ export function FinancialOutlookScreen(): React.ReactElement {
               {rec && (
                 <View style={styles.mcRecCard}>
                   <View style={styles.mcRecHeader}>
-                    <Ionicons name="trending-up-outline" size={18} color={PRIMARY} />
-                    <Text style={styles.mcRecTitle}>To Reach a 75% Modeled Probability</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, flex: 1 }}>
+                      <Ionicons name="trending-up-outline" size={18} color={PRIMARY} />
+                      <Text style={styles.mcRecTitle}>To Reach a 75% Modeled Probability</Text>
+                    </View>
+                    {rec.feasibility && rec.feasibility.status !== 'UNKNOWN' && (
+                      <View style={[
+                        styles.feasibilityPill,
+                        rec.feasibility.status === 'MANAGEABLE' ? styles.feasPillManageable :
+                          rec.feasibility.status === 'AGGRESSIVE' ? styles.feasPillAggressive :
+                            rec.feasibility.status === 'VERY_AGGRESSIVE' ? styles.feasPillVeryAggressive :
+                              styles.feasPillImpractical
+                      ]}>
+                        <Text style={[
+                          styles.feasibilityPillText,
+                          rec.feasibility.status === 'MANAGEABLE' ? styles.feasTextManageable :
+                            rec.feasibility.status === 'AGGRESSIVE' ? styles.feasTextAggressive :
+                              rec.feasibility.status === 'VERY_AGGRESSIVE' ? styles.feasTextVeryAggressive :
+                                styles.feasTextImpractical
+                        ]}>
+                          {rec.feasibility.status === 'MANAGEABLE' ? 'Manageable' :
+                            rec.feasibility.status === 'AGGRESSIVE' ? 'High Commitment' :
+                              rec.feasibility.status === 'VERY_AGGRESSIVE' ? 'Very High Commitment' :
+                                'Exceeds Typical Savings Capacity'}
+                        </Text>
+                      </View>
+                    )}
                   </View>
 
                   {rec.solved ? (
@@ -620,6 +685,34 @@ export function FinancialOutlookScreen(): React.ReactElement {
                         <Text style={styles.mcRecFromTo}>
                           From {formatCurrency(rec.currentMonthlyContribution)} → {formatCurrency(rec.recommendedMonthlyContribution)} per month
                         </Text>
+
+                        {/* Feasibility Contextual Messaging */}
+                        {rec.feasibility && rec.feasibility.status === 'MANAGEABLE' && rec.feasibility.recommendedContributionRatio !== null && (
+                          <Text style={styles.mcRecFeasContext}>
+                            About {Math.round(rec.feasibility.recommendedContributionRatio * 100)}% of your reliable monthly income.
+                          </Text>
+                        )}
+                        {rec.feasibility && rec.feasibility.status === 'AGGRESSIVE' && rec.feasibility.recommendedContributionRatio !== null && (
+                          <Text style={[styles.mcRecFeasContext, { color: PURPLE }]}>
+                            This would require a high savings commitment relative to your current income (~{Math.round(rec.feasibility.recommendedContributionRatio * 100)}% of reliable monthly income).
+                          </Text>
+                        )}
+                        {rec.feasibility && rec.feasibility.status === 'VERY_AGGRESSIVE' && rec.feasibility.recommendedContributionRatio !== null && (
+                          <Text style={[styles.mcRecFeasContext, { color: WARNING }]}>
+                            This recommendation would require more than half (~{Math.round(rec.feasibility.recommendedContributionRatio * 100)}%) of your reliable monthly income.
+                          </Text>
+                        )}
+                        {rec.feasibility && rec.feasibility.status === 'IMPRACTICAL' && (
+                          <Text style={[styles.mcRecFeasContext, { color: '#DC2626' }]}>
+                            Reaching a 75% modeled probability by your target retirement age would require approximately {formatCurrency(rec.recommendedMonthlyContribution)}/month under flat contribution modeling. This is substantially above your current reliable monthly income, so extending your retirement timeline may be more realistic.
+                          </Text>
+                        )}
+                        {rec.feasibility && rec.feasibility.status === 'UNKNOWN' && (
+                          <Text style={styles.mcRecFeasContext}>
+                            We can estimate the investment needed, but need a more reliable income baseline to assess how practical it may be.
+                          </Text>
+                        )}
+
                         <Text style={styles.mcRecNote}>
                           Modeled to elevate funding likelihood from {formatPercentInt(rec.currentProbabilityFunded)} to {formatPercentInt(rec.achievedProbabilityFunded)}.
                         </Text>
@@ -643,6 +736,78 @@ export function FinancialOutlookScreen(): React.ReactElement {
                   )}
                 </View>
               )}
+
+              {/* 4b. Retirement Timeline Alternatives */}
+              {probabilistic.retirementAlternatives && probabilistic.retirementAlternatives.length > 0 && (
+                <View style={styles.mcAlternativesCard}>
+                  <View style={styles.mcAltHeader}>
+                    <Ionicons name="calendar-outline" size={18} color={PRIMARY} />
+                    <Text style={styles.mcAltTitle}>Retirement Timeline Alternatives</Text>
+                  </View>
+                  <Text style={styles.mcAltSubtitle}>
+                    See how giving your investments more time to compound reduces your required monthly savings.
+                  </Text>
+
+                  <View style={styles.mcAltList}>
+                    {probabilistic.retirementAlternatives.map((alt) => {
+                      const altFeas = alt.feasibility;
+                      const feasStatus = altFeas?.status;
+                      return (
+                        <View key={alt.targetAge} style={styles.mcAltRow}>
+                          <View style={styles.mcAltLeft}>
+                            <Text style={styles.mcAltAgeText}>Age {alt.targetAge}</Text>
+                            <Text style={styles.mcAltYearsOffset}>+{alt.yearsExtended} yrs</Text>
+                          </View>
+                          <View style={styles.mcAltRight}>
+                            <View style={styles.mcAltMetricRow}>
+                              <Text style={styles.mcAltMetricLabel}>Chance with current SIP:</Text>
+                              <Text style={[styles.mcAltMetricVal, { color: PRIMARY }]}>
+                                {formatPercentInt(alt.probabilityFundedAtTargetAge)}
+                              </Text>
+                            </View>
+                            <View style={styles.mcAltMetricRow}>
+                              <Text style={styles.mcAltMetricLabel}>Required for 75%:</Text>
+                              <Text style={[styles.mcAltMetricVal, { fontWeight: '700' }]}>
+                                {formatCurrency(alt.recommendedMonthlyContribution)}/mo
+                              </Text>
+                            </View>
+                            {feasStatus && feasStatus !== 'UNKNOWN' && (
+                              <View style={styles.mcAltFeasRow}>
+                                <View style={[
+                                  styles.feasibilityPillSmall,
+                                  feasStatus === 'MANAGEABLE' ? styles.feasPillManageable :
+                                    feasStatus === 'AGGRESSIVE' ? styles.feasPillAggressive :
+                                      feasStatus === 'VERY_AGGRESSIVE' ? styles.feasPillVeryAggressive :
+                                        styles.feasPillImpractical
+                                ]}>
+                                  <Text style={[
+                                    styles.feasibilityPillTextSmall,
+                                    feasStatus === 'MANAGEABLE' ? styles.feasTextManageable :
+                                      feasStatus === 'AGGRESSIVE' ? styles.feasTextAggressive :
+                                        feasStatus === 'VERY_AGGRESSIVE' ? styles.feasTextVeryAggressive :
+                                          styles.feasTextImpractical
+                                  ]}>
+                                    {feasStatus === 'MANAGEABLE' ? 'Manageable' :
+                                      feasStatus === 'AGGRESSIVE' ? 'High Commitment' :
+                                        feasStatus === 'VERY_AGGRESSIVE' ? 'Very High' :
+                                          'Exceeds Capacity'}
+                                  </Text>
+                                </View>
+                                {altFeas?.recommendedContributionRatio !== null && altFeas?.recommendedContributionRatio !== undefined && (
+                                  <Text style={styles.mcAltRatioText}>
+                                    ~{Math.round(altFeas.recommendedContributionRatio * 100)}% of income
+                                  </Text>
+                                )}
+                              </View>
+                            )}
+                          </View>
+                        </View>
+                      );
+                    })}
+                  </View>
+                </View>
+              )}
+
 
               {/* 5. Personal Goal Comparison (if personal goal exists) */}
               {userGoal && userGoal.targetAmountReal > 0 && (
@@ -1041,6 +1206,11 @@ export function FinancialOutlookScreen(): React.ReactElement {
                   <View style={styles.detailRow}>
                     <Text style={styles.detailLabel}>Contribution Model</Text>
                     <Text style={styles.detailValue}>Fixed Nominal Monthly (NOMINAL_FLAT)</Text>
+                  </View>
+                  <View style={styles.nominalFlatNote}>
+                    <Text style={styles.nominalFlatNoteText}>
+                      Current projections assume your monthly investment stays flat in nominal rupees over time. Future versions may model increasing contributions over time.
+                    </Text>
                   </View>
                 </>
               )}
@@ -1874,5 +2044,160 @@ const styles = StyleSheet.create({
   matrixValBase: {
     color: PRIMARY,
     fontWeight: '800',
+  },
+  // Feasibility Badges & Context
+  timingSubNote: {
+    fontSize: 10,
+    color: MUTED,
+    marginTop: 2,
+    fontStyle: 'italic',
+  },
+  feasibilityPill: {
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+  },
+  feasibilityPillSmall: {
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+  },
+  feasibilityPillText: {
+    fontSize: 10,
+    fontWeight: '700',
+  },
+  feasibilityPillTextSmall: {
+    fontSize: 9,
+    fontWeight: '700',
+  },
+  feasPillManageable: {
+    backgroundColor: '#ECFDF5',
+  },
+  feasPillAggressive: {
+    backgroundColor: '#F5F3FF',
+  },
+  feasPillVeryAggressive: {
+    backgroundColor: '#FFFBEB',
+  },
+  feasPillImpractical: {
+    backgroundColor: '#FEF2F2',
+  },
+  feasTextManageable: {
+    color: '#059669',
+  },
+  feasTextAggressive: {
+    color: '#7C3AED',
+  },
+  feasTextVeryAggressive: {
+    color: '#D97706',
+  },
+  feasTextImpractical: {
+    color: '#DC2626',
+  },
+  mcRecFeasContext: {
+    fontSize: 12,
+    lineHeight: 17,
+    color: SLATE,
+    marginTop: 6,
+  },
+  // Alternatives Card
+  mcAlternativesCard: {
+    backgroundColor: '#F8FAFC',
+    borderRadius: 12,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    marginTop: 12,
+  },
+  mcAltHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 4,
+  },
+  mcAltTitle: {
+    fontSize: 13,
+    fontWeight: '800',
+    color: DARK,
+  },
+  mcAltSubtitle: {
+    fontSize: 11,
+    color: SLATE,
+    lineHeight: 15,
+    marginBottom: 12,
+  },
+  mcAltList: {
+    gap: 10,
+  },
+  mcAltRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: CARD_BG,
+    padding: 12,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+  },
+  mcAltLeft: {
+    width: 75,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRightWidth: 1,
+    borderRightColor: '#E2E8F0',
+    paddingRight: 10,
+    marginRight: 12,
+  },
+  mcAltAgeText: {
+    fontSize: 14,
+    fontWeight: '800',
+    color: DARK,
+  },
+  mcAltYearsOffset: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: PRIMARY,
+    marginTop: 2,
+  },
+  mcAltRight: {
+    flex: 1,
+    gap: 3,
+  },
+  mcAltMetricRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  mcAltMetricLabel: {
+    fontSize: 11,
+    color: MUTED,
+  },
+  mcAltMetricVal: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: DARK,
+  },
+  mcAltFeasRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginTop: 4,
+  },
+  mcAltRatioText: {
+    fontSize: 10,
+    color: SLATE,
+  },
+  nominalFlatNote: {
+    marginTop: 4,
+    padding: 8,
+    backgroundColor: '#F8FAFC',
+    borderRadius: 6,
+    borderLeftWidth: 2,
+    borderLeftColor: PRIMARY,
+  },
+  nominalFlatNoteText: {
+    fontSize: 11,
+    color: SLATE,
+    lineHeight: 15,
+    fontStyle: 'italic',
   },
 });

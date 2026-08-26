@@ -429,6 +429,28 @@ export interface MonteCarloUserGoal {
   fundedAge75: MonteCarloFundedAgePoint | null;
 }
 
+export type MonteCarloFeasibilityStatus = 'MANAGEABLE' | 'AGGRESSIVE' | 'VERY_AGGRESSIVE' | 'IMPRACTICAL' | 'UNKNOWN';
+
+export interface MonteCarloContributionFeasibility {
+  status: MonteCarloFeasibilityStatus;
+  recommendedContributionRatio: number | null;
+  additionalContributionRatio: number | null;
+  reliableMonthlyIncome: number | null;
+}
+
+export interface MonteCarloRetirementAlternative {
+  targetAge: number;
+  yearsExtended: number;
+  monthsUntilRetirement: number;
+  probabilityFundedAtTargetAge: number | null;
+  recommendedMonthlyContribution: number | null;
+  additionalMonthlyContributionRequired: number | null;
+  achievedProbabilityFunded: number | null;
+  targetProbability: number;
+  solved: boolean;
+  feasibility?: MonteCarloContributionFeasibility | null;
+}
+
 export interface MonteCarloContributionRecommendation {
   solved: boolean;
   targetProbability: number;
@@ -438,6 +460,7 @@ export interface MonteCarloContributionRecommendation {
   additionalMonthlyContributionRequired: number;
   achievedProbabilityFunded: number;
   recommendationIncrement: number;
+  feasibility?: MonteCarloContributionFeasibility | null;
 }
 
 export interface MonteCarloSection {
@@ -451,6 +474,7 @@ export interface MonteCarloSection {
   estimatedFire?: MonteCarloEstimatedFire;
   userGoal?: MonteCarloUserGoal | null;
   contributionRecommendation?: MonteCarloContributionRecommendation | null;
+  retirementAlternatives?: MonteCarloRetirementAlternative[] | null;
   missingInputs?: string[];
   details?: string;
 }

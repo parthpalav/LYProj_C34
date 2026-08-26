@@ -1,7 +1,7 @@
 /**
  * client/src/screens/FinancialOutlookScreen.tsx
  * 
- * Deterministic Financial Outlook & Predictability Screen for FINAURA.
+ * Deterministic + Probabilistic Financial Outlook & Predictability Screen for FINAURA.
  * Read-only frontend view consuming backend GET /api/predictability.
  * 
  * Invariants:
@@ -9,6 +9,7 @@
  *  - Neutral, non-punitive presentation of irregular income & high CV.
  *  - Strict visual separation between estimated FIRE target and user-entered goal.
  *  - Honest presentation of data limitations and explicit model assumptions.
+ *  - Progressive disclosure of probabilistic simulation and risk metrics.
  */
 
 import React, { useCallback, useEffect, useState } from 'react';
@@ -67,8 +68,23 @@ function formatPercent(ratio: number | null | undefined): string {
   return `${(ratio * 100).toFixed(1)}%`;
 }
 
+function formatPercentInt(ratio: number | null | undefined): string {
+  if (ratio === null || ratio === undefined || !Number.isFinite(ratio)) return '—';
+  return `${Math.round(ratio * 100)}%`;
+}
+
+function formatAge(ageYears: number | null | undefined): string {
+  if (ageYears === null || ageYears === undefined || !Number.isFinite(ageYears)) return '—';
+  const wholeYears = Math.floor(ageYears);
+  const months = Math.round((ageYears - wholeYears) * 12);
+  if (months === 0 || months === 12) {
+    return `Age ${months === 12 ? wholeYears + 1 : wholeYears}`;
+  }
+  return `Age ${wholeYears}y ${months}m`;
+}
+
 // ── Human Explanation Facts Mapping ────────────────────────────
-function mapFactToMessage(code: string, value?: number): { title: string; desc: string; icon: keyof typeof Ionicons.glyphMap; color: string } {
+function mapFactToMessage(code: string, value?: any): { title: string; desc: string; icon: keyof typeof Ionicons.glyphMap; color: string } {
   switch (code) {
     case 'INCOME_VARIABILITY_ZERO':
       return {
@@ -154,6 +170,41 @@ function mapFactToMessage(code: string, value?: number): { title: string; desc: 
         icon: 'hourglass-outline',
         color: WARNING
       };
+    case 'PORTFOLIO_RISK_ESTIMATED':
+      return {
+        title: 'Forecast Risk Assumption',
+        desc: 'Market variability is estimated from your expected return because portfolio allocation data is not yet recorded.',
+        icon: 'git-branch-outline',
+        color: SLATE
+      };
+    case 'MONTE_CARLO_AVAILABLE':
+      return {
+        title: 'Probabilistic Engine Active',
+        desc: '10,000 future market paths simulated under current financial assumptions.',
+        icon: 'sparkles-outline',
+        color: PRIMARY
+      };
+    case 'MONTE_CARLO_PROBABILITY_FUNDED':
+      return {
+        title: 'Modeled Funding Chance',
+        desc: 'Estimated probability of reaching retirement target corpus under market dispersion.',
+        icon: 'pie-chart-outline',
+        color: PRIMARY
+      };
+    case 'MONTE_CARLO_DATA_QUALITY_LOW':
+      return {
+        title: 'Preliminary Forecast Baseline',
+        desc: 'Projections are based on early history and will calibrate as more months are observed.',
+        icon: 'time-outline',
+        color: WARNING
+      };
+    case 'MONTE_CARLO_UNAVAILABLE':
+      return {
+        title: 'Simulation Notice',
+        desc: 'Probability-based forecast is temporarily unavailable; baseline projections remain active.',
+        icon: 'alert-circle-outline',
+        color: SLATE
+      };
     default:
       return {
         title: 'Financial Observation',
@@ -173,6 +224,7 @@ export function FinancialOutlookScreen(): React.ReactElement {
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showAssumptions, setShowAssumptions] = useState(false);
+  const [showAdvancedMc, setShowAdvancedMc] = useState(false);
   const [selectedScenarioKey, setSelectedScenarioKey] = useState<'conservative' | 'base' | 'optimistic'>('base');
 
   const fetchOutlook = useCallback(async (isRefresh = false) => {
@@ -209,7 +261,7 @@ export function FinancialOutlookScreen(): React.ReactElement {
         </View>
         <View style={styles.centerContainer}>
           <ActivityIndicator size="large" color={PRIMARY} />
-          <Text style={styles.loadingText}>Generating deterministic projections...</Text>
+          <Text style={styles.loadingText}>Generating financial projections...</Text>
         </View>
       </View>
     );
@@ -251,7 +303,8 @@ export function FinancialOutlookScreen(): React.ReactElement {
     retirement,
     dataQuality,
     explanationFacts,
-    limitations
+    limitations,
+    probabilistic
   } = snapshot;
 
   // Target coverage progress calculation (pure presentation helper)
@@ -282,7 +335,7 @@ export function FinancialOutlookScreen(): React.ReactElement {
         </TouchableOpacity>
         <View style={styles.headerCenter}>
           <Text style={styles.headerTitle}>Financial Outlook</Text>
-          <Text style={styles.headerSubtitle}>Deterministic Projections</Text>
+          <Text style={styles.headerSubtitle}>Forecast & Predictability</Text>
         </View>
         <TouchableOpacity onPress={() => fetchOutlook(true)} style={styles.backBtn} activeOpacity={0.7}>
           <Ionicons name="refresh" size={20} color={PRIMARY} />
@@ -332,7 +385,7 @@ export function FinancialOutlookScreen(): React.ReactElement {
         </View>
 
         {/* ══════════════════════════════════════════════════════
-            SECTION B: RETIREMENT & FIRE OUTLOOK (PRIMARY)
+            SECTION B: RETIREMENT & FIRE OUTLOOK (DETERMINISTIC)
         ══════════════════════════════════════════════════════ */}
         {!snapshot.forecastStatus.available ? (
           <View style={[styles.sectionCard, { backgroundColor: '#F8FAFC' }]}>
@@ -424,29 +477,222 @@ export function FinancialOutlookScreen(): React.ReactElement {
               )}
 
               <View style={styles.detailRow}>
-
-              <Text style={styles.detailLabel}>Timeline Horizon</Text>
-              <Text style={styles.detailValue}>
-                {retirement.monthsUntilRetirement !== null
-                  ? `${(retirement.monthsUntilRetirement / 12).toFixed(1)} yrs (${retirement.monthsUntilRetirement} mos)`
-                  : 'Age missing'}
-              </Text>
-            </View>
-
-            {retirement.projectedFire.reached && retirement.projectedFire.projectedAge && (
-              <View style={styles.detailRow}>
-                <Text style={styles.detailLabel}>Projected Target Timing</Text>
-                <Text style={[styles.detailValue, { color: SUCCESS, fontWeight: '700' }]}>
-                  Age {retirement.projectedFire.projectedAge.toFixed(1)} (under current model)
+                <Text style={styles.detailLabel}>Timeline Horizon</Text>
+                <Text style={styles.detailValue}>
+                  {retirement.monthsUntilRetirement !== null
+                    ? `${(retirement.monthsUntilRetirement / 12).toFixed(1)} yrs (${retirement.monthsUntilRetirement} mos)`
+                    : 'Age missing'}
                 </Text>
               </View>
-            )}
+
+              {retirement.projectedFire.reached && retirement.projectedFire.projectedAge && (
+                <View style={styles.detailRow}>
+                  <Text style={styles.detailLabel}>Projected Target Timing</Text>
+                  <Text style={[styles.detailValue, { color: SUCCESS, fontWeight: '700' }]}>
+                    Age {retirement.projectedFire.projectedAge.toFixed(1)} (under baseline model)
+                  </Text>
+                </View>
+              )}
+            </View>
           </View>
-        </View>
         )}
 
         {/* ══════════════════════════════════════════════════════
-            SECTION C: PLANNING SCENARIOS (SENSITIVITY ANALYSIS)
+            SECTION C: MODELED FUNDING OUTLOOK (MONTE CARLO V1)
+        ══════════════════════════════════════════════════════ */}
+        {probabilistic?.available && probabilistic.estimatedFire && (() => {
+          const ef = probabilistic.estimatedFire;
+          const pFunded = ef.probabilityFundedAtTargetAge ?? 0;
+          const pFundedPct = Math.round(pFunded * 100);
+          const targetAge = retirement?.retirementAge ?? 60;
+          const rec = probabilistic.contributionRecommendation;
+          const userGoal = probabilistic.userGoal;
+
+          // Semantic band styling (visual support only)
+          let bandColor = WARNING;
+          let bandLabel = 'Needs Attention';
+          if (pFundedPct >= 90) {
+            bandColor = SUCCESS;
+            bandLabel = 'High Modeled Likelihood';
+          } else if (pFundedPct >= 75) {
+            bandColor = PURPLE;
+            bandLabel = 'Stronger Path';
+          } else if (pFundedPct >= 50) {
+            bandColor = PRIMARY;
+            bandLabel = 'Developing Path';
+          }
+
+          return (
+            <View style={styles.sectionCard}>
+              <View style={styles.sectionHeader}>
+                <Ionicons name="sparkles-outline" size={22} color={PRIMARY} />
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.sectionTitle}>Modeled Funding Outlook</Text>
+                  <Text style={styles.sectionSubtitle}>
+                    10,000 simulated future paths under market variability
+                  </Text>
+                </View>
+              </View>
+
+              {/* 1. Headline Probability Card */}
+              <View style={[styles.mcHeadlineCard, { borderLeftColor: bandColor, borderLeftWidth: 4 }]}>
+                <View style={styles.mcHeadlineTopRow}>
+                  <Text style={styles.mcHeadlineBadgeText}>MODELED CHANCE AT AGE {targetAge}</Text>
+                  <View style={[styles.mcBandPill, { backgroundColor: `${bandColor}15` }]}>
+                    <Text style={[styles.mcBandPillText, { color: bandColor }]}>{bandLabel}</Text>
+                  </View>
+                </View>
+
+                <View style={styles.mcProbabilityRow}>
+                  <Text style={[styles.mcProbabilityBig, { color: bandColor }]}>{pFundedPct}%</Text>
+                  <View style={styles.mcProbabilityTextWrap}>
+                    <Text style={styles.mcProbabilityTitle}>
+                      {pFundedPct}% modeled chance of being funded by age {targetAge}
+                    </Text>
+                    <Text style={styles.mcProbabilitySub}>
+                      Modeled likelihood of remaining funded for lifestyle needs at your target retirement age.
+                    </Text>
+                  </View>
+                </View>
+
+                {/* Probability Track */}
+                <View style={styles.mcProgressTrack}>
+                  <View style={[styles.mcProgressFill, { width: `${Math.min(100, Math.max(0, pFundedPct))}%`, backgroundColor: bandColor }]} />
+                </View>
+              </View>
+
+              {/* 2. Simulated Retirement Outcomes (Median & Middle 50%) */}
+              {ef.corpusPercentiles && (
+                <View style={styles.mcOutcomeBlock}>
+                  <Text style={styles.mcBlockHeader}>Simulated Retirement Outcomes</Text>
+                  <View style={styles.comparisonRow}>
+                    <View style={styles.comparisonBox}>
+                      <Text style={styles.compBoxLabel}>Median Modeled Corpus</Text>
+                      <Text style={styles.compBoxValue}>{formatCurrency(ef.corpusPercentiles.p50, true)}</Text>
+                      <Text style={styles.compBoxSub}>50th percentile modeled outcome</Text>
+                    </View>
+
+                    <View style={styles.comparisonBox}>
+                      <Text style={styles.compBoxLabel}>Middle 50% of Simulated Outcomes</Text>
+                      <Text style={styles.compBoxValue}>
+                        {formatCurrency(ef.corpusPercentiles.p25, true)} – {formatCurrency(ef.corpusPercentiles.p75, true)}
+                      </Text>
+                      <Text style={styles.compBoxSub}>Between 25th and 75th percentiles</Text>
+                    </View>
+                  </View>
+                </View>
+              )}
+
+              {/* 3. Probabilistic FIRE Timing (fundedAge50 & fundedAge75) */}
+              <View style={styles.mcTimingBlock}>
+                <Text style={styles.mcBlockHeader}>Probabilistic Target Timing</Text>
+                <View style={styles.detailList}>
+                  <View style={styles.detailRow}>
+                    <Text style={styles.detailLabel}>50% Funded-Probability Age</Text>
+                    <Text style={[styles.detailValue, { fontWeight: '700', color: ef.fundedAge50?.reached ? PRIMARY : SLATE }]}>
+                      {ef.fundedAge50?.reached ? formatAge(ef.fundedAge50.ageYears) : 'Not reached in forecast horizon'}
+                    </Text>
+                  </View>
+
+                  <View style={styles.detailRow}>
+                    <Text style={styles.detailLabel}>75% Funded-Probability Age</Text>
+                    <Text style={[styles.detailValue, { fontWeight: '700', color: ef.fundedAge75?.reached ? SUCCESS : SLATE }]}>
+                      {ef.fundedAge75?.reached ? formatAge(ef.fundedAge75.ageYears) : 'Not reached in forecast horizon'}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+
+              {/* 4. Contribution Recommendation (What improves your odds) */}
+              {rec && (
+                <View style={styles.mcRecCard}>
+                  <View style={styles.mcRecHeader}>
+                    <Ionicons name="trending-up-outline" size={18} color={PRIMARY} />
+                    <Text style={styles.mcRecTitle}>To Reach a 75% Modeled Probability</Text>
+                  </View>
+
+                  {rec.solved ? (
+                    rec.additionalMonthlyContributionRequired > 0 ? (
+                      <View style={styles.mcRecBody}>
+                        <Text style={styles.mcRecAction}>
+                          Increase monthly investments by {formatCurrency(rec.additionalMonthlyContributionRequired)}/mo
+                        </Text>
+                        <Text style={styles.mcRecFromTo}>
+                          From {formatCurrency(rec.currentMonthlyContribution)} → {formatCurrency(rec.recommendedMonthlyContribution)} per month
+                        </Text>
+                        <Text style={styles.mcRecNote}>
+                          Modeled to elevate funding likelihood from {formatPercentInt(rec.currentProbabilityFunded)} to {formatPercentInt(rec.achievedProbabilityFunded)}.
+                        </Text>
+                      </View>
+                    ) : (
+                      <View style={styles.mcRecBody}>
+                        <Text style={[styles.mcRecAction, { color: SUCCESS }]}>
+                          Your current monthly investment already meets the 75% modeled-probability target.
+                        </Text>
+                        <Text style={styles.mcRecNote}>
+                          {formatCurrency(rec.currentMonthlyContribution)}/mo provides a {formatPercentInt(rec.currentProbabilityFunded)} modeled chance of being funded by retirement.
+                        </Text>
+                      </View>
+                    )
+                  ) : (
+                    <View style={styles.mcRecBody}>
+                      <Text style={styles.mcRecUnsolvedText}>
+                        We couldn't find a practical monthly contribution within the model's search range that reaches the selected probability target.
+                      </Text>
+                    </View>
+                  )}
+                </View>
+              )}
+
+              {/* 5. Personal Goal Comparison (if personal goal exists) */}
+              {userGoal && userGoal.targetAmountReal > 0 && (
+                <View style={styles.mcGoalBlock}>
+                  <Text style={styles.mcBlockHeader}>Estimated Requirement vs Your Goal</Text>
+                  <View style={styles.comparisonRow}>
+                    <View style={styles.comparisonBox}>
+                      <Text style={styles.compBoxLabel}>FINAURA Estimated Target</Text>
+                      <Text style={styles.compBoxValue}>{formatCurrency(ef.targetAmountReal, true)}</Text>
+                      <Text style={[styles.compBoxSub, { color: PRIMARY, fontWeight: '700' }]}>
+                        {formatPercentInt(ef.probabilityFundedAtTargetAge)} modeled chance
+                      </Text>
+                    </View>
+
+                    <View style={styles.comparisonBox}>
+                      <Text style={styles.compBoxLabel}>Your Personal Goal</Text>
+                      <Text style={styles.compBoxValue}>{formatCurrency(userGoal.targetAmountReal, true)}</Text>
+                      <Text style={[styles.compBoxSub, { color: PURPLE, fontWeight: '700' }]}>
+                        {formatPercentInt(userGoal.probabilityFundedAtTargetAge)} modeled chance
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              )}
+
+              {/* 6. Data Quality Warning */}
+              {snapshot.forecastStatus?.dataQuality === 'LOW' && (
+                <View style={styles.mcWarningBanner}>
+                  <Ionicons name="alert-circle-outline" size={16} color={WARNING} />
+                  <Text style={styles.mcWarningText}>
+                    This forecast is based on limited financial history and may change as FINAURA learns more about your spending and investment patterns.
+                  </Text>
+                </View>
+              )}
+            </View>
+          );
+        })()}
+
+        {/* Fallback Notice if Probabilistic Service Unavailable */}
+        {!probabilistic?.available && snapshot.forecastStatus?.available && probabilistic?.reason === 'SIMULATION_SERVICE_UNAVAILABLE' && (
+          <View style={styles.mcServiceNotice}>
+            <Ionicons name="information-circle-outline" size={16} color={SLATE} />
+            <Text style={styles.mcServiceNoticeText}>
+              Probability-based forecast is temporarily unavailable. Baseline projections remain active below.
+            </Text>
+          </View>
+        )}
+
+        {/* ══════════════════════════════════════════════════════
+            SECTION D: PLANNING SCENARIOS (SENSITIVITY ANALYSIS)
         ══════════════════════════════════════════════════════ */}
         {snapshot.scenarios && (
           <View style={styles.sectionCard}>
@@ -613,7 +859,7 @@ export function FinancialOutlookScreen(): React.ReactElement {
         )}
 
         {/* ══════════════════════════════════════════════════════
-            SECTION D: INCOME & RESILIENCE
+            SECTION E: INCOME & RESILIENCE
         ══════════════════════════════════════════════════════ */}
         <View style={styles.sectionCard}>
           <View style={styles.sectionHeader}>
@@ -672,7 +918,7 @@ export function FinancialOutlookScreen(): React.ReactElement {
         </View>
 
         {/* ══════════════════════════════════════════════════════
-            SECTION D: EMERGENCY BUFFER
+            SECTION F: EMERGENCY BUFFER
         ══════════════════════════════════════════════════════ */}
         <View style={styles.sectionCard}>
           <View style={styles.sectionHeader}>
@@ -706,7 +952,7 @@ export function FinancialOutlookScreen(): React.ReactElement {
         </View>
 
         {/* ══════════════════════════════════════════════════════
-            SECTION E: CURRENT FINANCIAL POSITION & OUTFLOWS
+            SECTION G: CURRENT FINANCIAL POSITION & OUTFLOWS
         ══════════════════════════════════════════════════════ */}
         <View style={styles.sectionCard}>
           <View style={styles.sectionHeader}>
@@ -748,7 +994,7 @@ export function FinancialOutlookScreen(): React.ReactElement {
         </View>
 
         {/* ══════════════════════════════════════════════════════
-            SECTION F: MODEL ASSUMPTIONS (EXPLAINABILITY)
+            SECTION H: MODEL ASSUMPTIONS (EXPLAINABILITY)
         ══════════════════════════════════════════════════════ */}
         <View style={styles.sectionCard}>
           <TouchableOpacity
@@ -758,46 +1004,112 @@ export function FinancialOutlookScreen(): React.ReactElement {
           >
             <View style={styles.sectionHeaderNoMargin}>
               <Ionicons name="options-outline" size={22} color={SLATE} />
-              <Text style={styles.sectionTitle}>Projection Assumptions</Text>
+              <Text style={styles.sectionTitle}>Forecast Assumptions & Details</Text>
             </View>
             <Ionicons name={showAssumptions ? 'chevron-up' : 'chevron-down'} size={20} color={SLATE} />
           </TouchableOpacity>
 
-          {showAssumptions && retirement && (
+          {showAssumptions && (
             <View style={styles.assumptionsBody}>
-              <View style={styles.detailRow}>
-                <Text style={styles.detailLabel}>Expected Nominal Return</Text>
-                <Text style={styles.detailValue}>{formatPercent(retirement.assumptions.nominalReturn)}</Text>
-              </View>
+              {retirement && (
+                <>
+                  <View style={styles.detailRow}>
+                    <Text style={styles.detailLabel}>Expected Nominal Return</Text>
+                    <Text style={styles.detailValue}>{formatPercent(retirement.assumptions.nominalReturn)}</Text>
+                  </View>
 
-              <View style={styles.detailRow}>
-                <Text style={styles.detailLabel}>Expected Inflation</Text>
-                <Text style={styles.detailValue}>{formatPercent(retirement.assumptions.inflation)}</Text>
-              </View>
+                  <View style={styles.detailRow}>
+                    <Text style={styles.detailLabel}>Expected Inflation</Text>
+                    <Text style={styles.detailValue}>{formatPercent(retirement.assumptions.inflation)}</Text>
+                  </View>
 
-              <View style={styles.detailRow}>
-                <Text style={styles.detailLabel}>Real Return (Fisher exact)</Text>
-                <Text style={styles.detailValue}>{formatPercent(retirement.assumptions.realReturn)}</Text>
-              </View>
+                  <View style={styles.detailRow}>
+                    <Text style={styles.detailLabel}>Real Return (Fisher exact)</Text>
+                    <Text style={styles.detailValue}>{formatPercent(retirement.assumptions.realReturn)}</Text>
+                  </View>
 
-              <View style={styles.detailRow}>
-                <Text style={styles.detailLabel}>Safe Withdrawal Rate</Text>
-                <Text style={styles.detailValue}>{formatPercent(retirement.assumptions.withdrawalRate)}</Text>
-              </View>
+                  <View style={styles.detailRow}>
+                    <Text style={styles.detailLabel}>Safe Withdrawal Rate</Text>
+                    <Text style={styles.detailValue}>{formatPercent(retirement.assumptions.withdrawalRate)}</Text>
+                  </View>
 
-              <View style={styles.detailRow}>
-                <Text style={styles.detailLabel}>Lifestyle Adjustment Ratio</Text>
-                <Text style={styles.detailValue}>{formatPercent(retirement.assumptions.lifestyleAdjustmentRatio)}</Text>
-              </View>
+                  <View style={styles.detailRow}>
+                    <Text style={styles.detailLabel}>Lifestyle Adjustment Ratio</Text>
+                    <Text style={styles.detailValue}>{formatPercent(retirement.assumptions.lifestyleAdjustmentRatio)}</Text>
+                  </View>
 
-              <View style={styles.detailRow}>
-                <Text style={styles.detailLabel}>Contribution Model</Text>
-                <Text style={styles.detailValue}>Fixed Nominal Monthly (NOMINAL_FLAT)</Text>
-              </View>
+                  <View style={styles.detailRow}>
+                    <Text style={styles.detailLabel}>Contribution Model</Text>
+                    <Text style={styles.detailValue}>Fixed Nominal Monthly (NOMINAL_FLAT)</Text>
+                  </View>
+                </>
+              )}
+
+              {/* Probabilistic assumptions if available */}
+              {probabilistic?.available && probabilistic.assumptions && (
+                <>
+                  <View style={styles.detailRow}>
+                    <Text style={styles.detailLabel}>Market Variability Assumption</Text>
+                    <Text style={styles.detailValue}>{formatPercent(probabilistic.assumptions.portfolioVolatility)} annual</Text>
+                  </View>
+
+                  <View style={styles.detailRow}>
+                    <Text style={styles.detailLabel}>Simulation Sample</Text>
+                    <Text style={styles.detailValue}>10,000 simulated future paths</Text>
+                  </View>
+                </>
+              )}
+
+              {/* Expandable Advanced Distribution Metrics */}
+              {probabilistic?.available && probabilistic.estimatedFire && (
+                <View style={{ marginTop: 8 }}>
+                  <TouchableOpacity
+                    style={styles.advancedToggleRow}
+                    onPress={() => setShowAdvancedMc(!showAdvancedMc)}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={styles.advancedToggleText}>
+                      {showAdvancedMc ? 'Hide Advanced Distribution Metrics' : 'Show Advanced Distribution Metrics (P10/P90)'}
+                    </Text>
+                    <Ionicons name={showAdvancedMc ? 'chevron-up' : 'chevron-down'} size={16} color={PRIMARY} />
+                  </TouchableOpacity>
+
+                  {showAdvancedMc && probabilistic.estimatedFire.corpusPercentiles && (
+                    <View style={styles.advancedMetricsBox}>
+                      <View style={styles.detailRow}>
+                        <Text style={styles.detailLabel}>10th-Percentile Modeled Outcome</Text>
+                        <Text style={styles.detailValue}>{formatCurrency(probabilistic.estimatedFire.corpusPercentiles.p10, true)}</Text>
+                      </View>
+
+                      <View style={styles.detailRow}>
+                        <Text style={styles.detailLabel}>90th-Percentile Modeled Outcome</Text>
+                        <Text style={styles.detailValue}>{formatCurrency(probabilistic.estimatedFire.corpusPercentiles.p90, true)}</Text>
+                      </View>
+
+                      {probabilistic.estimatedFire.probabilityReachedFireByTargetAge !== null && (
+                        <View style={styles.detailRow}>
+                          <Text style={styles.detailLabel}>Chance of Touching Target Once</Text>
+                          <Text style={styles.detailValue}>
+                            {formatPercentInt(probabilistic.estimatedFire.probabilityReachedFireByTargetAge)}
+                          </Text>
+                        </View>
+                      )}
+
+                      {probabilistic.estimatedFire.firstCrossing && (
+                        <View style={styles.firstCrossingNote}>
+                          <Text style={styles.firstCrossingNoteText}>
+                            * First-crossing estimates when simulated paths first touch the FIRE target. A path may later fall below it.
+                          </Text>
+                        </View>
+                      )}
+                    </View>
+                  )}
+                </View>
+              )}
 
               <View style={styles.assumptionNote}>
                 <Text style={styles.assumptionNoteText}>
-                  * Projection models fixed rupee monthly contributions without assuming inflation escalation.
+                  * FINAURA simulated thousands of possible future market paths using these assumptions. These are modeled outcomes, not guarantees. We estimate market variability from your expected return because detailed portfolio allocation data isn't available yet.
                 </Text>
               </View>
             </View>
@@ -805,7 +1117,7 @@ export function FinancialOutlookScreen(): React.ReactElement {
         </View>
 
         {/* ══════════════════════════════════════════════════════
-            SECTION G: OBSERVATIONS & EXPLANATION FACTS
+            SECTION I: OBSERVATIONS & EXPLANATION FACTS
         ══════════════════════════════════════════════════════ */}
         {explanationFacts && explanationFacts.length > 0 && (
           <View style={styles.sectionCard}>
@@ -834,7 +1146,7 @@ export function FinancialOutlookScreen(): React.ReactElement {
         )}
 
         {/* ══════════════════════════════════════════════════════
-            SECTION H: DATA LIMITATIONS & NOTES
+            SECTION J: DATA LIMITATIONS & NOTES
         ══════════════════════════════════════════════════════ */}
         {limitations && limitations.length > 0 && (
           <View style={[styles.sectionCard, { backgroundColor: '#F8FAFC', borderColor: '#E2E8F0' }]}>
@@ -1006,6 +1318,11 @@ const styles = StyleSheet.create({
     color: DARK,
     letterSpacing: -0.2,
   },
+  sectionSubtitle: {
+    fontSize: 11,
+    color: MUTED,
+    marginTop: 2,
+  },
   // Progress Bar
   progressContainer: {
     marginBottom: 16,
@@ -1094,6 +1411,7 @@ const styles = StyleSheet.create({
   detailLabel: {
     fontSize: 13,
     color: MUTED,
+    flex: 1,
   },
   detailLabelHighlight: {
     fontSize: 13,
@@ -1159,6 +1477,194 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '700',
   },
+  // ── Monte Carlo UX Elements ──────────────────────────────────
+  mcHeadlineCard: {
+    backgroundColor: '#F8FAFC',
+    borderRadius: 14,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    marginBottom: 16,
+  },
+  mcHeadlineTopRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  mcHeadlineBadgeText: {
+    fontSize: 10,
+    fontWeight: '800',
+    color: SLATE,
+    letterSpacing: 0.5,
+  },
+  mcBandPill: {
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+  },
+  mcBandPillText: {
+    fontSize: 10,
+    fontWeight: '800',
+  },
+  mcProbabilityRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  mcProbabilityBig: {
+    fontSize: 38,
+    fontWeight: '900',
+    letterSpacing: -1,
+  },
+  mcProbabilityTextWrap: {
+    flex: 1,
+    marginLeft: 14,
+  },
+  mcProbabilityTitle: {
+    fontSize: 14,
+    fontWeight: '800',
+    color: DARK,
+    marginBottom: 3,
+  },
+  mcProbabilitySub: {
+    fontSize: 11,
+    color: MUTED,
+    lineHeight: 15,
+  },
+  mcProgressTrack: {
+    height: 8,
+    backgroundColor: '#E2E8F0',
+    borderRadius: 4,
+    overflow: 'hidden',
+  },
+  mcProgressFill: {
+    height: '100%',
+    borderRadius: 4,
+  },
+  mcOutcomeBlock: {
+    marginBottom: 16,
+  },
+  mcTimingBlock: {
+    marginBottom: 16,
+  },
+  mcGoalBlock: {
+    marginBottom: 16,
+  },
+  mcBlockHeader: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: DARK,
+    marginBottom: 10,
+  },
+  mcRecCard: {
+    backgroundColor: '#EEF2FF',
+    borderRadius: 12,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: '#C7D2FE',
+    marginBottom: 16,
+  },
+  mcRecHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 8,
+  },
+  mcRecTitle: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: PRIMARY,
+  },
+  mcRecBody: {
+    gap: 4,
+  },
+  mcRecAction: {
+    fontSize: 14,
+    fontWeight: '800',
+    color: DARK,
+  },
+  mcRecFromTo: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: PRIMARY,
+  },
+  mcRecNote: {
+    fontSize: 11,
+    color: SLATE,
+    marginTop: 2,
+    lineHeight: 15,
+  },
+  mcRecUnsolvedText: {
+    fontSize: 12,
+    color: SLATE,
+    lineHeight: 16,
+  },
+  mcWarningBanner: {
+    flexDirection: 'row',
+    gap: 8,
+    alignItems: 'center',
+    backgroundColor: '#FFFBEB',
+    padding: 10,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#FDE68A',
+    marginTop: 6,
+  },
+  mcWarningText: {
+    fontSize: 11,
+    color: '#92400E',
+    flex: 1,
+    lineHeight: 15,
+  },
+  mcServiceNotice: {
+    flexDirection: 'row',
+    gap: 8,
+    alignItems: 'center',
+    backgroundColor: '#F1F5F9',
+    padding: 12,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+  },
+  mcServiceNoticeText: {
+    fontSize: 12,
+    color: SLATE,
+    flex: 1,
+    lineHeight: 16,
+  },
+  advancedToggleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 8,
+    borderTopWidth: 1,
+    borderTopColor: '#F1F5F9',
+  },
+  advancedToggleText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: PRIMARY,
+  },
+  advancedMetricsBox: {
+    backgroundColor: '#F8FAFC',
+    borderRadius: 8,
+    padding: 10,
+    gap: 8,
+    marginTop: 6,
+  },
+  firstCrossingNote: {
+    marginTop: 4,
+    paddingTop: 4,
+    borderTopWidth: 1,
+    borderTopColor: '#E2E8F0',
+  },
+  firstCrossingNoteText: {
+    fontSize: 10,
+    color: SLATE,
+    fontStyle: 'italic',
+    lineHeight: 14,
+  },
   // Assumptions Body
   assumptionsBody: {
     marginTop: 16,
@@ -1166,14 +1672,14 @@ const styles = StyleSheet.create({
   },
   assumptionNote: {
     marginTop: 8,
-    padding: 8,
+    padding: 10,
     backgroundColor: '#F1F5F9',
-    borderRadius: 6,
+    borderRadius: 8,
   },
   assumptionNoteText: {
     fontSize: 11,
     color: SLATE,
-    lineHeight: 15,
+    lineHeight: 16,
   },
   // Facts List
   factsList: {

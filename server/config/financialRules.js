@@ -19,8 +19,10 @@ export const EPSILON = 1e-9;
 // Contribution Modeling Modes
 export const CONTRIBUTION_MODE = Object.freeze({
   REAL_CONSTANT: 'REAL_CONSTANT',
-  NOMINAL_FLAT: 'NOMINAL_FLAT'
+  NOMINAL_FLAT: 'NOMINAL_FLAT',
+  STEP_UP: 'STEP_UP'
 });
+export const MAX_ANNUAL_CONTRIBUTION_GROWTH_RATE = 0.50; // Max 50% annual contribution escalation
 
 // Scenario Engine V1 Assumption Profiles
 export const DEFAULT_SCENARIOS = Object.freeze({

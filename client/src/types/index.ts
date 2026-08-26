@@ -262,6 +262,7 @@ export interface ScenarioProjection {
     withdrawalRate: number;
     lifestyleAdjustmentRatio: number;
     contributionMode: string;
+    annualContributionGrowthRate?: number;
   };
   currentAnnualLifestyleSpending: number;
   estimatedFireCorpus: number;
@@ -385,7 +386,8 @@ export interface MonteCarloAssumptions {
   expectedInflationRate: number;
   portfolioVolatility: number;
   volatilitySource: 'RETURN_DERIVED' | 'SYSTEM_DEFAULT' | string;
-  contributionMode: 'NOMINAL_FLAT' | 'REAL_CONSTANT' | string;
+  contributionMode: 'NOMINAL_FLAT' | 'REAL_CONSTANT' | 'STEP_UP' | string;
+  annualContributionGrowthRate?: number | null;
   seed: number;
 }
 
@@ -444,6 +446,8 @@ export interface MonteCarloRetirementAlternative {
   monthsUntilRetirement: number;
   probabilityFundedAtTargetAge: number | null;
   recommendedMonthlyContribution: number | null;
+  recommendedInitialMonthlyContribution?: number | null;
+  annualContributionGrowthRate?: number | null;
   additionalMonthlyContributionRequired: number | null;
   achievedProbabilityFunded: number | null;
   targetProbability: number;
@@ -457,6 +461,8 @@ export interface MonteCarloContributionRecommendation {
   currentMonthlyContribution: number;
   currentProbabilityFunded: number;
   recommendedMonthlyContribution: number;
+  recommendedInitialMonthlyContribution?: number;
+  annualContributionGrowthRate?: number | null;
   additionalMonthlyContributionRequired: number;
   achievedProbabilityFunded: number;
   recommendationIncrement: number;

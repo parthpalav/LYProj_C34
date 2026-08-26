@@ -132,23 +132,23 @@ def _validate_solver_inputs(params: dict) -> None:
 
 
 # ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
 # Fast Path Evaluation under Common Random Numbers
 # ---------------------------------------------------------------------------
 def _evaluate_candidate_probability(
     candidate_contribution: float,
     starting_corpus: float,
     months: int,
-    contribution_mode: str,
+    contribution_multipliers: np.ndarray,
     growth_factors: np.ndarray,
     is_zero_vol: bool,
     monthly_geometric_factor: float,
-    cumulative_inflation: np.ndarray,
     final_nominal_target: float,
     num_paths: int,
 ) -> float:
     """
     Evaluate probabilityFundedAtTargetAge for a candidate monthly contribution
-    using precomputed growth factors (Common Random Numbers).
+    using precomputed growth factors (Common Random Numbers) and contribution multipliers.
 
     Returns fraction of paths where final portfolio >= final_nominal_target.
     """
@@ -160,10 +160,7 @@ def _evaluate_candidate_probability(
         else:
             portfolio *= growth_factors[t - 1]
 
-        if contribution_mode == CONTRIBUTION_MODE_NOMINAL_FLAT:
-            portfolio += candidate_contribution
-        else:
-            portfolio += candidate_contribution * cumulative_inflation[t]
+        portfolio += candidate_contribution * contribution_multipliers[t]
 
     return float(np.sum(portfolio >= final_nominal_target) / num_paths)
 
@@ -188,7 +185,8 @@ def solve_required_contribution(params: dict) -> dict:
         - estimatedFireCorpus (float > 0)
         - userGoalCorpus (float >= 0, optional)
         - monthsUntilRetirement (int >= 1)
-        - contributionMode ("NOMINAL_FLAT" | "REAL_CONSTANT")
+        - contributionMode ("NOMINAL_FLAT" | "REAL_CONSTANT" | "STEP_UP")
+        - annualContributionGrowthRate (float >= 0, required if STEP_UP)
         - simulationCount (int >= 100)
         - seed (int)
         - targetProbability (float, 0 < p < 1, default 0.75)
@@ -212,6 +210,7 @@ def solve_required_contribution(params: dict) -> dict:
     annual_volatility = float(params["portfolioVolatility"])
     months = int(params["monthsUntilRetirement"])
     contribution_mode = params["contributionMode"]
+    annual_growth_rate = float(params.get("annualContributionGrowthRate", 0.0)) if contribution_mode == "STEP_UP" else 0.0
     num_paths = int(params["simulationCount"])
     seed = int(params["seed"])
 
@@ -237,6 +236,18 @@ def solve_required_contribution(params: dict) -> dict:
     for t in range(1, months + 1):
         cumulative_inflation[t] = cumulative_inflation[t - 1] * monthly_inflation_factor
 
+    # --- Precompute contribution multipliers schedule ---
+    contribution_multipliers = np.empty(months + 1, dtype=np.float64)
+    contribution_multipliers[0] = 0.0
+    for t in range(1, months + 1):
+        if contribution_mode == "NOMINAL_FLAT":
+            contribution_multipliers[t] = 1.0
+        elif contribution_mode == "REAL_CONSTANT":
+            contribution_multipliers[t] = cumulative_inflation[t]
+        elif contribution_mode == "STEP_UP":
+            year_idx = (t - 1) // 12
+            contribution_multipliers[t] = (1.0 + annual_growth_rate) ** year_idx
+
     # Final nominal target at horizon T
     final_nominal_target = target_corpus_real * cumulative_inflation[months]
 
@@ -254,11 +265,10 @@ def solve_required_contribution(params: dict) -> dict:
             candidate_contribution=c,
             starting_corpus=starting_corpus,
             months=months,
-            contribution_mode=contribution_mode,
+            contribution_multipliers=contribution_multipliers,
             growth_factors=growth_factors,
             is_zero_vol=is_zero_vol,
             monthly_geometric_factor=monthly_geometric_factor,
-            cumulative_inflation=cumulative_inflation,
             final_nominal_target=final_nominal_target,
             num_paths=num_paths,
         )
@@ -276,6 +286,8 @@ def solve_required_contribution(params: dict) -> dict:
             "currentProbabilityFunded": p_current,
             "requiredMonthlyContributionRaw": current_contribution,
             "recommendedMonthlyContribution": current_contribution,
+            "recommendedInitialMonthlyContribution": current_contribution,
+            "annualContributionGrowthRate": annual_growth_rate if contribution_mode == "STEP_UP" else None,
             "additionalMonthlyContributionRequired": 0.0,
             "achievedProbabilityFunded": p_current,
             "recommendationIncrement": rec_increment,
@@ -380,6 +392,8 @@ def solve_required_contribution(params: dict) -> dict:
         "currentProbabilityFunded": p_current,
         "requiredMonthlyContributionRaw": float(raw_required),
         "recommendedMonthlyContribution": float(recommended),
+        "recommendedInitialMonthlyContribution": float(recommended),
+        "annualContributionGrowthRate": annual_growth_rate if contribution_mode == "STEP_UP" else None,
         "additionalMonthlyContributionRequired": float(additional_required),
         "achievedProbabilityFunded": float(p_rec),
         "recommendationIncrement": rec_increment,

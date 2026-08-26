@@ -228,6 +228,19 @@ def solve_funded_ages(params: dict) -> dict:
     for t in range(1, total_months + 1):
         cumulative_inflation[t] = cumulative_inflation[t - 1] * monthly_inflation_factor
 
+    # --- Precompute nominal contribution schedule ---
+    annual_growth_rate = float(params.get("annualContributionGrowthRate", 0.0)) if contribution_mode == "STEP_UP" else 0.0
+    contribution_schedule = np.empty(total_months + 1, dtype=np.float64)
+    contribution_schedule[0] = 0.0
+    for t in range(1, total_months + 1):
+        if contribution_mode == "NOMINAL_FLAT":
+            contribution_schedule[t] = monthly_contribution
+        elif contribution_mode == "REAL_CONSTANT":
+            contribution_schedule[t] = monthly_contribution * cumulative_inflation[t]
+        elif contribution_mode == "STEP_UP":
+            year_idx = (t - 1) // 12
+            contribution_schedule[t] = monthly_contribution * ((1.0 + annual_growth_rate) ** year_idx)
+
     # Nominal target schedules
     nominal_fire_targets = estimated_fire_corpus * cumulative_inflation
     nominal_goal_targets = user_goal_corpus * cumulative_inflation if user_goal_corpus is not None else None
@@ -257,10 +270,7 @@ def solve_funded_ages(params: dict) -> dict:
         else:
             portfolio *= growth_factors[t - 1]
 
-        if contribution_mode == CONTRIBUTION_MODE_NOMINAL_FLAT:
-            portfolio += monthly_contribution
-        else:
-            portfolio += monthly_contribution * cumulative_inflation[t]
+        portfolio += contribution_schedule[t]
 
         fire_probabilities[t] = float(np.sum(portfolio >= nominal_fire_targets[t]) / num_paths)
 

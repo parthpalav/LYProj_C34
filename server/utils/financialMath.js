@@ -294,6 +294,102 @@ export function futureValueNominalFlat({
 }
 
 /**
+ * Calculates the future value of STEP_UP monthly contributions.
+ * Contributions start at initialMonthlyContribution (C0) and escalate annually by
+ * annualContributionGrowthRate (g): contribution(t) = C0 * (1 + g)^floor((t-1)/12).
+ *
+ * @param {Object} params
+ * @param {number} params.initialMonthlyContribution - Initial monthly savings amount (C0)
+ * @param {number} [params.annualContributionGrowthRate=0] - Annual contribution escalation rate (g, e.g., 0.10 for 10%)
+ * @param {number} params.nominalAnnualReturn - Nominal annual expected return
+ * @param {number} params.inflationRate - Annual inflation rate
+ * @param {number} params.months - Projection horizon in months
+ * @param {boolean} [params.isBeginningOfMonth=false] - Contribution timing
+ * @returns {number} Real future value of step-up contributions (in today's purchasing power)
+ */
+export function futureValueStepUpContributions({
+  initialMonthlyContribution,
+  annualContributionGrowthRate = 0,
+  nominalAnnualReturn,
+  inflationRate,
+  months,
+  isBeginningOfMonth = false
+}) {
+  validateNonNegativeFinite(initialMonthlyContribution, 'initialMonthlyContribution');
+  validateNonNegativeFinite(annualContributionGrowthRate, 'annualContributionGrowthRate');
+  validateFinite(nominalAnnualReturn, 'nominalAnnualReturn');
+  validateFinite(inflationRate, 'inflationRate');
+  if (nominalAnnualReturn <= -1) {
+    throw new RangeError('nominalAnnualReturn must be greater than -1.0 (-100%)');
+  }
+  if (inflationRate <= -1) {
+    throw new RangeError('inflationRate must be greater than -1.0 (-100%)');
+  }
+  if (!Number.isInteger(months) || months < 0) {
+    throw new TypeError(`months must be a non-negative integer, got ${months}`);
+  }
+
+  if (months === 0 || initialMonthlyContribution === 0) return 0;
+
+  const rMonthly = monthlyRateFromAnnual(nominalAnnualReturn);
+  let fvNominal = 0;
+  for (let t = 1; t <= months; t++) {
+    const yearIdx = Math.floor((t - 1) / 12);
+    const pmt = initialMonthlyContribution * Math.pow(1 + annualContributionGrowthRate, yearIdx);
+    const monthsRemaining = isBeginningOfMonth ? (months - t + 1) : (months - t);
+    fvNominal += pmt * Math.pow(1 + rMonthly, monthsRemaining);
+  }
+
+  return fvNominal / Math.pow(1 + inflationRate, months / 12);
+}
+
+/**
+ * Combines lump sum growth and recurring STEP_UP monthly contributions FV.
+ *
+ * @param {Object} params
+ * @param {number} params.currentPrincipal - Starting principal (in today's rupees)
+ * @param {number} params.initialMonthlyContribution - Initial monthly savings (C0)
+ * @param {number} [params.annualContributionGrowthRate=0] - Annual contribution escalation rate (g)
+ * @param {number} params.nominalAnnualReturn - Nominal annual expected return
+ * @param {number} params.inflationRate - Annual inflation rate
+ * @param {number} params.months - Projection horizon in months
+ * @param {boolean} [params.isBeginningOfMonth=false] - Contribution timing
+ * @returns {Object} Real and nominal breakdown of principal and step-up contributions
+ */
+export function futureValueStepUp({
+  currentPrincipal,
+  initialMonthlyContribution,
+  annualContributionGrowthRate = 0,
+  nominalAnnualReturn,
+  inflationRate,
+  months,
+  isBeginningOfMonth = false
+}) {
+  const rReal = realReturn(nominalAnnualReturn, inflationRate);
+  const fvPrincipalReal = futureValueLumpSum(currentPrincipal, rReal, months);
+  const fvContributionsReal = futureValueStepUpContributions({
+    initialMonthlyContribution,
+    annualContributionGrowthRate,
+    nominalAnnualReturn,
+    inflationRate,
+    months,
+    isBeginningOfMonth
+  });
+
+  const fvPrincipalNominal = futureValueLumpSum(currentPrincipal, nominalAnnualReturn, months);
+  const fvContributionsNominal = fvContributionsReal * Math.pow(1 + inflationRate, months / 12);
+
+  return {
+    futureValueOfPrincipalReal: fvPrincipalReal,
+    futureValueOfContributionsReal: fvContributionsReal,
+    totalFutureValueReal: fvPrincipalReal + fvContributionsReal,
+    futureValueOfPrincipalNominal: fvPrincipalNominal,
+    futureValueOfContributionsNominal: fvContributionsNominal,
+    totalFutureValueNominal: fvPrincipalNominal + fvContributionsNominal
+  };
+}
+
+/**
  * Backwards-compatible alias for futureValue.
  * Defaults to REAL_CONSTANT mode.
  */
@@ -434,6 +530,75 @@ export function requiredNominalFlatContribution({
 }
 
 /**
+ * Solves for the required initial monthly contribution (C0) under STEP_UP mode
+ * to reach targetFutureValueReal in today's purchasing power at horizon.
+ *
+ * Meaning: "Start by investing C0/month in Year 1, escalating by annualContributionGrowthRate (g)
+ * every subsequent year."
+ *
+ * @param {Object} params
+ * @param {number} params.currentPrincipal - Starting principal (in today's rupees)
+ * @param {number} params.targetFutureValueReal - Target retirement corpus (in today's rupees)
+ * @param {number} [params.annualContributionGrowthRate=0] - Annual contribution escalation rate (g)
+ * @param {number} params.nominalAnnualReturn - Nominal annual expected return
+ * @param {number} params.inflationRate - Annual inflation rate
+ * @param {number} params.months - Months remaining (n)
+ * @param {boolean} [params.isBeginningOfMonth=false] - Contribution timing
+ * @returns {number} Required initial monthly contribution (C0)
+ */
+export function requiredStepUpContribution({
+  currentPrincipal,
+  targetFutureValueReal,
+  annualContributionGrowthRate,
+  nominalAnnualReturn,
+  inflationRate,
+  months,
+  isBeginningOfMonth = false
+}) {
+  if (annualContributionGrowthRate === undefined || annualContributionGrowthRate === null) {
+    throw new TypeError("annualContributionGrowthRate is required for requiredStepUpContribution");
+  }
+  validateNonNegativeFinite(currentPrincipal, 'currentPrincipal');
+  validateNonNegativeFinite(targetFutureValueReal, 'targetFutureValueReal');
+  validateNonNegativeFinite(annualContributionGrowthRate, 'annualContributionGrowthRate');
+  if (annualContributionGrowthRate > 0.50) {
+    throw new RangeError('annualContributionGrowthRate must be <= 0.50');
+  }
+  validateFinite(nominalAnnualReturn, 'nominalAnnualReturn');
+  validateFinite(inflationRate, 'inflationRate');
+  if (nominalAnnualReturn <= -1) {
+    throw new RangeError('nominalAnnualReturn must be greater than -1.0 (-100%)');
+  }
+  if (inflationRate <= -1) {
+    throw new RangeError('inflationRate must be greater than -1.0 (-100%)');
+  }
+  if (!Number.isInteger(months) || months < 0) {
+    throw new TypeError(`months must be a non-negative integer, got ${months}`);
+  }
+
+  if (months === 0) return 0;
+
+  const targetNominal = targetFutureValueReal * Math.pow(1 + inflationRate, months / 12);
+  const rMonthly = monthlyRateFromAnnual(nominalAnnualReturn);
+  const fvPrincipalNominal = currentPrincipal * Math.pow(1 + rMonthly, months);
+  const remainingNominal = Math.max(0, targetNominal - fvPrincipalNominal);
+
+  if (remainingNominal <= 0) return 0;
+
+  // Calculate unit FV for C0 = 1
+  let unitFvNominal = 0;
+  for (let t = 1; t <= months; t++) {
+    const yearIdx = Math.floor((t - 1) / 12);
+    const pmt = Math.pow(1 + annualContributionGrowthRate, yearIdx);
+    const monthsRemaining = isBeginningOfMonth ? (months - t + 1) : (months - t);
+    unitFvNominal += pmt * Math.pow(1 + rMonthly, monthsRemaining);
+  }
+
+  if (unitFvNominal <= 0) return 0;
+  return remainingNominal / unitFvNominal;
+}
+
+/**
  * Deterministic helper to calculate the retirement corpus required based on current lifestyle spending:
  * retirementAnnualSpending = currentAnnualLifestyleSpending * lifestyleAdjustmentRatio
  * fireCorpus = retirementAnnualSpending / safeWithdrawalRate
@@ -547,11 +712,12 @@ export function calculateInvestableCorpus(assets) {
  * 
  * @param {Object} params
  * @param {number} params.currentInvestableCorpus - Current investable assets
- * @param {number} params.monthlyContribution - Monthly saving amount
+ * @param {number} params.monthlyContribution - Monthly saving amount (initial amount if STEP_UP)
  * @param {string} [params.mode=CONTRIBUTION_MODE.REAL_CONSTANT] - Contribution mode
+ * @param {number} [params.annualContributionGrowthRate=0] - Annual contribution escalation rate (for STEP_UP mode)
  * @param {number} [params.realAnnualReturn] - Real annual return rate (for REAL_CONSTANT mode)
- * @param {number} [params.nominalAnnualReturn] - Nominal annual return rate (for NOMINAL_FLAT mode)
- * @param {number} [params.inflationRate] - Annual inflation rate (for NOMINAL_FLAT mode)
+ * @param {number} [params.nominalAnnualReturn] - Nominal annual return rate (for NOMINAL_FLAT / STEP_UP mode)
+ * @param {number} [params.inflationRate] - Annual inflation rate (for NOMINAL_FLAT / STEP_UP mode)
  * @param {number} params.monthsToRetirement - Time until retirement in months
  * @param {boolean} [params.isBeginningOfMonth=false] - Contribution timing
  * @returns {number} Projected corpus value in today's purchasing power (real terms)
@@ -560,6 +726,7 @@ export function projectedCorpusAtRetirement({
   currentInvestableCorpus,
   monthlyContribution,
   mode = CONTRIBUTION_MODE.REAL_CONSTANT,
+  annualContributionGrowthRate = 0,
   realAnnualReturn,
   nominalAnnualReturn,
   inflationRate,
@@ -570,6 +737,22 @@ export function projectedCorpusAtRetirement({
     const result = futureValueNominalFlat({
       currentPrincipal: currentInvestableCorpus,
       monthlyContribution,
+      nominalAnnualReturn,
+      inflationRate,
+      months: monthsToRetirement,
+      isBeginningOfMonth
+    });
+    return result.totalFutureValueReal;
+  }
+
+  if (mode === CONTRIBUTION_MODE.STEP_UP) {
+    if (annualContributionGrowthRate === undefined || annualContributionGrowthRate === null) {
+      throw new TypeError("annualContributionGrowthRate is required when mode is STEP_UP");
+    }
+    const result = futureValueStepUp({
+      currentPrincipal: currentInvestableCorpus,
+      initialMonthlyContribution: monthlyContribution,
+      annualContributionGrowthRate,
       nominalAnnualReturn,
       inflationRate,
       months: monthsToRetirement,
@@ -590,16 +773,17 @@ export function projectedCorpusAtRetirement({
 
 /**
  * Calculates the number of months required to reach a target corpus.
- * Supports both REAL_CONSTANT and NOMINAL_FLAT contribution modes.
+ * Supports REAL_CONSTANT, NOMINAL_FLAT, and STEP_UP contribution modes.
  * 
  * @param {Object} params
  * @param {number} params.currentPrincipal - PV starting amount
  * @param {number} params.monthlyContribution - Monthly contribution amount
  * @param {string} [params.mode=CONTRIBUTION_MODE.REAL_CONSTANT] - Contribution mode
+ * @param {number} [params.annualContributionGrowthRate=0] - Annual contribution escalation rate (for STEP_UP)
  * @param {number} [params.annualRate] - Alias for realAnnualReturn (backwards compatibility)
  * @param {number} [params.realAnnualReturn] - Real expected return rate
- * @param {number} [params.nominalAnnualReturn] - Nominal expected return rate (for NOMINAL_FLAT)
- * @param {number} [params.inflationRate] - Inflation rate (for NOMINAL_FLAT)
+ * @param {number} [params.nominalAnnualReturn] - Nominal expected return rate (for NOMINAL_FLAT / STEP_UP)
+ * @param {number} [params.inflationRate] - Inflation rate (for NOMINAL_FLAT / STEP_UP)
  * @param {number} params.targetFutureValue - Target corpus in today's real purchasing power (FV)
  * @param {number} [params.maxMonths=MAX_PROJECTION_MONTHS] - Max projection horizon
  * @param {boolean} [params.isBeginningOfMonth=false] - Contribution timing
@@ -609,6 +793,7 @@ export function monthsToTarget({
   currentPrincipal,
   monthlyContribution,
   mode = CONTRIBUTION_MODE.REAL_CONSTANT,
+  annualContributionGrowthRate = 0,
   annualRate,
   realAnnualReturn,
   nominalAnnualReturn,
@@ -625,7 +810,16 @@ export function monthsToTarget({
     return { reached: true, months: 0, projectedValue: currentPrincipal };
   }
 
-  if (mode === CONTRIBUTION_MODE.NOMINAL_FLAT) {
+  if (mode === CONTRIBUTION_MODE.NOMINAL_FLAT || mode === CONTRIBUTION_MODE.STEP_UP) {
+    if (mode === CONTRIBUTION_MODE.STEP_UP) {
+      if (annualContributionGrowthRate === undefined || annualContributionGrowthRate === null) {
+        throw new TypeError("annualContributionGrowthRate is required when mode is STEP_UP");
+      }
+      validateNonNegativeFinite(annualContributionGrowthRate, 'annualContributionGrowthRate');
+      if (annualContributionGrowthRate > 0.50) {
+        throw new RangeError('annualContributionGrowthRate must be <= 0.50');
+      }
+    }
     validateFinite(nominalAnnualReturn, 'nominalAnnualReturn');
     validateFinite(inflationRate, 'inflationRate');
     if (nominalAnnualReturn <= -1) throw new RangeError('nominalAnnualReturn must be greater than -1.0 (-100%)');
@@ -635,10 +829,15 @@ export function monthsToTarget({
     let currentNominal = currentPrincipal;
 
     for (let m = 1; m <= maxMonths; m++) {
+      const yearIdx = Math.floor((m - 1) / 12);
+      const pmt = mode === CONTRIBUTION_MODE.STEP_UP
+        ? monthlyContribution * Math.pow(1 + annualContributionGrowthRate, yearIdx)
+        : monthlyContribution;
+
       if (isBeginningOfMonth) {
-        currentNominal = (currentNominal + monthlyContribution) * (1 + monthlyNominalRate);
+        currentNominal = (currentNominal + pmt) * (1 + monthlyNominalRate);
       } else {
-        currentNominal = currentNominal * (1 + monthlyNominalRate) + monthlyContribution;
+        currentNominal = currentNominal * (1 + monthlyNominalRate) + pmt;
       }
 
       const realValue = currentNominal / Math.pow(1 + inflationRate, m / 12);

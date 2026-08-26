@@ -455,6 +455,52 @@ def test_api_performance_benchmarks():
     print("  ✅ Test 21 Done: Flask API performance benchmarked")
 
 
+def test_step_up_api_contract_validation():
+    """
+    TEST 22: STEP_UP API Contract & Growth Rate Validation.
+    """
+    client = app.test_client()
+
+    # 1. STEP_UP + missing annualContributionGrowthRate -> 400
+    r1 = client.post("/simulate", json=base_api_payload(contributionMode="STEP_UP"))
+    assert r1.status_code == 400
+    assert "annualContributionGrowthRate" in r1.get_json()["error"]["message"]
+
+    # 2. STEP_UP + null -> 400
+    r2 = client.post("/simulate", json=base_api_payload(contributionMode="STEP_UP", annualContributionGrowthRate=None))
+    assert r2.status_code == 400
+
+    # 3. STEP_UP + non-numeric -> 400
+    r3 = client.post("/simulate", json=base_api_payload(contributionMode="STEP_UP", annualContributionGrowthRate="five_percent"))
+    assert r3.status_code == 400
+
+    # 4. STEP_UP + negative (-0.01) -> 400
+    r4 = client.post("/simulate", json=base_api_payload(contributionMode="STEP_UP", annualContributionGrowthRate=-0.01))
+    assert r4.status_code == 400
+
+    # 5. STEP_UP + >0.50 (0.51) -> 400
+    r5 = client.post("/simulate", json=base_api_payload(contributionMode="STEP_UP", annualContributionGrowthRate=0.51))
+    assert r5.status_code == 400
+
+    # 6. STEP_UP + valid 0.00 -> 200
+    r6 = client.post("/simulate", json=base_api_payload(contributionMode="STEP_UP", annualContributionGrowthRate=0.0))
+    assert r6.status_code == 200
+
+    # 7. STEP_UP + valid 0.10 -> 200
+    r7 = client.post("/simulate", json=base_api_payload(contributionMode="STEP_UP", annualContributionGrowthRate=0.10))
+    assert r7.status_code == 200
+
+    # 8. NOMINAL_FLAT without annualContributionGrowthRate -> 200
+    r8 = client.post("/simulate", json=base_api_payload(contributionMode="NOMINAL_FLAT"))
+    assert r8.status_code == 200
+
+    # 9. REAL_CONSTANT without annualContributionGrowthRate -> 200
+    r9 = client.post("/simulate", json=base_api_payload(contributionMode="REAL_CONSTANT"))
+    assert r9.status_code == 200
+
+    print("  ✅ Test 22 Passed: STEP_UP API contract and growth rate requirements strictly enforced")
+
+
 # ===========================================================================
 # Main Runner
 # ===========================================================================
@@ -484,6 +530,7 @@ def run_all_api_tests():
         ("19. Zero-Volatility API Parity Check", test_zero_vol_api_parity),
         ("20. Existing Health & Classifier Compatibility", test_existing_routes_compatibility),
         ("21. Flask API Performance Benchmarking", test_api_performance_benchmarks),
+        ("22. STEP_UP API Contract & Growth Rate Validation", test_step_up_api_contract_validation),
     ]
 
     passed = 0

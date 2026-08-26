@@ -111,10 +111,14 @@ import math
 # ---------------------------------------------------------------------------
 CONTRIBUTION_MODE_NOMINAL_FLAT = "NOMINAL_FLAT"
 CONTRIBUTION_MODE_REAL_CONSTANT = "REAL_CONSTANT"
+CONTRIBUTION_MODE_STEP_UP = "STEP_UP"
 VALID_CONTRIBUTION_MODES = frozenset({
     CONTRIBUTION_MODE_NOMINAL_FLAT,
     CONTRIBUTION_MODE_REAL_CONSTANT,
+    CONTRIBUTION_MODE_STEP_UP,
 })
+
+MAX_ANNUAL_GROWTH_RATE = 0.50  # Up to 50% annual contribution growth in V1
 
 MIN_SIMULATION_COUNT = 100
 MAX_SIMULATION_COUNT = 100_000
@@ -193,6 +197,24 @@ def _validate_inputs(params: dict) -> None:
             f"'contributionMode' must be one of {sorted(VALID_CONTRIBUTION_MODES)}, got '{mode}'"
         )
 
+    # Validate STEP_UP specific parameter
+    if mode == CONTRIBUTION_MODE_STEP_UP:
+        if "annualContributionGrowthRate" not in params or params["annualContributionGrowthRate"] is None:
+            raise ValueError("Missing required field: 'annualContributionGrowthRate' for STEP_UP mode")
+        growth_rate = params["annualContributionGrowthRate"]
+        _check_finite(growth_rate, "annualContributionGrowthRate")
+        if growth_rate < 0.0 or growth_rate > MAX_ANNUAL_GROWTH_RATE:
+            raise ValueError(
+                f"'annualContributionGrowthRate' must be in [0.0, {MAX_ANNUAL_GROWTH_RATE}], got {growth_rate}"
+            )
+    elif "annualContributionGrowthRate" in params and params["annualContributionGrowthRate"] is not None:
+        growth_rate = params["annualContributionGrowthRate"]
+        _check_finite(growth_rate, "annualContributionGrowthRate")
+        if growth_rate < 0.0 or growth_rate > MAX_ANNUAL_GROWTH_RATE:
+            raise ValueError(
+                f"'annualContributionGrowthRate' must be in [0.0, {MAX_ANNUAL_GROWTH_RATE}], got {growth_rate}"
+            )
+
     # Simulation count
     sim_count = params["simulationCount"]
     if not isinstance(sim_count, int):
@@ -241,6 +263,7 @@ def run_simulation(params: dict) -> dict:
     estimated_fire_corpus = float(params["estimatedFireCorpus"])
     months = int(params["monthsUntilRetirement"])
     contribution_mode = params["contributionMode"]
+    annual_growth_rate = float(params.get("annualContributionGrowthRate", 0.0)) if contribution_mode == CONTRIBUTION_MODE_STEP_UP else 0.0
     num_paths = int(params["simulationCount"])
     seed = int(params["seed"])
 
@@ -267,6 +290,19 @@ def run_simulation(params: dict) -> dict:
     cumulative_inflation[0] = 1.0
     for t in range(1, months + 1):
         cumulative_inflation[t] = cumulative_inflation[t - 1] * monthly_inflation_factor
+
+    # --- Precompute nominal contribution schedule ---
+    # contribution_schedule[t] is the exact nominal INR deposited at the end of month t
+    contribution_schedule = np.empty(months + 1, dtype=np.float64)
+    contribution_schedule[0] = 0.0
+    for t in range(1, months + 1):
+        if contribution_mode == CONTRIBUTION_MODE_NOMINAL_FLAT:
+            contribution_schedule[t] = monthly_contribution
+        elif contribution_mode == CONTRIBUTION_MODE_REAL_CONSTANT:
+            contribution_schedule[t] = monthly_contribution * cumulative_inflation[t]
+        elif contribution_mode == CONTRIBUTION_MODE_STEP_UP:
+            year_idx = (t - 1) // 12
+            contribution_schedule[t] = monthly_contribution * ((1.0 + annual_growth_rate) ** year_idx)
 
     # --- Nominal FIRE target at each month ---
     # nominalFireTarget[t] = estimatedFireCorpus * cumulativeInflation[t]
@@ -318,13 +354,8 @@ def run_simulation(params: dict) -> dict:
 
         portfolio *= growth_factors
 
-        # 2. End-of-month contribution
-        if contribution_mode == CONTRIBUTION_MODE_NOMINAL_FLAT:
-            # Constant nominal INR
-            portfolio += monthly_contribution
-        else:
-            # REAL_CONSTANT: escalate nominally with inflation
-            portfolio += monthly_contribution * cumulative_inflation[t]
+        # 2. End-of-month contribution (precomputed vectorized addition)
+        portfolio += contribution_schedule[t]
 
         # 3. FIRE crossing check (only for paths that haven't crossed yet)
         not_yet_crossed_fire = ~fire_ever_crossed
@@ -404,11 +435,7 @@ def run_simulation(params: dict) -> dict:
     # Central path (deterministic reference — the zero-shock trajectory)
     central_nominal = starting_corpus
     for t in range(1, months + 1):
-        central_nominal *= monthly_geometric_factor
-        if contribution_mode == CONTRIBUTION_MODE_NOMINAL_FLAT:
-            central_nominal += monthly_contribution
-        else:
-            central_nominal += monthly_contribution * cumulative_inflation[t]
+        central_nominal = central_nominal * monthly_geometric_factor + contribution_schedule[t]
     central_real = central_nominal / cumulative_inflation[months]
 
     return {
@@ -431,4 +458,5 @@ def run_simulation(params: dict) -> dict:
         "seed": seed,
         "monthsSimulated": months,
         "contributionMode": contribution_mode,
+        "annualContributionGrowthRate": annual_growth_rate if contribution_mode == CONTRIBUTION_MODE_STEP_UP else None,
     }

@@ -680,10 +680,14 @@ export function FinancialOutlookScreen(): React.ReactElement {
                     rec.additionalMonthlyContributionRequired > 0 ? (
                       <View style={styles.mcRecBody}>
                         <Text style={styles.mcRecAction}>
-                          Increase monthly investments by {formatCurrency(rec.additionalMonthlyContributionRequired)}/mo
+                          {rec.annualContributionGrowthRate && rec.annualContributionGrowthRate > 0
+                            ? `Increase initial monthly investments by ${formatCurrency(rec.additionalMonthlyContributionRequired)}/mo`
+                            : `Increase monthly investments by ${formatCurrency(rec.additionalMonthlyContributionRequired)}/mo`}
                         </Text>
                         <Text style={styles.mcRecFromTo}>
-                          From {formatCurrency(rec.currentMonthlyContribution)} → {formatCurrency(rec.recommendedMonthlyContribution)} per month
+                          {rec.annualContributionGrowthRate && rec.annualContributionGrowthRate > 0
+                            ? `From ${formatCurrency(rec.currentMonthlyContribution)} → ${formatCurrency(rec.recommendedMonthlyContribution)} initial per month (+${Math.round(rec.annualContributionGrowthRate * 100)}%/yr annual step-up)`
+                            : `From ${formatCurrency(rec.currentMonthlyContribution)} → ${formatCurrency(rec.recommendedMonthlyContribution)} per month`}
                         </Text>
 
                         {/* Feasibility Contextual Messaging */}
@@ -1205,11 +1209,21 @@ export function FinancialOutlookScreen(): React.ReactElement {
 
                   <View style={styles.detailRow}>
                     <Text style={styles.detailLabel}>Contribution Model</Text>
-                    <Text style={styles.detailValue}>Fixed Nominal Monthly (NOMINAL_FLAT)</Text>
+                    <Text style={styles.detailValue}>
+                      {retirement.assumptions.contributionMode === 'STEP_UP'
+                        ? `Annual Step-Up (${((retirement.assumptions.annualContributionGrowthRate ?? 0) * 100).toFixed(0)}%/yr)`
+                        : retirement.assumptions.contributionMode === 'REAL_CONSTANT'
+                          ? 'Constant Real (REAL_CONSTANT)'
+                          : 'Fixed Nominal Monthly (NOMINAL_FLAT)'}
+                    </Text>
                   </View>
                   <View style={styles.nominalFlatNote}>
                     <Text style={styles.nominalFlatNoteText}>
-                      Current projections assume your monthly investment stays flat in nominal rupees over time. Future versions may model increasing contributions over time.
+                      {retirement.assumptions.contributionMode === 'STEP_UP'
+                        ? `Monthly investments are modeled to increase by ${((retirement.assumptions.annualContributionGrowthRate ?? 0) * 100).toFixed(0)}% each year.`
+                        : retirement.assumptions.contributionMode === 'REAL_CONSTANT'
+                          ? 'Monthly investments are modeled to increase with inflation to maintain purchasing power.'
+                          : 'Current projections assume your monthly investment stays flat in nominal rupees over time.'}
                     </Text>
                   </View>
                 </>

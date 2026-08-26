@@ -33,6 +33,7 @@ import {
   monthsToTarget,
   requiredNominalFlatContribution,
   requiredRealConstantContribution,
+  requiredStepUpContribution,
   calculateEmergencyFundTarget,
   CONTRIBUTION_MODE
 } from '../utils/financialMath.js';
@@ -47,7 +48,8 @@ import {
   DEFAULT_WITHDRAWAL_RATE,
   DEFAULT_LIFESTYLE_RATIO,
   DEFAULT_EMERGENCY_MONTHS,
-  DEFAULT_SCENARIOS
+  DEFAULT_SCENARIOS,
+  MAX_ANNUAL_CONTRIBUTION_GROWTH_RATE
 } from '../config/financialRules.js';
 import { attachMonteCarloSimulation } from '../utils/monteCarloAdapter.js';
 
@@ -57,22 +59,41 @@ import { attachMonteCarloSimulation } from '../utils/monteCarloAdapter.js';
  * 
  * @param {Object} data
  * @param {Object} data.user - User document or plain object
- * @param {Array<Object>} [data.incomes=[]] - Historical income records
- * @param {Array<Object>} [data.transactions=[]] - Historical transaction records
- * @param {Array<Object>} [data.assets=[]] - User asset records
- * @param {Array<Object>} [data.liabilities=[]] - User liability records
+ * @param {Array} [data.incomes=[]] - Array of Income documents/objects
+ * @param {Array} [data.transactions=[]] - Array of Transaction documents/objects
+ * @param {Array} [data.assets=[]] - Array of Asset documents/objects
+ * @param {Array} [data.liabilities=[]] - Array of Liability documents/objects
  * @param {Object} [options={}]
  * @param {Date|string} [options.referenceDate] - Override current date for testing
  * @param {string} [options.contributionMode=CONTRIBUTION_MODE.NOMINAL_FLAT] - Contribution projection mode
+ * @param {number} [options.annualContributionGrowthRate] - Annual contribution escalation rate (required if STEP_UP)
  * @param {number} [options.monthlyContributionOverride] - Optional override for monthly savings
  * @param {number} [options.spendingWindowMonths=6] - Trailing window in months for spending analysis
  * @returns {Object} Structured predictability snapshot
  */
 export function buildPredictabilitySnapshot(data = {}, options = {}) {
   const referenceDate = options.referenceDate ? new Date(options.referenceDate) : new Date();
-  const contributionMode = options.contributionMode || CONTRIBUTION_MODE.NOMINAL_FLAT;
-
   const resolved = resolveForecastInputs(data, options);
+  const contributionMode = options.contributionMode || resolved.contributionMode || CONTRIBUTION_MODE.NOMINAL_FLAT;
+  let annualContributionGrowthRate = undefined;
+
+  if (contributionMode === CONTRIBUTION_MODE.STEP_UP) {
+    const rawRate = options.annualContributionGrowthRate !== undefined
+      ? options.annualContributionGrowthRate
+      : (resolved.annualContributionGrowthRate !== undefined ? resolved.annualContributionGrowthRate : undefined);
+
+    if (rawRate === undefined || rawRate === null) {
+      throw new TypeError("Missing required parameter 'annualContributionGrowthRate' for STEP_UP contribution mode");
+    }
+    const numRate = Number(rawRate);
+    if (!Number.isFinite(numRate)) {
+      throw new TypeError(`'annualContributionGrowthRate' must be a number, got ${typeof rawRate}`);
+    }
+    if (numRate < 0.0 || numRate > MAX_ANNUAL_CONTRIBUTION_GROWTH_RATE) {
+      throw new RangeError(`'annualContributionGrowthRate' must be in [0.0, ${MAX_ANNUAL_CONTRIBUTION_GROWTH_RATE}], got ${rawRate}`);
+    }
+    annualContributionGrowthRate = numRate;
+  }
 
   const {
     user,
@@ -219,6 +240,7 @@ export function buildPredictabilitySnapshot(data = {}, options = {}) {
           currentInvestableCorpus: fireInvestableCorpus,
           monthlyContribution: monthlyContributionUsed,
           mode: contributionMode,
+          annualContributionGrowthRate,
           realAnnualReturn,
           nominalAnnualReturn: nomRate,
           inflationRate: infRate,
@@ -237,6 +259,25 @@ export function buildPredictabilitySnapshot(data = {}, options = {}) {
             ? requiredNominalFlatContribution({
                 currentPrincipal: fireInvestableCorpus,
                 targetFutureValueReal: userGoalCorpus,
+                nominalAnnualReturn: nomRate,
+                inflationRate: infRate,
+                months: monthsUntilRetirement
+              })
+            : 0;
+        } else if (contributionMode === CONTRIBUTION_MODE.STEP_UP) {
+          requiredContributionForEstimatedFire = requiredStepUpContribution({
+            currentPrincipal: fireInvestableCorpus,
+            targetFutureValueReal: estimatedFireCorpus,
+            annualContributionGrowthRate,
+            nominalAnnualReturn: nomRate,
+            inflationRate: infRate,
+            months: monthsUntilRetirement
+          });
+          requiredContributionForUserGoal = userGoalCorpus > 0
+            ? requiredStepUpContribution({
+                currentPrincipal: fireInvestableCorpus,
+                targetFutureValueReal: userGoalCorpus,
+                annualContributionGrowthRate,
                 nominalAnnualReturn: nomRate,
                 inflationRate: infRate,
                 months: monthsUntilRetirement
@@ -265,6 +306,7 @@ export function buildPredictabilitySnapshot(data = {}, options = {}) {
           currentPrincipal: fireInvestableCorpus,
           monthlyContribution: monthlyContributionUsed,
           mode: contributionMode,
+          annualContributionGrowthRate,
           realAnnualReturn,
           nominalAnnualReturn: nomRate,
           inflationRate: infRate,
@@ -289,7 +331,8 @@ export function buildPredictabilitySnapshot(data = {}, options = {}) {
         realReturn: realAnnualReturn,
         withdrawalRate: swrRate,
         lifestyleAdjustmentRatio,
-        contributionMode
+        contributionMode,
+        annualContributionGrowthRate: contributionMode === CONTRIBUTION_MODE.STEP_UP ? (annualContributionGrowthRate ?? 0) : undefined
       },
       currentAnnualLifestyleSpending,
       estimatedFireCorpus,

@@ -89,6 +89,9 @@ export function deriveMonteCarloSeed(params = {}) {
     params.userGoalCorpus && Number(params.userGoalCorpus) > 0 ? Number(params.userGoalCorpus).toFixed(2) : '0.00',
     String(params.monthsUntilRetirement ?? 0),
     String(params.contributionMode || 'NOMINAL_FLAT'),
+    params.annualContributionGrowthRate !== undefined && params.annualContributionGrowthRate !== null
+      ? Number(params.annualContributionGrowthRate).toFixed(4)
+      : 'null',
     String(params.simulationCount || DEFAULT_SIMULATION_COUNT),
     params.currentAge !== null && params.currentAge !== undefined ? Number(params.currentAge).toFixed(2) : 'null',
     params.maxSearchAge !== null && params.maxSearchAge !== undefined ? Number(params.maxSearchAge).toFixed(2) : 'null'
@@ -130,6 +133,26 @@ export function buildMonteCarloPayload(resolved = {}, options = {}, extra = {}) 
 
   const monthsUntilRetirement = Number(resolved.monthsUntilRetirement ?? 0);
   const contributionMode = options.contributionMode || resolved.contributionMode || 'NOMINAL_FLAT';
+  let annualContributionGrowthRate = undefined;
+
+  if (contributionMode === 'STEP_UP') {
+    const rawRate = options.annualContributionGrowthRate !== undefined
+      ? options.annualContributionGrowthRate
+      : (resolved.annualContributionGrowthRate !== undefined ? resolved.annualContributionGrowthRate : undefined);
+
+    if (rawRate === undefined || rawRate === null) {
+      throw new TypeError("Missing required parameter 'annualContributionGrowthRate' for STEP_UP contribution mode");
+    }
+    const numRate = Number(rawRate);
+    if (!Number.isFinite(numRate)) {
+      throw new TypeError(`'annualContributionGrowthRate' must be a number, got ${typeof rawRate}`);
+    }
+    if (numRate < 0.0 || numRate > 0.50) {
+      throw new RangeError(`'annualContributionGrowthRate' must be in [0.0, 0.50], got ${rawRate}`);
+    }
+    annualContributionGrowthRate = numRate;
+  }
+
   const simulationCount = Math.max(100, Math.min(100000, Number(options.simulationCount) || DEFAULT_SIMULATION_COUNT));
 
   const currentAge = resolved.currentAge !== null && resolved.currentAge !== undefined ? Number(resolved.currentAge) : null;
@@ -150,6 +173,7 @@ export function buildMonteCarloPayload(resolved = {}, options = {}, extra = {}) 
         userGoalCorpus,
         monthsUntilRetirement,
         contributionMode,
+        annualContributionGrowthRate,
         simulationCount,
         currentAge,
         maxSearchAge
@@ -166,6 +190,7 @@ export function buildMonteCarloPayload(resolved = {}, options = {}, extra = {}) 
     userGoalCorpus: userGoalCorpus || undefined,
     monthsUntilRetirement,
     contributionMode,
+    annualContributionGrowthRate: contributionMode === 'STEP_UP' ? annualContributionGrowthRate : undefined,
     simulationCount,
     seed,
     includeSimulation: options.includeSimulation ?? true,
@@ -424,6 +449,7 @@ export async function calculateRetirementAlternatives(
       userGoalCorpus: null,
       monthsUntilRetirement: alt.monthsUntilRetirement,
       contributionMode: basePayload.contributionMode,
+      annualContributionGrowthRate: basePayload.annualContributionGrowthRate,
       simulationCount: basePayload.simulationCount,
       seed: basePayload.seed, // CRITICAL: Reuse BASE forecast seed for CRN cross-horizon comparison
       includeSimulation: true,
@@ -455,6 +481,8 @@ export async function calculateRetirementAlternatives(
       monthsUntilRetirement: alt.monthsUntilRetirement,
       probabilityFundedAtTargetAge: sim.probabilityFundedAtTargetAge ?? null,
       recommendedMonthlyContribution: recContribution,
+      recommendedInitialMonthlyContribution: solver.recommendedInitialMonthlyContribution ?? recContribution,
+      annualContributionGrowthRate: solver.annualContributionGrowthRate ?? basePayload.annualContributionGrowthRate ?? null,
       additionalMonthlyContributionRequired: addContribution,
       achievedProbabilityFunded: solver.achievedProbabilityFunded ?? null,
       targetProbability: solver.targetProbability ?? (basePayload.solverTargetProbability || DEFAULT_SOLVER_TARGET_PROBABILITY),
@@ -510,6 +538,7 @@ export function mapMonteCarloResponse(data, payload, dataQuality = 'MEDIUM', fea
       portfolioVolatility: payload.portfolioVolatility,
       volatilitySource: payload.volatilitySource || 'RETURN_DERIVED',
       contributionMode: payload.contributionMode,
+      annualContributionGrowthRate: payload.annualContributionGrowthRate ?? null,
       seed: payload.seed
     },
     estimatedFire: {
@@ -534,6 +563,8 @@ export function mapMonteCarloResponse(data, payload, dataQuality = 'MEDIUM', fea
       currentMonthlyContribution: solver.currentMonthlyContribution,
       currentProbabilityFunded: solver.currentProbabilityFunded,
       recommendedMonthlyContribution: solver.recommendedMonthlyContribution,
+      recommendedInitialMonthlyContribution: solver.recommendedInitialMonthlyContribution ?? solver.recommendedMonthlyContribution,
+      annualContributionGrowthRate: solver.annualContributionGrowthRate ?? payload.annualContributionGrowthRate ?? null,
       additionalMonthlyContributionRequired: solver.additionalMonthlyContributionRequired,
       achievedProbabilityFunded: solver.achievedProbabilityFunded,
       recommendationIncrement: solver.recommendationIncrement,

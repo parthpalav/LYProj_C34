@@ -46,3 +46,15 @@ export const DEFAULT_SCENARIOS = Object.freeze({
     withdrawalRateOffset: 0.00  // SWR remains a stable retirement-planning policy assumption
   })
 });
+
+// Monte Carlo Simulation Engine Defaults (V1)
+export const DEFAULT_SIMULATION_COUNT = 10000;    // 10,000 Monte Carlo paths for V1 production
+export const DEFAULT_SOLVER_TARGET_PROBABILITY = 0.75; // 75% target funding probability
+export const MONTE_CARLO_ENGINE_VERSION = 'mc-v1';
+
+// Frozen V1 Volatility Model Constants: sigma = clamp(-0.04 + 2.0 * returnRate, 0.06, 0.22)
+export const VOLATILITY_INTERCEPT = -0.04;
+export const VOLATILITY_SLOPE = 2.0;
+export const VOLATILITY_MIN = 0.06;
+export const VOLATILITY_MAX = 0.22;
+export const DEFAULT_PORTFOLIO_VOLATILITY = 0.12; // Corresponding to DEFAULT_RETURN_RATE = 0.08: clamp(-0.04 + 2 * 0.08, 0.06, 0.22) = 0.12

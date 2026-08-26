@@ -8,6 +8,7 @@ Endpoints:
   POST /fmi-score       → Deterministic FMI (Financial Maturity Index) scoring engine
   POST /predict         → spending threshold alerts
   POST /classify        → TF-IDF + LogReg expense categorisation
+  POST /simulate        → Monte Carlo probabilistic simulation & solvers (V1)
 
 NOTE: FMI is no longer a supervised ML prediction model. It is a transparent,
 mathematically-grounded financial wellness index computed from retirement readiness.
@@ -25,6 +26,9 @@ from flask_cors import CORS
 from predictor import detect_threshold_alerts
 from sentiment import score_sentiment
 from fmi_engine import calculate_fmi
+from monte_carlo import run_simulation
+from contribution_solver import solve_required_contribution
+from funded_age_solver import solve_funded_ages
 
 # ─── Configuration ────────────────────────────────────────────────────────────
 MODEL_BACKEND = os.getenv("MODEL_BACKEND", "legacy").lower()
@@ -289,6 +293,129 @@ def classify_expense():
     # Unified Hybrid Pipeline (Merchant Rules -> TF-IDF Category + MiniLM Type)
     result = _hybrid_classifier.classify(raw)
     return jsonify(result)
+
+
+# ─── Monte Carlo Simulation API ───────────────────────────────────────────────
+
+def _sanitize_json(obj):
+    """Recursively convert NumPy scalars and collections to standard JSON types."""
+    if isinstance(obj, dict):
+        return {k: _sanitize_json(v) for k, v in obj.items()}
+    elif isinstance(obj, (list, tuple)):
+        return [_sanitize_json(v) for v in obj]
+    elif hasattr(obj, "item"):  # NumPy scalar
+        return obj.item()
+    return obj
+
+
+@app.post('/simulate')
+def simulate_endpoint():
+    """
+    POST /simulate
+
+    Execute Monte Carlo accumulation path simulation, probabilistic monthly-contribution
+    solving, and/or sustained funded-age calculation on pre-normalized numerical inputs.
+    """
+    try:
+        if not request.is_json and request.content_type != 'application/json':
+            if not request.data:
+                return jsonify({
+                    "error": {
+                        "code": "INVALID_SIMULATION_INPUT",
+                        "message": "Request body must be a valid JSON object."
+                    }
+                }), 400
+
+        payload = request.get_json(force=True, silent=True)
+        if payload is None or not isinstance(payload, dict):
+            return jsonify({
+                "error": {
+                    "code": "INVALID_SIMULATION_INPUT",
+                    "message": "Request body must be a valid JSON object."
+                }
+            }), 400
+
+        # Validate inclusion flags
+        include_sim = payload.get("includeSimulation", True)
+        if not isinstance(include_sim, bool):
+            return jsonify({
+                "error": {
+                    "code": "INVALID_SIMULATION_INPUT",
+                    "message": "'includeSimulation' must be a boolean."
+                }
+            }), 400
+
+        include_contrib_solver = payload.get("includeContributionSolver", False)
+        if not isinstance(include_contrib_solver, bool):
+            return jsonify({
+                "error": {
+                    "code": "INVALID_SIMULATION_INPUT",
+                    "message": "'includeContributionSolver' must be a boolean."
+                }
+            }), 400
+
+        include_funded_age = payload.get("includeFundedAgeSolver", False)
+        if not isinstance(include_funded_age, bool):
+            return jsonify({
+                "error": {
+                    "code": "INVALID_SIMULATION_INPUT",
+                    "message": "'includeFundedAgeSolver' must be a boolean."
+                }
+            }), 400
+
+        # Must request at least one computation section
+        if not include_sim and not include_contrib_solver and not include_funded_age:
+            return jsonify({
+                "error": {
+                    "code": "INVALID_SIMULATION_INPUT",
+                    "message": "At least one of 'includeSimulation', 'includeContributionSolver', or 'includeFundedAgeSolver' must be true."
+                }
+            }), 400
+
+        response = {
+            "meta": {
+                "engineVersion": "mc-v1",
+                "simulationCount": payload.get("simulationCount"),
+                "seed": payload.get("seed")
+            }
+        }
+
+        # 1. Base Simulation
+        if include_sim:
+            sim_result = run_simulation(payload)
+            response["simulation"] = sim_result
+
+        # 2. Contribution Solver
+        if include_contrib_solver:
+            solver_params = payload.copy()
+            if "solverTargetProbability" in payload:
+                solver_params["targetProbability"] = payload["solverTargetProbability"]
+            contrib_result = solve_required_contribution(solver_params)
+            response["contributionSolver"] = contrib_result
+
+        # 3. Funded Age Solver
+        if include_funded_age:
+            funded_age_result = solve_funded_ages(payload)
+            response["fundedAge"] = funded_age_result
+
+        return jsonify(_sanitize_json(response)), 200
+
+    except (ValueError, TypeError) as e:
+        log.warning("Monte Carlo simulation input validation error: %s", str(e))
+        return jsonify({
+            "error": {
+                "code": "INVALID_SIMULATION_INPUT",
+                "message": str(e)
+            }
+        }), 400
+    except Exception as e:
+        log.exception("Monte Carlo simulation internal error: %s", str(e))
+        return jsonify({
+            "error": {
+                "code": "INTERNAL_SIMULATION_ERROR",
+                "message": "An unexpected error occurred during simulation."
+            }
+        }), 500
 
 
 # ─── Run ──────────────────────────────────────────────────────────────────────

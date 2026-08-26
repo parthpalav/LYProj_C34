@@ -49,6 +49,7 @@ import {
   DEFAULT_EMERGENCY_MONTHS,
   DEFAULT_SCENARIOS
 } from '../config/financialRules.js';
+import { attachMonteCarloSimulation } from '../utils/monteCarloAdapter.js';
 
 /**
  * Pure deterministic snapshot builder.
@@ -481,18 +482,38 @@ export function buildPredictabilitySnapshot(data = {}, options = {}) {
     },
     retirement: baseRetirement,
     scenarios,
+    probabilistic: {
+      available: false,
+      reason: forecastStatus.available ? 'SIMULATION_NOT_RUN' : 'FORECAST_INPUTS_UNAVAILABLE',
+      missingInputs: forecastStatus.missingInputs,
+      dataQuality: forecastStatus.dataQuality
+    },
     explanationFacts,
     limitations
   };
 }
 
 /**
+ * Async snapshot builder with Monte Carlo simulation execution.
+ *
+ * @param {Object} data - Plain objects data payload (user, incomes, transactions, assets, liabilities)
+ * @param {Object} [options={}] - Snapshot options (simulationCount, portfolioVolatility, seed, etc.)
+ * @returns {Promise<Object>} Predictability snapshot with full probabilistic analysis attached
+ */
+export async function buildPredictabilitySnapshotAsync(data = {}, options = {}) {
+  const resolved = resolveForecastInputs(data, options);
+  const snapshot = buildPredictabilitySnapshot(data, options);
+  return attachMonteCarloSimulation(snapshot, resolved, options);
+}
+
+/**
  * Async data retriever and orchestrator.
- * Safely resolves user records from MongoDB and invokes buildPredictabilitySnapshot.
+ * Safely resolves user records from MongoDB, builds the deterministic snapshot,
+ * and attaches probabilistic Monte Carlo forecasts via the Python ML microservice.
  * 
  * @param {string|Object} userIdOrUser - User ID string or Mongoose User document
  * @param {Object} [options={}] - Snapshot options
- * @returns {Promise<Object>} Complete predictability snapshot
+ * @returns {Promise<Object>} Complete predictability snapshot with additive probabilistic section
  */
 export async function getPredictabilitySnapshot(userIdOrUser, options = {}) {
   let user = null;
@@ -523,11 +544,16 @@ export async function getPredictabilitySnapshot(userIdOrUser, options = {}) {
     Liability.find({ userId: queryUid, status: { $ne: 'deleted' } }).lean()
   ]);
 
-  return buildPredictabilitySnapshot({
+  const data = {
     user,
     incomes,
     transactions,
     assets,
     liabilities
-  }, options);
+  };
+
+  const resolved = resolveForecastInputs(data, options);
+  const snapshot = buildPredictabilitySnapshot(data, options);
+
+  return attachMonteCarloSimulation(snapshot, resolved, options);
 }

@@ -36,8 +36,10 @@ export interface NewGoalPayload {
 
 export interface NewIncomePayload {
   amount:       number;
-  source:       'salary' | 'gig' | 'freelance' | 'other';
+  source:       string;
   description?: string;
+  timestamp?:   string | Date;
+  date?:        string;
 }
 
 // ── Base URL ─────────────────────────────────────────────────

@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useStore } from '../store/useStore';
 import { useAuthStore } from '../store/useAuthStore';
@@ -111,6 +112,7 @@ const infoStyles = StyleSheet.create({
 // MAIN SCREEN
 // ═══════════════════════════════════════════════════════════════
 export function ProfileScreen(): React.ReactElement {
+  const navigation = useNavigation();
   const user = useStore((s) => s.user);
   const setUser = useStore((s) => s.setUser);
   const logout = useAuthStore((s) => s.logout);
@@ -236,8 +238,23 @@ export function ProfileScreen(): React.ReactElement {
           <InfoRow icon="mail-outline" label="Email Address" value={user?.email ?? 'Not set'} />
           <InfoRow icon="calendar-outline" label="Date of Birth" value={formatDOB(user?.dateOfBirth)} />
           <InfoRow icon="trending-up-outline" label="Income Type" value={user?.incomeType ? user.incomeType.charAt(0).toUpperCase() + user.incomeType.slice(1) : 'Not set'} />
-          <InfoRow icon="cash-outline" label="Monthly Income" value={formatCurrency(user?.monthlyIncome)} />
-          <InfoRow icon="hourglass-outline" label="Retirement Age" value={user?.retirementAge ? `${user.retirementAge} years` : 'Not set'} isLast />
+          <InfoRow icon="cash-outline" label="Monthly Income (Declared)" value={formatCurrency(user?.monthlyIncome)} />
+          <InfoRow icon="hourglass-outline" label="Retirement Age" value={user?.retirementAge ? `${user.retirementAge} years` : 'Not set'} />
+          <TouchableOpacity
+            style={infoStyles.row}
+            onPress={() => (navigation as any).navigate('IncomeFlow')}
+            activeOpacity={0.7}
+            accessibilityLabel="Manage Income Streams and History"
+          >
+            <View style={[infoStyles.iconWrap, { backgroundColor: '#ECFDF5' }]}>
+              <Ionicons name="wallet-outline" size={18} color="#059669" />
+            </View>
+            <View style={infoStyles.textCol}>
+              <Text style={infoStyles.label}>Income Streams & History</Text>
+              <Text style={infoStyles.value}>View, Log & Manage Receipts</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={16} color={TEXT_MUTED} />
+          </TouchableOpacity>
         </View>
 
         {/* ── Preferences ── */}

@@ -1355,7 +1355,7 @@ router.get('/income', async (req, res, next) => {
 router.post('/income', async (req, res, next) => {
   try {
     const userId = req.user.id;
-    const { amount, source, description } = req.body;
+    const { amount, source, description, timestamp, date } = req.body;
     const numericAmount = Number(amount);
 
     if (isNaN(numericAmount) || !Number.isFinite(numericAmount) || numericAmount <= 0) {
@@ -1375,13 +1375,14 @@ router.post('/income', async (req, res, next) => {
 
     let income;
     try {
+      const incomeDate = timestamp || date ? new Date(timestamp || date) : new Date();
       income = await Income.create({
         id:          `i-${Date.now()}`,
         userId:      userId,
         amount:      numericAmount,
         source:      source || 'salary',
         description: description || '',
-        timestamp:   new Date()
+        timestamp:   isNaN(incomeDate.getTime()) ? new Date() : incomeDate
       });
     } catch (createErr) {
       // Revert currentBalance on creation failure
@@ -1399,10 +1400,14 @@ router.post('/income', async (req, res, next) => {
 router.put('/income/:id', async (req, res, next) => {
   try {
     const userId = req.user.id;
-    const { amount, source, description } = req.body;
+    const { amount, source, description, timestamp, date } = req.body;
     const update = {};
     if (source !== undefined) update.source = source;
     if (description !== undefined) update.description = description;
+    if (timestamp !== undefined || date !== undefined) {
+      const d = new Date(timestamp || date);
+      if (!isNaN(d.getTime())) update.timestamp = d;
+    }
 
     let income;
     if (amount !== undefined) {

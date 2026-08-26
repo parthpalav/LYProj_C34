@@ -443,12 +443,17 @@ export function DashboardScreen(): React.ReactElement {
 
             {/* 3-Column Monthly Cash Flow Grid */}
             <View style={styles.cashGrid}>
-              <View style={styles.cashCol}>
-                <Text style={styles.cashColLabel}>Income</Text>
+              <TouchableOpacity
+                style={styles.cashCol}
+                onPress={() => (navigation as any).navigate('IncomeFlow')}
+                activeOpacity={0.75}
+                accessibilityLabel="Manage Income Streams and History"
+              >
+                <Text style={styles.cashColLabel}>Income ↗</Text>
                 <Text style={[styles.cashColValue, { color: '#6EE7B7' }]}>
                   {formatCurrency(incomeThisMonth)}
                 </Text>
-              </View>
+              </TouchableOpacity>
               <View style={styles.cashColDivider} />
               <View style={styles.cashCol}>
                 <Text style={styles.cashColLabel}>Spent</Text>

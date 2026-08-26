@@ -12,6 +12,7 @@ import { TransactionsScreen } from '../screens/TransactionsScreen';
 import { LiabilitiesScreen } from '../screens/LiabilitiesScreen';
 import { FinancialOutlookScreen } from '../screens/FinancialOutlookScreen';
 import { FmiScreen } from '../screens/FmiScreen';
+import { IncomeFlowScreen } from '../screens/IncomeFlowScreen';
 
 export type RootTabParamList = {
   Envelopes: undefined;
@@ -26,6 +27,7 @@ export type RootStackParamList = {
   MainTabs: undefined;
   FinancialOutlook: undefined;
   FMI: undefined;
+  IncomeFlow: undefined;
 };
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
@@ -106,6 +108,14 @@ export function AppNavigator(): React.ReactElement {
       <Stack.Screen
         name="FMI"
         component={FmiScreen}
+        options={{
+          headerShown: false,
+          animation: 'slide_from_right',
+        }}
+      />
+      <Stack.Screen
+        name="IncomeFlow"
+        component={IncomeFlowScreen}
         options={{
           headerShown: false,
           animation: 'slide_from_right',

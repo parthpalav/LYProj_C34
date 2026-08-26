@@ -183,7 +183,7 @@ export interface IncomeRecord {
   id: string;
   userId: string;
   amount: number;
-  source: 'salary' | 'gig' | 'freelance' | 'other';
+  source: string;
   description: string;
   timestamp: string;
 }

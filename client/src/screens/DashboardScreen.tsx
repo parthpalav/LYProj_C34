@@ -1,670 +1,1338 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import {
   View,
   Text,
   ScrollView,
   StyleSheet,
-  Dimensions,
   TouchableOpacity,
   ActivityIndicator,
   RefreshControl,
   Modal,
+  Dimensions,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
-import { getDashboard } from '../services/api';
+import {
+  getDashboard,
+  getPredictability,
+  getLiabilities,
+  getFMI,
+  getUserProfile
+} from '../services/api';
 import { useStore } from '../store/useStore';
-import { DashboardData, WantsNeedsBreakdown } from '../types';
+import {
+  DashboardData,
+  PredictabilitySnapshot,
+  Liability,
+  FMIResponse,
+  User
+} from '../types';
 import { UpdateBalanceScreen } from './UpdateBalanceScreen';
-import { BudgetPacing } from '../components/BudgetPacing';
-import { Heatmap } from '../components/Heatmap';
 
 const { width: SCREEN_W } = Dimensions.get('window');
-const CARD_PAD = 16;
 
-// ── Colour tokens ──────────────────────────────────────────
-const BLUE   = '#3B3BDE';
-const GREEN  = '#22C880';
-const AMBER  = '#F59E0B';
-const RED    = '#EF4444';
+// ── Design Tokens ──────────────────────────────────────────
+const BLUE = '#2563EB';
+const BLUE_LIGHT = '#EFF6FF';
+const GREEN = '#10B981';
+const GREEN_LIGHT = '#ECFDF5';
+const AMBER = '#F59E0B';
+const AMBER_LIGHT = '#FFFBEB';
+const RED = '#EF4444';
+const RED_LIGHT = '#FEF2F2';
 const PURPLE = '#7C3AED';
+const PURPLE_LIGHT = '#F3E8FF';
+const DARK = '#0F172A';
+const GRAY_600 = '#475569';
+const GRAY_400 = '#94A3B8';
+const BORDER = '#E2E8F0';
+const BG = '#F8FAFC';
 
-// ═══════════════════════════════════════════════════════════
-// GAUGE  (semi-circle via overflow + border trick)
-// ═══════════════════════════════════════════════════════════
-function SavingsGauge({ score = 5, max = 100 }: { score?: number; max?: number }) {
-  const pct = Math.min(score / max, 1);
-  const deg = -90 + pct * 180;
-  const color = score >= 70 ? GREEN : score >= 45 ? AMBER : RED;
-
-  return (
-    <View style={gStyles.wrap}>
-      <View style={gStyles.track}>
-        <View style={[gStyles.fill, { transform: [{ rotate: `${deg}deg` }], borderColor: color, borderBottomColor: 'transparent', borderLeftColor: 'transparent' }]} />
-        <View style={gStyles.mask} />
-      </View>
-      <View style={gStyles.label}>
-        <Text style={gStyles.value}>{score}/100</Text>
-        <Text style={gStyles.sub}>FMI score</Text>
-      </View>
-    </View>
-  );
+// ── Formatting Helpers ─────────────────────────────────────
+function formatCurrency(n: number | null | undefined): string {
+  if (n === null || n === undefined || isNaN(n)) return '₹0';
+  return new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    maximumFractionDigits: 0,
+  }).format(Math.round(n));
 }
 
-const R = 72;
-const T = 12;
-const gStyles = StyleSheet.create({
-  wrap: { alignItems: 'center', paddingTop: 8 },
-  track: { width: R * 2, height: R, overflow: 'hidden', position: 'relative' },
-  fill: {
-    position: 'absolute',
-    width: R * 2, height: R * 2,
-    borderRadius: R,
-    borderWidth: T,
-    bottom: 0,
-  },
-  mask: {
-    position: 'absolute',
-    width: (R - T) * 2, height: (R - T) * 2,
-    borderRadius: R - T,
-    backgroundColor: '#fff',
-    bottom: 0, left: T, top: T,
-  },
-  label: { alignItems: 'center', marginTop: 8 },
-  value: { fontSize: 22, fontWeight: '800', color: '#111827', letterSpacing: -0.5 },
-  sub: { fontSize: 11, color: '#6B7280', marginTop: 2 },
-});
+function formatShortDate(dateStr: string | null | undefined): string {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return '';
+  return d.toLocaleDateString('en-IN', { month: 'short', day: 'numeric' });
+}
 
-// ═══════════════════════════════════════════════════════════
-// WANTS vs NEEDS  (vertical bars – driven by real tx data)
-// ═══════════════════════════════════════════════════════════
-function WantsNeedsChart({ breakdown }: { breakdown?: WantsNeedsBreakdown }) {
-  const BAR_H = 110;
-
-  if (!breakdown || breakdown.total <= 0) {
-    return (
-      <View style={wnStyles.empty}>
-        <Text style={wnStyles.emptyIcon}>📊</Text>
-        <Text style={wnStyles.emptyText}>No transactions this month yet.</Text>
-        <Text style={wnStyles.emptyHint}>Add a transaction to see your Wants vs Needs breakdown.</Text>
-      </View>
-    );
+function fmiStatusColor(score: number): { text: string; bg: string; border: string; label: string } {
+  if (score >= 70) {
+    return { text: '#059669', bg: GREEN_LIGHT, border: '#A7F3D0', label: 'Strong' };
   }
-
-  const bars = [
-    { label: 'Needs',  pct: breakdown.needs.pct,       amount: breakdown.needs.amount,       color: GREEN },
-    { label: 'Wants',  pct: breakdown.wants.pct,       amount: breakdown.wants.amount,       color: AMBER },
-    { label: 'Invest', pct: breakdown.investments.pct, amount: breakdown.investments.amount, color: PURPLE },
-  ];
-
-  const fmt = (n: number) =>
-    new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(n);
-
-  return (
-    <View style={wnStyles.row}>
-      {bars.map((b) => (
-        <View key={b.label} style={wnStyles.col}>
-          <View style={[wnStyles.track, { height: BAR_H }]}>
-            <View style={[wnStyles.bar, { height: Math.max((b.pct / 100) * BAR_H, 4), backgroundColor: b.color }]} />
-          </View>
-          <Text style={wnStyles.pct}>{b.pct}%</Text>
-          <Text style={wnStyles.amt}>{fmt(b.amount)}</Text>
-          <Text style={wnStyles.lbl}>{b.label}</Text>
-        </View>
-      ))}
-    </View>
-  );
-}
-const wnStyles = StyleSheet.create({
-  row:   { flexDirection: 'row', justifyContent: 'space-around', alignItems: 'flex-end', paddingTop: 4 },
-  col:   { alignItems: 'center', gap: 3 },
-  track: { width: 48, backgroundColor: '#F0F1F5', borderRadius: 8, justifyContent: 'flex-end', overflow: 'hidden' },
-  bar:   { width: '100%', borderRadius: 8 },
-  pct:   { fontSize: 20, fontWeight: '800', color: '#111827', marginTop: 6 },
-  amt:   { fontSize: 11, color: '#6B7280', fontWeight: '600' },
-  lbl:   { fontSize: 12, color: '#6B7280', fontWeight: '500' },
-  empty:     { alignItems: 'center', paddingVertical: 18, gap: 6 },
-  emptyIcon: { fontSize: 28 },
-  emptyText: { fontSize: 13, fontWeight: '600', color: '#6B7280' },
-  emptyHint: { fontSize: 11, color: '#9CA3AF', textAlign: 'center', lineHeight: 16 },
-});
-
-// ═══════════════════════════════════════════════════════════
-// GOAL PROGRESS BARS
-// ═══════════════════════════════════════════════════════════
-function GoalProgress({ goals = [] }: { goals?: any[] }) {
-  if (goals.length === 0) return <Text style={{ color: '#6B7280' }}>No active goals. Add one in the Planner!</Text>;
-  
-  return (
-    <View style={{ gap: 14 }}>
-      {goals.slice(0, 2).map((g) => {
-        const pct = g.targetAmount > 0 ? Math.min(100, Math.round((g.savedAmount / g.targetAmount) * 100)) : 0;
-        return (
-          <View key={g.id || g.name}>
-            <View style={gp.row}>
-              <Text style={gp.name}>{g.emoji} {g.name}</Text>
-              <Text style={[gp.pct, { color: BLUE }]}>{pct}%</Text>
-            </View>
-            <View style={gp.track}>
-              <View style={[gp.fill, { width: `${pct}%` as any, backgroundColor: BLUE }]} />
-            </View>
-            <Text style={gp.sub}>₹{g.savedAmount.toLocaleString()} of ₹{g.targetAmount.toLocaleString()}</Text>
-          </View>
-        );
-      })}
-    </View>
-  );
-}
-const gp = StyleSheet.create({
-  row: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 6 },
-  name: { fontSize: 13, fontWeight: '600', color: '#111827' },
-  pct:  { fontSize: 13, fontWeight: '700' },
-  track: { height: 8, backgroundColor: '#E8ECF2', borderRadius: 99, overflow: 'hidden' },
-  fill:  { height: '100%', borderRadius: 99 },
-  sub:   { fontSize: 11, color: '#6B7280', marginTop: 4 },
-});
-
-// ═══════════════════════════════════════════════════════════
-// LINE CHART  (driven by real spendingSeries)
-// ═══════════════════════════════════════════════════════════
-const LINE_H = 130;
-const LINE_LABELS = ['1', '2', '3', '4', '5', '6', '7'];
-
-function LineGraph({ series }: { series: number[] }) {
-  const points = series.length >= 2 ? series.slice(-7) : [50, 120, 200, 280, 350, 420, 490];
-  const LINE_MAX = Math.max(...points, 1);
-  const availW = SCREEN_W - 48 - CARD_PAD * 2;
-  const stepX = availW / (points.length - 1);
-  const labels = points.map((_, i) => `${i + 1}`);
-
-  return (
-    <View>
-      <View style={{ height: LINE_H, position: 'relative' }}>
-        {[0.25, 0.5, 0.75, 1].map((f) => (
-          <View key={f} style={[lnStyles.grid, { bottom: f * LINE_H, left: 28 }]} />
-        ))}
-        {points.map((val, i) => {
-          const x = 28 + i * stepX;
-          const y = (val / LINE_MAX) * LINE_H;
-          let lineEl = null;
-          if (i > 0) {
-            const prevVal = points[i - 1];
-            const prevX   = 28 + (i - 1) * stepX;
-            const prevY   = (prevVal / LINE_MAX) * LINE_H;
-            const dx = x - prevX; const dy = y - prevY;
-            const length = Math.sqrt(dx * dx + dy * dy);
-            const angle  = Math.atan2(dy, dx) * (180 / Math.PI);
-            lineEl = (
-              <View key={`line-${i}`} style={[lnStyles.segment, { width: length, bottom: prevY, left: prevX, transform: [{ rotate: `${-angle}deg` }] }]} />
-            );
-          }
-          return (
-            <React.Fragment key={i}>
-              {lineEl}
-              <View style={[lnStyles.dot, { bottom: y - 4, left: x - 4 }]} />
-            </React.Fragment>
-          );
-        })}
-      </View>
-      <View style={[lnStyles.xRow, { paddingLeft: 28 }]}>
-        {labels.map((l) => (
-          <Text key={l} style={lnStyles.xLbl}>{l}</Text>
-        ))}
-      </View>
-    </View>
-  );
-}
-const lnStyles = StyleSheet.create({
-  grid:    { position: 'absolute', right: 0, height: 1, backgroundColor: '#F0F1F5' },
-  segment: { position: 'absolute', height: 2.5, backgroundColor: BLUE, borderRadius: 2 },
-  dot:     { position: 'absolute', width: 8, height: 8, borderRadius: 4, backgroundColor: BLUE, borderWidth: 2, borderColor: '#fff' },
-  xRow:    { flexDirection: 'row', justifyContent: 'space-between', marginTop: 6 },
-  xLbl:    { fontSize: 10, color: '#9CA3AF', flex: 1, textAlign: 'center' },
-});
-
-// ═══════════════════════════════════════════════════════════
-// DONUT RING
-// ═══════════════════════════════════════════════════════════
-function DonutRing({ data = [] }: { data?: Array<{ label: string; pct: number }> }) {
-  const SIZE = 130;
-  if (data.length === 0) return <View style={{ height: SIZE, alignItems: 'center', justifyContent: 'center' }}><Text style={{ fontSize: 11, color: '#9CA3AF' }}>No data</Text></View>;
-  
-  const COLORS = [BLUE, GREEN, AMBER, RED, PURPLE];
-  let acc = 0;
-  return (
-    <View style={{ alignItems: 'center' }}>
-      <View style={{ width: SIZE, height: SIZE, borderRadius: SIZE / 2, overflow: 'hidden', backgroundColor: '#F0F1F5' }}>
-        {data.map((seg, i) => {
-          const color = COLORS[i % COLORS.length];
-          const startAngle = acc * 3.6;
-          acc += seg.pct;
-          return (
-            <View key={i} pointerEvents="none" style={{ position: 'absolute', width: SIZE, height: SIZE, borderRadius: SIZE / 2, borderWidth: SIZE / 2, borderColor: 'transparent', borderTopColor: seg.pct >= 50 ? color : 'transparent', borderRightColor: color, transform: [{ rotate: `${startAngle - 90}deg` }] }} />
-          );
-        })}
-        <View style={{ position: 'absolute', width: SIZE - 36, height: SIZE - 36, borderRadius: (SIZE - 36) / 2, backgroundColor: '#fff', left: 18, top: 18, alignItems: 'center', justifyContent: 'center' }}>
-          <Text style={{ fontSize: 11, fontWeight: '700', color: '#111827' }}>Spend</Text>
-        </View>
-      </View>
-      <View style={donStyles.legRow2}>
-        {data.slice(0, 3).map((s, i) => (
-          <View key={s.label} style={donStyles.legItem}>
-            <View style={[donStyles.legDot, { backgroundColor: COLORS[i % COLORS.length] }]} />
-            <Text style={donStyles.legLbl}>{s.label}</Text>
-          </View>
-        ))}
-      </View>
-    </View>
-  );
-}
-const donStyles = StyleSheet.create({
-  legRow2: { flexDirection: 'row', gap: 16, marginTop: 10 },
-  legItem: { flexDirection: 'row', alignItems: 'center', gap: 5 },
-  legDot: { width: 9, height: 9, borderRadius: 5 },
-  legLbl: { fontSize: 12, color: '#6B7280', fontWeight: '500' },
-});
-
-// ═══════════════════════════════════════════════════════════
-// BAR CHART
-// ═══════════════════════════════════════════════════════════
-const BAR_H   = 130;
-
-function BarChart({ data = [] }: { data?: Array<{ label: string; val: number; color: string }> }) {
-  if (data.length === 0) return <Text style={{ fontSize: 12, color: '#6B7280' }}>No budget data</Text>;
-  const maxVal = Math.max(...data.map(d => d.val), 1);
-
-  return (
-    <View>
-      <View style={{ flexDirection: 'row', height: BAR_H }}>
-        <View style={{ width: 44, height: BAR_H, justifyContent: 'space-between', alignItems: 'flex-end', paddingRight: 8 }}>
-          {[maxVal, maxVal / 2, 0].map((v) => (
-            <Text key={v} style={{ fontSize: 9, color: '#9CA3AF' }}>₹{Math.round(v)}</Text>
-          ))}
-        </View>
-        <View style={{ flex: 1, flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-around' }}>
-          {data.map((b) => (
-            <View key={b.label} style={{ alignItems: 'center', flex: 1 }}>
-              <View style={{ width: 30, height: (b.val / maxVal) * BAR_H, backgroundColor: b.color, borderRadius: 6 }} />
-            </View>
-          ))}
-        </View>
-      </View>
-      <View style={{ flexDirection: 'row', paddingLeft: 44, marginTop: 4 }}>
-        {data.map((b) => (
-          <Text key={b.label} style={{ flex: 1, textAlign: 'center', fontSize: 10, color: '#9CA3AF' }}>{b.label}</Text>
-        ))}
-      </View>
-    </View>
-  );
+  if (score >= 45) {
+    return { text: '#D97706', bg: AMBER_LIGHT, border: '#FDE68A', label: 'Fair' };
+  }
+  return { text: '#DC2626', bg: RED_LIGHT, border: '#FECACA', label: 'Needs Attention' };
 }
 
 // ═══════════════════════════════════════════════════════════
-// CARD WRAPPER
-// ═══════════════════════════════════════════════════════════
-function Card({ title, info, children }: { title: string; info?: boolean; children: React.ReactNode }) {
-  return (
-    <View style={cardStyles.card}>
-      <View style={cardStyles.header}>
-        <Text style={cardStyles.title}>{title}</Text>
-        {info && <TouchableOpacity style={cardStyles.infoBtn}><Text style={cardStyles.infoTxt}>i</Text></TouchableOpacity>}
-      </View>
-      {children}
-    </View>
-  );
-}
-const cardStyles = StyleSheet.create({
-  card: {
-    backgroundColor: '#fff',
-    borderRadius: 20,
-    padding: CARD_PAD,
-    borderWidth: 1,
-    borderColor: '#E8ECF2',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 10,
-    elevation: 3,
-  },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 },
-  title:  { fontSize: 15, fontWeight: '700', color: '#111827' },
-  infoBtn: { width: 22, height: 22, borderRadius: 11, borderWidth: 1.5, borderColor: '#D1D5DB', alignItems: 'center', justifyContent: 'center' },
-  infoTxt: { fontSize: 11, fontWeight: '700', color: '#6B7280' },
-});
-
-// ═══════════════════════════════════════════════════════════
-// BALANCE CARD
-// ═══════════════════════════════════════════════════════════
-function BalanceCard({ balance }: { balance: number }) {
-  const formatted = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(balance);
-  return (
-    <View style={balStyles.card}>
-      <Text style={balStyles.label}>Current Balance</Text>
-      <Text style={balStyles.amount}>{formatted}</Text>
-    </View>
-  );
-}
-const balStyles = StyleSheet.create({
-  card: {
-    backgroundColor: BLUE,
-    borderRadius: 20,
-    padding: 20,
-    shadowColor: BLUE,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 12,
-    elevation: 6,
-  },
-  label: { fontSize: 13, color: 'rgba(255,255,255,0.75)', fontWeight: '500', marginBottom: 6 },
-  amount: { fontSize: 32, fontWeight: '800', color: '#fff', letterSpacing: -1 },
-});
-
-
-
-// ═══════════════════════════════════════════════════════════
-// MAIN DASHBOARD SCREEN
+// MAIN DASHBOARD COMPONENT
 // ═══════════════════════════════════════════════════════════
 export function DashboardScreen(): React.ReactElement {
   const navigation = useNavigation();
-  const { dashboard, setDashboard } = useStore();
-  const [loading,     setLoading]   = useState(!dashboard);
-  const [refreshing,  setRefreshing] = useState(false);
-  const [error,       setError]     = useState<string | null>(null);
-  const [showUpdateBalance, setShowUpdateBalance] = useState(false);
-  const [refreshKey,  setRefreshKey] = useState(0);
+  const { user, setUser, dashboard, setDashboard } = useStore();
 
-  const fetchDashboard = useCallback(async (isRefresh = false) => {
+  // Screen state
+  const [loading, setLoading] = useState(!dashboard);
+  const [refreshing, setRefreshing] = useState(false);
+  const [showUpdateBalance, setShowUpdateBalance] = useState(false);
+
+  // Subsystem data
+  const [predictability, setPredictability] = useState<PredictabilitySnapshot | null>(null);
+  const [liabilities, setLiabilities] = useState<Liability[]>([]);
+  const [fmiData, setFmiData] = useState<FMIResponse | null>(null);
+  const [dataLoaded, setDataLoaded] = useState(false);
+
+  // ── Parallel Data Fetcher with Failure Isolation ─────────
+  const fetchAllData = useCallback(async (isRefresh = false) => {
+    if (isRefresh) setRefreshing(true);
+    else if (!dataLoaded) setLoading(true);
+
     try {
-      if (isRefresh) setRefreshing(true);
-      else setLoading(true);
-      const data: DashboardData = await getDashboard();
-      setDashboard(data);
-      setError(null);
-      setRefreshKey((k) => k + 1);
+      const results = await Promise.allSettled([
+        getDashboard(),
+        getPredictability(),
+        getLiabilities(),
+        getFMI(),
+        getUserProfile(),
+      ]);
+
+      // 1. Dashboard
+      if (results[0].status === 'fulfilled' && results[0].value) {
+        setDashboard(results[0].value);
+      }
+
+      // 2. Predictability
+      if (results[1].status === 'fulfilled' && results[1].value) {
+        setPredictability(results[1].value);
+      }
+
+      // 3. Liabilities
+      if (results[2].status === 'fulfilled' && Array.isArray(results[2].value)) {
+        setLiabilities(results[2].value);
+      }
+
+      // 4. FMI
+      if (results[3].status === 'fulfilled' && results[3].value?.current) {
+        setFmiData(results[3].value.current);
+      }
+
+      // 5. User Profile
+      if (results[4].status === 'fulfilled' && results[4].value) {
+        setUser(results[4].value);
+      }
+
+      setDataLoaded(true);
     } catch {
-      setError('Could not load dashboard. Is the server running?');
+      // Non-blocking fallback
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
-  }, []);
+  }, [dataLoaded, setDashboard, setUser]);
 
   useEffect(() => {
-    fetchDashboard();
-  }, [fetchDashboard]);
+    fetchAllData();
+  }, [fetchAllData]);
 
-  const fmiScore     = dashboard?.fmiScore     ?? 0;
-  const balance      = dashboard?.balance      ?? 0;
-  const spendSeries  = dashboard?.spendingSeries ?? [];
-  const risk         = dashboard?.risk         ?? 'low';
-  const insights     = dashboard?.insights     ?? [];
+  // ── Computed Values ───────────────────────────────────────
+  const fmiScore = fmiData?.score ?? dashboard?.fmiScore ?? 50;
+  const fmiConfig = fmiStatusColor(fmiScore);
 
-  const bannerColor  = risk === 'high' ? '#FEF2F2' : risk === 'medium' ? '#FFFBEB' : '#ECFDF5';
-  const bannerBorder = risk === 'high' ? '#FECACA' : risk === 'medium' ? '#FCD34D' : '#6EE7B7';
-  const bannerTextColor = risk === 'high' ? '#991B1B' : risk === 'medium' ? '#92400E' : '#065F46';
-  const bannerIcon   = risk === 'high' ? '🚨' : risk === 'medium' ? '⚠️' : '✅';
+  const balance = user?.currentBalance ?? dashboard?.balance ?? 0;
+  const incomeThisMonth = dashboard?.totalIncome ?? user?.monthlyIncome ?? predictability?.income?.meanMonthlyIncome ?? 0;
+  const spendingThisMonth = dashboard?.wantsNeedsBreakdown?.total ?? fmiData?.totalSpent ?? 0;
+  const investmentsThisMonth = dashboard?.wantsNeedsBreakdown?.investments?.amount ?? fmiData?.totalSaved ?? 0;
 
-  if (loading) {
+  const wantsNeeds = dashboard?.wantsNeedsBreakdown;
+  const hasSpendingData = wantsNeeds && wantsNeeds.total > 0;
+
+  // Upcoming liabilities
+  const activeLiabilities = useMemo(() => {
+    return liabilities.filter((l) => !l.status || l.status === 'active');
+  }, [liabilities]);
+
+  const nearestLiability = useMemo(() => {
+    const sorted = [...activeLiabilities]
+      .filter((l) => l.nextDueDate)
+      .sort((a, b) => new Date(a.nextDueDate!).getTime() - new Date(b.nextDueDate!).getTime());
+    return sorted[0] || null;
+  }, [activeLiabilities]);
+
+  // Days until nearest liability
+  const daysUntilLiability = useMemo(() => {
+    if (!nearestLiability?.nextDueDate) return null;
+    const due = new Date(nearestLiability.nextDueDate).getTime();
+    const now = new Date().getTime();
+    const diff = Math.ceil((due - now) / (1000 * 60 * 60 * 24));
+    return diff;
+  }, [nearestLiability]);
+
+  // Predictability metrics
+  const mcProb = predictability?.probabilistic?.estimatedFire?.probabilityFundedAtTargetAge;
+  const targetAge = predictability?.retirement?.retirementAge ?? user?.retirementAge ?? 60;
+  const rec = predictability?.probabilistic?.contributionRecommendation;
+  const isMcAvailable = predictability?.probabilistic?.available === true && mcProb !== null && mcProb !== undefined;
+  const isMcDegraded = predictability?.probabilistic?.available === true && (predictability?.probabilistic?.dataQuality === 'LOW' || predictability?.probabilistic?.dataQuality === 'INSUFFICIENT');
+  const isHistoryInsufficient = predictability?.forecastStatus?.available === false || predictability?.dataQuality?.incomeDataQuality?.dataQualityLevel === 'INSUFFICIENT';
+
+  // ── Smart Next Action Logic (Deterministic & Transparent) ─
+  const smartAction = useMemo(() => {
+    // Priority 1: Insufficient history
+    if (isHistoryInsufficient || (dashboard?.spendingSeries && dashboard.spendingSeries.length < 2)) {
+      return {
+        icon: 'sparkles',
+        iconColor: PURPLE,
+        iconBg: PURPLE_LIGHT,
+        badge: 'Forecast Setup',
+        title: 'Activate Detailed Forecasts',
+        message: 'Log a few more transactions to build your behavioral history and unlock Monte Carlo projections.',
+        actionText: 'Log Transaction',
+        actionTarget: 'Transactions' as const,
+      };
+    }
+
+    // Priority 2: Contribution recommendation > 0
+    if (rec?.solved && rec.additionalMonthlyContributionRequired > 0) {
+      const stepUpText = rec.annualContributionGrowthRate && rec.annualContributionGrowthRate > 0
+        ? ` (+${Math.round(rec.annualContributionGrowthRate * 100)}%/yr annual step-up)`
+        : '';
+      return {
+        icon: 'trending-up',
+        iconColor: BLUE,
+        iconBg: BLUE_LIGHT,
+        badge: 'Retirement Outlook',
+        title: 'Boost Target Confidence',
+        message: `Increasing initial investments by ${formatCurrency(rec.additionalMonthlyContributionRequired)}/mo${stepUpText} improves your modeled retirement path toward age ${targetAge}.`,
+        actionText: 'View Outlook',
+        actionTarget: 'FinancialOutlook' as const,
+      };
+    }
+
+    // Priority 3: Upcoming liability due soon (within 7 days)
+    if (nearestLiability && daysUntilLiability !== null && daysUntilLiability >= 0 && daysUntilLiability <= 7) {
+      const dueLabel = daysUntilLiability === 0 ? 'today' : daysUntilLiability === 1 ? 'tomorrow' : `in ${daysUntilLiability} days`;
+      return {
+        icon: 'calendar',
+        iconColor: AMBER,
+        iconBg: AMBER_LIGHT,
+        badge: 'Upcoming Due Date',
+        title: `${nearestLiability.name} Due ${dueLabel}`,
+        message: `${formatCurrency(nearestLiability.amount)} payment scheduled for ${formatShortDate(nearestLiability.nextDueDate)}${nearestLiability.autoDeduct ? ' (Auto Deduct enabled)' : ''}.`,
+        actionText: 'View Liabilities',
+        actionTarget: 'Liabilities' as const,
+      };
+    }
+
+    // Priority 4: Emergency fund gap
+    if (predictability?.emergencyFund && predictability.emergencyFund.fundingGap > 0) {
+      return {
+        icon: 'shield-checkmark',
+        iconColor: GREEN,
+        iconBg: GREEN_LIGHT,
+        badge: 'Emergency Reserve',
+        title: 'Build Safety Reserve',
+        message: `Your liquid emergency reserve is ${formatCurrency(predictability.emergencyFund.fundingGap)} below the recommended ${predictability.emergencyFund.targetMonths || 6}-month essential buffer.`,
+        actionText: 'View Buffer',
+        actionTarget: 'FinancialOutlook' as const,
+      };
+    }
+
+    // Priority 5: Default on-track state
+    return {
+      icon: 'checkmark-circle',
+      iconColor: GREEN,
+      iconBg: GREEN_LIGHT,
+      badge: 'Plan On Track',
+      title: 'Current Plan Aligned',
+      message: `Your current savings and investment trajectory meets your modeled retirement target for age ${targetAge}.`,
+      actionText: 'View Outlook',
+      actionTarget: 'FinancialOutlook' as const,
+    };
+  }, [
+    isHistoryInsufficient,
+    dashboard?.spendingSeries,
+    rec,
+    targetAge,
+    nearestLiability,
+    daysUntilLiability,
+    predictability?.emergencyFund,
+  ]);
+
+  // Supporting FMI insight
+  const fmiInsight = useMemo(() => {
+    if (fmiData?.insights && fmiData.insights.length > 0) {
+      return fmiData.insights[0];
+    }
+    if (dashboard?.insights && dashboard.insights.length > 0) {
+      return dashboard.insights[0];
+    }
+    return 'Your saving discipline and spending control determine your overall financial health.';
+  }, [fmiData, dashboard]);
+
+  // Greeting
+  const greeting = useMemo(() => {
+    const hour = new Date().getHours();
+    const timeGreeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+    const firstName = user?.name ? user.name.trim().split(' ')[0] : 'there';
+    return `${timeGreeting}, ${firstName}`;
+  }, [user?.name]);
+
+  const todayFormatted = useMemo(() => {
+    return new Date().toLocaleDateString('en-IN', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'short',
+    });
+  }, []);
+
+  // ── Loading Skeleton / Spinner ───────────────────────────
+  if (loading && !dataLoaded) {
     return (
-      <View style={{ flex: 1, backgroundColor: '#F4F6FA', alignItems: 'center', justifyContent: 'center' }}>
+      <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color={BLUE} />
-        <Text style={{ marginTop: 12, color: '#6B7280', fontSize: 14 }}>Loading dashboard…</Text>
-      </View>
-    );
-  }
-
-  if (error) {
-    return (
-      <View style={{ flex: 1, backgroundColor: '#F4F6FA', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
-        <Text style={{ fontSize: 32, marginBottom: 12 }}>⚠️</Text>
-        <Text style={{ fontSize: 15, color: '#374151', textAlign: 'center', lineHeight: 22 }}>{error}</Text>
+        <Text style={styles.loadingTitle}>Loading your financial pulse…</Text>
+        <Text style={styles.loadingSubtitle}>Gathering real-time health, cash flow & forecast data</Text>
       </View>
     );
   }
 
   return (
-    <View style={s.container}>
+    <View style={styles.container}>
       <ScrollView
-        style={s.screen}
-        contentContainerStyle={s.content}
+        style={styles.screen}
+        contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
-            onRefresh={() => fetchDashboard(true)}
+            onRefresh={() => fetchAllData(true)}
             tintColor={BLUE}
             colors={[BLUE]}
           />
         }
       >
-
-      {/* Balance */}
-      <BalanceCard balance={balance} />
-
-      {/* FMI Score */}
-      <Card title="FMI Score" info>
-        <SavingsGauge score={fmiScore} max={100} />
-      </Card>
-
-      {/* Financial Outlook Entry Card */}
-      <TouchableOpacity
-        style={s.outlookCard}
-        activeOpacity={0.85}
-        onPress={() => (navigation as any).navigate('FinancialOutlook')}
-      >
-        <View style={s.outlookIconWrap}>
-          <Ionicons name="compass-outline" size={24} color={BLUE} />
+        {/* ── A. HEADER ────────────────────────────────────── */}
+        <View style={styles.headerRow}>
+          <View style={styles.headerLeft}>
+            <Text style={styles.headerGreeting}>{greeting}</Text>
+            <Text style={styles.headerSubtitle}>{todayFormatted} · Live Financial Pulse</Text>
+          </View>
+          <TouchableOpacity
+            style={styles.profileAvatarBtn}
+            onPress={() => (navigation as any).navigate('Profile')}
+            activeOpacity={0.8}
+            accessibilityLabel="View User Profile"
+          >
+            <Ionicons name="person-circle-outline" size={36} color={BLUE} />
+          </TouchableOpacity>
         </View>
-        <View style={{ flex: 1 }}>
-          <View style={s.outlookTitleRow}>
-            <Text style={s.outlookTitle}>Financial Outlook</Text>
-            <View style={s.outlookBadge}>
-              <Text style={s.outlookBadgeText}>FIRE & Projections</Text>
+
+        {/* ── B. CURRENT FINANCIAL HEALTH (FMI) ─────────────── */}
+        <TouchableOpacity
+          style={styles.fmiCard}
+          activeOpacity={0.88}
+          onPress={() => (navigation as any).navigate('FMI')}
+          accessibilityLabel="View Financial Health Details"
+        >
+          <View style={styles.fmiCardHeader}>
+            <View style={styles.fmiTitleRow}>
+              <View style={styles.fmiIconBadge}>
+                <Ionicons name="pulse" size={18} color="#059669" />
+              </View>
+              <Text style={styles.cardTitle}>Financial Health</Text>
+            </View>
+            <View style={[styles.statusPill, { backgroundColor: fmiConfig.bg, borderColor: fmiConfig.border }]}>
+              <Text style={[styles.statusPillText, { color: fmiConfig.text }]}>{fmiConfig.label}</Text>
             </View>
           </View>
-          <Text style={s.outlookSubtitle}>
-            View your projected retirement corpus, emergency runway & resilience.
-          </Text>
-        </View>
-        <Ionicons name="chevron-forward" size={18} color="#9CA3AF" />
-      </TouchableOpacity>
 
-      {/* Budget Pacing + Heatmap (placed under Balance/FMI) */}
-      <View style={s.visualsWrapper}>
-        <Card title="Budget Pacing">
-          <BudgetPacing refreshKey={refreshKey} />
-        </Card>
+          <View style={styles.fmiScoreRow}>
+            <View style={styles.fmiScoreWrap}>
+              <Text style={[styles.fmiScoreNumber, { color: fmiConfig.text }]}>{Math.round(fmiScore)}</Text>
+              <Text style={styles.fmiScoreDenominator}>/100</Text>
+            </View>
+            <View style={styles.fmiInsightWrap}>
+              <Text style={styles.fmiInsightText} numberOfLines={2}>
+                {fmiInsight}
+              </Text>
+            </View>
+          </View>
 
-        <View style={{ height: 12 }} />
-
-        <Card title="Spend Heatmap">
-          <Heatmap refreshKey={refreshKey} />
-        </Card>
-      </View>
-
-      {/* Row 1 */}
-      <View style={s.row}>
-        <View style={{ flex: 1 }}>
-          <Card title="Wants vs Needs" info>
-            <WantsNeedsChart breakdown={dashboard?.wantsNeedsBreakdown} />
-          </Card>
-        </View>
-      </View>
-
-      {/* Goal Progress – full width */}
-      <Card title="Goal Progress" info>
-        <GoalProgress />
-      </Card>
-
-      {/* Pattern Banner */}
-      {dashboard?.patterns && dashboard.patterns.length > 0 && (
-         <View style={[s.banner, { backgroundColor: '#F3E8FF', borderColor: '#D8B4FE', marginBottom: 0 }]}>
-           <Text style={s.bannerIcon}>{dashboard.patterns[0].emoji}</Text>
-           <View style={{ flex: 1 }}>
-             <Text style={[s.bannerBold, { color: '#6B21A8' }]}>Behavioral Insight</Text>
-             <Text style={[s.bannerText, { color: '#6B21A8' }]}>{dashboard.patterns[0].message}</Text>
-           </View>
-         </View>
-      )}
-
-      {/* Embedded MicroActions directly from PredictionService */}
-      {dashboard?.microActions && dashboard.microActions.length > 0 && (
-        <Card title="Suggested Micro-Actions">
-          {dashboard.microActions.map(action => (
-            <View key={action.id} style={s.microActionItem}>
-              <View style={{ flex: 1 }}>
-                <Text style={s.maTitle}>{action.title}</Text>
-                <Text style={s.maDesc}>{action.description}</Text>
-                <Text style={s.maImpact}>Impact: {action.impact}</Text>
+          {/* FMI Pillar Progress Bars */}
+          {fmiData?.pillars && (
+            <View style={styles.pillarRow}>
+              <View style={styles.pillarItem}>
+                <Text style={styles.pillarLabel}>Saving</Text>
+                <View style={styles.pillarTrack}>
+                  <View
+                    style={[
+                      styles.pillarFill,
+                      {
+                        width: `${Math.min(100, Math.max(5, fmiData.pillars.D1_savingDiscipline.score))}%`,
+                        backgroundColor: GREEN,
+                      },
+                    ]}
+                  />
+                </View>
               </View>
-              <TouchableOpacity style={s.maBtn} activeOpacity={0.8}>
-                <Text style={s.maBtnText}>{action.actionText}</Text>
+              <View style={styles.pillarItem}>
+                <Text style={styles.pillarLabel}>Discipline</Text>
+                <View style={styles.pillarTrack}>
+                  <View
+                    style={[
+                      styles.pillarFill,
+                      {
+                        width: `${Math.min(100, Math.max(5, fmiData.pillars.D2_spendingControl.score))}%`,
+                        backgroundColor: BLUE,
+                      },
+                    ]}
+                  />
+                </View>
+              </View>
+              <View style={styles.pillarItem}>
+                <Text style={styles.pillarLabel}>Stability</Text>
+                <View style={styles.pillarTrack}>
+                  <View
+                    style={[
+                      styles.pillarFill,
+                      {
+                        width: `${Math.min(100, Math.max(5, fmiData.pillars.D3_behavioralRisk.score))}%`,
+                        backgroundColor: PURPLE,
+                      },
+                    ]}
+                  />
+                </View>
+              </View>
+            </View>
+          )}
+
+          <View style={styles.cardActionRow}>
+            <Text style={styles.cardActionLink}>View Financial Health breakdown</Text>
+            <Ionicons name="chevron-forward" size={14} color={BLUE} />
+          </View>
+        </TouchableOpacity>
+
+        {/* ── C. CASH POSITION / MONTH SNAPSHOT ────────────── */}
+        <View style={styles.cashSection}>
+          {/* Main Current Balance Card */}
+          <View style={styles.balanceHeroCard}>
+            <View style={styles.balanceHeader}>
+              <Text style={styles.balanceLabel}>Current Balance</Text>
+              <TouchableOpacity
+                style={styles.updateBalanceBtn}
+                onPress={() => setShowUpdateBalance(true)}
+                activeOpacity={0.8}
+                accessibilityLabel="Update Current Balance"
+              >
+                <Ionicons name="create-outline" size={14} color="#FFFFFF" />
+                <Text style={styles.updateBalanceBtnText}>Update</Text>
               </TouchableOpacity>
             </View>
-          ))}
-        </Card>
-      )}
+            <Text style={styles.balanceAmount}>{formatCurrency(balance)}</Text>
 
-      {/* Prediction Banner – driven by real risk + insights */}
-      <View style={[s.banner, { backgroundColor: bannerColor, borderColor: bannerBorder }]}>
-        <Text style={s.bannerIcon}>{bannerIcon}</Text>
-        <View style={{ flex: 1 }}>
-          <Text style={[s.bannerBold, { color: bannerTextColor }]}>
-            Risk Level: {risk.toUpperCase()}
-          </Text>
-          {insights.slice(0, 2).map((ins, i) => (
-            <Text key={i} style={[s.bannerText, { color: bannerTextColor }]}>{ins}</Text>
-          ))}
+            {/* 3-Column Monthly Cash Flow Grid */}
+            <View style={styles.cashGrid}>
+              <View style={styles.cashCol}>
+                <Text style={styles.cashColLabel}>Income</Text>
+                <Text style={[styles.cashColValue, { color: '#6EE7B7' }]}>
+                  {formatCurrency(incomeThisMonth)}
+                </Text>
+              </View>
+              <View style={styles.cashColDivider} />
+              <View style={styles.cashCol}>
+                <Text style={styles.cashColLabel}>Spent</Text>
+                <Text style={[styles.cashColValue, { color: '#FCD34D' }]}>
+                  {formatCurrency(spendingThisMonth)}
+                </Text>
+              </View>
+              <View style={styles.cashColDivider} />
+              <View style={styles.cashCol}>
+                <Text style={styles.cashColLabel}>Invested</Text>
+                <Text style={[styles.cashColValue, { color: '#C4B5FD' }]}>
+                  {formatCurrency(investmentsThisMonth)}
+                </Text>
+              </View>
+            </View>
+          </View>
         </View>
-      </View>
 
-    </ScrollView>
+        {/* ── F. PREDICTABILITY SNAPSHOT (FUTURE OUTLOOK) ───── */}
+        <TouchableOpacity
+          style={styles.outlookCard}
+          activeOpacity={0.88}
+          onPress={() => (navigation as any).navigate('FinancialOutlook')}
+          accessibilityLabel="View Financial Outlook and Monte Carlo Simulation"
+        >
+          <View style={styles.outlookCardHeader}>
+            <View style={styles.outlookTitleRow}>
+              <View style={styles.outlookIconBadge}>
+                <Ionicons name="compass" size={18} color={BLUE} />
+              </View>
+              <Text style={styles.cardTitle}>Future Outlook</Text>
+            </View>
+            <View style={styles.outlookPill}>
+              <Text style={styles.outlookPillText}>FIRE & Monte Carlo</Text>
+            </View>
+          </View>
 
-    {/* Floating Balance Button - Always Visible */}
-    <TouchableOpacity
-      style={s.floatingBtn}
-      onPress={() => setShowUpdateBalance(true)}
-      activeOpacity={0.8}
-    >
-      <Text style={s.floatingBtnIcon}>☰</Text>
-    </TouchableOpacity>
+          {isMcAvailable ? (
+            <View style={styles.outlookBody}>
+              <View style={styles.outlookProbRow}>
+                <View style={styles.outlookProbCircle}>
+                  <Text style={styles.outlookProbPercent}>{Math.round((mcProb || 0) * 100)}%</Text>
+                </View>
+                <View style={styles.outlookProbInfo}>
+                  <Text style={styles.outlookProbHeadline}>
+                    Modeled chance of fully funded retirement
+                  </Text>
+                  <Text style={styles.outlookProbSubtitle}>
+                    Target Age {targetAge} · 10,000 market paths simulated
+                  </Text>
+                </View>
+              </View>
 
-    {/* Update Balance Modal */}
-    <Modal
-      visible={showUpdateBalance}
-      transparent
-      animationType="slide"
-      onRequestClose={() => {
-        setShowUpdateBalance(false);
-        fetchDashboard(true);
-      }}
-    >
-      <UpdateBalanceScreen
-        onClose={() => {
+              {/* Recommendation summary note */}
+              {rec && rec.solved && (
+                <View style={styles.outlookRecBanner}>
+                  <Ionicons
+                    name={rec.additionalMonthlyContributionRequired > 0 ? 'arrow-up-circle' : 'checkmark-circle'}
+                    size={16}
+                    color={rec.additionalMonthlyContributionRequired > 0 ? BLUE : GREEN}
+                  />
+                  <Text style={styles.outlookRecText}>
+                    {rec.additionalMonthlyContributionRequired > 0
+                      ? `Recommended initial monthly investment: ${formatCurrency(rec.recommendedMonthlyContribution)}/mo`
+                      : `Current plan meets the ${Math.round((rec.targetProbability || 0.75) * 100)}% modeled target.`}
+                  </Text>
+                </View>
+              )}
+            </View>
+          ) : isMcDegraded ? (
+            <View style={styles.outlookDegradedBody}>
+              <Text style={styles.outlookDegradedTitle}>Probabilistic Model Calibrating</Text>
+              <Text style={styles.outlookDegradedText}>
+                Market volatility is derived from your expected return. Deterministic projection is active.
+              </Text>
+            </View>
+          ) : (
+            <View style={styles.outlookEmptyBody}>
+              <Text style={styles.outlookEmptyTitle}>More History Needed for Monte Carlo</Text>
+              <Text style={styles.outlookEmptyText}>
+                Log recurring transactions and incomes to activate 10,000-path probabilistic forecasts.
+              </Text>
+            </View>
+          )}
+
+          <View style={styles.cardActionRow}>
+            <Text style={styles.cardActionLink}>View full Financial Outlook & simulations</Text>
+            <Ionicons name="chevron-forward" size={14} color={BLUE} />
+          </View>
+        </TouchableOpacity>
+
+        {/* ── D. SPENDING SNAPSHOT (NEEDS vs WANTS) ─────────── */}
+        <TouchableOpacity
+          style={styles.spendingCard}
+          activeOpacity={0.88}
+          onPress={() => (navigation as any).navigate('Transactions')}
+          accessibilityLabel="View Spending and Transactions"
+        >
+          <View style={styles.cardHeader}>
+            <View style={styles.cardTitleRow}>
+              <View style={[styles.iconBadge, { backgroundColor: AMBER_LIGHT }]}>
+                <Ionicons name="pie-chart" size={18} color={AMBER} />
+              </View>
+              <Text style={styles.cardTitle}>Spending Snapshot</Text>
+            </View>
+            <Text style={styles.headerTimeframe}>This Month</Text>
+          </View>
+
+          {hasSpendingData && wantsNeeds ? (
+            <View style={styles.spendingBody}>
+              {/* Segmented Proportion Bar */}
+              <View style={styles.segmentedTrack}>
+                {wantsNeeds.needs.pct > 0 && (
+                  <View style={[styles.segment, { width: `${wantsNeeds.needs.pct}%`, backgroundColor: GREEN }]} />
+                )}
+                {wantsNeeds.wants.pct > 0 && (
+                  <View style={[styles.segment, { width: `${wantsNeeds.wants.pct}%`, backgroundColor: AMBER }]} />
+                )}
+                {wantsNeeds.investments.pct > 0 && (
+                  <View style={[styles.segment, { width: `${wantsNeeds.investments.pct}%`, backgroundColor: PURPLE }]} />
+                )}
+              </View>
+
+              {/* 3 Categories Breakdown */}
+              <View style={styles.spendingLegendRow}>
+                <View style={styles.spendingLegendItem}>
+                  <View style={[styles.legendDot, { backgroundColor: GREEN }]} />
+                  <Text style={styles.legendLabel}>Needs</Text>
+                  <Text style={styles.legendAmount}>{formatCurrency(wantsNeeds.needs.amount)}</Text>
+                  <Text style={styles.legendPct}>({wantsNeeds.needs.pct}%)</Text>
+                </View>
+                <View style={styles.spendingLegendItem}>
+                  <View style={[styles.legendDot, { backgroundColor: AMBER }]} />
+                  <Text style={styles.legendLabel}>Wants</Text>
+                  <Text style={styles.legendAmount}>{formatCurrency(wantsNeeds.wants.amount)}</Text>
+                  <Text style={styles.legendPct}>({wantsNeeds.wants.pct}%)</Text>
+                </View>
+                <View style={styles.spendingLegendItem}>
+                  <View style={[styles.legendDot, { backgroundColor: PURPLE }]} />
+                  <Text style={styles.legendLabel}>Invest</Text>
+                  <Text style={styles.legendAmount}>{formatCurrency(wantsNeeds.investments.amount)}</Text>
+                  <Text style={styles.legendPct}>({wantsNeeds.investments.pct}%)</Text>
+                </View>
+              </View>
+            </View>
+          ) : (
+            <View style={styles.emptyInlineState}>
+              <Text style={styles.emptyInlineText}>No transactions recorded yet this month.</Text>
+            </View>
+          )}
+
+          <View style={styles.cardActionRow}>
+            <Text style={styles.cardActionLink}>View all categorized transactions</Text>
+            <Ionicons name="chevron-forward" size={14} color={BLUE} />
+          </View>
+        </TouchableOpacity>
+
+        {/* ── E. UPCOMING LIABILITIES ──────────────────────── */}
+        <TouchableOpacity
+          style={styles.liabilityCard}
+          activeOpacity={0.88}
+          onPress={() => (navigation as any).navigate('Liabilities')}
+          accessibilityLabel="View Liabilities and Scheduled Deductions"
+        >
+          <View style={styles.cardHeader}>
+            <View style={styles.cardTitleRow}>
+              <View style={[styles.iconBadge, { backgroundColor: RED_LIGHT }]}>
+                <Ionicons name="calendar-outline" size={18} color={RED} />
+              </View>
+              <Text style={styles.cardTitle}>Upcoming Liabilities</Text>
+            </View>
+            {activeLiabilities.length > 0 && (
+              <View style={styles.countBadge}>
+                <Text style={styles.countBadgeText}>{activeLiabilities.length} active</Text>
+              </View>
+            )}
+          </View>
+
+          {nearestLiability ? (
+            <View style={styles.liabilityItemRow}>
+              <View style={styles.liabilityIconWrap}>
+                <Ionicons
+                  name={nearestLiability.autoDeduct ? 'flash' : 'time-outline'}
+                  size={20}
+                  color={nearestLiability.autoDeduct ? BLUE : GRAY_600}
+                />
+              </View>
+              <View style={styles.liabilityInfo}>
+                <Text style={styles.liabilityName}>{nearestLiability.name}</Text>
+                <Text style={styles.liabilityDueDate}>
+                  Due {formatShortDate(nearestLiability.nextDueDate)}
+                  {daysUntilLiability !== null && daysUntilLiability >= 0
+                    ? ` (${daysUntilLiability === 0 ? 'Today' : `in ${daysUntilLiability}d`})`
+                    : ''}
+                  {nearestLiability.autoDeduct ? ' · Auto Deduct' : ''}
+                </Text>
+              </View>
+              <Text style={styles.liabilityAmount}>{formatCurrency(nearestLiability.amount)}</Text>
+            </View>
+          ) : (
+            <View style={styles.emptyInlineState}>
+              <Text style={styles.emptyInlineText}>No recurring liabilities or auto-deductions scheduled.</Text>
+            </View>
+          )}
+
+          <View style={styles.cardActionRow}>
+            <Text style={styles.cardActionLink}>Manage liability schedules & auto-deductions</Text>
+            <Ionicons name="chevron-forward" size={14} color={BLUE} />
+          </View>
+        </TouchableOpacity>
+
+        {/* ── G. SMART NEXT ACTION ─────────────────────────── */}
+        <TouchableOpacity
+          style={styles.smartActionCard}
+          activeOpacity={0.88}
+          onPress={() => (navigation as any).navigate(smartAction.actionTarget)}
+          accessibilityLabel={`Smart Next Action: ${smartAction.title}`}
+        >
+          <View style={styles.smartActionHeader}>
+            <View style={[styles.smartActionIconWrap, { backgroundColor: smartAction.iconBg }]}>
+              <Ionicons name={smartAction.icon as any} size={20} color={smartAction.iconColor} />
+            </View>
+            <View style={styles.smartActionTitleWrap}>
+              <View style={styles.smartActionBadge}>
+                <Text style={styles.smartActionBadgeText}>{smartAction.badge}</Text>
+              </View>
+              <Text style={styles.smartActionTitle}>{smartAction.title}</Text>
+            </View>
+          </View>
+          <Text style={styles.smartActionMessage}>{smartAction.message}</Text>
+          <View style={styles.smartActionButtonRow}>
+            <Text style={styles.smartActionBtnText}>{smartAction.actionText}</Text>
+            <Ionicons name="arrow-forward" size={14} color={BLUE} />
+          </View>
+        </TouchableOpacity>
+      </ScrollView>
+
+      {/* Floating Balance Button */}
+      <TouchableOpacity
+        style={styles.floatingBtn}
+        onPress={() => setShowUpdateBalance(true)}
+        activeOpacity={0.8}
+        accessibilityLabel="Quick Update Current Balance"
+      >
+        <Ionicons name="wallet-outline" size={24} color="#FFFFFF" />
+      </TouchableOpacity>
+
+      {/* Update Balance Modal */}
+      <Modal
+        visible={showUpdateBalance}
+        transparent
+        animationType="slide"
+        onRequestClose={() => {
           setShowUpdateBalance(false);
-          fetchDashboard(true);
+          fetchAllData(true);
         }}
-      />
-    </Modal>
+      >
+        <UpdateBalanceScreen
+          onClose={() => {
+            setShowUpdateBalance(false);
+            fetchAllData(true);
+          }}
+        />
+      </Modal>
     </View>
   );
 }
 
-const s = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F4F6FA', position: 'relative' },
-  screen:   { flex: 1, backgroundColor: '#F4F6FA' },
-  content:  { padding: 16, gap: 16, paddingBottom: 32 },
-  row:      { flexDirection: 'row', gap: 12 },
-  chartSub: { fontSize: 11, color: '#6B7280', marginBottom: 8, marginTop: -4 },
-  banner: {
-    flexDirection: 'row',
-    borderWidth: 1.5,
-    borderRadius: 16,
-    padding: 14,
-    alignItems: 'flex-start',
-    gap: 10,
+// ═══════════════════════════════════════════════════════════
+// STYLES
+// ═══════════════════════════════════════════════════════════
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: BG,
+    position: 'relative',
   },
-  bannerIcon:      { fontSize: 20 },
-  bannerText:      { flex: 1, fontSize: 13, lineHeight: 20, marginTop: 2 },
-  bannerBold:      { fontWeight: '700', fontSize: 13, marginBottom: 4 },
+  screen: {
+    flex: 1,
+    backgroundColor: BG,
+  },
+  content: {
+    padding: 16,
+    gap: 16,
+    paddingBottom: 48,
+  },
 
-  visualsWrapper: { marginTop: 12, gap: 12 },
-
-  microActionItem: { flexDirection: 'row', alignItems: 'center', gap: 12, borderTopWidth: 1, borderTopColor: '#F0F1F5', paddingTop: 14, marginTop: 14 },
-  maTitle:         { fontSize: 13, fontWeight: '700', color: '#111827', marginBottom: 2 },
-  maDesc:          { fontSize: 12, color: '#6B7280', lineHeight: 16 },
-  maImpact:        { fontSize: 11, fontWeight: '600', color: GREEN, marginTop: 4 },
-  maBtn:           { backgroundColor: BLUE, paddingHorizontal: 16, paddingVertical: 8, borderRadius: 12 },
-  maBtnText:       { color: '#fff', fontSize: 12, fontWeight: '600' },
-  floatingBtn: {
-    position: 'absolute',
-    bottom: 24,
-    right: 24,
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: BLUE,
+  // Loading State
+  loadingContainer: {
+    flex: 1,
+    backgroundColor: BG,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: BLUE,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.4,
-    shadowRadius: 12,
-    elevation: 8,
+    padding: 24,
+    gap: 12,
   },
-  floatingBtnIcon: {
-    fontSize: 28,
-    color: '#fff',
+  loadingTitle: {
+    fontSize: 16,
     fontWeight: '700',
+    color: DARK,
+    marginTop: 8,
   },
-  outlookCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 16,
+  loadingSubtitle: {
+    fontSize: 13,
+    color: GRAY_600,
+    textAlign: 'center',
+    lineHeight: 18,
+  },
+
+  // Header
+  headerRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 14,
+    justifyContent: 'space-between',
+    paddingVertical: 4,
+  },
+  headerLeft: {
+    flex: 1,
+  },
+  headerGreeting: {
+    fontSize: 22,
+    fontWeight: '800',
+    color: DARK,
+    letterSpacing: -0.5,
+  },
+  headerSubtitle: {
+    fontSize: 13,
+    color: GRAY_600,
+    fontWeight: '500',
+    marginTop: 2,
+  },
+  profileAvatarBtn: {
+    padding: 4,
+  },
+
+  // Card Base
+  cardTitle: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: DARK,
+    letterSpacing: -0.2,
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  cardTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  iconBadge: {
+    width: 32,
+    height: 32,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cardActionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingTop: 12,
+    marginTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: BORDER,
+  },
+  cardActionLink: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: BLUE,
+  },
+
+  // FMI Financial Health Card
+  fmiCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 16,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: BORDER,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
-    shadowRadius: 6,
-    elevation: 2,
+    shadowRadius: 8,
+    elevation: 3,
   },
-  outlookIconWrap: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: '#EEF2FF',
-    justifyContent: 'center',
+  fmiCardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: 12,
+  },
+  fmiTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  fmiIconBadge: {
+    width: 32,
+    height: 32,
+    borderRadius: 8,
+    backgroundColor: GREEN_LIGHT,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  statusPill: {
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    borderRadius: 12,
+    borderWidth: 1,
+  },
+  statusPillText: {
+    fontSize: 11,
+    fontWeight: '700',
+  },
+  fmiScoreRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 16,
+    marginBottom: 12,
+  },
+  fmiScoreWrap: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+  },
+  fmiScoreNumber: {
+    fontSize: 42,
+    fontWeight: '800',
+    letterSpacing: -1,
+  },
+  fmiScoreDenominator: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: GRAY_400,
+    marginLeft: 2,
+  },
+  fmiInsightWrap: {
+    flex: 1,
+  },
+  fmiInsightText: {
+    fontSize: 13,
+    color: GRAY_600,
+    lineHeight: 18,
+    fontWeight: '500',
+  },
+  pillarRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginTop: 4,
+  },
+  pillarItem: {
+    flex: 1,
+  },
+  pillarLabel: {
+    fontSize: 10,
+    fontWeight: '600',
+    color: GRAY_600,
+    marginBottom: 4,
+  },
+  pillarTrack: {
+    height: 6,
+    backgroundColor: '#F1F5F9',
+    borderRadius: 3,
+    overflow: 'hidden',
+  },
+  pillarFill: {
+    height: '100%',
+    borderRadius: 3,
+  },
+
+  // Cash Section / Hero Balance
+  cashSection: {
+    gap: 12,
+  },
+  balanceHeroCard: {
+    backgroundColor: '#1E293B',
+    borderRadius: 20,
+    padding: 18,
+    shadowColor: '#0F172A',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
+    elevation: 5,
+  },
+  balanceHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 6,
+  },
+  balanceLabel: {
+    fontSize: 13,
+    color: '#94A3B8',
+    fontWeight: '600',
+  },
+  updateBalanceBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  updateBalanceBtnText: {
+    fontSize: 11,
+    color: '#FFFFFF',
+    fontWeight: '600',
+  },
+  balanceAmount: {
+    fontSize: 34,
+    fontWeight: '800',
+    color: '#FFFFFF',
+    letterSpacing: -1,
+    marginBottom: 16,
+  },
+  cashGrid: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.07)',
+    borderRadius: 14,
+    paddingVertical: 10,
+    paddingHorizontal: 8,
+  },
+  cashCol: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  cashColLabel: {
+    fontSize: 11,
+    color: '#94A3B8',
+    fontWeight: '600',
+    marginBottom: 2,
+  },
+  cashColValue: {
+    fontSize: 13,
+    fontWeight: '700',
+  },
+  cashColDivider: {
+    width: 1,
+    height: 24,
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+  },
+
+  // Future Outlook (Predictability)
+  outlookCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#C7D2FE',
+    shadowColor: BLUE,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  outlookCardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
   },
   outlookTitleRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    marginBottom: 4,
   },
-  outlookTitle: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: '#111827',
-    letterSpacing: -0.2,
+  outlookIconBadge: {
+    width: 32,
+    height: 32,
+    borderRadius: 8,
+    backgroundColor: BLUE_LIGHT,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  outlookBadge: {
-    backgroundColor: '#F3E8FF',
+  outlookPill: {
+    backgroundColor: PURPLE_LIGHT,
     paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 6,
+    paddingVertical: 3,
+    borderRadius: 10,
   },
-  outlookBadgeText: {
+  outlookPillText: {
     fontSize: 10,
     fontWeight: '700',
-    color: '#7C3AED',
+    color: PURPLE,
   },
-  outlookSubtitle: {
+  outlookBody: {
+    gap: 10,
+  },
+  outlookProbRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
+  },
+  outlookProbCircle: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: BLUE_LIGHT,
+    borderWidth: 2,
+    borderColor: BLUE,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  outlookProbPercent: {
+    fontSize: 18,
+    fontWeight: '800',
+    color: BLUE,
+  },
+  outlookProbInfo: {
+    flex: 1,
+  },
+  outlookProbHeadline: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: DARK,
+    lineHeight: 18,
+  },
+  outlookProbSubtitle: {
     fontSize: 12,
-    color: '#6B7280',
+    color: GRAY_600,
+    marginTop: 2,
+  },
+  outlookRecBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: '#F8FAFC',
+    padding: 10,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: BORDER,
+  },
+  outlookRecText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: DARK,
+    flex: 1,
     lineHeight: 16,
+  },
+  outlookDegradedBody: {
+    paddingVertical: 8,
+  },
+  outlookDegradedTitle: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: DARK,
+  },
+  outlookDegradedText: {
+    fontSize: 12,
+    color: GRAY_600,
+    marginTop: 2,
+    lineHeight: 16,
+  },
+  outlookEmptyBody: {
+    paddingVertical: 8,
+  },
+  outlookEmptyTitle: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: DARK,
+  },
+  outlookEmptyText: {
+    fontSize: 12,
+    color: GRAY_600,
+    marginTop: 2,
+    lineHeight: 16,
+  },
+
+  // Spending Snapshot
+  spendingCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: BORDER,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  headerTimeframe: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: GRAY_600,
+  },
+  spendingBody: {
+    gap: 12,
+  },
+  segmentedTrack: {
+    flexDirection: 'row',
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: '#F1F5F9',
+    overflow: 'hidden',
+  },
+  segment: {
+    height: '100%',
+  },
+  spendingLegendRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  spendingLegendItem: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  legendDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginBottom: 4,
+  },
+  legendLabel: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: GRAY_600,
+  },
+  legendAmount: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: DARK,
+    marginTop: 1,
+  },
+  legendPct: {
+    fontSize: 10,
+    color: GRAY_400,
+    marginTop: 1,
+  },
+
+  // Liabilities Card
+  liabilityCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: BORDER,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  countBadge: {
+    backgroundColor: '#F1F5F9',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 10,
+  },
+  countBadgeText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: GRAY_600,
+  },
+  liabilityItemRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingVertical: 4,
+  },
+  liabilityIconWrap: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: '#F8FAFC',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: BORDER,
+  },
+  liabilityInfo: {
+    flex: 1,
+  },
+  liabilityName: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: DARK,
+  },
+  liabilityDueDate: {
+    fontSize: 12,
+    color: GRAY_600,
+    marginTop: 2,
+  },
+  liabilityAmount: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: DARK,
+  },
+
+  // Smart Next Action Card
+  smartActionCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 16,
+    borderWidth: 1.5,
+    borderColor: '#DBEAFE',
+    shadowColor: BLUE,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+    elevation: 4,
+  },
+  smartActionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    marginBottom: 8,
+  },
+  smartActionIconWrap: {
+    width: 38,
+    height: 38,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  smartActionTitleWrap: {
+    flex: 1,
+  },
+  smartActionBadge: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#EFF6FF',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 6,
+    marginBottom: 2,
+  },
+  smartActionBadgeText: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: BLUE,
+    textTransform: 'uppercase',
+  },
+  smartActionTitle: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: DARK,
+  },
+  smartActionMessage: {
+    fontSize: 13,
+    color: GRAY_600,
+    lineHeight: 18,
+    marginBottom: 12,
+  },
+  smartActionButtonRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    alignSelf: 'flex-start',
+  },
+  smartActionBtnText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: BLUE,
+  },
+
+  // Empty Inline States
+  emptyInlineState: {
+    paddingVertical: 8,
+  },
+  emptyInlineText: {
+    fontSize: 12,
+    color: GRAY_600,
+    fontStyle: 'italic',
+  },
+
+  // Floating Action Button
+  floatingBtn: {
+    position: 'absolute',
+    bottom: 24,
+    right: 20,
+    width: 54,
+    height: 54,
+    borderRadius: 27,
+    backgroundColor: BLUE,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: BLUE,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.35,
+    shadowRadius: 10,
+    elevation: 6,
   },
 });

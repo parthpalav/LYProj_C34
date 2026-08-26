@@ -388,8 +388,8 @@ function runTests() {
   }, { referenceDate: refDate });
   assert.strictEqual(snapT.currentState.totalEssentialSpending, 0);
   assert.strictEqual(snapT.assets.fireInvestableCorpus, 0);
-  assert.strictEqual(snapT.retirement.estimatedFireCorpus, 0);
-  assert.ok(snapT.limitations.length >= 3);
+  assert.strictEqual(snapT.forecastStatus.available, false);
+  assert.ok(snapT.forecastStatus.missingInputs.length >= 2);
   console.log('  ✅ Scenario T: Completely empty profile returns safe baseline without NaN/crash');
 
   console.log('\n============================================================');

@@ -22,3 +22,27 @@ export const CONTRIBUTION_MODE = Object.freeze({
   NOMINAL_FLAT: 'NOMINAL_FLAT'
 });
 
+// Scenario Engine V1 Assumption Profiles
+export const DEFAULT_SCENARIOS = Object.freeze({
+  CONSERVATIVE: Object.freeze({
+    id: 'conservative',
+    label: 'Conservative',
+    nominalReturnOffset: -0.02, // -2.0% nominal return
+    inflationOffset: 0.01,      // +1.0% inflation
+    withdrawalRateOffset: 0.00  // SWR remains a stable retirement-planning policy assumption
+  }),
+  BASE: Object.freeze({
+    id: 'base',
+    label: 'Base',
+    nominalReturnOffset: 0.00,
+    inflationOffset: 0.00,
+    withdrawalRateOffset: 0.00
+  }),
+  OPTIMISTIC: Object.freeze({
+    id: 'optimistic',
+    label: 'Optimistic',
+    nominalReturnOffset: 0.02,  // +2.0% nominal return
+    inflationOffset: -0.01,     // -1.0% inflation
+    withdrawalRateOffset: 0.00  // SWR remains a stable retirement-planning policy assumption
+  })
+});

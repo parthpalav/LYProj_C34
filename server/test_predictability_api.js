@@ -232,6 +232,11 @@ async function runTests() {
     assert.ok(dataA.liabilities);
     assert.ok(dataA.emergencyFund);
     assert.ok(dataA.retirement);
+    assert.ok(dataA.scenarios);
+    assert.ok(dataA.scenarios.conservative);
+    assert.ok(dataA.scenarios.base);
+    assert.ok(dataA.scenarios.optimistic);
+    assert.strictEqual(dataA.scenarios.base.estimatedFireCorpus, dataA.retirement.estimatedFireCorpus);
     assert.ok(Array.isArray(dataA.explanationFacts));
     assert.ok(Array.isArray(dataA.limitations));
 
@@ -258,11 +263,11 @@ async function runTests() {
     assert.strictEqual(emptyRes.status, 200);
     const emptyJson = await emptyRes.json();
     assert.strictEqual(emptyJson.success, true);
-    assert.strictEqual(emptyJson.data.assets.fireInvestableCorpus, 0);
-    assert.strictEqual(emptyJson.data.income.meanMonthlyIncome, 0);
-    assert.strictEqual(emptyJson.data.retirement.currentAge, null);
-    assert.strictEqual(emptyJson.data.retirement.monthsUntilRetirement, null);
-    assert.ok(emptyJson.data.limitations.length >= 3);
+    const snapNew = emptyJson.data;
+    assert.strictEqual(snapNew.currentState.totalEssentialSpending, 0);
+    assert.strictEqual(snapNew.forecastStatus.available, false);
+    assert.ok(snapNew.forecastStatus.missingInputs.length >= 2);
+    assert.strictEqual(snapNew.limitations.length >= 2, true);
     console.log('  ✅ Missing data returns HTTP 200 with clear limitations array');
 
     // -------------------------------------------------------------

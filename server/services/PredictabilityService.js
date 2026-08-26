@@ -40,12 +40,14 @@ import {
   analyzeIncomeResilience,
   DATA_QUALITY_LEVEL
 } from '../utils/incomeAnalytics.js';
+import { resolveForecastInputs } from '../utils/forecastResolver.js';
 import {
   DEFAULT_RETURN_RATE,
   DEFAULT_INFLATION_RATE,
   DEFAULT_WITHDRAWAL_RATE,
   DEFAULT_LIFESTYLE_RATIO,
-  DEFAULT_EMERGENCY_MONTHS
+  DEFAULT_EMERGENCY_MONTHS,
+  DEFAULT_SCENARIOS
 } from '../config/financialRules.js';
 
 /**
@@ -68,150 +70,48 @@ import {
 export function buildPredictabilitySnapshot(data = {}, options = {}) {
   const referenceDate = options.referenceDate ? new Date(options.referenceDate) : new Date();
   const contributionMode = options.contributionMode || CONTRIBUTION_MODE.NOMINAL_FLAT;
-  const spendingWindowMonths = options.spendingWindowMonths || 6;
 
-  const user = data.user || {};
+  const resolved = resolveForecastInputs(data, options);
+
+  const {
+    user,
+    assets = Array.isArray(data.assets) ? data.assets : [],
+    activeLiabilities,
+    liabilitiesSummary,
+    monthlyLiabilityService,
+    knownOutstandingPrincipal,
+    unknownPrincipalCount,
+    averageMonthlyNeeds,
+    averageMonthlyWants,
+    totalEssentialSpending,
+    observedAverageMonthlyInvestment,
+    monthlyContributionUsed,
+    activeMonthsCount,
+    fireInvestableCorpus,
+    liquidBuffer,
+    totalAssetValue,
+    knownNetWorth,
+    investableResult,
+    currentAge,
+    retirementAge,
+    monthsUntilRetirement,
+    forecastStatus,
+    liabilityOverhang
+  } = resolved;
+
   const incomes = Array.isArray(data.incomes) ? data.incomes : [];
-  const transactions = Array.isArray(data.transactions) ? data.transactions : [];
-  const assets = Array.isArray(data.assets) ? data.assets : [];
-  const liabilities = Array.isArray(data.liabilities) ? data.liabilities : [];
+  const needsConsumption = averageMonthlyNeeds;
 
   const limitations = [];
   const explanationFacts = [];
 
-  // -------------------------------------------------------------
-  // 1. LIABILITIES & DEBT SERVICE
-  // -------------------------------------------------------------
-  const activeLiabilities = liabilities.filter(l => l && l.status !== 'deleted');
-  let monthlyLiabilityService = 0;
-  let knownOutstandingPrincipal = 0;
-  let unknownPrincipalCount = 0;
-  const liabilitiesSummary = [];
-
-  for (const l of activeLiabilities) {
-    const amt = Number(l.amount) || 0;
-    let monthlyAmount = amt;
-    if (l.frequency === 'yearly') monthlyAmount = amt / 12;
-    else if (l.frequency === 'weekly') monthlyAmount = (amt * 52) / 12;
-    else if (l.frequency === 'daily') monthlyAmount = (amt * 365) / 12;
-
-    monthlyLiabilityService += monthlyAmount;
-
-    if (l.outstandingBalance !== null && l.outstandingBalance !== undefined && Number.isFinite(Number(l.outstandingBalance))) {
-      knownOutstandingPrincipal += Number(l.outstandingBalance);
-    } else {
-      unknownPrincipalCount++;
-    }
-
-    liabilitiesSummary.push({
-      id: l.id || l._id?.toString(),
-      name: l.name,
-      monthlyAmount: Math.round(monthlyAmount * 100) / 100,
-      frequency: l.frequency,
-      outstandingBalance: l.outstandingBalance ?? null,
-      interestRate: l.interestRate ?? null,
-      remainingTermMonths: l.remainingTermMonths ?? null
-    });
-  }
-
   if (unknownPrincipalCount > 0) {
-    limitations.push(`${unknownPrincipalCount} active liability(ies) lack outstanding balance; net worth may be incomplete.`);
+    limitations.push(`${unknownPrincipalCount} active liability(ies) lack outstanding balance or maturity; net worth and overhang may be incomplete.`);
   }
 
-  // -------------------------------------------------------------
-  // 2. TRANSACTION CONSUMPTION & INVESTMENT CASH FLOWS
-  // -------------------------------------------------------------
-  // Compute trailing window for spending averages
-  const spendingCutoff = new Date(Date.UTC(
-    referenceDate.getUTCFullYear(),
-    referenceDate.getUTCMonth() - spendingWindowMonths,
-    1
-  ));
-
-  const validTxs = transactions.filter(t => {
-    if (!t || !t.timestamp) return false;
-    const d = new Date(t.timestamp);
-    return !isNaN(d.getTime()) && Number.isFinite(Number(t.amount)) && Number(t.amount) > 0;
-  });
-
-  const recentTxs = validTxs.filter(t => new Date(t.timestamp) >= spendingCutoff);
-  const txsToUse = recentTxs.length > 0 ? recentTxs : validTxs;
-
-  // Group transactions by calendar month to get true monthly averages
-  const monthlySpendingMap = new Map();
-
-  for (const t of txsToUse) {
-    const d = new Date(t.timestamp);
-    const key = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}`;
-    if (!monthlySpendingMap.has(key)) {
-      monthlySpendingMap.set(key, { needs: 0, wants: 0, investments: 0, debtServiceTxs: 0 });
-    }
-    const bucket = monthlySpendingMap.get(key);
-    const amt = Number(t.amount);
-
-    if (isDebtService(t)) {
-      bucket.debtServiceTxs += amt;
-    } else if (isConsumption(t)) {
-      if (t.type === 'Need') bucket.needs += amt;
-      else if (t.type === 'Want') bucket.wants += amt;
-    } else if (isInvestment(t)) {
-      bucket.investments += amt;
-    }
-  }
-
-  const activeMonthsCount = Math.max(1, monthlySpendingMap.size);
-  let totalNeeds = 0;
-  let totalWants = 0;
-  let totalInvestments = 0;
-
-  for (const bucket of monthlySpendingMap.values()) {
-    totalNeeds += bucket.needs;
-    totalWants += bucket.wants;
-    totalInvestments += bucket.investments;
-  }
-
-  const averageMonthlyNeeds = totalNeeds / activeMonthsCount;
-  const averageMonthlyWants = totalWants / activeMonthsCount;
-  const observedAverageMonthlyInvestment = totalInvestments / activeMonthsCount;
-
-  // Invariant: Needs consumption strictly excludes liability-linked transactions.
-  // Scheduled liability service is added separately so that debt service is counted exactly once.
-  const needsConsumption = averageMonthlyNeeds;
-  const totalEssentialSpending = needsConsumption + monthlyLiabilityService;
-
-  if (validTxs.length === 0) {
+  if (activeMonthsCount === 0 && totalEssentialSpending === 0) {
     limitations.push('No transaction history found; spending and investment cash flows are unpopulated.');
   }
-
-  // -------------------------------------------------------------
-  // 3. ASSETS, FIRE CORPUS & LIQUID BUFFER
-  // -------------------------------------------------------------
-  const investableResult = calculateInvestableCorpus(assets);
-  const fireInvestableCorpus = investableResult.includedTotal;
-
-  let totalAssetValue = 0;
-  let liquidBuffer = 0;
-
-  for (const a of assets) {
-    if (!a || typeof a !== 'object') continue;
-    const val = Number(a.currentValue) || 0;
-    totalAssetValue += val;
-
-    // Explicit qualifying liquid emergency assets (cash equivalents, semi-liquid reserves)
-    const isLiquid = (
-      a.assetClass === 'SEMI_LIQUID' ||
-      a.assetType?.toLowerCase() === 'cash' ||
-      a.assetType?.toLowerCase() === 'bank' ||
-      a.assetType?.toLowerCase() === 'savings' ||
-      a.assetType?.toLowerCase() === 'liquid fund'
-    ) && a.liquidity !== 'locked' && a.liquidity !== 'restricted' && a.assetClass !== 'NON_INVESTABLE';
-
-    if (isLiquid) {
-      liquidBuffer += val;
-    }
-  }
-
-  const knownNetWorth = totalAssetValue - knownOutstandingPrincipal;
 
   if (assets.length === 0) {
     limitations.push('No asset records found; FIRE investable corpus starts at ₹0.');
@@ -252,131 +152,195 @@ export function buildPredictabilitySnapshot(data = {}, options = {}) {
   const emergencyFundingGap = Math.max(0, efTarget.targetAmount - liquidBuffer);
 
   // -------------------------------------------------------------
-  // 6. RETIREMENT & FIRE PROJECTIONS
+  // -------------------------------------------------------------
+  // 6. RETIREMENT & FIRE PROJECTIONS (SCENARIO ENGINE V1)
   // -------------------------------------------------------------
   // Lifestyle spending basis: Needs + Wants (excluding liability payments that terminate before retirement)
   const currentAnnualLifestyleSpending = (averageMonthlyNeeds + averageMonthlyWants) * 12;
 
-  const expectedReturnRate = user.expectedReturnRate ?? DEFAULT_RETURN_RATE;
-  const expectedInflationRate = user.expectedInflationRate ?? DEFAULT_INFLATION_RATE;
-  const expectedWithdrawalRate = user.expectedWithdrawalRate ?? DEFAULT_WITHDRAWAL_RATE;
+  const baseReturnRate = user.expectedReturnRate ?? DEFAULT_RETURN_RATE;
+  const baseInflationRate = user.expectedInflationRate ?? DEFAULT_INFLATION_RATE;
+  const baseWithdrawalRate = user.expectedWithdrawalRate ?? DEFAULT_WITHDRAWAL_RATE;
   const lifestyleAdjustmentRatio = user.lifestyleAdjustmentRatio ?? DEFAULT_LIFESTYLE_RATIO;
-  const realAnnualReturn = realReturn(expectedReturnRate, expectedInflationRate);
 
-  const fireCorpusResult = calculateFireCorpus({
-    currentAnnualLifestyleSpending,
-    lifestyleAdjustmentRatio,
-    safeWithdrawalRate: expectedWithdrawalRate
-  });
-  const estimatedFireCorpus = fireCorpusResult.fireCorpus;
   const userGoalCorpus = Number(user.retirementCorpusGoal) || 0;
-  const goalDifference = userGoalCorpus > 0
-    ? corpusGoalDifference(userGoalCorpus, estimatedFireCorpus)
-    : null;
 
-  // Retirement Age & Horizon
-  let currentAge = null;
-  if (user.age !== null && user.age !== undefined && Number.isFinite(Number(user.age))) {
-    currentAge = Number(user.age);
-  } else if (user.dateOfBirth) {
-    const dob = new Date(user.dateOfBirth);
-    if (!isNaN(dob.getTime())) {
-      const ageDiff = referenceDate.getTime() - dob.getTime();
-      currentAge = Math.floor(ageDiff / (365.25 * 24 * 60 * 60 * 1000));
-    }
+  if (!forecastStatus.available) {
+    forecastStatus.missingInputs.forEach(code => {
+      limitations.push(`Forecast unavailable: ${code}`);
+    });
   }
 
-  const retirementAge = user.retirementAge ?? 60;
-  let monthsUntilRetirement = null;
-  let projectedCorpus = null;
-  let requiredContributionForEstimatedFire = null;
-  let requiredContributionForUserGoal = null;
-  let contributionGap = null;
-  let projectedFire = null;
-  let projectedFireAge = null;
+  // Pure retirement projection helper executed across scenario profiles
+  const runProjection = (nomRate, infRate, swrRate, label, id) => {
+    if (!forecastStatus.available) {
+      return null;
+    }
 
-  const monthlyContributionUsed = options.monthlyContributionOverride !== undefined
-    ? Number(options.monthlyContributionOverride)
-    : observedAverageMonthlyInvestment;
-
-  if (currentAge === null) {
-    limitations.push('User age is not specified; retirement timeline and horizon cannot be calculated.');
-  } else if (currentAge >= retirementAge) {
-    monthsUntilRetirement = 0;
-    projectedCorpus = fireInvestableCorpus;
-    requiredContributionForEstimatedFire = Math.max(0, estimatedFireCorpus - fireInvestableCorpus);
-    requiredContributionForUserGoal = userGoalCorpus > 0 ? Math.max(0, userGoalCorpus - fireInvestableCorpus) : 0;
-    contributionGap = Math.max(0, requiredContributionForEstimatedFire - monthlyContributionUsed);
-    projectedFire = {
-      reached: fireInvestableCorpus >= estimatedFireCorpus,
-      months: fireInvestableCorpus >= estimatedFireCorpus ? 0 : null,
-      projectedValue: fireInvestableCorpus
-    };
-    projectedFireAge = fireInvestableCorpus >= estimatedFireCorpus ? currentAge : null;
-    limitations.push('User has already reached or passed the target retirement age.');
-  } else {
-    monthsUntilRetirement = Math.round((retirementAge - currentAge) * 12);
-
-    projectedCorpus = projectedCorpusAtRetirement({
-      currentInvestableCorpus: fireInvestableCorpus,
-      monthlyContribution: monthlyContributionUsed,
-      mode: contributionMode,
-      realAnnualReturn,
-      nominalAnnualReturn: expectedReturnRate,
-      inflationRate: expectedInflationRate,
-      monthsToRetirement: monthsUntilRetirement
+    const realAnnualReturn = realReturn(nomRate, infRate);
+    const fireCorpusResult = calculateFireCorpus({
+      currentAnnualLifestyleSpending,
+      lifestyleAdjustmentRatio,
+      safeWithdrawalRate: swrRate
     });
+    const baseFireCorpus = fireCorpusResult.fireCorpus;
+    const estimatedFireCorpus = baseFireCorpus + liabilityOverhang;
 
-    if (contributionMode === CONTRIBUTION_MODE.NOMINAL_FLAT) {
-      requiredContributionForEstimatedFire = requiredNominalFlatContribution({
-        currentPrincipal: fireInvestableCorpus,
-        targetFutureValueReal: estimatedFireCorpus,
-        nominalAnnualReturn: expectedReturnRate,
-        inflationRate: expectedInflationRate,
-        months: monthsUntilRetirement
-      });
-      requiredContributionForUserGoal = userGoalCorpus > 0
-        ? requiredNominalFlatContribution({
+    const goalDifference = userGoalCorpus > 0
+      ? corpusGoalDifference(userGoalCorpus, estimatedFireCorpus)
+      : null;
+
+    let monthsUntilRetirement = null;
+    let projectedCorpus = null;
+    let requiredContributionForEstimatedFire = null;
+    let requiredContributionForUserGoal = null;
+    let contributionGap = null;
+    let projectedFire = null;
+    let projectedFireAge = null;
+
+    if (currentAge !== null) {
+      if (currentAge >= retirementAge) {
+        monthsUntilRetirement = 0;
+        projectedCorpus = fireInvestableCorpus;
+        requiredContributionForEstimatedFire = Math.max(0, estimatedFireCorpus - fireInvestableCorpus);
+        requiredContributionForUserGoal = userGoalCorpus > 0 ? Math.max(0, userGoalCorpus - fireInvestableCorpus) : 0;
+        contributionGap = Math.max(0, requiredContributionForEstimatedFire - monthlyContributionUsed);
+        projectedFire = {
+          reached: fireInvestableCorpus >= estimatedFireCorpus,
+          months: fireInvestableCorpus >= estimatedFireCorpus ? 0 : null,
+          projectedValue: fireInvestableCorpus
+        };
+        projectedFireAge = fireInvestableCorpus >= estimatedFireCorpus ? currentAge : null;
+      } else {
+        monthsUntilRetirement = Math.round((retirementAge - currentAge) * 12);
+
+        projectedCorpus = projectedCorpusAtRetirement({
+          currentInvestableCorpus: fireInvestableCorpus,
+          monthlyContribution: monthlyContributionUsed,
+          mode: contributionMode,
+          realAnnualReturn,
+          nominalAnnualReturn: nomRate,
+          inflationRate: infRate,
+          monthsToRetirement: monthsUntilRetirement
+        });
+
+        if (contributionMode === CONTRIBUTION_MODE.NOMINAL_FLAT) {
+          requiredContributionForEstimatedFire = requiredNominalFlatContribution({
             currentPrincipal: fireInvestableCorpus,
-            targetFutureValueReal: userGoalCorpus,
-            nominalAnnualReturn: expectedReturnRate,
-            inflationRate: expectedInflationRate,
+            targetFutureValueReal: estimatedFireCorpus,
+            nominalAnnualReturn: nomRate,
+            inflationRate: infRate,
             months: monthsUntilRetirement
-          })
-        : 0;
-    } else {
-      requiredContributionForEstimatedFire = requiredRealConstantContribution({
-        currentPrincipal: fireInvestableCorpus,
-        targetFutureValueReal: estimatedFireCorpus,
-        realAnnualReturn,
-        months: monthsUntilRetirement
-      });
-      requiredContributionForUserGoal = userGoalCorpus > 0
-        ? requiredRealConstantContribution({
+          });
+          requiredContributionForUserGoal = userGoalCorpus > 0
+            ? requiredNominalFlatContribution({
+                currentPrincipal: fireInvestableCorpus,
+                targetFutureValueReal: userGoalCorpus,
+                nominalAnnualReturn: nomRate,
+                inflationRate: infRate,
+                months: monthsUntilRetirement
+              })
+            : 0;
+        } else {
+          requiredContributionForEstimatedFire = requiredRealConstantContribution({
             currentPrincipal: fireInvestableCorpus,
-            targetFutureValueReal: userGoalCorpus,
+            targetFutureValueReal: estimatedFireCorpus,
             realAnnualReturn,
             months: monthsUntilRetirement
-          })
-        : 0;
+          });
+          requiredContributionForUserGoal = userGoalCorpus > 0
+            ? requiredRealConstantContribution({
+                currentPrincipal: fireInvestableCorpus,
+                targetFutureValueReal: userGoalCorpus,
+                realAnnualReturn,
+                months: monthsUntilRetirement
+              })
+            : 0;
+        }
+
+        contributionGap = requiredContributionForEstimatedFire - monthlyContributionUsed;
+
+        projectedFire = monthsToTarget({
+          currentPrincipal: fireInvestableCorpus,
+          monthlyContribution: monthlyContributionUsed,
+          mode: contributionMode,
+          realAnnualReturn,
+          nominalAnnualReturn: nomRate,
+          inflationRate: infRate,
+          targetFutureValue: estimatedFireCorpus
+        });
+
+        if (projectedFire.reached && projectedFire.months !== null) {
+          projectedFireAge = currentAge + (projectedFire.months / 12);
+        }
+      }
     }
 
-    contributionGap = requiredContributionForEstimatedFire - monthlyContributionUsed;
+    return {
+      id,
+      label,
+      currentAge,
+      retirementAge,
+      monthsUntilRetirement,
+      assumptions: {
+        nominalReturn: nomRate,
+        inflation: infRate,
+        realReturn: realAnnualReturn,
+        withdrawalRate: swrRate,
+        lifestyleAdjustmentRatio,
+        contributionMode
+      },
+      currentAnnualLifestyleSpending,
+      estimatedFireCorpus,
+      userGoalCorpus,
+      goalDifference,
+      monthlyContributionUsed,
+      projectedCorpusAtRetirement: projectedCorpus,
+      requiredMonthlyContributionForEstimatedFire: requiredContributionForEstimatedFire,
+      requiredMonthlyContributionForUserGoal: requiredContributionForUserGoal,
+      contributionGap,
+      projectedFire: {
+        reached: projectedFire ? projectedFire.reached : false,
+        months: projectedFire ? projectedFire.months : null,
+        projectedAge: projectedFireAge
+      }
+    };
+  };
 
-    projectedFire = monthsToTarget({
-      currentPrincipal: fireInvestableCorpus,
-      monthlyContribution: monthlyContributionUsed,
-      mode: contributionMode,
-      realAnnualReturn,
-      nominalAnnualReturn: expectedReturnRate,
-      inflationRate: expectedInflationRate,
-      targetFutureValue: estimatedFireCorpus
-    });
+  const roundRate = (val) => Math.round(val * 10000) / 10000;
 
-    if (projectedFire.reached && projectedFire.months !== null) {
-      projectedFireAge = currentAge + (projectedFire.months / 12);
-    }
+  // Base scenario (current profile defaults)
+  const baseRetirement = runProjection(baseReturnRate, baseInflationRate, baseWithdrawalRate, 'Base', 'base');
+
+  let scenarios = null;
+  let retirement = null;
+  let estimatedFireCorpus = 0;
+  let projectedCorpus = null;
+
+  if (forecastStatus.available) {
+    // Conservative scenario (lower nominal return, higher inflation; SWR remains stable policy)
+    const consNominal = Math.max(0, roundRate(baseReturnRate + DEFAULT_SCENARIOS.CONSERVATIVE.nominalReturnOffset));
+    const consInflation = Math.max(0.005, roundRate(baseInflationRate + DEFAULT_SCENARIOS.CONSERVATIVE.inflationOffset));
+    const consSWR = Math.max(0.01, roundRate(baseWithdrawalRate + DEFAULT_SCENARIOS.CONSERVATIVE.withdrawalRateOffset));
+    const conservativeRetirement = runProjection(consNominal, consInflation, consSWR, 'Conservative', 'conservative');
+
+    // Optimistic scenario (higher nominal return, lower inflation; SWR remains stable policy)
+    const optNominal = Math.max(0, roundRate(baseReturnRate + DEFAULT_SCENARIOS.OPTIMISTIC.nominalReturnOffset));
+    const optInflation = Math.max(0.005, roundRate(baseInflationRate + DEFAULT_SCENARIOS.OPTIMISTIC.inflationOffset));
+    const optSWR = Math.max(0.01, roundRate(baseWithdrawalRate + DEFAULT_SCENARIOS.OPTIMISTIC.withdrawalRateOffset));
+    const optimisticRetirement = runProjection(optNominal, optInflation, optSWR, 'Optimistic', 'optimistic');
+
+    scenarios = {
+      conservative: conservativeRetirement,
+      base: baseRetirement,
+      optimistic: optimisticRetirement
+    };
+
+    retirement = baseRetirement;
+    estimatedFireCorpus = baseRetirement.estimatedFireCorpus;
+    projectedCorpus = baseRetirement.projectedCorpusAtRetirement;
   }
+
 
   // -------------------------------------------------------------
   // 7. DETERMINISTIC EXPLAINABILITY FACTS
@@ -435,11 +399,28 @@ export function buildPredictabilitySnapshot(data = {}, options = {}) {
     });
   }
 
+  if (forecastStatus.warnings.includes('UNKNOWN_LIABILITY_MATURITY_EXCLUDED')) {
+    explanationFacts.push({
+      code: 'UNKNOWN_LIABILITY_MATURITY_EXCLUDED',
+      metric: 'unknownPrincipalCount',
+      value: resolved.unknownPrincipalCount
+    });
+  }
+
+  if (liabilityOverhang > 0) {
+    explanationFacts.push({
+      code: 'LIABILITY_OVERHANG_INCLUDED',
+      metric: 'liabilityOverhang',
+      value: liabilityOverhang
+    });
+  }
+
   // -------------------------------------------------------------
   // 8. ASSEMBLE COMPLETE PREDICTABILITY SNAPSHOT
   // -------------------------------------------------------------
   return {
     generatedAt: referenceDate.toISOString(),
+    forecastStatus,
     dataQuality: {
       incomeDataQuality: incomeSnapshot.dataQuality,
       transactionMonthsObserved: activeMonthsCount,
@@ -498,33 +479,8 @@ export function buildPredictabilitySnapshot(data = {}, options = {}) {
       coverageMonths: emergencyCoverageMonths,
       fundingGap: emergencyFundingGap
     },
-    retirement: {
-      currentAge,
-      retirementAge,
-      monthsUntilRetirement,
-      assumptions: {
-        nominalReturn: expectedReturnRate,
-        inflation: expectedInflationRate,
-        realReturn: realAnnualReturn,
-        withdrawalRate: expectedWithdrawalRate,
-        lifestyleAdjustmentRatio,
-        contributionMode
-      },
-      currentAnnualLifestyleSpending,
-      estimatedFireCorpus,
-      userGoalCorpus,
-      goalDifference,
-      monthlyContributionUsed,
-      projectedCorpusAtRetirement: projectedCorpus,
-      requiredMonthlyContributionForEstimatedFire: requiredContributionForEstimatedFire,
-      requiredMonthlyContributionForUserGoal: requiredContributionForUserGoal,
-      contributionGap,
-      projectedFire: {
-        reached: projectedFire ? projectedFire.reached : false,
-        months: projectedFire ? projectedFire.months : null,
-        projectedAge: projectedFireAge
-      }
-    },
+    retirement: baseRetirement,
+    scenarios,
     explanationFacts,
     limitations
   };

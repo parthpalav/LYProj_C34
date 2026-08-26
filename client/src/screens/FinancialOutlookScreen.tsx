@@ -173,6 +173,7 @@ export function FinancialOutlookScreen(): React.ReactElement {
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showAssumptions, setShowAssumptions] = useState(false);
+  const [selectedScenarioKey, setSelectedScenarioKey] = useState<'conservative' | 'base' | 'optimistic'>('base');
 
   const fetchOutlook = useCallback(async (isRefresh = false) => {
     try {
@@ -254,8 +255,8 @@ export function FinancialOutlookScreen(): React.ReactElement {
   } = snapshot;
 
   // Target coverage progress calculation (pure presentation helper)
-  const targetCoveragePct = retirement.estimatedFireCorpus > 0 && retirement.projectedCorpusAtRetirement !== null
-    ? Math.min(100, Math.max(0, Math.round((retirement.projectedCorpusAtRetirement / retirement.estimatedFireCorpus) * 100)))
+  const targetCoveragePct = (retirement?.estimatedFireCorpus ?? 0) > 0 && retirement?.projectedCorpusAtRetirement !== null
+    ? Math.min(100, Math.max(0, Math.round((retirement!.projectedCorpusAtRetirement! / retirement!.estimatedFireCorpus) * 100)))
     : 0;
 
   // Income variability display label
@@ -300,7 +301,7 @@ export function FinancialOutlookScreen(): React.ReactElement {
           <View style={[styles.headlineCard, { borderLeftColor: PRIMARY, borderLeftWidth: 4 }]}>
             <Text style={styles.headlineLabel}>Projected Corpus</Text>
             <Text style={styles.headlineValue}>
-              {formatCurrency(retirement.projectedCorpusAtRetirement, true)}
+              {retirement ? formatCurrency(retirement.projectedCorpusAtRetirement, true) : '—'}
             </Text>
             <Text style={styles.headlineSub}>at retirement age</Text>
           </View>
@@ -308,7 +309,7 @@ export function FinancialOutlookScreen(): React.ReactElement {
           <View style={[styles.headlineCard, { borderLeftColor: PURPLE, borderLeftWidth: 4 }]}>
             <Text style={styles.headlineLabel}>Estimated FIRE Target</Text>
             <Text style={styles.headlineValue}>
-              {formatCurrency(retirement.estimatedFireCorpus, true)}
+              {retirement ? formatCurrency(retirement.estimatedFireCorpus, true) : '—'}
             </Text>
             <Text style={styles.headlineSub}>lifestyle sustain basis</Text>
           </View>
@@ -333,78 +334,97 @@ export function FinancialOutlookScreen(): React.ReactElement {
         {/* ══════════════════════════════════════════════════════
             SECTION B: RETIREMENT & FIRE OUTLOOK (PRIMARY)
         ══════════════════════════════════════════════════════ */}
-        <View style={styles.sectionCard}>
-          <View style={styles.sectionHeader}>
-            <Ionicons name="compass-outline" size={22} color={PRIMARY} />
-            <Text style={styles.sectionTitle}>Retirement & FIRE Projection</Text>
-          </View>
-
-          {/* Progress Bar */}
-          <View style={styles.progressContainer}>
-            <View style={styles.progressHeaderRow}>
-              <Text style={styles.progressLabel}>Projected Target Coverage</Text>
-              <Text style={styles.progressPctText}>{targetCoveragePct}%</Text>
+        {!snapshot.forecastStatus.available ? (
+          <View style={[styles.sectionCard, { backgroundColor: '#F8FAFC' }]}>
+            <View style={styles.sectionHeader}>
+              <Ionicons name="compass-outline" size={22} color={SLATE} />
+              <Text style={styles.sectionTitle}>Retirement & FIRE Projection</Text>
             </View>
-            <View style={styles.progressBarTrack}>
-              <View style={[styles.progressBarFill, { width: `${targetCoveragePct}%`, backgroundColor: targetCoveragePct >= 100 ? SUCCESS : PRIMARY }]} />
-            </View>
-            <Text style={styles.progressFootnote}>
-              Projected real purchasing power vs estimated lifestyle target under model assumptions.
-            </Text>
-          </View>
-
-          {/* Target Comparison Cards */}
-          <View style={styles.comparisonRow}>
-            <View style={styles.comparisonBox}>
-              <Text style={styles.compBoxLabel}>FINAURA Estimated Target</Text>
-              <Text style={styles.compBoxValue}>{formatCurrency(retirement.estimatedFireCorpus, true)}</Text>
-              <Text style={styles.compBoxSub}>Based on ₹{(retirement.currentAnnualLifestyleSpending / 12).toFixed(0)}/mo spending</Text>
-            </View>
-
-            <View style={styles.comparisonBox}>
-              <Text style={styles.compBoxLabel}>Your Retirement Goal</Text>
-              <Text style={styles.compBoxValue}>
-                {retirement.userGoalCorpus > 0 ? formatCurrency(retirement.userGoalCorpus, true) : 'Not Set'}
+            <View style={{ paddingVertical: 16 }}>
+              <Text style={{ fontSize: 15, color: SLATE, marginBottom: 12 }}>
+                We need a little more financial history before we can estimate your FIRE trajectory reliably.
               </Text>
-              <Text style={styles.compBoxSub}>Personal target preference</Text>
-            </View>
-          </View>
-
-          {/* Detail Rows */}
-          <View style={styles.detailList}>
-            <View style={styles.detailRow}>
-              <Text style={styles.detailLabel}>Current FIRE-Investable Corpus</Text>
-              <Text style={styles.detailValue}>{formatCurrency(assets.fireInvestableCorpus)}</Text>
-            </View>
-
-            <View style={styles.detailRow}>
-              <Text style={styles.detailLabel}>Observed Monthly Investment</Text>
-              <Text style={styles.detailValue}>{formatCurrency(retirement.monthlyContributionUsed)}/mo</Text>
-            </View>
-
-            <View style={styles.detailRow}>
-              <Text style={styles.detailLabel}>Modeled Required Contribution</Text>
-              <Text style={styles.detailValue}>
-                {retirement.requiredMonthlyContributionForEstimatedFire !== null
-                  ? `${formatCurrency(retirement.requiredMonthlyContributionForEstimatedFire)}/mo`
-                  : '—'}
-              </Text>
-            </View>
-
-            {retirement.contributionGap !== null && (
-              <View style={styles.detailRowHighlight}>
-                <Text style={styles.detailLabelHighlight}>
-                  {retirement.contributionGap > 0 ? 'Modeled Contribution Gap' : 'Contribution Status'}
+              {snapshot.forecastStatus.missingInputs.map((input, idx) => (
+                <Text key={idx} style={{ fontSize: 13, color: WARNING, fontWeight: '600', marginBottom: 4 }}>
+                  • {input.replace(/_/g, ' ')}
                 </Text>
-                <Text style={[styles.detailValueHighlight, { color: retirement.contributionGap > 0 ? PRIMARY : SUCCESS }]}>
-                  {retirement.contributionGap > 0
-                    ? `${formatCurrency(retirement.contributionGap)}/mo`
-                    : 'Target Met by Current Outflow'}
+              ))}
+            </View>
+          </View>
+        ) : retirement && (
+          <View style={styles.sectionCard}>
+            <View style={styles.sectionHeader}>
+              <Ionicons name="compass-outline" size={22} color={PRIMARY} />
+              <Text style={styles.sectionTitle}>Retirement & FIRE Projection</Text>
+            </View>
+
+            {/* Progress Bar */}
+            <View style={styles.progressContainer}>
+              <View style={styles.progressHeaderRow}>
+                <Text style={styles.progressLabel}>Projected Target Coverage</Text>
+                <Text style={styles.progressPctText}>{targetCoveragePct}%</Text>
+              </View>
+              <View style={styles.progressBarTrack}>
+                <View style={[styles.progressBarFill, { width: `${targetCoveragePct}%`, backgroundColor: targetCoveragePct >= 100 ? SUCCESS : PRIMARY }]} />
+              </View>
+              <Text style={styles.progressFootnote}>
+                Projected real purchasing power vs estimated lifestyle target under model assumptions.
+              </Text>
+            </View>
+
+            {/* Target Comparison Cards */}
+            <View style={styles.comparisonRow}>
+              <View style={styles.comparisonBox}>
+                <Text style={styles.compBoxLabel}>FINAURA Estimated Target</Text>
+                <Text style={styles.compBoxValue}>{formatCurrency(retirement.estimatedFireCorpus, true)}</Text>
+                <Text style={styles.compBoxSub}>Based on ₹{(retirement.currentAnnualLifestyleSpending / 12).toFixed(0)}/mo spending</Text>
+              </View>
+
+              <View style={styles.comparisonBox}>
+                <Text style={styles.compBoxLabel}>Your Retirement Goal</Text>
+                <Text style={styles.compBoxValue}>
+                  {retirement.userGoalCorpus > 0 ? formatCurrency(retirement.userGoalCorpus, true) : 'Not Set'}
+                </Text>
+                <Text style={styles.compBoxSub}>Personal target preference</Text>
+              </View>
+            </View>
+
+            {/* Detail Rows */}
+            <View style={styles.detailList}>
+              <View style={styles.detailRow}>
+                <Text style={styles.detailLabel}>Current FIRE-Investable Corpus</Text>
+                <Text style={styles.detailValue}>{formatCurrency(assets.fireInvestableCorpus)}</Text>
+              </View>
+
+              <View style={styles.detailRow}>
+                <Text style={styles.detailLabel}>Observed Monthly Investment</Text>
+                <Text style={styles.detailValue}>{formatCurrency(retirement.monthlyContributionUsed)}/mo</Text>
+              </View>
+
+              <View style={styles.detailRow}>
+                <Text style={styles.detailLabel}>Modeled Required Contribution</Text>
+                <Text style={styles.detailValue}>
+                  {retirement.requiredMonthlyContributionForEstimatedFire !== null
+                    ? `${formatCurrency(retirement.requiredMonthlyContributionForEstimatedFire)}/mo`
+                    : '—'}
                 </Text>
               </View>
-            )}
 
-            <View style={styles.detailRow}>
+              {retirement.contributionGap !== null && (
+                <View style={styles.detailRowHighlight}>
+                  <Text style={styles.detailLabelHighlight}>
+                    {retirement.contributionGap > 0 ? 'Modeled Contribution Gap' : 'Contribution Status'}
+                  </Text>
+                  <Text style={[styles.detailValueHighlight, { color: retirement.contributionGap > 0 ? PRIMARY : SUCCESS }]}>
+                    {retirement.contributionGap > 0
+                      ? `${formatCurrency(retirement.contributionGap)}/mo`
+                      : 'Target Met by Current Outflow'}
+                  </Text>
+                </View>
+              )}
+
+              <View style={styles.detailRow}>
+
               <Text style={styles.detailLabel}>Timeline Horizon</Text>
               <Text style={styles.detailValue}>
                 {retirement.monthsUntilRetirement !== null
@@ -423,9 +443,177 @@ export function FinancialOutlookScreen(): React.ReactElement {
             )}
           </View>
         </View>
+        )}
 
         {/* ══════════════════════════════════════════════════════
-            SECTION C: INCOME & RESILIENCE
+            SECTION C: PLANNING SCENARIOS (SENSITIVITY ANALYSIS)
+        ══════════════════════════════════════════════════════ */}
+        {snapshot.scenarios && (
+          <View style={styles.sectionCard}>
+            <View style={styles.sectionHeader}>
+              <Ionicons name="analytics-outline" size={22} color={PRIMARY} />
+              <Text style={styles.sectionTitle}>Planning Scenarios (Sensitivity)</Text>
+            </View>
+            <Text style={styles.scenarioIntroText}>
+              These scenarios illustrate how your outlook responds to varying long-term market conditions. Base represents your current profile assumptions.
+            </Text>
+
+            {/* Scenario Segmented Tabs */}
+            <View style={styles.scenarioTabsRow}>
+              {(['conservative', 'base', 'optimistic'] as const).map((key) => {
+                const isSelected = selectedScenarioKey === key;
+                const sc = snapshot.scenarios![key];
+                return (
+                  <TouchableOpacity
+                    key={key}
+                    style={[
+                      styles.scenarioTabBtn,
+                      isSelected && styles.scenarioTabBtnActive,
+                      key === 'base' && !isSelected && styles.scenarioTabBtnBase
+                    ]}
+                    onPress={() => setSelectedScenarioKey(key)}
+                    activeOpacity={0.7}
+                  >
+                    <Text style={[styles.scenarioTabLabel, isSelected && styles.scenarioTabLabelActive]}>
+                      {sc.label}
+                    </Text>
+                    {key === 'base' && (
+                      <View style={[styles.baseBadge, isSelected && styles.baseBadgeActive]}>
+                        <Text style={[styles.baseBadgeText, isSelected && styles.baseBadgeTextActive]}>Current</Text>
+                      </View>
+                    )}
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+
+            {/* Selected Scenario Active Summary Card */}
+            {(() => {
+              const activeSc = snapshot.scenarios![selectedScenarioKey];
+              return (
+                <View style={styles.activeScenarioCard}>
+                  <View style={styles.activeScHeaderRow}>
+                    <Text style={styles.activeScTitle}>{activeSc.label} Scenario Outlook</Text>
+                    <View style={styles.realReturnPill}>
+                      <Text style={styles.realReturnPillLabel}>Real Return: </Text>
+                      <Text style={styles.realReturnPillValue}>
+                        {(activeSc.assumptions.realReturn * 100).toFixed(2)}%
+                      </Text>
+                    </View>
+                  </View>
+
+                  <View style={styles.comparisonRow}>
+                    <View style={styles.comparisonBox}>
+                      <Text style={styles.compBoxLabel}>Estimated FIRE Target</Text>
+                      <Text style={styles.compBoxValue}>{formatCurrency(activeSc.estimatedFireCorpus, true)}</Text>
+                      <Text style={styles.compBoxSub}>@ {(activeSc.assumptions.withdrawalRate * 100).toFixed(1)}% SWR</Text>
+                    </View>
+                    <View style={styles.comparisonBox}>
+                      <Text style={styles.compBoxLabel}>Projected Corpus</Text>
+                      <Text style={styles.compBoxValue}>
+                        {activeSc.projectedCorpusAtRetirement !== null ? formatCurrency(activeSc.projectedCorpusAtRetirement, true) : '—'}
+                      </Text>
+                      <Text style={styles.compBoxSub}>at target retirement age</Text>
+                    </View>
+                  </View>
+
+                  <View style={styles.detailList}>
+                    <View style={styles.detailRow}>
+                      <Text style={styles.detailLabel}>Required Monthly Investment</Text>
+                      <Text style={[styles.detailValue, { fontWeight: '700', color: PRIMARY }]}>
+                        {activeSc.requiredMonthlyContributionForEstimatedFire !== null
+                          ? `${formatCurrency(activeSc.requiredMonthlyContributionForEstimatedFire)}/mo`
+                          : '—'}
+                      </Text>
+                    </View>
+
+                    <View style={styles.detailRow}>
+                      <Text style={styles.detailLabel}>Projected FIRE Timing</Text>
+                      <Text style={[styles.detailValue, { color: activeSc.projectedFire.reached ? SUCCESS : SLATE, fontWeight: '700' }]}>
+                        {activeSc.projectedFire.reached && activeSc.projectedFire.projectedAge !== null
+                          ? `Age ${activeSc.projectedFire.projectedAge.toFixed(1)}`
+                          : 'Not achieved by horizon'}
+                      </Text>
+                    </View>
+
+                    <View style={styles.detailRow}>
+                      <Text style={styles.detailLabel}>Scenario Assumptions</Text>
+                      <Text style={styles.detailValue}>
+                        Nominal {(activeSc.assumptions.nominalReturn * 100).toFixed(1)}% | Inflation {(activeSc.assumptions.inflation * 100).toFixed(1)}%
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              );
+            })()}
+
+            {/* Quick 3-Way Scenario Matrix Table */}
+            <View style={styles.scenarioMatrixWrap}>
+              <Text style={styles.matrixTitle}>Scenario Comparison Matrix</Text>
+              <View style={styles.matrixHeaderRow}>
+                <Text style={[styles.matrixColHeader, { flex: 1.3 }]}>Metric</Text>
+                <Text style={[styles.matrixColHeader, { flex: 1, textAlign: 'center' }]}>Cons.</Text>
+                <Text style={[styles.matrixColHeader, { flex: 1, textAlign: 'center', color: PRIMARY }]}>Base</Text>
+                <Text style={[styles.matrixColHeader, { flex: 1, textAlign: 'center' }]}>Opt.</Text>
+              </View>
+
+              <View style={styles.matrixRow}>
+                <Text style={[styles.matrixLabel, { flex: 1.3 }]}>Real Return</Text>
+                <Text style={[styles.matrixVal, { flex: 1 }]}>{(snapshot.scenarios!.conservative.assumptions.realReturn * 100).toFixed(1)}%</Text>
+                <Text style={[styles.matrixVal, styles.matrixValBase, { flex: 1 }]}>{(snapshot.scenarios!.base.assumptions.realReturn * 100).toFixed(1)}%</Text>
+                <Text style={[styles.matrixVal, { flex: 1 }]}>{(snapshot.scenarios!.optimistic.assumptions.realReturn * 100).toFixed(1)}%</Text>
+              </View>
+
+              <View style={styles.matrixRow}>
+                <Text style={[styles.matrixLabel, { flex: 1.3 }]}>Projected Corpus</Text>
+                <Text style={[styles.matrixVal, { flex: 1 }]}>
+                  {snapshot.scenarios!.conservative.projectedCorpusAtRetirement !== null
+                    ? formatCurrency(snapshot.scenarios!.conservative.projectedCorpusAtRetirement, true)
+                    : '—'}
+                </Text>
+                <Text style={[styles.matrixVal, styles.matrixValBase, { flex: 1 }]}>
+                  {snapshot.scenarios!.base.projectedCorpusAtRetirement !== null
+                    ? formatCurrency(snapshot.scenarios!.base.projectedCorpusAtRetirement, true)
+                    : '—'}
+                </Text>
+                <Text style={[styles.matrixVal, { flex: 1 }]}>
+                  {snapshot.scenarios!.optimistic.projectedCorpusAtRetirement !== null
+                    ? formatCurrency(snapshot.scenarios!.optimistic.projectedCorpusAtRetirement, true)
+                    : '—'}
+                </Text>
+              </View>
+
+              <View style={styles.matrixRow}>
+                <Text style={[styles.matrixLabel, { flex: 1.3 }]}>Req. Monthly</Text>
+                <Text style={[styles.matrixVal, { flex: 1 }]}>{formatCurrency(snapshot.scenarios!.conservative.requiredMonthlyContributionForEstimatedFire, true)}</Text>
+                <Text style={[styles.matrixVal, styles.matrixValBase, { flex: 1 }]}>{formatCurrency(snapshot.scenarios!.base.requiredMonthlyContributionForEstimatedFire, true)}</Text>
+                <Text style={[styles.matrixVal, { flex: 1 }]}>{formatCurrency(snapshot.scenarios!.optimistic.requiredMonthlyContributionForEstimatedFire, true)}</Text>
+              </View>
+
+              <View style={styles.matrixRow}>
+                <Text style={[styles.matrixLabel, { flex: 1.3 }]}>Projected Age</Text>
+                <Text style={[styles.matrixVal, { flex: 1 }]}>
+                  {snapshot.scenarios!.conservative.projectedFire.reached && snapshot.scenarios!.conservative.projectedFire.projectedAge !== null
+                    ? `${snapshot.scenarios!.conservative.projectedFire.projectedAge.toFixed(0)}y`
+                    : '—'}
+                </Text>
+                <Text style={[styles.matrixVal, styles.matrixValBase, { flex: 1 }]}>
+                  {snapshot.scenarios!.base.projectedFire.reached && snapshot.scenarios!.base.projectedFire.projectedAge !== null
+                    ? `${snapshot.scenarios!.base.projectedFire.projectedAge.toFixed(0)}y`
+                    : '—'}
+                </Text>
+                <Text style={[styles.matrixVal, { flex: 1 }]}>
+                  {snapshot.scenarios!.optimistic.projectedFire.reached && snapshot.scenarios!.optimistic.projectedFire.projectedAge !== null
+                    ? `${snapshot.scenarios!.optimistic.projectedFire.projectedAge.toFixed(0)}y`
+                    : '—'}
+                </Text>
+              </View>
+            </View>
+          </View>
+        )}
+
+        {/* ══════════════════════════════════════════════════════
+            SECTION D: INCOME & RESILIENCE
         ══════════════════════════════════════════════════════ */}
         <View style={styles.sectionCard}>
           <View style={styles.sectionHeader}>
@@ -575,7 +763,7 @@ export function FinancialOutlookScreen(): React.ReactElement {
             <Ionicons name={showAssumptions ? 'chevron-up' : 'chevron-down'} size={20} color={SLATE} />
           </TouchableOpacity>
 
-          {showAssumptions && (
+          {showAssumptions && retirement && (
             <View style={styles.assumptionsBody}>
               <View style={styles.detailRow}>
                 <Text style={styles.detailLabel}>Expected Nominal Return</Text>
@@ -1037,5 +1225,148 @@ const styles = StyleSheet.create({
     color: SLATE,
     lineHeight: 18,
     flex: 1,
+  },
+  // Scenario Styles
+  scenarioIntroText: {
+    fontSize: 12,
+    color: SLATE,
+    lineHeight: 17,
+    marginBottom: 14,
+  },
+  scenarioTabsRow: {
+    flexDirection: 'row',
+    backgroundColor: '#F1F5F9',
+    borderRadius: 10,
+    padding: 3,
+    marginBottom: 14,
+    gap: 4,
+  },
+  scenarioTabBtn: {
+    flex: 1,
+    paddingVertical: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 8,
+    flexDirection: 'row',
+    gap: 4,
+  },
+  scenarioTabBtnActive: {
+    backgroundColor: CARD_BG,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  scenarioTabBtnBase: {
+    borderWidth: 1,
+    borderColor: '#CBD5E1',
+  },
+  scenarioTabLabel: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: SLATE,
+  },
+  scenarioTabLabelActive: {
+    color: PRIMARY,
+    fontWeight: '800',
+  },
+  baseBadge: {
+    backgroundColor: '#E2E8F0',
+    paddingHorizontal: 5,
+    paddingVertical: 1,
+    borderRadius: 4,
+  },
+  baseBadgeActive: {
+    backgroundColor: '#EEF2FF',
+  },
+  baseBadgeText: {
+    fontSize: 9,
+    fontWeight: '700',
+    color: SLATE,
+  },
+  baseBadgeTextActive: {
+    color: PRIMARY,
+  },
+  activeScenarioCard: {
+    backgroundColor: '#F8FAFC',
+    borderRadius: 12,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    marginBottom: 14,
+  },
+  activeScHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  activeScTitle: {
+    fontSize: 14,
+    fontWeight: '800',
+    color: DARK,
+  },
+  realReturnPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#EEF2FF',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+  },
+  realReturnPillLabel: {
+    fontSize: 10,
+    color: PRIMARY,
+  },
+  realReturnPillValue: {
+    fontSize: 11,
+    fontWeight: '800',
+    color: PRIMARY,
+  },
+  scenarioMatrixWrap: {
+    backgroundColor: '#F8FAFC',
+    borderRadius: 12,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+  },
+  matrixTitle: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: DARK,
+    marginBottom: 8,
+  },
+  matrixHeaderRow: {
+    flexDirection: 'row',
+    paddingBottom: 6,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E2E8F0',
+    marginBottom: 6,
+  },
+  matrixColHeader: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: MUTED,
+  },
+  matrixRow: {
+    flexDirection: 'row',
+    paddingVertical: 4,
+    alignItems: 'center',
+  },
+  matrixLabel: {
+    fontSize: 11,
+    color: SLATE,
+    fontWeight: '500',
+  },
+  matrixVal: {
+    fontSize: 11,
+    color: DARK,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  matrixValBase: {
+    color: PRIMARY,
+    fontWeight: '800',
   },
 });

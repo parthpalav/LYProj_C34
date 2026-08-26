@@ -65,7 +65,7 @@ async function runTests() {
   console.log('Running Test 1: Mark Upcoming Payment as Paid (Success)...');
   const scheduledDue = new Date('2026-09-01T00:00:00Z');
   const lAuto = await Liability.create({
-    id: 'L_CAR_AUTO',
+    id: 'L_CAR_AUTO_2',
     userId: 'USER_C',
     name: 'Car Loan EMI',
     amount: 15000,
@@ -86,7 +86,7 @@ async function runTests() {
       category: 'Bills',
       type: 'Need',
       description: 'Advance EMI payment paid manually',
-      liabilityId: 'L_CAR_AUTO',
+      liabilityId: 'L_CAR_AUTO_2',
       expectedScheduledFor: scheduledDue.toISOString()
     }
   };
@@ -94,12 +94,12 @@ async function runTests() {
   await postTxHandler(req1, res1, (err) => { if (err) throw err; });
 
   assert.strictEqual(res1.statusCode, 201);
-  assert.strictEqual(res1.data.liabilityId, 'L_CAR_AUTO');
+  assert.strictEqual(res1.data.liabilityId, 'L_CAR_AUTO_2');
   assert.strictEqual(res1.data.classificationSource, 'manual');
   assert.strictEqual(new Date(res1.data.scheduledFor).toISOString(), scheduledDue.toISOString());
   
   // Verify nextDueDate is advanced exactly once
-  const lAutoAfter = await Liability.findOne({ id: 'L_CAR_AUTO' });
+  const lAutoAfter = await Liability.findOne({ id: 'L_CAR_AUTO_2' });
   const expectedNextDue = new Date('2026-10-01T00:00:00Z');
   assert.strictEqual(
     lAutoAfter.nextDueDate.toISOString(),
@@ -120,7 +120,7 @@ async function runTests() {
       category: 'Bills',
       type: 'Need',
       description: 'Another EMI payment using stale date',
-      liabilityId: 'L_CAR_AUTO',
+      liabilityId: 'L_CAR_AUTO_2',
       expectedScheduledFor: scheduledDue.toISOString() // This is now stale, nextDueDate is 2026-10-01
     }
   };
@@ -137,7 +137,7 @@ async function runTests() {
   console.log('Running Test 3: Reject non-AutoDeduct liability...');
   
   const lManual = await Liability.create({
-    id: 'L_RENT_MANUAL',
+    id: 'L_RENT_MANUAL_2',
     userId: 'USER_C',
     name: 'Home Rent',
     amount: 25000,
@@ -157,7 +157,7 @@ async function runTests() {
       category: 'Bills',
       type: 'Need',
       description: 'Payment',
-      liabilityId: 'L_RENT_MANUAL',
+      liabilityId: 'L_RENT_MANUAL_2',
       expectedScheduledFor: scheduledDue.toISOString()
     }
   };
@@ -180,17 +180,17 @@ async function runTests() {
       category: 'Bills',
       type: 'Need',
       description: 'Partial extra payment',
-      liabilityId: 'L_CAR_AUTO'
+      liabilityId: 'L_CAR_AUTO_2'
     }
   };
   const res4 = mockRes();
   await postTxHandler(req4, res4, (err) => { if (err) throw err; });
 
   assert.strictEqual(res4.statusCode, 201);
-  assert.strictEqual(res4.data.liabilityId, 'L_CAR_AUTO');
+  assert.strictEqual(res4.data.liabilityId, 'L_CAR_AUTO_2');
   assert.strictEqual(res4.data.scheduledFor, null);
 
-  const lAutoUnchanged = await Liability.findOne({ id: 'L_CAR_AUTO' });
+  const lAutoUnchanged = await Liability.findOne({ id: 'L_CAR_AUTO_2' });
   assert.strictEqual(
     lAutoUnchanged.nextDueDate.toISOString(),
     currentNextDue.toISOString(),
@@ -215,7 +215,7 @@ async function runTests() {
       category: 'Bills',
       type: 'Need',
       classificationSource: 'manual',
-      liabilityId: 'L_CAR_AUTO',
+      liabilityId: 'L_CAR_AUTO_2',
       scheduledFor: currentNextDue,
       description: 'First concurrent manual payment',
       timestamp: new Date()
@@ -232,7 +232,7 @@ async function runTests() {
       category: 'Bills',
       type: 'Need',
       description: 'Duplicate simultaneous submission',
-      liabilityId: 'L_CAR_AUTO',
+      liabilityId: 'L_CAR_AUTO_2',
       expectedScheduledFor: currentNextDue.toISOString()
     }
   };
@@ -264,7 +264,7 @@ async function runTests() {
     category: 'Bills',
     type: 'Need',
     classificationSource: 'manual',
-    liabilityId: 'L_CAR_AUTO',
+    liabilityId: 'L_CAR_AUTO_2',
     scheduledFor: pastDueDate,
     description: 'Manually fulfilled past due occurrence',
     timestamp: new Date()
@@ -272,7 +272,7 @@ async function runTests() {
 
   // Set liability nextDueDate back to pastDueDate to test scheduler behavior when due
   await Liability.findOneAndUpdate(
-    { id: 'L_CAR_AUTO' },
+    { id: 'L_CAR_AUTO_2' },
     { $set: { nextDueDate: pastDueDate } }
   );
 
@@ -280,14 +280,14 @@ async function runTests() {
   await processLiabilities();
 
   // Verify scheduler caught duplicate key E11000 on scheduledFor and advanced nextDueDate cleanly
-  const lAutoAfterScheduler = await Liability.findOne({ id: 'L_CAR_AUTO' });
+  const lAutoAfterScheduler = await Liability.findOne({ id: 'L_CAR_AUTO_2' });
   assert.ok(
     lAutoAfterScheduler.nextDueDate > pastDueDate,
     'Scheduler must advance nextDueDate after catching idempotency key collision'
   );
 
   // Ensure NO duplicate transaction was created by scheduler
-  const txCount = await Transaction.countDocuments({ liabilityId: 'L_CAR_AUTO', scheduledFor: pastDueDate });
+  const txCount = await Transaction.countDocuments({ liabilityId: 'L_CAR_AUTO_2', scheduledFor: pastDueDate });
   assert.strictEqual(txCount, 1, 'Only ONE transaction must exist for the scheduled occurrence');
   console.log('  ✅ Test 6 Passed: Scheduler correctly respects manually fulfilled occurrence and advances schedule without duplicate tx');
 
@@ -296,7 +296,7 @@ async function runTests() {
   // ─────────────────────────────────────────────────────────
   console.log('Running Test 7: Manual Fulfilled Transaction Source Semantics...');
 
-  const fulfilledTx = await Transaction.findOne({ liabilityId: 'L_CAR_AUTO', scheduledFor: pastDueDate });
+  const fulfilledTx = await Transaction.findOne({ liabilityId: 'L_CAR_AUTO_2', scheduledFor: pastDueDate });
   assert.strictEqual(fulfilledTx.classificationSource, 'manual');
   console.log('  ✅ Test 7 Passed: Fulfilled transaction preserves Manual Payment classificationSource semantics');
 
@@ -312,7 +312,7 @@ async function runTests() {
       category: 'Bills',
       type: 'Need',
       description: 'User D trying to satisfy User C liability',
-      liabilityId: 'L_CAR_AUTO',
+      liabilityId: 'L_CAR_AUTO_2',
       expectedScheduledFor: lAutoAfterScheduler.nextDueDate.toISOString()
     }
   };
@@ -333,7 +333,7 @@ async function runTests() {
   // Find the manual fulfilled transaction from Test 1
   const manualFulfilledTx = await Transaction.findOne({
     userId: 'USER_C',
-    liabilityId: 'L_CAR_AUTO',
+    liabilityId: 'L_CAR_AUTO_2',
     scheduledFor: scheduledDue
   });
   assert.ok(manualFulfilledTx, 'Manual fulfilled transaction must exist');
@@ -349,7 +349,7 @@ async function runTests() {
   assert.strictEqual(resUnlink.statusCode, 200);
 
   // Verify nextDueDate remains forward and unchanged
-  const lAutoUnlinked = await Liability.findOne({ id: 'L_CAR_AUTO' });
+  const lAutoUnlinked = await Liability.findOne({ id: 'L_CAR_AUTO_2' });
   assert.strictEqual(
     lAutoUnlinked.nextDueDate.toISOString(),
     currentNextDueTime.toISOString(),
@@ -357,7 +357,7 @@ async function runTests() {
   );
 
   // Relink it and then delete it to test delete semantics
-  await Transaction.updateOne({ id: manualFulfilledTx.id }, { $set: { liabilityId: 'L_CAR_AUTO' } });
+  await Transaction.updateOne({ id: manualFulfilledTx.id }, { $set: { liabilityId: 'L_CAR_AUTO_2' } });
 
   const reqDelete = {
     user: { id: 'USER_C' },
@@ -368,7 +368,7 @@ async function runTests() {
   assert.strictEqual(resDelete.statusCode, 200);
 
   // Verify nextDueDate remains forward and unchanged
-  const lAutoDeleted = await Liability.findOne({ id: 'L_CAR_AUTO' });
+  const lAutoDeleted = await Liability.findOne({ id: 'L_CAR_AUTO_2' });
   assert.strictEqual(
     lAutoDeleted.nextDueDate.toISOString(),
     currentNextDueTime.toISOString(),

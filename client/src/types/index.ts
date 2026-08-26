@@ -249,8 +249,49 @@ export interface User {
   onboardingCompleted?: boolean;
 }
 
+export interface ScenarioProjection {
+  id: string;
+  label: string;
+  currentAge: number | null;
+  retirementAge: number | null;
+  monthsUntilRetirement: number | null;
+  assumptions: {
+    nominalReturn: number;
+    inflation: number;
+    realReturn: number;
+    withdrawalRate: number;
+    lifestyleAdjustmentRatio: number;
+    contributionMode: string;
+  };
+  currentAnnualLifestyleSpending: number;
+  estimatedFireCorpus: number;
+  userGoalCorpus: number;
+  goalDifference: {
+    userGoalCorpus: number;
+    estimatedFireCorpus: number;
+    difference: number;
+    percentageDifference: number;
+  } | null;
+  monthlyContributionUsed: number;
+  projectedCorpusAtRetirement: number | null;
+  requiredMonthlyContributionForEstimatedFire: number | null;
+  requiredMonthlyContributionForUserGoal: number | null;
+  contributionGap: number | null;
+  projectedFire: {
+    reached: boolean;
+    months: number | null;
+    projectedAge: number | null;
+  };
+}
+
 export interface PredictabilitySnapshot {
   generatedAt: string;
+  forecastStatus: {
+    available: boolean;
+    missingInputs: string[];
+    warnings: string[];
+    dataQuality: 'INSUFFICIENT' | 'LOW' | 'MEDIUM' | 'HIGH';
+  };
   dataQuality: {
     incomeDataQuality: {
       dataQualityLevel: 'INSUFFICIENT' | 'VERY_LOW' | 'LOW' | 'MODERATE' | 'HIGH';
@@ -324,38 +365,12 @@ export interface PredictabilitySnapshot {
     coverageMonths: number | null;
     fundingGap: number;
   };
-  retirement: {
-    currentAge: number | null;
-    retirementAge: number | null;
-    monthsUntilRetirement: number | null;
-    assumptions: {
-      nominalReturn: number;
-      inflation: number;
-      realReturn: number;
-      withdrawalRate: number;
-      lifestyleAdjustmentRatio: number;
-      contributionMode: string;
-    };
-    currentAnnualLifestyleSpending: number;
-    estimatedFireCorpus: number;
-    userGoalCorpus: number;
-    goalDifference: {
-      userGoalCorpus: number;
-      estimatedFireCorpus: number;
-      difference: number;
-      percentageDifference: number;
-    } | null;
-    monthlyContributionUsed: number;
-    projectedCorpusAtRetirement: number | null;
-    requiredMonthlyContributionForEstimatedFire: number | null;
-    requiredMonthlyContributionForUserGoal: number | null;
-    contributionGap: number | null;
-    projectedFire: {
-      reached: boolean;
-      months: number | null;
-      projectedAge: number | null;
-    };
-  };
+  retirement: ScenarioProjection | null;
+  scenarios: {
+    conservative: ScenarioProjection;
+    base: ScenarioProjection;
+    optimistic: ScenarioProjection;
+  } | null;
   explanationFacts: Array<{
     code: string;
     metric: string;

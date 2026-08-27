@@ -4,7 +4,13 @@ server/node_modules/
 ml-service/.venv/
 __pycache__/
 .DS_Store
+# Environment & Local Secrets
 .env
+.env.*
+.env*.local
+!.env.example
+!.env.*.example
+
 node_modules
 
 # ML Models & Checkpoints

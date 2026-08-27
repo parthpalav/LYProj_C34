@@ -427,11 +427,59 @@ router.put('/user/profile', async (req, res, next) => {
     if (payload.retirementCorpusGoal !== undefined) updateFields.retirementCorpusGoal = Number(payload.retirementCorpusGoal);
     if (payload.currentBalance !== undefined) updateFields.currentBalance = Number(payload.currentBalance);
     if (payload.dateOfBirth) updateFields.dateOfBirth = new Date(payload.dateOfBirth);
+    if (payload.expectedReturnRate !== undefined) updateFields.expectedReturnRate = Number(payload.expectedReturnRate);
+    if (payload.expectedInflationRate !== undefined) updateFields.expectedInflationRate = Number(payload.expectedInflationRate);
+    if (payload.expectedWithdrawalRate !== undefined) updateFields.expectedWithdrawalRate = Number(payload.expectedWithdrawalRate);
+    if (payload.lifestyleAdjustmentRatio !== undefined) updateFields.lifestyleAdjustmentRatio = Number(payload.lifestyleAdjustmentRatio);
+    if (payload.emergencyFundTargetMonths !== undefined) updateFields.emergencyFundTargetMonths = Number(payload.emergencyFundTargetMonths);
+
+    // Validation checks
+    if (updateFields.retirementAge !== undefined) {
+      const rage = updateFields.retirementAge;
+      if (isNaN(rage) || rage < 40 || rage > 100) {
+        return res.status(400).json({ success: false, error: 'Retirement age must be an integer between 40 and 100' });
+      }
+    }
+    if (updateFields.monthlyIncome !== undefined) {
+      if (isNaN(updateFields.monthlyIncome) || updateFields.monthlyIncome < 0) {
+        return res.status(400).json({ success: false, error: 'Monthly income must be a positive number' });
+      }
+    }
+    if (updateFields.retirementCorpusGoal !== undefined) {
+      if (isNaN(updateFields.retirementCorpusGoal) || updateFields.retirementCorpusGoal < 0) {
+        return res.status(400).json({ success: false, error: 'Retirement corpus goal must be a non-negative number' });
+      }
+    }
+    if (updateFields.expectedReturnRate !== undefined) {
+      if (isNaN(updateFields.expectedReturnRate) || updateFields.expectedReturnRate < 0 || updateFields.expectedReturnRate > 1) {
+        return res.status(400).json({ success: false, error: 'Expected return rate must be between 0% and 100%' });
+      }
+    }
+    if (updateFields.expectedInflationRate !== undefined) {
+      if (isNaN(updateFields.expectedInflationRate) || updateFields.expectedInflationRate < 0 || updateFields.expectedInflationRate > 1) {
+        return res.status(400).json({ success: false, error: 'Expected inflation rate must be between 0% and 100%' });
+      }
+    }
+    if (updateFields.expectedWithdrawalRate !== undefined) {
+      if (isNaN(updateFields.expectedWithdrawalRate) || updateFields.expectedWithdrawalRate <= 0 || updateFields.expectedWithdrawalRate > 1) {
+        return res.status(400).json({ success: false, error: 'Expected withdrawal rate must be between 0% and 100%' });
+      }
+    }
+    if (updateFields.lifestyleAdjustmentRatio !== undefined) {
+      if (isNaN(updateFields.lifestyleAdjustmentRatio) || updateFields.lifestyleAdjustmentRatio <= 0 || updateFields.lifestyleAdjustmentRatio > 2) {
+        return res.status(400).json({ success: false, error: 'Lifestyle adjustment ratio must be between 0% and 200%' });
+      }
+    }
+    if (updateFields.emergencyFundTargetMonths !== undefined) {
+      if (isNaN(updateFields.emergencyFundTargetMonths) || updateFields.emergencyFundTargetMonths < 0 || updateFields.emergencyFundTargetMonths > 36) {
+        return res.status(400).json({ success: false, error: 'Emergency fund target must be between 0 and 36 months' });
+      }
+    }
 
     const updated = await User.findOneAndUpdate(
       userFilter(userId),
       updateFields,
-      { new: true }
+      { new: true, runValidators: true }
     );
 
     if (!updated) {

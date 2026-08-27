@@ -186,23 +186,125 @@ export function DashboardScreen(): React.ReactElement {
   const isMcDegraded = predictability?.probabilistic?.available === true && (predictability?.probabilistic?.dataQuality === 'LOW' || predictability?.probabilistic?.dataQuality === 'INSUFFICIENT');
   const isHistoryInsufficient = predictability?.forecastStatus?.available === false || predictability?.dataQuality?.incomeDataQuality?.dataQualityLevel === 'INSUFFICIENT';
 
-  // ── Smart Next Action Logic (Deterministic & Transparent) ─
+  // ── Smart Next Action Logic (Proactive Guidance Driven) ──
   const smartAction = useMemo(() => {
-    // Priority 1: Insufficient history
-    if (isHistoryInsufficient || (dashboard?.spendingSeries && dashboard.spendingSeries.length < 2)) {
+    const guidance = predictability?.proactiveGuidance;
+
+    // Priority 1: Insufficient history / LIMITED_DATA
+    if (guidance?.status === 'LIMITED_DATA' || isHistoryInsufficient || (dashboard?.spendingSeries && dashboard.spendingSeries.length < 2)) {
       return {
         icon: 'sparkles',
         iconColor: PURPLE,
         iconBg: PURPLE_LIGHT,
-        badge: 'Forecast Setup',
-        title: 'Activate Detailed Forecasts',
-        message: 'Log a few more transactions to build your behavioral history and unlock Monte Carlo projections.',
+        badge: 'Getting Started',
+        title: guidance?.headline || 'More Financial History Needed',
+        message: guidance?.explanation || 'Log a few more transactions to build your behavioral history and unlock saving guidance.',
         actionText: 'Log Transaction',
         actionTarget: 'Transactions' as const,
       };
     }
 
-    // Priority 2: Contribution recommendation > 0
+    // Priority 2: TEMPORARILY_UNAVAILABLE (service down, deterministic still active)
+    if (guidance?.status === 'TEMPORARILY_UNAVAILABLE') {
+      return {
+        icon: 'cloud-offline-outline',
+        iconColor: GRAY_400,
+        iconBg: '#F1F5F9',
+        badge: 'Service Notice',
+        title: guidance.headline,
+        message: guidance.explanation,
+        actionText: 'View Forecast',
+        actionTarget: 'FinancialOutlook' as const,
+      };
+    }
+
+    // Priority 3: ON_TRACK
+    if (guidance?.status === 'ON_TRACK') {
+      return {
+        icon: 'checkmark-circle',
+        iconColor: GREEN,
+        iconBg: GREEN_LIGHT,
+        badge: 'Plan On Track',
+        title: guidance.headline,
+        message: guidance.explanation,
+        actionText: 'View Outlook',
+        actionTarget: 'FinancialOutlook' as const,
+      };
+    }
+
+    // Priority 4: IMPROVEMENT_RECOMMENDED
+    if (guidance?.status === 'IMPROVEMENT_RECOMMENDED') {
+      const isKnownZero = guidance.investmentBaseline === 'KNOWN_ZERO';
+      const isAggressive = guidance.feasibilityStatus === 'AGGRESSIVE';
+      const variableNote = guidance.isVariableIncome
+        ? ' Because your income varies, treat this as an average target.'
+        : '';
+
+      let message = guidance.explanation;
+      if (guidance.additionalMonthlyContribution != null && guidance.additionalMonthlyContribution > 0 && !isKnownZero) {
+        message = `Increasing monthly investments by ${formatCurrency(guidance.additionalMonthlyContribution)}/mo could improve your modeled retirement path toward age ${targetAge}.${variableNote}`;
+      } else if (isKnownZero && guidance.recommendedMonthlyContribution != null) {
+        message = `Starting at approximately ${formatCurrency(guidance.recommendedMonthlyContribution)}/mo could move you toward the modeled funding target.${variableNote}`;
+      }
+
+      return {
+        icon: isKnownZero ? 'rocket-outline' : 'trending-up',
+        iconColor: isAggressive ? AMBER : BLUE,
+        iconBg: isAggressive ? AMBER_LIGHT : BLUE_LIGHT,
+        badge: isKnownZero ? 'Start Investing' : 'Retirement Outlook',
+        title: guidance.headline,
+        message,
+        actionText: 'View Outlook',
+        actionTarget: 'FinancialOutlook' as const,
+      };
+    }
+
+    // Priority 5: ACTION_NEEDED (timeline alternatives)
+    if (guidance?.status === 'ACTION_NEEDED') {
+      return {
+        icon: 'time-outline',
+        iconColor: AMBER,
+        iconBg: AMBER_LIGHT,
+        badge: 'Action Needed',
+        title: guidance.headline,
+        message: guidance.retirementAlternativeAvailable
+          ? 'Reaching your target at the current retirement age may require a large increase. Extending the timeline could reduce the required monthly amount.'
+          : guidance.explanation,
+        actionText: 'View Alternatives',
+        actionTarget: 'FinancialOutlook' as const,
+      };
+    }
+
+    // Priority 6: Upcoming liability due soon (within 7 days) — non-guidance priority
+    if (nearestLiability && daysUntilLiability !== null && daysUntilLiability >= 0 && daysUntilLiability <= 7) {
+      const dueLabel = daysUntilLiability === 0 ? 'today' : daysUntilLiability === 1 ? 'tomorrow' : `in ${daysUntilLiability} days`;
+      return {
+        icon: 'calendar',
+        iconColor: AMBER,
+        iconBg: AMBER_LIGHT,
+        badge: 'Upcoming Due Date',
+        title: `${nearestLiability.name} Due ${dueLabel}`,
+        message: `${formatCurrency(nearestLiability.amount)} payment scheduled for ${formatShortDate(nearestLiability.nextDueDate)}${nearestLiability.autoDeduct ? ' (Auto Deduct enabled)' : ''}.`,
+        actionText: 'View Liabilities',
+        actionTarget: 'Liabilities' as const,
+      };
+    }
+
+    // Priority 7: Emergency fund gap
+    if (predictability?.emergencyFund && predictability.emergencyFund.fundingGap > 0) {
+      return {
+        icon: 'shield-checkmark',
+        iconColor: GREEN,
+        iconBg: GREEN_LIGHT,
+        badge: 'Emergency Reserve',
+        title: 'Build Safety Reserve',
+        message: `Your liquid emergency reserve is ${formatCurrency(predictability.emergencyFund.fundingGap)} below the recommended ${predictability.emergencyFund.targetMonths || 6}-month essential buffer.`,
+        actionText: 'View Buffer',
+        actionTarget: 'FinancialOutlook' as const,
+      };
+    }
+
+    // Priority 8: Fallback — contribution recommendation from raw solver (legacy path / no proactiveGuidance)
     if (rec?.solved && rec.additionalMonthlyContributionRequired > 0) {
       const stepUpText = rec.annualContributionGrowthRate && rec.annualContributionGrowthRate > 0
         ? ` (+${Math.round(rec.annualContributionGrowthRate * 100)}%/yr annual step-up)`
@@ -219,36 +321,7 @@ export function DashboardScreen(): React.ReactElement {
       };
     }
 
-    // Priority 3: Upcoming liability due soon (within 7 days)
-    if (nearestLiability && daysUntilLiability !== null && daysUntilLiability >= 0 && daysUntilLiability <= 7) {
-      const dueLabel = daysUntilLiability === 0 ? 'today' : daysUntilLiability === 1 ? 'tomorrow' : `in ${daysUntilLiability} days`;
-      return {
-        icon: 'calendar',
-        iconColor: AMBER,
-        iconBg: AMBER_LIGHT,
-        badge: 'Upcoming Due Date',
-        title: `${nearestLiability.name} Due ${dueLabel}`,
-        message: `${formatCurrency(nearestLiability.amount)} payment scheduled for ${formatShortDate(nearestLiability.nextDueDate)}${nearestLiability.autoDeduct ? ' (Auto Deduct enabled)' : ''}.`,
-        actionText: 'View Liabilities',
-        actionTarget: 'Liabilities' as const,
-      };
-    }
-
-    // Priority 4: Emergency fund gap
-    if (predictability?.emergencyFund && predictability.emergencyFund.fundingGap > 0) {
-      return {
-        icon: 'shield-checkmark',
-        iconColor: GREEN,
-        iconBg: GREEN_LIGHT,
-        badge: 'Emergency Reserve',
-        title: 'Build Safety Reserve',
-        message: `Your liquid emergency reserve is ${formatCurrency(predictability.emergencyFund.fundingGap)} below the recommended ${predictability.emergencyFund.targetMonths || 6}-month essential buffer.`,
-        actionText: 'View Buffer',
-        actionTarget: 'FinancialOutlook' as const,
-      };
-    }
-
-    // Priority 5: Default on-track state
+    // Priority 9: Default on-track state
     return {
       icon: 'checkmark-circle',
       iconColor: GREEN,
@@ -260,6 +333,7 @@ export function DashboardScreen(): React.ReactElement {
       actionTarget: 'FinancialOutlook' as const,
     };
   }, [
+    predictability?.proactiveGuidance,
     isHistoryInsufficient,
     dashboard?.spendingSeries,
     rec,

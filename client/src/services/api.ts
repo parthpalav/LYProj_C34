@@ -6,7 +6,8 @@ import {
   AlertItem, BehaviorPattern, ChatMessage, DashboardData, EnvelopeData,
   FISData, FMIRecord, FMIResponse, Goal, IncomeFlowData, IncomeRecord,
   Transaction, WeeklyReport, User, Liability, LiabilityPaymentSummary,
-  LiabilityPaymentHistoryResponse, PredictabilitySnapshot, PredictabilityResponse
+  LiabilityPaymentHistoryResponse, PredictabilitySnapshot, PredictabilityResponse,
+  Asset, PredictabilityQueryOptions
 } from '../types';
 
 export interface NewTransaction {
@@ -462,9 +463,38 @@ export async function deleteLiability(id: string): Promise<{ success: boolean; m
   return data;
 }
 
+// ── Assets ───────────────────────────────────────────────────
+
+export async function getAssets(): Promise<Asset[]> {
+  const { data } = await api.get('/api/assets');
+  return data.data;
+}
+
+export async function createAsset(payload: Partial<Asset>): Promise<Asset> {
+  const { data } = await api.post('/api/assets', payload);
+  return data.data;
+}
+
+export async function updateAsset(id: string, payload: Partial<Asset>): Promise<Asset> {
+  const { data } = await api.put(`/api/assets/${id}`, payload);
+  return data.data;
+}
+
+export async function deleteAsset(id: string): Promise<{ success: boolean; message: string }> {
+  const { data } = await api.delete(`/api/assets/${id}`);
+  return data;
+}
+
 // ── Predictability Engine ─────────────────────────────────────
 
-export async function getPredictability(): Promise<PredictabilitySnapshot> {
-  const { data } = await api.get<PredictabilityResponse>('/api/predictability');
+export async function getPredictability(options?: PredictabilityQueryOptions): Promise<PredictabilitySnapshot> {
+  const params: Record<string, string | number> = {};
+  if (options?.contributionMode) {
+    params.contributionMode = options.contributionMode;
+  }
+  if (options?.annualContributionGrowthRate !== undefined) {
+    params.annualContributionGrowthRate = options.annualContributionGrowthRate;
+  }
+  const { data } = await api.get<PredictabilityResponse>('/api/predictability', { params });
   return data.data;
 }

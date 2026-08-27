@@ -29,7 +29,18 @@ export const getPredictability = async (req, res, next) => {
       });
     }
 
-    const snapshot = await getPredictabilitySnapshot(userId);
+    const options = {};
+    if (req.query.contributionMode) {
+      options.contributionMode = String(req.query.contributionMode).toUpperCase();
+    }
+    if (req.query.annualContributionGrowthRate !== undefined && req.query.annualContributionGrowthRate !== '') {
+      const g = Number(req.query.annualContributionGrowthRate);
+      if (Number.isFinite(g)) {
+        options.annualContributionGrowthRate = g;
+      }
+    }
+
+    const snapshot = await getPredictabilitySnapshot(userId, options);
 
     return res.status(200).json({
       success: true,

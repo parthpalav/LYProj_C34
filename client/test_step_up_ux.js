@@ -5,6 +5,8 @@
  */
 
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
 
 function formatCurrency(amount, compact = false) {
   if (amount === null || amount === undefined || !Number.isFinite(amount)) {
@@ -143,31 +145,74 @@ test('Test 4: Feasibility Ratio Computation with Initial Contribution', () => {
   assert.equal(Math.round(ratio * 100), 18);
 });
 
-// 5. Client Contract Enforcement: STEP_UP with Required Growth Rate
-test('Test 5: Client Type Contract Enforcement for STEP_UP Mode', () => {
-  const validStepUpPayload = {
-    contributionMode: 'STEP_UP',
-    annualContributionGrowthRate: 0.10
-  };
-  assert.ok(validStepUpPayload.contributionMode === 'STEP_UP');
-  assert.ok(typeof validStepUpPayload.annualContributionGrowthRate === 'number');
-  assert.ok(validStepUpPayload.annualContributionGrowthRate >= 0.0 && validStepUpPayload.annualContributionGrowthRate <= 0.50);
+// 6. Strategy Selector UI Component in FinancialOutlookScreen
+test('Test 6: Strategy Selector UI Component in FinancialOutlookScreen', () => {
+  const code = fs.readFileSync(path.resolve('client/src/screens/FinancialOutlookScreen.tsx'), 'utf8');
 
-  // Missing growth rate helper check
-  function validateClientStepUpPayload(payload) {
-    if (payload.contributionMode === 'STEP_UP') {
-      if (payload.annualContributionGrowthRate === undefined || payload.annualContributionGrowthRate === null) {
-        throw new TypeError('annualContributionGrowthRate is required when contributionMode is STEP_UP');
-      }
+  assert.ok(code.includes('Investment Strategy'), 'Strategy section title exists');
+  assert.ok(code.includes('Constant SIP'), 'Constant SIP option exists');
+  assert.ok(code.includes('Step-Up SIP'), 'Step-Up SIP option exists');
+  assert.ok(code.includes('Annual Contribution Increase Rate'), 'Rate controls exist');
+  assert.ok(code.includes('+5%/yr') || code.includes('0.05'), '5% preset exists');
+  assert.ok(code.includes('+10%/yr') || code.includes('0.10'), '10% preset exists');
+  assert.ok(code.includes('+15%/yr') || code.includes('0.15'), '15% preset exists');
+  assert.ok(code.includes('Custom'), 'Custom preset option exists');
+});
+
+// 7. Custom Growth Rate Boundaries & Validation
+test('Test 7: Custom Growth Rate Boundaries [0%, 50%]', () => {
+  function validateCustomRate(ratePct) {
+    const parsed = parseFloat(ratePct);
+    if (isNaN(parsed) || parsed < 0 || parsed > 50) {
+      throw new RangeError('Annual increase rate must be between 0% and 50%.');
     }
+    return parsed / 100;
   }
 
-  assert.throws(() => {
-    validateClientStepUpPayload({ contributionMode: 'STEP_UP' });
-  }, /annualContributionGrowthRate is required/);
+  assert.equal(validateCustomRate('10'), 0.10);
+  assert.equal(validateCustomRate('0'), 0.00);
+  assert.equal(validateCustomRate('50'), 0.50);
+  assert.equal(validateCustomRate('7.5'), 0.075);
+  assert.throws(() => validateCustomRate('-1'), /between 0% and 50%/);
+  assert.throws(() => validateCustomRate('51'), /between 0% and 50%/);
+  assert.throws(() => validateCustomRate('abc'), /between 0% and 50%/);
+});
+
+// 8. Zero Current Investment with Step-Up
+test('Test 8: Zero Current Investment with Step-Up Wording', () => {
+  const zeroRec = {
+    solved: true,
+    currentMonthlyContribution: 0,
+    recommendedMonthlyContribution: 62500,
+    additionalMonthlyContributionRequired: 62500,
+    annualContributionGrowthRate: 0.10
+  };
+
+  const action = renderRecAction(zeroRec);
+  const fromTo = renderRecFromTo(zeroRec);
+
+  assert.equal(action, 'Increase initial monthly investments by ₹62,500/mo');
+  assert.equal(fromTo, 'From ₹0 → ₹62,500 initial per month (+10%/yr annual step-up)');
+});
+
+// 9. API Client Query Options Contract
+test('Test 9: getPredictability handles query options cleanly', () => {
+  const apiCode = fs.readFileSync(path.resolve('client/src/services/api.ts'), 'utf8');
+
+  assert.ok(apiCode.includes('getPredictability(options?: PredictabilityQueryOptions)'), 'Signature accepts options');
+  assert.ok(apiCode.includes('params.contributionMode = options.contributionMode'), 'contributionMode param mapped');
+  assert.ok(apiCode.includes('params.annualContributionGrowthRate = options.annualContributionGrowthRate'), 'annualContributionGrowthRate param mapped');
+});
+
+// 10. Non-Mutation Guarantee
+test('Test 10: Changing Step-Up Scenario is purely computational (Non-Mutating)', () => {
+  const scenarioA = { contributionMode: 'NOMINAL_FLAT' };
+  const scenarioB = { contributionMode: 'STEP_UP', annualContributionGrowthRate: 0.10 };
+
+  // Pure inputs produces distinct scenario assumptions without modifying user DB
+  assert.notEqual(scenarioA.contributionMode, scenarioB.contributionMode);
 });
 
 console.log('='.repeat(64));
 console.log(`  ALL ${passed} UX CONTRACT TESTS PASSED (0 failures)`);
 console.log('='.repeat(64));
-

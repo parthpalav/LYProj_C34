@@ -1,21 +1,10 @@
 import { create } from 'zustand';
 import {
   AlertItem, BehaviorPattern, ChatMessage, DashboardData,
-  FISData, FMIRecord, Goal, IncomeRecord, Transaction, WeeklyReport
+  FISData, FMIRecord, Goal, IncomeRecord, Transaction, WeeklyReport, User
 } from '../types';
 
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  dateOfBirth?: Date | string | null;
-  retirementAge?: number | null;
-  monthlyIncome?: number | null;
-  onboardingComplete?: boolean;
-  incomeType?: string;
-  goals?: string[];
-  currentBalance?: number;
-}
+export type { User };
 
 interface AppState {
   user:         User | null;

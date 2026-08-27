@@ -17,6 +17,21 @@ import {
 } from '../config/financialRules.js';
 import { logger } from './logger.js';
 
+// ── Proactive Guidance Status & Priority Constants ────────────
+export const PROACTIVE_STATUS = Object.freeze({
+  ON_TRACK: 'ON_TRACK',
+  IMPROVEMENT_RECOMMENDED: 'IMPROVEMENT_RECOMMENDED',
+  ACTION_NEEDED: 'ACTION_NEEDED',
+  LIMITED_DATA: 'LIMITED_DATA',
+  TEMPORARILY_UNAVAILABLE: 'TEMPORARILY_UNAVAILABLE'
+});
+
+export const PROACTIVE_PRIORITY = Object.freeze({
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH'
+});
+
 const ML_SERVICE_URL = process.env.ML_SERVICE_URL || 'http://localhost:5001';
 
 /**
@@ -575,6 +590,216 @@ export function mapMonteCarloResponse(data, payload, dataQuality = 'MEDIUM', fea
 }
 
 /**
+ * Interpret already-computed snapshot outputs into a machine-readable proactive guidance contract.
+ *
+ * INVARIANT: This function performs ZERO financial computation.
+ * It reads only existing fields on the fully-assembled snapshot.
+ *
+ * Status semantics:
+ *  - ON_TRACK: probabilistic available, currentProbabilityFunded >= target (0.75)
+ *  - IMPROVEMENT_RECOMMENDED: below target, solver solved, feasibility MANAGEABLE or AGGRESSIVE
+ *  - ACTION_NEEDED: below target, feasibility VERY_AGGRESSIVE/IMPRACTICAL or solver unsolved
+ *  - LIMITED_DATA: forecastStatus.available === false (insufficient user data/history)
+ *  - TEMPORARILY_UNAVAILABLE: forecastStatus.available but probabilistic unavailable (service down)
+ *
+ * Investment baseline provenance:
+ *  - OBSERVED: positive contribution baseline from transaction history or override
+ *  - KNOWN_ZERO: spending history exists but observed investment is zero
+ *  - UNKNOWN: no spending history / contribution baseline is null
+ *
+ * @param {Object} snapshot - Fully assembled predictability snapshot (after Monte Carlo attachment)
+ * @returns {Object} Proactive guidance contract
+ */
+export function buildProactiveGuidance(snapshot) {
+  const forecastAvailable = snapshot.forecastStatus?.available === true;
+  const prob = snapshot.probabilistic;
+  const probAvailable = prob?.available === true;
+  const rec = prob?.contributionRecommendation || null;
+  const feasibility = rec?.feasibility || null;
+  const targetProb = DEFAULT_SOLVER_TARGET_PROBABILITY; // 0.75
+
+  const currentProb = probAvailable
+    ? (prob.estimatedFire?.probabilityFundedAtTargetAge ?? null)
+    : null;
+
+  const currentContribution = rec?.currentMonthlyContribution
+    ?? snapshot.currentState?.observedAverageMonthlyInvestment
+    ?? null;
+
+  // ── Investment Baseline Provenance ──────────────────────
+  // Derived from forecastResolver semantics:
+  //   monthlyContributionUsed === null → UNKNOWN (no spending map)
+  //   monthlyContributionUsed === 0 && spending history exists → KNOWN_ZERO
+  //   monthlyContributionUsed > 0 → OBSERVED
+  let investmentBaseline = 'UNKNOWN';
+  if (snapshot.retirement?.monthlyContributionUsed !== null &&
+      snapshot.retirement?.monthlyContributionUsed !== undefined) {
+    investmentBaseline = snapshot.retirement.monthlyContributionUsed > 0
+      ? 'OBSERVED'
+      : 'KNOWN_ZERO';
+  } else if (snapshot.currentState?.observedAverageMonthlyInvestment !== null &&
+             snapshot.currentState?.observedAverageMonthlyInvestment !== undefined &&
+             snapshot.dataQuality?.transactionMonthsObserved > 0) {
+    investmentBaseline = snapshot.currentState.observedAverageMonthlyInvestment > 0
+      ? 'OBSERVED'
+      : 'KNOWN_ZERO';
+  }
+
+  // ── Variable-Income Detection ──────────────────────────
+  // From income analytics CV, not from number of sources
+  const cv = snapshot.income?.coefficientOfVariation;
+  const isVariableIncome = typeof cv === 'number' && Number.isFinite(cv) && cv >= 0.5;
+
+  // ── Step-Up Availability ───────────────────────────────
+  const stepUpAvailable = snapshot.retirement?.assumptions?.contributionMode === 'STEP_UP'
+    || (rec?.annualContributionGrowthRate != null && rec.annualContributionGrowthRate > 0);
+
+  // ── Retirement Alternatives Availability ───────────────
+  const retirementAlternativeAvailable = Array.isArray(prob?.retirementAlternatives)
+    && prob.retirementAlternatives.length > 0;
+
+  // ── Derive Status & Priority ───────────────────────────
+  let status, priority, headline, explanation, actionType;
+  const reasons = [];
+
+  if (!forecastAvailable) {
+    // ─ LIMITED_DATA: insufficient user data for any forecast ─
+    status = PROACTIVE_STATUS.LIMITED_DATA;
+    priority = PROACTIVE_PRIORITY.MEDIUM;
+    actionType = 'ADD_DATA';
+    headline = 'More Financial History Needed';
+    explanation = 'We need a little more financial history before we can suggest a saving target.';
+
+    const missing = snapshot.forecastStatus?.missingInputs || [];
+    if (missing.includes('INSUFFICIENT_SPENDING_HISTORY')) {
+      reasons.push('Transaction history is insufficient to estimate spending and investment patterns.');
+    }
+    if (missing.includes('MISSING_INVESTMENT_BASELINE')) {
+      reasons.push('No regular investment contribution has been observed yet.');
+    }
+    if (missing.includes('MISSING_RETIREMENT_AGE')) {
+      reasons.push('Date of birth or age information is needed to calculate retirement timeline.');
+    }
+    if (missing.includes('RETIREMENT_AGE_REACHED')) {
+      reasons.push('Current age has reached or exceeded the target retirement age.');
+    }
+    if (reasons.length === 0) {
+      reasons.push('Additional financial data is needed to generate a projection.');
+    }
+  } else if (!probAvailable) {
+    // ─ TEMPORARILY_UNAVAILABLE: forecast inputs valid but simulation service down ─
+    status = PROACTIVE_STATUS.TEMPORARILY_UNAVAILABLE;
+    priority = PROACTIVE_PRIORITY.LOW;
+    actionType = 'NONE';
+    headline = 'Modeled Guidance Temporarily Unavailable';
+    explanation = 'Modeled saving guidance is temporarily unavailable. Your baseline forecast remains available.';
+    reasons.push('The probabilistic simulation service did not respond. Deterministic projections are still active.');
+  } else if (currentProb !== null && currentProb >= targetProb) {
+    // ─ ON_TRACK ─
+    status = PROACTIVE_STATUS.ON_TRACK;
+    priority = PROACTIVE_PRIORITY.LOW;
+    actionType = 'NONE';
+    headline = 'Your Saving Trajectory Is On Track';
+    explanation = `Your current saving trajectory already meets FINAURA's modeled funding target. Your modeled probability of being funded by retirement is ${Math.round(currentProb * 100)}%, which meets the ${Math.round(targetProb * 100)}% planning target.`;
+    reasons.push(`Current modeled probability (${Math.round(currentProb * 100)}%) meets or exceeds the ${Math.round(targetProb * 100)}% target.`);
+  } else {
+    // Below target — classify based on solver result and feasibility
+    const feasStatus = feasibility?.status || null;
+    const solverSolved = rec?.solved === true;
+    const additionalRequired = rec?.additionalMonthlyContributionRequired ?? 0;
+
+    if (solverSolved && (feasStatus === FEASIBILITY_STATUS.MANAGEABLE || feasStatus === FEASIBILITY_STATUS.AGGRESSIVE)) {
+      // ─ IMPROVEMENT_RECOMMENDED ─
+      status = PROACTIVE_STATUS.IMPROVEMENT_RECOMMENDED;
+      actionType = 'INCREASE_CONTRIBUTION';
+
+      if (feasStatus === FEASIBILITY_STATUS.MANAGEABLE) {
+        priority = PROACTIVE_PRIORITY.MEDIUM;
+      } else {
+        priority = PROACTIVE_PRIORITY.HIGH;
+      }
+
+      if (investmentBaseline === 'KNOWN_ZERO') {
+        headline = 'Start Building Your Retirement Path';
+        explanation = `You're not currently making regular investments toward this goal. Based on the current model, starting at approximately ${formatGuidanceCurrency(rec.recommendedMonthlyContribution)}/month could move you toward the ${Math.round(targetProb * 100)}% modeled funding target.`;
+        reasons.push('No regular investment transactions have been observed in recent history.');
+      } else {
+        headline = 'A Manageable Increase Could Improve Your Outlook';
+        explanation = `Your current modeled probability of being funded by retirement is ${Math.round((currentProb ?? 0) * 100)}%. FINAURA uses ${Math.round(targetProb * 100)}% as its planning target.`;
+      }
+
+      if (additionalRequired > 0) {
+        reasons.push(`Increasing monthly investments by approximately ${formatGuidanceCurrency(additionalRequired)} could elevate your modeled funding probability toward ${Math.round(targetProb * 100)}%.`);
+      }
+
+      if (feasStatus === FEASIBILITY_STATUS.AGGRESSIVE) {
+        reasons.push('This recommendation represents a significant commitment relative to your reliable income.');
+      }
+    } else {
+      // ─ ACTION_NEEDED: VERY_AGGRESSIVE / IMPRACTICAL / solver unsolved ─
+      status = PROACTIVE_STATUS.ACTION_NEEDED;
+      priority = PROACTIVE_PRIORITY.HIGH;
+
+      if (!solverSolved) {
+        actionType = 'EXTEND_TIMELINE';
+        headline = 'Consider Alternative Approaches';
+        explanation = `The contribution solver couldn't find a practical monthly amount within its search range that reaches the ${Math.round(targetProb * 100)}% probability target at your current retirement age.`;
+        reasons.push('No feasible flat contribution amount found within model search limits.');
+      } else if (feasStatus === FEASIBILITY_STATUS.IMPRACTICAL) {
+        actionType = 'EXTEND_TIMELINE';
+        headline = 'Timeline Adjustment May Be More Realistic';
+        explanation = `Reaching the ${Math.round(targetProb * 100)}% modeled probability by your target retirement age would require a monthly investment that substantially exceeds your current reliable income. Extending your retirement timeline may be a more practical path.`;
+        reasons.push(`Required investment of ${formatGuidanceCurrency(rec.recommendedMonthlyContribution)}/month exceeds practical savings capacity.`);
+      } else {
+        // VERY_AGGRESSIVE
+        actionType = 'EXTEND_TIMELINE';
+        headline = 'Your Current Timeline Requires a Large Savings Increase';
+        explanation = `Reaching the ${Math.round(targetProb * 100)}% modeled probability by your target retirement age would require more than half of your reliable monthly income. Consider reviewing retirement timeline alternatives.`;
+        reasons.push(`Required investment represents more than 50% of reliable monthly income.`);
+      }
+
+      if (retirementAlternativeAvailable) {
+        reasons.push('Retirement timeline alternatives are available with potentially more manageable contribution requirements.');
+      }
+    }
+  }
+
+  // ── Variable-Income Contextual Note ────────────────────
+  if (isVariableIncome && (status === PROACTIVE_STATUS.IMPROVEMENT_RECOMMENDED || status === PROACTIVE_STATUS.ACTION_NEEDED)) {
+    reasons.push('Because your income varies, consider any contribution target as an average rather than a fixed monthly requirement.');
+  }
+
+  return {
+    status,
+    priority,
+    headline,
+    explanation,
+    actionType,
+    targetProbability: targetProb,
+    currentProbability: currentProb,
+    currentMonthlyContribution: currentContribution,
+    recommendedMonthlyContribution: rec?.recommendedMonthlyContribution ?? null,
+    additionalMonthlyContribution: rec?.additionalMonthlyContributionRequired ?? null,
+    feasibilityStatus: feasibility?.status ?? null,
+    isVariableIncome,
+    investmentBaseline,
+    retirementAlternativeAvailable,
+    stepUpAvailable: !!stepUpAvailable,
+    reasons
+  };
+}
+
+/**
+ * Simple currency formatter for guidance strings (server-side).
+ * @param {number|null} amount
+ * @returns {string}
+ */
+function formatGuidanceCurrency(amount) {
+  if (amount === null || amount === undefined || !Number.isFinite(amount)) return '—';
+  return `₹${Math.round(Math.abs(amount)).toLocaleString('en-IN')}`;
+}
+
+/**
  * High-level orchestrator to execute Monte Carlo and attach result onto predictability snapshot.
  * 
  * @param {Object} snapshot - Deterministic snapshot returned by buildPredictabilitySnapshot
@@ -595,6 +820,8 @@ export async function attachMonteCarloSimulation(snapshot, resolved, options = {
       code: 'MONTE_CARLO_UNAVAILABLE',
       value: 'FORECAST_INPUTS_UNAVAILABLE'
     });
+    // Attach proactive guidance for LIMITED_DATA path
+    snapshot.proactiveGuidance = buildProactiveGuidance(snapshot);
     return snapshot;
   }
 
@@ -604,6 +831,7 @@ export async function attachMonteCarloSimulation(snapshot, resolved, options = {
       available: false,
       reason: 'SIMULATION_SKIPPED'
     };
+    snapshot.proactiveGuidance = buildProactiveGuidance(snapshot);
     return snapshot;
   }
 
@@ -719,6 +947,8 @@ export async function attachMonteCarloSimulation(snapshot, resolved, options = {
       });
     }
 
+    // 10. Attach proactive guidance (success path)
+    snapshot.proactiveGuidance = buildProactiveGuidance(snapshot);
     return snapshot;
   } catch (err) {
     // 10. Graceful error handling (distinguish 400 client rejection vs network/500 failure)
@@ -739,6 +969,8 @@ export async function attachMonteCarloSimulation(snapshot, resolved, options = {
       value: reason
     });
 
+    // Attach proactive guidance for TEMPORARILY_UNAVAILABLE path
+    snapshot.proactiveGuidance = buildProactiveGuidance(snapshot);
     return snapshot;
   }
 }

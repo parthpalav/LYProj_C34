@@ -22,12 +22,14 @@ import {
   ActivityIndicator,
   RefreshControl,
   Dimensions,
+  TextInput,
+  Alert,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { getPredictability } from '../services/api';
-import { PredictabilitySnapshot } from '../types';
+import { PredictabilitySnapshot, PredictabilityQueryOptions } from '../types';
 
 const { width: SCREEN_W } = Dimensions.get('window');
 
@@ -254,13 +256,27 @@ export function FinancialOutlookScreen(): React.ReactElement {
   const [showAdvancedMc, setShowAdvancedMc] = useState(false);
   const [selectedScenarioKey, setSelectedScenarioKey] = useState<'conservative' | 'base' | 'optimistic'>('base');
 
-  const fetchOutlook = useCallback(async (isRefresh = false) => {
+  // Step-Up Strategy State
+  const [contributionMode, setContributionMode] = useState<'NOMINAL_FLAT' | 'STEP_UP'>('NOMINAL_FLAT');
+  const [stepUpGrowthRate, setStepUpGrowthRate] = useState<number>(0.10);
+  const [customGrowthRateInput, setCustomGrowthRateInput] = useState<string>('10');
+  const [isCustomGrowth, setIsCustomGrowth] = useState<boolean>(false);
+
+  const fetchOutlook = useCallback(async (isRefresh = false, overrideMode?: 'NOMINAL_FLAT' | 'STEP_UP', overrideRate?: number) => {
     try {
       if (isRefresh) setRefreshing(true);
       else setLoading(true);
       setError(null);
 
-      const data = await getPredictability();
+      const mode = overrideMode || contributionMode;
+      const rate = overrideRate !== undefined ? overrideRate : stepUpGrowthRate;
+
+      const opts: PredictabilityQueryOptions = {
+        contributionMode: mode,
+        annualContributionGrowthRate: mode === 'STEP_UP' ? rate : undefined,
+      };
+
+      const data = await getPredictability(opts);
       setSnapshot(data);
     } catch (err: any) {
       console.error('Failed to fetch predictability snapshot:', err);
@@ -269,11 +285,19 @@ export function FinancialOutlookScreen(): React.ReactElement {
       setLoading(false);
       setRefreshing(false);
     }
-  }, []);
+  }, [contributionMode, stepUpGrowthRate]);
 
   useEffect(() => {
     fetchOutlook();
   }, [fetchOutlook]);
+
+  const handleApplyStrategy = (newMode: 'NOMINAL_FLAT' | 'STEP_UP', newRate?: number) => {
+    setContributionMode(newMode);
+    if (newRate !== undefined) {
+      setStepUpGrowthRate(newRate);
+    }
+    fetchOutlook(false, newMode, newRate);
+  };
 
   // ── Loading View ───────────────────────────────────────────
   if (loading && !snapshot) {
@@ -472,7 +496,16 @@ export function FinancialOutlookScreen(): React.ReactElement {
             {/* Detail Rows */}
             <View style={styles.detailList}>
               <View style={styles.detailRow}>
-                <Text style={styles.detailLabel}>Current FIRE-Investable Corpus</Text>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.detailLabel}>Current FIRE-Investable Corpus</Text>
+                  <TouchableOpacity
+                    onPress={() => (navigation as any).navigate('Assets')}
+                    style={{ marginTop: 2 }}
+                    accessibilityLabel="Manage Financial Assets and Holdings"
+                  >
+                    <Text style={{ fontSize: 11, color: PRIMARY, fontWeight: '600' }}>Manage Assets ↗</Text>
+                  </TouchableOpacity>
+                </View>
                 <Text style={styles.detailValue}>{formatCurrency(assets.fireInvestableCorpus)}</Text>
               </View>
 
@@ -642,6 +675,202 @@ export function FinancialOutlookScreen(): React.ReactElement {
                     );
                   })()}
                 </View>
+              </View>
+
+              {/* 3b. PROACTIVE GUIDANCE — "What You Can Do" */}
+              {snapshot.proactiveGuidance && snapshot.proactiveGuidance.status !== 'LIMITED_DATA' && snapshot.proactiveGuidance.status !== 'TEMPORARILY_UNAVAILABLE' && (() => {
+                const pg = snapshot.proactiveGuidance;
+                const statusIcon = pg.status === 'ON_TRACK' ? 'checkmark-circle-outline' as const
+                  : pg.status === 'IMPROVEMENT_RECOMMENDED' ? 'bulb-outline' as const
+                  : 'alert-circle-outline' as const;
+                const statusColor = pg.status === 'ON_TRACK' ? SUCCESS
+                  : pg.status === 'IMPROVEMENT_RECOMMENDED' ? PRIMARY
+                  : WARNING;
+                const priorityLabel = pg.priority === 'HIGH' ? 'High Priority'
+                  : pg.priority === 'MEDIUM' ? 'Suggested Action'
+                  : 'Looking Good';
+
+                return (
+                  <View style={[styles.mcRecCard, { borderLeftColor: statusColor, borderLeftWidth: 3 }]}>
+                    <View style={styles.mcRecHeader}>
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, flex: 1 }}>
+                        <Ionicons name={statusIcon} size={20} color={statusColor} />
+                        <Text style={[styles.mcRecTitle, { fontSize: 16 }]}>What You Can Do</Text>
+                      </View>
+                      <View style={[styles.mcBandPill, { backgroundColor: `${statusColor}15` }]}>
+                        <Text style={[styles.mcBandPillText, { color: statusColor }]}>{priorityLabel}</Text>
+                      </View>
+                    </View>
+
+                    <View style={styles.mcRecBody}>
+                      <Text style={[styles.mcRecAction, { color: statusColor, fontSize: 15 }]}>
+                        {pg.headline}
+                      </Text>
+                      <Text style={[styles.mcRecNote, { marginTop: 6, fontSize: 13, lineHeight: 19 }]}>
+                        {pg.explanation}
+                      </Text>
+
+                      {/* Actionable reasons */}
+                      {pg.reasons.length > 0 && (
+                        <View style={{ marginTop: 10 }}>
+                          {pg.reasons.map((reason, idx) => (
+                            <View key={idx} style={{ flexDirection: 'row', marginBottom: 4, paddingRight: 4 }}>
+                              <Text style={{ fontSize: 12, color: MUTED, marginRight: 6 }}>•</Text>
+                              <Text style={{ fontSize: 12, color: MUTED, flex: 1, lineHeight: 17 }}>
+                                {reason}
+                              </Text>
+                            </View>
+                          ))}
+                        </View>
+                      )}
+
+                      {/* Step-up availability note */}
+                      {pg.stepUpAvailable && pg.status !== 'ON_TRACK' && (
+                        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 8, gap: 4 }}>
+                          <Ionicons name="trending-up-outline" size={13} color={PURPLE} />
+                          <Text style={{ fontSize: 12, color: PURPLE, fontWeight: '600' }}>
+                            Step-up SIP modeling active — contributions grow annually.
+                          </Text>
+                        </View>
+                      )}
+
+                      {/* Timeline alternatives link */}
+                      {pg.retirementAlternativeAvailable && pg.status !== 'ON_TRACK' && (
+                        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 6, gap: 4 }}>
+                          <Ionicons name="calendar-outline" size={13} color={PRIMARY} />
+                          <Text style={{ fontSize: 12, color: PRIMARY, fontWeight: '600' }}>
+                            Retirement timeline alternatives available below.
+                          </Text>
+                        </View>
+                      )}
+                    </View>
+                  </View>
+                );
+              })()}
+
+              {/* 3c. INVESTMENT STRATEGY & STEP-UP SIP SELECTOR */}
+              <View style={styles.strategyCard}>
+                <View style={styles.strategyHeader}>
+                  <Ionicons name="options-outline" size={18} color={PRIMARY} />
+                  <Text style={styles.strategyTitle}>Investment Strategy</Text>
+                </View>
+                <Text style={styles.strategySubtitle}>
+                  Model your savings trajectory as constant monthly outlays or annual contribution escalation.
+                </Text>
+
+                <View style={styles.strategyOptionRow}>
+                  <TouchableOpacity
+                    style={[
+                      styles.strategyOptionBtn,
+                      contributionMode === 'NOMINAL_FLAT' && styles.strategyOptionBtnActive,
+                    ]}
+                    onPress={() => handleApplyStrategy('NOMINAL_FLAT')}
+                    activeOpacity={0.7}
+                    accessibilityLabel="Keep monthly investment constant"
+                  >
+                    <Ionicons
+                      name={contributionMode === 'NOMINAL_FLAT' ? 'radio-button-on' : 'radio-button-off'}
+                      size={18}
+                      color={contributionMode === 'NOMINAL_FLAT' ? PRIMARY : SLATE}
+                    />
+                    <View style={{ marginLeft: 8, flex: 1 }}>
+                      <Text style={[styles.strategyOptionLabel, contributionMode === 'NOMINAL_FLAT' && styles.strategyOptionLabelActive]}>
+                        Constant SIP
+                      </Text>
+                      <Text style={styles.strategyOptionSub}>Flat monthly savings</Text>
+                    </View>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={[
+                      styles.strategyOptionBtn,
+                      contributionMode === 'STEP_UP' && styles.strategyOptionBtnActive,
+                    ]}
+                    onPress={() => handleApplyStrategy('STEP_UP', stepUpGrowthRate)}
+                    activeOpacity={0.7}
+                    accessibilityLabel="Increase monthly investment annually"
+                  >
+                    <Ionicons
+                      name={contributionMode === 'STEP_UP' ? 'radio-button-on' : 'radio-button-off'}
+                      size={18}
+                      color={contributionMode === 'STEP_UP' ? PURPLE : SLATE}
+                    />
+                    <View style={{ marginLeft: 8, flex: 1 }}>
+                      <Text style={[styles.strategyOptionLabel, contributionMode === 'STEP_UP' && { color: PURPLE }]}>
+                        Step-Up SIP
+                      </Text>
+                      <Text style={styles.strategyOptionSub}>Annual increase</Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+
+                {/* Step-Up Rate Controls */}
+                {contributionMode === 'STEP_UP' && (
+                  <View style={styles.stepUpControlWrap}>
+                    <Text style={styles.stepUpRateLabel}>Annual Contribution Increase Rate:</Text>
+                    <View style={styles.presetRow}>
+                      {[0.05, 0.10, 0.15].map((rate) => {
+                        const isSelected = !isCustomGrowth && stepUpGrowthRate === rate;
+                        return (
+                          <TouchableOpacity
+                            key={rate}
+                            style={[styles.stepUpChip, isSelected && styles.stepUpChipActive]}
+                            onPress={() => {
+                              setIsCustomGrowth(false);
+                              handleApplyStrategy('STEP_UP', rate);
+                            }}
+                            accessibilityLabel={`Select ${Math.round(rate * 100)} percent annual step-up`}
+                          >
+                            <Text style={[styles.stepUpChipText, isSelected && styles.stepUpChipTextActive]}>
+                              +{Math.round(rate * 100)}%/yr
+                            </Text>
+                          </TouchableOpacity>
+                        );
+                      })}
+                      <TouchableOpacity
+                        style={[styles.stepUpChip, isCustomGrowth && styles.stepUpChipActive]}
+                        onPress={() => setIsCustomGrowth(true)}
+                        accessibilityLabel="Custom annual step-up rate"
+                      >
+                        <Text style={[styles.stepUpChipText, isCustomGrowth && styles.stepUpChipTextActive]}>
+                          Custom
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+
+                    {isCustomGrowth && (
+                      <View style={styles.customRateRow}>
+                        <TextInput
+                          style={styles.customRateInput}
+                          keyboardType="numeric"
+                          placeholder="e.g. 8"
+                          placeholderTextColor={SLATE}
+                          value={customGrowthRateInput}
+                          onChangeText={setCustomGrowthRateInput}
+                        />
+                        <Text style={styles.customRatePercent}>%/year</Text>
+                        <TouchableOpacity
+                          style={styles.applyCustomBtn}
+                          onPress={() => {
+                            const parsed = parseFloat(customGrowthRateInput);
+                            if (isNaN(parsed) || parsed < 0 || parsed > 50) {
+                              Alert.alert('Invalid Rate', 'Annual increase rate must be between 0% and 50%.');
+                              return;
+                            }
+                            const decimalRate = parsed / 100;
+                            handleApplyStrategy('STEP_UP', decimalRate);
+                          }}
+                        >
+                          <Text style={styles.applyCustomBtnText}>Apply</Text>
+                        </TouchableOpacity>
+                      </View>
+                    )}
+
+                    <Text style={styles.stepUpExplanation}>
+                      Model my monthly investments as increasing by {(stepUpGrowthRate * 100).toFixed(0)}% each year. Compounding reduces the initial monthly savings required today.
+                    </Text>
+                  </View>
+                )}
               </View>
 
               {/* 4. Contribution Recommendation (What improves your odds) */}
@@ -2212,6 +2441,145 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: SLATE,
     lineHeight: 15,
+    fontStyle: 'italic',
+  },
+  // ── Strategy Selector Styles ───────────────────────────────────
+  strategyCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 14,
+    padding: 16,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 3,
+    elevation: 1,
+  },
+  strategyHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 4,
+  },
+  strategyTitle: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: DARK,
+  },
+  strategySubtitle: {
+    fontSize: 12,
+    color: MUTED,
+    marginBottom: 14,
+    lineHeight: 17,
+  },
+  strategyOptionRow: {
+    flexDirection: 'row',
+    gap: 10,
+  },
+  strategyOptionBtn: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 12,
+    borderRadius: 10,
+    backgroundColor: '#F8FAFC',
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+  },
+  strategyOptionBtnActive: {
+    backgroundColor: '#EEF2FF',
+    borderColor: PRIMARY,
+  },
+  strategyOptionLabel: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: DARK,
+  },
+  strategyOptionLabelActive: {
+    color: PRIMARY,
+  },
+  strategyOptionSub: {
+    fontSize: 11,
+    color: MUTED,
+    marginTop: 1,
+  },
+  stepUpControlWrap: {
+    marginTop: 14,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#F1F5F9',
+  },
+  stepUpRateLabel: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: DARK,
+    marginBottom: 8,
+  },
+  presetRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 10,
+  },
+  stepUpChip: {
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    borderRadius: 8,
+    backgroundColor: '#F8FAFC',
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+  },
+  stepUpChipActive: {
+    backgroundColor: '#F5F3FF',
+    borderColor: PURPLE,
+  },
+  stepUpChipText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: SLATE,
+  },
+  stepUpChipTextActive: {
+    color: PURPLE,
+  },
+  customRateRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 10,
+  },
+  customRateInput: {
+    backgroundColor: '#F8FAFC',
+    borderWidth: 1,
+    borderColor: '#CBD5E1',
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    fontSize: 14,
+    color: DARK,
+    width: 80,
+    textAlign: 'center',
+  },
+  customRatePercent: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: MUTED,
+  },
+  applyCustomBtn: {
+    backgroundColor: PURPLE,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 8,
+  },
+  applyCustomBtnText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  stepUpExplanation: {
+    fontSize: 11,
+    color: SLATE,
+    lineHeight: 16,
     fontStyle: 'italic',
   },
 });

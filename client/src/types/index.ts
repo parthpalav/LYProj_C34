@@ -94,6 +94,29 @@ export interface LiabilityPaymentHistoryResponse {
   };
 }
 
+export type AssetClass = 'FIRE_INVESTABLE' | 'SEMI_LIQUID' | 'NON_INVESTABLE';
+export type AssetLiquidity = 'liquid' | 'locked' | 'restricted';
+
+export interface Asset {
+  id: string;
+  userId?: string;
+  name: string;
+  assetType: string;
+  assetClass: AssetClass;
+  currentValue: number;
+  includedInFireCorpus: boolean;
+  liquidity: AssetLiquidity;
+  notes?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface PredictabilityQueryOptions {
+  contributionMode?: 'NOMINAL_FLAT' | 'REAL_CONSTANT' | 'STEP_UP' | string;
+  annualContributionGrowthRate?: number;
+}
+
+
 export interface FMIRecord {
   score: number;
   factors: string[];
@@ -244,6 +267,11 @@ export interface User {
   incomeType?: string;
   retirementCorpusGoal?: number;
   currentBalance?: number;
+  expectedReturnRate?: number;
+  expectedInflationRate?: number;
+  expectedWithdrawalRate?: number;
+  lifestyleAdjustmentRatio?: number;
+  emergencyFundTargetMonths?: number;
   goals?: string[];
   onboardingComplete?: boolean;
   onboardingCompleted?: boolean;
@@ -373,12 +401,37 @@ export interface PredictabilitySnapshot {
     optimistic: ScenarioProjection;
   } | null;
   probabilistic?: MonteCarloSection;
+  proactiveGuidance?: ProactiveGuidance;
   explanationFacts: Array<{
     code: string;
     metric?: string;
     value: number | string | boolean;
   }>;
   limitations: string[];
+}
+
+export type ProactiveStatus = 'ON_TRACK' | 'IMPROVEMENT_RECOMMENDED' | 'ACTION_NEEDED' | 'LIMITED_DATA' | 'TEMPORARILY_UNAVAILABLE';
+export type ProactivePriority = 'LOW' | 'MEDIUM' | 'HIGH';
+export type ProactiveActionType = 'NONE' | 'INCREASE_CONTRIBUTION' | 'EXTEND_TIMELINE' | 'ADD_DATA';
+export type InvestmentBaseline = 'OBSERVED' | 'KNOWN_ZERO' | 'UNKNOWN';
+
+export interface ProactiveGuidance {
+  status: ProactiveStatus;
+  priority: ProactivePriority;
+  headline: string;
+  explanation: string;
+  actionType: ProactiveActionType;
+  targetProbability: number;
+  currentProbability: number | null;
+  currentMonthlyContribution: number | null;
+  recommendedMonthlyContribution: number | null;
+  additionalMonthlyContribution: number | null;
+  feasibilityStatus: MonteCarloFeasibilityStatus | null;
+  isVariableIncome: boolean;
+  investmentBaseline: InvestmentBaseline;
+  retirementAlternativeAvailable: boolean;
+  stepUpAvailable: boolean;
+  reasons: string[];
 }
 
 export interface MonteCarloAssumptions {

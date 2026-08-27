@@ -8,6 +8,14 @@ import PasswordResetToken from '../models/PasswordResetToken.js';
 import EmailVerificationToken from '../models/EmailVerificationToken.js';
 import { logger } from '../utils/logger.js';
 
+import {
+  DEFAULT_RETURN_RATE,
+  DEFAULT_INFLATION_RATE,
+  DEFAULT_WITHDRAWAL_RATE,
+  DEFAULT_LIFESTYLE_RATIO,
+  DEFAULT_EMERGENCY_MONTHS
+} from '../config/financialRules.js';
+
 const JWT_SECRET = process.env.JWT_SECRET || 'finaura_jwt_s3cr3t_k3y_2026_xK9mP2qL7wN4';
 const BCRYPT_ROUNDS = Number(process.env.BCRYPT_ROUNDS) || 10;
 
@@ -47,6 +55,11 @@ export function stripUser(user) {
     incomeType: user.incomeType || 'salaried',
     retirementCorpusGoal: user.retirementCorpusGoal || 0,
     currentBalance: user.currentBalance || 0,
+    expectedReturnRate: user.expectedReturnRate ?? DEFAULT_RETURN_RATE,
+    expectedInflationRate: user.expectedInflationRate ?? DEFAULT_INFLATION_RATE,
+    expectedWithdrawalRate: user.expectedWithdrawalRate ?? DEFAULT_WITHDRAWAL_RATE,
+    lifestyleAdjustmentRatio: user.lifestyleAdjustmentRatio ?? DEFAULT_LIFESTYLE_RATIO,
+    emergencyFundTargetMonths: user.emergencyFundTargetMonths ?? DEFAULT_EMERGENCY_MONTHS,
     goals: user.goals || [],
     onboardingComplete: isComplete,
     onboardingCompleted: isComplete

@@ -36,9 +36,10 @@ interface AppState {
   setFIS:          (fis: FISData) => void;
   setPatterns:     (patterns: BehaviorPattern[]) => void;
   setWeeklyReport: (report: WeeklyReport) => void;
+  resetStore:      () => void;
 }
 
-export const useStore = create<AppState>((set) => ({
+const initialState = {
   user:         null,
   dashboard:    null,
   transactions: [],
@@ -50,6 +51,10 @@ export const useStore = create<AppState>((set) => ({
   fis:          null,
   patterns:     [],
   weeklyReport: null,
+};
+
+export const useStore = create<AppState>((set) => ({
+  ...initialState,
 
   setUser:         (user)         => set({ user }),
   setDashboard:    (dashboard)    => set({ dashboard }),
@@ -70,4 +75,5 @@ export const useStore = create<AppState>((set) => ({
   setFIS:          (fis)          => set({ fis }),
   setPatterns:     (patterns)     => set({ patterns }),
   setWeeklyReport: (weeklyReport) => set({ weeklyReport }),
+  resetStore:      ()             => set(initialState),
 }));

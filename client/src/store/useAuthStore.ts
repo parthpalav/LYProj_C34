@@ -19,11 +19,13 @@ import {
   forgotPasswordClientSchema,
   resetPasswordClientSchema
 } from '../utils/authValidation';
+import { useStore } from './useStore';
 
 interface AuthState {
   user: User | null;
   token: string | null;
   onboardingCompleted: boolean;
+  showWelcome: boolean;
   loading: boolean;
   initializing: boolean;
   authError: string | null;
@@ -33,6 +35,7 @@ interface AuthState {
   login: (payload: { email: string; password: string }) => Promise<boolean>;
   register: (payload: { name: string; email: string; password: string; confirmPassword: string; incomeType?: string }) => Promise<boolean>;
   logout: () => Promise<void>;
+  dismissWelcome: () => void;
   forgotPassword: (email: string) => Promise<{ success: boolean; message: string }>;
   resetPassword: (payload: { token: string; password: string; confirmPassword: string }) => Promise<{ success: boolean; message: string }>;
   resendVerification: (email: string) => Promise<{ success: boolean; message: string }>;
@@ -46,12 +49,14 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   user: null,
   token: null,
   onboardingCompleted: false,
+  showWelcome: false,
   loading: false,
   initializing: true,
   authError: null,
   fieldErrors: {},
 
   setUser: (user) => set({ user }),
+  dismissWelcome: () => set({ showWelcome: false }),
   clearErrors: () => set({ authError: null, fieldErrors: {} }),
 
   initAuth: async () => {
@@ -73,6 +78,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     } catch {
       await secureStorage.clearTokens();
       setAuthToken(undefined);
+      useStore.getState().resetStore();
     } finally {
       set({ initializing: false });
     }
@@ -100,10 +106,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         password: payload.password,
         incomeType: payload.incomeType
       });
+
       const token = res.accessToken || res.token;
       await secureStorage.saveTokens(token, res.refreshToken);
       setAuthToken(token);
       const isComplete = Boolean(res.user?.onboardingComplete || res.user?.onboardingCompleted);
+
       set({
         user: res.user,
         token,
@@ -115,7 +123,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       if (responseData?.errors) {
         set({ fieldErrors: responseData.errors });
       } else {
-        set({ authError: responseData?.error || responseData?.message || 'Registration failed. Please check your connection.' });
+        set({ authError: responseData?.error || responseData?.message || 'Registration failed. Please try again.' });
       }
       return false;
     } finally {
@@ -144,10 +152,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       await secureStorage.saveTokens(token, res.refreshToken);
       setAuthToken(token);
       const isComplete = Boolean(res.user?.onboardingComplete || res.user?.onboardingCompleted);
+
       set({
         user: res.user,
         token,
-        onboardingCompleted: isComplete
+        onboardingCompleted: isComplete,
+        showWelcome: isComplete // Explicit login triggers Welcome only if user is already onboarded
       });
       return true;
     } catch (error: any) {
@@ -175,10 +185,12 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     } finally {
       await secureStorage.clearTokens();
       setAuthToken(undefined);
+      useStore.getState().resetStore();
       set({
         user: null,
         token: null,
         onboardingCompleted: false,
+        showWelcome: false,
         loading: false,
         authError: null,
         fieldErrors: {}
@@ -258,7 +270,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     try {
       const res = await submitOnboarding(payload);
       const user = res.user || get().user;
-      set({ user, onboardingCompleted: true, loading: false });
+      set({ user, onboardingCompleted: true, showWelcome: false, loading: false });
       return true;
     } catch (error: any) {
       console.error('Onboarding submission failed:', error);

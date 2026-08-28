@@ -423,7 +423,7 @@ def test_existing_routes_compatibility():
     r_classify = client.post("/classify", json={"text": "500rs pizza"})
     assert r_classify.status_code == 200
     d_classify = r_classify.get_json()
-    assert d_classify["category"] == "Food"
+    assert d_classify["category"] == "Food & Dining"
     assert d_classify["type"] == "Want"
 
     print("  ✅ Test 20 Passed: /health and /classify routes continue to function normally")

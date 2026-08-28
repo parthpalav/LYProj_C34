@@ -4,17 +4,18 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, View, StyleSheet } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AppNavigator } from './src/navigation/AppNavigator';
-import { WelcomeOverlay } from './src/components/WelcomeOverlay';
+import { WelcomeScreen } from './src/screens/WelcomeScreen';
 import { useStore } from './src/store/useStore';
 import { useAuthStore } from './src/store/useAuthStore';
 import { LoginScreen } from './src/screens/LoginScreen';
 import { OnboardingScreen } from './src/screens/OnboardingScreen';
 
 export default function App(): React.ReactElement {
-  const [welcomeDone, setWelcomeDone] = useState(false);
   const token = useAuthStore((state) => state.token);
   const authUser = useAuthStore((state) => state.user);
   const onboardingCompleted = useAuthStore((state) => state.onboardingCompleted);
+  const showWelcome = useAuthStore((state) => state.showWelcome);
+  const dismissWelcome = useAuthStore((state) => state.dismissWelcome);
   const initializing = useAuthStore((state) => state.initializing);
   const initAuth = useAuthStore((state) => state.initAuth);
   const setUser = useStore((state) => state.setUser);
@@ -73,13 +74,22 @@ export default function App(): React.ReactElement {
     );
   }
 
+  // Explicit successful login transition for onboarded users
+  if (showWelcome) {
+    return (
+      <SafeAreaProvider>
+        <StatusBar style="dark" />
+        <WelcomeScreen onContinue={dismissWelcome} />
+      </SafeAreaProvider>
+    );
+  }
+
   // Authenticated & onboarded — show the full app
   return (
     <SafeAreaProvider>
       <NavigationContainer>
         <StatusBar style="dark" />
         <AppNavigator />
-        {!welcomeDone && <WelcomeOverlay onDismiss={() => setWelcomeDone(true)} />}
       </NavigationContainer>
     </SafeAreaProvider>
   );

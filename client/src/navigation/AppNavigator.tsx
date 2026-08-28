@@ -55,6 +55,7 @@ function MainTabNavigator(): React.ReactElement {
 
   return (
     <Tab.Navigator
+      initialRouteName="Dashboard"
       screenOptions={({ route }) => ({
         headerStyle: { backgroundColor: '#f8f9fb' },
         headerTitleStyle: { fontWeight: '700' },

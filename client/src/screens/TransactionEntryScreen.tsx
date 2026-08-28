@@ -21,17 +21,20 @@ import { useStore } from '../store/useStore';
 import { Liability } from '../types';
 
 const CATEGORIES = [
-  { label: 'Food',          emoji: '🍕', ml: 'Food'          },
-  { label: 'Travel',        emoji: '🚕', ml: 'Travel'        },
-  { label: 'Entertainment', emoji: '🎬', ml: 'Entertainment' },
-  { label: 'Shopping',      emoji: '🛍️', ml: 'Shopping'      },
-  { label: 'Bills',         emoji: '💡', ml: 'Bills'         },
-  { label: 'Groceries',     emoji: '🥦', ml: 'Groceries'     },
-  { label: 'Health',        emoji: '💊', ml: 'Health'        },
-  { label: 'Party',         emoji: '🎉', ml: 'Party'         },
-  { label: 'Education',     emoji: '📚', ml: 'Education'     },
-  { label: 'Investments',   emoji: '📈', ml: 'Investments'   },
-  { label: 'Misc',          emoji: '📦', ml: 'Misc'          },
+  { label: 'Food & Dining',        emoji: '🍽️', ml: 'Food & Dining'        },
+  { label: 'Groceries',            emoji: '🛒', ml: 'Groceries'            },
+  { label: 'Transport & Travel',   emoji: '🚕', ml: 'Transport & Travel'   },
+  { label: 'Housing',              emoji: '🏠', ml: 'Housing'              },
+  { label: 'Utilities & Bills',    emoji: '💡', ml: 'Utilities & Bills'    },
+  { label: 'Debt & Loan Payments', emoji: '💳', ml: 'Debt & Loan Payments' },
+  { label: 'Shopping',             emoji: '🛍️', ml: 'Shopping'             },
+  { label: 'Entertainment',        emoji: '🎬', ml: 'Entertainment'        },
+  { label: 'Health',               emoji: '🏥', ml: 'Health'               },
+  { label: 'Education',            emoji: '🎓', ml: 'Education'            },
+  { label: 'Personal Care',        emoji: '✂️', ml: 'Personal Care'        },
+  { label: 'Insurance',            emoji: '🛡️', ml: 'Insurance'            },
+  { label: 'Investments',          emoji: '📈', ml: 'Investments'          },
+  { label: 'Misc',                 emoji: '📦', ml: 'Misc'                 },
 ];
 
 const SPEND_TYPES = ['Need', 'Want', 'Investment'] as const;
@@ -101,7 +104,14 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
 
         // ML suggests: only pre-select if user has not manually chosen category
         if (!userOverrodeCategoryRef.current) {
-          const match = CATEGORIES.find(c => c.ml.toLowerCase() === (result.category || '').toLowerCase());
+          const rawCat = (result.category || '').trim();
+          const match = CATEGORIES.find(c =>
+            c.ml.toLowerCase() === rawCat.toLowerCase() ||
+            (rawCat.toLowerCase() === 'food' && c.ml === 'Food & Dining') ||
+            (rawCat.toLowerCase() === 'travel' && c.ml === 'Transport & Travel') ||
+            (rawCat.toLowerCase() === 'bills' && c.ml === 'Utilities & Bills') ||
+            (rawCat.toLowerCase() === 'party' && c.ml === 'Entertainment')
+          );
           if (match) setSelectedCategory(match);
         }
 

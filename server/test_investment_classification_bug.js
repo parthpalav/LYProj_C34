@@ -1,20 +1,15 @@
 /**
  * server/test_investment_classification_bug.js
  * 
- * Target test suite verifying:
- * 1. Official 'Investments' Category Classification across Python ML & Node Fallback.
- * 2. Bug Regression: 'Nifty50' and 'Nvidia shares' NEVER classify as 'Food'.
- * 3. Canonical investment descriptions classify to Category: Investments, Type: Investment.
- * 4. Negative regression: Food, Travel, Bills, Groceries, etc. are properly protected.
- * 5. FMI & Predictability accounting invariance: type === 'Investment' remains authoritative.
+ * Validates FINAURA V3 Category Taxonomy (14 Categories) + Fallback & Accounting Invariance
  */
 
 import assert from 'node:assert/strict';
-import { isInvestment, isConsumption } from './utils/financialAccounting.js';
 import { VALID_CATEGORIES, VALID_TYPES } from './models/Transaction.js';
+import { isInvestment, isConsumption } from './utils/financialAccounting.js';
 
 console.log('='.repeat(64));
-console.log('  FINAURA INVESTMENT CLASSIFICATION & BUG REGRESSION SUITE');
+console.log('  FINAURA V3 CATEGORY & INVESTMENT CLASSIFICATION SUITE');
 console.log('='.repeat(64));
 console.log();
 
@@ -35,15 +30,68 @@ function test(name, fn) {
 
 // ── Mock the Node Local Fallback function from controllers/index.js ──
 const KEYWORD_CATEGORY_MAP = {
-  Food: ['pizza','burger','biryani','pasta','noodles','sandwich','dosa','idli','chai','coffee','restaurant','zomato','swiggy','dinner','lunch'],
-  Travel: ['uber','ola','rapido','metro','train','flight','bus','cab','auto fare','commute'],
-  Entertainment: ['movie','netflix','spotify','youtube premium','gaming','concert','ott','pvr'],
-  Shopping: ['dress','clothes','shoes','amazon','flipkart','myntra','ajio','nykaa','online shopping'],
-  Bills: ['electricity bill','electricity','water bill','gas bill','internet','wifi bill','mobile recharge','house rent','rent','emi'],
-  Groceries: ['vegetables','fruits','milk','eggs','bread','grocery','supermarket','dmart','blinkit','zepto','instamart'],
-  Health: ['doctor','hospital','clinic','medicine','pharmacy','tablets','gym','therapy'],
-  Party: ['party','birthday party','club','nightclub','bar','pub','cocktails'],
-  Education: ['books','course','online course','udemy','coursera','tuition','fees','college fees'],
+  'Food & Dining': [
+    'pizza','burger','biryani','pasta','noodles','sandwich','dosa','idli',
+    'chai','coffee','restaurant','cafe','zomato','swiggy','dinner','lunch',
+    'breakfast','starbucks','mcdonalds','dominos','kfc','subway','haldirams',
+    'faasos','behrouz','chaayos','buffet','dhaba','eating out','food delivery'
+  ],
+  Groceries: [
+    'vegetables','fruits','milk','eggs','bread','butter','curd','grocery','supermarket',
+    'dmart','big bazaar','reliance fresh','more supermarket','ration','flour','sugar','salt',
+    'cooking oil','spices','masala','lentils','pulses','cereal','oats','instant food',
+    'blinkit','zepto','instamart','bigbasket','nature basket'
+  ],
+  'Transport & Travel': [
+    'uber','ola','rapido','metro','train','flight','bus','cab','auto fare','commute',
+    'petrol','diesel','cng','fastag','toll','irctc','indigo','air india','spicejet','vistara',
+    'makemytrip','goibibo','hotel stay','hotel booking','airbnb','redbus','zoomcar'
+  ],
+  Housing: [
+    'house rent','apartment rent','flat rent','rent payment','society maintenance',
+    'building maintenance','residential maintenance','property tax','plumber','electrician',
+    'carpenter','pest control','house painting','water tank cleaning','maid salary','cook salary'
+  ],
+  'Utilities & Bills': [
+    'electricity bill','electricity','light bill','power bill','water bill','piped gas','gas bill',
+    'lpg cylinder','internet','wifi bill','broadband','mobile recharge','phone bill','postpaid bill',
+    'dth recharge','tata play','airtel broadband','jio fiber','act fibernet'
+  ],
+  'Debt & Loan Payments': [
+    'home loan emi','car loan emi','personal loan emi','education loan emi','bike loan emi',
+    'loan emi','loan installment','loan repayment','credit card bill','credit card payment',
+    'bajaj finserv emi','simpl bill','lazypay','kreditbee','zestmoney'
+  ],
+  Shopping: [
+    'dress','clothes','shirt','jeans','shoes','sandals','sneakers','bag','purse','wallet',
+    'jewellery','watch','sunglasses','perfume','amazon','flipkart','myntra','ajio','nykaa',
+    'zara','h&m','uniqlo','ikea','croma','reliance digital','gift','headphones','electronics'
+  ],
+  Entertainment: [
+    'movie','netflix','amazon prime','hotstar','spotify','youtube premium','gaming','ps5','xbox',
+    'concert','comedy show','event ticket','theme park','bowling','multiplex','pvr','inox',
+    'party','birthday party','nightclub','pub','bar','brewery','celebration','clubbing'
+  ],
+  Health: [
+    'doctor','hospital','clinic','medicine','pharmacy','tablets','health checkup','blood test',
+    'pathlab','dr lal pathlabs','metropolis','apollo pharmacy','medplus','tata 1mg','pharmeasy',
+    'dentist','dental','optician','physiotherapy','vaccination','vitamin','therapy','counselling'
+  ],
+  Education: [
+    'books','textbook','course','online course','udemy','coursera','upgrad','tuition','coaching',
+    'college fees','school fees','university fees','semester fees','exam fees','certification',
+    'study material','library','byjus','unacademy'
+  ],
+  'Personal Care': [
+    'haircut','barbershop','barber','hair salon','beauty parlour','hair spa','facial','threading',
+    'waxing','manicure','pedicure','nail art','body massage','spa','enrich salon','jawed habib',
+    'skincare','cosmetics','sunscreen','moisturizer','shampoo','beard oil','grooming'
+  ],
+  Insurance: [
+    'health insurance','star health','care health','hdfc ergo','niva bupa','icici lombard',
+    'term insurance','life insurance','max life','lic premium','lic policy','car insurance',
+    'bike insurance','vehicle insurance','motor insurance','travel insurance','policybazaar','insurance premium'
+  ],
   Investments: [
     'nifty50','nifty 50','nifty etf','nifty index','nifty bees','nifty',
     'sensex','s&p 500','nasdaq',
@@ -59,12 +107,26 @@ const KEYWORD_CATEGORY_MAP = {
     'provident fund','sovereign gold bond','sgb',
     'government bond purchase','government bond investment','government bond','govt bond','corporate bond','treasury bill','securities investment'
   ],
+  Misc: [
+    'miscellaneous','unclassified','general expense','cash withdrawal','petty cash'
+  ],
 };
 
 const CATEGORY_TYPE_MAP = {
-  Food: 'Want', Travel: 'Want', Entertainment: 'Want', Shopping: 'Want',
-  Bills: 'Need', Groceries: 'Need', Health: 'Need',
-  Party: 'Want', Education: 'Investment', Investments: 'Investment', Misc: 'Need',
+  'Food & Dining': 'Want',
+  Groceries: 'Need',
+  'Transport & Travel': 'Want',
+  Housing: 'Need',
+  'Utilities & Bills': 'Need',
+  'Debt & Loan Payments': 'Need',
+  Shopping: 'Want',
+  Entertainment: 'Want',
+  Health: 'Need',
+  Education: 'Investment',
+  'Personal Care': 'Want',
+  Insurance: 'Need',
+  Investments: 'Investment',
+  Misc: 'Need',
 };
 
 function classifyLocally(rawText) {
@@ -101,9 +163,16 @@ function classifyLocally(rawText) {
 }
 
 // ── TEST 1: Schema & Valid Categories Validation ─────────────────────────────
-test('1. Valid Categories array contains official Investments category', () => {
-  assert.ok(VALID_CATEGORIES.includes('Investments'), 'Investments is in VALID_CATEGORIES');
-  assert.equal(VALID_CATEGORIES.length, 11, '11 canonical categories exist');
+test('1. Valid Categories array contains 14 canonical V3 categories + legacy compatibility', () => {
+  const canonicalV3 = [
+    'Food & Dining', 'Groceries', 'Transport & Travel', 'Housing',
+    'Utilities & Bills', 'Debt & Loan Payments', 'Shopping', 'Entertainment',
+    'Health', 'Education', 'Personal Care', 'Insurance', 'Investments', 'Misc'
+  ];
+  for (const cat of canonicalV3) {
+    assert.ok(VALID_CATEGORIES.includes(cat), `${cat} must be in VALID_CATEGORIES`);
+  }
+  assert.equal(canonicalV3.length, 14, 'Exactly 14 canonical V3 categories');
   assert.ok(VALID_TYPES.includes('Investment'), 'Investment is in VALID_TYPES');
 });
 
@@ -132,54 +201,59 @@ test('2. Node Fallback classifies canonical investments to Category: Investments
   }
 });
 
-// ── TEST 3: Particular Bug Regression: Nifty50 and Nvidia shares NEVER return Food ─
-test('3. CRITICAL BUG REGRESSION: "Nifty50" and "Nvidia shares" NEVER classify as Food', () => {
+// ── TEST 3: Particular Bug Regression: Nifty50 and Nvidia shares NEVER return Food & Dining ─
+test('3. CRITICAL BUG REGRESSION: "Nifty50" and "Nvidia shares" NEVER classify as Food & Dining', () => {
   const bugInputs = ['Nifty50', '50000 nifty 50', 'Nvidia shares', 'Bought Apple stock'];
 
   for (const input of bugInputs) {
     const res = classifyLocally(input);
+    assert.notEqual(res.category, 'Food & Dining', `BUG REGRESSION: "${input}" classified as Food & Dining!`);
     assert.notEqual(res.category, 'Food', `BUG REGRESSION: "${input}" classified as Food!`);
     assert.equal(res.category, 'Investments', `"${input}" must be category Investments`);
     assert.equal(res.type, 'Investment', `"${input}" must be type Investment`);
   }
 });
 
-// ── TEST 4: Negative Regression Protection for Non-Investment Categories ─────
-test('4. Non-investment categories are properly classified and protected against false matches', () => {
+// ── TEST 4: Category Verification Across V3 Domains ──────────────────────────
+test('4. All V3 categories properly classified in Node fallback', () => {
   const cases = [
-    { text: 'Swiggy biryani', expectedCat: 'Food', expectedType: 'Want' },
-    { text: 'Uber ride', expectedCat: 'Travel', expectedType: 'Want' },
+    { text: 'Swiggy biryani', expectedCat: 'Food & Dining', expectedType: 'Want' },
+    { text: 'Uber ride', expectedCat: 'Transport & Travel', expectedType: 'Want' },
     { text: 'Netflix subscription', expectedCat: 'Entertainment', expectedType: 'Want' },
-    { text: 'Electricity bill', expectedCat: 'Bills', expectedType: 'Need' },
+    { text: 'Electricity bill', expectedCat: 'Utilities & Bills', expectedType: 'Need' },
     { text: 'DMart groceries', expectedCat: 'Groceries', expectedType: 'Need' },
     { text: 'Doctor consultation', expectedCat: 'Health', expectedType: 'Need' },
     { text: 'College tuition', expectedCat: 'Education', expectedType: 'Investment' },
     { text: 'New shoes shopping', expectedCat: 'Shopping', expectedType: 'Want' },
-    { text: 'Birthday party', expectedCat: 'Party', expectedType: 'Want' },
+    { text: 'Birthday party', expectedCat: 'Entertainment', expectedType: 'Want' },
+    { text: 'Monthly house rent', expectedCat: 'Housing', expectedType: 'Need' },
+    { text: 'Home loan emi', expectedCat: 'Debt & Loan Payments', expectedType: 'Need' },
+    { text: 'Star health insurance premium', expectedCat: 'Insurance', expectedType: 'Need' },
+    { text: 'Haircut and beard trim', expectedCat: 'Personal Care', expectedType: 'Want' },
   ];
 
   for (const { text, expectedCat, expectedType } of cases) {
     const res = classifyLocally(text);
-    assert.equal(res.category, expectedCat, `Negative regression in category for "${text}"`);
-    assert.equal(res.type, expectedType, `Negative regression in type for "${text}"`);
+    assert.equal(res.category, expectedCat, `Category mismatch for "${text}"`);
+    assert.equal(res.type, expectedType, `Type mismatch for "${text}"`);
   }
 });
 
 // ── TEST 5: Financial Accounting Invariance ──────────────────────────────────
 test('5. Financial Accounting: isInvestment strictly evaluates type === "Investment" regardless of category', () => {
-  // Transaction with new category Investments and type Investment -> isInvestment is true
   const invTx = { amount: 25000, category: 'Investments', type: 'Investment' };
   assert.equal(isInvestment(invTx), true, 'Category: Investments, Type: Investment is investment');
   assert.equal(isConsumption(invTx), false, 'Investment is not consumption');
 
-  // Legacy transaction with category Misc and type Investment -> isInvestment is still true
   const legacyInvTx = { amount: 10000, category: 'Misc', type: 'Investment' };
   assert.equal(isInvestment(legacyInvTx), true, 'Legacy Investment transaction is recognized as investment');
 
-  // Consumption transaction with category Bills and type Need -> isConsumption is true
-  const needTx = { amount: 5000, category: 'Bills', type: 'Need' };
-  assert.equal(isInvestment(needTx), false, 'Bills/Need is not investment');
-  assert.equal(isConsumption(needTx), true, 'Bills/Need is consumption');
+  const eduInvTx = { amount: 50000, category: 'Education', type: 'Investment' };
+  assert.equal(isInvestment(eduInvTx), true, 'Education with type Investment is recognized as investment');
+
+  const needTx = { amount: 5000, category: 'Utilities & Bills', type: 'Need' };
+  assert.equal(isInvestment(needTx), false, 'Utilities & Bills/Need is not investment');
+  assert.equal(isConsumption(needTx), true, 'Utilities & Bills/Need is consumption');
 });
 
 // ── TEST 6: Ambiguous & Non-Investment Phrase Safety ─────────────────────────

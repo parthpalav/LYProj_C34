@@ -233,9 +233,9 @@ test('16. Official Investments category with distinct emoji registered in Transa
   const txScreen = readScreen('TransactionsScreen.tsx');
   const entryScreen = readScreen('TransactionEntryScreen.tsx');
   
-  assert.ok(txScreen.includes("key: 'investments', label: 'Investments', emoji: '📈'"), 'Investments in TransactionsScreen CATEGORIES');
+  assert.ok(txScreen.includes("key: 'investments'") && txScreen.includes("label: 'Investments'"), 'Investments in TransactionsScreen CATEGORIES');
   assert.ok(txScreen.includes("investments: '📈'"), 'Investments emoji map in TransactionsScreen');
-  assert.ok(entryScreen.includes("label: 'Investments',   emoji: '📈', ml: 'Investments'"), 'Investments in TransactionEntryScreen CATEGORIES');
+  assert.ok(entryScreen.includes("label: 'Investments'") && entryScreen.includes("ml: 'Investments'"), 'Investments in TransactionEntryScreen CATEGORIES');
 });
 
 // ── TEST 17: Category 'Investments' (plural) distinct from Type 'Investment' (singular) ───

@@ -1,10 +1,16 @@
 import mongoose from 'mongoose';
 
-// Canonical FINAURA expense categories
-const VALID_CATEGORIES = [
-  'Food', 'Travel', 'Entertainment', 'Shopping', 'Bills',
-  'Groceries', 'Health', 'Party', 'Education', 'Investments', 'Misc'
+// Canonical FINAURA V3 expense categories
+const CANONICAL_V3_CATEGORIES = [
+  'Food & Dining', 'Groceries', 'Transport & Travel', 'Housing',
+  'Utilities & Bills', 'Debt & Loan Payments', 'Shopping', 'Entertainment',
+  'Health', 'Education', 'Personal Care', 'Insurance', 'Investments', 'Misc'
 ];
+
+// Legacy categories accepted for backward-compatibility with unmigrated historical records
+const LEGACY_CATEGORIES = ['Food', 'Travel', 'Bills', 'Party'];
+
+const VALID_CATEGORIES = [...CANONICAL_V3_CATEGORIES, ...LEGACY_CATEGORIES];
 
 // Canonical spend-type classification
 const VALID_TYPES = ['Need', 'Want', 'Investment'];

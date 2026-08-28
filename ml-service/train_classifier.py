@@ -83,20 +83,20 @@ print(classification_report(y, y_pred, zero_division=0))
 
 # ─── 7. Quick smoke-test ──────────────────────────────────────────────────────
 test_inputs = [
-    "500rs Pizza",
-    "200rs Book",
-    "900rs Drinks",
+    "500rs Pizza order",
+    "200rs Book purchase",
     "1000rs Electricity bill",
-    "799rs Dress",
-    "uber ride",
-    "netflix subscription",
-    "gym membership",
-    "birthday party",
-    "vegetable shopping",
+    "monthly house rent",
+    "car loan emi payment",
+    "health insurance premium",
+    "haircut and beard trim",
+    "799rs Dress shopping",
+    "uber cab ride",
+    "netflix streaming subscription",
+    "doctor consultation fee",
+    "vegetable grocery shopping",
     "Nifty 50 SIP",
     "Nvidia shares",
-    "Mutual fund investment",
-    "Bought Apple stock",
 ]
 
 print("[SMOKE TEST]")

@@ -100,26 +100,26 @@ async function runTests() {
     assert(typeof res.data.all_probs === 'object', 'T1: all_probs returned as object');
   }
 
-  // Test 1b: Deterministic merchant rule (Zomato -> Food / Want / merchant_rule)
+  // Test 1b: Deterministic merchant rule (Zomato -> Food & Dining / Want / merchant_rule)
   {
     const res = await api('POST', '/classify', { text: 'Zomato lunch order' });
     assert(res.status === 200, 'T1b: Zomato classify succeeds');
-    assert(res.data.category === 'Food', 'T1b: Category is Food', `got ${res.data.category}`);
+    assert(res.data.category === 'Food & Dining', 'T1b: Category is Food & Dining', `got ${res.data.category}`);
     assert(res.data.type === 'Want', 'T1b: Type is Want', `got ${res.data.type}`);
     assert(res.data.needsReview === false, 'T1b: needsReview is false for deterministic rule');
   }
 
-  // Test 1c: Deterministic public transit rule (Mumbai Metro -> Travel / Need / merchant_rule)
+  // Test 1c: Deterministic public transit rule (Mumbai Metro -> Transport & Travel / Need / merchant_rule)
   {
     const res = await api('POST', '/classify', { text: 'Mumbai Metro card recharge' });
     assert(res.status === 200, 'T1c: Metro classify succeeds');
-    assert(res.data.category === 'Travel', 'T1c: Category is Travel', `got ${res.data.category}`);
+    assert(res.data.category === 'Transport & Travel', 'T1c: Category is Transport & Travel', `got ${res.data.category}`);
     assert(res.data.type === 'Need', 'T1c: Type is Need for public transit', `got ${res.data.type}`);
     assert(res.data.needsReview === false, 'T1c: needsReview is false');
   }
 
   // Test 2: Manual category and type override in POST /api/transactions
-  // Even if ML would classify "pizza" as Food / Want, user supplies Health / Need
+  // Even if ML would classify "pizza" as Food & Dining / Want, user supplies Health / Need
   {
     const res = await api('POST', '/transactions', {
       amount: 450,
@@ -148,7 +148,7 @@ async function runTests() {
     const tx = res.data;
     createdTxIds.push(tx?.id);
     assert(res.status === 201, 'T3: Transaction created with backend inference');
-    assert(tx?.category === 'Bills', 'T3: Backend inferred category as Bills', `got ${tx?.category}`);
+    assert(tx?.category === 'Utilities & Bills', 'T3: Backend inferred category as Utilities & Bills', `got ${tx?.category}`);
     assert(tx?.type === 'Need', 'T3: Backend inferred type as Need', `got ${tx?.type}`);
   }
 
@@ -156,13 +156,13 @@ async function runTests() {
   {
     const txId = createdTxIds[0];
     const res = await api('PUT', `/transactions/${txId}`, {
-      category: 'Food',
+      category: 'Food & Dining',
       type: 'Want',
       amount: 600,
       description: 'Corrected: Pizza dinner with friends'
     });
     assert(res.status === 200, 'T4: PUT /api/transactions/:id succeeds');
-    assert(res.data?.category === 'Food', 'T4: Edited category updated to Food', `got ${res.data?.category}`);
+    assert(res.data?.category === 'Food & Dining', 'T4: Edited category updated to Food & Dining', `got ${res.data?.category}`);
     assert(res.data?.type === 'Want', 'T4: Edited type updated to Want', `got ${res.data?.type}`);
     assert(res.data?.amount === 600, 'T4: Edited amount updated to 600', `got ${res.data?.amount}`);
   }

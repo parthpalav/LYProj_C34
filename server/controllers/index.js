@@ -1637,71 +1637,69 @@ router.get('/reports/weekly', async (req, res, next) => {
 // ML EXPENSE CLASSIFIER  (proxies to Flask on port 5001, with keyword fallback)
 // ═══════════════════════════════════════════════════════════
 
-// Built-in keyword → category map (mirrors dataset.csv so classification
-// still works when the Python ML service is unreachable).
+// Canonical V3 Keyword Map for fallback classification
 const KEYWORD_CATEGORY_MAP = {
-  Food: [
-    'pizza','burger','biryani','pasta','noodles','sandwich','dosa','idli','paratha',
-    'chicken','mutton','fish','paneer','dal','rice','roti','sabzi','maggi','poha','upma',
-    'chai','coffee','tea','juice','smoothie','cold drink','coca cola','pepsi','drinks',
-    'beer','wine','whiskey','alcohol','snacks','chips','biscuits','chocolate','cake',
-    'ice cream','sweets','mithai','halwa','samosa','pav bhaji','vada pav','pani puri',
-    'chole bhature','rajma','khichdi','thali','dominos','pizza hut','mcdonalds','kfc',
-    'subway','zomato','swiggy','food delivery','restaurant','cafe','dhaba','mess bill',
-    'canteen','lunch','dinner','breakfast','evening snack','fast food','chinese food',
-    'sushi','tacos','meal','eating out','restaurant bill',
-  ],
-  Travel: [
-    'uber','ola','rapido','auto','taxi','cab','rickshaw','bus','train','metro',
-    'flight','airline','bus ticket','train ticket','petrol','diesel','fuel','toll',
-    'parking','bike rental','car rental','hotel','hostel','resort','airbnb','trip',
-    'tour','travel','vacation','holiday','road trip','irctc','redbus','makemytrip',
-    'goibibo','cleartrip','booking','uber ride','ola cab','metro card','bus pass',
-    'commute','ride home','ride back','taxi home','cab home',
-  ],
-  Entertainment: [
-    'movie','netflix','amazon prime','hotstar','spotify','youtube premium','gaming',
-    'video games','ps5','xbox','concert','stand up comedy','comedy show','show ticket',
-    'event ticket','amusement park','zoo','museum','theme park','bowling','pool',
-    'cricket match','ipl ticket','football match','streaming','ott','movie ticket',
-    'multiplex','pvr','inox','carnival','escape room','laser tag','arcade','board games',
-    'play station',
-  ],
-  Shopping: [
-    'dress','clothes','shirt','jeans','kurta','saree','shoes','sandals','heels',
-    'sneakers','bag','purse','wallet','accessories','jewellery','watch','sunglasses',
-    'perfume','makeup','cosmetics','lipstick','moisturizer','shampoo','amazon','flipkart',
-    'myntra','meesho','ajio','nykaa','gift','present','toy','gadget','phone','charger',
-    'earphones','headphones','laptop bag','stationery','notebook','pen','online shopping',
-  ],
-  Bills: [
-    'electricity bill','electricity','light bill','power bill','water bill','gas bill',
-    'internet','wifi bill','broadband','mobile recharge','phone bill','dth','cable tv',
-    'house rent','rent','emi','loan emi','insurance','subscription','maintenance',
-    'society charges','landlord','recharge','postpaid bill','prepaid recharge',
+  'Food & Dining': [
+    'pizza','burger','biryani','pasta','noodles','sandwich','dosa','idli',
+    'chai','coffee','restaurant','cafe','zomato','swiggy','dinner','lunch',
+    'breakfast','starbucks','mcdonalds','dominos','kfc','subway','haldirams',
+    'faasos','behrouz','chaayos','buffet','dhaba','eating out','food delivery'
   ],
   Groceries: [
     'vegetables','fruits','milk','eggs','bread','butter','curd','grocery','supermarket',
-    'dmart','big bazaar','reliance fresh','more supermarket','store','ration',
-    'weekly grocery','monthly grocery','flour','sugar','salt','cooking oil','spices',
-    'masala','lentils','pulses','cereal','oats','instant food','blinkit','zepto','instamart',
+    'dmart','big bazaar','reliance fresh','more supermarket','ration','flour','sugar','salt',
+    'cooking oil','spices','masala','lentils','pulses','cereal','oats','instant food',
+    'blinkit','zepto','instamart','bigbasket','nature basket'
+  ],
+  'Transport & Travel': [
+    'uber','ola','rapido','metro','train','flight','bus','cab','auto fare','commute',
+    'petrol','diesel','cng','fastag','toll','irctc','indigo','air india','spicejet','vistara',
+    'makemytrip','goibibo','hotel stay','hotel booking','airbnb','redbus','zoomcar'
+  ],
+  Housing: [
+    'house rent','apartment rent','flat rent','rent payment','society maintenance',
+    'building maintenance','residential maintenance','property tax','plumber','electrician',
+    'carpenter','pest control','house painting','water tank cleaning','maid salary','cook salary'
+  ],
+  'Utilities & Bills': [
+    'electricity bill','electricity','light bill','power bill','water bill','piped gas','gas bill',
+    'lpg cylinder','internet','wifi bill','broadband','mobile recharge','phone bill','postpaid bill',
+    'dth recharge','tata play','airtel broadband','jio fiber','act fibernet'
+  ],
+  'Debt & Loan Payments': [
+    'home loan emi','car loan emi','personal loan emi','education loan emi','bike loan emi',
+    'loan emi','loan installment','loan repayment','credit card bill','credit card payment',
+    'bajaj finserv emi','simpl bill','lazypay','kreditbee','zestmoney'
+  ],
+  Shopping: [
+    'dress','clothes','shirt','jeans','shoes','sandals','sneakers','bag','purse','wallet',
+    'jewellery','watch','sunglasses','perfume','amazon','flipkart','myntra','ajio','nykaa',
+    'zara','h&m','uniqlo','ikea','croma','reliance digital','gift','headphones','electronics'
+  ],
+  Entertainment: [
+    'movie','netflix','amazon prime','hotstar','spotify','youtube premium','gaming','ps5','xbox',
+    'concert','comedy show','event ticket','theme park','bowling','multiplex','pvr','inox',
+    'party','birthday party','nightclub','pub','bar','brewery','celebration','clubbing'
   ],
   Health: [
-    'doctor','hospital','clinic','medicine','pharmacy','tablets','pills','health checkup',
-    'blood test','lab test','pathlab','x-ray','scan','dentist','dental','eye doctor',
-    'optician','spectacles','gym','gym membership','yoga','physiotherapy','vaccination',
-    'vitamin','supplement','protein powder','mental health','therapy','counselling',
-  ],
-  Party: [
-    'party','birthday party','anniversary','celebration','club','nightclub','bar','pub',
-    'hookah','dj night','cocktails','mocktails','birthday cake','birthday gift','decorator',
-    'event planning','wedding','reception','get together','housewarming','farewell',
-    'bachelor party','kitty party',
+    'doctor','hospital','clinic','medicine','pharmacy','tablets','health checkup','blood test',
+    'pathlab','dr lal pathlabs','metropolis','apollo pharmacy','medplus','tata 1mg','pharmeasy',
+    'dentist','dental','optician','physiotherapy','vaccination','vitamin','therapy','counselling'
   ],
   Education: [
-    'books','textbook','book','course','online course','udemy','coursera','upgrad',
-    'tuition','coaching','fees','college fees','school fees','exam fees','certification',
-    'workshop','seminar','study material','library','pen drive','laptop for study',
+    'books','textbook','course','online course','udemy','coursera','upgrad','tuition','coaching',
+    'college fees','school fees','university fees','semester fees','exam fees','certification',
+    'study material','library','byjus','unacademy'
+  ],
+  'Personal Care': [
+    'haircut','barbershop','barber','hair salon','beauty parlour','hair spa','facial','threading',
+    'waxing','manicure','pedicure','nail art','body massage','spa','enrich salon','jawed habib',
+    'skincare','cosmetics','sunscreen','moisturizer','shampoo','beard oil','grooming'
+  ],
+  Insurance: [
+    'health insurance','star health','care health','hdfc ergo','niva bupa','icici lombard',
+    'term insurance','life insurance','max life','lic premium','lic policy','car insurance',
+    'bike insurance','vehicle insurance','motor insurance','travel insurance','policybazaar','insurance premium'
   ],
   Investments: [
     'nifty50','nifty 50','nifty etf','nifty index','nifty bees','nifty',
@@ -1718,18 +1716,56 @@ const KEYWORD_CATEGORY_MAP = {
     'provident fund','sovereign gold bond','sgb',
     'government bond purchase','government bond investment','government bond','govt bond','corporate bond','treasury bill','securities investment'
   ],
+  Misc: [
+    'miscellaneous','unclassified','general expense','cash withdrawal','petty cash'
+  ],
 };
 
 // Category → spend-type and sentiment maps for the fallback classifier
 const CATEGORY_TYPE_MAP = {
-  Food: 'Want', Travel: 'Want', Entertainment: 'Want', Shopping: 'Want',
-  Bills: 'Need', Groceries: 'Need', Health: 'Need',
-  Party: 'Want', Education: 'Investment', Investments: 'Investment', Misc: 'Need',
+  'Food & Dining': 'Want',
+  Groceries: 'Need',
+  'Transport & Travel': 'Want',
+  Housing: 'Need',
+  'Utilities & Bills': 'Need',
+  'Debt & Loan Payments': 'Need',
+  Shopping: 'Want',
+  Entertainment: 'Want',
+  Health: 'Need',
+  Education: 'Investment',
+  'Personal Care': 'Want',
+  Insurance: 'Need',
+  Investments: 'Investment',
+  Misc: 'Need',
+
+  // Legacy mappings for backward compatibility
+  Food: 'Want',
+  Travel: 'Want',
+  Bills: 'Need',
+  Party: 'Want',
 };
+
 const CATEGORY_SENTIMENT_MAP = {
-  Food: 'negative', Travel: 'neutral', Entertainment: 'negative', Shopping: 'negative',
-  Bills: 'neutral', Groceries: 'neutral', Health: 'positive',
-  Party: 'negative', Education: 'positive', Investments: 'positive', Misc: 'neutral',
+  'Food & Dining': 'negative',
+  Groceries: 'neutral',
+  'Transport & Travel': 'neutral',
+  Housing: 'neutral',
+  'Utilities & Bills': 'neutral',
+  'Debt & Loan Payments': 'neutral',
+  Shopping: 'negative',
+  Entertainment: 'negative',
+  Health: 'positive',
+  Education: 'positive',
+  'Personal Care': 'neutral',
+  Insurance: 'positive',
+  Investments: 'positive',
+  Misc: 'neutral',
+
+  // Legacy mappings for backward compatibility
+  Food: 'negative',
+  Travel: 'neutral',
+  Bills: 'neutral',
+  Party: 'negative',
 };
 
 function classifyLocally(rawText) {

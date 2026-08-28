@@ -77,7 +77,7 @@ async function runTests() {
     
     // TF-IDF V2 Fallback
     res = await api('POST', '/classify', { text: 'ordered some delivery meal from an online kitchen because did not cook' });
-    assert(res.data.category === 'Food' && res.data.categorySource === 'tfidf_v2',
+    assert(res.data.category === 'Food & Dining' && res.data.categorySource === 'tfidf_v2',
       'Category Integration: Fallback to tfidf_v2 for contextual food description', `got ${res.data.category} / ${res.data.categorySource}`);
   }
 

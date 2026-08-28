@@ -86,7 +86,7 @@ async function runSuite() {
       assert.equal(typeof data.confidence, 'number');
       assert.ok(Number.isFinite(data.confidence));
       assert.ok(data.confidence >= 0 && data.confidence <= 1.0);
-      assert.ok(['Food', 'Travel', 'Entertainment', 'Shopping', 'Bills', 'Groceries', 'Health', 'Party', 'Education', 'Investments', 'Misc'].includes(data.category));
+      assert.ok(VALID_CATEGORIES.includes(data.category));
       assert.ok(['Need', 'Want', 'Investment'].includes(data.type));
       assert.equal(typeof data.needsReview, 'boolean');
     });
@@ -103,13 +103,13 @@ async function runSuite() {
       assert.equal(r.type, 'Investment');
       assert.equal(r.needsReview, false);
 
-      // 2. Electricity -> Bills (Need)
+      // 2. Electricity -> Utilities & Bills (Need)
       r = await (await fetch('http://127.0.0.1:4000/api/classify', {
         method: 'POST',
         headers: authHeaders,
         body: JSON.stringify({ text: 'Electricity bill payment' })
       })).json();
-      assert.equal(r.category, 'Bills');
+      assert.equal(r.category, 'Utilities & Bills');
       assert.equal(r.type, 'Need');
       assert.equal(r.needsReview, false);
 
@@ -214,7 +214,7 @@ async function runSuite() {
           id: `tx-need-1`,
           userId,
           amount: 30000,
-          category: 'Bills',
+          category: 'Utilities & Bills',
           type: 'Need',
           description: 'Rent and utilities',
           timestamp: new Date()

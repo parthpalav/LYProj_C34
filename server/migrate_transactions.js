@@ -29,24 +29,43 @@ const __dirname = path.dirname(__filename);
 const MONGO_URI = process.env.MONGODB_URI || process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/lyproj';
 
 const VALID_CATEGORIES = [
-  'Food', 'Travel', 'Entertainment', 'Shopping', 'Bills',
-  'Groceries', 'Health', 'Party', 'Education', 'Investments', 'Misc'
+  'Food & Dining', 'Groceries', 'Transport & Travel', 'Housing',
+  'Utilities & Bills', 'Debt & Loan Payments', 'Shopping', 'Entertainment',
+  'Health', 'Education', 'Personal Care', 'Insurance', 'Investments', 'Misc'
 ];
 
 const VALID_TYPES = ['Need', 'Want', 'Investment'];
 
-// Refined Category -> Type Defaults (Health -> Need, Education -> Investment, Bills/Groceries -> Need)
+// Canonical V3 Taxonomy Category Migration Map
+export const LEGACY_TO_V3_CATEGORY_MAP = {
+  'Food': 'Food & Dining',
+  'Travel': 'Transport & Travel',
+  'Bills': 'Utilities & Bills',
+  'Party': 'Entertainment',
+  'Groceries': 'Groceries',
+  'Entertainment': 'Entertainment',
+  'Shopping': 'Shopping',
+  'Health': 'Health',
+  'Education': 'Education',
+  'Investments': 'Investments',
+  'Misc': 'Misc',
+};
+
+// Refined Category -> Type Defaults
 const REFINED_CATEGORY_TYPE_MAP = {
-  Food: 'Want',
-  Travel: 'Want',
-  Entertainment: 'Want',
-  Shopping: 'Want',
-  Bills: 'Need',
+  'Food & Dining': 'Want',
   Groceries: 'Need',
-  Health: 'Need',          // Fixed: Essential medical is a Need, not an Investment
-  Party: 'Want',
-  Education: 'Investment',  // Human capital investment
-  Investments: 'Investment',// Financial asset investment
+  'Transport & Travel': 'Want',
+  Housing: 'Need',
+  'Utilities & Bills': 'Need',
+  'Debt & Loan Payments': 'Need',
+  Shopping: 'Want',
+  Entertainment: 'Want',
+  Health: 'Need',
+  Education: 'Investment',
+  'Personal Care': 'Want',
+  Insurance: 'Need',
+  Investments: 'Investment',
   Misc: 'Need',
 };
 
@@ -116,14 +135,23 @@ function resolveCategoryAndType(tx) {
       categoryAction = 'UNCHANGED';
     }
   } else {
-    // Standard normalization: map lowercase to canonical casing
-    const exactMatch = VALID_CATEGORIES.find(c => c.toLowerCase() === rawCatLower);
-    if (exactMatch) {
-      proposedCategory = exactMatch;
-      categoryAction = exactMatch === tx.category ? 'UNCHANGED' : 'NORMALIZED_CASE';
+    // Check legacy V1/V2 to V3 mapping first
+    const legacyV3Match = Object.entries(LEGACY_TO_V3_CATEGORY_MAP).find(
+      ([leg, v3]) => leg.toLowerCase() === rawCatLower
+    );
+    if (legacyV3Match) {
+      proposedCategory = legacyV3Match[1];
+      categoryAction = proposedCategory === tx.category ? 'UNCHANGED' : 'MIGRATED_TO_V3';
     } else {
-      proposedCategory = 'Misc';
-      categoryAction = 'UNRECOGNIZED_CATEGORY_DEFAULT_MISC';
+      // Standard normalization: map lowercase to canonical casing
+      const exactMatch = VALID_CATEGORIES.find(c => c.toLowerCase() === rawCatLower);
+      if (exactMatch) {
+        proposedCategory = exactMatch;
+        categoryAction = exactMatch === tx.category ? 'UNCHANGED' : 'NORMALIZED_CASE';
+      } else {
+        proposedCategory = 'Misc';
+        categoryAction = 'UNRECOGNIZED_CATEGORY_DEFAULT_MISC';
+      }
     }
   }
 

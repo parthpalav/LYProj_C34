@@ -4,7 +4,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { getLiabilities, createLiability, updateLiability, deleteLiability, getLiabilitiesPaymentsSummary, getLiabilityTransactions } from '../services/api';
 import { Liability, LiabilityPaymentSummary, LiabilityPaymentHistoryResponse, Transaction } from '../types';
 
-const VALID_CATEGORIES = ['Food', 'Travel', 'Entertainment', 'Shopping', 'Bills', 'Groceries', 'Health', 'Party', 'Education', 'Investments', 'Misc'];
+const VALID_CATEGORIES = [
+  'Food & Dining', 'Groceries', 'Transport & Travel', 'Housing',
+  'Utilities & Bills', 'Debt & Loan Payments', 'Shopping', 'Entertainment',
+  'Health', 'Education', 'Personal Care', 'Insurance', 'Investments', 'Misc'
+];
 const VALID_TYPES: ('Need' | 'Want' | 'Investment')[] = ['Need', 'Want', 'Investment'];
 const FREQUENCIES = ['daily', 'weekly', 'monthly', 'yearly'];
 
@@ -18,7 +22,7 @@ export function LiabilitiesScreen() {
   // Form State
   const [name, setName] = useState('');
   const [amount, setAmount] = useState('');
-  const [category, setCategory] = useState('Bills');
+  const [category, setCategory] = useState('Utilities & Bills');
   const [type, setType] = useState<'Need' | 'Want' | 'Investment'>('Need');
   const [autoDeduct, setAutoDeduct] = useState(false);
   const [frequency, setFrequency] = useState<'daily' | 'weekly' | 'monthly' | 'yearly'>('monthly');
@@ -61,7 +65,7 @@ export function LiabilitiesScreen() {
     setEditingId(null);
     setName('');
     setAmount('');
-    setCategory('Bills');
+    setCategory('Utilities & Bills');
     setType('Need');
     setAutoDeduct(false);
     setFrequency('monthly');

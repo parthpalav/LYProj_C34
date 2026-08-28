@@ -35,17 +35,20 @@ log = logging.getLogger(__name__)
 
 # Category → Sentiment mapping
 CATEGORY_SENTIMENT: Dict[str, str] = {
-    "Food":          "negative",    # often discretionary / dining out
-    "Travel":        "neutral",     # contextual
-    "Entertainment": "negative",    # discretionary leisure
-    "Shopping":      "negative",    # discretionary goods
-    "Bills":         "neutral",     # necessary utility/obligation
-    "Groceries":     "neutral",     # necessary household sustenance
-    "Health":        "positive",    # investment in wellbeing / essential
-    "Party":         "negative",    # discretionary nightlife
-    "Education":     "positive",    # investment in self/future
-    "Investments":   "positive",    # investment in financial wealth
-    "Misc":          "neutral",     # neutral baseline
+    "Food & Dining":         "negative",    # often discretionary / dining out
+    "Groceries":             "neutral",     # necessary household sustenance
+    "Transport & Travel":    "neutral",     # contextual / commute
+    "Housing":               "neutral",     # necessary shelter / living cost
+    "Utilities & Bills":     "neutral",     # necessary utility / obligation
+    "Debt & Loan Payments":  "neutral",     # financial liability obligation
+    "Shopping":              "negative",    # discretionary goods
+    "Entertainment":         "negative",    # discretionary leisure
+    "Health":                "positive",    # investment in wellbeing / essential
+    "Education":             "positive",    # investment in self/future
+    "Personal Care":         "neutral",     # grooming / personal maintenance
+    "Insurance":             "positive",    # risk protection / financial safeguard
+    "Investments":           "positive",    # investment in financial wealth
+    "Misc":                  "neutral",     # neutral baseline
 }
 
 SENTIMENT_META = {
@@ -56,17 +59,20 @@ SENTIMENT_META = {
 
 # Category → Default Type mapping (used when TF-IDF predicts category without explicit type)
 CATEGORY_TYPE_MAP: Dict[str, str] = {
-    "Food": "Want",
-    "Travel": "Want",
-    "Entertainment": "Want",
-    "Shopping": "Want",
-    "Bills": "Need",
-    "Groceries": "Need",
-    "Health": "Need",          # Fixed: Essential medical is a Need
-    "Party": "Want",
-    "Education": "Investment",  # Human capital investment
-    "Investments": "Investment",# Financial asset investment
-    "Misc": "Need",
+    "Food & Dining":         "Want",
+    "Groceries":             "Need",
+    "Transport & Travel":    "Want",
+    "Housing":               "Need",
+    "Utilities & Bills":     "Need",
+    "Debt & Loan Payments":  "Need",
+    "Shopping":              "Want",
+    "Entertainment":         "Want",
+    "Health":                "Need",
+    "Education":             "Investment",
+    "Personal Care":         "Want",
+    "Insurance":             "Need",
+    "Investments":           "Investment",
+    "Misc":                  "Need",
 }
 
 

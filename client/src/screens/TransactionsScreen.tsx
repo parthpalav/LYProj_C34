@@ -21,33 +21,52 @@ import { formatCurrency } from '../utils/format';
 import { TransactionEntryScreen } from './TransactionEntryScreen';
 
 // ── Category definitions ───────────────────────────────────────────────────
+export const LEGACY_CATEGORY_MAP: Record<string, string> = {
+  food: 'Food & Dining',
+  travel: 'Transport & Travel',
+  bills: 'Utilities & Bills',
+  party: 'Entertainment',
+};
+
 const CATEGORIES = [
-  { key: 'food', label: 'Food', emoji: '🍕' },
-  { key: 'travel', label: 'Travel', emoji: '🚕' },
-  { key: 'entertainment', label: 'Entertainment', emoji: '🎬' },
-  { key: 'shopping', label: 'Shopping', emoji: '🛍️' },
-  { key: 'bills', label: 'Bills', emoji: '💡' },
-  { key: 'groceries', label: 'Groceries', emoji: '🥦' },
-  { key: 'health', label: 'Health', emoji: '💊' },
-  { key: 'party', label: 'Party', emoji: '🎉' },
-  { key: 'education', label: 'Education', emoji: '📚' },
-  { key: 'investments', label: 'Investments', emoji: '📈' },
-  { key: 'misc', label: 'Misc', emoji: '📦' },
+  { key: 'food & dining',        label: 'Food & Dining',        emoji: '🍽️' },
+  { key: 'groceries',            label: 'Groceries',            emoji: '🛒' },
+  { key: 'transport & travel',   label: 'Transport & Travel',   emoji: '🚕' },
+  { key: 'housing',              label: 'Housing',              emoji: '🏠' },
+  { key: 'utilities & bills',    label: 'Utilities & Bills',    emoji: '💡' },
+  { key: 'debt & loan payments', label: 'Debt & Loan Payments', emoji: '💳' },
+  { key: 'shopping',             label: 'Shopping',             emoji: '🛍️' },
+  { key: 'entertainment',        label: 'Entertainment',        emoji: '🎬' },
+  { key: 'health',               label: 'Health',               emoji: '🏥' },
+  { key: 'education',            label: 'Education',            emoji: '🎓' },
+  { key: 'personal care',        label: 'Personal Care',        emoji: '✂️' },
+  { key: 'insurance',            label: 'Insurance',            emoji: '🛡️' },
+  { key: 'investments',          label: 'Investments',          emoji: '📈' },
+  { key: 'misc',                 label: 'Misc',                 emoji: '📦' },
 ];
 
 // ── Category emoji map (case-insensitive — compare via .toLowerCase()) ─────
 const CATEGORY_EMOJI: Record<string, string> = {
-  food: '🍕',
-  travel: '🚕',
-  entertainment: '🎬',
+  'food & dining': '🍽️',
+  groceries: '🛒',
+  'transport & travel': '🚕',
+  housing: '🏠',
+  'utilities & bills': '💡',
+  'debt & loan payments': '💳',
   shopping: '🛍️',
-  bills: '💡',
-  groceries: '🥦',
-  health: '💊',
-  party: '🎉',
-  education: '📚',
+  entertainment: '🎬',
+  health: '🏥',
+  education: '🎓',
+  'personal care': '✂️',
+  insurance: '🛡️',
   investments: '📈',
   misc: '📦',
+
+  // Legacy mappings for backward compatibility
+  food: '🍽️',
+  travel: '🚕',
+  bills: '💡',
+  party: '🎬',
 };
 
 // ── Need / Want / Investment badge colours ─────────────────────────────────
@@ -237,11 +256,13 @@ export function TransactionsScreen(): React.ReactElement {
       filtered = filtered.filter((tx) => tx.type === activeType);
     }
 
-    // Category filter: transaction category must match ANY of the selected categories
+    // Category filter: transaction category must match ANY of the selected categories (including legacy aliases)
     if (selectedCategories.length > 0) {
-      filtered = filtered.filter((tx) =>
-        selectedCategories.includes((tx.category || '').toLowerCase())
-      );
+      filtered = filtered.filter((tx) => {
+        const raw = (tx.category || '').toLowerCase();
+        const normalized = (LEGACY_CATEGORY_MAP[raw] || tx.category || '').toLowerCase();
+        return selectedCategories.includes(raw) || selectedCategories.includes(normalized);
+      });
     }
 
     return groupByMonth(filtered);
@@ -320,7 +341,7 @@ export function TransactionsScreen(): React.ReactElement {
           {/* Category · Type · Date row */}
           <View style={styles.metaRow}>
             <Text style={styles.categoryLabel}>
-              {item.category ?? '—'}
+              {LEGACY_CATEGORY_MAP[(item.category || '').toLowerCase()] || item.category || '—'}
             </Text>
             {typeBadge && (
               <>

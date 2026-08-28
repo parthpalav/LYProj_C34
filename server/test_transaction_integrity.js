@@ -256,7 +256,166 @@ async function runTests() {
     }
   }
 
-  // ─── Cleanup: delete test transactions ───
+  // ═══════════════════════════════════════════════════════════
+  // P0 BALANCE RECONCILIATION REGRESSION TESTS (T16 - T24)
+  // ═══════════════════════════════════════════════════════════
+
+  // Setup User B for cross-user isolation tests
+  const USER_B_EMAIL = 'test-integrity-b@finaura.test';
+  let USER_B_TOKEN = null;
+  {
+    let bLogin = await api('POST', '/auth/login', { email: USER_B_EMAIL, password: TEST_USER_PASSWORD });
+    if (bLogin.status === 200 && bLogin.data.token) {
+      USER_B_TOKEN = bLogin.data.token;
+    } else {
+      await api('POST', '/auth/register', { name: 'User B', email: USER_B_EMAIL, password: TEST_USER_PASSWORD });
+      bLogin = await api('POST', '/auth/login', { email: USER_B_EMAIL, password: TEST_USER_PASSWORD });
+      USER_B_TOKEN = bLogin.data.token;
+    }
+  }
+
+  async function apiAsUserB(method, path, body = null) {
+    const opts = {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(USER_B_TOKEN ? { 'Authorization': `Bearer ${USER_B_TOKEN}` } : {})
+      },
+    };
+    if (body) opts.body = JSON.stringify(body);
+    const res = await fetch(`${BASE_URL}${path}`, opts);
+    const text = await res.text();
+    let data;
+    try { data = JSON.parse(text); } catch { data = text; }
+    return { status: res.status, data };
+  }
+
+  // Set User A's baseline balance to ₹50,000
+  await api('PUT', '/user/profile', { currentBalance: 50000 });
+  let profile = await api('GET', '/user/profile');
+  assert(profile.data.currentBalance === 50000, 'Setup: User A starting balance set to 50,000', `got ${profile.data.currentBalance}`);
+
+  // Set User B's baseline balance to ₹20,000
+  await apiAsUserB('PUT', '/user/profile', { currentBalance: 20000 });
+
+  let p0TxId = null;
+
+  // ─── Test 16: Create ₹5,000 expense from ₹50,000 → ₹45,000 ───
+  {
+    const res = await api('POST', '/transactions', {
+      amount: 5000,
+      description: 'P0 Initial Expense',
+      category: 'Shopping',
+      type: 'Want',
+      timestamp: new Date().toISOString()
+    });
+    assert(res.status === 201, 'T16: Create ₹5,000 expense succeeds');
+    p0TxId = res.data?.id;
+
+    const userProfile = await api('GET', '/user/profile');
+    assert(userProfile.data.currentBalance === 45000, 'T16: Balance decremented to ₹45,000 on create', `got ${userProfile.data.currentBalance}`);
+  }
+
+  // ─── Test 17: Edit ₹5,000 → ₹1,000 → balance becomes ₹49,000 (refund delta +₹4,000) ───
+  {
+    const res = await api('PUT', `/transactions/${p0TxId}`, {
+      amount: 1000,
+      description: 'P0 Reduced Expense'
+    });
+    assert(res.status === 200, 'T17: Edit amount down to ₹1,000 succeeds');
+    assert(res.data.amount === 1000, 'T17: Transaction amount is now 1,000');
+
+    const userProfile = await api('GET', '/user/profile');
+    assert(userProfile.data.currentBalance === 49000, 'T17: Balance refunded by ₹4,000 to ₹49,000', `got ${userProfile.data.currentBalance}`);
+  }
+
+  // ─── Test 18: Edit ₹1,000 → ₹5,000 → balance becomes ₹45,000 (additional debit -₹4,000) ───
+  {
+    const res = await api('PUT', `/transactions/${p0TxId}`, {
+      amount: 5000,
+      description: 'P0 Increased Expense'
+    });
+    assert(res.status === 200, 'T18: Edit amount up to ₹5,000 succeeds');
+    assert(res.data.amount === 5000, 'T18: Transaction amount is now 5,000');
+
+    const userProfile = await api('GET', '/user/profile');
+    assert(userProfile.data.currentBalance === 45000, 'T18: Balance debited by ₹4,000 to ₹45,000', `got ${userProfile.data.currentBalance}`);
+  }
+
+  // ─── Test 19: Edit fields without changing amount → balance unchanged (₹45,000) ───
+  {
+    const res = await api('PUT', `/transactions/${p0TxId}`, {
+      description: 'P0 Metadata Edit Only',
+      category: 'Entertainment',
+      type: 'Want'
+    });
+    assert(res.status === 200, 'T19: Edit metadata without amount succeeds');
+
+    const userProfile = await api('GET', '/user/profile');
+    assert(userProfile.data.currentBalance === 45000, 'T19: Balance unchanged at ₹45,000 when amount is not modified', `got ${userProfile.data.currentBalance}`);
+  }
+
+  // ─── Test 20: Updating amount to the same value (₹5,000 → ₹5,000) → balance unchanged ───
+  {
+    const res = await api('PUT', `/transactions/${p0TxId}`, {
+      amount: 5000,
+      description: 'P0 Same Amount'
+    });
+    assert(res.status === 200, 'T20: Edit with identical amount succeeds');
+
+    const userProfile = await api('GET', '/user/profile');
+    assert(userProfile.data.currentBalance === 45000, 'T20: Balance unchanged at ₹45,000 when amount delta is 0', `got ${userProfile.data.currentBalance}`);
+  }
+
+  // ─── Test 21: Invalid update must not affect balance ───
+  {
+    const resNegative = await api('PUT', `/transactions/${p0TxId}`, { amount: -500 });
+    assert(resNegative.status === 400, 'T21: PUT with negative amount rejected with 400');
+
+    const resZero = await api('PUT', `/transactions/${p0TxId}`, { amount: 0 });
+    assert(resZero.status === 400, 'T21: PUT with zero amount rejected with 400');
+
+    const resNaN = await api('PUT', `/transactions/${p0TxId}`, { amount: 'invalid-amount' });
+    assert(resNaN.status === 400, 'T21: PUT with NaN amount rejected with 400');
+
+    const userProfile = await api('GET', '/user/profile');
+    assert(userProfile.data.currentBalance === 45000, 'T21: Balance unchanged at ₹45,000 after invalid update attempts', `got ${userProfile.data.currentBalance}`);
+  }
+
+  // ─── Test 22: Unauthorized edit must not affect transaction or balance ───
+  {
+    const res = await apiAsUserB('PUT', `/transactions/${p0TxId}`, { amount: 100 });
+    assert(res.status === 404, 'T22: Unauthorized edit by User B rejected with 404');
+
+    const userAProfile = await api('GET', '/user/profile');
+    assert(userAProfile.data.currentBalance === 45000, 'T22: User A balance untouched at ₹45,000', `got ${userAProfile.data.currentBalance}`);
+
+    const userBProfile = await apiAsUserB('GET', '/user/profile');
+    assert(userBProfile.data.currentBalance === 20000, 'T22: User B balance untouched at ₹20,000', `got ${userBProfile.data.currentBalance}`);
+  }
+
+  // ─── Test 23: Unauthorized delete must not affect transaction or balance ───
+  {
+    const res = await apiAsUserB('DELETE', `/transactions/${p0TxId}`);
+    assert(res.status === 404, 'T23: Unauthorized delete by User B rejected with 404');
+
+    const userAProfile = await api('GET', '/user/profile');
+    assert(userAProfile.data.currentBalance === 45000, 'T23: User A balance untouched at ₹45,000', `got ${userAProfile.data.currentBalance}`);
+
+    const userBProfile = await apiAsUserB('GET', '/user/profile');
+    assert(userBProfile.data.currentBalance === 20000, 'T23: User B balance untouched at ₹20,000', `got ${userBProfile.data.currentBalance}`);
+  }
+
+  // ─── Test 24: Delete ₹5,000 transaction → balance restored to ₹50,000 ───
+  {
+    const res = await api('DELETE', `/transactions/${p0TxId}`);
+    assert(res.status === 200, 'T24: Delete ₹5,000 expense succeeds');
+
+    const userProfile = await api('GET', '/user/profile');
+    assert(userProfile.data.currentBalance === 50000, 'T24: Balance restored to ₹50,000 on delete', `got ${userProfile.data.currentBalance}`);
+  }
+
+  // ─── Cleanup: delete remaining test transactions ───
   console.log('\n⏳ Cleaning up test transactions...');
   for (const txId of createdTxIds) {
     if (txId) {

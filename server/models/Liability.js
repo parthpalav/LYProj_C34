@@ -65,7 +65,10 @@ const liabilitySchema = new mongoose.Schema(
         validator: (v) => v === null || (Number.isInteger(v) && v >= 0),
         message: 'Remaining term months must be a non-negative integer'
       }
-    }
+    },
+    processingScheduledFor: { type: Date, default: null },
+    processingStartedAt: { type: Date, default: null },
+    processingToken: { type: String, default: null }
   },
   { timestamps: true, versionKey: false }
 );

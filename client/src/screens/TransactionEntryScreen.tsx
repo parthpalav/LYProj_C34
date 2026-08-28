@@ -155,13 +155,13 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
   // Real-time stats
   const today = new Date().toDateString();
   const todaySpend = transactions
-    .filter(t => new Date(t.timestamp).toDateString() === today)
-    .reduce((s, t) => s + (t.amount < 0 ? Math.abs(t.amount) : 0), 0) + parsedAmount;
+    .filter(t => new Date(t.timestamp).toDateString() === today && t.type !== 'Investment')
+    .reduce((s, t) => s + Math.abs(t.amount), 0) + (selectedType !== 'Investment' ? parsedAmount : 0);
 
   const startOfWeek = new Date(); startOfWeek.setDate(startOfWeek.getDate() - 7);
   const weekSpend = transactions
-    .filter(t => new Date(t.timestamp) > startOfWeek)
-    .reduce((s, t) => s + (t.amount < 0 ? Math.abs(t.amount) : 0), 0) + parsedAmount;
+    .filter(t => new Date(t.timestamp) > startOfWeek && t.type !== 'Investment')
+    .reduce((s, t) => s + Math.abs(t.amount), 0) + (selectedType !== 'Investment' ? parsedAmount : 0);
 
   const wantsRatio = transactions.length > 0 
     ? Math.round((transactions.filter(t => t.sentiment === 'negative').length / transactions.length) * 100)

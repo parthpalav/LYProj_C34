@@ -69,6 +69,7 @@ const userSchema = new mongoose.Schema(
       }
     },
     goals: { type: [String], default: [] },
+    processedLiabilityOccurrences: { type: [String], default: [] },
     onboardingComplete: { type: Boolean, default: false },
     onboardingCompleted: { type: Boolean, default: false }
   },

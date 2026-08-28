@@ -181,7 +181,7 @@ export function TransactionsScreen(): React.ReactElement {
     const thisMonth = transactions.filter((tx) => monthKey(tx.timestamp) === cmk);
     // Spent = Need + Want amounts (exclude Investment)
     const spent = thisMonth
-      .filter((tx) => tx.amount < 0 && tx.type !== 'Investment')
+      .filter((tx) => tx.type !== 'Investment')
       .reduce((sum, tx) => sum + Math.abs(tx.amount), 0);
     // Invested = Investment amounts
     const invested = thisMonth
@@ -233,9 +233,8 @@ export function TransactionsScreen(): React.ReactElement {
       return;
     }
     try {
-      const isExpense = editTx.amount < 0;
       await updateTransaction(editTx.id, {
-        amount: isExpense ? -parsedAmt : parsedAmt,
+        amount: parsedAmt,
         description: editDesc,
       });
       setEditTx(null);
@@ -307,8 +306,7 @@ export function TransactionsScreen(): React.ReactElement {
 
   // ── Transaction card renderer ──────────────────────────────────────────
   const renderItem = ({ item }: { item: Transaction }) => {
-    const isExpense = item.amount < 0;
-    const displayAmount = `${isExpense ? '-' : '+'}${formatCurrency(Math.abs(item.amount))}`;
+    const displayAmount = `-${formatCurrency(Math.abs(item.amount))}`;
 
     // Category emoji — lowercase lookup handles canonical ("Food") & legacy ("food")
     const icon = CATEGORY_EMOJI[(item.category || '').toLowerCase()] ?? '📦';
@@ -369,7 +367,7 @@ export function TransactionsScreen(): React.ReactElement {
 
         {/* Right column: amount + overflow */}
         <View style={styles.rightCol}>
-          <Text style={[styles.amount, !isExpense && styles.income]}>
+          <Text style={styles.amount}>
             {displayAmount}
           </Text>
 

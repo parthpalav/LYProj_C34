@@ -249,6 +249,77 @@ test('17. Category Investments (plural) remains strictly distinct from Type Inve
   assert.ok(txScreen.includes("{ key: 'Investment', label: 'Investments' }"), 'Type filter key is Investment');
 });
 
+// ── TEST 18: Expense display formatting renders with minus sign and no amount < 0 check ───
+test('18. Expense transactions render with minus sign (-₹X) and do not rely on amount < 0', () => {
+  const code = readScreen('TransactionsScreen.tsx');
+
+  // Stored positive amounts must render with a minus sign prefix
+  assert.ok(code.includes("`-${formatCurrency(Math.abs(item.amount))}`"), 'displayAmount formats with minus prefix');
+  assert.ok(!code.includes("isExpense = item.amount < 0"), 'renderItem does not check item.amount < 0');
+  assert.ok(!code.includes("isExpense ? '-' : '+'"), 'renderItem does not output plus sign for positive expense amounts');
+});
+
+// ── TEST 19: Monthly spend calculation sums positive amounts and excludes Investment ───
+test('19. Monthly spend calculation sums positive amounts and excludes Investment', () => {
+  const code = readScreen('TransactionsScreen.tsx');
+
+  // Filter logic must NOT use tx.amount < 0
+  assert.ok(!code.includes("tx.amount < 0 && tx.type !== 'Investment'"), 'monthlySummary does not require tx.amount < 0');
+  assert.ok(code.includes(".filter((tx) => tx.type !== 'Investment')"), 'monthlySummary spent filters for non-Investment type');
+
+  // Verify numerical behavior with test data
+  const sampleTransactions = [
+    { amount: 500, type: 'Want' },
+    { amount: 1000, type: 'Need' },
+    { amount: 2000, type: 'Investment' }
+  ];
+
+  const spent = sampleTransactions
+    .filter((tx) => tx.type !== 'Investment')
+    .reduce((sum, tx) => sum + Math.abs(tx.amount), 0);
+
+  const invested = sampleTransactions
+    .filter((tx) => tx.type === 'Investment')
+    .reduce((sum, tx) => sum + Math.abs(tx.amount), 0);
+
+  assert.equal(spent, 1500, 'Spent is 1500 (500 + 1000)');
+  assert.equal(invested, 2000, 'Invested is 2000');
+
+  // Empty transactions test
+  const emptyTransactions = [];
+  const emptySpent = emptyTransactions
+    .filter((tx) => tx.type !== 'Investment')
+    .reduce((sum, tx) => sum + Math.abs(tx.amount), 0);
+  assert.equal(emptySpent, 0, 'Zero transactions produces 0 spent');
+});
+
+// ── TEST 20: TransactionEntryScreen stats calculation uses positive amounts and excludes Investment ───
+test('20. TransactionEntryScreen todaySpend and weekSpend sum positive amounts and preview form entry', () => {
+  const code = readScreen('TransactionEntryScreen.tsx');
+
+  assert.ok(!code.includes("t.amount < 0 ? Math.abs(t.amount) : 0"), 'TransactionEntryScreen does not check t.amount < 0');
+  assert.ok(code.includes("t.type !== 'Investment'"), 'TransactionEntryScreen filters out Investment from spend stats');
+
+  // Simulate stats calculation with positive transactions
+  const now = new Date();
+  const todayStr = now.toDateString();
+  const txList = [
+    { amount: 300, timestamp: now.toISOString(), type: 'Want' },
+    { amount: 700, timestamp: now.toISOString(), type: 'Need' },
+    { amount: 1500, timestamp: now.toISOString(), type: 'Investment' }
+  ];
+
+  const parsedAmount = 250;
+  const selectedType = 'Need';
+
+  const todaySpend = txList
+    .filter(t => new Date(t.timestamp).toDateString() === todayStr && t.type !== 'Investment')
+    .reduce((s, t) => s + Math.abs(t.amount), 0) + (selectedType !== 'Investment' ? parsedAmount : 0);
+
+  // 300 (Want) + 700 (Need) + 250 (preview) = 1250 (excludes 1500 Investment)
+  assert.equal(todaySpend, 1250, 'todaySpend correctly sums positive historical amounts + non-investment preview');
+});
+
 console.log('='.repeat(64));
 console.log(`  NAVIGATION + TRANSACTIONS UX SUITE: ${passed} PASSED, ${failed} FAILED`);
 console.log('='.repeat(64));

@@ -1012,12 +1012,47 @@ router.put('/transactions/:id', async (req, res, next) => {
       return res.status(400).json({ error: 'No editable fields provided' });
     }
 
-    const updated = await Transaction.findOneAndUpdate(
-      { id: req.params.id, userId },
-      { $set: sanitized },
-      { new: true, runValidators: true }
-    ).lean();
-    if (!updated) return res.status(404).json({ error: 'Transaction not found' });
+    let updated;
+    if (sanitized.amount !== undefined) {
+      const oldTx = await Transaction.findOne({ id: req.params.id, userId }).lean();
+      if (!oldTx) return res.status(404).json({ error: 'Transaction not found' });
+
+      // Expense accounting: balanceDelta = oldAmount - newAmount
+      // If new amount is smaller, balance increases (+); if new amount is larger, balance decreases (-).
+      const balanceDelta = oldTx.amount - sanitized.amount;
+
+      if (balanceDelta !== 0) {
+        await User.findOneAndUpdate(userFilter(userId), { $inc: { currentBalance: balanceDelta } });
+      }
+
+      try {
+        updated = await Transaction.findOneAndUpdate(
+          { id: req.params.id, userId },
+          { $set: sanitized },
+          { new: true, runValidators: true }
+        ).lean();
+
+        if (!updated) {
+          if (balanceDelta !== 0) {
+            await User.findOneAndUpdate(userFilter(userId), { $inc: { currentBalance: -balanceDelta } });
+          }
+          return res.status(404).json({ error: 'Transaction not found' });
+        }
+      } catch (updateErr) {
+        if (balanceDelta !== 0) {
+          await User.findOneAndUpdate(userFilter(userId), { $inc: { currentBalance: -balanceDelta } });
+        }
+        throw updateErr;
+      }
+    } else {
+      updated = await Transaction.findOneAndUpdate(
+        { id: req.params.id, userId },
+        { $set: sanitized },
+        { new: true, runValidators: true }
+      ).lean();
+      if (!updated) return res.status(404).json({ error: 'Transaction not found' });
+    }
+
     res.json(normalizeTransaction(updated));
   } catch (error) { next(error); }
 });
@@ -1025,8 +1060,26 @@ router.put('/transactions/:id', async (req, res, next) => {
 router.delete('/transactions/:id', async (req, res, next) => {
   try {
     const userId = req.user.id;
-    const deleted = await Transaction.findOneAndDelete({ id: req.params.id, userId }).lean();
-    if (!deleted) return res.status(404).json({ error: 'Transaction not found' });
+    const oldTx = await Transaction.findOne({ id: req.params.id, userId }).lean();
+    if (!oldTx) return res.status(404).json({ error: 'Transaction not found' });
+
+    const refundAmount = oldTx.amount;
+
+    // Refund operating balance for deleted expense
+    await User.findOneAndUpdate(userFilter(userId), { $inc: { currentBalance: refundAmount } });
+
+    try {
+      const deleted = await Transaction.findOneAndDelete({ id: req.params.id, userId }).lean();
+      if (!deleted) {
+        // Rollback balance refund if delete fails
+        await User.findOneAndUpdate(userFilter(userId), { $inc: { currentBalance: -refundAmount } });
+        return res.status(404).json({ error: 'Transaction not found' });
+      }
+    } catch (deleteErr) {
+      await User.findOneAndUpdate(userFilter(userId), { $inc: { currentBalance: -refundAmount } });
+      throw deleteErr;
+    }
+
     res.json({ success: true, id: req.params.id });
   } catch (error) { next(error); }
 });
@@ -1079,13 +1132,39 @@ router.get('/fmi', async (req, res, next) => {
     // Calculate FMI (fully deterministic, no external service)
     const computed = calculateFMI(fmiUser, annotated);
 
-    // Persist FMI snapshot for history/trends
-    await FMIHistory.create({
-      userId,
-      score:     computed.score,
-      factors:   computed.factors,
-      timestamp: new Date()
-    });
+    // Persist or update today's FMI snapshot (at most 1 per user per calendar day)
+    const now = new Date();
+    const snapshotDate = now.toISOString().slice(0, 10); // "YYYY-MM-DD" in UTC
+
+    try {
+      await FMIHistory.findOneAndUpdate(
+        { userId: String(userId), snapshotDate },
+        {
+          $set: {
+            score:     computed.score,
+            factors:   computed.factors,
+            timestamp: now,
+            snapshotDate
+          }
+        },
+        { upsert: true, new: true, setDefaultsOnInsert: true }
+      );
+    } catch (upsertErr) {
+      if (upsertErr.code === 11000) {
+        await FMIHistory.findOneAndUpdate(
+          { userId: String(userId), snapshotDate },
+          {
+            $set: {
+              score:     computed.score,
+              factors:   computed.factors,
+              timestamp: now
+            }
+          }
+        );
+      } else {
+        throw upsertErr;
+      }
+    }
 
     console.log(`✓ FMI calculated for ${userId}: score=${computed.FMI} (${computed.fmiLabel}), status=${computed.status}`);
 
@@ -1107,14 +1186,23 @@ router.get('/fmi/history', async (req, res, next) => {
 
 router.get('/alerts', async (req, res, next) => {
   try {
-    const userId = req.user.id;
-    const txDocs = await Transaction.find({ userId }).sort({ timestamp: -1 }).lean();
-    const incomes = await Income.find({ userId }).lean();
-    const alerts = await Alert.find({ userId }).lean();
+    const userId = req.user.id || req.user._id;
+    const user = await User.findOne(userFilter(userId)).lean();
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    const txDocs = await Transaction.find({ userId: String(userId) }).sort({ timestamp: -1 }).lean();
+    const incomes = await Income.find({ userId: String(userId) }).lean();
+    const alerts = await Alert.find({ userId: String(userId) }).lean();
 
     const totalInc = incomes.reduce((sum, income) => sum + income.amount, 0);
     const totalExp = txDocs.reduce((sum, tx) => sum + tx.amount, 0);
-    const currentBalance = totalInc - totalExp;
+
+    // Authoritative balance source: User.currentBalance (safe fallback to totalInc - totalExp only if missing)
+    const currentBalance = typeof user.currentBalance === 'number' && !isNaN(user.currentBalance)
+      ? user.currentBalance
+      : totalInc - totalExp;
 
     const recentSpending = txDocs.slice(0, 4).map((tx) => tx.amount);
     const overspend = predictOverspend(recentSpending, currentBalance);
@@ -1124,13 +1212,13 @@ router.get('/alerts', async (req, res, next) => {
     const dynamic = [];
 
     if (overspend.risk === 'high') {
-      dynamic.push({ id: `a-${Date.now()}-1`, userId, message: 'Spending trend is above your average this week.', type: 'nudge', severity: 'medium' });
+      dynamic.push({ id: `a-${Date.now()}-1`, userId: String(userId), message: 'Spending trend is above your average this week.', type: 'nudge', severity: 'medium' });
     }
     if (lowBalance) {
-      dynamic.push({ id: `a-${Date.now()}-2`, userId, message: 'Risk of low balance before next income date.', type: 'warning', severity: 'high' });
+      dynamic.push({ id: `a-${Date.now()}-2`, userId: String(userId), message: 'Risk of low balance before next income date.', type: 'warning', severity: 'high' });
     }
     patterns.forEach((p, i) => {
-      dynamic.push({ id: `a-${Date.now()}-p${i}`, userId, message: `${p.emoji} ${p.message}`, type: 'nudge', severity: p.severity });
+      dynamic.push({ id: `a-${Date.now()}-p${i}`, userId: String(userId), message: `${p.emoji} ${p.message}`, type: 'nudge', severity: p.severity });
     });
 
     res.json([...alerts, ...dynamic]);

@@ -180,7 +180,9 @@ export function buildPredictabilitySnapshot(data = {}, options = {}) {
   // Lifestyle spending basis: Needs + Wants (excluding liability payments that terminate before retirement)
   const currentAnnualLifestyleSpending = (averageMonthlyNeeds + averageMonthlyWants) * 12;
 
-  const baseReturnRate = user.expectedReturnRate ?? DEFAULT_RETURN_RATE;
+  const baseReturnRate = (resolved.investableWeightedReturnRate !== undefined && fireInvestableCorpus > 0)
+    ? resolved.investableWeightedReturnRate
+    : (user.expectedReturnRate ?? DEFAULT_RETURN_RATE);
   const baseInflationRate = user.expectedInflationRate ?? DEFAULT_INFLATION_RATE;
   const baseWithdrawalRate = user.expectedWithdrawalRate ?? DEFAULT_WITHDRAWAL_RATE;
   const lifestyleAdjustmentRatio = user.lifestyleAdjustmentRatio ?? DEFAULT_LIFESTYLE_RATIO;
@@ -193,11 +195,18 @@ export function buildPredictabilitySnapshot(data = {}, options = {}) {
     });
   }
 
+  const fallbackReturnRate = user.expectedReturnRate ?? DEFAULT_RETURN_RATE;
+  const includedAssets = investableResult.includedAssets;
+
   // Pure retirement projection helper executed across scenario profiles
   const runProjection = (nomRate, infRate, swrRate, label, id) => {
     if (!forecastStatus.available) {
       return null;
     }
+
+    const nominalReturnOffset = id === 'conservative'
+      ? DEFAULT_SCENARIOS.CONSERVATIVE.nominalReturnOffset
+      : (id === 'optimistic' ? DEFAULT_SCENARIOS.OPTIMISTIC.nominalReturnOffset : 0);
 
     const realAnnualReturn = realReturn(nomRate, infRate);
     const fireCorpusResult = calculateFireCorpus({
@@ -238,6 +247,9 @@ export function buildPredictabilitySnapshot(data = {}, options = {}) {
 
         projectedCorpus = projectedCorpusAtRetirement({
           currentInvestableCorpus: fireInvestableCorpus,
+          assets: includedAssets,
+          fallbackNominalReturn: fallbackReturnRate,
+          nominalReturnOffset,
           monthlyContribution: monthlyContributionUsed,
           mode: contributionMode,
           annualContributionGrowthRate,
@@ -250,6 +262,9 @@ export function buildPredictabilitySnapshot(data = {}, options = {}) {
         if (contributionMode === CONTRIBUTION_MODE.NOMINAL_FLAT) {
           requiredContributionForEstimatedFire = requiredNominalFlatContribution({
             currentPrincipal: fireInvestableCorpus,
+            assets: includedAssets,
+            fallbackNominalReturn: fallbackReturnRate,
+            nominalReturnOffset,
             targetFutureValueReal: estimatedFireCorpus,
             nominalAnnualReturn: nomRate,
             inflationRate: infRate,
@@ -258,6 +273,9 @@ export function buildPredictabilitySnapshot(data = {}, options = {}) {
           requiredContributionForUserGoal = userGoalCorpus > 0
             ? requiredNominalFlatContribution({
                 currentPrincipal: fireInvestableCorpus,
+                assets: includedAssets,
+                fallbackNominalReturn: fallbackReturnRate,
+                nominalReturnOffset,
                 targetFutureValueReal: userGoalCorpus,
                 nominalAnnualReturn: nomRate,
                 inflationRate: infRate,
@@ -267,6 +285,9 @@ export function buildPredictabilitySnapshot(data = {}, options = {}) {
         } else if (contributionMode === CONTRIBUTION_MODE.STEP_UP) {
           requiredContributionForEstimatedFire = requiredStepUpContribution({
             currentPrincipal: fireInvestableCorpus,
+            assets: includedAssets,
+            fallbackNominalReturn: fallbackReturnRate,
+            nominalReturnOffset,
             targetFutureValueReal: estimatedFireCorpus,
             annualContributionGrowthRate,
             nominalAnnualReturn: nomRate,
@@ -276,6 +297,9 @@ export function buildPredictabilitySnapshot(data = {}, options = {}) {
           requiredContributionForUserGoal = userGoalCorpus > 0
             ? requiredStepUpContribution({
                 currentPrincipal: fireInvestableCorpus,
+                assets: includedAssets,
+                fallbackNominalReturn: fallbackReturnRate,
+                nominalReturnOffset,
                 targetFutureValueReal: userGoalCorpus,
                 annualContributionGrowthRate,
                 nominalAnnualReturn: nomRate,
@@ -286,6 +310,9 @@ export function buildPredictabilitySnapshot(data = {}, options = {}) {
         } else {
           requiredContributionForEstimatedFire = requiredRealConstantContribution({
             currentPrincipal: fireInvestableCorpus,
+            assets: includedAssets,
+            fallbackNominalReturn: fallbackReturnRate,
+            nominalReturnOffset,
             targetFutureValueReal: estimatedFireCorpus,
             realAnnualReturn,
             months: monthsUntilRetirement
@@ -293,6 +320,9 @@ export function buildPredictabilitySnapshot(data = {}, options = {}) {
           requiredContributionForUserGoal = userGoalCorpus > 0
             ? requiredRealConstantContribution({
                 currentPrincipal: fireInvestableCorpus,
+                assets: includedAssets,
+                fallbackNominalReturn: fallbackReturnRate,
+                nominalReturnOffset,
                 targetFutureValueReal: userGoalCorpus,
                 realAnnualReturn,
                 months: monthsUntilRetirement
@@ -304,6 +334,9 @@ export function buildPredictabilitySnapshot(data = {}, options = {}) {
 
         projectedFire = monthsToTarget({
           currentPrincipal: fireInvestableCorpus,
+          assets: includedAssets,
+          fallbackNominalReturn: fallbackReturnRate,
+          nominalReturnOffset,
           monthlyContribution: monthlyContributionUsed,
           mode: contributionMode,
           annualContributionGrowthRate,

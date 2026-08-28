@@ -104,6 +104,7 @@ export interface Asset {
   assetType: string;
   assetClass: AssetClass;
   currentValue: number;
+  annualReturnRate?: number | null;
   includedInFireCorpus: boolean;
   liquidity: AssetLiquidity;
   notes?: string;

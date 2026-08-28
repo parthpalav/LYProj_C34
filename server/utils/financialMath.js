@@ -16,7 +16,7 @@
  *      * NOMINAL_FLAT: Fixed rupee SIP every month (deflated by inflation over time in real terms).
  */
 
-import { MAX_PROJECTION_MONTHS, EPSILON, CONTRIBUTION_MODE } from '../config/financialRules.js';
+import { MAX_PROJECTION_MONTHS, EPSILON, CONTRIBUTION_MODE, DEFAULT_RETURN_RATE } from '../config/financialRules.js';
 
 export { CONTRIBUTION_MODE };
 
@@ -224,12 +224,22 @@ export function futureValueNominalFlatContributions({
  */
 export function futureValueRealConstant({
   currentPrincipal,
+  assets,
+  fallbackNominalReturn,
+  nominalReturnOffset = 0,
   monthlyContribution,
   realAnnualReturn,
   months,
   isBeginningOfMonth = false
 }) {
-  const fvPrincipal = futureValueLumpSum(currentPrincipal, realAnnualReturn, months);
+  let fvPrincipal;
+  if (Array.isArray(assets) && assets.length > 0) {
+    const fallbackRate = fallbackNominalReturn !== undefined ? fallbackNominalReturn : realAnnualReturn;
+    fvPrincipal = projectInvestableAssetsFutureValue(assets, months, fallbackRate, nominalReturnOffset);
+  } else {
+    fvPrincipal = futureValueLumpSum(currentPrincipal, realAnnualReturn, months);
+  }
+
   const fvContributions = futureValueRealConstantContributions({
     monthlyContribution,
     realAnnualReturn,
@@ -250,6 +260,9 @@ export function futureValueRealConstant({
  * 
  * @param {Object} params
  * @param {number} params.currentPrincipal - Starting principal (in today's rupees)
+ * @param {Array} [params.assets] - Optional array of Asset documents/objects for independent asset compounding
+ * @param {number} [params.fallbackNominalReturn] - Fallback rate for legacy assets
+ * @param {number} [params.nominalReturnOffset=0] - Scenario rate offset
  * @param {number} params.monthlyContribution - Fixed nominal monthly savings (PMT)
  * @param {number} params.nominalAnnualReturn - Nominal annual return rate
  * @param {number} params.inflationRate - Annual inflation rate
@@ -259,14 +272,28 @@ export function futureValueRealConstant({
  */
 export function futureValueNominalFlat({
   currentPrincipal,
+  assets,
+  fallbackNominalReturn,
+  nominalReturnOffset = 0,
   monthlyContribution,
   nominalAnnualReturn,
   inflationRate,
   months,
   isBeginningOfMonth = false
 }) {
-  const rReal = realReturn(nominalAnnualReturn, inflationRate);
-  const fvPrincipalReal = futureValueLumpSum(currentPrincipal, rReal, months);
+  let fvPrincipalReal;
+  let fvPrincipalNominal;
+
+  if (Array.isArray(assets) && assets.length > 0) {
+    const fallbackRate = fallbackNominalReturn !== undefined ? fallbackNominalReturn : nominalAnnualReturn;
+    fvPrincipalNominal = projectInvestableAssetsFutureValue(assets, months, fallbackRate, nominalReturnOffset);
+    fvPrincipalReal = fvPrincipalNominal / Math.pow(1 + inflationRate, months / 12);
+  } else {
+    const rReal = realReturn(nominalAnnualReturn, inflationRate);
+    fvPrincipalReal = futureValueLumpSum(currentPrincipal, rReal, months);
+    fvPrincipalNominal = futureValueLumpSum(currentPrincipal, nominalAnnualReturn, months);
+  }
+
   const fvContributionsReal = futureValueNominalFlatContributions({
     monthlyContribution,
     nominalAnnualReturn,
@@ -275,7 +302,6 @@ export function futureValueNominalFlat({
     isBeginningOfMonth
   });
 
-  const fvPrincipalNominal = futureValueLumpSum(currentPrincipal, nominalAnnualReturn, months);
   const fvContributionsNominal = futureValueRealConstantContributions({
     monthlyContribution,
     realAnnualReturn: nominalAnnualReturn,
@@ -348,6 +374,9 @@ export function futureValueStepUpContributions({
  *
  * @param {Object} params
  * @param {number} params.currentPrincipal - Starting principal (in today's rupees)
+ * @param {Array} [params.assets] - Optional array of Asset documents/objects for independent asset compounding
+ * @param {number} [params.fallbackNominalReturn] - Fallback rate for legacy assets
+ * @param {number} [params.nominalReturnOffset=0] - Scenario rate offset
  * @param {number} params.initialMonthlyContribution - Initial monthly savings (C0)
  * @param {number} [params.annualContributionGrowthRate=0] - Annual contribution escalation rate (g)
  * @param {number} params.nominalAnnualReturn - Nominal annual expected return
@@ -358,6 +387,9 @@ export function futureValueStepUpContributions({
  */
 export function futureValueStepUp({
   currentPrincipal,
+  assets,
+  fallbackNominalReturn,
+  nominalReturnOffset = 0,
   initialMonthlyContribution,
   annualContributionGrowthRate = 0,
   nominalAnnualReturn,
@@ -365,8 +397,19 @@ export function futureValueStepUp({
   months,
   isBeginningOfMonth = false
 }) {
-  const rReal = realReturn(nominalAnnualReturn, inflationRate);
-  const fvPrincipalReal = futureValueLumpSum(currentPrincipal, rReal, months);
+  let fvPrincipalReal;
+  let fvPrincipalNominal;
+
+  if (Array.isArray(assets) && assets.length > 0) {
+    const fallbackRate = fallbackNominalReturn !== undefined ? fallbackNominalReturn : nominalAnnualReturn;
+    fvPrincipalNominal = projectInvestableAssetsFutureValue(assets, months, fallbackRate, nominalReturnOffset);
+    fvPrincipalReal = fvPrincipalNominal / Math.pow(1 + inflationRate, months / 12);
+  } else {
+    const rReal = realReturn(nominalAnnualReturn, inflationRate);
+    fvPrincipalReal = futureValueLumpSum(currentPrincipal, rReal, months);
+    fvPrincipalNominal = futureValueLumpSum(currentPrincipal, nominalAnnualReturn, months);
+  }
+
   const fvContributionsReal = futureValueStepUpContributions({
     initialMonthlyContribution,
     annualContributionGrowthRate,
@@ -376,7 +419,6 @@ export function futureValueStepUp({
     isBeginningOfMonth
   });
 
-  const fvPrincipalNominal = futureValueLumpSum(currentPrincipal, nominalAnnualReturn, months);
   const fvContributionsNominal = fvContributionsReal * Math.pow(1 + inflationRate, months / 12);
 
   return {
@@ -420,6 +462,9 @@ export function futureValue({ currentPrincipal, monthlyContribution, annualRate,
  */
 export function requiredRealConstantContribution({
   currentPrincipal,
+  assets,
+  fallbackNominalReturn,
+  nominalReturnOffset = 0,
   targetFutureValueReal,
   realAnnualReturn,
   months,
@@ -436,7 +481,13 @@ export function requiredRealConstantContribution({
   }
 
   const monthlyRate = monthlyRateFromAnnual(realAnnualReturn);
-  const fvPrincipal = futureValueLumpSum(currentPrincipal, realAnnualReturn, months);
+  let fvPrincipal;
+  if (Array.isArray(assets) && assets.length > 0) {
+    const fallbackRate = fallbackNominalReturn !== undefined ? fallbackNominalReturn : realAnnualReturn;
+    fvPrincipal = projectInvestableAssetsFutureValue(assets, months, fallbackRate, nominalReturnOffset);
+  } else {
+    fvPrincipal = futureValueLumpSum(currentPrincipal, realAnnualReturn, months);
+  }
   const remainingTarget = targetFutureValueReal - fvPrincipal;
 
   if (remainingTarget <= 0) return 0;
@@ -481,12 +532,15 @@ export function requiredMonthlyContribution({ currentPrincipal, targetFutureValu
  * Method (Option A - Entire projection in nominal terms):
  *  1. Inflate target to future nominal rupees:
  *     targetNominal = targetFutureValueReal * (1 + inflationRate)^(months / 12)
- *  2. Grow current principal using nominal return:
- *     principalNominal = futureValueLumpSum(currentPrincipal, nominalAnnualReturn, months)
+ *  2. Grow current principal using individual asset compounding or nominal return:
+ *     principalNominal = projectInvestableAssetsFutureValue(...)
  *  3. Solve for required fixed nominal PMT using nominal return.
  * 
  * @param {Object} params
  * @param {number} params.currentPrincipal - Starting principal (in today's rupees)
+ * @param {Array} [params.assets] - Optional array of Asset documents/objects
+ * @param {number} [params.fallbackNominalReturn] - Fallback rate for legacy assets
+ * @param {number} [params.nominalReturnOffset=0] - Scenario rate offset
  * @param {number} params.targetFutureValueReal - Target retirement corpus (in today's rupees)
  * @param {number} params.nominalAnnualReturn - Nominal annual expected return
  * @param {number} params.inflationRate - Annual inflation rate
@@ -496,6 +550,9 @@ export function requiredMonthlyContribution({ currentPrincipal, targetFutureValu
  */
 export function requiredNominalFlatContribution({
   currentPrincipal,
+  assets,
+  fallbackNominalReturn,
+  nominalReturnOffset = 0,
   targetFutureValueReal,
   nominalAnnualReturn,
   inflationRate,
@@ -522,6 +579,9 @@ export function requiredNominalFlatContribution({
   // 2. Solve in nominal space
   return requiredRealConstantContribution({
     currentPrincipal,
+    assets,
+    fallbackNominalReturn,
+    nominalReturnOffset,
     targetFutureValueReal: targetNominal,
     realAnnualReturn: nominalAnnualReturn,
     months,
@@ -538,6 +598,9 @@ export function requiredNominalFlatContribution({
  *
  * @param {Object} params
  * @param {number} params.currentPrincipal - Starting principal (in today's rupees)
+ * @param {Array} [params.assets] - Optional array of Asset documents/objects
+ * @param {number} [params.fallbackNominalReturn] - Fallback rate for legacy assets
+ * @param {number} [params.nominalReturnOffset=0] - Scenario rate offset
  * @param {number} params.targetFutureValueReal - Target retirement corpus (in today's rupees)
  * @param {number} [params.annualContributionGrowthRate=0] - Annual contribution escalation rate (g)
  * @param {number} params.nominalAnnualReturn - Nominal annual expected return
@@ -548,6 +611,9 @@ export function requiredNominalFlatContribution({
  */
 export function requiredStepUpContribution({
   currentPrincipal,
+  assets,
+  fallbackNominalReturn,
+  nominalReturnOffset = 0,
   targetFutureValueReal,
   annualContributionGrowthRate,
   nominalAnnualReturn,
@@ -580,7 +646,13 @@ export function requiredStepUpContribution({
 
   const targetNominal = targetFutureValueReal * Math.pow(1 + inflationRate, months / 12);
   const rMonthly = monthlyRateFromAnnual(nominalAnnualReturn);
-  const fvPrincipalNominal = currentPrincipal * Math.pow(1 + rMonthly, months);
+  let fvPrincipalNominal;
+  if (Array.isArray(assets) && assets.length > 0) {
+    const fallbackRate = fallbackNominalReturn !== undefined ? fallbackNominalReturn : nominalAnnualReturn;
+    fvPrincipalNominal = projectInvestableAssetsFutureValue(assets, months, fallbackRate, nominalReturnOffset);
+  } else {
+    fvPrincipalNominal = currentPrincipal * Math.pow(1 + rMonthly, months);
+  }
   const remainingNominal = Math.max(0, targetNominal - fvPrincipalNominal);
 
   if (remainingNominal <= 0) return 0;
@@ -708,6 +780,73 @@ export function calculateInvestableCorpus(assets) {
 }
 
 /**
+ * Calculates the value-weighted nominal return rate of investable assets.
+ * For each asset with annualReturnRate specified, uses that rate (normalized to decimal fraction in [0, 1]).
+ * For legacy assets without annualReturnRate, falls back to defaultReturnRate.
+ * If total investable corpus is 0, returns defaultReturnRate.
+ *
+ * @param {Array} assets - Array of Asset objects
+ * @param {number} [defaultReturnRate=DEFAULT_RETURN_RATE] - Fallback return rate
+ * @returns {number} Effective value-weighted return rate
+ */
+export function calculateInvestableWeightedReturn(assets, defaultReturnRate = DEFAULT_RETURN_RATE) {
+  if (!Array.isArray(assets)) {
+    return defaultReturnRate;
+  }
+  let totalValue = 0;
+  let weightedSum = 0;
+
+  for (const a of assets) {
+    if (!a || typeof a !== 'object') continue;
+    const included = a.includedInFireCorpus === true && a.assetClass !== 'NON_INVESTABLE';
+    if (!included) continue;
+
+    const val = Number(a.currentValue) || 0;
+    if (val <= 0) continue;
+
+    let rate = defaultReturnRate;
+    if (a.annualReturnRate !== undefined && a.annualReturnRate !== null) {
+      const numRate = Number(a.annualReturnRate);
+      if (Number.isFinite(numRate) && numRate >= 0) {
+        rate = numRate > 1 ? numRate / 100 : numRate;
+      }
+    }
+
+    totalValue += val;
+    weightedSum += val * rate;
+  }
+
+  if (totalValue <= 0) {
+    return defaultReturnRate;
+  }
+  return weightedSum / totalValue;
+}
+
+/**
+ * Projects the future value of an individual asset based on its currentValue,
+ * annualReturnRate, and horizon in months using canonical lump-sum compounding.
+ *
+ * @param {Object} asset - Asset document / object
+ * @param {number} months - Projection horizon in months
+ * @param {number} [fallbackRate=DEFAULT_RETURN_RATE] - Fallback rate if asset.annualReturnRate is null/undefined
+ * @returns {number} Projected future value of the asset
+ */
+export function projectAssetFutureValue(asset, months, fallbackRate = DEFAULT_RETURN_RATE) {
+  if (!asset || typeof asset !== 'object') {
+    throw new TypeError('asset must be an object');
+  }
+  const val = Number(asset.currentValue) || 0;
+  let rate = fallbackRate;
+  if (asset.annualReturnRate !== undefined && asset.annualReturnRate !== null) {
+    const numRate = Number(asset.annualReturnRate);
+    if (Number.isFinite(numRate) && numRate >= 0) {
+      rate = numRate > 1 ? numRate / 100 : numRate;
+    }
+  }
+  return futureValueLumpSum(val, rate, months);
+}
+
+/**
  * Projects total portfolio corpus at retirement.
  * 
  * @param {Object} params
@@ -722,8 +861,65 @@ export function calculateInvestableCorpus(assets) {
  * @param {boolean} [params.isBeginningOfMonth=false] - Contribution timing
  * @returns {number} Projected corpus value in today's purchasing power (real terms)
  */
+/**
+ * Projects the aggregate future value of an array of investable assets over `months` horizon.
+ * Each asset is projected independently based on its own annualReturnRate (or fallbackRate if absent).
+ *
+ * @param {Array} assets - Array of Asset documents/objects
+ * @param {number} months - Projection horizon in months
+ * @param {number} [fallbackRate=DEFAULT_RETURN_RATE] - Rate to use if asset.annualReturnRate is null/undefined
+ * @param {number} [rateOffset=0] - Scenario rate offset (e.g. -0.02 for conservative, +0.02 for optimistic)
+ * @returns {number} Nominal future value of the existing assets
+ */
+export function projectInvestableAssetsFutureValue(assets, months, fallbackRate = DEFAULT_RETURN_RATE, rateOffset = 0) {
+  if (!Array.isArray(assets)) {
+    return 0;
+  }
+  let totalFv = 0;
+  for (const a of assets) {
+    if (!a || typeof a !== 'object') continue;
+    const included = a.includedInFireCorpus === true && a.assetClass !== 'NON_INVESTABLE';
+    if (!included) continue;
+
+    const val = Number(a.currentValue) || 0;
+    if (val <= 0) continue;
+
+    let rate = fallbackRate;
+    if (a.annualReturnRate !== undefined && a.annualReturnRate !== null) {
+      const numRate = Number(a.annualReturnRate);
+      if (Number.isFinite(numRate) && numRate >= 0) {
+        rate = numRate > 1 ? numRate / 100 : numRate;
+      }
+    }
+    const effectiveRate = Math.max(0, rate + rateOffset);
+    totalFv += futureValueLumpSum(val, effectiveRate, months);
+  }
+  return totalFv;
+}
+
+/**
+ * Projects total portfolio corpus at retirement.
+ *
+ * @param {Object} params
+ * @param {number} params.currentInvestableCorpus - Current investable assets
+ * @param {Array} [params.assets] - Optional array of Asset documents/objects for independent asset compounding
+ * @param {number} [params.fallbackNominalReturn] - Fallback rate for legacy assets
+ * @param {number} [params.nominalReturnOffset=0] - Scenario rate offset
+ * @param {number} params.monthlyContribution - Monthly saving amount (initial amount if STEP_UP)
+ * @param {string} [params.mode=CONTRIBUTION_MODE.REAL_CONSTANT] - Contribution mode
+ * @param {number} [params.annualContributionGrowthRate=0] - Annual contribution escalation rate (for STEP_UP mode)
+ * @param {number} [params.realAnnualReturn] - Real annual return rate (for REAL_CONSTANT mode)
+ * @param {number} [params.nominalAnnualReturn] - Nominal annual return rate (for NOMINAL_FLAT / STEP_UP mode)
+ * @param {number} [params.inflationRate] - Annual inflation rate (for NOMINAL_FLAT / STEP_UP mode)
+ * @param {number} params.monthsToRetirement - Time until retirement in months
+ * @param {boolean} [params.isBeginningOfMonth=false] - Contribution timing
+ * @returns {number} Projected corpus value in today's purchasing power (real terms)
+ */
 export function projectedCorpusAtRetirement({
   currentInvestableCorpus,
+  assets,
+  fallbackNominalReturn,
+  nominalReturnOffset = 0,
   monthlyContribution,
   mode = CONTRIBUTION_MODE.REAL_CONSTANT,
   annualContributionGrowthRate = 0,
@@ -736,6 +932,9 @@ export function projectedCorpusAtRetirement({
   if (mode === CONTRIBUTION_MODE.NOMINAL_FLAT) {
     const result = futureValueNominalFlat({
       currentPrincipal: currentInvestableCorpus,
+      assets,
+      fallbackNominalReturn,
+      nominalReturnOffset,
       monthlyContribution,
       nominalAnnualReturn,
       inflationRate,
@@ -751,6 +950,9 @@ export function projectedCorpusAtRetirement({
     }
     const result = futureValueStepUp({
       currentPrincipal: currentInvestableCorpus,
+      assets,
+      fallbackNominalReturn,
+      nominalReturnOffset,
       initialMonthlyContribution: monthlyContribution,
       annualContributionGrowthRate,
       nominalAnnualReturn,
@@ -763,6 +965,9 @@ export function projectedCorpusAtRetirement({
 
   const result = futureValueRealConstant({
     currentPrincipal: currentInvestableCorpus,
+    assets,
+    fallbackNominalReturn,
+    nominalReturnOffset,
     monthlyContribution,
     realAnnualReturn,
     months: monthsToRetirement,
@@ -777,6 +982,9 @@ export function projectedCorpusAtRetirement({
  * 
  * @param {Object} params
  * @param {number} params.currentPrincipal - PV starting amount
+ * @param {Array} [params.assets] - Optional array of Asset documents/objects for independent asset compounding
+ * @param {number} [params.fallbackNominalReturn] - Fallback rate for legacy assets
+ * @param {number} [params.nominalReturnOffset=0] - Scenario rate offset
  * @param {number} params.monthlyContribution - Monthly contribution amount
  * @param {string} [params.mode=CONTRIBUTION_MODE.REAL_CONSTANT] - Contribution mode
  * @param {number} [params.annualContributionGrowthRate=0] - Annual contribution escalation rate (for STEP_UP)
@@ -791,6 +999,9 @@ export function projectedCorpusAtRetirement({
  */
 export function monthsToTarget({
   currentPrincipal,
+  assets,
+  fallbackNominalReturn,
+  nominalReturnOffset = 0,
   monthlyContribution,
   mode = CONTRIBUTION_MODE.REAL_CONSTANT,
   annualContributionGrowthRate = 0,
@@ -810,6 +1021,8 @@ export function monthsToTarget({
     return { reached: true, months: 0, projectedValue: currentPrincipal };
   }
 
+  const hasAssets = Array.isArray(assets) && assets.length > 0;
+
   if (mode === CONTRIBUTION_MODE.NOMINAL_FLAT || mode === CONTRIBUTION_MODE.STEP_UP) {
     if (mode === CONTRIBUTION_MODE.STEP_UP) {
       if (annualContributionGrowthRate === undefined || annualContributionGrowthRate === null) {
@@ -826,7 +1039,7 @@ export function monthsToTarget({
     if (inflationRate <= -1) throw new RangeError('inflationRate must be greater than -1.0 (-100%)');
 
     const monthlyNominalRate = monthlyRateFromAnnual(nominalAnnualReturn);
-    let currentNominal = currentPrincipal;
+    let cumulativeContributionsNominal = 0;
 
     for (let m = 1; m <= maxMonths; m++) {
       const yearIdx = Math.floor((m - 1) / 12);
@@ -835,18 +1048,34 @@ export function monthsToTarget({
         : monthlyContribution;
 
       if (isBeginningOfMonth) {
-        currentNominal = (currentNominal + pmt) * (1 + monthlyNominalRate);
+        cumulativeContributionsNominal = (cumulativeContributionsNominal + pmt) * (1 + monthlyNominalRate);
       } else {
-        currentNominal = currentNominal * (1 + monthlyNominalRate) + pmt;
+        cumulativeContributionsNominal = cumulativeContributionsNominal * (1 + monthlyNominalRate) + pmt;
       }
 
-      const realValue = currentNominal / Math.pow(1 + inflationRate, m / 12);
+      let fvPrincipalNominal;
+      if (hasAssets) {
+        const fallbackRate = fallbackNominalReturn !== undefined ? fallbackNominalReturn : nominalAnnualReturn;
+        fvPrincipalNominal = projectInvestableAssetsFutureValue(assets, m, fallbackRate, nominalReturnOffset);
+      } else {
+        fvPrincipalNominal = currentPrincipal * Math.pow(1 + monthlyNominalRate, m);
+      }
+
+      const totalNominal = fvPrincipalNominal + cumulativeContributionsNominal;
+      const realValue = totalNominal / Math.pow(1 + inflationRate, m / 12);
       if (realValue >= targetFutureValue) {
         return { reached: true, months: m, projectedValue: realValue };
       }
     }
 
-    const finalReal = currentNominal / Math.pow(1 + inflationRate, maxMonths / 12);
+    let finalFvPrincipalNominal;
+    if (hasAssets) {
+      const fallbackRate = fallbackNominalReturn !== undefined ? fallbackNominalReturn : nominalAnnualReturn;
+      finalFvPrincipalNominal = projectInvestableAssetsFutureValue(assets, maxMonths, fallbackRate, nominalReturnOffset);
+    } else {
+      finalFvPrincipalNominal = currentPrincipal * Math.pow(1 + monthlyNominalRate, maxMonths);
+    }
+    const finalReal = (finalFvPrincipalNominal + cumulativeContributionsNominal) / Math.pow(1 + inflationRate, maxMonths / 12);
     return { reached: false, months: null, projectedValueAtHorizon: finalReal };
   }
 
@@ -858,26 +1087,37 @@ export function monthsToTarget({
   }
 
   const monthlyRate = monthlyRateFromAnnual(effectiveRealRate);
-  let currentValue = currentPrincipal;
-
-  const monthlyGrowth = currentValue * monthlyRate;
-  if (monthlyGrowth + monthlyContribution <= 0) {
-    return { reached: false, months: null, projectedValueAtHorizon: currentValue };
-  }
+  let cumulativeContributionsReal = 0;
 
   for (let m = 1; m <= maxMonths; m++) {
     if (isBeginningOfMonth) {
-      currentValue = (currentValue + monthlyContribution) * (1 + monthlyRate);
+      cumulativeContributionsReal = (cumulativeContributionsReal + monthlyContribution) * (1 + monthlyRate);
     } else {
-      currentValue = currentValue * (1 + monthlyRate) + monthlyContribution;
+      cumulativeContributionsReal = cumulativeContributionsReal * (1 + monthlyRate) + monthlyContribution;
     }
 
-    if (currentValue >= targetFutureValue) {
-      return { reached: true, months: m, projectedValue: currentValue };
+    let fvPrincipalReal;
+    if (hasAssets) {
+      const fallbackRate = fallbackNominalReturn !== undefined ? fallbackNominalReturn : effectiveRealRate;
+      fvPrincipalReal = projectInvestableAssetsFutureValue(assets, m, fallbackRate, nominalReturnOffset);
+    } else {
+      fvPrincipalReal = currentPrincipal * Math.pow(1 + monthlyRate, m);
+    }
+
+    const totalReal = fvPrincipalReal + cumulativeContributionsReal;
+    if (totalReal >= targetFutureValue) {
+      return { reached: true, months: m, projectedValue: totalReal };
     }
   }
 
-  return { reached: false, months: null, projectedValueAtHorizon: currentValue };
+  let finalFvPrincipalReal;
+  if (hasAssets) {
+    const fallbackRate = fallbackNominalReturn !== undefined ? fallbackNominalReturn : effectiveRealRate;
+    finalFvPrincipalReal = projectInvestableAssetsFutureValue(assets, maxMonths, fallbackRate, nominalReturnOffset);
+  } else {
+    finalFvPrincipalReal = currentPrincipal * Math.pow(1 + monthlyRate, maxMonths);
+  }
+  return { reached: false, months: null, projectedValueAtHorizon: finalFvPrincipalReal + cumulativeContributionsReal };
 }
 
 /**

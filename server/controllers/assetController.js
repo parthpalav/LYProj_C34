@@ -36,6 +36,7 @@ export const createAsset = async (req, res, next) => {
       assetType,
       assetClass,
       currentValue,
+      annualReturnRate,
       includedInFireCorpus,
       liquidity,
       notes
@@ -75,6 +76,19 @@ export const createAsset = async (req, res, next) => {
       });
     }
 
+    let cleanAnnualReturnRate = null;
+    if (annualReturnRate !== undefined && annualReturnRate !== null && annualReturnRate !== '') {
+      const numRate = Number(annualReturnRate);
+      if (!Number.isFinite(numRate) || numRate < 0 || numRate > 100) {
+        return res.status(400).json({
+          success: false,
+          error: 'Annual return rate must be a finite number between 0% and 100%',
+          code: 'INVALID_ANNUAL_RETURN_RATE'
+        });
+      }
+      cleanAnnualReturnRate = numRate > 1 ? numRate / 100 : numRate;
+    }
+
     const isIncludedInFire = Boolean(includedInFireCorpus);
     if (assetClass === 'NON_INVESTABLE' && isIncludedInFire) {
       return res.status(400).json({
@@ -97,6 +111,7 @@ export const createAsset = async (req, res, next) => {
       assetType: assetType.trim(),
       assetClass,
       currentValue: numValue,
+      annualReturnRate: cleanAnnualReturnRate,
       includedInFireCorpus: isIncludedInFire,
       liquidity: cleanLiquidity,
       notes: typeof notes === 'string' ? notes.trim() : ''
@@ -127,6 +142,7 @@ export const updateAsset = async (req, res, next) => {
       assetType,
       assetClass,
       currentValue,
+      annualReturnRate,
       includedInFireCorpus,
       liquidity,
       notes
@@ -184,6 +200,22 @@ export const updateAsset = async (req, res, next) => {
         });
       }
       existing.currentValue = numValue;
+    }
+
+    if (annualReturnRate !== undefined) {
+      if (annualReturnRate === null || annualReturnRate === '') {
+        existing.annualReturnRate = null;
+      } else {
+        const numRate = Number(annualReturnRate);
+        if (!Number.isFinite(numRate) || numRate < 0 || numRate > 100) {
+          return res.status(400).json({
+            success: false,
+            error: 'Annual return rate must be a finite number between 0% and 100%',
+            code: 'INVALID_ANNUAL_RETURN_RATE'
+          });
+        }
+        existing.annualReturnRate = numRate > 1 ? numRate / 100 : numRate;
+      }
     }
 
     if (includedInFireCorpus !== undefined) {

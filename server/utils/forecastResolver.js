@@ -1,5 +1,6 @@
 import { isConsumption, isInvestment, isDebtService } from './financialAccounting.js';
-import { calculateInvestableCorpus } from './financialMath.js';
+import { calculateInvestableCorpus, calculateInvestableWeightedReturn } from './financialMath.js';
+import { DEFAULT_RETURN_RATE } from '../config/financialRules.js';
 
 /**
  * server/utils/forecastResolver.js
@@ -172,6 +173,10 @@ export function resolveForecastInputs(data, options = {}) {
   // 3. Process Assets
   const investableResult = calculateInvestableCorpus(assets);
   const fireInvestableCorpus = investableResult.includedTotal;
+  const investableWeightedReturnRate = calculateInvestableWeightedReturn(
+    investableResult.includedAssets,
+    user.expectedReturnRate ?? DEFAULT_RETURN_RATE
+  );
 
   let totalAssetValue = 0;
   let liquidBuffer = 0;
@@ -293,6 +298,7 @@ export function resolveForecastInputs(data, options = {}) {
     totalAssetValue,
     knownNetWorth,
     investableResult,
+    investableWeightedReturnRate,
     currentAge,
     retirementAge,
     monthsUntilRetirement,

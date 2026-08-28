@@ -129,7 +129,9 @@ export function deriveMonteCarloSeed(params = {}) {
  */
 export function buildMonteCarloPayload(resolved = {}, options = {}, extra = {}) {
   const user = resolved.user || {};
-  const rawExpectedReturn = user.expectedReturnRate;
+  const rawExpectedReturn = (resolved.investableWeightedReturnRate !== undefined && resolved.fireInvestableCorpus > 0)
+    ? resolved.investableWeightedReturnRate
+    : user.expectedReturnRate;
   const {
     portfolioVolatility,
     effectiveExpectedReturnRate,

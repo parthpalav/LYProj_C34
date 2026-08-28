@@ -58,6 +58,7 @@ test('2. Fixed Deposit: FIRE_INVESTABLE, locked, included in FIRE corpus', () =>
       assetType: 'Fixed Deposit',
       assetClass: 'FIRE_INVESTABLE',
       currentValue: 1000000, // 10L
+      annualReturnRate: 0.06, // 6%
       includedInFireCorpus: true,
       liquidity: 'locked'
     }
@@ -81,6 +82,7 @@ test('3. Bank Savings: SEMI_LIQUID, liquid, included in emergency buffer, exclud
       assetType: 'Bank / Savings',
       assetClass: 'SEMI_LIQUID',
       currentValue: 500000, // 5L
+      annualReturnRate: 0.035, // 3.5%
       includedInFireCorpus: false,
       liquidity: 'liquid'
     }
@@ -102,6 +104,7 @@ test('4. Mutual Fund: FIRE_INVESTABLE, liquid, included in FIRE corpus', () => {
       assetType: 'Mutual Fund',
       assetClass: 'FIRE_INVESTABLE',
       currentValue: 800000, // 8L
+      annualReturnRate: 0.12, // 12%
       includedInFireCorpus: true,
       liquidity: 'liquid'
     }
@@ -150,6 +153,7 @@ test('6. Non-double-counting of User.currentBalance vs Asset records', () => {
         assetType: 'Fixed Deposit',
         assetClass: 'FIRE_INVESTABLE',
         currentValue: 1000000, // 10L FD
+        annualReturnRate: 0.065,
         includedInFireCorpus: true,
         liquidity: 'locked'
       }
@@ -189,6 +193,54 @@ test('9. AssetsScreen provides clear empty state and no NaN/undefined leakage', 
   assert.ok(code.includes('No assets added yet'), 'Empty state headline present');
   assert.ok(code.includes('+ Add First Asset'), 'Empty state CTA present');
   assert.ok(code.includes('formatINR'), 'INR formatter used for safe currency display');
+});
+
+// ── TEST 10: Contextual Rate Labels by Asset Type ────────────
+test('10. Contextual rate labels depend on asset type (FD/RD vs Mutual Fund vs Other)', () => {
+  const code = readScreen('AssetsScreen.tsx');
+  assert.ok(code.includes('getRateLabel'), 'getRateLabel helper defined');
+  assert.ok(code.includes('Interest Rate (% p.a.)'), 'Interest Rate label used for FD/RD');
+  assert.ok(code.includes('Expected Return (% p.a.)'), 'Expected Return label used for Mutual Funds/Stocks');
+  assert.ok(code.includes('Expected Annual Return (% p.a.)'), 'Expected Annual Return label used for other assets');
+});
+
+// ── TEST 11: Annual Return Rate Form State & Input ───────────
+test('11. Annual return rate field is editable with numeric keyboard and % p.a. context', () => {
+  const code = readScreen('AssetsScreen.tsx');
+  assert.ok(code.includes('annualReturnRate'), 'annualReturnRate state defined');
+  assert.ok(code.includes('setAnnualReturnRate'), 'setAnnualReturnRate updater used');
+  assert.ok(code.includes('keyboardType="numeric"'), 'Numeric keyboard requested');
+});
+
+// ── TEST 12: Decimal Entry & Conversion on Save ──────────────
+test('12. Decimal rate entry supported and converted to decimal fraction on save', () => {
+  const code = readScreen('AssetsScreen.tsx');
+  assert.ok(code.includes('annualReturnRate.trim()'), 'Trims rate input');
+  assert.ok(code.includes('parseFloat(annualReturnRate.trim())'), 'Parses float decimal rate');
+  assert.ok(code.includes('rateNum > 1 ? rateNum / 100 : rateNum'), 'Converts user % to decimal fraction');
+  assert.ok(code.includes('annualReturnRate: parsedRate'), 'Passes annualReturnRate in save payload');
+});
+
+// ── TEST 13: Rate Pre-population on Edit ─────────────────────
+test('13. Edit form pre-populates existing rate percentage', () => {
+  const code = readScreen('AssetsScreen.tsx');
+  assert.ok(
+    code.includes('ast.annualReturnRate * 100') || code.includes('ast.annualReturnRate > 1'),
+    'Pre-populates edit form with rate percentage'
+  );
+});
+
+// ── TEST 14: Rate Displayed on Asset Cards ───────────────────
+test('14. Rate displayed on asset card with % p.a. badge', () => {
+  const code = readScreen('AssetsScreen.tsx');
+  assert.ok(code.includes('% p.a.'), 'Asset card displays % p.a.');
+  assert.ok(code.includes('ast.annualReturnRate !== undefined'), 'Guards against undefined rate');
+});
+
+// ── TEST 15: Graceful Legacy Asset Handling ──────────────────
+test('15. Legacy assets without rate display gracefully without blank badges', () => {
+  const code = readScreen('AssetsScreen.tsx');
+  assert.ok(code.includes('ast.annualReturnRate !== null'), 'Null rate check present');
 });
 
 console.log('='.repeat(64));

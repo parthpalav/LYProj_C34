@@ -19,6 +19,14 @@ const assetSchema = new mongoose.Schema(
         message: 'Current value must be a non-negative finite number'
       }
     },
+    annualReturnRate: {
+      type: Number,
+      default: null,
+      validate: {
+        validator: (v) => v === null || v === undefined || (Number.isFinite(v) && v >= 0 && v <= 1),
+        message: 'Annual return rate must be a decimal fraction between 0 and 1'
+      }
+    },
     includedInFireCorpus: {
       type: Boolean,
       default: false

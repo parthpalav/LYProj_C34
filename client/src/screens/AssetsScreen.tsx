@@ -64,6 +64,17 @@ function formatINR(val: number): string {
   return '₹' + Math.round(val).toLocaleString('en-IN');
 }
 
+export function getRateLabel(type: string): { label: string; placeholder: string } {
+  const t = type?.toLowerCase() || '';
+  if (t.includes('deposit') || t.includes('fd') || t.includes('rd') || t.includes('recurring')) {
+    return { label: 'Interest Rate (% p.a.)', placeholder: 'e.g. 7.25' };
+  }
+  if (t.includes('mutual') || t.includes('stock') || t.includes('equity') || t.includes('etf')) {
+    return { label: 'Expected Return (% p.a.)', placeholder: 'e.g. 12.00' };
+  }
+  return { label: 'Expected Annual Return (% p.a.)', placeholder: 'e.g. 8.00' };
+}
+
 export default function AssetsScreen() {
   const navigation = useNavigation<any>();
   const [assets, setAssets] = useState<Asset[]>([]);
@@ -80,6 +91,7 @@ export default function AssetsScreen() {
   const [assetType, setAssetType] = useState('Fixed Deposit');
   const [customType, setCustomType] = useState('');
   const [currentValue, setCurrentValue] = useState('');
+  const [annualReturnRate, setAnnualReturnRate] = useState('');
   const [assetClass, setAssetClass] = useState<AssetClass>('FIRE_INVESTABLE');
   const [includedInFireCorpus, setIncludedInFireCorpus] = useState(true);
   const [liquidity, setLiquidity] = useState<AssetLiquidity>('locked');
@@ -113,6 +125,7 @@ export default function AssetsScreen() {
     setAssetType('Fixed Deposit');
     setCustomType('');
     setCurrentValue('');
+    setAnnualReturnRate('');
     setAssetClass('FIRE_INVESTABLE');
     setIncludedInFireCorpus(true);
     setLiquidity('locked');
@@ -131,6 +144,11 @@ export default function AssetsScreen() {
       setCustomType(ast.assetType);
     }
     setCurrentValue(String(ast.currentValue));
+    setAnnualReturnRate(
+      ast.annualReturnRate !== undefined && ast.annualReturnRate !== null
+        ? String(ast.annualReturnRate > 1 ? ast.annualReturnRate : ast.annualReturnRate * 100)
+        : ''
+    );
     setAssetClass(ast.assetClass);
     setIncludedInFireCorpus(ast.includedInFireCorpus);
     setLiquidity(ast.liquidity || 'liquid');
@@ -193,6 +211,16 @@ export default function AssetsScreen() {
       return;
     }
 
+    let parsedRate: number | null = null;
+    if (annualReturnRate.trim() !== '') {
+      const rateNum = parseFloat(annualReturnRate.trim());
+      if (isNaN(rateNum) || rateNum < 0 || rateNum > 100) {
+        Alert.alert('Validation Error', 'Annual return / interest rate must be a valid number between 0% and 100%.');
+        return;
+      }
+      parsedRate = rateNum > 1 ? rateNum / 100 : rateNum;
+    }
+
     setSaving(true);
     try {
       const payload: Partial<Asset> = {
@@ -200,6 +228,7 @@ export default function AssetsScreen() {
         assetType: finalType,
         assetClass,
         currentValue: val,
+        annualReturnRate: parsedRate,
         includedInFireCorpus: assetClass === 'NON_INVESTABLE' ? false : includedInFireCorpus,
         liquidity,
         notes: notes.trim(),
@@ -381,6 +410,16 @@ export default function AssetsScreen() {
                     <MaterialCommunityIcons name={liqConfig.icon as any} size={12} color="#38BDF8" />
                     <Text style={[styles.statusBadgeText, { color: '#38BDF8' }]}>{liqConfig.label}</Text>
                   </View>
+
+                  {ast.annualReturnRate !== undefined && ast.annualReturnRate !== null ? (
+                    <View style={[styles.statusBadge, { backgroundColor: '#10B98120' }]}>
+                      <MaterialCommunityIcons name="trending-up" size={12} color="#10B981" />
+                      <Text style={[styles.statusBadgeText, { color: '#10B981' }]}>
+                        {ast.assetType.toLowerCase().includes('deposit') || ast.assetType.toLowerCase().includes('fd') || ast.assetType.toLowerCase().includes('rd') ? 'Interest: ' : 'Return: '}
+                        {(ast.annualReturnRate > 1 ? ast.annualReturnRate : ast.annualReturnRate * 100).toFixed(2)}% p.a.
+                      </Text>
+                    </View>
+                  ) : null}
                 </View>
 
                 {ast.notes ? <Text style={styles.assetNotes}>{ast.notes}</Text> : null}
@@ -479,6 +518,24 @@ export default function AssetsScreen() {
                 value={currentValue}
                 onChangeText={setCurrentValue}
               />
+
+              {/* Annual Return / Interest Rate */}
+              {(() => {
+                const rateInfo = getRateLabel(assetType === 'Other' ? customType : assetType);
+                return (
+                  <View style={{ marginTop: 12 }}>
+                    <Text style={styles.fieldLabel}>{rateInfo.label}</Text>
+                    <TextInput
+                      style={styles.input}
+                      placeholder={rateInfo.placeholder}
+                      placeholderTextColor="#64748B"
+                      keyboardType="numeric"
+                      value={annualReturnRate}
+                      onChangeText={setAnnualReturnRate}
+                    />
+                  </View>
+                );
+              })()}
 
               {/* Asset Class */}
               <Text style={styles.fieldLabel}>Planning Classification</Text>

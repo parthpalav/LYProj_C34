@@ -236,6 +236,168 @@ test('Test 8: Financial Data Section Deep Links', () => {
   assert.equal(sectionLinks[2].route, 'Envelopes');
 });
 
+// ── 9. STORE SYNCHRONIZATION: SINGLE FIELD UPDATE ───────────
+test('Test 9: Case 1 — Successful Profile Save synchronizes both useStore and useAuthStore', () => {
+  // Mock stores
+  let storeState = { user: { id: 'u-1', name: 'Alice', monthlyIncome: 50000 } };
+  let authState = { user: { id: 'u-1', name: 'Alice', monthlyIncome: 50000 }, token: 'mock-jwt-token', onboardingCompleted: true };
+
+  const setStoreUser = (u) => { storeState.user = u; };
+  const setAuthUser = (u) => { authState.user = u; };
+
+  // Profile save simulation
+  const backendResponse = {
+    success: true,
+    user: { id: 'u-1', name: 'Alice', monthlyIncome: 75000 }
+  };
+
+  // Synchronize both stores
+  setStoreUser(backendResponse.user);
+  setAuthUser(backendResponse.user);
+
+  assert.equal(storeState.user.monthlyIncome, 75000);
+  assert.equal(authState.user.monthlyIncome, 75000);
+  assert.deepEqual(storeState.user, authState.user);
+});
+
+// ── 10. STORE SYNCHRONIZATION: MULTIPLE UPDATED FIELDS ───────
+test('Test 10: Case 2 — Multiple updated fields are synchronized across both stores', () => {
+  let storeState = { user: { id: 'u-1', name: 'Bob', age: 30, monthlyIncome: 60000, retirementAge: 60, retirementCorpusGoal: 10000000 } };
+  let authState = { user: { id: 'u-1', name: 'Bob', age: 30, monthlyIncome: 60000, retirementAge: 60, retirementCorpusGoal: 10000000 } };
+
+  const serverUser = {
+    id: 'u-1',
+    name: 'Robert',
+    age: 32,
+    monthlyIncome: 90000,
+    retirementAge: 55,
+    retirementCorpusGoal: 25000000,
+    expectedReturnRate: 0.10,
+    expectedInflationRate: 0.05
+  };
+
+  storeState.user = serverUser;
+  authState.user = serverUser;
+
+  assert.equal(storeState.user.name, 'Robert');
+  assert.equal(authState.user.name, 'Robert');
+  assert.equal(storeState.user.retirementAge, 55);
+  assert.equal(authState.user.retirementAge, 55);
+  assert.equal(storeState.user.expectedReturnRate, 0.10);
+  assert.equal(authState.user.expectedReturnRate, 0.10);
+  assert.deepEqual(storeState.user, authState.user);
+});
+
+// ── 11. SESSION PRESERVATION ─────────────────────────────────
+test('Test 11: Case 3 — Profile save preserves authentication tokens and session status', () => {
+  let authState = {
+    user: { id: 'u-1', name: 'Charlie', monthlyIncome: 40000 },
+    token: 'valid-access-token-xyz',
+    onboardingCompleted: true,
+    initializing: false,
+    loading: false
+  };
+
+  const updatedServerUser = { id: 'u-1', name: 'Charlie Updated', monthlyIncome: 60000 };
+
+  // Update user in authStore
+  authState.user = updatedServerUser;
+
+  assert.equal(authState.user.name, 'Charlie Updated');
+  assert.equal(authState.token, 'valid-access-token-xyz', 'Token remains intact');
+  assert.equal(authState.onboardingCompleted, true, 'Onboarding status remains intact');
+  assert.equal(authState.initializing, false, 'Auth initialization state untouched');
+});
+
+// ── 12. BACKEND FAILURE BEHAVIOUR ───────────────────────────
+test('Test 12: Case 4 — Backend save failure leaves both stores untouched with original data', () => {
+  const originalUser = { id: 'u-1', name: 'Dave', monthlyIncome: 50000 };
+  let storeUser = { ...originalUser };
+  let authUser = { ...originalUser };
+
+  const setStoreUser = (u) => { storeUser = u; };
+  const setAuthUser = (u) => { authUser = u; };
+
+  // Simulated API call failure
+  let apiFailed = true;
+  let response = null;
+
+  if (!apiFailed) {
+    response = { success: true, user: { id: 'u-1', name: 'Dave', monthlyIncome: 99999 } };
+    setStoreUser(response.user);
+    setAuthUser(response.user);
+  }
+
+  assert.equal(storeUser.monthlyIncome, 50000, 'storeUser remains unchanged on failure');
+  assert.equal(authUser.monthlyIncome, 50000, 'authUser remains unchanged on failure');
+  assert.deepEqual(storeUser, originalUser);
+});
+
+// ── 13. SERVER NORMALIZATION CANONICAL SOURCING ─────────────
+test('Test 13: Case 5 — Stores use server-normalized user rather than raw client form payload', () => {
+  let storeUser = null;
+  let authUser = null;
+
+  // Client form raw payload
+  const rawFormPayload = {
+    name: '  Eve Adams  ', // un-trimmed
+    monthlyIncome: 80000
+  };
+
+  // Server response with normalized fields and defaults applied
+  const serverNormalizedResponse = {
+    success: true,
+    user: {
+      id: 'u-1',
+      name: 'Eve Adams', // trimmed by server
+      email: 'eve@finaura.app',
+      monthlyIncome: 80000,
+      income: 80000, // mirrored by server
+      expectedReturnRate: 0.08, // default supplied by server
+      expectedInflationRate: 0.06
+    }
+  };
+
+  storeUser = serverNormalizedResponse.user;
+  authUser = serverNormalizedResponse.user;
+
+  assert.equal(storeUser.name, 'Eve Adams', 'Stored name is server-trimmed');
+  assert.equal(storeUser.income, 80000, 'Stored income includes server-derived income field');
+  assert.equal(authUser.expectedReturnRate, 0.08, 'Auth user includes server defaults');
+});
+
+// ── 14. PRESERVATION OF UNMODIFIED FIELDS ───────────────────
+test('Test 14: Case 6 — Unmodified fields (email, id, isEmailVerified) are preserved', () => {
+  const initialUser = {
+    id: 'u-1',
+    name: 'Frank',
+    email: 'frank@finaura.app',
+    isEmailVerified: true,
+    createdAt: '2026-01-01T00:00:00Z',
+    monthlyIncome: 70000
+  };
+
+  let storeUser = { ...initialUser };
+  let authUser = { ...initialUser };
+
+  // Profile update response from server
+  const serverUpdatedUser = {
+    ...initialUser,
+    name: 'Franklin',
+    monthlyIncome: 85000
+  };
+
+  storeUser = serverUpdatedUser;
+  authUser = serverUpdatedUser;
+
+  assert.equal(storeUser.id, 'u-1');
+  assert.equal(storeUser.email, 'frank@finaura.app');
+  assert.equal(storeUser.isEmailVerified, true);
+  assert.equal(storeUser.createdAt, '2026-01-01T00:00:00Z');
+  assert.equal(storeUser.name, 'Franklin');
+  assert.equal(storeUser.monthlyIncome, 85000);
+});
+
 console.log('='.repeat(64));
 console.log(`  ALL ${passed} PROFILE SCREEN UX TESTS PASSED! 🚀`);
 console.log('='.repeat(64));

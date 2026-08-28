@@ -38,6 +38,7 @@ interface AuthState {
   resendVerification: (email: string) => Promise<{ success: boolean; message: string }>;
   completeOnboarding: (payload: Partial<User>) => Promise<boolean>;
   updateUserProfile: (payload: Partial<User>) => Promise<boolean>;
+  setUser: (user: User | null) => void;
   clearErrors: () => void;
 }
 
@@ -50,6 +51,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   authError: null,
   fieldErrors: {},
 
+  setUser: (user) => set({ user }),
   clearErrors: () => set({ authError: null, fieldErrors: {} }),
 
   initAuth: async () => {

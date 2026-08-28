@@ -168,8 +168,11 @@ const infoStyles = StyleSheet.create({
 // ═══════════════════════════════════════════════════════════════
 export function ProfileScreen(): React.ReactElement {
   const navigation = useNavigation();
-  const user = useStore((s) => s.user);
-  const setUser = useStore((s) => s.setUser);
+  const storeUser = useStore((s) => s.user);
+  const authUser = useAuthStore((s) => s.user);
+  const user = storeUser || authUser;
+  const setStoreUser = useStore((s) => s.setUser);
+  const setAuthUser = useAuthStore((s) => s.setUser);
   const logout = useAuthStore((s) => s.logout);
   const insets = useSafeAreaInsets();
 
@@ -304,12 +307,15 @@ export function ProfileScreen(): React.ReactElement {
       const response = await updateUserProfileApi(payload);
 
       if (response && response.user) {
-        setUser(response.user);
+        setStoreUser(response.user);
+        setAuthUser(response.user);
       } else {
-        setUser({
-          ...user,
+        const updated = {
+          ...(user || {}),
           ...payload,
-        });
+        } as User;
+        setStoreUser(updated);
+        setAuthUser(updated);
       }
 
       setEditVisible(false);

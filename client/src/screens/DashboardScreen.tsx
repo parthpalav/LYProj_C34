@@ -17,7 +17,8 @@ import {
   getPredictability,
   getLiabilities,
   getFMI,
-  getUserProfile
+  getUserProfile,
+  getAssets
 } from '../services/api';
 import { useStore } from '../store/useStore';
 import {
@@ -25,7 +26,8 @@ import {
   PredictabilitySnapshot,
   Liability,
   FMIResponse,
-  User
+  User,
+  Asset
 } from '../types';
 import { UpdateBalanceScreen } from './UpdateBalanceScreen';
 
@@ -91,6 +93,7 @@ export function DashboardScreen(): React.ReactElement {
   const [predictability, setPredictability] = useState<PredictabilitySnapshot | null>(null);
   const [liabilities, setLiabilities] = useState<Liability[]>([]);
   const [fmiData, setFmiData] = useState<FMIResponse | null>(null);
+  const [assets, setAssets] = useState<Asset[] | null>(null);
   const [dataLoaded, setDataLoaded] = useState(false);
 
   // ── Parallel Data Fetcher with Failure Isolation ─────────
@@ -105,6 +108,7 @@ export function DashboardScreen(): React.ReactElement {
         getLiabilities(),
         getFMI(),
         getUserProfile(),
+        getAssets(),
       ]);
 
       // 1. Dashboard
@@ -130,6 +134,11 @@ export function DashboardScreen(): React.ReactElement {
       // 5. User Profile
       if (results[4].status === 'fulfilled' && results[4].value) {
         setUser(results[4].value);
+      }
+
+      // 6. Assets
+      if (results[5].status === 'fulfilled' && Array.isArray(results[5].value)) {
+        setAssets(results[5].value);
       }
 
       setDataLoaded(true);
@@ -161,6 +170,35 @@ export function DashboardScreen(): React.ReactElement {
   const activeLiabilities = useMemo(() => {
     return liabilities.filter((l) => !l.status || l.status === 'active');
   }, [liabilities]);
+
+  // Asset summary (simple presentation aggregate only from direct Assets API)
+  const assetSummary = useMemo(() => {
+    if (!assets) return null; // still loading
+    const totalValue = assets.reduce((sum, a) => sum + (a.currentValue || 0), 0);
+    return { totalValue, count: assets.length };
+  }, [assets]);
+
+  // Use authoritative Predictability asset metrics when available, fall back to simple direct total
+  const assetDisplay = useMemo(() => {
+    const pred = predictability?.assets;
+    if (pred && pred.totalAssetValue > 0) {
+      return {
+        total: pred.totalAssetValue,
+        fire: pred.fireInvestableCorpus,
+        liquid: pred.liquidBuffer,
+        source: 'predictability' as const,
+      };
+    }
+    if (assetSummary && assetSummary.count > 0) {
+      return {
+        total: assetSummary.totalValue,
+        fire: null,
+        liquid: null,
+        source: 'direct' as const,
+      };
+    }
+    return null;
+  }, [predictability?.assets, assetSummary]);
 
   const nearestLiability = useMemo(() => {
     const sorted = [...activeLiabilities]
@@ -735,6 +773,83 @@ export function DashboardScreen(): React.ReactElement {
 
           <View style={styles.cardActionRow}>
             <Text style={styles.cardActionLink}>Manage liability schedules & auto-deductions</Text>
+            <Ionicons name="chevron-forward" size={14} color={BLUE} />
+          </View>
+        </TouchableOpacity>
+
+        {/* ── F2. FINANCIAL ASSETS ─────────────────────────── */}
+        <TouchableOpacity
+          style={styles.assetsCard}
+          activeOpacity={0.88}
+          onPress={() => (navigation as any).navigate('Assets')}
+          accessibilityLabel="View and Manage Financial Assets"
+        >
+          <View style={styles.cardHeader}>
+            <View style={styles.cardTitleRow}>
+              <View style={[styles.iconBadge, { backgroundColor: '#ECFDF5' }]}>
+                <Ionicons name="pie-chart" size={18} color={GREEN} />
+              </View>
+              <Text style={styles.cardTitle}>Financial Assets</Text>
+            </View>
+            {assetDisplay && (
+              <View style={styles.countBadge}>
+                <Text style={styles.countBadgeText}>
+                  {assetSummary ? `${assetSummary.count} recorded` : ''}
+                </Text>
+              </View>
+            )}
+          </View>
+
+          {assetDisplay ? (
+            <View style={styles.assetsBody}>
+              {assetDisplay.source === 'predictability' ? (
+                <>
+                  <View style={styles.assetsMetricRow}>
+                    <View style={styles.assetsMetric}>
+                      <Text style={styles.assetsMetricLabel}>Total Assets</Text>
+                      <Text style={styles.assetsMetricValue}>{formatCurrency(assetDisplay.total)}</Text>
+                    </View>
+                    <View style={styles.assetsMetricDivider} />
+                    <View style={styles.assetsMetric}>
+                      <Text style={styles.assetsMetricLabel}>FIRE Corpus</Text>
+                      <Text style={[styles.assetsMetricValue, { color: GREEN }]}>
+                        {formatCurrency(assetDisplay.fire ?? 0)}
+                      </Text>
+                    </View>
+                  </View>
+                  {(assetDisplay.liquid ?? 0) > 0 && (
+                    <View style={styles.assetsBufferRow}>
+                      <Ionicons name="shield-checkmark-outline" size={14} color={GRAY_600} />
+                      <Text style={styles.assetsBufferText}>
+                        Liquid emergency buffer: {formatCurrency(assetDisplay.liquid ?? 0)}
+                      </Text>
+                    </View>
+                  )}
+                </>
+              ) : (
+                <>
+                  <View style={styles.assetsDirectRow}>
+                    <Text style={styles.assetsDirectLabel}>Total Recorded Assets</Text>
+                    <Text style={styles.assetsDirectValue}>{formatCurrency(assetDisplay.total)}</Text>
+                  </View>
+                  <Text style={styles.assetsDirectSubtext}>
+                    Open Assets to review retirement and liquidity treatment.
+                  </Text>
+                </>
+              )}
+            </View>
+          ) : assets !== null && assetSummary?.count === 0 ? (
+            <View style={styles.emptyInlineState}>
+              <Text style={styles.emptyInlineText}>No assets recorded yet — tap to add your first.</Text>
+            </View>
+          ) : (
+            <View style={styles.emptyInlineState}>
+              <Text style={styles.emptyInlineText}>Track your FDs, mutual funds, stocks & more.</Text>
+            </View>
+          )}
+
+          <View style={styles.cardActionRow}>
+            <Text style={styles.cardActionLink}>View Assets</Text>
             <Ionicons name="chevron-forward" size={14} color={BLUE} />
           </View>
         </TouchableOpacity>
@@ -1385,6 +1500,81 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '700',
     color: BLUE,
+  },
+
+  // Assets Card
+  assetsCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#D1FAE5',
+    shadowColor: GREEN,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  assetsBody: {
+    gap: 8,
+  },
+  assetsMetricRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  assetsMetric: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  assetsMetricLabel: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: GRAY_600,
+    marginBottom: 2,
+  },
+  assetsMetricValue: {
+    fontSize: 16,
+    fontWeight: '800',
+    color: DARK,
+  },
+  assetsMetricDivider: {
+    width: 1,
+    height: 28,
+    backgroundColor: BORDER,
+  },
+  assetsBufferRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: '#F8FAFC',
+    padding: 8,
+    borderRadius: 10,
+  },
+  assetsBufferText: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: GRAY_600,
+  },
+  assetsDirectRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 2,
+  },
+  assetsDirectLabel: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: GRAY_600,
+  },
+  assetsDirectValue: {
+    fontSize: 16,
+    fontWeight: '800',
+    color: DARK,
+  },
+  assetsDirectSubtext: {
+    fontSize: 12,
+    color: GRAY_600,
+    marginTop: 2,
   },
 
   // Empty Inline States

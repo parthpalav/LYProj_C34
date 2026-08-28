@@ -37,8 +37,8 @@ test('1. AppNavigator registers all primary tabs and stack screens', () => {
   const appNavPath = path.resolve('client/src/navigation/AppNavigator.tsx');
   const content = fs.readFileSync(appNavPath, 'utf8');
 
-  // Verify Tab Screens
-  const expectedTabs = ['Envelopes', 'Transactions', 'Dashboard', 'Liabilities', 'Chat', 'Profile'];
+  // Verify Tab Screens (5 tabs — Envelopes removed)
+  const expectedTabs = ['Transactions', 'Dashboard', 'Liabilities', 'Chat', 'Profile'];
   for (const tab of expectedTabs) {
     assert.ok(
       content.includes(`name="${tab}"`),
@@ -56,12 +56,82 @@ test('1. AppNavigator registers all primary tabs and stack screens', () => {
   }
 });
 
-// ── TEST 2: Dashboard Navigation CTAs Point to Registered Routes ─
-test('2. DashboardScreen navigation CTAs match registered routes', () => {
+// ── TEST 2: Envelopes is NOT a primary tab ───────────────────
+test('2. Envelopes is NOT a primary tab destination', () => {
+  const appNavPath = path.resolve('client/src/navigation/AppNavigator.tsx');
+  const content = fs.readFileSync(appNavPath, 'utf8');
+
+  // Envelopes should not be a Tab.Screen
+  assert.ok(
+    !content.includes('name="Envelopes"'),
+    'Envelopes is NOT registered as a tab screen'
+  );
+
+  // Envelopes should not be in RootTabParamList
+  assert.ok(
+    !content.includes('Envelopes: undefined'),
+    'Envelopes is NOT in RootTabParamList'
+  );
+});
+
+// ── TEST 3: Chat remains in navigation ───────────────────────
+test('3. Chat remains available in primary navigation', () => {
+  const appNavPath = path.resolve('client/src/navigation/AppNavigator.tsx');
+  const content = fs.readFileSync(appNavPath, 'utf8');
+
+  assert.ok(
+    content.includes('name="Chat"'),
+    'Chat is registered as a tab screen'
+  );
+  assert.ok(
+    content.includes('ChatScreen'),
+    'ChatScreen component is imported and used'
+  );
+});
+
+// ── TEST 4: Assets is reachable without going through Profile ─
+test('4. Assets can be reached directly from Home (Dashboard)', () => {
   const dashPath = path.resolve('client/src/screens/DashboardScreen.tsx');
   const content = fs.readFileSync(dashPath, 'utf8');
 
-  const validTargets = ['FMI', 'IncomeFlow', 'FinancialOutlook', 'Transactions', 'Liabilities', 'Profile'];
+  assert.ok(
+    content.includes("navigate('Assets')"),
+    'Dashboard has direct navigation to Assets screen'
+  );
+  assert.ok(
+    content.includes('Financial Assets'),
+    'Dashboard includes Financial Assets card'
+  );
+});
+
+// ── TEST 5: Profile still links to Assets ────────────────────
+test('5. Profile → Assets link is preserved', () => {
+  const profPath = path.resolve('client/src/screens/ProfileScreen.tsx');
+  const content = fs.readFileSync(profPath, 'utf8');
+
+  assert.ok(
+    content.includes("navigate('Assets')"),
+    'Profile still links to Assets screen'
+  );
+});
+
+// ── TEST 6: Profile no longer links to Envelopes ─────────────
+test('6. Profile does NOT link to Envelopes', () => {
+  const profPath = path.resolve('client/src/screens/ProfileScreen.tsx');
+  const content = fs.readFileSync(profPath, 'utf8');
+
+  assert.ok(
+    !content.includes("navigate('Envelopes')"),
+    'Profile does NOT navigate to Envelopes'
+  );
+});
+
+// ── TEST 7: Dashboard Navigation CTAs Point to Registered Routes ─
+test('7. DashboardScreen navigation CTAs match registered routes', () => {
+  const dashPath = path.resolve('client/src/screens/DashboardScreen.tsx');
+  const content = fs.readFileSync(dashPath, 'utf8');
+
+  const validTargets = ['FMI', 'IncomeFlow', 'FinancialOutlook', 'Transactions', 'Liabilities', 'Profile', 'Assets'];
   for (const target of validTargets) {
     assert.ok(
       content.includes(`'${target}'`) || content.includes(`"${target}"`),
@@ -70,8 +140,8 @@ test('2. DashboardScreen navigation CTAs match registered routes', () => {
   }
 });
 
-// ── TEST 3: Modal Entry Screens Are Properly Mounted ─────────
-test('3. TransactionEntry and UpdateBalance modals are mounted in parent screens', () => {
+// ── TEST 8: Modal Entry Screens Are Properly Mounted ─────────
+test('8. TransactionEntry and UpdateBalance modals are mounted in parent screens', () => {
   const txScreenPath = path.resolve('client/src/screens/TransactionsScreen.tsx');
   const txContent = fs.readFileSync(txScreenPath, 'utf8');
   assert.ok(txContent.includes('<TransactionEntryScreen'), 'TransactionEntryScreen is mounted in TransactionsScreen modal');
@@ -81,8 +151,8 @@ test('3. TransactionEntry and UpdateBalance modals are mounted in parent screens
   assert.ok(dashContent.includes('<UpdateBalanceScreen'), 'UpdateBalanceScreen is mounted in DashboardScreen modal');
 });
 
-// ── TEST 4: IncomeFlow Add Income Modal Is Present ────────────
-test('4. IncomeFlowScreen includes Add Income modal and action', () => {
+// ── TEST 9: IncomeFlow Add Income Modal Is Present ────────────
+test('9. IncomeFlowScreen includes Add Income modal and action', () => {
   const incomePath = path.resolve('client/src/screens/IncomeFlowScreen.tsx');
   const content = fs.readFileSync(incomePath, 'utf8');
 
@@ -90,8 +160,8 @@ test('4. IncomeFlowScreen includes Add Income modal and action', () => {
   assert.ok(content.includes('showAddModal') || content.includes('addIncome'), 'Add Income state/handler exists in IncomeFlowScreen');
 });
 
-// ── TEST 5: Liabilities Screen Actions & Modals ───────────────
-test('5. LiabilitiesScreen includes Create and Payment History modals', () => {
+// ── TEST 10: Liabilities Screen Actions & Modals ───────────────
+test('10. LiabilitiesScreen includes Create and Payment History modals', () => {
   const liabPath = path.resolve('client/src/screens/LiabilitiesScreen.tsx');
   const content = fs.readFileSync(liabPath, 'utf8');
 
@@ -99,8 +169,20 @@ test('5. LiabilitiesScreen includes Create and Payment History modals', () => {
   assert.ok(content.includes('getLiabilityTransactions') || content.includes('Payment History'), 'Payment history capability exists');
 });
 
-// ── TEST 6: FinancialOutlook Back Navigation & Structure ──────
-test('6. FinancialOutlookScreen includes back button and scroll view', () => {
+// ── TEST 11: FinancialOutlook → Assets link still works ──────
+test('11. FinancialOutlookScreen Manage Assets link is preserved', () => {
+  const foPath = path.resolve('client/src/screens/FinancialOutlookScreen.tsx');
+  const content = fs.readFileSync(foPath, 'utf8');
+
+  assert.ok(
+    content.includes("navigate('Assets')"),
+    'Financial Outlook still has Manage Assets navigation'
+  );
+  assert.ok(content.includes('Manage Assets'), 'Manage Assets label exists');
+});
+
+// ── TEST 12: FinancialOutlook Back Navigation & Structure ──────
+test('12. FinancialOutlookScreen includes back button and scroll view', () => {
   const foPath = path.resolve('client/src/screens/FinancialOutlookScreen.tsx');
   const content = fs.readFileSync(foPath, 'utf8');
 

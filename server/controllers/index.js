@@ -1703,18 +1703,33 @@ const KEYWORD_CATEGORY_MAP = {
     'tuition','coaching','fees','college fees','school fees','exam fees','certification',
     'workshop','seminar','study material','library','pen drive','laptop for study',
   ],
+  Investments: [
+    'nifty50','nifty 50','nifty etf','nifty index','nifty bees','nifty',
+    'sensex','s&p 500','nasdaq',
+    'mutual fund sip','mutual fund','mutual funds','sip investment','sip payment','sip deduction','sip',
+    'zerodha kite','zerodha stocks','zerodha','groww mutual fund','groww stocks','groww investment','groww',
+    'upstox','angel one','kuvera','smallcase','etmoney','indmoney','demat account','demat',
+    'index fund','stocks investment','stock purchase','stocks','shares purchase','equity shares','equity investment','equity trading',
+    'nvidia shares','apple stock','bought stock','bought shares','shares',
+    'reliance shares','tcs shares','hdfc mutual fund','sbi nifty',
+    'nps contribution','nps deposit','nps tier','nps',
+    'ppf deposit','ppf contribution','ppf account','ppf',
+    'epf contribution','epf deposit','epf',
+    'provident fund','sovereign gold bond','sgb',
+    'government bond purchase','government bond investment','government bond','govt bond','corporate bond','treasury bill','securities investment'
+  ],
 };
 
 // Category → spend-type and sentiment maps for the fallback classifier
 const CATEGORY_TYPE_MAP = {
   Food: 'Want', Travel: 'Want', Entertainment: 'Want', Shopping: 'Want',
   Bills: 'Need', Groceries: 'Need', Health: 'Need',
-  Party: 'Want', Education: 'Investment', Misc: 'Need',
+  Party: 'Want', Education: 'Investment', Investments: 'Investment', Misc: 'Need',
 };
 const CATEGORY_SENTIMENT_MAP = {
   Food: 'negative', Travel: 'neutral', Entertainment: 'negative', Shopping: 'negative',
   Bills: 'neutral', Groceries: 'neutral', Health: 'positive',
-  Party: 'negative', Education: 'positive', Misc: 'neutral',
+  Party: 'negative', Education: 'positive', Investments: 'positive', Misc: 'neutral',
 };
 
 function classifyLocally(rawText) {

@@ -31,8 +31,12 @@ function test(name, fn) {
   console.log();
 }
 
+const clientRoot = fs.existsSync(path.resolve('src/screens'))
+  ? path.resolve('.')
+  : path.resolve('client');
+
 function readScreen(name) {
-  return fs.readFileSync(path.resolve(`client/src/screens/${name}`), 'utf8');
+  return fs.readFileSync(path.join(clientRoot, 'src/screens', name), 'utf8');
 }
 
 // ── TEST 1: FMI Screen Feature Representation ────────────────

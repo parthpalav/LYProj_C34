@@ -30,7 +30,7 @@ const MONGO_URI = process.env.MONGODB_URI || process.env.MONGO_URI || 'mongodb:/
 
 const VALID_CATEGORIES = [
   'Food', 'Travel', 'Entertainment', 'Shopping', 'Bills',
-  'Groceries', 'Health', 'Party', 'Education', 'Misc'
+  'Groceries', 'Health', 'Party', 'Education', 'Investments', 'Misc'
 ];
 
 const VALID_TYPES = ['Need', 'Want', 'Investment'];
@@ -46,6 +46,7 @@ const REFINED_CATEGORY_TYPE_MAP = {
   Health: 'Need',          // Fixed: Essential medical is a Need, not an Investment
   Party: 'Want',
   Education: 'Investment',  // Human capital investment
+  Investments: 'Investment',// Financial asset investment
   Misc: 'Need',
 };
 

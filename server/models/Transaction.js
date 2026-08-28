@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 // Canonical FINAURA expense categories
 const VALID_CATEGORIES = [
   'Food', 'Travel', 'Entertainment', 'Shopping', 'Bills',
-  'Groceries', 'Health', 'Party', 'Education', 'Misc'
+  'Groceries', 'Health', 'Party', 'Education', 'Investments', 'Misc'
 ];
 
 // Canonical spend-type classification

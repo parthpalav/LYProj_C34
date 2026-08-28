@@ -86,19 +86,20 @@ async function runSuite() {
       assert.equal(typeof data.confidence, 'number');
       assert.ok(Number.isFinite(data.confidence));
       assert.ok(data.confidence >= 0 && data.confidence <= 1.0);
-      assert.ok(['Food', 'Travel', 'Entertainment', 'Shopping', 'Bills', 'Groceries', 'Health', 'Party', 'Education', 'Misc'].includes(data.category));
+      assert.ok(['Food', 'Travel', 'Entertainment', 'Shopping', 'Bills', 'Groceries', 'Health', 'Party', 'Education', 'Investments', 'Misc'].includes(data.category));
       assert.ok(['Need', 'Want', 'Investment'].includes(data.type));
       assert.equal(typeof data.needsReview, 'boolean');
     });
 
     // ── 2. EXACT PRESENTATION EXAMPLES ──────────────────────
     await test('Test 2: Canonical Presentation Examples Classify Accurately', async () => {
-      // 1. SIP -> Investment
+      // 1. SIP -> Investments / Investment
       let r = await (await fetch('http://127.0.0.1:4000/api/classify', {
         method: 'POST',
         headers: authHeaders,
         body: JSON.stringify({ text: 'Monthly mutual fund SIP' })
       })).json();
+      assert.equal(r.category, 'Investments');
       assert.equal(r.type, 'Investment');
       assert.equal(r.needsReview, false);
 

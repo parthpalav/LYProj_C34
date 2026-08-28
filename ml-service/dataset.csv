@@ -188,6 +188,8 @@ laptop bag,Shopping
 stationery,Shopping
 notebook,Shopping
 pen,Shopping
+apple store,Shopping
+apple store purchase,Shopping
 electricity bill,Bills
 electricity,Bills
 light bill,Bills
@@ -213,6 +215,16 @@ landlord,Bills
 recharge,Bills
 postpaid bill,Bills
 prepaid recharge,Bills
+home loan,Bills
+home loan emi,Bills
+home equity loan,Bills
+home maintenance,Bills
+apartment deposit,Bills
+security deposit,Bills
+photo subscription,Entertainment
+photos subscription,Entertainment
+exam fee,Education
+exam course,Education
 vegetables,Groceries
 fruits,Groceries
 milk,Groceries
@@ -292,11 +304,14 @@ decorator,Party
 event planning,Party
 wedding,Party
 reception,Party
-get together,Party
-housewarming,Party
 farewell,Party
+housewarming,Party
 bachelor party,Party
 kitty party,Party
+friends,Party
+friends hangout,Party
+drinks with friends,Party
+bond with friends,Party
 books,Education
 textbook,Education
 book,Education
@@ -341,3 +356,48 @@ fine,Misc
 penalty,Misc
 bank charges,Misc
 transaction fee,Misc
+nifty 50 sip,Investments
+nifty50 index investment,Investments
+sensex index fund,Investments
+bought nvidia shares,Investments
+nvidia stock purchase,Investments
+apple stock,Investments
+bought apple stock,Investments
+reliance industries shares,Investments
+tcs shares investment,Investments
+infosys stock purchase,Investments
+hdfc bank shares,Investments
+sbi nifty index fund,Investments
+hdfc mutual fund sip,Investments
+icici prudential mutual fund,Investments
+parag parikh flexi cap fund,Investments
+zerodha equity investment,Investments
+zerodha kite stocks,Investments
+groww mutual fund,Investments
+upstox equity trading,Investments
+angel one stock purchase,Investments
+kuvera mutual fund sip,Investments
+smallcase investment portfolio,Investments
+nps contribution,Investments
+ppf deposit,Investments
+epf employee contribution,Investments
+provident fund contribution,Investments
+sovereign gold bond sgb,Investments
+government bond investment,Investments
+treasury bills investment,Investments
+etf purchase,Investments
+etf investment,Investments
+nifty bees etf,Investments
+monthly sip deduction,Investments
+systematic investment plan,Investments
+demat account shares transfer,Investments
+dividend reinvestment,Investments
+corporate bond purchase,Investments
+us equity investment,Investments
+s and p 500 etf,Investments
+nasdaq 100 etf,Investments
+gold etf units,Investments
+equity mutual fund investment,Investments
+index fund monthly investment,Investments
+stocks investment,Investments
+equity shares purchase,Investments

@@ -30,6 +30,7 @@ const CATEGORIES = [
   { label: 'Health',        emoji: '💊', ml: 'Health'        },
   { label: 'Party',         emoji: '🎉', ml: 'Party'         },
   { label: 'Education',     emoji: '📚', ml: 'Education'     },
+  { label: 'Investments',   emoji: '📈', ml: 'Investments'   },
   { label: 'Misc',          emoji: '📦', ml: 'Misc'          },
 ];
 

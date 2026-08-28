@@ -48,6 +48,7 @@ SOURCE_TO_FINAURA: dict[str, str | None] = {
     "Bills":                      "Bills",
     "Misc":                       "Misc",
     "Party":                      "Party",
+    "Investments":                "Investments",
 }
 
 # Keep backward compat alias
@@ -110,7 +111,7 @@ def map_category(mitulshah_category: str, description: str) -> tuple[str, bool]:
     
     Returns:
         (finaura_category, is_ambiguous)
-        - finaura_category: one of FINAURA's 10 categories
+        - finaura_category: one of FINAURA's 11 categories
         - is_ambiguous: True if the mapping was forced or uncertain
     """
     desc_lower = description.lower()
@@ -149,7 +150,7 @@ def map_category(mitulshah_category: str, description: str) -> tuple[str, bool]:
 # ─── FINAURA category metadata ───────────────────────────────
 FINAURA_CATEGORIES = [
     "Food", "Travel", "Entertainment", "Shopping", "Bills",
-    "Groceries", "Health", "Party", "Education", "Misc",
+    "Groceries", "Health", "Party", "Education", "Investments", "Misc",
 ]
 
 # Sentiment mapping (copied from api.py for consistency)
@@ -163,6 +164,7 @@ CATEGORY_SENTIMENT: dict[str, str] = {
     "Health":        "positive",
     "Party":         "negative",
     "Education":     "positive",
+    "Investments":   "positive",
     "Misc":          "neutral",
 }
 
@@ -177,5 +179,6 @@ CATEGORY_TYPE: dict[str, str] = {
     "Health":        "Investment",
     "Party":         "Want",
     "Education":     "Investment",
+    "Investments":   "Investment",
     "Misc":          "Need",
 }

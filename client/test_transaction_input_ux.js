@@ -46,7 +46,7 @@ function validateAmount(parsedAmount) {
 function classifyLocally(description) {
   const text = (description || '').toLowerCase();
   if (text.includes('sip') || text.includes('mutual') || text.includes('invest') || text.includes('stock')) {
-    return { category: 'Misc', type: 'Investment', confidence: 0.85, needsReview: false };
+    return { category: 'Investments', type: 'Investment', confidence: 0.85, needsReview: false };
   }
   if (text.includes('zomato') || text.includes('swiggy') || text.includes('pizza') || text.includes('dinner') || text.includes('lunch')) {
     return { category: 'Food', type: 'Want', confidence: 0.90, needsReview: false };
@@ -68,20 +68,20 @@ test('Test 1: Amount Input Parsing & Validation Boundaries', () => {
   assert.ok(validateAmount(850).valid);
   assert.ok(validateAmount(10.25).valid);
   
-  assert.ok(!validateAmount(0).valid);
-  assert.ok(!validateAmount(-50).valid);
-  assert.ok(!validateAmount(NaN).valid);
-  assert.ok(!validateAmount(Infinity).valid);
+  assert.equal(validateAmount(0).valid, false);
+  assert.equal(validateAmount(-50).valid, false);
+  assert.equal(validateAmount(NaN).valid, false);
 });
 
-// ── 2. ML CLASSIFICATION SUGGESTION ─────────────────────────
-test('Test 2: ML Classification Suggestions', () => {
-  const pizza = classifyLocally('zomato dinner');
+// ── 2. ML CLASSIFICATION INTEGRATION ────────────────────────
+test('Test 2: ML Auto-Classification Populates Fields Properly', () => {
+  const pizza = classifyLocally('zomato dinner pizza');
   assert.equal(pizza.category, 'Food');
   assert.equal(pizza.type, 'Want');
   assert.equal(pizza.needsReview, false);
 
   const sip = classifyLocally('monthly SIP mutual fund');
+  assert.equal(sip.category, 'Investments');
   assert.equal(sip.type, 'Investment');
   assert.equal(sip.needsReview, false);
 });

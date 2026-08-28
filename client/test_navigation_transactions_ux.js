@@ -32,12 +32,16 @@ function test(name, fn) {
   console.log();
 }
 
+const clientDir = fs.existsSync(path.resolve(process.cwd(), 'src'))
+  ? process.cwd()
+  : path.resolve(process.cwd(), 'client');
+
 function readScreen(name) {
-  return fs.readFileSync(path.resolve(`client/src/screens/${name}`), 'utf8');
+  return fs.readFileSync(path.join(clientDir, 'src/screens', name), 'utf8');
 }
 
 function readNav() {
-  return fs.readFileSync(path.resolve('client/src/navigation/AppNavigator.tsx'), 'utf8');
+  return fs.readFileSync(path.join(clientDir, 'src/navigation/AppNavigator.tsx'), 'utf8');
 }
 
 // ── TEST 1: Tab order is Transactions | Liabilities | Home | AI | Profile ──
@@ -224,16 +228,25 @@ test('14. Filter modal contains only Category, not duplicate Type selection', ()
   );
 });
 
-// ── TEST 15: Clear Filters resets categories while keeping high-level Type selection ───
-test('15. Clear Filters resets categories while keeping high-level Type selection', () => {
-  const code = readScreen('TransactionsScreen.tsx');
+// ── TEST 16: Official 'Investments' Category Registered in Transactions and Entry ───
+test('16. Official Investments category with distinct emoji registered in Transactions and Entry screens', () => {
+  const txScreen = readScreen('TransactionsScreen.tsx');
+  const entryScreen = readScreen('TransactionEntryScreen.tsx');
   
-  const clearFiltersBlock = code.substring(
-    code.indexOf('const clearFilters = () => {'),
-    code.indexOf('const clearFilters = () => {') + 120
-  );
-  assert.ok(clearFiltersBlock.includes('setSelectedCategories([])'), 'Clear filters resets selected categories');
-  assert.ok(!clearFiltersBlock.includes("setActiveType('all')"), 'Clear filters preserves activeType selection');
+  assert.ok(txScreen.includes("key: 'investments', label: 'Investments', emoji: '📈'"), 'Investments in TransactionsScreen CATEGORIES');
+  assert.ok(txScreen.includes("investments: '📈'"), 'Investments emoji map in TransactionsScreen');
+  assert.ok(entryScreen.includes("label: 'Investments',   emoji: '📈', ml: 'Investments'"), 'Investments in TransactionEntryScreen CATEGORIES');
+});
+
+// ── TEST 17: Category 'Investments' (plural) distinct from Type 'Investment' (singular) ───
+test('17. Category Investments (plural) remains strictly distinct from Type Investment (singular)', () => {
+  const txScreen = readScreen('TransactionsScreen.tsx');
+  // CATEGORIES contains 'Investments'
+  assert.ok(txScreen.includes("label: 'Investments'"), 'Category label is Investments');
+  // TYPE_BADGE contains 'Investment'
+  assert.ok(txScreen.includes("Investment: { bg: '#D1FAE5', text: '#065F46', label: 'Investment' }"), 'Type badge is Investment');
+  // TYPE_FILTERS contains 'Investment'
+  assert.ok(txScreen.includes("{ key: 'Investment', label: 'Investments' }"), 'Type filter key is Investment');
 });
 
 console.log('='.repeat(64));

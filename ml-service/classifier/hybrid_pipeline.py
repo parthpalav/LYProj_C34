@@ -44,6 +44,7 @@ CATEGORY_SENTIMENT: Dict[str, str] = {
     "Health":        "positive",    # investment in wellbeing / essential
     "Party":         "negative",    # discretionary nightlife
     "Education":     "positive",    # investment in self/future
+    "Investments":   "positive",    # investment in financial wealth
     "Misc":          "neutral",     # neutral baseline
 }
 
@@ -64,6 +65,7 @@ CATEGORY_TYPE_MAP: Dict[str, str] = {
     "Health": "Need",          # Fixed: Essential medical is a Need
     "Party": "Want",
     "Education": "Investment",  # Human capital investment
+    "Investments": "Investment",# Financial asset investment
     "Misc": "Need",
 }
 

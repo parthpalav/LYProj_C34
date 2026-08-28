@@ -80,7 +80,7 @@ class TestHybridClassifier(unittest.TestCase):
             ("Zepto quick grocery delivery", "Groceries", "Need"),
             ("Apollo pharmacy medicines", "Health", "Need"),
             ("Doctor consultation fee", "Health", "Need"),
-            ("Zerodha mutual fund SIP ₹5000", "Misc", "Investment"),
+            ("Zerodha mutual fund SIP ₹5000", "Investments", "Investment"),
             ("Coursera machine learning course", "Education", "Investment"),
             ("Netflix monthly subscription", "Entertainment", "Want"),
         ]
@@ -90,6 +90,68 @@ class TestHybridClassifier(unittest.TestCase):
             self.assertEqual(res["category"], expected_cat)
             self.assertEqual(res["type"], expected_type)
             self.assertEqual(res["classificationSource"], "merchant_rule")
+
+    def test_canonical_investments(self):
+        investment_cases = [
+            ("Nifty50", "Investments", "Investment"),
+            ("Nifty 50 SIP", "Investments", "Investment"),
+            ("Nvidia shares", "Investments", "Investment"),
+            ("Bought Apple stock", "Investments", "Investment"),
+            ("SBI Nifty Index Fund", "Investments", "Investment"),
+            ("HDFC Mutual Fund SIP", "Investments", "Investment"),
+            ("Zerodha equity purchase", "Investments", "Investment"),
+            ("Groww mutual fund", "Investments", "Investment"),
+            ("NPS contribution", "Investments", "Investment"),
+            ("PPF deposit", "Investments", "Investment"),
+            ("Government bond purchase", "Investments", "Investment"),
+            ("ETF investment", "Investments", "Investment"),
+        ]
+        for text, expected_cat, expected_type in investment_cases:
+            res = self.classifier.classify(text)
+            self.assertEqual(res["category"], expected_cat, f"Category mismatch for '{text}': got {res['category']}")
+            self.assertEqual(res["type"], expected_type, f"Type mismatch for '{text}': got {res['type']}")
+
+    def test_negative_regression_non_investments(self):
+        cases = [
+            ("Swiggy biryani", "Food", "Want"),
+            ("Uber ride", "Travel", "Want"),
+            ("Netflix subscription", "Entertainment", "Want"),
+            ("Electricity bill", "Bills", "Need"),
+            ("DMart groceries", "Groceries", "Need"),
+            ("Doctor consultation", "Health", "Need"),
+            ("College tuition", "Education", "Investment"),
+            ("New shoes", "Shopping", "Want"),
+            ("Birthday party", "Party", "Want"),
+        ]
+        for text, expected_cat, expected_type in cases:
+            res = self.classifier.classify(text)
+            self.assertEqual(res["category"], expected_cat, f"Negative regression in category for '{text}'")
+            self.assertEqual(res["type"], expected_type, f"Negative regression in type for '{text}'")
+
+    def test_ambiguous_phrase_safety(self):
+        # Ensure phrases containing 'share', 'stock', 'bond', 'security' in non-investment contexts don't classify as Investments
+        cases = [
+            "share dinner bill",
+            "share cab fare",
+            "stock up on groceries",
+            "stock photos subscription",
+            "equity in my home",
+            "bond with friends",
+            "security deposit for apartment",
+            "securities exam course",
+            "Apple Store purchase",
+        ]
+        for text in cases:
+            res = self.classifier.classify(text)
+            self.assertNotEqual(res["category"], "Investments", f"'{text}' falsely classified as Investments: got {res['category']} ({res['classificationSource']})")
+
+    def test_nifty50_and_nvidia_shares_bug_regression(self):
+        """CRITICAL: Ensure Nifty50 and Nvidia shares NEVER return Food."""
+        for text in ["Nifty50", "Nifty 50", "Nvidia shares", "nvidia shares", "Bought Apple stock"]:
+            res = self.classifier.classify(text)
+            self.assertNotEqual(res["category"], "Food", f"CRITICAL BUG: '{text}' returned Food!")
+            self.assertEqual(res["category"], "Investments")
+            self.assertEqual(res["type"], "Investment")
 
     def test_unresolved_falls_through_to_tfidf(self):
         # Text without clear merchant keywords
@@ -104,14 +166,16 @@ class TestHybridClassifier(unittest.TestCase):
         self.assertIn("confidence", res)
         self.assertIn("all_probs", res)
         self.assertIsInstance(res["all_probs"], dict)
-        self.assertGreater(len(res["all_probs"]), 1, "TF-IDF should return full probability distribution")
+        self.assertEqual(len(res["all_probs"]), 11, "TF-IDF should return full probability distribution for 11 classes")
+        self.assertIn("Investments", res["all_probs"])
 
     def test_full_contract_compatibility(self):
         test_inputs = [
             "Zomato burger",
             "Uber ride",
             "General office paper work",
-            "Apollo pharmacy tablets"
+            "Apollo pharmacy tablets",
+            "Nifty50 SIP"
         ]
         expected_keys = {
             "category", "type", "confidence", "confidenceScore",

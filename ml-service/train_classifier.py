@@ -93,6 +93,10 @@ test_inputs = [
     "gym membership",
     "birthday party",
     "vegetable shopping",
+    "Nifty 50 SIP",
+    "Nvidia shares",
+    "Mutual fund investment",
+    "Bought Apple stock",
 ]
 
 print("[SMOKE TEST]")
@@ -105,8 +109,10 @@ for text in test_inputs:
     print(f"   '{text}' --> {pred}  ({conf:.0f}%)")
 
 # ─── 8. Save model ────────────────────────────────────────────────────────────
-model_path      = os.path.join(BASE_DIR, "classifier_model.pkl")
-vectorizer_path = os.path.join(BASE_DIR, "tfidf_vectorizer.pkl")
+model_path         = os.path.join(BASE_DIR, "classifier_model.pkl")
+vectorizer_path    = os.path.join(BASE_DIR, "tfidf_vectorizer.pkl")
+v2_model_path      = os.path.join(BASE_DIR, "tfidf_v2_category_model.pkl")
+v2_vectorizer_path = os.path.join(BASE_DIR, "tfidf_v2_category_vectorizer.pkl")
 
 with open(model_path, "wb") as f:
     pickle.dump(model, f)
@@ -114,6 +120,14 @@ with open(model_path, "wb") as f:
 with open(vectorizer_path, "wb") as f:
     pickle.dump(vectorizer, f)
 
-print(f"\n[SAVED] Model      --> {model_path}")
-print(f"[SAVED] Vectorizer --> {vectorizer_path}")
+with open(v2_model_path, "wb") as f:
+    pickle.dump(model, f)
+
+with open(v2_vectorizer_path, "wb") as f:
+    pickle.dump(vectorizer, f)
+
+print(f"\n[SAVED] Model (legacy) --> {model_path}")
+print(f"[SAVED] Vectorizer     --> {vectorizer_path}")
+print(f"[SAVED] Model (v2)     --> {v2_model_path}")
+print(f"[SAVED] Vectorizer(v2) --> {v2_vectorizer_path}")
 print("\n[DONE] Training complete! Run 'python api.py' to start the Flask service.")

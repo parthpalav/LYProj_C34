@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { getLiabilities, createLiability, updateLiability, deleteLiability, getLiabilitiesPaymentsSummary, getLiabilityTransactions } from '../services/api';
 import { Liability, LiabilityPaymentSummary, LiabilityPaymentHistoryResponse, Transaction } from '../types';
 
-const VALID_CATEGORIES = ['Food', 'Travel', 'Entertainment', 'Shopping', 'Bills', 'Groceries', 'Health', 'Party', 'Education', 'Misc'];
+const VALID_CATEGORIES = ['Food', 'Travel', 'Entertainment', 'Shopping', 'Bills', 'Groceries', 'Health', 'Party', 'Education', 'Investments', 'Misc'];
 const VALID_TYPES: ('Need' | 'Want' | 'Investment')[] = ['Need', 'Want', 'Investment'];
 const FREQUENCIES = ['daily', 'weekly', 'monthly', 'yearly'];
 

@@ -31,6 +31,7 @@ const CATEGORIES = [
   { key: 'health', label: 'Health', emoji: '💊' },
   { key: 'party', label: 'Party', emoji: '🎉' },
   { key: 'education', label: 'Education', emoji: '📚' },
+  { key: 'investments', label: 'Investments', emoji: '📈' },
   { key: 'misc', label: 'Misc', emoji: '📦' },
 ];
 
@@ -45,6 +46,7 @@ const CATEGORY_EMOJI: Record<string, string> = {
   health: '💊',
   party: '🎉',
   education: '📚',
+  investments: '📈',
   misc: '📦',
 };
 

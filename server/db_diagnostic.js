@@ -21,7 +21,7 @@ dotenv.config({ path: '.env' });
 
 const MONGO_URI = process.env.MONGODB_URI || process.env.MONGO_URI || 'mongodb://localhost:27017/finaura';
 
-const VALID_CATEGORIES = ['Food', 'Travel', 'Entertainment', 'Shopping', 'Bills', 'Groceries', 'Health', 'Party', 'Education', 'Misc'];
+const VALID_CATEGORIES = ['Food', 'Travel', 'Entertainment', 'Shopping', 'Bills', 'Groceries', 'Health', 'Party', 'Education', 'Investments', 'Misc'];
 const VALID_TYPES      = ['Need', 'Want', 'Investment'];
 
 async function main() {

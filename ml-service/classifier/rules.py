@@ -38,7 +38,17 @@ _RULE_DEFINITIONS: List[Tuple[str, str, str, float]] = [
     (r"\b(apollo\s*pharmacy|pharmacy|medplus|tata\s*1mg|1mg|netmeds|pharmeasy|hospital|clinic|doctor\s*(fee|consultation|visit)|diagnostic\s*lab|pathology|dr\s*lal\s*pathlabs|metropolis\s*healthcare|thyrocare|dental\s*clinic|medicines?|tablets?|blood\s*test|health\s*checkup)\b", "Health", "Need", 0.96),
 
     # ── 6. Investments & Wealth Building (Investment) ─────────────────────────
-    (r"\b(zerodha|groww|upstox|angel\s*one|angelone|kuvera|etmoney|smallcase|mutual\s*funds?|sip\s*(investment|payment|deduction)|nifty\s*50|nifty50|sensex|etf\s*investment|ppf\s*contribution|nps\s*contribution|sovereign\s*gold\s*bond|sgb|equity\s*shares?|stock\s*(investment|purchase))\b", "Misc", "Investment", 0.97),
+    # A. Dedicated Brokers & Investment Platforms
+    (r"\b(zerodha(\s*kite)?|groww|upstox|angel\s*one|angelone|kuvera|etmoney|smallcase|indmoney|dhan|geojit|motilal\s*oswal|sharekhan|icici\s*direct|hdfc\s*sec(urities)?|kotak\s*securities|demat(\s*account)?)\b", "Investments", "Investment", 0.98),
+
+    # B. Stock Indices & Core Investment Vehicles
+    (r"\b(nifty\s*50|nifty50|nifty(\s*etf|\s*index|\s*bees|\s*next\s*50)?|sensex|s&p\s*500|nasdaq(\s*100)?|mutual\s*funds?(\s*sip|\s*investment|\s*units?|\s*scheme|\s*plan|\s*portfolio)?|(monthly\s*)?sip(\s*investment|\s*payment|\s*deduction|\s*instalment|\s*installment|\s*order)?|etf(\s*investment|\s*purchase|\s*units?|\s*portfolio)?|index\s*funds?(\s*sip|\s*investment|\s*units?)?|equity\s*(shares?|investment|purchase|portfolio|fund))\b", "Investments", "Investment", 0.98),
+
+    # C. Stock / Equity Purchases (avoiding false positives like 'share cab' or 'stock up')
+    (r"\b((bought|buy|purchased?|invest(ed|ing)?\s*in)\s+(.*?)(shares?|stocks?|equity)|(nvidia|nvda|apple|aapl|reliance|tcs|infosys|infy|hdfc|icici|sbi|tata\s*motors|tesla|tsla|google|googl|microsoft|msft|meta|amazon)\s+(shares?|stocks?|equity)|(shares?|stocks?)\s*(purchase|investment|bought|buy|portfolio))\b", "Investments", "Investment", 0.97),
+
+    # D. Government / Retirement / Fixed Income / Securities
+    (r"\b(ppf(\s*deposit|\s*contribution|\s*transfer|\s*account)?|nps(\s*contribution|\s*tier\s*[12]|\s*deposit)?|epf(\s*contribution|\s*transfer)?|provident\s*fund|sovereign\s*gold\s*bond(s)?|sgb|treasury\s*bills?|t\s*bills?|((government|govt|corporate|rbi|treasury|tax\s*saving)\s*bonds?|bonds?\s*(investment|purchase|yield|portfolio))|securities\s*(investment|purchase|holding|trading))\b", "Investments", "Investment", 0.98),
 
     # ── 7. Education & Skill Building (Investment) ────────────────────
     (r"\b(coursera|udemy|edx|skillshare|unacademy|byjus?|physics\s*wallah|tuition\s*fees?|coaching\s*fees?|college\s*fees?|school\s*fees?|university\s*fees?|exam\s*fees?|gate\s*exam|cat\s*exam|textbooks?|educational\s*books?)\b", "Education", "Investment", 0.95),
@@ -50,7 +60,7 @@ _RULE_DEFINITIONS: List[Tuple[str, str, str, float]] = [
     (r"\b(nightclub|pub|brewery|cocktail\s*bar|liquor\s*store|wine\s*shop|beer\s*cafe|party\s*drinks?|clubbing)\b", "Party", "Want", 0.95),
 
     # ── 10. Shopping & Discretionary Goods (Want) ─────────────────────────────
-    (r"\b(myntra|ajio|nykaa|zara|h&m|uniqlo|flipkart|meesho|tata\s*cliq|decathlon|croma|reliance\s*digital|ikea|luxury\s*watch|jewellery|tanishq|kalyan\s*jewellers|caratlane|amazon\s*(impulse|purchase|order|shopping)?|shopping)\b", "Shopping", "Want", 0.92),
+    (r"\b(myntra|ajio|nykaa|zara|h&m|uniqlo|flipkart|meesho|tata\s*cliq|decathlon|croma|reliance\s*digital|ikea|luxury\s*watch|jewellery|tanishq|kalyan\s*jewellers|caratlane|apple\s*store|amazon\s*(impulse|purchase|order|shopping)?|shopping)\b", "Shopping", "Want", 0.92),
 ]
 
 _COMPILED_RULES = [

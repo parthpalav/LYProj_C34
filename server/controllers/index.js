@@ -6,6 +6,7 @@ import { predictOverspend, detectLowBalanceRisk } from '../services/PredictionSe
 import { applyRoundup, allocateToEnvelope, generateMicroActions } from '../services/MicroActionService.js';
 import { generateResponse } from '../services/AgentService.js';
 import { buildChatContext } from '../services/ChatContextService.js';
+import { routeDeterministicIntent } from '../services/ChatIntentRouter.js';
 import { analyzeSentiment, annotateTransactions } from '../services/SentimentService.js';
 import { detectBehavioralPatterns, calculateFIS, generateWeeklyReport } from '../services/BehaviorService.js';
 import { smoothIncomeFlow } from '../services/IncomeFlowService.js';
@@ -1411,10 +1412,19 @@ router.post('/agent/chat', async (req, res, next) => {
     // 3. Build verified deterministic financial context (fresh on every turn)
     const context = await buildChatContext(userId);
 
-    // 4. Generate multi-turn grounded response
-    const response = await generateResponse(message, context, priorHistory);
+    // 4. Check deterministic router before calling Gemini
+    const intentResult = routeDeterministicIntent(message, context, priorHistory);
 
-    // 5. Persist assistant response
+    let response = '';
+    if (intentResult.handled && intentResult.response) {
+      logger.info(`[Chat] Deterministic intent resolved: ${intentResult.intent}`);
+      response = intentResult.response;
+    } else {
+      logger.info('[Chat] Escalated query to Gemini LLM');
+      response = await generateResponse(message, context, priorHistory);
+    }
+
+    // 5. Persist assistant response (shared persistence for both deterministic & Gemini paths)
     const saved = await AgentMemory.create({ userId, role: 'assistant', content: response });
 
     res.json({

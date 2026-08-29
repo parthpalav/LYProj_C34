@@ -604,12 +604,19 @@ export function FinancialOutlookScreen(): React.ReactElement {
                 </View>
 
                 <View style={styles.mcProbabilityRow}>
-                  <Text style={[styles.mcProbabilityBig, { color: bandColor }]}>{pFundedPct}%</Text>
+                  <Text
+                    style={[styles.mcProbabilityBig, { color: bandColor }]}
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                    minimumFontScale={0.8}
+                  >
+                    {pFundedPct}%
+                  </Text>
                   <View style={styles.mcProbabilityTextWrap}>
-                    <Text style={styles.mcProbabilityTitle}>
+                    <Text style={styles.mcProbabilityTitle} numberOfLines={2}>
                       {pFundedPct}% modeled chance of being funded by age {targetAge}
                     </Text>
-                    <Text style={styles.mcProbabilitySub}>
+                    <Text style={styles.mcProbabilitySub} numberOfLines={3}>
                       Modeled likelihood of remaining funded for lifestyle needs at your target retirement age.
                     </Text>
                   </View>

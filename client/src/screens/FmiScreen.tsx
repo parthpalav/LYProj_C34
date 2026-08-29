@@ -59,10 +59,17 @@ function Gauge({ score, label }: { score: number; label?: string }) {
         />
       </View>
       <View style={g.scoreWrap}>
-        <Text style={[g.scoreText, { color }]}>{Math.round(score)}</Text>
+        <Text
+          style={[g.scoreText, { color }]}
+          numberOfLines={1}
+          adjustsFontSizeToFit
+          minimumFontScale={0.7}
+        >
+          {Math.round(score)}
+        </Text>
         <Text style={g.scoreLabel}>/ 100</Text>
       </View>
-      <Text style={[g.status, { color }]}>
+      <Text style={[g.status, { color }]} numberOfLines={1}>
         {label || (score >= 80 ? 'Excellent' : score >= 65 ? 'Good' : score >= 45 ? 'Fair' : 'Needs Attention')}
       </Text>
     </View>

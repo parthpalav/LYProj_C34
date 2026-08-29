@@ -437,8 +437,12 @@ export function DashboardScreen(): React.ReactElement {
         {/* ── A. HEADER ────────────────────────────────────── */}
         <View style={styles.headerRow}>
           <View style={styles.headerLeft}>
-            <Text style={styles.headerGreeting}>{greeting}</Text>
-            <Text style={styles.headerSubtitle}>{todayFormatted} · Live Financial Pulse</Text>
+            <Text style={styles.headerGreeting} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8}>
+              {greeting}
+            </Text>
+            <Text style={styles.headerSubtitle} numberOfLines={1}>
+              {todayFormatted} · Live Financial Pulse
+            </Text>
           </View>
           <TouchableOpacity
             style={styles.profileAvatarBtn}
@@ -462,16 +466,27 @@ export function DashboardScreen(): React.ReactElement {
               <View style={styles.fmiIconBadge}>
                 <Ionicons name="pulse" size={18} color="#059669" />
               </View>
-              <Text style={styles.cardTitle}>Financial Health</Text>
+              <Text style={styles.cardTitle} numberOfLines={1}>
+                Financial Health
+              </Text>
             </View>
             <View style={[styles.statusPill, { backgroundColor: fmiConfig.bg, borderColor: fmiConfig.border }]}>
-              <Text style={[styles.statusPillText, { color: fmiConfig.text }]}>{fmiConfig.label}</Text>
+              <Text style={[styles.statusPillText, { color: fmiConfig.text }]} numberOfLines={1}>
+                {fmiConfig.label}
+              </Text>
             </View>
           </View>
 
           <View style={styles.fmiScoreRow}>
             <View style={styles.fmiScoreWrap}>
-              <Text style={[styles.fmiScoreNumber, { color: fmiConfig.text }]}>{Math.round(fmiScore)}</Text>
+              <Text
+                style={[styles.fmiScoreNumber, { color: fmiConfig.text }]}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.8}
+              >
+                {Math.round(fmiScore)}
+              </Text>
               <Text style={styles.fmiScoreDenominator}>/100</Text>
             </View>
             <View style={styles.fmiInsightWrap}>
@@ -485,7 +500,7 @@ export function DashboardScreen(): React.ReactElement {
           {fmiData?.pillars && (
             <View style={styles.pillarRow}>
               <View style={styles.pillarItem}>
-                <Text style={styles.pillarLabel}>Saving</Text>
+                <Text style={styles.pillarLabel} numberOfLines={1}>Saving</Text>
                 <View style={styles.pillarTrack}>
                   <View
                     style={[
@@ -499,7 +514,7 @@ export function DashboardScreen(): React.ReactElement {
                 </View>
               </View>
               <View style={styles.pillarItem}>
-                <Text style={styles.pillarLabel}>Discipline</Text>
+                <Text style={styles.pillarLabel} numberOfLines={1}>Discipline</Text>
                 <View style={styles.pillarTrack}>
                   <View
                     style={[
@@ -513,7 +528,7 @@ export function DashboardScreen(): React.ReactElement {
                 </View>
               </View>
               <View style={styles.pillarItem}>
-                <Text style={styles.pillarLabel}>Stability</Text>
+                <Text style={styles.pillarLabel} numberOfLines={1}>Stability</Text>
                 <View style={styles.pillarTrack}>
                   <View
                     style={[
@@ -540,7 +555,7 @@ export function DashboardScreen(): React.ReactElement {
           {/* Main Current Balance Card */}
           <View style={styles.balanceHeroCard}>
             <View style={styles.balanceHeader}>
-              <Text style={styles.balanceLabel}>Current Balance</Text>
+              <Text style={styles.balanceLabel} numberOfLines={1}>Current Balance</Text>
               <TouchableOpacity
                 style={styles.updateBalanceBtn}
                 onPress={() => setShowUpdateBalance(true)}
@@ -551,7 +566,14 @@ export function DashboardScreen(): React.ReactElement {
                 <Text style={styles.updateBalanceBtnText}>Update</Text>
               </TouchableOpacity>
             </View>
-            <Text style={styles.balanceAmount}>{formatCurrency(balance)}</Text>
+            <Text
+              style={styles.balanceAmount}
+              numberOfLines={1}
+              adjustsFontSizeToFit
+              minimumFontScale={0.7}
+            >
+              {formatCurrency(balance)}
+            </Text>
 
             {/* 3-Column Monthly Cash Flow Grid */}
             <View style={styles.cashGrid}>
@@ -561,22 +583,37 @@ export function DashboardScreen(): React.ReactElement {
                 activeOpacity={0.75}
                 accessibilityLabel="Manage Income Streams and History"
               >
-                <Text style={styles.cashColLabel}>Income ↗</Text>
-                <Text style={[styles.cashColValue, { color: '#6EE7B7' }]}>
+                <Text style={styles.cashColLabel} numberOfLines={1}>Income ↗</Text>
+                <Text
+                  style={[styles.cashColValue, { color: '#6EE7B7' }]}
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.75}
+                >
                   {formatCurrency(incomeThisMonth)}
                 </Text>
               </TouchableOpacity>
               <View style={styles.cashColDivider} />
               <View style={styles.cashCol}>
-                <Text style={styles.cashColLabel}>Spent</Text>
-                <Text style={[styles.cashColValue, { color: '#FCD34D' }]}>
+                <Text style={styles.cashColLabel} numberOfLines={1}>Spent</Text>
+                <Text
+                  style={[styles.cashColValue, { color: '#FCD34D' }]}
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.75}
+                >
                   {formatCurrency(spendingThisMonth)}
                 </Text>
               </View>
               <View style={styles.cashColDivider} />
               <View style={styles.cashCol}>
-                <Text style={styles.cashColLabel}>Invested</Text>
-                <Text style={[styles.cashColValue, { color: '#C4B5FD' }]}>
+                <Text style={styles.cashColLabel} numberOfLines={1}>Invested</Text>
+                <Text
+                  style={[styles.cashColValue, { color: '#C4B5FD' }]}
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.75}
+                >
                   {formatCurrency(investmentsThisMonth)}
                 </Text>
               </View>
@@ -606,14 +643,33 @@ export function DashboardScreen(): React.ReactElement {
           {isMcAvailable ? (
             <View style={styles.outlookBody}>
               <View style={styles.outlookProbRow}>
-                <View style={styles.outlookProbCircle}>
-                  <Text style={styles.outlookProbPercent}>{Math.round((mcProb || 0) * 100)}%</Text>
+                <View style={styles.outlookProbCircleContainer}>
+                  <View style={styles.outlookProbCircle}>
+                    <Text
+                      style={styles.outlookProbPercent}
+                      numberOfLines={1}
+                      adjustsFontSizeToFit
+                      minimumFontScale={0.7}
+                    >
+                      {Math.round((mcProb || 0) * 100)}
+                    </Text>
+                    <Text style={styles.outlookProbDenominator}>/100</Text>
+                  </View>
+                  <View style={styles.outlookProbPill}>
+                    <Text style={styles.outlookProbPillText} numberOfLines={1}>
+                      {(mcProb || 0) >= 0.75
+                        ? 'Good Predictability'
+                        : (mcProb || 0) >= 0.5
+                        ? 'Fair Predictability'
+                        : 'Action Needed'}
+                    </Text>
+                  </View>
                 </View>
                 <View style={styles.outlookProbInfo}>
-                  <Text style={styles.outlookProbHeadline}>
+                  <Text style={styles.outlookProbHeadline} numberOfLines={2}>
                     Modeled chance of fully funded retirement
                   </Text>
-                  <Text style={styles.outlookProbSubtitle}>
+                  <Text style={styles.outlookProbSubtitle} numberOfLines={2}>
                     Target Age {targetAge} · 10,000 market paths simulated
                   </Text>
                 </View>
@@ -627,7 +683,7 @@ export function DashboardScreen(): React.ReactElement {
                     size={16}
                     color={rec.additionalMonthlyContributionRequired > 0 ? BLUE : GREEN}
                   />
-                  <Text style={styles.outlookRecText}>
+                  <Text style={styles.outlookRecText} numberOfLines={2}>
                     {rec.additionalMonthlyContributionRequired > 0
                       ? `Recommended initial monthly investment: ${formatCurrency(rec.recommendedMonthlyContribution)}/mo`
                       : `Current plan meets the ${Math.round((rec.targetProbability || 0.75) * 100)}% modeled target.`}
@@ -638,14 +694,14 @@ export function DashboardScreen(): React.ReactElement {
           ) : isMcDegraded ? (
             <View style={styles.outlookDegradedBody}>
               <Text style={styles.outlookDegradedTitle}>Probabilistic Model Calibrating</Text>
-              <Text style={styles.outlookDegradedText}>
+              <Text style={styles.outlookDegradedText} numberOfLines={3}>
                 Market volatility is derived from your expected return. Deterministic projection is active.
               </Text>
             </View>
           ) : (
             <View style={styles.outlookEmptyBody}>
               <Text style={styles.outlookEmptyTitle}>More History Needed for Monte Carlo</Text>
-              <Text style={styles.outlookEmptyText}>
+              <Text style={styles.outlookEmptyText} numberOfLines={3}>
                 Log recurring transactions and incomes to activate 10,000-path probabilistic forecasts.
               </Text>
             </View>
@@ -693,21 +749,42 @@ export function DashboardScreen(): React.ReactElement {
               <View style={styles.spendingLegendRow}>
                 <View style={styles.spendingLegendItem}>
                   <View style={[styles.legendDot, { backgroundColor: GREEN }]} />
-                  <Text style={styles.legendLabel}>Needs</Text>
-                  <Text style={styles.legendAmount}>{formatCurrency(wantsNeeds.needs.amount)}</Text>
-                  <Text style={styles.legendPct}>({wantsNeeds.needs.pct}%)</Text>
+                  <Text style={styles.legendLabel} numberOfLines={1}>Needs</Text>
+                  <Text
+                    style={styles.legendAmount}
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                    minimumFontScale={0.75}
+                  >
+                    {formatCurrency(wantsNeeds.needs.amount)}
+                  </Text>
+                  <Text style={styles.legendPct} numberOfLines={1}>({wantsNeeds.needs.pct}%)</Text>
                 </View>
                 <View style={styles.spendingLegendItem}>
                   <View style={[styles.legendDot, { backgroundColor: AMBER }]} />
-                  <Text style={styles.legendLabel}>Wants</Text>
-                  <Text style={styles.legendAmount}>{formatCurrency(wantsNeeds.wants.amount)}</Text>
-                  <Text style={styles.legendPct}>({wantsNeeds.wants.pct}%)</Text>
+                  <Text style={styles.legendLabel} numberOfLines={1}>Wants</Text>
+                  <Text
+                    style={styles.legendAmount}
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                    minimumFontScale={0.75}
+                  >
+                    {formatCurrency(wantsNeeds.wants.amount)}
+                  </Text>
+                  <Text style={styles.legendPct} numberOfLines={1}>({wantsNeeds.wants.pct}%)</Text>
                 </View>
                 <View style={styles.spendingLegendItem}>
                   <View style={[styles.legendDot, { backgroundColor: PURPLE }]} />
-                  <Text style={styles.legendLabel}>Invest</Text>
-                  <Text style={styles.legendAmount}>{formatCurrency(wantsNeeds.investments.amount)}</Text>
-                  <Text style={styles.legendPct}>({wantsNeeds.investments.pct}%)</Text>
+                  <Text style={styles.legendLabel} numberOfLines={1}>Invest</Text>
+                  <Text
+                    style={styles.legendAmount}
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                    minimumFontScale={0.75}
+                  >
+                    {formatCurrency(wantsNeeds.investments.amount)}
+                  </Text>
+                  <Text style={styles.legendPct} numberOfLines={1}>({wantsNeeds.investments.pct}%)</Text>
                 </View>
               </View>
             </View>
@@ -735,11 +812,11 @@ export function DashboardScreen(): React.ReactElement {
               <View style={[styles.iconBadge, { backgroundColor: RED_LIGHT }]}>
                 <Ionicons name="calendar-outline" size={18} color={RED} />
               </View>
-              <Text style={styles.cardTitle}>Upcoming Liabilities</Text>
+              <Text style={styles.cardTitle} numberOfLines={1}>Upcoming Liabilities</Text>
             </View>
             {activeLiabilities.length > 0 && (
               <View style={styles.countBadge}>
-                <Text style={styles.countBadgeText}>{activeLiabilities.length} active</Text>
+                <Text style={styles.countBadgeText} numberOfLines={1}>{activeLiabilities.length} active</Text>
               </View>
             )}
           </View>
@@ -754,8 +831,8 @@ export function DashboardScreen(): React.ReactElement {
                 />
               </View>
               <View style={styles.liabilityInfo}>
-                <Text style={styles.liabilityName}>{nearestLiability.name}</Text>
-                <Text style={styles.liabilityDueDate}>
+                <Text style={styles.liabilityName} numberOfLines={1}>{nearestLiability.name}</Text>
+                <Text style={styles.liabilityDueDate} numberOfLines={1}>
                   Due {formatShortDate(nearestLiability.nextDueDate)}
                   {daysUntilLiability !== null && daysUntilLiability >= 0
                     ? ` (${daysUntilLiability === 0 ? 'Today' : `in ${daysUntilLiability}d`})`
@@ -763,7 +840,14 @@ export function DashboardScreen(): React.ReactElement {
                   {nearestLiability.autoDeduct ? ' · Auto Deduct' : ''}
                 </Text>
               </View>
-              <Text style={styles.liabilityAmount}>{formatCurrency(nearestLiability.amount)}</Text>
+              <Text
+                style={styles.liabilityAmount}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.8}
+              >
+                {formatCurrency(nearestLiability.amount)}
+              </Text>
             </View>
           ) : (
             <View style={styles.emptyInlineState}>
@@ -789,11 +873,11 @@ export function DashboardScreen(): React.ReactElement {
               <View style={[styles.iconBadge, { backgroundColor: '#ECFDF5' }]}>
                 <Ionicons name="pie-chart" size={18} color={GREEN} />
               </View>
-              <Text style={styles.cardTitle}>Financial Assets</Text>
+              <Text style={styles.cardTitle} numberOfLines={1}>Financial Assets</Text>
             </View>
             {assetDisplay && (
               <View style={styles.countBadge}>
-                <Text style={styles.countBadgeText}>
+                <Text style={styles.countBadgeText} numberOfLines={1}>
                   {assetSummary ? `${assetSummary.count} recorded` : ''}
                 </Text>
               </View>
@@ -806,13 +890,25 @@ export function DashboardScreen(): React.ReactElement {
                 <>
                   <View style={styles.assetsMetricRow}>
                     <View style={styles.assetsMetric}>
-                      <Text style={styles.assetsMetricLabel}>Total Assets</Text>
-                      <Text style={styles.assetsMetricValue}>{formatCurrency(assetDisplay.total)}</Text>
+                      <Text style={styles.assetsMetricLabel} numberOfLines={1}>Total Assets</Text>
+                      <Text
+                        style={styles.assetsMetricValue}
+                        numberOfLines={1}
+                        adjustsFontSizeToFit
+                        minimumFontScale={0.75}
+                      >
+                        {formatCurrency(assetDisplay.total)}
+                      </Text>
                     </View>
                     <View style={styles.assetsMetricDivider} />
                     <View style={styles.assetsMetric}>
-                      <Text style={styles.assetsMetricLabel}>FIRE Corpus</Text>
-                      <Text style={[styles.assetsMetricValue, { color: GREEN }]}>
+                      <Text style={styles.assetsMetricLabel} numberOfLines={1}>FIRE Corpus</Text>
+                      <Text
+                        style={[styles.assetsMetricValue, { color: GREEN }]}
+                        numberOfLines={1}
+                        adjustsFontSizeToFit
+                        minimumFontScale={0.75}
+                      >
                         {formatCurrency(assetDisplay.fire ?? 0)}
                       </Text>
                     </View>
@@ -820,7 +916,7 @@ export function DashboardScreen(): React.ReactElement {
                   {(assetDisplay.liquid ?? 0) > 0 && (
                     <View style={styles.assetsBufferRow}>
                       <Ionicons name="shield-checkmark-outline" size={14} color={GRAY_600} />
-                      <Text style={styles.assetsBufferText}>
+                      <Text style={styles.assetsBufferText} numberOfLines={1}>
                         Liquid emergency buffer: {formatCurrency(assetDisplay.liquid ?? 0)}
                       </Text>
                     </View>
@@ -829,10 +925,17 @@ export function DashboardScreen(): React.ReactElement {
               ) : (
                 <>
                   <View style={styles.assetsDirectRow}>
-                    <Text style={styles.assetsDirectLabel}>Total Recorded Assets</Text>
-                    <Text style={styles.assetsDirectValue}>{formatCurrency(assetDisplay.total)}</Text>
+                    <Text style={styles.assetsDirectLabel} numberOfLines={1}>Total Recorded Assets</Text>
+                    <Text
+                      style={styles.assetsDirectValue}
+                      numberOfLines={1}
+                      adjustsFontSizeToFit
+                      minimumFontScale={0.75}
+                    >
+                      {formatCurrency(assetDisplay.total)}
+                    </Text>
                   </View>
-                  <Text style={styles.assetsDirectSubtext}>
+                  <Text style={styles.assetsDirectSubtext} numberOfLines={2}>
                     Open Assets to review retirement and liquidity treatment.
                   </Text>
                 </>
@@ -867,14 +970,14 @@ export function DashboardScreen(): React.ReactElement {
             </View>
             <View style={styles.smartActionTitleWrap}>
               <View style={styles.smartActionBadge}>
-                <Text style={styles.smartActionBadgeText}>{smartAction.badge}</Text>
+                <Text style={styles.smartActionBadgeText} numberOfLines={1}>{smartAction.badge}</Text>
               </View>
-              <Text style={styles.smartActionTitle}>{smartAction.title}</Text>
+              <Text style={styles.smartActionTitle} numberOfLines={1}>{smartAction.title}</Text>
             </View>
           </View>
-          <Text style={styles.smartActionMessage}>{smartAction.message}</Text>
+          <Text style={styles.smartActionMessage} numberOfLines={3}>{smartAction.message}</Text>
           <View style={styles.smartActionButtonRow}>
-            <Text style={styles.smartActionBtnText}>{smartAction.actionText}</Text>
+            <Text style={styles.smartActionBtnText} numberOfLines={1}>{smartAction.actionText}</Text>
             <Ionicons name="arrow-forward" size={14} color={BLUE} />
           </View>
         </TouchableOpacity>
@@ -958,9 +1061,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 4,
+    gap: 8,
   },
   headerLeft: {
     flex: 1,
+    flexShrink: 1,
   },
   headerGreeting: {
     fontSize: 22,
@@ -976,6 +1081,7 @@ const styles = StyleSheet.create({
   },
   profileAvatarBtn: {
     padding: 4,
+    flexShrink: 0,
   },
 
   // Card Base
@@ -990,11 +1096,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 12,
+    gap: 6,
   },
   cardTitleRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
+    flex: 1,
+    flexShrink: 1,
   },
   iconBadge: {
     width: 32,
@@ -1002,6 +1111,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
+    flexShrink: 0,
   },
   cardActionRow: {
     flexDirection: 'row',
@@ -1036,11 +1146,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 12,
+    gap: 6,
   },
   fmiTitleRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
+    flex: 1,
+    flexShrink: 1,
   },
   fmiIconBadge: {
     width: 32,
@@ -1049,12 +1162,14 @@ const styles = StyleSheet.create({
     backgroundColor: GREEN_LIGHT,
     alignItems: 'center',
     justifyContent: 'center',
+    flexShrink: 0,
   },
   statusPill: {
-    paddingHorizontal: 10,
+    paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 12,
     borderWidth: 1,
+    flexShrink: 0,
   },
   statusPillText: {
     fontSize: 11,
@@ -1063,26 +1178,28 @@ const styles = StyleSheet.create({
   fmiScoreRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 16,
+    gap: 14,
     marginBottom: 12,
   },
   fmiScoreWrap: {
     flexDirection: 'row',
     alignItems: 'baseline',
+    flexShrink: 0,
   },
   fmiScoreNumber: {
-    fontSize: 42,
+    fontSize: 38,
     fontWeight: '800',
     letterSpacing: -1,
   },
   fmiScoreDenominator: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '700',
     color: GRAY_400,
     marginLeft: 2,
   },
   fmiInsightWrap: {
     flex: 1,
+    flexShrink: 1,
   },
   fmiInsightText: {
     fontSize: 13,
@@ -1097,6 +1214,7 @@ const styles = StyleSheet.create({
   },
   pillarItem: {
     flex: 1,
+    minWidth: 50,
   },
   pillarLabel: {
     fontSize: 10,
@@ -1122,7 +1240,7 @@ const styles = StyleSheet.create({
   balanceHeroCard: {
     backgroundColor: '#1E293B',
     borderRadius: 20,
-    padding: 18,
+    padding: 16,
     shadowColor: '#0F172A',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.15,
@@ -1134,11 +1252,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 6,
+    gap: 8,
   },
   balanceLabel: {
     fontSize: 13,
     color: '#94A3B8',
     fontWeight: '600',
+    flexShrink: 1,
   },
   updateBalanceBtn: {
     flexDirection: 'row',
@@ -1148,6 +1268,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 12,
+    flexShrink: 0,
   },
   updateBalanceBtnText: {
     fontSize: 11,
@@ -1155,11 +1276,11 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   balanceAmount: {
-    fontSize: 34,
+    fontSize: 32,
     fontWeight: '800',
     color: '#FFFFFF',
     letterSpacing: -1,
-    marginBottom: 16,
+    marginBottom: 14,
   },
   cashGrid: {
     flexDirection: 'row',
@@ -1167,11 +1288,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.07)',
     borderRadius: 14,
     paddingVertical: 10,
-    paddingHorizontal: 8,
+    paddingHorizontal: 6,
   },
   cashCol: {
     flex: 1,
     alignItems: 'center',
+    paddingHorizontal: 2,
   },
   cashColLabel: {
     fontSize: 11,
@@ -1207,11 +1329,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 12,
+    gap: 6,
   },
   outlookTitleRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
+    flex: 1,
+    flexShrink: 1,
   },
   outlookIconBadge: {
     width: 32,
@@ -1220,12 +1345,14 @@ const styles = StyleSheet.create({
     backgroundColor: BLUE_LIGHT,
     alignItems: 'center',
     justifyContent: 'center',
+    flexShrink: 0,
   },
   outlookPill: {
     backgroundColor: PURPLE_LIGHT,
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 10,
+    flexShrink: 0,
   },
   outlookPillText: {
     fontSize: 10,
@@ -1240,23 +1367,53 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 14,
   },
+  outlookProbCircleContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+  },
   outlookProbCircle: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+    width: 66,
+    height: 66,
+    borderRadius: 33,
     backgroundColor: BLUE_LIGHT,
     borderWidth: 2,
     borderColor: BLUE,
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 2,
   },
   outlookProbPercent: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: '800',
     color: BLUE,
+    lineHeight: 22,
+    letterSpacing: -0.5,
+  },
+  outlookProbDenominator: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: GRAY_400,
+    marginTop: -2,
+  },
+  outlookProbPill: {
+    marginTop: 4,
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 6,
+    backgroundColor: BLUE_LIGHT,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  outlookProbPillText: {
+    fontSize: 9,
+    fontWeight: '700',
+    color: BLUE,
+    textAlign: 'center',
   },
   outlookProbInfo: {
     flex: 1,
+    flexShrink: 1,
   },
   outlookProbHeadline: {
     fontSize: 14,
@@ -1268,6 +1425,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: GRAY_600,
     marginTop: 2,
+    lineHeight: 16,
   },
   outlookRecBanner: {
     flexDirection: 'row',
@@ -1332,6 +1490,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '600',
     color: GRAY_600,
+    flexShrink: 0,
   },
   spendingBody: {
     gap: 12,
@@ -1349,10 +1508,12 @@ const styles = StyleSheet.create({
   spendingLegendRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    gap: 4,
   },
   spendingLegendItem: {
     alignItems: 'center',
     flex: 1,
+    minWidth: 50,
   },
   legendDot: {
     width: 8,
@@ -1395,6 +1556,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 10,
+    flexShrink: 0,
   },
   countBadgeText: {
     fontSize: 11,
@@ -1404,7 +1566,7 @@ const styles = StyleSheet.create({
   liabilityItemRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: 10,
     paddingVertical: 4,
   },
   liabilityIconWrap: {
@@ -1416,9 +1578,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderWidth: 1,
     borderColor: BORDER,
+    flexShrink: 0,
   },
   liabilityInfo: {
     flex: 1,
+    flexShrink: 1,
   },
   liabilityName: {
     fontSize: 14,
@@ -1434,6 +1598,8 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '700',
     color: DARK,
+    flexShrink: 0,
+    marginLeft: 4,
   },
 
   // Smart Next Action Card
@@ -1452,7 +1618,7 @@ const styles = StyleSheet.create({
   smartActionHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: 10,
     marginBottom: 8,
   },
   smartActionIconWrap: {
@@ -1461,9 +1627,11 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
+    flexShrink: 0,
   },
   smartActionTitleWrap: {
     flex: 1,
+    flexShrink: 1,
   },
   smartActionBadge: {
     alignSelf: 'flex-start',
@@ -1488,7 +1656,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: GRAY_600,
     lineHeight: 18,
-    marginBottom: 12,
+    marginBottom: 10,
   },
   smartActionButtonRow: {
     flexDirection: 'row',
@@ -1521,10 +1689,13 @@ const styles = StyleSheet.create({
   assetsMetricRow: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 8,
   },
   assetsMetric: {
     flex: 1,
     alignItems: 'center',
+    paddingHorizontal: 2,
   },
   assetsMetricLabel: {
     fontSize: 11,
@@ -1533,7 +1704,7 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   assetsMetricValue: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '800',
     color: DARK,
   },
@@ -1554,6 +1725,8 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '500',
     color: GRAY_600,
+    flex: 1,
+    lineHeight: 16,
   },
   assetsDirectRow: {
     flexDirection: 'row',

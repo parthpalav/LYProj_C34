@@ -5,6 +5,7 @@ import { calculateFMI } from '../services/FMIService.js';
 import { predictOverspend, detectLowBalanceRisk } from '../services/PredictionService.js';
 import { applyRoundup, allocateToEnvelope, generateMicroActions } from '../services/MicroActionService.js';
 import { generateResponse } from '../services/AgentService.js';
+import { buildChatContext } from '../services/ChatContextService.js';
 import { analyzeSentiment, annotateTransactions } from '../services/SentimentService.js';
 import { detectBehavioralPatterns, calculateFIS, generateWeeklyReport } from '../services/BehaviorService.js';
 import { smoothIncomeFlow } from '../services/IncomeFlowService.js';
@@ -1384,7 +1385,8 @@ router.get('/dashboard', async (req, res, next) => {
 router.get('/agent/history', async (req, res, next) => {
   try {
     const userId = req.user.id;
-    const history = await AgentMemory.find({ userId }).sort({ timestamp: 1 }).lean();
+    const historyDocs = await AgentMemory.find({ userId }).sort({ timestamp: -1 }).limit(100).lean();
+    const history = historyDocs.reverse();
     res.json(history.map((m) => ({
       id:        m._id.toString(),
       role:      m.role,
@@ -1398,17 +1400,21 @@ router.post('/agent/chat', async (req, res, next) => {
   try {
     const userId = req.user.id;
     const message = req.body.message || '';
-    const fmi     = await FMIHistory.findOne({ userId }).sort({ timestamp: -1 }).lean();
-    const alerts  = await Alert.find({ userId }).lean();
-    const goals   = await Goal.find({ userId }).lean();
-    const envelope = await Envelope.findOne({ userId }).lean();
 
-    // Persist user message
+    // 1. Fetch prior conversation history before saving current user message (deduplication guarantee)
+    const priorHistoryDocs = await AgentMemory.find({ userId }).sort({ timestamp: -1 }).limit(10).lean();
+    const priorHistory = priorHistoryDocs.reverse();
+
+    // 2. Persist current user message
     await AgentMemory.create({ userId, role: 'user', content: message });
 
-    const response = await generateResponse(message, { fmi, alerts, goals, envelope });
+    // 3. Build verified deterministic financial context (fresh on every turn)
+    const context = await buildChatContext(userId);
 
-    // Persist assistant response
+    // 4. Generate multi-turn grounded response
+    const response = await generateResponse(message, context, priorHistory);
+
+    // 5. Persist assistant response
     const saved = await AgentMemory.create({ userId, role: 'assistant', content: response });
 
     res.json({

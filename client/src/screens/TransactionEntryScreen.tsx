@@ -46,6 +46,7 @@ interface Props {
 
 export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
   const [amount, setAmount] = useState('');
+  const [isAmountFocused, setIsAmountFocused] = useState(false);
   const [description, setDescription] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(CATEGORIES[0]);
   const [selectedType, setSelectedType] = useState<SpendType>('Want');
@@ -56,6 +57,7 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
   const [selectedLiability, setSelectedLiability] = useState<Liability | null>(null);
   const [showLiabilityModal, setShowLiabilityModal] = useState(false);
   const [markAsPaid, setMarkAsPaid] = useState(true);
+  const amountInputRef = useRef<TextInput>(null);
   const { transactions, addTransaction: addToStore } = useStore();
 
   useEffect(() => {
@@ -258,18 +260,46 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
             </TouchableOpacity>
           </View>
 
-          {/* Amount */}
-          <TextInput
-            style={styles.amountInput}
-            value={`₹${amount}`}
-            onChangeText={(t) => setAmount(t.replace('₹', ''))}
-            keyboardType="decimal-pad"
-            selectTextOnFocus
-            placeholder="₹0"
-          />
+          {/* Amount Field Label */}
+          <Text style={styles.fieldLabel}>Amount</Text>
 
-          {/* Divider */}
-          <View style={styles.divider} />
+          {/* Amount Input Container */}
+          <TouchableOpacity
+            style={[
+              styles.amountContainer,
+              isAmountFocused && styles.amountContainerFocused,
+            ]}
+            activeOpacity={1}
+            onPress={() => amountInputRef.current?.focus()}
+            accessibilityRole="button"
+            accessibilityLabel="Transaction amount"
+          >
+            <View pointerEvents="none" style={styles.currencyPrefixWrap}>
+              <Text style={[styles.currencyPrefix, isAmountFocused && styles.currencyPrefixFocused]}>
+                ₹
+              </Text>
+            </View>
+            <TextInput
+              ref={amountInputRef}
+              style={styles.amountInput}
+              value={amount}
+              onChangeText={(t) => {
+                const cleaned = t.replace(/[^0-9.]/g, '');
+                const parts = cleaned.split('.');
+                if (parts.length > 2) {
+                  setAmount(`${parts[0]}.${parts.slice(1).join('')}`);
+                } else {
+                  setAmount(cleaned);
+                }
+              }}
+              keyboardType="decimal-pad"
+              placeholder="0"
+              placeholderTextColor="#94A3B8"
+              onFocus={() => setIsAmountFocused(true)}
+              onBlur={() => setIsAmountFocused(false)}
+              accessibilityLabel="Amount value"
+            />
+          </TouchableOpacity>
 
           {/* Description */}
           <Text style={styles.fieldLabel}>Description</Text>
@@ -698,19 +728,45 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 
-  // Amount
-  amountInput: {
-    fontSize: 42,
-    fontWeight: '800',
-    color: '#1A202C',
-    letterSpacing: -1,
-    paddingVertical: 4,
+  // Amount Container & Inputs
+  amountContainer: {
+    minHeight: 64,
+    borderRadius: 16,
+    borderWidth: 1.5,
+    borderColor: '#E2E8F0',
+    backgroundColor: '#F8FAFC',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
     marginBottom: 16,
   },
-  divider: {
-    height: 1,
-    backgroundColor: '#E2E8F0',
-    marginBottom: 20,
+  amountContainerFocused: {
+    borderColor: BRAND_BLUE,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 2,
+  },
+  currencyPrefixWrap: {
+    marginRight: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  currencyPrefix: {
+    fontSize: 30,
+    fontWeight: '700',
+    color: '#64748B',
+    lineHeight: 36,
+  },
+  currencyPrefixFocused: {
+    color: BRAND_BLUE,
+  },
+  amountInput: {
+    flex: 1,
+    fontSize: 32,
+    fontWeight: '800',
+    color: '#1A202C',
+    letterSpacing: -0.5,
+    paddingVertical: 8,
+    minHeight: 48,
   },
 
   // Fields

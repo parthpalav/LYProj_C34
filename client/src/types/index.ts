@@ -259,6 +259,9 @@ export interface User {
   _id?: string;
   name: string;
   email: string;
+  avatar?: string | null;
+  /** Transient: local file:// uri of a just-picked avatar, for reliable immediate display. Not persisted server-side. */
+  avatarLocalUri?: string | null;
   isEmailVerified?: boolean;
   dateOfBirth?: string | null;
   age?: number | null;

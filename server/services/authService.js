@@ -46,6 +46,7 @@ export function stripUser(user) {
     _id: user._id,
     name: user.name,
     email: user.email,
+    avatar: user.avatar ?? null,
     isEmailVerified: !!user.isEmailVerified,
     dateOfBirth: user.dateOfBirth,
     age: user.age,

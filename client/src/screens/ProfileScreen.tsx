@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
+  Image,
   Keyboard,
   KeyboardAvoidingView,
   Modal,
@@ -15,6 +16,7 @@ import {
   View,
 } from 'react-native';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -180,6 +182,10 @@ export function ProfileScreen(): React.ReactElement {
   const [editVisible, setEditVisible] = useState(false);
   const [saving, setSaving] = useState(false);
 
+  // Avatar upload
+  const [avatarBusy, setAvatarBusy] = useState(false);
+  const [avatarRenderKey, setAvatarRenderKey] = useState(0);
+
   // Typed edit state
   const [editName, setEditName] = useState('');
   const [editDOB, setEditDOB] = useState<Date>(new Date(2000, 0, 1));
@@ -194,6 +200,8 @@ export function ProfileScreen(): React.ReactElement {
 
   // Date picker visibility
   const [showDatePicker, setShowDatePicker] = useState(false);
+
+  const shownAvatar = user?.avatarLocalUri || user?.avatar || null;
 
   const onboardingDone = user?.onboardingComplete ?? false;
   const statusColor = onboardingDone ? GREEN : AMBER;
@@ -218,6 +226,98 @@ export function ProfileScreen(): React.ReactElement {
   const onDateChange = (_event: DateTimePickerEvent, selectedDate?: Date) => {
     if (Platform.OS === 'android') setShowDatePicker(false);
     if (selectedDate) setEditDOB(selectedDate);
+  };
+
+  const persistAvatar = async (avatar: string | null, localUri: string | null) => {
+    const base = (user ?? {}) as User;
+    const previous = base.avatar ?? null;
+    const previousLocal = base.avatarLocalUri ?? null;
+    const apply = (next: User) => {
+      setStoreUser(next);
+      setAuthUser(next);
+      setAvatarRenderKey((k) => k + 1); // force <Image> to remount so it repaints
+    };
+
+    // Optimistic: show the picked local file immediately (RN renders file:// reliably,
+    // unlike swapping one big data: URI for another on a mounted <Image>)
+    apply({ ...base, avatar, avatarLocalUri: localUri } as User);
+
+    try {
+      const response = await updateUserProfileApi({ avatar });
+      const serverUser = response?.user;
+      // Keep our avatar even if an older server build doesn't echo the field back
+      apply((serverUser
+        ? { ...serverUser, avatar: serverUser.avatar ?? avatar, avatarLocalUri: localUri }
+        : { ...base, avatar, avatarLocalUri: localUri }) as User);
+    } catch (err: any) {
+      // Roll back on failure
+      apply({ ...base, avatar: previous, avatarLocalUri: previousLocal } as User);
+      const status = err?.response?.status;
+      const serverMsg = err?.response?.data?.error || err?.response?.data?.message;
+      const detail =
+        status === 413
+          ? 'Image too large for the server — restart the backend so the new 6 MB limit applies, or pick a smaller photo.'
+          : serverMsg || err?.message || 'Could not update your profile picture.';
+      Alert.alert('Photo Not Saved', status ? `(HTTP ${status}) ${detail}` : detail);
+    }
+  };
+
+  const handlePickAvatar = async () => {
+    if (avatarBusy) return;
+
+    const hasPhoto = !!(user?.avatarLocalUri || user?.avatar);
+    const choose = () =>
+      new Promise<'library' | 'remove' | 'cancel'>((resolve) => {
+        const options: Array<{ text: string; style?: 'cancel' | 'destructive'; onPress?: () => void }> = [
+          { text: 'Choose from Library', onPress: () => resolve('library') },
+        ];
+        if (hasPhoto) options.push({ text: 'Remove Photo', style: 'destructive', onPress: () => resolve('remove') });
+        options.push({ text: 'Cancel', style: 'cancel', onPress: () => resolve('cancel') });
+        Alert.alert('Profile Picture', undefined, options, { cancelable: true, onDismiss: () => resolve('cancel') });
+      });
+
+    const action = await choose();
+    if (action === 'cancel') return;
+
+    setAvatarBusy(true);
+    try {
+      if (action === 'remove') {
+        await persistAvatar(null, null);
+        return;
+      }
+
+      const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (!perm.granted) {
+        Alert.alert('Permission Needed', 'Allow photo library access in Settings to set a profile picture.');
+        return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ['images'],
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.35,
+        base64: true,
+      });
+      if (result.canceled) return;
+
+      const asset = result.assets?.[0];
+      if (!asset?.base64) {
+        Alert.alert('Photo Error', 'Could not read the selected image. Please try another.');
+        return;
+      }
+
+      const mime = asset.mimeType || 'image/jpeg';
+      const dataUri = `data:${mime};base64,${asset.base64}`;
+      if (dataUri.length > 3_800_000) {
+        Alert.alert('Image Too Large', 'That photo is too large. Please pick a smaller one or crop it tighter.');
+        return;
+      }
+
+      await persistAvatar(dataUri, asset.uri ?? null);
+    } finally {
+      setAvatarBusy(false);
+    }
   };
 
   const handleSave = async () => {
@@ -343,10 +443,31 @@ export function ProfileScreen(): React.ReactElement {
           </TouchableOpacity>
 
           <View style={s.avatarOuter}>
-            <View style={s.avatar}>
-              <Text style={s.avatarText}>{getInitials(user?.name)}</Text>
-            </View>
-            <View style={s.onlineDot} />
+            <TouchableOpacity
+              style={s.avatar}
+              activeOpacity={0.8}
+              onPress={handlePickAvatar}
+              accessibilityLabel="Change profile picture"
+            >
+              {shownAvatar ? (
+                <Image key={avatarRenderKey} source={{ uri: shownAvatar }} style={s.avatarImg} />
+              ) : (
+                <Text style={s.avatarText}>{getInitials(user?.name)}</Text>
+              )}
+              {avatarBusy && (
+                <View style={s.avatarBusy}>
+                  <ActivityIndicator color="#FFFFFF" size="small" />
+                </View>
+              )}
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={s.avatarCameraBadge}
+              activeOpacity={0.8}
+              onPress={handlePickAvatar}
+              accessibilityLabel="Change profile picture"
+            >
+              <Ionicons name="camera" size={13} color="#FFFFFF" />
+            </TouchableOpacity>
           </View>
 
           <Text style={s.name}>{user?.name ?? 'Valued Member'}</Text>
@@ -471,7 +592,7 @@ export function ProfileScreen(): React.ReactElement {
             accessibilityLabel="Manage Financial Assets and Holdings"
           >
             <View style={[infoStyles.iconWrap, { backgroundColor: '#ECFDF5' }]}>
-              <Ionicons name="pie-chart-outline" size={18} color="#059669" />
+              <Ionicons name="pie-chart" size={18} color="#10B981" />
             </View>
             <View style={infoStyles.textCol}>
               <Text style={infoStyles.label}>Financial Assets & Holdings</Text>
@@ -488,8 +609,8 @@ export function ProfileScreen(): React.ReactElement {
             activeOpacity={0.7}
             accessibilityLabel="Manage Income Streams and History"
           >
-            <View style={[infoStyles.iconWrap, { backgroundColor: '#ECFDF5' }]}>
-              <Ionicons name="wallet-outline" size={18} color="#059669" />
+            <View style={[infoStyles.iconWrap, { backgroundColor: BLUE_LIGHT }]}>
+              <Ionicons name="wallet" size={18} color={BLUE} />
             </View>
             <View style={infoStyles.textCol}>
               <Text style={infoStyles.label}>Income Streams & History</Text>
@@ -506,8 +627,8 @@ export function ProfileScreen(): React.ReactElement {
             activeOpacity={0.7}
             accessibilityLabel="View and Manage User Liabilities"
           >
-            <View style={[infoStyles.iconWrap, { backgroundColor: '#EFF6FF' }]}>
-              <Ionicons name="calendar-outline" size={18} color={BLUE} />
+            <View style={[infoStyles.iconWrap, { backgroundColor: '#FEF2F2' }]}>
+              <Ionicons name="calendar-outline" size={18} color="#EF4444" />
             </View>
             <View style={infoStyles.textCol}>
               <Text style={infoStyles.label}>Recurring Liabilities</Text>
@@ -832,6 +953,27 @@ const s = StyleSheet.create({
     elevation: 6,
   },
   avatarText: { fontSize: 28, fontWeight: '800', color: '#FFFFFF', letterSpacing: 1 },
+  avatarImg: { width: 80, height: 80, borderRadius: 40 },
+  avatarBusy: {
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: 40,
+    backgroundColor: 'rgba(15,23,42,0.45)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  avatarCameraBadge: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    backgroundColor: BLUE,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2.5,
+    borderColor: BG,
+  },
   onlineDot: {
     position: 'absolute',
     bottom: 2,

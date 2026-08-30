@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import {
   View,
   Text,
+  Image,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -18,7 +19,8 @@ import {
   getLiabilities,
   getFMI,
   getUserProfile,
-  getAssets
+  getAssets,
+  getIncome
 } from '../services/api';
 import { useStore } from '../store/useStore';
 import {
@@ -27,7 +29,8 @@ import {
   Liability,
   FMIResponse,
   User,
-  Asset
+  Asset,
+  IncomeRecord
 } from '../types';
 import { UpdateBalanceScreen } from './UpdateBalanceScreen';
 
@@ -94,6 +97,7 @@ export function DashboardScreen(): React.ReactElement {
   const [liabilities, setLiabilities] = useState<Liability[]>([]);
   const [fmiData, setFmiData] = useState<FMIResponse | null>(null);
   const [assets, setAssets] = useState<Asset[] | null>(null);
+  const [income, setIncome] = useState<IncomeRecord[] | null>(null);
   const [dataLoaded, setDataLoaded] = useState(false);
 
   // ── Parallel Data Fetcher with Failure Isolation ─────────
@@ -109,6 +113,7 @@ export function DashboardScreen(): React.ReactElement {
         getFMI(),
         getUserProfile(),
         getAssets(),
+        getIncome(),
       ]);
 
       // 1. Dashboard
@@ -139,6 +144,11 @@ export function DashboardScreen(): React.ReactElement {
       // 6. Assets
       if (results[5].status === 'fulfilled' && Array.isArray(results[5].value)) {
         setAssets(results[5].value);
+      }
+
+      // 7. Income receipts
+      if (results[6].status === 'fulfilled' && Array.isArray(results[6].value)) {
+        setIncome(results[6].value);
       }
 
       setDataLoaded(true);
@@ -178,27 +188,25 @@ export function DashboardScreen(): React.ReactElement {
     return { totalValue, count: assets.length };
   }, [assets]);
 
-  // Use authoritative Predictability asset metrics when available, fall back to simple direct total
-  const assetDisplay = useMemo(() => {
-    const pred = predictability?.assets;
-    if (pred && pred.totalAssetValue > 0) {
-      return {
-        total: pred.totalAssetValue,
-        fire: pred.fireInvestableCorpus,
-        liquid: pred.liquidBuffer,
-        source: 'predictability' as const,
-      };
-    }
-    if (assetSummary && assetSummary.count > 0) {
-      return {
-        total: assetSummary.totalValue,
-        fire: null,
-        liquid: null,
-        source: 'direct' as const,
-      };
-    }
-    return null;
-  }, [predictability?.assets, assetSummary]);
+  // First-logged assets (earliest created) for the Home preview
+  const previewAssets = useMemo(() => {
+    if (!assets || assets.length === 0) return [];
+    return [...assets]
+      .sort((a, b) => {
+        const ta = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const tb = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return ta - tb;
+      })
+      .slice(0, 2);
+  }, [assets]);
+
+  // Latest income receipts for the Home preview
+  const latestReceipts = useMemo(() => {
+    if (!income || income.length === 0) return [];
+    return [...income]
+      .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+      .slice(0, 2);
+  }, [income]);
 
   const nearestLiability = useMemo(() => {
     const sorted = [...activeLiabilities]
@@ -450,7 +458,15 @@ export function DashboardScreen(): React.ReactElement {
             activeOpacity={0.8}
             accessibilityLabel="View User Profile"
           >
-            <Ionicons name="person-circle-outline" size={36} color={BLUE} />
+            {user?.avatarLocalUri || user?.avatar ? (
+              <Image
+                key={user.avatarLocalUri || (user.avatar as string).slice(-24)}
+                source={{ uri: (user.avatarLocalUri || user.avatar) as string }}
+                style={styles.profileAvatarImg}
+              />
+            ) : (
+              <Ionicons name="person-circle-outline" size={36} color={BLUE} />
+            )}
           </TouchableOpacity>
         </View>
 
@@ -660,8 +676,8 @@ export function DashboardScreen(): React.ReactElement {
                       {(mcProb || 0) >= 0.75
                         ? 'Good Predictability'
                         : (mcProb || 0) >= 0.5
-                        ? 'Fair Predictability'
-                        : 'Action Needed'}
+                          ? 'Fair Predictability'
+                          : 'Action Needed'}
                     </Text>
                   </View>
                 </View>
@@ -800,10 +816,134 @@ export function DashboardScreen(): React.ReactElement {
           </View>
         </TouchableOpacity>
 
-        {/* ── E. UPCOMING LIABILITIES ──────────────────────── */}
+        {/* ── E. MANAGE · ASSETS / INCOME / LIABILITIES ─────── */}
+        <View style={styles.manageCard}>
+        {/* Assets */}
         <TouchableOpacity
-          style={styles.liabilityCard}
-          activeOpacity={0.88}
+          style={styles.manageSection}
+          activeOpacity={0.7}
+          onPress={() => (navigation as any).navigate('Assets')}
+          accessibilityLabel="View and Manage Financial Assets"
+        >
+          <View style={styles.cardHeader}>
+            <View style={styles.cardTitleRow}>
+              <View style={[styles.iconBadge, { backgroundColor: GREEN_LIGHT }]}>
+                <Ionicons name="pie-chart" size={18} color={GREEN} />
+              </View>
+              <Text style={styles.cardTitle} numberOfLines={1}>Assets</Text>
+            </View>
+            {assetSummary && assetSummary.count > 0 && (
+              <View style={styles.countBadge}>
+                <Text style={styles.countBadgeText} numberOfLines={1}>{assetSummary.count} logged</Text>
+              </View>
+            )}
+          </View>
+
+          {previewAssets.length > 0 ? (
+            <View style={styles.miniList}>
+              {previewAssets.map((a) => (
+                <View key={a.id} style={styles.miniRow}>
+                  <View style={styles.miniInfo}>
+                    <Text style={styles.miniName} numberOfLines={1}>{a.name}</Text>
+                    <Text style={styles.miniSub} numberOfLines={1}>{a.assetType}</Text>
+                  </View>
+                  <Text
+                    style={styles.miniAmount}
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                    minimumFontScale={0.8}
+                  >
+                    {formatCurrency(a.currentValue)}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          ) : (
+            <View style={styles.emptyInlineState}>
+              <Text style={styles.emptyInlineText}>
+                {assets !== null
+                  ? 'No assets logged yet — tap to add your first.'
+                  : 'Track your FDs, mutual funds, stocks & more.'}
+              </Text>
+            </View>
+          )}
+
+          <View style={styles.manageSectionAction}>
+            <Text style={styles.cardActionLink}>View all assets</Text>
+            <Ionicons name="chevron-forward" size={14} color={BLUE} />
+          </View>
+        </TouchableOpacity>
+
+        <View style={styles.manageDivider} />
+
+        {/* Income receipts */}
+        <TouchableOpacity
+          style={styles.manageSection}
+          activeOpacity={0.7}
+          onPress={() => (navigation as any).navigate('IncomeFlow')}
+          accessibilityLabel="View, Log and Manage Income Receipts"
+        >
+          <View style={styles.cardHeader}>
+            <View style={styles.cardTitleRow}>
+              <View style={[styles.iconBadge, { backgroundColor: BLUE_LIGHT }]}>
+                <Ionicons name="wallet" size={18} color={BLUE} />
+              </View>
+              <Text style={styles.cardTitle} numberOfLines={1}>Income Receipts</Text>
+            </View>
+            {income && income.length > 0 && (
+              <View style={styles.countBadge}>
+                <Text style={styles.countBadgeText} numberOfLines={1}>{income.length} logged</Text>
+              </View>
+            )}
+          </View>
+
+          {latestReceipts.length > 0 ? (
+            <View style={styles.miniList}>
+              {latestReceipts.map((r) => (
+                <View key={r.id} style={styles.miniRow}>
+                  <View style={styles.miniInfo}>
+                    <Text style={styles.miniName} numberOfLines={1}>
+                      {r.description || r.source || 'Income'}
+                    </Text>
+                    <Text style={styles.miniSub} numberOfLines={1}>
+                      {r.source
+                        ? `${r.source} · ${formatShortDate(r.timestamp)}`
+                        : formatShortDate(r.timestamp)}
+                    </Text>
+                  </View>
+                  <Text
+                    style={[styles.miniAmount, { color: GREEN }]}
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                    minimumFontScale={0.8}
+                  >
+                    +{formatCurrency(r.amount)}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          ) : (
+            <View style={styles.emptyInlineState}>
+              <Text style={styles.emptyInlineText}>
+                {income !== null
+                  ? 'No receipts logged yet — tap to log income.'
+                  : 'Log salary, freelance & other receipts.'}
+              </Text>
+            </View>
+          )}
+
+          <View style={styles.manageSectionAction}>
+            <Text style={styles.cardActionLink}>View all logged receipts</Text>
+            <Ionicons name="chevron-forward" size={14} color={BLUE} />
+          </View>
+        </TouchableOpacity>
+
+        <View style={styles.manageDivider} />
+
+        {/* Upcoming liabilities */}
+        <TouchableOpacity
+          style={styles.manageSection}
+          activeOpacity={0.7}
           onPress={() => (navigation as any).navigate('Liabilities')}
           accessibilityLabel="View Liabilities and Scheduled Deductions"
         >
@@ -822,32 +962,34 @@ export function DashboardScreen(): React.ReactElement {
           </View>
 
           {nearestLiability ? (
-            <View style={styles.liabilityItemRow}>
-              <View style={styles.liabilityIconWrap}>
-                <Ionicons
-                  name={nearestLiability.autoDeduct ? 'flash' : 'time-outline'}
-                  size={20}
-                  color={nearestLiability.autoDeduct ? BLUE : GRAY_600}
-                />
-              </View>
-              <View style={styles.liabilityInfo}>
-                <Text style={styles.liabilityName} numberOfLines={1}>{nearestLiability.name}</Text>
-                <Text style={styles.liabilityDueDate} numberOfLines={1}>
-                  Due {formatShortDate(nearestLiability.nextDueDate)}
-                  {daysUntilLiability !== null && daysUntilLiability >= 0
-                    ? ` (${daysUntilLiability === 0 ? 'Today' : `in ${daysUntilLiability}d`})`
-                    : ''}
-                  {nearestLiability.autoDeduct ? ' · Auto Deduct' : ''}
+            <View style={styles.miniList}>
+              <View style={styles.miniRow}>
+                <View style={styles.liabilityIconWrap}>
+                  <Ionicons
+                    name={nearestLiability.autoDeduct ? 'flash' : 'time-outline'}
+                    size={18}
+                    color={nearestLiability.autoDeduct ? BLUE : GRAY_600}
+                  />
+                </View>
+                <View style={styles.miniInfo}>
+                  <Text style={styles.miniName} numberOfLines={1}>{nearestLiability.name}</Text>
+                  <Text style={styles.miniSub} numberOfLines={1}>
+                    Due {formatShortDate(nearestLiability.nextDueDate)}
+                    {daysUntilLiability !== null && daysUntilLiability >= 0
+                      ? ` (${daysUntilLiability === 0 ? 'Today' : `in ${daysUntilLiability}d`})`
+                      : ''}
+                    {nearestLiability.autoDeduct ? ' · Auto Deduct' : ''}
+                  </Text>
+                </View>
+                <Text
+                  style={styles.miniAmount}
+                  numberOfLines={1}
+                  adjustsFontSizeToFit
+                  minimumFontScale={0.8}
+                >
+                  {formatCurrency(nearestLiability.amount)}
                 </Text>
               </View>
-              <Text
-                style={styles.liabilityAmount}
-                numberOfLines={1}
-                adjustsFontSizeToFit
-                minimumFontScale={0.8}
-              >
-                {formatCurrency(nearestLiability.amount)}
-              </Text>
             </View>
           ) : (
             <View style={styles.emptyInlineState}>
@@ -855,107 +997,12 @@ export function DashboardScreen(): React.ReactElement {
             </View>
           )}
 
-          <View style={styles.cardActionRow}>
-            <Text style={styles.cardActionLink}>Manage liability schedules & auto-deductions</Text>
+          <View style={styles.manageSectionAction}>
+            <Text style={styles.cardActionLink}>View all commitments</Text>
             <Ionicons name="chevron-forward" size={14} color={BLUE} />
           </View>
         </TouchableOpacity>
-
-        {/* ── F2. FINANCIAL ASSETS ─────────────────────────── */}
-        <TouchableOpacity
-          style={styles.assetsCard}
-          activeOpacity={0.88}
-          onPress={() => (navigation as any).navigate('Assets')}
-          accessibilityLabel="View and Manage Financial Assets"
-        >
-          <View style={styles.cardHeader}>
-            <View style={styles.cardTitleRow}>
-              <View style={[styles.iconBadge, { backgroundColor: '#ECFDF5' }]}>
-                <Ionicons name="pie-chart" size={18} color={GREEN} />
-              </View>
-              <Text style={styles.cardTitle} numberOfLines={1}>Financial Assets</Text>
-            </View>
-            {assetDisplay && (
-              <View style={styles.countBadge}>
-                <Text style={styles.countBadgeText} numberOfLines={1}>
-                  {assetSummary ? `${assetSummary.count} recorded` : ''}
-                </Text>
-              </View>
-            )}
-          </View>
-
-          {assetDisplay ? (
-            <View style={styles.assetsBody}>
-              {assetDisplay.source === 'predictability' ? (
-                <>
-                  <View style={styles.assetsMetricRow}>
-                    <View style={styles.assetsMetric}>
-                      <Text style={styles.assetsMetricLabel} numberOfLines={1}>Total Assets</Text>
-                      <Text
-                        style={styles.assetsMetricValue}
-                        numberOfLines={1}
-                        adjustsFontSizeToFit
-                        minimumFontScale={0.75}
-                      >
-                        {formatCurrency(assetDisplay.total)}
-                      </Text>
-                    </View>
-                    <View style={styles.assetsMetricDivider} />
-                    <View style={styles.assetsMetric}>
-                      <Text style={styles.assetsMetricLabel} numberOfLines={1}>FIRE Corpus</Text>
-                      <Text
-                        style={[styles.assetsMetricValue, { color: GREEN }]}
-                        numberOfLines={1}
-                        adjustsFontSizeToFit
-                        minimumFontScale={0.75}
-                      >
-                        {formatCurrency(assetDisplay.fire ?? 0)}
-                      </Text>
-                    </View>
-                  </View>
-                  {(assetDisplay.liquid ?? 0) > 0 && (
-                    <View style={styles.assetsBufferRow}>
-                      <Ionicons name="shield-checkmark-outline" size={14} color={GRAY_600} />
-                      <Text style={styles.assetsBufferText} numberOfLines={1}>
-                        Liquid emergency buffer: {formatCurrency(assetDisplay.liquid ?? 0)}
-                      </Text>
-                    </View>
-                  )}
-                </>
-              ) : (
-                <>
-                  <View style={styles.assetsDirectRow}>
-                    <Text style={styles.assetsDirectLabel} numberOfLines={1}>Total Recorded Assets</Text>
-                    <Text
-                      style={styles.assetsDirectValue}
-                      numberOfLines={1}
-                      adjustsFontSizeToFit
-                      minimumFontScale={0.75}
-                    >
-                      {formatCurrency(assetDisplay.total)}
-                    </Text>
-                  </View>
-                  <Text style={styles.assetsDirectSubtext} numberOfLines={2}>
-                    Open Assets to review retirement and liquidity treatment.
-                  </Text>
-                </>
-              )}
-            </View>
-          ) : assets !== null && assetSummary?.count === 0 ? (
-            <View style={styles.emptyInlineState}>
-              <Text style={styles.emptyInlineText}>No assets recorded yet — tap to add your first.</Text>
-            </View>
-          ) : (
-            <View style={styles.emptyInlineState}>
-              <Text style={styles.emptyInlineText}>Track your FDs, mutual funds, stocks & more.</Text>
-            </View>
-          )}
-
-          <View style={styles.cardActionRow}>
-            <Text style={styles.cardActionLink}>View Assets</Text>
-            <Ionicons name="chevron-forward" size={14} color={BLUE} />
-          </View>
-        </TouchableOpacity>
+        </View>
 
         {/* ── G. SMART NEXT ACTION ─────────────────────────── */}
         <TouchableOpacity
@@ -1082,6 +1129,70 @@ const styles = StyleSheet.create({
   profileAvatarBtn: {
     padding: 4,
     flexShrink: 0,
+  },
+  profileAvatarImg: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: BLUE_LIGHT,
+  },
+
+  // Manage card (Assets / Income / Liabilities previews clubbed in one rectangle)
+  manageCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    borderColor: BORDER,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  manageSection: {
+    paddingVertical: 16,
+  },
+  manageDivider: {
+    height: 1,
+    backgroundColor: '#F1F5F9',
+    marginLeft: 44,
+  },
+  manageSectionAction: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 12,
+  },
+  miniList: {
+    gap: 10,
+  },
+  miniRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  miniInfo: {
+    flex: 1,
+    flexShrink: 1,
+  },
+  miniName: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: DARK,
+  },
+  miniSub: {
+    fontSize: 11,
+    fontWeight: '500',
+    color: GRAY_600,
+    marginTop: 2,
+  },
+  miniAmount: {
+    fontSize: 13,
+    fontWeight: '800',
+    color: DARK,
+    flexShrink: 0,
+    maxWidth: 128,
   },
 
   // Card Base

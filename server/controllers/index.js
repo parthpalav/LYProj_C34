@@ -415,6 +415,17 @@ router.put('/user/profile', async (req, res, next) => {
 
     const updateFields = {};
     if (payload.name !== undefined) updateFields.name = String(payload.name).trim();
+    if (payload.avatar !== undefined) {
+      if (payload.avatar === null || payload.avatar === '') {
+        updateFields.avatar = null;
+      } else {
+        const avatarStr = String(payload.avatar);
+        if (avatarStr.length > 4_000_000) {
+          return res.status(400).json({ success: false, error: 'Avatar image is too large. Please choose a smaller photo.' });
+        }
+        updateFields.avatar = avatarStr;
+      }
+    }
     if (payload.age !== undefined) updateFields.age = Number(payload.age);
     if (payload.income !== undefined) {
       updateFields.income = Number(payload.income);

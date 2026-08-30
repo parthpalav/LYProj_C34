@@ -12,7 +12,13 @@
       "bundleIdentifier": "com.parth.lyproj"
     },
     "plugins": [
-      "@react-native-community/datetimepicker"
+      "@react-native-community/datetimepicker",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "FINAURA needs access to your photos so you can set a profile picture."
+        }
+      ]
     ]
   }
 }

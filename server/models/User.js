@@ -15,6 +15,7 @@ const userSchema = new mongoose.Schema(
     id: { type: String, required: false },
     name: { type: String, required: true, trim: true },
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
+    avatar: { type: String, default: null },
     password: { type: String, required: false, select: false },
     passwordHash: { type: String, required: false, select: false },
     isEmailVerified: { type: Boolean, default: false },

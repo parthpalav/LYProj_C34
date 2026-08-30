@@ -2,7 +2,7 @@ import { BottomTabBarButtonProps, createBottomTabNavigator } from '@react-naviga
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ChatScreen } from '../screens/ChatScreen';
 import { DashboardScreen } from '../screens/DashboardScreen';
@@ -41,11 +41,26 @@ function tabIconName(routeName: keyof RootTabParamList, focused: boolean): React
   return focused ? 'person-circle' : 'person-circle-outline';
 }
 
-function HomeTabButton({ children, onPress, accessibilityState }: BottomTabBarButtonProps): React.ReactElement {
-  const isFocused = accessibilityState?.selected;
+function HomeTabButton({ onPress, accessibilityState }: BottomTabBarButtonProps): React.ReactElement {
+  const isFocused = Boolean(accessibilityState?.selected);
+  const tintColor = isFocused ? '#1e293b' : '#94a3b8';
+
   return (
-    <Pressable onPress={onPress} style={styles.homeButtonWrap} accessibilityRole="tab" accessibilityState={{ selected: isFocused }}>
-      <View style={[styles.homeButton, isFocused ? styles.homeButtonActive : undefined]}>{children}</View>
+    <Pressable
+      onPress={onPress}
+      style={styles.homeButtonWrap}
+      accessibilityRole="tab"
+      accessibilityState={{ selected: isFocused }}
+      accessibilityLabel="Home"
+    >
+      <View style={[styles.homeButton, isFocused ? styles.homeButtonActive : undefined]}>
+        <Ionicons
+          name={isFocused ? 'home' : 'home-outline'}
+          size={22}
+          color={tintColor}
+        />
+        <Text style={[styles.homeLabel, { color: tintColor }]}>Home</Text>
+      </View>
     </Pressable>
   );
 }
@@ -172,7 +187,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#2563EB',
   },
   homeItem: {
-    marginTop: -16,
+    marginTop: -14,
   },
   homeButtonWrap: {
     alignItems: 'center',
@@ -180,22 +195,32 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   homeButton: {
-    width: 58,
-    height: 58,
-    borderRadius: 29,
+    minWidth: 64,
+    height: 54,
+    borderRadius: 18,
     backgroundColor: '#eef2ff',
-    borderWidth: 3,
+    borderWidth: 2,
     borderColor: '#ffffff',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
     shadowColor: '#1e293b',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.10,
-    shadowRadius: 8,
-    elevation: 5,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 4,
     alignItems: 'center',
     justifyContent: 'center',
   },
   homeButtonActive: {
     backgroundColor: '#dbeafe',
-    shadowOpacity: 0.14,
+    borderColor: '#ffffff',
+    shadowOpacity: 0.16,
+    elevation: 6,
+  },
+  homeLabel: {
+    fontSize: 10,
+    fontWeight: '600',
+    marginTop: 2,
+    letterSpacing: 0.1,
   },
 });

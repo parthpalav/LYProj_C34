@@ -1030,16 +1030,6 @@ export function DashboardScreen(): React.ReactElement {
         </TouchableOpacity>
       </ScrollView>
 
-      {/* Floating Balance Button */}
-      <TouchableOpacity
-        style={styles.floatingBtn}
-        onPress={() => setShowUpdateBalance(true)}
-        activeOpacity={0.8}
-        accessibilityLabel="Quick Update Current Balance"
-      >
-        <Ionicons name="wallet-outline" size={24} color="#FFFFFF" />
-      </TouchableOpacity>
-
       {/* Update Balance Modal */}
       <Modal
         visible={showUpdateBalance}
@@ -1869,23 +1859,5 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: GRAY_600,
     fontStyle: 'italic',
-  },
-
-  // Floating Action Button
-  floatingBtn: {
-    position: 'absolute',
-    bottom: 24,
-    right: 20,
-    width: 54,
-    height: 54,
-    borderRadius: 27,
-    backgroundColor: BLUE,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: BLUE,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.35,
-    shadowRadius: 10,
-    elevation: 6,
   },
 });

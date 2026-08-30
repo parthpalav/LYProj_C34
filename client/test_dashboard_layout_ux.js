@@ -187,6 +187,54 @@ test('Test 6 — Existing Data Wiring Preserved (Zero Mock Data)', () => {
   assert.ok(!dashboardCode.includes('AiReasoningPanel'), 'No fake AI panels');
 });
 
+// ── Test 7 — Redundant Floating Balance Button Removed ──────
+test('Test 7 — Redundant Floating Balance Button Removed', () => {
+  assert.ok(
+    !dashboardCode.includes('accessibilityLabel="Quick Update Current Balance"'),
+    'Floating balance action button JSX is removed from Dashboard'
+  );
+  assert.ok(
+    !dashboardCode.includes('style={styles.floatingBtn}'),
+    'floatingBtn JSX reference is removed from Dashboard'
+  );
+});
+
+// ── Test 8 — Balance Widget Edit Interaction Preserved ──────
+test('Test 8 — Balance Widget Edit Interaction Preserved', () => {
+  assert.ok(
+    dashboardCode.includes('styles.updateBalanceBtn'),
+    'Balance widget retains its dedicated updateBalanceBtn'
+  );
+  assert.ok(
+    dashboardCode.includes('accessibilityLabel="Update Current Balance"'),
+    'Balance widget button retains descriptive accessibility label'
+  );
+  assert.ok(
+    dashboardCode.includes('onPress={() => setShowUpdateBalance(true)}'),
+    'Balance widget button opens the balance update flow'
+  );
+});
+
+// ── Test 9 — Shared Balance Modal & Flow Preserved ───────────
+test('Test 9 — Shared Balance Modal & Flow Preserved', () => {
+  assert.ok(
+    dashboardCode.includes('const [showUpdateBalance, setShowUpdateBalance] = useState(false)'),
+    'showUpdateBalance state is preserved'
+  );
+  assert.ok(
+    dashboardCode.includes('<UpdateBalanceScreen'),
+    'UpdateBalanceScreen modal is mounted and reachable'
+  );
+});
+
+// ── Test 10 — No Dead Floating Button Styles ─────────────────
+test('Test 10 — No Dead Floating Button Styles', () => {
+  assert.ok(
+    !dashboardCode.includes('floatingBtn: {'),
+    'floatingBtn style definition is completely removed from StyleSheet'
+  );
+});
+
 // ── Summary ─────────────────────────────────────────────────
 console.log('='.repeat(64));
 if (failed === 0) {

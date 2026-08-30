@@ -7,6 +7,8 @@
  */
 
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
 
 console.log('='.repeat(64));
 console.log('  FINAURA FMI SCREEN UX & CONTRACT TEST SUITE');
@@ -183,6 +185,92 @@ test('Test 10: Home Screen & FMI Screen Score Parity Contract', () => {
 
   assert.equal(homeFmiScore, fmiScreenScore);
   assert.equal(homeFmiScore, 78);
+});
+
+// ── 11. SCORE AND RATING SEPARATION ─────────────────────────
+test('Test 11: Score and Qualitative Rating Separated in Layout', () => {
+  const clientDir = fs.existsSync(path.resolve(process.cwd(), 'src'))
+    ? process.cwd()
+    : path.resolve(process.cwd(), 'client');
+  const code = fs.readFileSync(path.join(clientDir, 'src/screens/FmiScreen.tsx'), 'utf8');
+
+  // scoreWrap must be inside arcWrap
+  const arcWrapSection = code.substring(code.indexOf('<View style={g.arcWrap}>'), code.indexOf('<View style={g.ratingWrap}>'));
+  assert.ok(
+    arcWrapSection.includes('<View style={g.scoreWrap}>'),
+    'scoreWrap is nested inside arcWrap for accurate geometric containment'
+  );
+
+  // ratingWrap must be separate below arcWrap
+  assert.ok(
+    code.includes('<View style={g.ratingWrap}>'),
+    'ratingWrap provides a dedicated container for the qualitative rating below the arc'
+  );
+});
+
+// ── 12. LARGE SCORE (100/100) GEOMETRY SUPPORT ──────────────
+test('Test 12: Large Score (100/100) Support without Collision', () => {
+  const clientDir = fs.existsSync(path.resolve(process.cwd(), 'src'))
+    ? process.cwd()
+    : path.resolve(process.cwd(), 'client');
+  const code = fs.readFileSync(path.join(clientDir, 'src/screens/FmiScreen.tsx'), 'utf8');
+
+  assert.ok(
+    code.includes('adjustsFontSizeToFit'),
+    'scoreText specifies adjustsFontSizeToFit for dynamic text scaling'
+  );
+  assert.ok(
+    code.includes('numberOfLines={1}'),
+    'scoreText specifies single line constraint'
+  );
+  assert.ok(
+    code.includes('minimumFontScale'),
+    'scoreText specifies minimumFontScale safety floor'
+  );
+});
+
+// ── 13. NO BRITTLE OVERLAP OFFSETS ──────────────────────────
+test('Test 13: No Conflicting Absolute Offsets on Rating', () => {
+  const clientDir = fs.existsSync(path.resolve(process.cwd(), 'src'))
+    ? process.cwd()
+    : path.resolve(process.cwd(), 'client');
+  const code = fs.readFileSync(path.join(clientDir, 'src/screens/FmiScreen.tsx'), 'utf8');
+
+  // status and ratingWrap must NOT have position: 'absolute' with negative offsets
+  assert.ok(
+    !code.includes("ratingWrap: {\n    position: 'absolute'"),
+    'ratingWrap uses in-flow flex positioning'
+  );
+  assert.ok(
+    !code.includes("status: {\n    position: 'absolute'"),
+    'status uses in-flow flex positioning'
+  );
+});
+
+// ── 14. QUALITATIVE LABELS REMAIN VISIBLE ───────────────────
+test('Test 14: Qualitative Rating Labels Integrity', () => {
+  const clientDir = fs.existsSync(path.resolve(process.cwd(), 'src'))
+    ? process.cwd()
+    : path.resolve(process.cwd(), 'client');
+  const code = fs.readFileSync(path.join(clientDir, 'src/screens/FmiScreen.tsx'), 'utf8');
+
+  assert.ok(code.includes('Excellent'), 'Label "Excellent" preserved');
+  assert.ok(code.includes('Good'), 'Label "Good" preserved');
+  assert.ok(code.includes('Fair'), 'Label "Fair" preserved');
+  assert.ok(code.includes('Needs Attention'), 'Label "Needs Attention" preserved');
+});
+
+// ── 15. FMI BACKEND & STATE WIRING PRESERVED ────────────────
+test('Test 15: FMI Backend & State Wiring Preserved', () => {
+  const clientDir = fs.existsSync(path.resolve(process.cwd(), 'src'))
+    ? process.cwd()
+    : path.resolve(process.cwd(), 'client');
+  const code = fs.readFileSync(path.join(clientDir, 'src/screens/FmiScreen.tsx'), 'utf8');
+
+  assert.ok(code.includes('getFMI'), 'getFMI API client imported and called');
+  assert.ok(code.includes('FMIRecord'), 'FMIRecord type imported');
+  assert.ok(code.includes('FMIResponse'), 'FMIResponse type imported');
+  assert.ok(code.includes('PillarCard'), '3 Pillars component retained');
 });
 
 console.log('='.repeat(64));

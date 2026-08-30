@@ -43,6 +43,7 @@ function formatINR(n: number | null | undefined) {
 function Gauge({ score, label }: { score: number; label?: string }) {
   const color = fmiColor(score);
   const rotation = -90 + (Math.min(100, Math.max(0, score)) / 100) * 180;
+  const ratingText = label || (score >= 80 ? 'Excellent' : score >= 65 ? 'Good' : score >= 45 ? 'Fair' : 'Needs Attention');
 
   return (
     <View style={g.container}>
@@ -57,32 +58,35 @@ function Gauge({ score, label }: { score: number; label?: string }) {
             },
           ]}
         />
+        <View style={g.scoreWrap}>
+          <Text
+            style={[g.scoreText, { color }]}
+            numberOfLines={1}
+            adjustsFontSizeToFit
+            minimumFontScale={0.7}
+          >
+            {Math.round(score)}
+          </Text>
+          <Text style={g.scoreLabel}>/ 100</Text>
+        </View>
       </View>
-      <View style={g.scoreWrap}>
-        <Text
-          style={[g.scoreText, { color }]}
-          numberOfLines={1}
-          adjustsFontSizeToFit
-          minimumFontScale={0.7}
-        >
-          {Math.round(score)}
+      <View style={g.ratingWrap}>
+        <Text style={[g.status, { color }]} numberOfLines={1}>
+          {ratingText}
         </Text>
-        <Text style={g.scoreLabel}>/ 100</Text>
       </View>
-      <Text style={[g.status, { color }]} numberOfLines={1}>
-        {label || (score >= 80 ? 'Excellent' : score >= 65 ? 'Good' : score >= 45 ? 'Fair' : 'Needs Attention')}
-      </Text>
     </View>
   );
 }
 
 const g = StyleSheet.create({
-  container: { alignItems: 'center', marginVertical: 16 },
+  container: { alignItems: 'center', marginVertical: 14 },
   arcWrap: {
     width: 220,
     height: 110,
     overflow: 'hidden',
     alignItems: 'center',
+    justifyContent: 'flex-end',
     position: 'relative',
   },
   arcBg: {
@@ -92,6 +96,7 @@ const g = StyleSheet.create({
     borderWidth: 20,
     borderColor: '#F1F5F9',
     position: 'absolute',
+    top: 0,
   },
   arcFg: {
     width: 220,
@@ -101,11 +106,39 @@ const g = StyleSheet.create({
     borderTopColor: 'transparent',
     borderRightColor: 'transparent',
     position: 'absolute',
+    top: 0,
   },
-  scoreWrap: { position: 'absolute', bottom: 8, alignItems: 'center' },
-  scoreText: { fontSize: 44, fontWeight: '800', letterSpacing: -1.5 },
-  scoreLabel: { fontSize: 13, fontWeight: '700', color: '#94A3B8', marginTop: -6 },
-  status: { fontSize: 16, fontWeight: '700', marginTop: 12 },
+  scoreWrap: {
+    position: 'absolute',
+    bottom: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 140,
+  },
+  scoreText: {
+    fontSize: 40,
+    fontWeight: '800',
+    letterSpacing: -1,
+    lineHeight: 44,
+  },
+  scoreLabel: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#94A3B8',
+    marginTop: -2,
+    letterSpacing: 0.5,
+  },
+  ratingWrap: {
+    marginTop: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 24,
+  },
+  status: {
+    fontSize: 17,
+    fontWeight: '700',
+    letterSpacing: 0.2,
+  },
 });
 
 // ── Status Badge ─────────────────────────────────────────────

@@ -22,6 +22,13 @@ import type {
   LiabilityPayload,
   LiabilityTransactionsResponse,
   LiabilitiesPaymentSummaryItem,
+  BehaviorResponse,
+  Goal,
+  ScenarioOverrides,
+  WeeklyReport,
+  MonthlyReport,
+  PacingReport,
+  HeatmapPoint,
 } from '../types';
 
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
@@ -236,6 +243,7 @@ export async function getIncome(): Promise<IncomeRecord[]> {
   const { data } = await api.get('/api/income');
   return Array.isArray(data) ? data : data?.data || [];
 }
+export const getIncomes = getIncome;
 
 export async function getAlerts(): Promise<AlertItem[]> {
   const { data } = await api.get('/api/alerts');
@@ -250,6 +258,11 @@ export async function getFMI(): Promise<{ current: FMIResponse; history: FMIReco
   const current = currentRes.data?.data || currentRes.data;
   const history = Array.isArray(historyRes.data) ? historyRes.data : historyRes.data?.data || [];
   return { current, history };
+}
+
+export async function getFMIHistory(): Promise<FMIRecord[]> {
+  const { data } = await api.get('/api/fmi/history');
+  return Array.isArray(data) ? data : data?.data || [];
 }
 
 export async function getPredictability(params?: Record<string, any>): Promise<PredictabilitySnapshot> {
@@ -338,5 +351,99 @@ export async function getLiabilityTransactions(
 export async function getLiabilitiesPaymentsSummary(): Promise<Record<string, LiabilitiesPaymentSummaryItem>> {
   const { data } = await api.get('/api/liabilities/payments-summary');
   return data?.data || data || {};
+}
+
+/**
+ * ============================================================================
+ * INSIGHTS WORKSPACE API SERVICES (PART 5 SPECIFICATION)
+ * ============================================================================
+ */
+
+export async function getBehavior(): Promise<BehaviorResponse> {
+  const { data } = await api.get('/api/behavior');
+  return data?.data || data || { patterns: [], analyzedCount: 0 };
+}
+
+/**
+ * ============================================================================
+ * PLANNING WORKSPACE API SERVICES (PART 6 SPECIFICATION)
+ * ============================================================================
+ */
+
+// ── Assets CRUD ─────────────────────────────────────────────────────────────
+
+export async function createAsset(payload: Omit<Asset, 'id'>): Promise<Asset> {
+  const { data } = await api.post('/api/assets', payload);
+  return data?.data || data;
+}
+
+export async function updateAsset(id: string, payload: Partial<Asset>): Promise<Asset> {
+  const { data } = await api.put(`/api/assets/${id}`, payload);
+  return data?.data || data;
+}
+
+export async function deleteAsset(id: string): Promise<{ success: boolean; message: string }> {
+  const { data } = await api.delete(`/api/assets/${id}`);
+  return data;
+}
+
+// ── Goals CRUD ──────────────────────────────────────────────────────────────
+
+export async function getGoals(): Promise<Goal[]> {
+  const { data } = await api.get('/api/goals');
+  return Array.isArray(data) ? data : data?.data || [];
+}
+
+export async function createGoal(payload: {
+  name: string;
+  emoji?: string;
+  targetAmount: number;
+  targetDate?: string;
+  monthlyContribution?: number;
+}): Promise<Goal> {
+  const { data } = await api.post('/api/goals', payload);
+  return data?.data || data;
+}
+
+export async function updateGoal(id: string, payload: Partial<Goal>): Promise<Goal> {
+  const { data } = await api.put(`/api/goals/${id}`, payload);
+  return data?.data || data;
+}
+
+export async function deleteGoal(id: string): Promise<{ message: string }> {
+  const { data } = await api.delete(`/api/goals/${id}`);
+  return data;
+}
+
+// ── Scenario Lab Evaluation ──────────────────────────────────────────────────
+
+export async function evaluateScenario(overrides: ScenarioOverrides): Promise<PredictabilitySnapshot> {
+  const { data } = await api.post('/api/predictability/scenario', overrides);
+  return data?.data || data;
+}
+
+// ── Reports Workspace Services ──────────────────────────────────────────────
+
+export async function getWeeklyReport(): Promise<WeeklyReport> {
+  const { data } = await api.get('/api/reports/weekly');
+  return data?.data || data;
+}
+
+export async function getPacingReport(): Promise<PacingReport> {
+  const { data } = await api.get('/api/reports/pacing');
+  return data?.data || data;
+}
+
+export async function getMonthlyReport(year?: number, month?: number): Promise<MonthlyReport> {
+  const params: Record<string, number> = {};
+  if (year !== undefined) params.year = year;
+  if (month !== undefined) params.month = month;
+  const { data } = await api.get('/api/reports/monthly', { params });
+  return data?.data || data;
+}
+
+export async function getHeatmapReport(): Promise<HeatmapPoint[]> {
+  const { data } = await api.get('/api/reports/heatmap');
+  return data?.data || data;
 }
 

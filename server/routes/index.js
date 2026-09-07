@@ -3,14 +3,19 @@ import controllerRouter from '../controllers/index.js';
 import * as liabilityController from '../controllers/liabilityController.js';
 import * as predictabilityController from '../controllers/predictabilityController.js';
 import * as assetController from '../controllers/assetController.js';
+import * as reportController from '../controllers/reportController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 
 const router = Router();
 
 router.use(controllerRouter);
 
-// Predictability route
+// Predictability routes
 router.get('/predictability', authMiddleware, predictabilityController.getPredictability);
+router.post('/predictability/scenario', authMiddleware, predictabilityController.evaluateScenario);
+
+// Report routes
+router.get('/reports/monthly', authMiddleware, reportController.getMonthlyReport);
 
 // Liability routes
 router.get('/liabilities', authMiddleware, liabilityController.getLiabilities);

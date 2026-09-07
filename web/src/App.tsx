@@ -9,10 +9,15 @@ import { RegisterPage } from './pages/RegisterPage';
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { ResetPasswordPage } from './pages/ResetPasswordPage';
 import { PlaceholderPage } from './pages/PlaceholderPage';
-import { OverviewPage } from './pages/OverviewPage';
-import { ActivityPage } from './pages/ActivityPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { LoadingScreen } from './components/ui/LoadingScreen';
+
+// Lazy load major workspace pages for optimal bundle chunking (Part 7)
+const OverviewPage = React.lazy(() => import('./pages/OverviewPage').then((m) => ({ default: m.OverviewPage })));
+const ActivityPage = React.lazy(() => import('./pages/ActivityPage').then((m) => ({ default: m.ActivityPage })));
+const InsightsPage = React.lazy(() => import('./pages/InsightsPage').then((m) => ({ default: m.InsightsPage })));
+const PlanPage = React.lazy(() => import('./pages/PlanPage').then((m) => ({ default: m.PlanPage })));
+const ReportsPage = React.lazy(() => import('./pages/ReportsPage').then((m) => ({ default: m.ReportsPage })));
 
 /**
  * Route wrapper requiring valid authenticated session.
@@ -29,7 +34,11 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
     return <Navigate to="/login" replace />;
   }
 
-  return <>{children}</>;
+  return (
+    <React.Suspense fallback={<LoadingScreen message="Loading workspace..." />}>
+      {children}
+    </React.Suspense>
+  );
 };
 
 /**
@@ -107,103 +116,14 @@ export const App: React.FC = () => {
             {/* Money / Activity Workspace */}
             <Route path="activity" element={<ActivityPage />} />
 
-            {/* Understand / Insights Placeholder */}
-            <Route
-              path="insights"
-              element={
-                <PlaceholderPage
-                  category="Understand"
-                  title="Insights"
-                  description="Deep behavioral and financial analytics, spending breakdowns, and FMI explainability."
-                  plannedFeatures={[
-                    {
-                      name: 'Spending Breakdown & Trends',
-                      description: 'Multi-month category distribution and month-over-month spending trend graphs.',
-                    },
-                    {
-                      name: 'FMI Factor Explainability',
-                      description: 'Decomposition of FMI into D1 Saving Discipline (40%), D2 Spending Control (30%), and D3 Behavioral Risk (30%).',
-                    },
-                    {
-                      name: 'Behavioral Pattern Analysis',
-                      description: 'Automated detection of late-night spending, impulse spikes, and high discretionary want-to-need ratios.',
-                    },
-                    {
-                      name: 'Income Predictability Analytics',
-                      description: 'Coefficient of variation, zero-income month resilience, and downside rolling quarter coverage.',
-                    },
-                  ]}
-                />
-              }
-            />
+            {/* Understand / Insights Workspace */}
+            <Route path="insights" element={<InsightsPage />} />
 
-            {/* Future / Plan Placeholder */}
-            <Route
-              path="plan"
-              element={
-                <PlaceholderPage
-                  category="Future"
-                  title="Plan"
-                  description="Long-term financial planning, net worth tracking, scenario modeling, and Monte Carlo FIRE simulations."
-                  plannedFeatures={[
-                    {
-                      name: 'Net Worth Trajectory',
-                      description: 'Complete assets valuation minus outstanding liability principal over time.',
-                    },
-                    {
-                      name: 'Assets Portfolio',
-                      description: 'Asset classes (FIRE Investable, Semi-Liquid, Non-Investable) and individual annual return rates.',
-                    },
-                    {
-                      name: 'Liabilities & Debt Amortization',
-                      description: 'Active liabilities, remaining term months, and debt-to-income impact.',
-                    },
-                    {
-                      name: 'Financial Goals Tracker',
-                      description: 'Milestone target dates, monthly contribution requirements, and accumulated savings.',
-                    },
-                    {
-                      name: 'FIRE Projections & Reverse Solvers',
-                      description: 'Target FIRE number calculation, required nominal-flat and step-up monthly contributions.',
-                    },
-                    {
-                      name: 'Deterministic & Monte Carlo Scenarios',
-                      description: 'Base, Conservative, and Optimistic models combined with probabilistic accumulation simulations.',
-                    },
-                  ]}
-                />
-              }
-            />
+            {/* Future / Plan Workspace */}
+            <Route path="plan" element={<PlanPage />} />
 
-            {/* Documents / Reports Placeholder */}
-            <Route
-              path="reports"
-              element={
-                <PlaceholderPage
-                  category="Documents"
-                  title="Reports"
-                  description="Historical summaries, monthly and weekly financial reports, and data exports."
-                  plannedFeatures={[
-                    {
-                      name: 'Weekly Reports',
-                      description: 'Trailing 7-day spending pacing, top category distribution, and weekly habit nudges.',
-                    },
-                    {
-                      name: 'Monthly Summaries',
-                      description: 'Calendar-month comprehensive financial statements with savings rate analysis.',
-                    },
-                    {
-                      name: 'Yearly Heatmaps',
-                      description: '365-day spending concentration visualization and seasonality identification.',
-                    },
-                    {
-                      name: 'Data Exports (CSV)',
-                      description: 'Export transaction and income histories for tax, budgeting, or offline spreadsheet analysis.',
-                    },
-                  ]}
-                />
-              }
-            />
+            {/* Documents / Reports Workspace */}
+            <Route path="reports" element={<ReportsPage />} />
 
             {/* Profile Placeholder */}
             <Route

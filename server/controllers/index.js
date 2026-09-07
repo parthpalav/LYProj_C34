@@ -67,7 +67,12 @@ function normalizeTransaction(tx) {
 }
 
 function normalizeFmi(item) {
-  return { score: item.score, factors: item.factors, timestamp: item.timestamp };
+  return {
+    score: item.score,
+    factors: item.factors,
+    timestamp: item.timestamp,
+    pillars: item.pillars || null
+  };
 }
 
 const ML_SERVICE_URL = process.env.ML_SERVICE_URL || 'http://localhost:5001';
@@ -1157,7 +1162,8 @@ router.get('/fmi', async (req, res, next) => {
             score:     computed.score,
             factors:   computed.factors,
             timestamp: now,
-            snapshotDate
+            snapshotDate,
+            pillars:   computed.pillars || null
           }
         },
         { upsert: true, new: true, setDefaultsOnInsert: true }
@@ -1170,7 +1176,8 @@ router.get('/fmi', async (req, res, next) => {
             $set: {
               score:     computed.score,
               factors:   computed.factors,
-              timestamp: now
+              timestamp: now,
+              pillars:   computed.pillars || null
             }
           }
         );

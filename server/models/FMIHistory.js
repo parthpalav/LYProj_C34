@@ -6,7 +6,28 @@ const fmiHistorySchema = new mongoose.Schema(
     score: { type: Number, required: true },
     factors: { type: [String], default: [] },
     timestamp: { type: Date, required: true },
-    snapshotDate: { type: String, default: null } // "YYYY-MM-DD" UTC date key for daily idempotency
+    snapshotDate: { type: String, default: null }, // "YYYY-MM-DD" UTC date key for daily idempotency
+    pillars: {
+      type: {
+        D1_savingDiscipline: {
+          score: { type: Number },
+          weight: { type: Number },
+          detail: { type: String }
+        },
+        D2_spendingControl: {
+          score: { type: Number },
+          weight: { type: Number },
+          detail: { type: String }
+        },
+        D3_behavioralRisk: {
+          score: { type: Number },
+          weight: { type: Number },
+          detail: { type: String }
+        }
+      },
+      default: null,
+      required: false
+    }
   },
   { versionKey: false }
 );

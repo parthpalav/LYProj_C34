@@ -10,6 +10,7 @@ import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { ResetPasswordPage } from './pages/ResetPasswordPage';
 import { PlaceholderPage } from './pages/PlaceholderPage';
 import { OverviewPage } from './pages/OverviewPage';
+import { ActivityPage } from './pages/ActivityPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { LoadingScreen } from './components/ui/LoadingScreen';
 
@@ -103,31 +104,8 @@ export const App: React.FC = () => {
             {/* Overview / Dashboard */}
             <Route index element={<OverviewPage />} />
 
-            {/* Money / Activity Placeholder */}
-            <Route
-              path="activity"
-              element={
-                <PlaceholderPage
-                  category="Money"
-                  title="Activity"
-                  description="Searchable, filterable ledger for transactions, income entries, and recurring liability obligations."
-                  plannedFeatures={[
-                    {
-                      name: 'Transactions Ledger',
-                      description: 'Filterable, paginated expense ledger with category correction, ML confidence review, and amount reconciliation.',
-                    },
-                    {
-                      name: 'Income History',
-                      description: 'Multi-source income records with flow smoothing, timeline analysis, and volatility metrics.',
-                    },
-                    {
-                      name: 'Recurring Liabilities Calendar',
-                      description: 'Upcoming debt and bill obligations calendar with auto-deduct state and payment history.',
-                    },
-                  ]}
-                />
-              }
-            />
+            {/* Money / Activity Workspace */}
+            <Route path="activity" element={<ActivityPage />} />
 
             {/* Understand / Insights Placeholder */}
             <Route

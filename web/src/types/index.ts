@@ -249,3 +249,125 @@ export interface CashFlowMonth {
   netFlow: number;
 }
 
+/**
+ * ============================================================================
+ * ACTIVITY WORKSPACE TYPES (PART 4 SPECIFICATION)
+ * ============================================================================
+ */
+
+export const CANONICAL_CATEGORIES = [
+  'Food & Dining',
+  'Groceries',
+  'Transport & Travel',
+  'Housing',
+  'Utilities & Bills',
+  'Debt & Loan Payments',
+  'Shopping',
+  'Entertainment',
+  'Health',
+  'Education',
+  'Personal Care',
+  'Insurance',
+  'Investments',
+  'Misc',
+] as const;
+
+export type CanonicalCategory = typeof CANONICAL_CATEGORIES[number];
+
+export const VALID_TRANSACTION_TYPES = ['Need', 'Want', 'Investment'] as const;
+export type TransactionType = typeof VALID_TRANSACTION_TYPES[number];
+
+export interface TransactionPayload {
+  amount: number;
+  category?: string;
+  type?: TransactionType;
+  description?: string;
+  timestamp?: string;
+  classificationSource?: string;
+  confidenceScore?: number;
+  categorySource?: string;
+  typeSource?: string;
+  categoryConfidence?: number;
+  typeConfidence?: number;
+  needsReview?: boolean;
+}
+
+export interface ClassifierSuggestion {
+  category: string;
+  type: TransactionType;
+  confidence: number;
+  confidenceScore?: number;
+  categoryConfidence?: number;
+  typeConfidence?: number;
+  needsReview?: boolean;
+  classificationSource?: string;
+  sentiment?: string;
+  sentiment_label?: string;
+}
+
+export interface IncomePayload {
+  amount: number;
+  source: string;
+  description?: string;
+  timestamp?: string;
+}
+
+export interface IncomeFlowResponse {
+  total: number;
+  dailySmoothed: number;
+  allocation?: {
+    essentials: number;
+    goals: number;
+    emergency: number;
+  };
+  sources?: Record<string, number>;
+  volatility: number;
+  incomeCount: number;
+}
+
+export interface LiabilityPayload {
+  name: string;
+  amount: number;
+  category: string;
+  type: TransactionType;
+  frequency: 'daily' | 'weekly' | 'monthly' | 'yearly';
+  startDate: string;
+  autoDeduct: boolean;
+  dayOfWeek?: number | null;
+  dayOfMonth?: number | null;
+  monthOfYear?: number | null;
+}
+
+export interface LiabilityTransactionsResponse {
+  liability: {
+    id: string;
+    name: string;
+    amount: number;
+    category: string;
+    type: TransactionType;
+    frequency: 'daily' | 'weekly' | 'monthly' | 'yearly';
+    autoDeduct: boolean;
+    status: 'active' | 'deleted';
+  };
+  transactions: Transaction[];
+  summary: {
+    totalPaid: number;
+    paymentCount: number;
+    lastPaymentAmount: number | null;
+    lastPaymentDate: string | null;
+  };
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
+export interface LiabilitiesPaymentSummaryItem {
+  paymentCount: number;
+  totalPaid: number;
+  lastPaymentAmount: number | null;
+  lastPaymentDate: string | null;
+}
+

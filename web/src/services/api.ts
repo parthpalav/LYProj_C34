@@ -15,6 +15,13 @@ import type {
   IncomeRecord,
   AlertItem,
   PredictabilitySnapshot,
+  TransactionPayload,
+  ClassifierSuggestion,
+  IncomePayload,
+  IncomeFlowResponse,
+  LiabilityPayload,
+  LiabilityTransactionsResponse,
+  LiabilitiesPaymentSummaryItem,
 } from '../types';
 
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
@@ -248,5 +255,88 @@ export async function getFMI(): Promise<{ current: FMIResponse; history: FMIReco
 export async function getPredictability(params?: Record<string, any>): Promise<PredictabilitySnapshot> {
   const { data } = await api.get('/api/predictability', { params });
   return data?.data || data;
+}
+
+/**
+ * ============================================================================
+ * ACTIVITY WORKSPACE API SERVICES (PART 4 SPECIFICATION)
+ * ============================================================================
+ */
+
+// ── Transactions ─────────────────────────────────────────────────────────────
+
+export async function createTransaction(payload: TransactionPayload): Promise<Transaction> {
+  const { data } = await api.post('/api/transactions', payload);
+  return data?.data || data;
+}
+
+export async function updateTransaction(id: string, payload: Partial<TransactionPayload>): Promise<Transaction> {
+  const { data } = await api.put(`/api/transactions/${id}`, payload);
+  return data?.data || data;
+}
+
+export async function deleteTransaction(id: string): Promise<{ success: boolean; id: string }> {
+  const { data } = await api.delete(`/api/transactions/${id}`);
+  return data;
+}
+
+export async function classifyExpense(text: string): Promise<ClassifierSuggestion> {
+  const { data } = await api.post<ClassifierSuggestion>('/api/classify', { text });
+  return data;
+}
+
+// ── Income ───────────────────────────────────────────────────────────────────
+
+export async function createIncome(payload: IncomePayload): Promise<IncomeRecord> {
+  const { data } = await api.post('/api/income', payload);
+  return data?.data || data;
+}
+
+export async function updateIncome(id: string, payload: Partial<IncomePayload>): Promise<IncomeRecord> {
+  const { data } = await api.put(`/api/income/${id}`, payload);
+  return data?.data || data;
+}
+
+export async function deleteIncome(id: string): Promise<{ success: boolean; id: string }> {
+  const { data } = await api.delete(`/api/income/${id}`);
+  return data;
+}
+
+export async function getIncomeFlow(): Promise<IncomeFlowResponse> {
+  const { data } = await api.get('/api/income/flow');
+  return data?.data || data;
+}
+
+// ── Liabilities ──────────────────────────────────────────────────────────────
+
+export async function createLiability(payload: LiabilityPayload): Promise<Liability> {
+  const { data } = await api.post('/api/liabilities', payload);
+  return data?.data || data;
+}
+
+export async function updateLiability(id: string, payload: Partial<LiabilityPayload>): Promise<Liability> {
+  const { data } = await api.put(`/api/liabilities/${id}`, payload);
+  return data?.data || data;
+}
+
+export async function deleteLiability(id: string): Promise<{ success: boolean; message: string }> {
+  const { data } = await api.delete(`/api/liabilities/${id}`);
+  return data;
+}
+
+export async function getLiabilityTransactions(
+  id: string,
+  page: number = 1,
+  limit: number = 20
+): Promise<LiabilityTransactionsResponse> {
+  const { data } = await api.get(`/api/liabilities/${id}/transactions`, {
+    params: { page, limit },
+  });
+  return data?.data || data;
+}
+
+export async function getLiabilitiesPaymentsSummary(): Promise<Record<string, LiabilitiesPaymentSummaryItem>> {
+  const { data } = await api.get('/api/liabilities/payments-summary');
+  return data?.data || data || {};
 }
 

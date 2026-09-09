@@ -26,6 +26,7 @@ import { Toast } from '../components/ui/Toast';
 import { Button } from '../components/ui/Button';
 import { SkeletonCard } from '../components/ui/SkeletonCard';
 import { SectionError } from '../components/dashboard/SectionError';
+import { Plus } from 'lucide-react';
 
 export const ActivityPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -208,7 +209,7 @@ export const ActivityPage: React.FC = () => {
       />
 
       {/* Header Section */}
-      <div className="overview-header">
+      <header className="overview-header overview-section-hero">
         <div className="overview-header-left">
           <span className="overview-context-badge">MONEY & CASH FLOW</span>
           <h1 className="overview-title">Financial Activity</h1>
@@ -216,7 +217,40 @@ export const ActivityPage: React.FC = () => {
             Inspect, record, and maintain your transactions, income streams, and recurring liabilities
           </p>
         </div>
-      </div>
+
+        <div className="overview-header-right">
+          {activeTab === 'transactions' && (
+            <Button
+              type="button"
+              variant="primary"
+              onClick={handleOpenAddTx}
+              leftIcon={<Plus size={16} strokeWidth={2.5} />}
+            >
+              Add Transaction
+            </Button>
+          )}
+          {activeTab === 'income' && (
+            <Button
+              type="button"
+              variant="primary"
+              onClick={handleOpenAddInc}
+              leftIcon={<Plus size={16} strokeWidth={2.5} />}
+            >
+              Record Income
+            </Button>
+          )}
+          {activeTab === 'liabilities' && (
+            <Button
+              type="button"
+              variant="primary"
+              onClick={handleOpenAddLiab}
+              leftIcon={<Plus size={16} strokeWidth={2.5} />}
+            >
+              Add Liability
+            </Button>
+          )}
+        </div>
+      </header>
 
       {/* Tab Navigation */}
       <ActivityTabs
@@ -323,26 +357,12 @@ export const ActivityPage: React.FC = () => {
             <SkeletonCard height={280} />
           ) : (
             <>
-              {/* Toolbar */}
+              {/* Toolbar Info */}
               <div className="activity-toolbar">
                 <div className="toolbar-search-wrap">
                   <span className="text-secondary text-sm font-medium">
                     Manage multi-source earnings and income flow smoothing
                   </span>
-                </div>
-                <div className="toolbar-controls-row">
-                  <Button
-                    type="button"
-                    variant="primary"
-                    onClick={handleOpenAddInc}
-                    className="add-activity-btn"
-                  >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="12" y1="5" x2="12" y2="19" />
-                      <line x1="5" y1="12" x2="19" y2="12" />
-                    </svg>
-                    <span>Record Income</span>
-                  </Button>
                 </div>
               </div>
 
@@ -353,7 +373,6 @@ export const ActivityPage: React.FC = () => {
                 averageIncome={incState.summary.averageIncome}
                 incomeCount={incState.summary.incomeCount}
                 volatility={incState.summary.volatility}
-                dailySmoothed={incState.summary.dailySmoothed}
               />
 
               {/* Income Table */}
@@ -402,26 +421,12 @@ export const ActivityPage: React.FC = () => {
             <SkeletonCard height={280} />
           ) : (
             <>
-              {/* Toolbar */}
+              {/* Toolbar Info */}
               <div className="activity-toolbar">
                 <div className="toolbar-search-wrap">
                   <span className="text-secondary text-sm font-medium">
                     Recurring commitments, auto-deductions, and schedule tracking
                   </span>
-                </div>
-                <div className="toolbar-controls-row">
-                  <Button
-                    type="button"
-                    variant="primary"
-                    onClick={handleOpenAddLiab}
-                    className="add-activity-btn"
-                  >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="12" y1="5" x2="12" y2="19" />
-                      <line x1="5" y1="12" x2="19" y2="12" />
-                    </svg>
-                    <span>Add Liability</span>
-                  </Button>
                 </div>
               </div>
 

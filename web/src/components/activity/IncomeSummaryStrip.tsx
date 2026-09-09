@@ -7,7 +7,7 @@ export interface IncomeSummaryStripProps {
   averageIncome: number;
   incomeCount: number;
   volatility: number | null;
-  dailySmoothed: number;
+  dailySmoothed?: number;
 }
 
 export const IncomeSummaryStrip: React.FC<IncomeSummaryStripProps> = ({
@@ -16,59 +16,49 @@ export const IncomeSummaryStrip: React.FC<IncomeSummaryStripProps> = ({
   averageIncome,
   incomeCount,
   volatility,
-  dailySmoothed,
 }) => {
   return (
-    <div className="activity-summary-strip">
+    <div className="activity-summary-strip" role="region" aria-label="Income Summary">
       <div className="summary-item">
         <span className="summary-label">This Month</span>
-        <span className="summary-value text-success">
+        <span className="summary-value text-success tabular-nums">
           +{formatCurrencyINR(thisMonthIncome)}
         </span>
       </div>
 
-      <div className="summary-divider" />
+      <div className="summary-divider" aria-hidden="true" />
 
       <div className="summary-item">
         <span className="summary-label">Total Recorded</span>
-        <span className="summary-value">
+        <span className="summary-value tabular-nums">
           {formatCurrencyINR(totalIncome)}
         </span>
       </div>
 
-      <div className="summary-divider" />
+      <div className="summary-divider" aria-hidden="true" />
 
       <div className="summary-item">
         <span className="summary-label">Average Entry</span>
-        <span className="summary-value">
+        <span className="summary-value tabular-nums">
           {formatCurrencyINR(averageIncome)}
         </span>
       </div>
 
-      <div className="summary-divider" />
+      <div className="summary-divider" aria-hidden="true" />
 
       <div className="summary-item">
         <span className="summary-label">Entries</span>
-        <span className="summary-value">
+        <span className="summary-value tabular-nums">
           {incomeCount}
-        </span>
-      </div>
-
-      <div className="summary-divider" />
-
-      <div className="summary-item">
-        <span className="summary-label">Daily Smoothed</span>
-        <span className="summary-value">
-          {formatCurrencyINR(dailySmoothed)}/day
         </span>
       </div>
 
       {volatility !== null && (
         <>
-          <div className="summary-divider" />
+          <div className="summary-divider" aria-hidden="true" />
           <div className="summary-item">
             <span className="summary-label">Income Volatility</span>
-            <span className="summary-value">
+            <span className="summary-value tabular-nums">
               {volatility}%
             </span>
           </div>

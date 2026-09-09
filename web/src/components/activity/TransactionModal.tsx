@@ -4,6 +4,7 @@ import { CANONICAL_CATEGORIES, VALID_TRANSACTION_TYPES } from '../../types';
 import { classifyExpense } from '../../services/api';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
+import { Sparkles } from 'lucide-react';
 
 export interface TransactionModalProps {
   isOpen: boolean;
@@ -220,25 +221,28 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
           <div className="classification-suggestion-card animate-fade-in">
             <div className="suggestion-head">
               <span className="suggestion-badge">
-                💡 FINAURA Suggestion {isClassifying && '(updating...)'}
+                <Sparkles size={12} aria-hidden="true" />
+                <span>FINAURA Classification {isClassifying && '(updating...)'}</span>
               </span>
-              {suggestion.confidence ? (
-                <span className="suggestion-confidence">
+              {typeof suggestion.confidence === 'number' && suggestion.confidence > 0 ? (
+                <span className="suggestion-confidence tabular-nums">
                   {Math.round(suggestion.confidence * 100)}% match
                 </span>
               ) : null}
             </div>
             <div className="suggestion-body">
-              <span>
-                <strong>{suggestion.category}</strong> · <em>{suggestion.type}</em>
-              </span>
+              <div className="suggestion-category-pair">
+                <span className="sug-cat">{suggestion.category}</span>
+                <span className="sug-dot">·</span>
+                <span className="sug-type">{suggestion.type}</span>
+              </div>
               {category !== suggestion.category && (
                 <button
                   type="button"
                   className="apply-suggestion-link"
                   onClick={handleApplySuggestion}
                 >
-                  Apply
+                  Apply suggestion
                 </button>
               )}
             </div>

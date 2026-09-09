@@ -17,22 +17,22 @@ export const LiabilitySummaryStrip: React.FC<LiabilitySummaryStripProps> = ({
     : 'None scheduled';
 
   return (
-    <div className="activity-summary-strip">
+    <div className="activity-summary-strip" role="region" aria-label="Liabilities Summary">
       <div className="summary-item">
         <span className="summary-label">Active Obligations</span>
-        <span className="summary-value">{activeCount}</span>
+        <span className="summary-value tabular-nums">{activeCount}</span>
       </div>
 
-      <div className="summary-divider" />
+      <div className="summary-divider" aria-hidden="true" />
 
       <div className="summary-item">
         <span className="summary-label">Due Next 30 Days</span>
-        <span className="summary-value summary-warning">
+        <span className="summary-value summary-warning tabular-nums">
           {formatCurrencyINR(dueNext30Days)}
         </span>
       </div>
 
-      <div className="summary-divider" />
+      <div className="summary-divider" aria-hidden="true" />
 
       <div className="summary-item">
         <span className="summary-label">Nearest Due Date</span>

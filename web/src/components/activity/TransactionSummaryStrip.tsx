@@ -19,46 +19,48 @@ export const TransactionSummaryStrip: React.FC<TransactionSummaryStripProps> = (
   isFiltered,
 }) => {
   return (
-    <div className="activity-summary-strip">
+    <div className="activity-summary-strip" role="region" aria-label="Transaction summary">
       <div className="summary-item">
         <span className="summary-label">
-          {isFiltered ? 'Filtered Transactions' : 'Transactions'}
+          {isFiltered ? 'Filtered Records' : 'Transactions'}
         </span>
-        <span className="summary-value">{count}</span>
+        <span className="summary-value tabular-nums">{count}</span>
       </div>
 
-      <div className="summary-divider" />
+      <div className="summary-divider" aria-hidden="true" />
 
       <div className="summary-item">
-        <span className="summary-label">Total Outflow</span>
-        <span className="summary-value summary-negative">
+        <span className="summary-label">
+          {isFiltered ? 'Filtered Outflow' : 'Total Outflow'}
+        </span>
+        <span className="summary-value summary-negative tabular-nums">
           -{formatCurrencyINR(totalSpend)}
         </span>
       </div>
 
-      <div className="summary-divider" />
+      <div className="summary-divider" aria-hidden="true" />
 
       <div className="summary-item">
         <span className="summary-label">Needs</span>
-        <span className="summary-value text-need">
+        <span className="summary-value text-need tabular-nums">
           {formatCurrencyINR(needsTotal)}
         </span>
       </div>
 
-      <div className="summary-divider" />
+      <div className="summary-divider" aria-hidden="true" />
 
       <div className="summary-item">
         <span className="summary-label">Wants</span>
-        <span className="summary-value text-want">
+        <span className="summary-value text-want tabular-nums">
           {formatCurrencyINR(wantsTotal)}
         </span>
       </div>
 
-      <div className="summary-divider" />
+      <div className="summary-divider" aria-hidden="true" />
 
       <div className="summary-item">
         <span className="summary-label">Investments</span>
-        <span className="summary-value text-inv">
+        <span className="summary-value tx-amount-investment tabular-nums">
           {formatCurrencyINR(investmentsTotal)}
         </span>
       </div>

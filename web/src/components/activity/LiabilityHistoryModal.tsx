@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Calendar, Hash, CreditCard, ChevronLeft, ChevronRight, Receipt } from 'lucide-react';
 import type { Liability, Transaction } from '../../types';
 import { getLiabilityTransactions } from '../../services/api';
 import { formatCurrencyINR, formatDateFull } from '../../utils/formatters';
@@ -80,30 +81,39 @@ export const LiabilityHistoryModal: React.FC<LiabilityHistoryModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title={liability ? `Payment History: ${liability.name}` : 'Payment History'}
-      subtitle="Track auto-deductions and recorded fulfillment transactions"
-      maxWidth="680px"
+      subtitle="Recorded ledger transactions linked to this obligation"
+      maxWidth="720px"
     >
       <div className="liability-history-container">
         {/* Summary stats */}
         <div className="history-stats-grid">
           <div className="history-stat-card">
-            <span className="history-stat-label">Total Paid to Date</span>
-            <span className="history-stat-val text-primary font-bold">
+            <div className="history-stat-header">
+              <CreditCard size={14} className="text-secondary" aria-hidden="true" />
+              <span className="history-stat-label">Total Recorded Outflow</span>
+            </div>
+            <span className="history-stat-val text-primary font-bold tabular-nums">
               {formatCurrencyINR(summary.totalPaid)}
             </span>
           </div>
           <div className="history-stat-card">
-            <span className="history-stat-label">Payments Executed</span>
-            <span className="history-stat-val font-bold">
+            <div className="history-stat-header">
+              <Hash size={14} className="text-secondary" aria-hidden="true" />
+              <span className="history-stat-label">Payments Recorded</span>
+            </div>
+            <span className="history-stat-val font-bold tabular-nums">
               {summary.paymentCount}
             </span>
           </div>
           <div className="history-stat-card">
-            <span className="history-stat-label">Last Payment</span>
-            <span className="history-stat-val">
+            <div className="history-stat-header">
+              <Calendar size={14} className="text-secondary" aria-hidden="true" />
+              <span className="history-stat-label">Most Recent Payment</span>
+            </div>
+            <span className="history-stat-val text-sm">
               {summary.lastPaymentAmount
-                ? `${formatCurrencyINR(summary.lastPaymentAmount)} on ${formatDateFull(summary.lastPaymentDate)}`
-                : 'None yet'}
+                ? `${formatCurrencyINR(summary.lastPaymentAmount)} · ${formatDateFull(summary.lastPaymentDate)}`
+                : 'None recorded'}
             </span>
           </div>
         </div>
@@ -121,9 +131,10 @@ export const LiabilityHistoryModal: React.FC<LiabilityHistoryModalProps> = ({
           </div>
         ) : historyTransactions.length === 0 ? (
           <div className="history-empty">
-            <p>No payments recorded yet for this obligation.</p>
+            <Receipt size={32} className="text-tertiary mb-2" aria-hidden="true" />
+            <p className="font-medium text-secondary">No payments recorded yet for this obligation.</p>
             {liability?.autoDeduct && (
-              <p className="text-tertiary text-sm">
+              <p className="text-tertiary text-xs mt-1">
                 Scheduled transactions will appear here once auto-deductions occur on the due date.
               </p>
             )}
@@ -135,6 +146,7 @@ export const LiabilityHistoryModal: React.FC<LiabilityHistoryModalProps> = ({
                 <tr>
                   <th scope="col">Date</th>
                   <th scope="col">Description</th>
+                  <th scope="col">Category</th>
                   <th scope="col">Type</th>
                   <th scope="col" className="text-right">Amount</th>
                 </tr>
@@ -143,13 +155,16 @@ export const LiabilityHistoryModal: React.FC<LiabilityHistoryModalProps> = ({
                 {historyTransactions.map((tx) => (
                   <tr key={tx.id} className="ledger-row">
                     <td className="ledger-date-cell">{formatDateFull(tx.timestamp)}</td>
-                    <td className="ledger-desc-cell">{tx.description || liability?.name}</td>
+                    <td className="ledger-desc-cell font-medium">{tx.description || liability?.name}</td>
+                    <td className="ledger-category-cell">
+                      <span className="cat-pill">{tx.category}</span>
+                    </td>
                     <td className="ledger-type-cell">
-                      <span className="badge-source badge-source-ml">
-                        {tx.classificationSource === 'manual' ? 'Manual Link' : 'Auto-Deduct'}
+                      <span className={`badge-type badge-type-${tx.type?.toLowerCase()}`}>
+                        {tx.type}
                       </span>
                     </td>
-                    <td className="ledger-amount-cell text-right font-semibold">
+                    <td className="ledger-amount-cell text-right font-semibold tx-amount-outflow tabular-nums">
                       -{formatCurrencyINR(tx.amount)}
                     </td>
                   </tr>
@@ -169,6 +184,7 @@ export const LiabilityHistoryModal: React.FC<LiabilityHistoryModalProps> = ({
                     size="sm"
                     disabled={page <= 1}
                     onClick={() => handlePageChange(page - 1)}
+                    leftIcon={<ChevronLeft size={14} />}
                   >
                     Previous
                   </Button>
@@ -178,6 +194,7 @@ export const LiabilityHistoryModal: React.FC<LiabilityHistoryModalProps> = ({
                     size="sm"
                     disabled={page >= totalPages}
                     onClick={() => handlePageChange(page + 1)}
+                    rightIcon={<ChevronRight size={14} />}
                   >
                     Next
                   </Button>

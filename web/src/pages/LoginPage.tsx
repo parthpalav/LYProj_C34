@@ -47,32 +47,17 @@ export const LoginPage: React.FC = () => {
 
   return (
     <AuthLayout
-      title="Sign in to FINAURA"
-      subtitle="Access your financial analytics and models"
+      title="Welcome back"
+      subtitle="Sign in to your financial intelligence workspace"
     >
       {error && (
-        <div
-          role="alert"
-          style={{
-            display: 'flex',
-            alignItems: 'flex-start',
-            gap: '0.625rem',
-            padding: '0.75rem',
-            borderRadius: 'var(--radius-md)',
-            backgroundColor: 'var(--danger-subtle)',
-            color: 'var(--danger-text)',
-            fontSize: '0.8125rem',
-            lineHeight: 1.4,
-            marginBottom: '1.25rem',
-            border: '1px solid #fecaca',
-          }}
-        >
-          <AlertCircle size={16} style={{ flexShrink: 0, marginTop: '2px' }} />
+        <div role="alert" className="auth-error-alert">
+          <AlertCircle size={16} className="auth-error-icon" aria-hidden="true" />
           <span>{error}</span>
         </div>
       )}
 
-      <form onSubmit={handleSubmit} noValidate>
+      <form onSubmit={handleSubmit} noValidate className="auth-form-root">
         <Input
           label="Email Address"
           type="email"
@@ -96,22 +81,8 @@ export const LoginPage: React.FC = () => {
           leftIcon={<Lock size={16} />}
         />
 
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            marginBottom: '1.25rem',
-            marginTop: '-0.25rem',
-          }}
-        >
-          <Link
-            to="/forgot-password"
-            style={{
-              fontSize: '0.8125rem',
-              color: 'var(--accent-primary)',
-              fontWeight: 500,
-            }}
-          >
+        <div className="auth-forgot-row">
+          <Link to="/forgot-password" className="auth-forgot-link">
             Forgot password?
           </Link>
         </div>
@@ -121,30 +92,15 @@ export const LoginPage: React.FC = () => {
           variant="primary"
           size="lg"
           isLoading={isSubmitting}
-          style={{ width: '100%' }}
+          className="auth-submit-btn"
         >
           Sign In
         </Button>
       </form>
 
-      <div
-        style={{
-          marginTop: '1.5rem',
-          paddingTop: '1.25rem',
-          borderTop: '1px solid var(--border-default)',
-          textAlign: 'center',
-          fontSize: '0.8125rem',
-          color: 'var(--text-secondary)',
-        }}
-      >
+      <div className="auth-switch-prompt">
         Don’t have an account yet?{' '}
-        <Link
-          to="/register"
-          style={{
-            color: 'var(--accent-primary)',
-            fontWeight: 600,
-          }}
-        >
+        <Link to="/register" className="auth-switch-link">
           Create account
         </Link>
       </div>

@@ -2,7 +2,7 @@ import React from 'react';
 import type { FMIResponse } from '../../types';
 import { ProgressBar } from '../ui/ProgressBar';
 import { EmptyState } from './EmptyState';
-import { Activity, Sparkles } from 'lucide-react';
+import { Activity, Sparkles, CheckCircle2 } from 'lucide-react';
 
 interface FmiPillarsViewProps {
   fmi?: FMIResponse | null;
@@ -28,6 +28,15 @@ export const FmiPillarsView: React.FC<FmiPillarsViewProps> = ({ fmi }) => {
 
   return (
     <div className="fmi-view-container">
+      {/* Weight distribution header banner */}
+      <div className="fmi-diagnostic-banner">
+        <div className="fmi-weights-summary">
+          <span className="weight-badge badge-d1">Saving Discipline: 40%</span>
+          <span className="weight-badge badge-d2">Spending Control: 30%</span>
+          <span className="weight-badge badge-d3">Behavioral Risk: 30%</span>
+        </div>
+      </div>
+
       {/* Pillar Breakdown */}
       <div className="fmi-pillars-list">
         {d1 && (
@@ -71,7 +80,8 @@ export const FmiPillarsView: React.FC<FmiPillarsViewProps> = ({ fmi }) => {
           <ul className="fmi-insights-list">
             {insights.map((insight, idx) => (
               <li key={idx} className="fmi-insight-item">
-                {insight}
+                <CheckCircle2 size={13} className="fmi-insight-bullet" aria-hidden="true" />
+                <span>{insight}</span>
               </li>
             ))}
           </ul>

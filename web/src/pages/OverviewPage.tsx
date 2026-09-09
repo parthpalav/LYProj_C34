@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { useOverview } from '../hooks/useOverview';
+import { useAnimatedNumber } from '../hooks/useAnimatedNumber';
 import { getUserFirstName, formatCurrencyINR } from '../utils/formatters';
 import { MetricCard } from '../components/dashboard/MetricCard';
 import { SectionCard } from '../components/dashboard/SectionCard';
@@ -57,15 +58,31 @@ export const OverviewPage: React.FC = () => {
   const fmiScore = fmi?.FMI ?? dashboard?.fmiScore ?? null;
   const fmiLabel = fmi?.fmiLabel; // Only use if returned by backend
 
+  // Smooth numeric counter animation on initial successful data load
+  const animBalance = useAnimatedNumber(isLoading ? null : currentBalance);
+  const animNetFlow = useAnimatedNumber(isLoading ? null : currentMonthNetFlow);
+  const animFmi = useAnimatedNumber(isLoading || fmiScore === null ? null : fmiScore);
+  const animSavings = useAnimatedNumber(isLoading || savingsRate === null ? null : savingsRate);
+
+  // Dynamic time-of-day greeting
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good morning';
+    if (hour < 17) return 'Good afternoon';
+    return 'Good evening';
+  };
+
+  const greetingHeadline = user?.name ? `${getGreeting()}, ${firstName}` : `${getGreeting()}`;
+
   return (
     <div className="overview-page">
       {/* Page Header */}
-      <header className="overview-header">
+      <header className="overview-header overview-section-hero">
         <div className="overview-header-left">
-          <span className="overview-context-badge">FINAURA Dashboard</span>
-          <h1 className="overview-title">Overview</h1>
+          <span className="overview-context-badge">Financial Intelligence</span>
+          <h1 className="overview-title">{greetingHeadline}</h1>
           <p className="overview-subtitle">
-            Welcome back, {firstName} · Here is your financial snapshot as of today.
+            Here’s your financial picture today.
           </p>
         </div>
 
@@ -87,8 +104,8 @@ export const OverviewPage: React.FC = () => {
         </div>
       </header>
 
-      {/* Top 4 Summary Metric Cards */}
-      <section className="overview-metrics-grid" aria-label="Financial Summary Cards">
+      {/* Top 4 Summary Metric Cards — Balance is the Primary Hero Anchor */}
+      <section className="overview-metrics-grid overview-section-hero" aria-label="Financial Summary Cards">
         {isLoading ? (
           <>
             <SkeletonCard height={120} />
@@ -98,18 +115,25 @@ export const OverviewPage: React.FC = () => {
           </>
         ) : (
           <>
-            {/* Card 1: Balance */}
+            {/* Card 1: Dominant Balance Hero */}
             <MetricCard
+              variant="hero"
               label="Current Balance"
-              value={formatCurrencyINR(currentBalance)}
-              subtext="Liquid operating balance"
+              value={formatCurrencyINR(animBalance ?? currentBalance)}
+              subtext="Liquid operating balance across active accounts"
               icon={Wallet}
             />
 
-            {/* Card 2: FMI */}
+            {/* Card 2: FMI Score */}
             <MetricCard
               label="FMI Score"
-              value={fmiScore !== null ? `${fmiScore} / 100` : '—'}
+              value={
+                animFmi !== null && animFmi !== undefined
+                  ? `${animFmi} / 100`
+                  : fmiScore !== null
+                  ? `${fmiScore} / 100`
+                  : '—'
+              }
               badge={fmiLabel}
               trend={
                 fmiScoreChange !== null
@@ -126,7 +150,7 @@ export const OverviewPage: React.FC = () => {
             {/* Card 3: Monthly Net Flow */}
             <MetricCard
               label="Monthly Net Flow"
-              value={formatCurrencyINR(currentMonthNetFlow, { showSign: true })}
+              value={formatCurrencyINR(animNetFlow ?? currentMonthNetFlow, { showSign: true })}
               trend={{
                 text: currentMonthNetFlow >= 0 ? 'Surplus' : 'Deficit',
                 positive: currentMonthNetFlow >= 0,
@@ -138,7 +162,11 @@ export const OverviewPage: React.FC = () => {
             {/* Card 4: Savings Rate */}
             <MetricCard
               label="Savings Rate"
-              value={savingsRate !== null ? `${savingsRate}%` : 'Not enough data yet'}
+              value={
+                savingsRate !== null
+                  ? `${animSavings ?? savingsRate}%`
+                  : 'Not enough data yet'
+              }
               subtext={
                 savingsRate !== null
                   ? 'of current month income retained'
@@ -151,7 +179,7 @@ export const OverviewPage: React.FC = () => {
       </section>
 
       {/* Primary Charts Row: Cash Flow & Spending Breakdown */}
-      <section className="overview-charts-grid">
+      <section className="overview-charts-grid overview-section-1">
         <SectionCard
           title="Cash Flow Trend"
           subtitle="Monthly inflow vs outflow across the trailing 6 calendar months"
@@ -180,7 +208,7 @@ export const OverviewPage: React.FC = () => {
       </section>
 
       {/* Health & Alerts Row */}
-      <section className="overview-two-col-grid">
+      <section className="overview-two-col-grid overview-section-2">
         <SectionCard
           title="Financial Health (FMI)"
           subtitle="Deterministic evaluation across 3 core discipline pillars"
@@ -209,7 +237,7 @@ export const OverviewPage: React.FC = () => {
       </section>
 
       {/* Obligations & Activity Row */}
-      <section className="overview-two-col-grid">
+      <section className="overview-two-col-grid overview-section-3">
         <SectionCard
           title="Upcoming Obligations"
           subtitle="Scheduled recurring liabilities and bill due dates"
@@ -238,7 +266,7 @@ export const OverviewPage: React.FC = () => {
       </section>
 
       {/* Bottom Full-Width: Future Outlook */}
-      <section className="overview-full-width">
+      <section className="overview-full-width overview-section-4">
         <SectionCard
           title="Future Outlook & Planning"
           subtitle="Deterministic targets for long-term independence and emergency reserves"

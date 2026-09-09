@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Activity, ShieldCheck, Sparkles } from 'lucide-react';
 
 export interface AuthLayoutProps {
   children: React.ReactNode;
@@ -14,86 +14,112 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({
   subtitle,
 }) => {
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'var(--bg-app)',
-        padding: '1.5rem',
-      }}
-    >
-      <div style={{ width: '100%', maxWidth: '420px', marginBottom: '1rem' }}>
-        <Link
-          to="/"
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.375rem',
-            fontSize: '0.8125rem',
-            color: 'var(--text-tertiary)',
-            fontWeight: 500,
-            marginBottom: '1rem',
-          }}
-        >
-          <ArrowLeft size={16} />
-          <span>Back to FINAURA</span>
-        </Link>
-      </div>
+    <div className="auth-page-root">
+      <div className="auth-split-wrapper">
+        {/* LEFT: Brand / Visual Panel (Desktop) */}
+        <aside className="auth-brand-panel" aria-hidden="true">
+          <div className="auth-brand-panel-glow" />
 
-      <div
-        style={{
-          width: '100%',
-          maxWidth: '420px',
-          backgroundColor: 'var(--bg-surface)',
-          borderRadius: 'var(--radius-xl)',
-          border: '1px solid var(--border-default)',
-          boxShadow: 'var(--shadow-md)',
-          padding: '2rem',
-        }}
-      >
-        {/* Brand & Header */}
-        <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
-          <div
-            style={{
-              width: '36px',
-              height: '36px',
-              borderRadius: 'var(--radius-md)',
-              backgroundColor: 'var(--accent-primary)',
-              color: 'var(--text-inverse)',
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontWeight: 800,
-              fontSize: '1.125rem',
-              marginBottom: '0.75rem',
-            }}
-          >
-            F
+          <div className="auth-brand-content">
+            <Link to="/" className="auth-brand-header">
+              <div className="auth-brand-badge">F</div>
+              <div className="auth-brand-text">
+                <span className="auth-brand-title">FINAURA</span>
+                <span className="auth-brand-tagline">Financial Intelligence</span>
+              </div>
+            </Link>
+
+            <div className="auth-brand-hero-text">
+              <h2 className="auth-brand-headline">
+                Intelligence for your financial journey.
+              </h2>
+              <p className="auth-brand-desc">
+                From daily cash flow discipline to lifelong independence modeling, experience transparent financial diagnostics designed to keep you in control.
+              </p>
+            </div>
+
+            {/* Illustrative Product Motif */}
+            <div className="auth-brand-motif-card">
+              <div className="auth-motif-head">
+                <div className="auth-motif-title-row">
+                  <Activity size={16} className="auth-motif-icon" />
+                  <span className="auth-motif-title">Financial Momentum Index</span>
+                </div>
+                <span className="auth-motif-watermark">Illustrative</span>
+              </div>
+
+              <div className="auth-motif-score-row">
+                <span className="auth-motif-score tabular-nums">78</span>
+                <span className="auth-motif-denom">/ 100</span>
+                <span className="auth-motif-status">Good Momentum</span>
+              </div>
+
+              <div className="auth-motif-weights-list">
+                <div className="auth-motif-weight-item">
+                  <span className="weight-name">Saving Discipline</span>
+                  <span className="weight-val">40% weight</span>
+                </div>
+                <div className="auth-motif-weight-track">
+                  <div className="auth-motif-weight-fill fill-green" style={{ width: '82%' }} />
+                </div>
+
+                <div className="auth-motif-weight-item">
+                  <span className="weight-name">Spending Control</span>
+                  <span className="weight-val">30% weight</span>
+                </div>
+                <div className="auth-motif-weight-track">
+                  <div className="auth-motif-weight-fill fill-blue" style={{ width: '75%' }} />
+                </div>
+
+                <div className="auth-motif-weight-item">
+                  <span className="weight-name">Behavioral Risk</span>
+                  <span className="weight-val">30% weight</span>
+                </div>
+                <div className="auth-motif-weight-track">
+                  <div className="auth-motif-weight-fill fill-amber" style={{ width: '76%' }} />
+                </div>
+              </div>
+            </div>
+
+            {/* Factual Security Reassurance */}
+            <div className="auth-brand-trust">
+              <ShieldCheck size={16} className="auth-trust-icon" />
+              <span>Strict account isolation enforced at query boundaries</span>
+            </div>
           </div>
-          <h1
-            style={{
-              fontSize: '1.375rem',
-              fontWeight: 700,
-              color: 'var(--text-primary)',
-              margin: '0 0 0.375rem 0',
-              letterSpacing: '-0.25px',
-            }}
-          >
-            {title}
-          </h1>
-          <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', margin: 0 }}>
-            {subtitle}
-          </p>
-        </div>
+        </aside>
 
-        {children}
-      </div>
+        {/* RIGHT: Form Panel */}
+        <main className="auth-form-panel">
+          <div className="auth-form-inner">
+            <div className="auth-top-nav">
+              <Link to="/" className="auth-back-link">
+                <ArrowLeft size={16} />
+                <span>Back to FINAURA</span>
+              </Link>
+            </div>
 
-      <div style={{ marginTop: '1.5rem', textAlign: 'center', fontSize: '0.75rem', color: 'var(--text-tertiary)' }}>
-        FINAURA Web Intelligence & Financial Health
+            {/* Form Header */}
+            <div className="auth-form-header">
+              <div className="auth-mobile-brand">
+                <div className="auth-brand-badge">F</div>
+                <span className="auth-brand-title">FINAURA</span>
+              </div>
+              <h1 className="auth-form-title">{title}</h1>
+              <p className="auth-form-subtitle">{subtitle}</p>
+            </div>
+
+            {/* Child Form */}
+            <div className="auth-form-body">
+              {children}
+            </div>
+
+            <div className="auth-form-footer">
+              <Sparkles size={13} className="auth-footer-icon" aria-hidden="true" />
+              <span>Unified Web Intelligence & Planning Platform</span>
+            </div>
+          </div>
+        </main>
       </div>
     </div>
   );

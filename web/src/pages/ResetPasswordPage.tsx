@@ -58,54 +58,27 @@ export const ResetPasswordPage: React.FC = () => {
       subtitle="Enter your verification token and your new password"
     >
       {success ? (
-        <div style={{ textAlign: 'center', padding: '1rem 0' }}>
-          <div
-            style={{
-              width: '48px',
-              height: '48px',
-              borderRadius: '50%',
-              backgroundColor: 'var(--success-subtle)',
-              color: 'var(--success)',
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginBottom: '1rem',
-            }}
-          >
+        <div className="auth-success-card">
+          <div className="auth-success-icon-wrap">
             <CheckCircle2 size={24} />
           </div>
-          <h2 style={{ fontSize: '1.125rem', fontWeight: 600, color: 'var(--text-primary)', margin: '0 0 0.5rem 0' }}>
+          <h2 className="auth-success-title">
             Password Reset Successfully
           </h2>
-          <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', margin: '0 0 1.5rem 0' }}>
-            Your credentials have been updated. Redirecting to sign in...
+          <p className="auth-success-msg">
+            Your credentials have been securely updated. Redirecting to sign in...
           </p>
-          <Link to="/login">
-            <Button variant="primary" size="md" style={{ width: '100%' }}>
+          <Link to="/login" className="auth-block-link">
+            <Button variant="primary" size="md" className="auth-submit-btn">
               Proceed to Sign In
             </Button>
           </Link>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} noValidate>
+        <form onSubmit={handleSubmit} noValidate className="auth-form-root">
           {error && (
-            <div
-              role="alert"
-              style={{
-                display: 'flex',
-                alignItems: 'flex-start',
-                gap: '0.625rem',
-                padding: '0.75rem',
-                borderRadius: 'var(--radius-md)',
-                backgroundColor: 'var(--danger-subtle)',
-                color: 'var(--danger-text)',
-                fontSize: '0.8125rem',
-                lineHeight: 1.4,
-                marginBottom: '1.25rem',
-                border: '1px solid #fecaca',
-              }}
-            >
-              <AlertCircle size={16} style={{ flexShrink: 0, marginTop: '2px' }} />
+            <div role="alert" className="auth-error-alert">
+              <AlertCircle size={16} className="auth-error-icon" aria-hidden="true" />
               <span>{error}</span>
             </div>
           )}
@@ -143,20 +116,13 @@ export const ResetPasswordPage: React.FC = () => {
             variant="primary"
             size="lg"
             isLoading={isSubmitting}
-            style={{ width: '100%', marginTop: '0.5rem' }}
+            className="auth-submit-btn"
           >
             Reset Password
           </Button>
 
-          <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
-            <Link
-              to="/login"
-              style={{
-                fontSize: '0.8125rem',
-                color: 'var(--text-secondary)',
-                fontWeight: 500,
-              }}
-            >
+          <div className="auth-switch-prompt">
+            <Link to="/login" className="auth-switch-link">
               Cancel and Return to Sign In
             </Link>
           </div>

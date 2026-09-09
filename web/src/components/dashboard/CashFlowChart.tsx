@@ -83,9 +83,9 @@ export const CashFlowChart: React.FC<CashFlowChartProps> = ({ data }) => {
             margin={{ top: 12, right: 12, left: -16, bottom: 0 }}
           >
             <CartesianGrid
-              strokeDasharray="3 3"
+              strokeDasharray="2 3"
               vertical={false}
-              stroke="var(--border-default)"
+              stroke="var(--border-subtle)"
             />
             <XAxis
               dataKey="shortLabel"
@@ -110,22 +110,25 @@ export const CashFlowChart: React.FC<CashFlowChartProps> = ({ data }) => {
               name="Income"
               dataKey="income"
               fill="#10b981"
-              radius={[4, 4, 0, 0]}
-              maxBarSize={28}
+              radius={[5, 5, 0, 0]}
+              maxBarSize={26}
+              animationDuration={500}
             />
             <Bar
               name="Expenses"
               dataKey="expenses"
               fill="#ef4444"
-              radius={[4, 4, 0, 0]}
-              maxBarSize={28}
+              radius={[5, 5, 0, 0]}
+              maxBarSize={26}
+              animationDuration={500}
             />
             <Bar
               name="Net Flow"
               dataKey="netFlow"
               fill="#2563eb"
-              radius={[4, 4, 0, 0]}
-              maxBarSize={28}
+              radius={[5, 5, 0, 0]}
+              maxBarSize={26}
+              animationDuration={500}
             />
           </BarChart>
         </ResponsiveContainer>

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Receipt, AlertCircle } from 'lucide-react';
+import { Receipt, AlertCircle, TrendingUp, Clock } from 'lucide-react';
 import type { Transaction } from '../../types';
-import { formatCurrencyINR, formatRelativeDate, getTransactionDate } from '../../utils/formatters';
+import { formatCurrencyINR, formatRelativeDate, getTransactionDate, formatDateShort } from '../../utils/formatters';
 import { getLatestTransactions } from '../../services/dashboard';
 import { EmptyState } from './EmptyState';
 
@@ -49,11 +49,29 @@ export const RecentActivityTable: React.FC<RecentActivityTableProps> = ({
       <div className="activity-list">
         {latest.map((tx) => {
           const txDate = getTransactionDate(tx);
+          const isInvestment = tx.type === 'Investment';
+          const isLiability = Boolean(tx.liabilityId);
+
           return (
             <div key={tx.id} className="tx-item">
               <div className="tx-item-left">
-                <div className="tx-icon-wrap" aria-hidden="true">
-                  <Receipt size={16} />
+                <div
+                  className={`tx-icon-wrap ${
+                    isInvestment
+                      ? 'tx-icon-investment'
+                      : isLiability
+                      ? 'tx-icon-liability'
+                      : ''
+                  }`}
+                  aria-hidden="true"
+                >
+                  {isInvestment ? (
+                    <TrendingUp size={16} />
+                  ) : isLiability ? (
+                    <Clock size={16} />
+                  ) : (
+                    <Receipt size={16} />
+                  )}
                 </div>
                 <div className="tx-details">
                   <div className="tx-desc-row">
@@ -61,6 +79,11 @@ export const RecentActivityTable: React.FC<RecentActivityTableProps> = ({
                     {tx.isAnomaly && (
                       <span className="tx-anomaly-badge" title="Unusual transaction spike">
                         <AlertCircle size={11} aria-hidden="true" /> Anomaly
+                      </span>
+                    )}
+                    {isLiability && (
+                      <span className="tx-liability-badge" title="Recurring obligation auto-deducted">
+                        Scheduled
                       </span>
                     )}
                   </div>
@@ -79,10 +102,16 @@ export const RecentActivityTable: React.FC<RecentActivityTableProps> = ({
               </div>
 
               <div className="tx-item-right">
-                <span className="tx-amount tx-outflow">
+                <span
+                  className={`tx-amount tabular-nums ${
+                    isInvestment ? 'tx-amount-investment' : 'tx-outflow'
+                  }`}
+                >
                   -{formatCurrencyINR(tx.amount)}
                 </span>
-                <span className="tx-date">{formatRelativeDate(txDate)}</span>
+                <span className="tx-date" title={formatDateShort(txDate)}>
+                  {formatRelativeDate(txDate)}
+                </span>
               </div>
             </div>
           );

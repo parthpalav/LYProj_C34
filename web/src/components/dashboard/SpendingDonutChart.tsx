@@ -38,7 +38,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload }) => {
         {item.name}
       </div>
       <div className="chart-tooltip-item">
-        <span className="chart-tooltip-val">
+        <span className="chart-tooltip-val tabular-nums">
           {formatCurrencyINR(item.amount)} ({item.pct}%)
         </span>
       </div>
@@ -88,17 +88,18 @@ export const SpendingDonutChart: React.FC<SpendingDonutChartProps> = ({ breakdow
 
   return (
     <div className="spending-donut-wrap">
-      <div className="spending-donut-chart" style={{ width: '100%', height: 180 }}>
+      <div className="spending-donut-chart" style={{ width: '100%', height: 180, position: 'relative' }}>
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
               data={data}
-              innerRadius={50}
-              outerRadius={75}
-              paddingAngle={3}
+              innerRadius={52}
+              outerRadius={76}
+              paddingAngle={4}
               dataKey="value"
               stroke="var(--bg-surface)"
               strokeWidth={2}
+              animationDuration={500}
             >
               {data.map((entry) => (
                 <Cell key={entry.name} fill={entry.color} />
@@ -120,8 +121,8 @@ export const SpendingDonutChart: React.FC<SpendingDonutChartProps> = ({ breakdow
               <span className="spending-legend-name">{item.name}</span>
             </div>
             <div className="spending-legend-val-col">
-              <span className="spending-legend-pct">{item.pct}%</span>
-              <span className="spending-legend-amt">
+              <span className="spending-legend-pct tabular-nums">{item.pct}%</span>
+              <span className="spending-legend-amt tabular-nums">
                 {formatCurrencyINR(item.amount)}
               </span>
             </div>

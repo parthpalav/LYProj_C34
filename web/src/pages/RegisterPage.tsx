@@ -81,19 +81,11 @@ export const RegisterPage: React.FC = () => {
   };
 
   const renderRule = (label: string, valid: boolean) => (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '0.375rem',
-        fontSize: '0.6875rem',
-        color: valid ? 'var(--success-text)' : 'var(--text-tertiary)',
-      }}
-    >
+    <div className={`auth-rule-item ${valid ? 'rule-valid' : 'rule-invalid'}`}>
       {valid ? (
-        <Check size={12} style={{ color: 'var(--success)' }} />
+        <Check size={12} className="rule-icon-check" />
       ) : (
-        <X size={12} style={{ color: 'var(--text-tertiary)' }} />
+        <X size={12} className="rule-icon-cross" />
       )}
       <span>{label}</span>
     </div>
@@ -101,39 +93,24 @@ export const RegisterPage: React.FC = () => {
 
   return (
     <AuthLayout
-      title="Create your FINAURA account"
-      subtitle="Start understanding and modeling your finances"
+      title="Create account"
+      subtitle="Start your journey to structured financial intelligence"
     >
       {error && (
-        <div
-          role="alert"
-          style={{
-            display: 'flex',
-            alignItems: 'flex-start',
-            gap: '0.625rem',
-            padding: '0.75rem',
-            borderRadius: 'var(--radius-md)',
-            backgroundColor: 'var(--danger-subtle)',
-            color: 'var(--danger-text)',
-            fontSize: '0.8125rem',
-            lineHeight: 1.4,
-            marginBottom: '1.25rem',
-            border: '1px solid #fecaca',
-          }}
-        >
-          <AlertCircle size={16} style={{ flexShrink: 0, marginTop: '2px' }} />
+        <div role="alert" className="auth-error-alert">
+          <AlertCircle size={16} className="auth-error-icon" aria-hidden="true" />
           <span>{error}</span>
         </div>
       )}
 
-      <form onSubmit={handleSubmit} noValidate>
+      <form onSubmit={handleSubmit} noValidate className="auth-form-root">
         <Input
           label="Full Name"
           type="text"
           name="name"
           autoComplete="name"
           required
-          placeholder="e.g. Parth Palav"
+          placeholder="Parth Palav"
           value={name}
           onChange={(e) => setName(e.target.value)}
           leftIcon={<UserIcon size={16} />}
@@ -156,47 +133,37 @@ export const RegisterPage: React.FC = () => {
           name="password"
           autoComplete="new-password"
           required
-          placeholder="Min 8 chars with upper, number, symbol"
+          placeholder="Create a secure password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           leftIcon={<Lock size={16} />}
         />
 
-        {/* Password Strength Checklist */}
-        {password.length > 0 && (
-          <div
-            style={{
-              padding: '0.625rem 0.75rem',
-              backgroundColor: 'var(--bg-app)',
-              borderRadius: 'var(--radius-sm)',
-              border: '1px solid var(--border-default)',
-              marginBottom: '1rem',
-              marginTop: '-0.5rem',
-            }}
-          >
-            <div style={{ fontSize: '0.6875rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '0.375rem' }}>
-              Password Requirements:
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.25rem' }}>
-              {renderRule('8+ Characters', hasMinLength)}
-              {renderRule('Uppercase letter', hasUpper)}
-              {renderRule('Lowercase letter', hasLower)}
-              {renderRule('Number (0-9)', hasNumber)}
-              {renderRule('Special char (@$!%*?&)', hasSpecial)}
-            </div>
+        {/* Password requirements indicators */}
+        <div className="auth-rules-box">
+          <div className="auth-rules-grid">
+            {renderRule('8+ characters', hasMinLength)}
+            {renderRule('Uppercase letter', hasUpper)}
+            {renderRule('Lowercase letter', hasLower)}
+            {renderRule('Number (0-9)', hasNumber)}
+            {renderRule('Special symbol (@$!%*?&)', hasSpecial)}
           </div>
-        )}
+        </div>
 
         <PasswordInput
           label="Confirm Password"
           name="confirmPassword"
           autoComplete="new-password"
           required
-          placeholder="Re-type your password"
+          placeholder="Re-enter your password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
           leftIcon={<Lock size={16} />}
-          error={confirmPassword.length > 0 && !passwordsMatch ? 'Passwords do not match' : undefined}
+          error={
+            confirmPassword.length > 0 && !passwordsMatch
+              ? 'Passwords do not match'
+              : undefined
+          }
         />
 
         <Button
@@ -204,30 +171,15 @@ export const RegisterPage: React.FC = () => {
           variant="primary"
           size="lg"
           isLoading={isSubmitting}
-          style={{ width: '100%', marginTop: '0.5rem' }}
+          className="auth-submit-btn"
         >
           Create Account
         </Button>
       </form>
 
-      <div
-        style={{
-          marginTop: '1.5rem',
-          paddingTop: '1.25rem',
-          borderTop: '1px solid var(--border-default)',
-          textAlign: 'center',
-          fontSize: '0.8125rem',
-          color: 'var(--text-secondary)',
-        }}
-      >
+      <div className="auth-switch-prompt">
         Already have an account?{' '}
-        <Link
-          to="/login"
-          style={{
-            color: 'var(--accent-primary)',
-            fontWeight: 600,
-          }}
-        >
+        <Link to="/login" className="auth-switch-link">
           Sign in
         </Link>
       </div>

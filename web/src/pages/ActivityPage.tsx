@@ -212,7 +212,7 @@ export const ActivityPage: React.FC = () => {
       <header className="overview-header overview-section-hero">
         <div className="overview-header-left">
           <span className="overview-context-badge">MONEY & CASH FLOW</span>
-          <h1 className="overview-title">Financial Activity</h1>
+          <h1 className="overview-title">Activity</h1>
           <p className="overview-subtitle">
             Inspect, record, and maintain your transactions, income streams, and recurring liabilities
           </p>

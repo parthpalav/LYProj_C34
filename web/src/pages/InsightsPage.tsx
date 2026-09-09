@@ -116,7 +116,7 @@ export const InsightsPage: React.FC = () => {
       <div className="activity-header-block">
         <div className="activity-title-group">
           <span className="overview-eyebrow">FINANCIAL INTELLIGENCE</span>
-          <h1 className="activity-main-heading">Financial Insights &amp; Explanations</h1>
+          <h1 className="activity-main-heading">Insights</h1>
           <p className="activity-sub-heading">
             Understand the patterns, momentum, and predictability governing your financial health
           </p>

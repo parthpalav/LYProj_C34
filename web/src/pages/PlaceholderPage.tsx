@@ -20,13 +20,13 @@ export const PlaceholderPage: React.FC<PlaceholderPageProps> = ({
   category,
   description,
   plannedFeatures = [],
-  partNotice = 'Part 3 will connect live backend analytics, calculations, and data visualisations.',
+  partNotice = 'This module is slated for a future release. Core financial activity, insights, planning, and historical reports are fully active in V1.',
 }) => {
   return (
     <div>
       <PageHeader
         title={title}
-        category={category}
+        category={category || 'COMING SOON'}
         description={description}
       />
 
@@ -59,7 +59,7 @@ export const PlaceholderPage: React.FC<PlaceholderPageProps> = ({
           </div>
           <div>
             <h2 style={{ fontSize: '0.9375rem', fontWeight: 600, color: 'var(--text-primary)', margin: '0 0 0.25rem 0' }}>
-              Protected Application Shell Verified
+              Future Release Roadmap
             </h2>
             <p style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.5 }}>
               {partNotice}
@@ -153,13 +153,14 @@ export const PlaceholderPage: React.FC<PlaceholderPageProps> = ({
                     <span>Status</span>
                     <span
                       style={{
-                        padding: '0.125rem 0.375rem',
+                        padding: '0.125rem 0.5rem',
                         borderRadius: 'var(--radius-sm)',
-                        backgroundColor: 'var(--bg-surface-subtle)',
-                        color: 'var(--text-secondary)',
+                        backgroundColor: 'var(--accent-subtle)',
+                        color: 'var(--accent-primary)',
+                        fontWeight: 600,
                       }}
                     >
-                      Scaffolded
+                      Coming Soon
                     </span>
                   </div>
                 </div>

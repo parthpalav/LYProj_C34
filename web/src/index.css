@@ -289,6 +289,14 @@ a:focus-visible {
     animation: none !important;
     background: var(--bg-surface-subtle) !important;
   }
+
+  .recharts-surface,
+  .recharts-curve,
+  .recharts-rectangle,
+  .recharts-bar-rectangle {
+    transition: none !important;
+    animation: none !important;
+  }
 }
 
 /* ==========================================================================
@@ -2884,9 +2892,29 @@ a:focus-visible {
   background-color: var(--bg-surface-subtle);
 }
 
+.modal-close-btn:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
 .modal-body {
   padding: 20px 24px;
   overflow-y: auto;
+}
+
+@media (max-width: 640px) {
+  .modal-container {
+    max-height: calc(100vh - 24px);
+    border-radius: var(--radius-lg);
+  }
+
+  .modal-header {
+    padding: 16px 18px 12px;
+  }
+
+  .modal-body {
+    padding: 16px 18px;
+  }
 }
 
 .modal-footer {

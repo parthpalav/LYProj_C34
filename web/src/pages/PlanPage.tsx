@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { RefreshCw } from 'lucide-react';
+import { RefreshCw, AlertTriangle } from 'lucide-react';
 import { PlanTabs, type PlanTabKey } from '../components/plan/PlanTabs';
 
 // Net Worth Components
@@ -362,8 +362,9 @@ export const PlanPage: React.FC = () => {
                   evaluating={scenarioLab.evaluating}
                 />
                 {scenarioLab.error && (
-                  <div className="plan-eval-error">
-                    <span>⚠️ Evaluation notice: {scenarioLab.error}</span>
+                  <div className="plan-eval-error flex items-center gap-1.5">
+                    <AlertTriangle size={14} className="text-amber-500 flex-shrink-0" />
+                    <span>Evaluation notice: {scenarioLab.error}</span>
                   </div>
                 )}
                 <ScenarioComparisonView

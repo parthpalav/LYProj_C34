@@ -1,4 +1,5 @@
 import React from 'react';
+import { Info } from 'lucide-react';
 
 export interface FmiDeltaSummaryProps {
   summary: {
@@ -86,8 +87,9 @@ export const FmiDeltaSummary: React.FC<FmiDeltaSummaryProps> = ({ summary }) => 
           </div>
         </div>
       ) : (
-        <div className="pillar-unavailable-notice text-xs text-tertiary" style={{ marginTop: '12px' }}>
-          ℹ️ {summary.pillarsUnavailableMessage || 'Detailed pillar history unavailable for this snapshot.'}
+        <div className="pillar-unavailable-notice text-xs text-tertiary flex items-center gap-1.5" style={{ marginTop: '12px' }}>
+          <Info size={14} className="flex-shrink-0" />
+          <span>{summary.pillarsUnavailableMessage || 'Detailed pillar history unavailable for this snapshot.'}</span>
         </div>
       )}
     </div>

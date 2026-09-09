@@ -81,7 +81,7 @@ export const GoalCard: React.FC<GoalCardProps> = ({ goal, onEdit, onDelete }) =>
 
       <div className="plan-goal-footer">
         <span className="plan-goal-progress-text">
-          {progressPct >= 100 ? '🎉 Goal Achieved!' : `${progressPct}% complete`}
+          {progressPct >= 100 ? 'Goal Achieved!' : `${progressPct}% complete`}
         </span>
         {progressPct < 100 && (
           <span className="plan-goal-remaining">

@@ -206,7 +206,7 @@ export const ExportReportView: React.FC<ExportReportViewProps> = ({
             <div>
               <span className="report-eyebrow-label">LONGITUDINAL SUMMARY</span>
               <h3>Monthly Summaries</h3>
-              <p className="report-export-sub">High-level cash flow, savings rate, 50/30/20 spend &amp; FMI by month</p>
+              <p className="report-export-sub">High-level cash flow, savings rate, spending mix &amp; FMI by month</p>
             </div>
           </div>
 

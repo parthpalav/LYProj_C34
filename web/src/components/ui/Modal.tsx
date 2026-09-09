@@ -41,7 +41,7 @@ export const Modal: React.FC<ModalProps> = ({
 
   return (
     <div
-      className="modal-backdrop animate-fade-in"
+      className="modal-backdrop"
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           onClose();

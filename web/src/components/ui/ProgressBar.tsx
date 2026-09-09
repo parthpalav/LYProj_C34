@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface ProgressBarProps {
   value: number; // 0 - 100
@@ -16,10 +16,23 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
   label,
   weightText,
   detail,
-  color = 'var(--accent-primary)',
+  color,
   className = '',
 }) => {
   const percentage = Math.max(0, Math.min(100, Math.round((value / max) * 100)));
+  const [fillWidth, setFillWidth] = useState(0);
+
+  useEffect(() => {
+    const timer = requestAnimationFrame(() => {
+      setFillWidth(percentage);
+    });
+    return () => cancelAnimationFrame(timer);
+  }, [percentage]);
+
+  const fillStyle: React.CSSProperties = {
+    width: `${fillWidth}%`,
+    ...(color ? { background: color, backgroundColor: color } : {}),
+  };
 
   return (
     <div className={`progress-bar-container ${className}`}>
@@ -42,10 +55,7 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({
         aria-valuemax={100}
         aria-label={label || 'Score progress'}
       >
-        <div
-          className="progress-bar-fill"
-          style={{ width: `${percentage}%`, backgroundColor: color }}
-        />
+        <div className="progress-bar-fill" style={fillStyle} />
       </div>
 
       {detail && <div className="progress-bar-detail">{detail}</div>}

@@ -30,74 +30,32 @@ export const TopBar: React.FC<TopBarProps> = ({ onToggleSidebar }) => {
     : (user?.email ? user.email.split('@')[0] : 'User');
 
   return (
-    <header
-      style={{
-        height: 'var(--topbar-height)',
-        backgroundColor: 'var(--bg-surface)',
-        borderBottom: '1px solid var(--border-default)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '0 1.5rem',
-        position: 'sticky',
-        top: 0,
-        zIndex: 30,
-      }}
-    >
+    <header className="topbar-root">
       {/* Left: Mobile hamburger + Current Page Title */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+      <div className="topbar-left">
         {onToggleSidebar && (
           <button
             type="button"
             onClick={onToggleSidebar}
             aria-label="Toggle navigation menu"
-            className="mobile-hamburger"
-            style={{
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              padding: '0.375rem',
-              borderRadius: 'var(--radius-sm)',
-              color: 'var(--text-secondary)',
-              display: 'none',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
+            className="topbar-hamburger"
           >
             <Menu size={20} />
           </button>
         )}
 
-        <div style={{ fontSize: '1.125rem', fontWeight: 600, color: 'var(--text-primary)', letterSpacing: '-0.25px' }}>
+        <div className="topbar-page-title">
           {currentTitle}
         </div>
       </div>
 
       {/* Right: Authenticated User Display */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-        <span
-          style={{
-            fontSize: '0.875rem',
-            fontWeight: 500,
-            color: 'var(--text-secondary)',
-          }}
-          className="topbar-user-name"
-        >
+      <div className="topbar-right">
+        <span className="topbar-user-name">
           {firstName}
         </span>
         <UserAvatar user={user} size="sm" />
       </div>
-
-      <style>{`
-        @media (max-width: 768px) {
-          .mobile-hamburger {
-            display: flex !important;
-          }
-          .topbar-user-name {
-            display: none !important;
-          }
-        }
-      `}</style>
     </header>
   );
 };

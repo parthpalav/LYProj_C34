@@ -16,77 +16,33 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
   tabs,
 }) => {
   return (
-    <header
-      style={{
-        borderBottom: '1px solid var(--border-default)',
-        backgroundColor: 'var(--bg-surface)',
-        padding: '1.5rem 2rem',
-        marginBottom: '1.5rem',
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'flex-start',
-          justifyContent: 'space-between',
-          flexWrap: 'wrap',
-          gap: '1rem',
-        }}
-      >
+    <header className="page-header-root">
+      <div className="page-header-content">
         <div>
           {category && (
-            <span
-              style={{
-                display: 'inline-block',
-                fontSize: '0.75rem',
-                fontWeight: 600,
-                textTransform: 'uppercase',
-                letterSpacing: '0.5px',
-                color: 'var(--accent-text)',
-                backgroundColor: 'var(--accent-subtle)',
-                padding: '0.125rem 0.5rem',
-                borderRadius: 'var(--radius-sm)',
-                marginBottom: '0.375rem',
-              }}
-            >
+            <span className="page-header-category">
               {category}
             </span>
           )}
-          <h1
-            style={{
-              fontSize: '1.5rem',
-              fontWeight: 700,
-              color: 'var(--text-primary)',
-              margin: '0 0 0.375rem 0',
-              letterSpacing: '-0.25px',
-            }}
-          >
+          <h1 className="page-header-title">
             {title}
           </h1>
           {description && (
-            <p
-              style={{
-                fontSize: '0.875rem',
-                color: 'var(--text-secondary)',
-                margin: 0,
-                maxWidth: '650px',
-                lineHeight: 1.5,
-              }}
-            >
+            <p className="page-header-desc">
               {description}
             </p>
           )}
         </div>
 
         {actions && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <div className="page-header-actions">
             {actions}
           </div>
         )}
       </div>
 
       {tabs && (
-        <div style={{ marginTop: '1.25rem', paddingTop: '0.5rem' }}>
+        <div className="page-header-tabs">
           {tabs}
         </div>
       )}

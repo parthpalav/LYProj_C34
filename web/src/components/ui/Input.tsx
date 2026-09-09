@@ -17,109 +17,50 @@ export const Input: React.FC<InputProps> = ({
   rightElement,
   fullWidth = true,
   id,
-  style,
+  className = '',
   ...props
 }) => {
   const generatedId = useId();
   const inputId = id || generatedId;
 
   return (
-    <div style={{ width: fullWidth ? '100%' : 'auto', marginBottom: '1rem' }}>
+    <div className={`input-group ${fullWidth ? 'input-full-width' : ''}`}>
       {label && (
-        <label
-          htmlFor={inputId}
-          style={{
-            display: 'block',
-            fontSize: '0.8125rem',
-            fontWeight: 500,
-            color: 'var(--text-secondary)',
-            marginBottom: '0.375rem',
-          }}
-        >
+        <label htmlFor={inputId} className="input-label">
           {label}
         </label>
       )}
 
-      <div
-        style={{
-          position: 'relative',
-          display: 'flex',
-          alignItems: 'center',
-          width: '100%',
-        }}
-      >
+      <div className="input-wrapper">
         {leftIcon && (
-          <div
-            style={{
-              position: 'absolute',
-              left: '0.75rem',
-              display: 'flex',
-              alignItems: 'center',
-              pointerEvents: 'none',
-              color: 'var(--text-tertiary)',
-            }}
-          >
+          <div className="input-left-icon">
             {leftIcon}
           </div>
         )}
 
         <input
           id={inputId}
-          style={{
-            width: '100%',
-            padding: '0.5625rem 0.875rem',
-            paddingLeft: leftIcon ? '2.375rem' : '0.875rem',
-            paddingRight: rightElement ? '2.5rem' : '0.875rem',
-            fontSize: '0.875rem',
-            color: 'var(--text-primary)',
-            backgroundColor: 'var(--bg-surface)',
-            border: error ? '1px solid var(--danger)' : '1px solid var(--border-default)',
-            borderRadius: 'var(--radius-md)',
-            boxShadow: 'var(--shadow-sm)',
-            transition: 'border-color var(--transition-fast), box-shadow var(--transition-fast)',
-            outline: 'none',
-            ...style,
-          }}
+          className={[
+            'input-field',
+            leftIcon ? 'input-has-left-icon' : '',
+            rightElement ? 'input-has-right-element' : '',
+            error ? 'input-error' : '',
+            className,
+          ].filter(Boolean).join(' ')}
           {...props}
         />
 
         {rightElement && (
-          <div
-            style={{
-              position: 'absolute',
-              right: '0.5rem',
-              display: 'flex',
-              alignItems: 'center',
-            }}
-          >
+          <div className="input-right-element">
             {rightElement}
           </div>
         )}
       </div>
 
       {error ? (
-        <p
-          style={{
-            margin: '0.375rem 0 0',
-            fontSize: '0.75rem',
-            color: 'var(--danger-text)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.25rem',
-          }}
-        >
-          {error}
-        </p>
+        <p className="input-error-text">{error}</p>
       ) : helperText ? (
-        <p
-          style={{
-            margin: '0.375rem 0 0',
-            fontSize: '0.75rem',
-            color: 'var(--text-tertiary)',
-          }}
-        >
-          {helperText}
-        </p>
+        <p className="input-helper-text">{helperText}</p>
       ) : null}
     </div>
   );

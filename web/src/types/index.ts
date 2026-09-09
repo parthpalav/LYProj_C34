@@ -534,7 +534,7 @@ export interface BehaviorResponse {
   analyzedCount: number;
 }
 
-export type SpendingRange = '3m' | '6m' | '12m' | 'ytd';
+export type SpendingRange = '30d' | '90d' | '3m' | '6m' | '12m' | 'ytd';
 
 export interface SpendingTrendPoint {
   monthKey: string;     // e.g. "2026-03"

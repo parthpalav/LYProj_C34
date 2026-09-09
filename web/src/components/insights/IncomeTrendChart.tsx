@@ -20,25 +20,31 @@ export interface IncomeTrendChartProps {
   onRangeChange: (range: IncomeRange) => void;
 }
 
-const CustomTooltip = ({ active, payload, label }: any) => {
+interface TooltipProps {
+  active?: boolean;
+  payload?: any[];
+  label?: string;
+}
+
+const CustomTooltip: React.FC<TooltipProps> = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     const item = payload[0].payload;
     const mean = item.averageIncome;
     return (
-      <div className="custom-chart-tooltip">
+      <div className="custom-chart-tooltip" role="tooltip">
         <div className="tooltip-header font-semibold">{label}</div>
         <div className="tooltip-row text-emerald">
           <span>Total Inflow:</span>
-          <span className="font-bold">+{formatCurrencyINR(item.amount)}</span>
+          <span className="font-semibold tabular-nums">+{formatCurrencyINR(item.amount)}</span>
         </div>
         <div className="tooltip-row text-secondary text-xs">
           <span>Transactions:</span>
-          <span>{item.eventCount}</span>
+          <span className="tabular-nums">{item.eventCount}</span>
         </div>
         {mean > 0 && (
           <div className="tooltip-row text-tertiary text-xs">
             <span>Mean Baseline:</span>
-            <span>{formatCurrencyINR(mean)}</span>
+            <span className="tabular-nums">{formatCurrencyINR(mean)}</span>
           </div>
         )}
       </div>
@@ -54,8 +60,8 @@ export const IncomeTrendChart: React.FC<IncomeTrendChartProps> = ({
   onRangeChange,
 }) => {
   const ranges: Array<{ id: IncomeRange; label: string }> = [
-    { id: '6m', label: '6 Months' },
-    { id: '12m', label: '12 Months' },
+    { id: '6m', label: '6M' },
+    { id: '12m', label: '12M' },
     { id: 'all', label: 'All Time' },
   ];
 
@@ -66,7 +72,7 @@ export const IncomeTrendChart: React.FC<IncomeTrendChartProps> = ({
   const hasData = data.some((d) => d.amount > 0);
 
   return (
-    <div className="insights-chart-card">
+    <div className="insights-chart-card" role="region" aria-label="Monthly Income History Chart">
       <div className="chart-header-row">
         <div>
           <h3 className="card-title">Monthly Income History</h3>
@@ -98,7 +104,7 @@ export const IncomeTrendChart: React.FC<IncomeTrendChartProps> = ({
         <div className="chart-svg-container" style={{ height: '300px', width: '100%' }}>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={chartDataWithMean} margin={{ top: 16, right: 16, left: -8, bottom: 8 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-subtle, #e2e8f0)" />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(226, 232, 240, 0.6)" />
               <XAxis
                 dataKey="monthLabel"
                 stroke="var(--text-tertiary, #94a3b8)"
@@ -132,8 +138,9 @@ export const IncomeTrendChart: React.FC<IncomeTrendChartProps> = ({
                 dataKey="amount"
                 name="Monthly Inflow"
                 fill="#10b981"
-                radius={[4, 4, 0, 0]}
-                maxBarSize={36}
+                radius={[5, 5, 0, 0]}
+                maxBarSize={38}
+                animationDuration={600}
               />
             </BarChart>
           </ResponsiveContainer>

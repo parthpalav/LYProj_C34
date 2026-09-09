@@ -1,4 +1,5 @@
 import React from 'react';
+import { Moon, Utensils, ShoppingBag, AlertTriangle, Activity, CheckCircle2 } from 'lucide-react';
 import type { BehaviorPattern } from '../../types';
 
 export interface BehaviorSignalCardsProps {
@@ -7,13 +8,29 @@ export interface BehaviorSignalCardsProps {
 
 export const BehaviorSignalCards: React.FC<BehaviorSignalCardsProps> = ({ patterns }) => {
   const getSeverityBadge = (sev: string) => {
-    switch (sev) {
-      case 'high':
-        return <span className="badge-severity badge-sev-high">High Impact</span>;
-      case 'medium':
-        return <span className="badge-severity badge-sev-med">Medium Alert</span>;
+    const s = sev?.toLowerCase();
+    const label = s ? s.charAt(0).toUpperCase() + s.slice(1) : 'Medium';
+    if (s === 'high') {
+      return <span className="badge-severity badge-sev-high">{label}</span>;
+    }
+    if (s === 'medium') {
+      return <span className="badge-severity badge-sev-med">{label}</span>;
+    }
+    return <span className="badge-severity badge-sev-low">{label}</span>;
+  };
+
+  const getPatternIcon = (type: string) => {
+    switch (type) {
+      case 'late_night':
+        return <Moon size={18} className="text-secondary" aria-hidden="true" />;
+      case 'food_spike':
+        return <Utensils size={18} className="text-secondary" aria-hidden="true" />;
+      case 'impulse_shopping':
+        return <ShoppingBag size={18} className="text-secondary" aria-hidden="true" />;
+      case 'anomaly_cluster':
+        return <AlertTriangle size={18} className="text-warning" aria-hidden="true" />;
       default:
-        return <span className="badge-severity badge-sev-low">Nudge</span>;
+        return <Activity size={18} className="text-secondary" aria-hidden="true" />;
     }
   };
 
@@ -36,7 +53,7 @@ export const BehaviorSignalCards: React.FC<BehaviorSignalCardsProps> = ({ patter
     return (
       <div className="insights-card">
         <div className="empty-behavior-box">
-          <span className="empty-behavior-emoji">✨</span>
+          <CheckCircle2 size={32} className="text-emerald mb-2" aria-hidden="true" />
           <h3 className="card-title">No Behavioral Risk Patterns Detected</h3>
           <p className="text-secondary text-sm" style={{ marginTop: '8px' }}>
             Your recent spending shows disciplined consistency with no late-night spikes, excessive impulse shopping, or cluster anomalies.
@@ -50,6 +67,7 @@ export const BehaviorSignalCards: React.FC<BehaviorSignalCardsProps> = ({ patter
     <div className="insights-card">
       <div className="card-header-row">
         <div>
+          <span className="overview-context-badge">ALGORITHMIC DETECTION</span>
           <h3 className="card-title">Detected Behavioral Patterns</h3>
           <p className="card-subtitle">
             Algorithmic signals flagged from your recent transactions
@@ -61,9 +79,11 @@ export const BehaviorSignalCards: React.FC<BehaviorSignalCardsProps> = ({ patter
         {patterns.map((p, idx) => (
           <div key={idx} className="behavior-pattern-card">
             <div className="pattern-card-top">
-              <span className="pattern-emoji">{p.emoji || '⚡'}</span>
+              <div className="pattern-icon-avatar">
+                {getPatternIcon(p.type)}
+              </div>
               <div className="pattern-title-wrap">
-                <span className="pattern-title font-semibold">{formatPatternTitle(p.type)}</span>
+                <span className="pattern-title font-semibold text-primary">{formatPatternTitle(p.type)}</span>
                 <span className="pattern-type-code text-xs text-tertiary">{p.type}</span>
               </div>
               {getSeverityBadge(p.severity)}

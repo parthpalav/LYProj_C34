@@ -18,6 +18,7 @@ export const FmiDeltaSummary: React.FC<FmiDeltaSummaryProps> = ({ summary }) => 
   if (!summary.hasComparison) {
     return (
       <div className="insights-card">
+        <span className="overview-context-badge">MOMENTUM COMPARISON</span>
         <h3 className="card-title">Score Movement</h3>
         <p className="card-subtitle">Comparison against previous snapshot</p>
         <p className="text-secondary text-sm" style={{ marginTop: '12px' }}>
@@ -37,7 +38,7 @@ export const FmiDeltaSummary: React.FC<FmiDeltaSummaryProps> = ({ summary }) => 
     return (
       <div className="pillar-delta-chip">
         <span className="chip-name text-xs text-secondary">{name}</span>
-        <span className={`chip-val font-semibold text-xs ${up ? 'text-emerald' : down ? 'text-danger' : 'text-tertiary'}`}>
+        <span className={`chip-val font-semibold text-xs tabular-nums ${up ? 'text-emerald' : down ? 'text-danger' : 'text-tertiary'}`}>
           {up ? `+${delta}` : delta}
         </span>
       </div>
@@ -48,6 +49,7 @@ export const FmiDeltaSummary: React.FC<FmiDeltaSummaryProps> = ({ summary }) => 
     <div className="insights-card">
       <div className="card-header-row">
         <div>
+          <span className="overview-context-badge">MOMENTUM COMPARISON</span>
           <h3 className="card-title">Score Movement</h3>
           <p className="card-subtitle">Comparison against previous recorded snapshot</p>
         </div>
@@ -56,16 +58,16 @@ export const FmiDeltaSummary: React.FC<FmiDeltaSummaryProps> = ({ summary }) => 
       <div className="fmi-delta-overview-row">
         <div className="delta-stat-unit">
           <span className="stat-unit-label text-xs text-tertiary">Current</span>
-          <span className="stat-unit-val font-bold">{summary.currentScore}</span>
+          <span className="stat-unit-val font-bold text-primary tabular-nums">{summary.currentScore}</span>
         </div>
         <div className="delta-stat-unit">
           <span className="stat-unit-label text-xs text-tertiary">Previous</span>
-          <span className="stat-unit-val font-semibold text-secondary">{summary.previousScore}</span>
+          <span className="stat-unit-val font-semibold text-secondary tabular-nums">{summary.previousScore}</span>
         </div>
         <div className="delta-stat-unit">
           <span className="stat-unit-label text-xs text-tertiary">Overall Change</span>
           <span
-            className={`delta-badge font-bold ${
+            className={`delta-badge font-bold tabular-nums ${
               isUp ? 'delta-badge-pos' : isDown ? 'delta-badge-neg' : 'delta-badge-neutral'
             }`}
           >

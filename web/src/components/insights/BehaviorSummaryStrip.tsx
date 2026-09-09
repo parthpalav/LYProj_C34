@@ -13,56 +13,42 @@ export const BehaviorSummaryStrip: React.FC<BehaviorSummaryStripProps> = ({
   analyzedCount,
 }) => {
   return (
-    <div className="activity-summary-strip">
-      <div className="summary-metric-card">
-        <span className="summary-metric-label">Analyzed Transactions</span>
-        <span className="summary-metric-value text-primary font-bold">
+    <div className="activity-summary-strip" role="region" aria-label="Behavioral Diagnostics Summary">
+      <div className="summary-item">
+        <span className="summary-label">Analyzed Records</span>
+        <span className="summary-value text-primary tabular-nums">
           {analyzedCount}
         </span>
-        <span className="summary-metric-subtext text-xs text-tertiary">
-          Evaluation analysis window
-        </span>
       </div>
 
-      <div className="summary-metric-card">
-        <span className="summary-metric-label">Detected Risk Patterns</span>
-        <span
-          className={`summary-metric-value font-bold ${
-            signals.length > 0 ? 'text-amber' : 'text-emerald'
-          }`}
-        >
+      <div className="summary-divider" aria-hidden="true" />
+
+      <div className="summary-item">
+        <span className="summary-label">Detected Risk Patterns</span>
+        <span className="summary-value text-primary tabular-nums">
           {signals.length}
         </span>
-        <span className="summary-metric-subtext text-xs text-tertiary">
-          {signals.length === 0 ? 'Optimal discipline' : 'Patterns requiring attention'}
-        </span>
       </div>
 
-      <div className="summary-metric-card">
-        <span className="summary-metric-label">Spending Anomalies</span>
-        <span
-          className={`summary-metric-value font-bold ${
-            anomaliesCount > 0 ? 'text-danger' : 'text-primary'
-          }`}
-        >
+      <div className="summary-divider" aria-hidden="true" />
+
+      <div className="summary-item">
+        <span className="summary-label">Spending Anomalies</span>
+        <span className="summary-value text-primary tabular-nums">
           {anomaliesCount}
         </span>
-        <span className="summary-metric-subtext text-xs text-tertiary">
-          {anomaliesCount === 0 ? 'No statistical outliers' : 'Transactions > 1.8× average'}
-        </span>
       </div>
 
-      {/* Render any additional dynamically verified pattern types */}
       {signals.map((sig) => (
-        <div key={sig.type} className="summary-metric-card">
-          <span className="summary-metric-label">{sig.label}</span>
-          <span className="summary-metric-value font-bold text-amber">
-            {sig.emoji} {sig.count}
-          </span>
-          <span className="summary-metric-subtext text-xs text-tertiary">
-            Severity: {sig.severity}
-          </span>
-        </div>
+        <React.Fragment key={sig.type}>
+          <div className="summary-divider" aria-hidden="true" />
+          <div className="summary-item">
+            <span className="summary-label">{sig.label}</span>
+            <span className="summary-value text-primary tabular-nums">
+              {sig.count}
+            </span>
+          </div>
+        </React.Fragment>
       ))}
     </div>
   );

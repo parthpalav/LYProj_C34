@@ -22,23 +22,19 @@ export const MonthOverMonthComparison: React.FC<MonthOverMonthComparisonProps> =
     return (
       <div className="mom-metric-block">
         <div className="mom-metric-header">
-          <span className="mom-metric-label">{label}</span>
-          <span
-            className={`mom-trend-pill ${
-              isUp ? 'pill-up' : isDown ? 'pill-down' : 'pill-flat'
-            }`}
-          >
+          <span className="mom-metric-label font-medium text-secondary">{label}</span>
+          <span className="mom-trend-pill mom-trend-neutral tabular-nums">
             {isUp && '↑ '}
             {isDown && '↓ '}
-            {Math.abs(delta.percentageChange)}%
+            {delta.percentageChange > 0 ? `+${delta.percentageChange}%` : `${delta.percentageChange}%`}
           </span>
         </div>
         <div className="mom-metric-values">
-          <span className="mom-current-val font-semibold">
+          <span className="mom-current-val font-bold text-primary tabular-nums">
             {formatCurrencyINR(delta.currentAmount)}
           </span>
-          <span className="mom-prev-val text-xs text-tertiary">
-            vs {formatCurrencyINR(delta.previousAmount)} prev
+          <span className="mom-prev-val text-xs text-tertiary tabular-nums">
+            vs {formatCurrencyINR(delta.previousAmount)} prior
           </span>
         </div>
       </div>
@@ -49,6 +45,7 @@ export const MonthOverMonthComparison: React.FC<MonthOverMonthComparisonProps> =
     <div className="insights-card">
       <div className="card-header-row">
         <div>
+          <span className="overview-context-badge">FAIR PERIOD ANALYSIS</span>
           <h3 className="card-title">Comparable-Period Spend Comparison</h3>
           <p className="card-subtitle">{comparison.periodLabel}</p>
         </div>

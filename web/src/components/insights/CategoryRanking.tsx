@@ -12,6 +12,7 @@ export const CategoryRanking: React.FC<CategoryRankingProps> = ({ categories }) 
   if (categories.length === 0) {
     return (
       <div className="insights-card">
+        <span className="overview-context-badge">EXPENDITURE BREAKDOWN</span>
         <h3 className="card-title">Category Breakdown</h3>
         <p className="text-secondary text-sm" style={{ marginTop: '12px' }}>
           No category spending recorded for the selected timeframe.
@@ -27,6 +28,7 @@ export const CategoryRanking: React.FC<CategoryRankingProps> = ({ categories }) 
     <div className="insights-card">
       <div className="card-header-flex">
         <div>
+          <span className="overview-context-badge">EXPENDITURE BREAKDOWN</span>
           <h3 className="card-title">Category Breakdown</h3>
           <p className="card-subtitle">Ranked by total expenditure in this period</p>
         </div>
@@ -44,19 +46,20 @@ export const CategoryRanking: React.FC<CategoryRankingProps> = ({ categories }) 
       <div className="category-ranking-list">
         {displayedCategories.map((item, index) => {
           const barWidth = Math.max(4, Math.round((item.amount / maxAmount) * 100));
+          const rankStr = String(index + 1).padStart(2, '0');
 
           return (
             <div key={item.category} className="category-rank-row">
-              <div className="rank-index text-tertiary text-xs">#{index + 1}</div>
+              <div className="rank-index text-tertiary text-xs font-semibold tabular-nums">{rankStr}</div>
               <div className="rank-info">
                 <div className="rank-title-row">
-                  <span className="rank-category-name font-semibold">{item.category}</span>
-                  <span className="rank-category-amount font-semibold">
+                  <span className="rank-category-name font-semibold text-primary">{item.category}</span>
+                  <span className="rank-category-amount font-semibold text-primary tabular-nums">
                     {formatCurrencyINR(item.amount)}{' '}
                     <span className="text-tertiary text-xs font-normal">({item.percentage}%)</span>
                   </span>
                 </div>
-                <div className="rank-bar-track">
+                <div className="rank-bar-track" aria-hidden="true">
                   <div
                     className="rank-bar-fill"
                     style={{ width: `${barWidth}%` }}

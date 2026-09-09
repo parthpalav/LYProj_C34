@@ -26,24 +26,27 @@ const CustomTooltip = ({ active, payload, label }: any) => {
     const total = needs + wants + investments;
 
     return (
-      <div className="custom-chart-tooltip">
-        <div className="tooltip-header font-semibold">{label}</div>
-        <div className="tooltip-row text-blue">
+      <div className="custom-chart-tooltip" role="tooltip">
+        <div className="tooltip-header font-semibold text-primary">{label}</div>
+        <div className="tooltip-row text-secondary">
+          <span className="tooltip-legend-dot dot-needs" aria-hidden="true" />
           <span>Needs:</span>
-          <span className="font-semibold">{formatCurrencyINR(needs)}</span>
+          <span className="font-semibold text-primary tabular-nums">{formatCurrencyINR(needs)}</span>
         </div>
-        <div className="tooltip-row text-amber">
+        <div className="tooltip-row text-secondary">
+          <span className="tooltip-legend-dot dot-wants" aria-hidden="true" />
           <span>Wants:</span>
-          <span className="font-semibold">{formatCurrencyINR(wants)}</span>
+          <span className="font-semibold text-primary tabular-nums">{formatCurrencyINR(wants)}</span>
         </div>
-        <div className="tooltip-row text-emerald">
+        <div className="tooltip-row text-secondary">
+          <span className="tooltip-legend-dot dot-investments" aria-hidden="true" />
           <span>Investments:</span>
-          <span className="font-semibold">{formatCurrencyINR(investments)}</span>
+          <span className="font-semibold text-primary tabular-nums">{formatCurrencyINR(investments)}</span>
         </div>
         <div className="tooltip-divider" />
-        <div className="tooltip-row font-bold">
-          <span>Total Spend:</span>
-          <span>{formatCurrencyINR(total)}</span>
+        <div className="tooltip-row font-bold text-primary">
+          <span>Total Outflow:</span>
+          <span className="tabular-nums">{formatCurrencyINR(total)}</span>
         </div>
       </div>
     );
@@ -57,10 +60,11 @@ export const SpendingTrendChart: React.FC<SpendingTrendChartProps> = ({
   onRangeChange,
 }) => {
   const ranges: Array<{ id: SpendingRange; label: string }> = [
-    { id: '3m', label: '3 Months' },
-    { id: '6m', label: '6 Months' },
-    { id: '12m', label: '12 Months' },
-    { id: 'ytd', label: 'This Year' },
+    { id: '30d', label: '30D' },
+    { id: '90d', label: '90D' },
+    { id: '6m', label: '6M' },
+    { id: '12m', label: '12M' },
+    { id: 'ytd', label: 'YTD' },
   ];
 
   const hasData = data.some((d) => d.total > 0);
@@ -69,22 +73,26 @@ export const SpendingTrendChart: React.FC<SpendingTrendChartProps> = ({
     <div className="insights-chart-card">
       <div className="chart-header-row">
         <div>
+          <span className="overview-context-badge">OUTFLOW TRAJECTORY</span>
           <h3 className="card-title">Monthly Spending Trend</h3>
           <p className="card-subtitle">
-            Outflow patterns across Needs, Wants, and Investments over time
+            Historical outflow patterns across Needs, Wants, and Investments
           </p>
         </div>
         <div className="chart-range-pills" role="group" aria-label="Spending Time Range">
-          {ranges.map((r) => (
-            <button
-              key={r.id}
-              type="button"
-              className={`range-pill-btn ${range === r.id ? 'active' : ''}`}
-              onClick={() => onRangeChange(r.id)}
-            >
-              {r.label}
-            </button>
-          ))}
+          {ranges.map((r) => {
+            const isMatch = range === r.id || (r.id === '90d' && range === '3m');
+            return (
+              <button
+                key={r.id}
+                type="button"
+                className={`range-pill-btn ${isMatch ? 'active' : ''}`}
+                onClick={() => onRangeChange(r.id)}
+              >
+                {r.label}
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -120,9 +128,9 @@ export const SpendingTrendChart: React.FC<SpendingTrendChartProps> = ({
                 iconType="circle"
                 wrapperStyle={{ paddingBottom: '12px', fontSize: '12px' }}
               />
-              <Bar dataKey="needs" name="Needs" fill="#3b82f6" radius={[4, 4, 0, 0]} maxBarSize={32} />
-              <Bar dataKey="wants" name="Wants" fill="#f59e0b" radius={[4, 4, 0, 0]} maxBarSize={32} />
-              <Bar dataKey="investments" name="Investments" fill="#10b981" radius={[4, 4, 0, 0]} maxBarSize={32} />
+              <Bar dataKey="needs" name="Needs" fill="#3b82f6" radius={[4, 4, 0, 0]} maxBarSize={32} animationDuration={600} />
+              <Bar dataKey="wants" name="Wants" fill="#f59e0b" radius={[4, 4, 0, 0]} maxBarSize={32} animationDuration={600} />
+              <Bar dataKey="investments" name="Investments" fill="#10b981" radius={[4, 4, 0, 0]} maxBarSize={32} animationDuration={600} />
             </BarChart>
           </ResponsiveContainer>
         </div>

@@ -34,15 +34,15 @@ export const FmiPillarsGrid: React.FC<FmiPillarsGridProps> = ({ fmi }) => {
         <div className="pillar-header">
           <div className="pillar-title-group">
             <span className="pillar-code">D1</span>
-            <span className="pillar-name font-semibold">Saving Discipline</span>
+            <span className="pillar-name font-semibold text-primary">Saving Discipline</span>
           </div>
-          <span className="pillar-weight text-xs text-tertiary">40% Weight</span>
+          <span className="pillar-weight-badge text-xs font-semibold">40% Weight</span>
         </div>
         <div className="pillar-score-row">
-          <span className="pillar-score font-bold">{d1.score}</span>
-          <span className="text-tertiary text-xs">/100</span>
+          <span className="pillar-score font-bold text-primary tabular-nums">{d1.score}</span>
+          <span className="text-tertiary text-xs">/100 score</span>
         </div>
-        <div className="pillar-track">
+        <div className="pillar-track" aria-hidden="true">
           <div
             className={`pillar-fill ${getPillarFillClass(d1.score)}`}
             style={{ width: `${Math.min(d1.score, 100)}%` }}
@@ -56,15 +56,15 @@ export const FmiPillarsGrid: React.FC<FmiPillarsGridProps> = ({ fmi }) => {
         <div className="pillar-header">
           <div className="pillar-title-group">
             <span className="pillar-code">D2</span>
-            <span className="pillar-name font-semibold">Spending Control</span>
+            <span className="pillar-name font-semibold text-primary">Spending Control</span>
           </div>
-          <span className="pillar-weight text-xs text-tertiary">30% Weight</span>
+          <span className="pillar-weight-badge text-xs font-semibold">30% Weight</span>
         </div>
         <div className="pillar-score-row">
-          <span className="pillar-score font-bold">{d2.score}</span>
-          <span className="text-tertiary text-xs">/100</span>
+          <span className="pillar-score font-bold text-primary tabular-nums">{d2.score}</span>
+          <span className="text-tertiary text-xs">/100 score</span>
         </div>
-        <div className="pillar-track">
+        <div className="pillar-track" aria-hidden="true">
           <div
             className={`pillar-fill ${getPillarFillClass(d2.score)}`}
             style={{ width: `${Math.min(d2.score, 100)}%` }}
@@ -78,15 +78,15 @@ export const FmiPillarsGrid: React.FC<FmiPillarsGridProps> = ({ fmi }) => {
         <div className="pillar-header">
           <div className="pillar-title-group">
             <span className="pillar-code">D3</span>
-            <span className="pillar-name font-semibold">Behavioral Risk</span>
+            <span className="pillar-name font-semibold text-primary">Behavioral Risk</span>
           </div>
-          <span className="pillar-weight text-xs text-tertiary">30% Weight</span>
+          <span className="pillar-weight-badge text-xs font-semibold">30% Weight</span>
         </div>
         <div className="pillar-score-row">
-          <span className="pillar-score font-bold">{d3.score}</span>
-          <span className="text-tertiary text-xs">/100</span>
+          <span className="pillar-score font-bold text-primary tabular-nums">{d3.score}</span>
+          <span className="text-tertiary text-xs">/100 score</span>
         </div>
-        <div className="pillar-track">
+        <div className="pillar-track" aria-hidden="true">
           <div
             className={`pillar-fill ${getPillarFillClass(d3.score)}`}
             style={{ width: `${Math.min(d3.score, 100)}%` }}

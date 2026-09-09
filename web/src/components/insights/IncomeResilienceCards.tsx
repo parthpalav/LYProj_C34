@@ -1,4 +1,5 @@
 import React from 'react';
+import { Shield, Hourglass } from 'lucide-react';
 
 export interface IncomeResilienceCardsProps {
   resilience: {
@@ -11,31 +12,25 @@ export interface IncomeResilienceCardsProps {
 export const IncomeResilienceCards: React.FC<IncomeResilienceCardsProps> = ({ resilience }) => {
   const formatCoverage = (ratio: number | null) => {
     if (ratio === null || ratio === undefined) return '—';
-    return `${Math.round(ratio * 100)}%`;
+    return `${ratio.toFixed(1)}×`;
   };
 
   const formatRunway = (months: number | null) => {
     if (months === null || months === undefined) return '—';
-    return `${months} months`;
+    return `${months} ${months === 1 ? 'month' : 'months'}`;
   };
 
   return (
-    <div className="insights-resilience-grid">
+    <div className="insights-resilience-grid" role="region" aria-label="Income Resilience & Runway">
       {/* Essential Coverage Ratio */}
       <div className="resilience-card">
         <div className="resilience-card-top">
           <span className="resilience-title font-semibold">Essential Coverage Ratio</span>
-          {resilience.isCoverageAdequate !== null && (
-            <span
-              className={`resilience-badge ${
-                resilience.isCoverageAdequate ? 'resilience-badge-pass' : 'resilience-badge-warn'
-              }`}
-            >
-              {resilience.isCoverageAdequate ? '✓ Adequate' : '⚠️ Low Buffer'}
-            </span>
-          )}
+          <div className="stat-card-icon-wrap icon-neutral">
+            <Shield size={16} />
+          </div>
         </div>
-        <div className="resilience-metric-val font-bold text-primary">
+        <div className="resilience-metric-val font-bold text-primary tabular-nums">
           {formatCoverage(resilience.essentialCoverageRatio)}
         </div>
         <p className="resilience-desc text-xs text-secondary">
@@ -47,8 +42,11 @@ export const IncomeResilienceCards: React.FC<IncomeResilienceCardsProps> = ({ re
       <div className="resilience-card">
         <div className="resilience-card-top">
           <span className="resilience-title font-semibold">Liquid Buffer Runway</span>
+          <div className="stat-card-icon-wrap icon-emerald">
+            <Hourglass size={16} />
+          </div>
         </div>
-        <div className="resilience-metric-val font-bold text-emerald">
+        <div className="resilience-metric-val font-bold text-emerald tabular-nums">
           {formatRunway(resilience.bufferRunwayMonths)}
         </div>
         <p className="resilience-desc text-xs text-secondary">

@@ -25,11 +25,11 @@ const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     const item = payload[0].payload;
     return (
-      <div className="custom-chart-tooltip">
-        <div className="tooltip-header font-semibold">{item.fullDate}</div>
-        <div className="tooltip-row text-primary">
+      <div className="custom-chart-tooltip" role="tooltip">
+        <div className="tooltip-header font-semibold text-primary">{item.fullDate}</div>
+        <div className="tooltip-row text-primary font-bold tabular-nums">
           <span>FMI Score:</span>
-          <span className="font-bold">{item.score} / 100</span>
+          <span>{item.score} / 100</span>
         </div>
       </div>
     );
@@ -43,17 +43,18 @@ export const FmiHistoryChart: React.FC<FmiHistoryChartProps> = ({
   onRangeChange,
 }) => {
   const ranges: Array<{ id: FmiHistoryRange; label: string }> = [
-    { id: '30d', label: '30 Days' },
-    { id: '90d', label: '90 Days' },
-    { id: '6m', label: '6 Months' },
-    { id: '1y', label: '1 Year' },
-    { id: 'all', label: 'All Time' },
+    { id: '30d', label: '30D' },
+    { id: '90d', label: '90D' },
+    { id: '6m', label: '6M' },
+    { id: '1y', label: '1Y' },
+    { id: 'all', label: 'All' },
   ];
 
   return (
     <div className="insights-chart-card">
       <div className="chart-header-row">
         <div>
+          <span className="overview-context-badge">MOMENTUM TRAJECTORY</span>
           <h3 className="card-title">FMI Historical Trajectory</h3>
           <p className="card-subtitle">
             Historical progression of daily financial momentum snapshots
@@ -108,6 +109,7 @@ export const FmiHistoryChart: React.FC<FmiHistoryChartProps> = ({
                 strokeWidth={3}
                 dot={{ r: 4, fill: '#6366f1', strokeWidth: 2, stroke: '#fff' }}
                 activeDot={{ r: 6, fill: '#4f46e5' }}
+                animationDuration={600}
               />
             </LineChart>
           </ResponsiveContainer>

@@ -45,7 +45,8 @@ export function useSpendingInsights() {
     const result: Array<{ key: string; label: string; year: number; month: number }> = [];
 
     let count = 6;
-    if (range === '3m') count = 3;
+    if (range === '30d') count = 1;
+    else if (range === '90d' || range === '3m') count = 3;
     else if (range === '6m') count = 6;
     else if (range === '12m') count = 12;
     else if (range === 'ytd') count = now.getMonth() + 1;

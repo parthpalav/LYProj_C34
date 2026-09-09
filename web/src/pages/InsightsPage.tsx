@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { RefreshCw } from 'lucide-react';
 import { InsightsTabs, type InsightsTab } from '../components/insights/InsightsTabs';
 
 // Spending Components
@@ -114,6 +115,7 @@ export const InsightsPage: React.FC = () => {
       {/* Workspace Header */}
       <div className="activity-header-block">
         <div className="activity-title-group">
+          <span className="overview-eyebrow">FINANCIAL INTELLIGENCE</span>
           <h1 className="activity-main-heading">Financial Insights &amp; Explanations</h1>
           <p className="activity-sub-heading">
             Understand the patterns, momentum, and predictability governing your financial health
@@ -126,18 +128,13 @@ export const InsightsPage: React.FC = () => {
             size="sm"
             onClick={handleRefreshCurrentTab}
             isLoading={isCurrentTabLoading()}
-            leftIcon={
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M23 4v6h-6" />
-                <path d="M1 20v-6h6" />
-                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
-              </svg>
-            }
+            leftIcon={<RefreshCw size={13} className={isCurrentTabLoading() ? 'animate-spin' : ''} />}
           >
             Refresh
           </Button>
         </div>
       </div>
+
 
       {/* Synchronized Tab Navigation */}
       <InsightsTabs activeTab={activeTab} onTabChange={handleTabChange} />
@@ -200,7 +197,7 @@ export const InsightsPage: React.FC = () => {
           ) : (
             <div className="insights-sections-stack">
               {/* Current Composite Hero */}
-              <FmiScoreHero fmi={fmi.currentFmi} />
+              <FmiScoreHero fmi={fmi.currentFmi} deltaSummary={fmi.deltaSummary} />
 
               {/* D1, D2, D3 Pillars Grid */}
               <FmiPillarsGrid fmi={fmi.currentFmi} />

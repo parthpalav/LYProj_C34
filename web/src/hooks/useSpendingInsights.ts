@@ -39,14 +39,17 @@ export function useSpendingInsights() {
     void loadData();
   }, [fetchSpendingData]);
 
-  // Determine months to include based on selected range
+  const isRollingRange = range === '30d' || range === '90d';
+
+  // Determine months to include based on selected range (for legacy ranges)
   const monthsInRange = useMemo(() => {
+    if (isRollingRange) return [];
+
     const now = new Date();
     const result: Array<{ key: string; label: string; year: number; month: number }> = [];
 
     let count = 6;
-    if (range === '30d') count = 1;
-    else if (range === '90d' || range === '3m') count = 3;
+    if (range === '3m') count = 3;
     else if (range === '6m') count = 6;
     else if (range === '12m') count = 12;
     else if (range === 'ytd') count = now.getMonth() + 1;
@@ -61,25 +64,116 @@ export function useSpendingInsights() {
     }
 
     return result;
-  }, [range]);
+  }, [range, isRollingRange]);
 
-  // Earliest date boundary for selected range
-  const rangeStartDate = useMemo(() => {
-    if (monthsInRange.length === 0) return new Date();
+  // Rolling weekly/bi-weekly buckets for 30D (4 weekly) and 90D (6 bi-weekly)
+  const rollingBuckets = useMemo(() => {
+    if (!isRollingRange) return [];
+
+    const now = new Date();
+    const days = range === '30d' ? 30 : 90;
+    const bucketCount = range === '30d' ? 4 : 6;
+    const step = Math.floor(days / bucketCount);
+    const buckets: Array<{ key: string; label: string; start: Date; end: Date }> = [];
+
+    for (let i = 0; i < bucketCount; i++) {
+      const daysFromNowStart = days - (i * step);
+      const daysFromNowEnd = (i === bucketCount - 1) ? 0 : days - ((i + 1) * step - 1);
+      const bStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - daysFromNowStart, 0, 0, 0, 0);
+      const bEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate() - daysFromNowEnd, 23, 59, 59, 999);
+      const sMonth = bStart.toLocaleDateString('en-IN', { month: 'short' });
+      const eMonth = bEnd.toLocaleDateString('en-IN', { month: 'short' });
+      const label = (sMonth === eMonth)
+        ? `${bStart.getDate()}–${bEnd.getDate()} ${sMonth}`
+        : `${bStart.getDate()} ${sMonth} – ${bEnd.getDate()} ${eMonth}`;
+      buckets.push({
+        key: `bucket-${i}`,
+        label,
+        start: bStart,
+        end: bEnd,
+      });
+    }
+
+    return buckets;
+  }, [range, isRollingRange]);
+
+  // Date boundaries for selected range
+  const { rangeStartDate, rangeEndDate } = useMemo(() => {
+    const now = new Date();
+    if (isRollingRange) {
+      const days = range === '30d' ? 30 : 90;
+      return {
+        rangeStartDate: new Date(now.getFullYear(), now.getMonth(), now.getDate() - days, 0, 0, 0, 0),
+        rangeEndDate: new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999),
+      };
+    }
+
+    if (monthsInRange.length === 0) {
+      return {
+        rangeStartDate: new Date(),
+        rangeEndDate: undefined,
+      };
+    }
     const first = monthsInRange[0];
-    return new Date(first.year, first.month - 1, 1, 0, 0, 0, 0);
-  }, [monthsInRange]);
+    return {
+      rangeStartDate: new Date(first.year, first.month - 1, 1, 0, 0, 0, 0),
+      rangeEndDate: undefined,
+    };
+  }, [range, isRollingRange, monthsInRange]);
 
   // Transactions filtered to selected range
   const rangeTransactions = useMemo(() => {
     return transactions.filter((tx) => {
       const d = getTransactionDate(tx);
+      if (rangeEndDate) {
+        return d >= rangeStartDate && d <= rangeEndDate;
+      }
       return d >= rangeStartDate;
     });
-  }, [transactions, rangeStartDate]);
+  }, [transactions, rangeStartDate, rangeEndDate]);
 
-  // 1. Monthly Spending Trend
+  // 1. Spending Trend
   const trendData = useMemo<SpendingTrendPoint[]>(() => {
+    if (isRollingRange) {
+      const bucketMap = new Map<
+        string,
+        { needs: number; wants: number; investments: number; total: number }
+      >();
+
+      rollingBuckets.forEach((b) => {
+        bucketMap.set(b.key, { needs: 0, wants: 0, investments: 0, total: 0 });
+      });
+
+      rangeTransactions.forEach((tx) => {
+        const d = getTransactionDate(tx);
+        const targetBucket = rollingBuckets.find((b) => d >= b.start && d <= b.end);
+        if (targetBucket) {
+          const entry = bucketMap.get(targetBucket.key);
+          if (entry) {
+            const amt = Math.abs(Number(tx.amount) || 0);
+            const type = tx.type || 'Need';
+            if (type === 'Need') entry.needs += amt;
+            else if (type === 'Want') entry.wants += amt;
+            else if (type === 'Investment') entry.investments += amt;
+            entry.total += amt;
+          }
+        }
+      });
+
+      return rollingBuckets.map((b) => {
+        const data = bucketMap.get(b.key) || { needs: 0, wants: 0, investments: 0, total: 0 };
+        return {
+          monthKey: b.key,
+          monthLabel: b.label,
+          needs: Math.round(data.needs),
+          wants: Math.round(data.wants),
+          investments: Math.round(data.investments),
+          total: Math.round(data.total),
+        };
+      });
+    }
+
+    // Legacy Monthly Spending Trend
     const monthlyMap = new Map<
       string,
       { needs: number; wants: number; investments: number; total: number }
@@ -114,7 +208,7 @@ export function useSpendingInsights() {
         total: Math.round(data.total),
       };
     });
-  }, [monthsInRange, rangeTransactions]);
+  }, [isRollingRange, rollingBuckets, monthsInRange, rangeTransactions]);
 
   // 2. Needs / Wants / Investments Analysis for Selected Range
   const typeAnalysis = useMemo(() => {

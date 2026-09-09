@@ -1,13 +1,13 @@
 import React from 'react';
+import { Info } from 'lucide-react';
 
 export const NetWorthHistoryNotice: React.FC = () => {
   return (
-    <div className="net-worth-history-notice" role="note" aria-label="Net Worth History Availability Notice">
-      <div className="notice-icon">ℹ️</div>
-      <div className="notice-content">
-        <h4 className="notice-title">Real-Time Snapshot Mode</h4>
-        <p className="notice-text">
-          Historical net-worth trajectory tracking is not yet persisted in the database. FINAURA currently displays your real-time, authoritative balance sheet calculated from your active financial assets and liabilities. Historical net-worth snapshots will be supported in a future update.
+    <div className="plan-info-notice" role="note" aria-label="Net Worth History Availability Notice">
+      <Info size={18} className="plan-info-notice-icon" aria-hidden="true" />
+      <div className="plan-info-notice-content">
+        <p className="plan-info-notice-text">
+          Historical net-worth tracking is not yet available. This view shows your current authoritative balance sheet.
         </p>
       </div>
     </div>

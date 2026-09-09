@@ -1,4 +1,5 @@
 import React from 'react';
+import { ArrowRight } from 'lucide-react';
 import type { PredictabilitySnapshot } from '../../types';
 import type { ScenarioComparisonDeltas } from '../../hooks/useScenarioLab';
 
@@ -17,6 +18,12 @@ function formatINR(val: number | null | undefined): string {
     return `₹${(val / 100000).toFixed(2)} L`;
   }
   return `₹${Math.round(val).toLocaleString('en-IN')}`;
+}
+
+function formatDeltaLabel(delta: number, unit: string): string {
+  if (delta === 0) return 'Unchanged';
+  const prefix = delta > 0 ? '+' : '';
+  return `${prefix}${delta}${unit}`;
 }
 
 export const ScenarioComparisonView: React.FC<ScenarioComparisonViewProps> = ({
@@ -40,111 +47,96 @@ export const ScenarioComparisonView: React.FC<ScenarioComparisonViewProps> = ({
   const scenProb = scenarioSnapshot?.probabilistic?.estimatedFire?.probabilityFundedAtTargetAge ?? null;
 
   return (
-    <div className="scenario-comparison-container">
-      <div className="comparison-header">
-        <h3 className="comparison-title">Scenario Comparison Matrix</h3>
-        <p className="comparison-subtitle">
-          Side-by-side evaluation of your Current Baseline versus Simulated Scenario outputs
+    <div className="plan-surface-card">
+      <div className="plan-section-header">
+        <h3 className="plan-section-title">Scenario Comparison</h3>
+        <p className="plan-section-subtitle">
+          Side-by-side evaluation of your current baseline versus simulated scenario outputs
         </p>
       </div>
 
-      {/* Delta Highlight Cards */}
-      <div className="deltas-cards-grid">
+      {/* Delta Highlight Cards — neutral styling per correction #20 */}
+      <div className="plan-delta-grid">
         {/* Corpus Delta */}
-        <div className="delta-card">
-          <span className="delta-card-label">Projected Retirement Corpus</span>
-          <div className="delta-values-row">
-            <span className="val-base">{formatINR(baseCorpus)}</span>
-            <span className="val-arrow">→</span>
-            <span className="val-scen">{formatINR(scenCorpus)}</span>
+        <div className="plan-delta-card">
+          <span className="plan-delta-label">Projected Retirement Corpus</span>
+          <div className="plan-delta-values">
+            <span className="plan-delta-base">{formatINR(baseCorpus)}</span>
+            <ArrowRight size={14} className="plan-delta-arrow" />
+            <span className="plan-delta-scen">{formatINR(scenCorpus)}</span>
           </div>
           {deltas.projectedCorpusDelta !== null && (
-            <div
-              className={`delta-badge ${
-                deltas.projectedCorpusDelta >= 0 ? 'badge-positive' : 'badge-negative'
-              }`}
-            >
-              {deltas.projectedCorpusDelta >= 0 ? '+' : ''}
-              {formatINR(deltas.projectedCorpusDelta)} ({deltas.projectedCorpusDeltaPct}%)
+            <div className={`plan-delta-badge ${deltas.projectedCorpusDelta === 0 ? 'plan-delta-badge--neutral' : deltas.projectedCorpusDelta > 0 ? 'plan-delta-badge--increase' : 'plan-delta-badge--decrease'}`}>
+              {deltas.projectedCorpusDelta === 0
+                ? 'Unchanged'
+                : `${deltas.projectedCorpusDelta > 0 ? '+' : ''}${formatINR(deltas.projectedCorpusDelta)} (${deltas.projectedCorpusDeltaPct}%)`
+              }
             </div>
           )}
         </div>
 
         {/* Projected FIRE Age Delta */}
-        <div className="delta-card">
-          <span className="delta-card-label">Projected FIRE Age</span>
-          <div className="delta-values-row">
-            <span className="val-base">{baseAge !== null ? `${baseAge.toFixed(1)}y` : '—'}</span>
-            <span className="val-arrow">→</span>
-            <span className="val-scen">{scenAge !== null ? `${scenAge.toFixed(1)}y` : '—'}</span>
+        <div className="plan-delta-card">
+          <span className="plan-delta-label">Projected FIRE Age</span>
+          <div className="plan-delta-values">
+            <span className="plan-delta-base">{baseAge !== null ? `${baseAge.toFixed(1)}y` : '—'}</span>
+            <ArrowRight size={14} className="plan-delta-arrow" />
+            <span className="plan-delta-scen">{scenAge !== null ? `${scenAge.toFixed(1)}y` : '—'}</span>
           </div>
           {deltas.fireAgeDeltaYears !== null && (
-            <div
-              className={`delta-badge ${
-                deltas.fireAgeDeltaYears <= 0 ? 'badge-positive' : 'badge-negative'
-              }`}
-            >
-              {deltas.fireAgeDeltaYears <= 0
-                ? `${Math.abs(deltas.fireAgeDeltaYears)} yrs earlier`
-                : `${deltas.fireAgeDeltaYears} yrs later`}
+            <div className={`plan-delta-badge ${deltas.fireAgeDeltaYears === 0 ? 'plan-delta-badge--neutral' : deltas.fireAgeDeltaYears < 0 ? 'plan-delta-badge--decrease' : 'plan-delta-badge--increase'}`}>
+              {formatDeltaLabel(deltas.fireAgeDeltaYears, ' yrs')}
             </div>
           )}
         </div>
 
         {/* Required Contribution Delta */}
-        <div className="delta-card">
-          <span className="delta-card-label">Required Monthly Investment</span>
-          <div className="delta-values-row">
-            <span className="val-base">{formatINR(baseReq)}</span>
-            <span className="val-arrow">→</span>
-            <span className="val-scen">{formatINR(scenReq)}</span>
+        <div className="plan-delta-card">
+          <span className="plan-delta-label">Required Monthly Investment</span>
+          <div className="plan-delta-values">
+            <span className="plan-delta-base">{formatINR(baseReq)}</span>
+            <ArrowRight size={14} className="plan-delta-arrow" />
+            <span className="plan-delta-scen">{formatINR(scenReq)}</span>
           </div>
           {deltas.requiredContributionDelta !== null && (
-            <div
-              className={`delta-badge ${
-                deltas.requiredContributionDelta <= 0 ? 'badge-positive' : 'badge-negative'
-              }`}
-            >
-              {deltas.requiredContributionDelta > 0 ? '+' : ''}
-              {formatINR(deltas.requiredContributionDelta)}/mo
+            <div className={`plan-delta-badge ${deltas.requiredContributionDelta === 0 ? 'plan-delta-badge--neutral' : deltas.requiredContributionDelta > 0 ? 'plan-delta-badge--increase' : 'plan-delta-badge--decrease'}`}>
+              {deltas.requiredContributionDelta === 0
+                ? 'Unchanged'
+                : `${deltas.requiredContributionDelta > 0 ? '+' : ''}${formatINR(deltas.requiredContributionDelta)}/mo`
+              }
             </div>
           )}
         </div>
 
         {/* Funding Probability Delta */}
-        <div className="delta-card">
-          <span className="delta-card-label">Probability of Funding</span>
-          <div className="delta-values-row">
-            <span className="val-base">
+        <div className="plan-delta-card">
+          <span className="plan-delta-label">Probability of Funding</span>
+          <div className="plan-delta-values">
+            <span className="plan-delta-base">
               {baseProb !== null ? `${Math.round(baseProb * 100)}%` : '—'}
             </span>
-            <span className="val-arrow">→</span>
-            <span className="val-scen">
+            <ArrowRight size={14} className="plan-delta-arrow" />
+            <span className="plan-delta-scen">
               {scenProb !== null ? `${Math.round(scenProb * 100)}%` : '—'}
             </span>
           </div>
           {deltas.probabilityDeltaPoints !== null && (
-            <div
-              className={`delta-badge ${
-                deltas.probabilityDeltaPoints >= 0 ? 'badge-positive' : 'badge-negative'
-              }`}
-            >
-              {deltas.probabilityDeltaPoints >= 0 ? '+' : ''}
-              {deltas.probabilityDeltaPoints} percentage pts
+            <div className={`plan-delta-badge ${deltas.probabilityDeltaPoints === 0 ? 'plan-delta-badge--neutral' : deltas.probabilityDeltaPoints > 0 ? 'plan-delta-badge--increase' : 'plan-delta-badge--decrease'}`}>
+              {formatDeltaLabel(deltas.probabilityDeltaPoints, ' pp')}
             </div>
           )}
         </div>
       </div>
 
       {/* Side-by-Side Detailed Parameter Table */}
-      <div className="comparison-table-wrapper">
-        <table className="comparison-table">
+      <div className="plan-table-wrapper">
+        <table className="plan-table">
           <thead>
             <tr>
               <th>Metric / Assumption</th>
               <th>Current Plan (Baseline)</th>
               <th>Simulated Scenario</th>
-              <th>Net Difference</th>
+              <th>Difference</th>
             </tr>
           </thead>
           <tbody>

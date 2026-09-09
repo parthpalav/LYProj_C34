@@ -1,4 +1,5 @@
 import React from 'react';
+import { FlaskConical } from 'lucide-react';
 import type { ProbabilisticSection } from '../../types';
 
 interface MonteCarloPanelProps {
@@ -29,68 +30,80 @@ export const MonteCarloPanel: React.FC<MonteCarloPanelProps> = ({
   const fundedAge75 = estimatedFire?.fundedAge75 ?? null;
 
   return (
-    <div className="monte-carlo-container">
-      <div className="monte-carlo-header">
+    <div className="plan-surface-card">
+      <div className="plan-section-header plan-section-header--row">
         <div>
-          <span className="mc-badge">Stochastic Simulation Engine</span>
-          <h3 className="mc-title">Monte Carlo Probability & Distribution</h3>
+          <div className="plan-section-eyebrow plan-section-eyebrow--accent">
+            <FlaskConical size={14} /> Stochastic Simulation
+          </div>
+          <h3 className="plan-section-title">Monte Carlo Probability & Distribution</h3>
         </div>
-        <div className="mc-status-indicator">
+        <div>
           {isAvailable ? (
-            <span className="pill-active">● 10,000 Modeled Paths</span>
+            <span className="plan-status-pill plan-status-pill--active">● 10,000 Modeled Paths</span>
           ) : (
-            <span className="pill-inactive">○ Deterministic Baseline Only</span>
+            <span className="plan-status-pill plan-status-pill--inactive">○ Deterministic Baseline Only</span>
           )}
         </div>
       </div>
 
       {!isAvailable ? (
-        <div className="mc-offline-banner">
-          <div className="offline-icon">🔬</div>
-          <div className="offline-content">
-            <h4 className="offline-title">Probabilistic Simulation Standby</h4>
-            <p className="offline-desc">
+        <div className="plan-mc-offline">
+          <FlaskConical size={28} className="plan-mc-offline-icon" />
+          <div className="plan-mc-offline-content">
+            <h4 className="plan-mc-offline-title">Probabilistic Simulation Standby</h4>
+            <p className="plan-mc-offline-desc">
               The external statistical modeling microservice is currently in offline standby. FINAURA is rendering your deterministic mathematical baseline. All deterministic retirement scenarios, required contribution reverse solvers, and emergency coverage metrics remain active and authoritative.
             </p>
           </div>
         </div>
       ) : (
-        <div className="mc-results-grid">
+        <div className="plan-mc-results">
           {/* Probability of Funding Card */}
-          <div className="mc-prob-card">
-            <span className="prob-label">Probability of Reaching Target</span>
-            <div className="prob-value">
+          <div className="plan-mc-prob-card">
+            <span className="plan-mc-prob-label">Probability of Reaching Target at Retirement Age</span>
+            <div className="plan-mc-prob-value">
               {probFunded !== null ? `${Math.round(probFunded * 100)}%` : '—'}
             </div>
-            <p className="prob-desc">
-              Percentage of 10,000 simulated market paths where final accumulated corpus satisfies or exceeds your estimated FIRE target.
+            <p className="plan-mc-prob-desc">
+              Percentage of 10,000 simulated market paths where final accumulated corpus meets or exceeds the estimated FIRE target at the target retirement age.
             </p>
-            <div className="funded-ages-row">
-              <div className="funded-age-item">
-                <span className="fage-label">50% Probability Age:</span>
-                <span className="fage-val">
-                  {fundedAge50?.ageYears !== undefined ? `${fundedAge50.ageYears.toFixed(1)} yrs` : '—'}
-                </span>
-              </div>
-              <div className="funded-age-item">
-                <span className="fage-label">75% Target Funding Age:</span>
-                <span className="fage-val">
-                  {fundedAge75?.ageYears !== undefined ? `${fundedAge75.ageYears.toFixed(1)} yrs` : '—'}
-                </span>
-              </div>
+
+            {/* Funded-age display — uses exact backend field semantics */}
+            <div className="plan-mc-funded-ages">
+              {fundedAge50 && (
+                <div className="plan-mc-funded-age-item">
+                  <span className="plan-mc-funded-label">50% of paths fund target by age:</span>
+                  <span className="plan-mc-funded-val">
+                    {fundedAge50.ageYears !== undefined && fundedAge50.ageYears !== null
+                      ? `${fundedAge50.ageYears.toFixed(1)} yrs`
+                      : '—'}
+                  </span>
+                </div>
+              )}
+              {fundedAge75 && (
+                <div className="plan-mc-funded-age-item">
+                  <span className="plan-mc-funded-label">75% of paths fund target by age:</span>
+                  <span className="plan-mc-funded-val">
+                    {fundedAge75.ageYears !== undefined && fundedAge75.ageYears !== null
+                      ? `${fundedAge75.ageYears.toFixed(1)} yrs`
+                      : '—'}
+                  </span>
+                </div>
+              )}
             </div>
           </div>
 
-          {/* Percentile Distribution Table (Correction #7) */}
+          {/* Percentile Distribution Table — only exact returned fields */}
           {percentiles && (
-            <div className="mc-percentiles-card">
-              <h4 className="percentiles-title">Projected Corpus Distribution (Percentiles)</h4>
-              <p className="percentiles-subtitle">
+            <div className="plan-mc-percentiles">
+              <h4 className="plan-mc-percentiles-title">Projected Corpus Distribution (Percentiles)</h4>
+              <p className="plan-mc-percentiles-subtitle">
                 Modeled outcomes across 10,000 randomized return & volatility trajectories
               </p>
 
-              <div className="percentiles-table-wrapper">
-                <table className="percentiles-table">
+              <div className="plan-table-wrapper">
+                <table className="plan-table">
                   <thead>
                     <tr>
                       <th>Percentile</th>
@@ -109,9 +122,9 @@ export const MonteCarloPanel: React.FC<MonteCarloPanelProps> = ({
                       <td>{formatINR(percentiles.p25)}</td>
                       <td>Sub-par market regime (75% exceeded this value)</td>
                     </tr>
-                    <tr className="median-row">
+                    <tr className="plan-table-highlight">
                       <td><strong>Median (50th)</strong></td>
-                      <td className="font-bold">{formatINR(percentiles.p50)}</td>
+                      <td className="plan-text-bold">{formatINR(percentiles.p50)}</td>
                       <td>Central tendency expectation across all simulation runs</td>
                     </tr>
                     <tr>
@@ -134,14 +147,14 @@ export const MonteCarloPanel: React.FC<MonteCarloPanelProps> = ({
 
       {/* Deterministic Explanation Facts */}
       {explanationFacts.length > 0 && (
-        <div className="explanation-facts-container">
-          <h4 className="facts-title">Deterministic Engine Modeling Facts</h4>
-          <div className="facts-chips-grid">
+        <div className="plan-facts-section">
+          <h4 className="plan-facts-title">Deterministic Engine Modeling Facts</h4>
+          <div className="plan-facts-chips">
             {explanationFacts.map((fact, idx) => (
-              <div key={idx} className="fact-chip">
-                <span className="fact-code">{fact.code.replace(/_/g, ' ')}</span>
+              <div key={idx} className="plan-fact-chip">
+                <span className="plan-fact-code">{fact.code.replace(/_/g, ' ')}</span>
                 {fact.metric && (
-                  <span className="fact-metric">
+                  <span className="plan-fact-metric">
                     {fact.metric}: <strong>{typeof fact.value === 'number' ? (fact.value < 1 ? (fact.value * 100).toFixed(1) + '%' : fact.value) : String(fact.value)}</strong>
                   </span>
                 )}

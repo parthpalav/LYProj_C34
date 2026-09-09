@@ -26,22 +26,22 @@ export const FireScenariosTable: React.FC<FireScenariosTableProps> = ({ scenario
   }
 
   const scenarioList = [
-    { key: 'conservative', title: 'Conservative', item: scenarios.conservative, tagClass: 'tag-conservative' },
-    { key: 'base', title: 'Base (Current Plan)', item: scenarios.base, tagClass: 'tag-base' },
-    { key: 'optimistic', title: 'Optimistic', item: scenarios.optimistic, tagClass: 'tag-optimistic' },
+    { key: 'conservative', title: 'Conservative', item: scenarios.conservative, tagClass: 'plan-scenario-tag--conservative' },
+    { key: 'base', title: 'Base (Current Plan)', item: scenarios.base, tagClass: 'plan-scenario-tag--base' },
+    { key: 'optimistic', title: 'Optimistic', item: scenarios.optimistic, tagClass: 'plan-scenario-tag--optimistic' },
   ].filter((s) => Boolean(s.item));
 
   return (
-    <div className="fire-scenarios-container">
-      <div className="scenarios-header">
-        <h3 className="scenarios-title">Deterministic Retirement Scenarios</h3>
-        <p className="scenarios-subtitle">
+    <div className="plan-surface-card">
+      <div className="plan-section-header">
+        <h3 className="plan-section-title">Deterministic Retirement Scenarios</h3>
+        <p className="plan-section-subtitle">
           Market sensitivity analysis comparing conservative, base, and optimistic return/inflation environments
         </p>
       </div>
 
-      <div className="scenarios-table-wrapper">
-        <table className="scenarios-table">
+      <div className="plan-table-wrapper">
+        <table className="plan-table">
           <thead>
             <tr>
               <th>Scenario Profile</th>
@@ -61,23 +61,23 @@ export const FireScenariosTable: React.FC<FireScenariosTableProps> = ({ scenario
               const isBase = key === 'base';
 
               return (
-                <tr key={key} className={isBase ? 'highlight-row' : ''}>
-                  <td className="td-scenario-name">
-                    <span className={`scenario-tag ${tagClass}`}>{title}</span>
+                <tr key={key} className={isBase ? 'plan-table-highlight' : ''}>
+                  <td>
+                    <span className={`plan-scenario-tag ${tagClass}`}>{title}</span>
                   </td>
                   <td>{(assump.nominalReturn * 100).toFixed(1)}%</td>
                   <td>{(assump.inflation * 100).toFixed(1)}%</td>
-                  <td className="font-semibold">{(assump.realReturn * 100).toFixed(2)}%</td>
-                  <td className="td-corpus font-semibold">
+                  <td className="plan-text-bold">{(assump.realReturn * 100).toFixed(2)}%</td>
+                  <td className="td-value">
                     {formatINR(item.projectedCorpusAtRetirement)}
                   </td>
-                  <td className="td-age">
+                  <td>
                     {item.projectedFire.projectedAge !== null
                       ? `${item.projectedFire.projectedAge.toFixed(1)} yrs`
                       : '—'}
                   </td>
                   <td>{formatINR(item.requiredMonthlyContributionForEstimatedFire)}/mo</td>
-                  <td className={item.contributionGap && item.contributionGap > 0 ? 'gap-negative' : 'gap-positive'}>
+                  <td className={item.contributionGap && item.contributionGap > 0 ? 'plan-text-danger' : 'plan-text-success'}>
                     {item.contributionGap && item.contributionGap > 0
                       ? `+${formatINR(item.contributionGap)}/mo shortfall`
                       : 'Covered'}

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Pencil, Trash2 } from 'lucide-react';
 import type { Goal } from '../../types';
 
 interface GoalCardProps {
@@ -15,7 +16,7 @@ export const GoalCard: React.FC<GoalCardProps> = ({ goal, onEdit, onDelete }) =>
   const target = Number(goal.targetAmount) || 0;
   const saved = Number(goal.savedAmount) || 0;
 
-  // Correction #6: Presentation math only
+  // Presentation math only
   const progressPct = target > 0 ? Math.min(100, Math.round((saved / target) * 100)) : 0;
   const remaining = Math.max(0, target - saved);
 
@@ -27,68 +28,70 @@ export const GoalCard: React.FC<GoalCardProps> = ({ goal, onEdit, onDelete }) =>
     : null;
 
   return (
-    <div className="goal-card">
-      <div className="goal-card-header">
-        <div className="goal-identity">
-          <span className="goal-emoji" role="img" aria-label="Goal icon">
+    <div className="plan-goal-card">
+      <div className="plan-goal-card-header">
+        <div className="plan-goal-identity">
+          <span className="plan-goal-emoji" role="img" aria-label="Goal icon">
             {goal.emoji || '🎯'}
           </span>
-          <div className="goal-title-group">
-            <h4 className="goal-name">{goal.name}</h4>
-            {formattedDate && <span className="goal-date">Target: {formattedDate}</span>}
+          <div className="plan-goal-title-group">
+            <h4 className="plan-goal-name">{goal.name}</h4>
+            {formattedDate && <span className="plan-goal-date">Target: {formattedDate}</span>}
           </div>
         </div>
-        <div className="goal-actions">
+        <div className="plan-goal-actions">
           <button
             type="button"
-            className="btn-action edit"
+            className="plan-icon-btn plan-icon-btn--edit"
             onClick={() => onEdit(goal)}
             aria-label={`Edit ${goal.name}`}
+            title="Edit"
           >
-            Edit
+            <Pencil size={13} />
           </button>
           <button
             type="button"
-            className="btn-action delete"
+            className="plan-icon-btn plan-icon-btn--delete"
             onClick={() => onDelete(goal)}
             aria-label={`Delete ${goal.name}`}
+            title="Delete"
           >
-            Delete
+            <Trash2 size={13} />
           </button>
         </div>
       </div>
 
-      <div className="goal-values-row">
+      <div className="plan-goal-values">
         <div>
-          <span className="val-label">Saved</span>
-          <span className="val-number val-saved">{formatINR(saved)}</span>
+          <span className="plan-goal-val-label">Saved</span>
+          <span className="plan-goal-val-number plan-goal-val-number--saved">{formatINR(saved)}</span>
         </div>
         <div className="text-right">
-          <span className="val-label">Target</span>
-          <span className="val-number">{formatINR(target)}</span>
+          <span className="plan-goal-val-label">Target</span>
+          <span className="plan-goal-val-number">{formatINR(target)}</span>
         </div>
       </div>
 
-      <div className="goal-progress-bar-track">
+      <div className="plan-goal-progress-track">
         <div
-          className={`goal-progress-bar-fill ${progressPct >= 100 ? 'complete' : ''}`}
-          style={{ width: `${progressPct}%` }}
+          className={`plan-goal-progress-fill ${progressPct >= 100 ? 'plan-goal-progress-fill--complete' : ''}`}
+          style={{ '--goal-progress-width': `${progressPct}%` } as React.CSSProperties}
         />
       </div>
 
-      <div className="goal-card-footer">
-        <span className="goal-progress-text">
+      <div className="plan-goal-footer">
+        <span className="plan-goal-progress-text">
           {progressPct >= 100 ? '🎉 Goal Achieved!' : `${progressPct}% complete`}
         </span>
         {progressPct < 100 && (
-          <span className="goal-remaining-text">
+          <span className="plan-goal-remaining">
             {formatINR(remaining)} to go
           </span>
         )}
       </div>
 
       {goal.monthlyContribution !== undefined && goal.monthlyContribution > 0 && (
-        <div className="goal-monthly-commitment">
+        <div className="plan-goal-monthly">
           <span>Monthly saving: <strong>{formatINR(goal.monthlyContribution)}</strong></span>
         </div>
       )}

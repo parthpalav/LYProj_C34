@@ -1,4 +1,5 @@
 import React from 'react';
+import { Flame } from 'lucide-react';
 
 interface FireHeroSummaryProps {
   targetFireCorpus: number;
@@ -31,76 +32,81 @@ export const FireHeroSummary: React.FC<FireHeroSummaryProps> = ({
   projectedCorpusAtRetirement,
   fireProgressPercentage,
 }) => {
+  // isFireReached = projectedFire.reached from backend
+  // This indicates whether the model projects the corpus reaching the FIRE target
+  // within the savings horizon (via monthsToTarget projection)
+  const statusText = isFireReached
+    ? 'Projected corpus reaches target'
+    : 'Projected corpus below target';
+
   return (
-    <div className="fire-hero-container">
-      <div className="fire-hero-header">
+    <div className="plan-fire-hero">
+      <div className="plan-fire-hero-header">
         <div>
-          <span className="fire-hero-badge">Financial Independence, Retire Early</span>
-          <h2 className="fire-hero-title">FIRE Cockpit</h2>
+          <span className="plan-fire-hero-eyebrow">
+            <Flame size={14} /> FIRE — Financial Independence, Retire Early
+          </span>
+          <h2 className="plan-fire-hero-title">Retirement Projection</h2>
         </div>
-        <div className="fire-status-pill">
-          {isFireReached ? (
-            <span className="pill-success">🎯 On Track for Target</span>
-          ) : (
-            <span className="pill-warning">⚡ Saving Gap Identified</span>
-          )}
+        <div className={`plan-fire-status-pill ${isFireReached ? 'plan-fire-status-pill--reached' : 'plan-fire-status-pill--gap'}`}>
+          {statusText}
         </div>
       </div>
 
-      <div className="fire-hero-main-grid">
+      <div className="plan-fire-hero-grid">
         {/* Target FIRE Corpus */}
-        <div className="fire-hero-stat">
-          <span className="hero-stat-label">Target FIRE Corpus</span>
-          <span className="hero-stat-value primary-gradient-text">{formatINR(targetFireCorpus)}</span>
-          <span className="hero-stat-desc">
+        <div className="plan-fire-stat">
+          <span className="plan-fire-stat-label">Estimated FIRE Target</span>
+          <span className="plan-fire-stat-value plan-fire-stat-value--primary">{formatINR(targetFireCorpus)}</span>
+          <span className="plan-fire-stat-desc">
             Estimated capital required for sustainable withdrawal
           </span>
         </div>
 
         {/* Current Investable Corpus */}
-        <div className="fire-hero-stat">
-          <span className="hero-stat-label">Current Investable Corpus</span>
-          <span className="hero-stat-value">{formatINR(currentFireCorpus)}</span>
-          <span className="hero-stat-desc">
+        <div className="plan-fire-stat">
+          <span className="plan-fire-stat-label">Current Investable Corpus</span>
+          <span className="plan-fire-stat-value">{formatINR(currentFireCorpus)}</span>
+          <span className="plan-fire-stat-desc">
             Qualified assets allocated to FIRE portfolio
           </span>
         </div>
 
         {/* Projected Corpus at Retirement */}
-        <div className="fire-hero-stat">
-          <span className="hero-stat-label">Projected Corpus at Age {targetRetirementAge ?? 60}</span>
-          <span className="hero-stat-value">
+        <div className="plan-fire-stat">
+          <span className="plan-fire-stat-label">Projected Corpus at Age {targetRetirementAge ?? 60}</span>
+          <span className="plan-fire-stat-value">
             {projectedCorpusAtRetirement !== null ? formatINR(projectedCorpusAtRetirement) : '—'}
           </span>
-          <span className="hero-stat-desc">
+          <span className="plan-fire-stat-desc">
             Under base nominal return and inflation assumptions
           </span>
         </div>
 
-        {/* Projected FIRE Age */}
-        <div className="fire-hero-stat">
-          <span className="hero-stat-label">Projected FIRE Age</span>
-          <span className="hero-stat-value accent-text">
+        {/* Projected FIRE Age — direct backend field */}
+        <div className="plan-fire-stat">
+          <span className="plan-fire-stat-label">Projected FIRE Age</span>
+          <span className="plan-fire-stat-value plan-fire-stat-value--accent">
             {projectedFireAge !== null ? `${projectedFireAge.toFixed(1)} yrs` : 'Not in horizon'}
           </span>
-          <span className="hero-stat-desc">
+          <span className="plan-fire-stat-desc">
             {currentAge !== null && targetRetirementAge !== null
-              ? `Current age: ${currentAge} | Target age: ${targetRetirementAge}`
+              ? `Current age: ${currentAge} · Target age: ${targetRetirementAge}`
               : 'Based on current savings trajectory'}
           </span>
         </div>
       </div>
 
       {/* FIRE Progress Track */}
-      <div className="fire-progress-card">
-        <div className="fire-progress-header">
+      <div className="plan-fire-progress">
+        <div className="plan-fire-progress-header">
           <span>Corpus Funding Progress</span>
           <span><strong>{fireProgressPercentage}%</strong> of target achieved</span>
         </div>
-        <div className="fire-progress-track">
+        <div className="plan-fire-progress-track">
           <div
-            className="fire-progress-fill"
-            style={{ width: `${fireProgressPercentage}%` }}
+            className="plan-fire-progress-fill"
+            style={{ '--fire-progress-width': `${fireProgressPercentage}%` } as React.CSSProperties}
           />
         </div>
       </div>

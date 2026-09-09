@@ -1,4 +1,5 @@
 import React from 'react';
+import { Target, Plus } from 'lucide-react';
 import type { Goal } from '../../types';
 import { GoalCard } from './GoalCard';
 
@@ -26,53 +27,53 @@ export const GoalsGrid: React.FC<GoalsGridProps> = ({
   onDeleteGoal,
 }) => {
   return (
-    <div className="goals-section-container">
+    <div className="plan-goals-section">
       {/* Summary Header */}
-      <div className="goals-summary-card">
-        <div className="goals-summary-info">
-          <h3 className="goals-title">Financial Goals</h3>
-          <p className="goals-subtitle">
+      <div className="plan-surface-card plan-section-header--row">
+        <div className="plan-goals-summary-info">
+          <h3 className="plan-section-title">Financial Goals</h3>
+          <p className="plan-section-subtitle">
             Track and fund your specific milestones, buffers, and life achievements
           </p>
-          <div className="goals-metrics-row">
-            <div className="goal-stat-item">
-              <span className="stat-label">Active Goals</span>
-              <span className="stat-value">{goals.length}</span>
+          <div className="plan-goals-metrics">
+            <div className="plan-goals-stat">
+              <span className="plan-goals-stat-label">Active Goals</span>
+              <span className="plan-goals-stat-value">{goals.length}</span>
             </div>
-            <div className="goal-stat-item">
-              <span className="stat-label">Total Target</span>
-              <span className="stat-value">{formatINR(totalTargetAmount)}</span>
+            <div className="plan-goals-stat">
+              <span className="plan-goals-stat-label">Total Target</span>
+              <span className="plan-goals-stat-value">{formatINR(totalTargetAmount)}</span>
             </div>
-            <div className="goal-stat-item">
-              <span className="stat-label">Total Saved</span>
-              <span className="stat-value val-saved">{formatINR(totalSavedAmount)}</span>
+            <div className="plan-goals-stat">
+              <span className="plan-goals-stat-label">Total Saved</span>
+              <span className="plan-goals-stat-value plan-goals-stat-value--saved">{formatINR(totalSavedAmount)}</span>
             </div>
-            <div className="goal-stat-item">
-              <span className="stat-label">Overall Progress</span>
-              <span className="stat-value">{overallProgressPercentage}%</span>
+            <div className="plan-goals-stat">
+              <span className="plan-goals-stat-label">Overall Progress</span>
+              <span className="plan-goals-stat-value">{overallProgressPercentage}%</span>
             </div>
           </div>
         </div>
 
-        <button type="button" className="btn btn-primary add-goal-btn" onClick={onAddGoal}>
-          + Create New Goal
+        <button type="button" className="btn btn-primary plan-add-btn" onClick={onAddGoal}>
+          <Plus size={15} /> Create Goal
         </button>
       </div>
 
       {/* Goals Cards Grid */}
       {goals.length === 0 ? (
-        <div className="goals-empty-state">
-          <div className="empty-icon">🎯</div>
-          <h4 className="empty-title">No financial goals created yet</h4>
-          <p className="empty-desc">
-            Define specific milestones like an Emergency Fund, Vacation, or Downpayment to organize your savings.
+        <div className="plan-empty-state">
+          <Target size={40} className="plan-empty-icon" />
+          <h4 className="plan-empty-title">No financial goals created yet</h4>
+          <p className="plan-empty-desc">
+            Create a financial goal to begin tracking progress.
           </p>
           <button type="button" className="btn btn-primary" onClick={onAddGoal}>
             Create Your First Goal
           </button>
         </div>
       ) : (
-        <div className="goals-cards-grid">
+        <div className="plan-goals-grid">
           {goals.map((goal) => (
             <GoalCard
               key={goal.id}

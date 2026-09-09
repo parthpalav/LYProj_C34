@@ -1,6 +1,8 @@
 /* oxlint-disable react/set-state-in-effect */
 import React, { useState, useEffect } from 'react';
 import type { Goal } from '../../types';
+import { Modal } from '../ui/Modal';
+import { Button } from '../ui/Button';
 
 interface GoalModalProps {
   isOpen: boolean;
@@ -48,8 +50,6 @@ export const GoalModal: React.FC<GoalModalProps> = ({
     }
     setError(null);
   }, [goalToEdit, isOpen]);
-
-  if (!isOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -108,129 +108,146 @@ export const GoalModal: React.FC<GoalModalProps> = ({
   };
 
   return (
-    <div className="modal-overlay" role="dialog" aria-modal="true">
-      <div className="modal-card">
-        <div className="modal-header">
-          <h3 className="modal-title">{goalToEdit ? 'Edit Financial Goal' : 'Create Financial Goal'}</h3>
-          <button type="button" className="btn-close" onClick={onClose} aria-label="Close">
-            ✕
-          </button>
-        </div>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={goalToEdit ? 'Edit Financial Goal' : 'Create Financial Goal'}
+      subtitle={
+        goalToEdit
+          ? 'Update target corpus, target timeline, or monthly commitment'
+          : 'Define a measurable target to track progress alongside retirement'
+      }
+      maxWidth="540px"
+    >
+      <form onSubmit={handleSubmit} className="plan-modal-form">
+        {error && (
+          <div className="form-error-banner" role="alert">
+            <span>{error}</span>
+          </div>
+        )}
 
-        <form onSubmit={handleSubmit} className="modal-form">
-          {error && <div className="form-error-banner">{error}</div>}
-
-          <div className="form-row emoji-name-row">
-            <div className="form-group emoji-picker-group">
-              <label htmlFor="goal-emoji-select" className="form-label">Icon</label>
-              <select
-                id="goal-emoji-select"
-                className="form-select emoji-select"
-                value={emoji}
-                onChange={(e) => setEmoji(e.target.value)}
-              >
-                {EMOJI_OPTIONS.map((em) => (
-                  <option key={em} value={em}>
-                    {em}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="form-group flex-1">
-              <label htmlFor="goal-name" className="form-label">
-                Goal Name *
-              </label>
-              <input
-                id="goal-name"
-                type="text"
-                className="form-input"
-                placeholder="e.g. Emergency Fund, Eurotrip, Car Downpayment"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
-            </div>
+        <div className="form-row emoji-name-row">
+          <div className="form-group emoji-picker-group" style={{ maxWidth: '80px' }}>
+            <label htmlFor="goal-emoji-select" className="form-label">
+              Icon
+            </label>
+            <select
+              id="goal-emoji-select"
+              className="form-select emoji-select"
+              value={emoji}
+              onChange={(e) => setEmoji(e.target.value)}
+              style={{ fontSize: '1.25rem', textAlign: 'center', padding: '8px' }}
+            >
+              {EMOJI_OPTIONS.map((em) => (
+                <option key={em} value={em}>
+                  {em}
+                </option>
+              ))}
+            </select>
           </div>
 
-          <div className="form-row">
-            <div className="form-group flex-1">
-              <label htmlFor="target-amount" className="form-label">
-                Target Amount (₹) *
-              </label>
+          <div className="form-group flex-1">
+            <label htmlFor="goal-name" className="form-label">
+              Goal Name <span className="text-danger">*</span>
+            </label>
+            <input
+              id="goal-name"
+              type="text"
+              className="form-input"
+              placeholder="e.g. Emergency Fund, Eurotrip, Home Downpayment"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </div>
+        </div>
+
+        <div className="form-row">
+          <div className="form-group flex-1">
+            <label htmlFor="target-amount" className="form-label">
+              Target Amount (₹) <span className="text-danger">*</span>
+            </label>
+            <div className="input-currency-wrapper">
+              <span className="currency-prefix">₹</span>
               <input
                 id="target-amount"
                 type="number"
                 step="any"
                 min="1"
-                className="form-input"
-                placeholder="₹ Target"
+                className="form-input currency-input"
+                placeholder="0.00"
                 value={targetAmount}
                 onChange={(e) => setTargetAmount(e.target.value)}
                 required
               />
             </div>
+          </div>
 
-            {goalToEdit && (
-              <div className="form-group flex-1">
-                <label htmlFor="saved-amount" className="form-label">
-                  Already Saved (₹)
-                </label>
+          {goalToEdit && (
+            <div className="form-group flex-1">
+              <label htmlFor="saved-amount" className="form-label">
+                Already Saved (₹)
+              </label>
+              <div className="input-currency-wrapper">
+                <span className="currency-prefix">₹</span>
                 <input
                   id="saved-amount"
                   type="number"
                   step="any"
                   min="0"
-                  className="form-input"
-                  placeholder="₹ Saved"
+                  className="form-input currency-input"
+                  placeholder="0.00"
                   value={savedAmount}
                   onChange={(e) => setSavedAmount(e.target.value)}
                 />
               </div>
-            )}
+            </div>
+          )}
+        </div>
+
+        <div className="form-row">
+          <div className="form-group flex-1">
+            <label htmlFor="target-date" className="form-label">
+              Target Completion Date
+            </label>
+            <input
+              id="target-date"
+              type="date"
+              className="form-input"
+              value={targetDate}
+              onChange={(e) => setTargetDate(e.target.value)}
+            />
           </div>
 
-          <div className="form-row">
-            <div className="form-group flex-1">
-              <label htmlFor="target-date" className="form-label">
-                Target Date (Optional)
-              </label>
-              <input
-                id="target-date"
-                type="date"
-                className="form-input"
-                value={targetDate}
-                onChange={(e) => setTargetDate(e.target.value)}
-              />
-            </div>
-
-            <div className="form-group flex-1">
-              <label htmlFor="monthly-contribution" className="form-label">
-                Planned Monthly Saving (₹)
-              </label>
+          <div className="form-group flex-1">
+            <label htmlFor="monthly-contribution" className="form-label">
+              Monthly Saving (₹ / mo)
+            </label>
+            <div className="input-currency-wrapper">
+              <span className="currency-prefix">₹</span>
               <input
                 id="monthly-contribution"
                 type="number"
                 step="any"
                 min="0"
-                className="form-input"
-                placeholder="₹ / month"
+                className="form-input currency-input"
+                placeholder="Optional"
                 value={monthlyContribution}
                 onChange={(e) => setMonthlyContribution(e.target.value)}
               />
             </div>
           </div>
+        </div>
 
-          <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" onClick={onClose} disabled={saving}>
-              Cancel
-            </button>
-            <button type="submit" className="btn btn-primary" disabled={saving}>
-              {saving ? 'Saving...' : goalToEdit ? 'Save Changes' : 'Create Goal'}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+        <div className="modal-footer" style={{ marginTop: '20px', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+          <Button type="button" variant="outline" onClick={onClose} disabled={saving}>
+            Cancel
+          </Button>
+          <Button type="submit" variant="primary" disabled={saving}>
+            {saving ? 'Saving...' : goalToEdit ? 'Save Changes' : 'Create Goal'}
+          </Button>
+        </div>
+      </form>
+    </Modal>
   );
 };

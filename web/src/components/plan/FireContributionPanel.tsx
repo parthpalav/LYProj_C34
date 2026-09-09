@@ -1,4 +1,5 @@
 import React from 'react';
+import { Info } from 'lucide-react';
 
 interface FireContributionPanelProps {
   requiredMonthlyContribution: number | null;
@@ -19,49 +20,49 @@ export const FireContributionPanel: React.FC<FireContributionPanelProps> = ({
   const hasGap = contributionGap !== null && contributionGap > 0;
 
   return (
-    <div className="fire-contribution-container">
-      <div className="contribution-header">
-        <h3 className="contribution-title">Contribution Solvers & Required Savings</h3>
-        <p className="contribution-subtitle">
-          Authoritative monthly savings requirements to fully fund the estimated FIRE target
+    <div className="plan-surface-card">
+      <div className="plan-section-header">
+        <h3 className="plan-section-title">Contribution Requirements</h3>
+        <p className="plan-section-subtitle">
+          Monthly savings requirements modeled to fund the estimated FIRE target
         </p>
       </div>
 
-      <div className="contribution-metrics-grid">
-        <div className="contrib-metric-card">
-          <span className="contrib-metric-label">Required Monthly Investment</span>
-          <span className="contrib-metric-value primary-color">
+      <div className="plan-contrib-grid">
+        <div className="plan-contrib-card">
+          <span className="plan-contrib-label">Required Monthly Investment</span>
+          <span className="plan-contrib-value plan-contrib-value--primary">
             {formatINR(requiredMonthlyContribution)}
           </span>
-          <span className="contrib-metric-hint">Nominal flat monthly requirement to reach target</span>
+          <span className="plan-contrib-hint">Nominal flat monthly requirement to reach target</span>
         </div>
 
-        <div className="contrib-metric-card">
-          <span className="contrib-metric-label">Observed Monthly Contribution</span>
-          <span className="contrib-metric-value">
+        <div className="plan-contrib-card">
+          <span className="plan-contrib-label">Observed Monthly Contribution</span>
+          <span className="plan-contrib-value">
             {formatINR(currentMonthlyContribution)}
           </span>
-          <span className="contrib-metric-hint">Based on recent observed investment cash flows</span>
+          <span className="plan-contrib-hint">Based on recent observed investment cash flows</span>
         </div>
 
-        <div className={`contrib-metric-card ${hasGap ? 'card-warning' : 'card-success'}`}>
-          <span className="contrib-metric-label">Monthly Contribution Gap</span>
-          <span className="contrib-metric-value">
+        <div className={`plan-contrib-card ${hasGap ? 'plan-contrib-card--warning' : 'plan-contrib-card--ok'}`}>
+          <span className="plan-contrib-label">Monthly Contribution Gap</span>
+          <span className="plan-contrib-value">
             {hasGap ? `-${formatINR(contributionGap)}` : '₹0 (Fully Funded)'}
           </span>
-          <span className="contrib-metric-hint">
+          <span className="plan-contrib-hint">
             {hasGap
-              ? 'Additional monthly investment needed to meet retirement corpus'
+              ? 'Additional monthly investment modeled to meet retirement corpus'
               : 'Current contribution satisfies modeled requirement'}
           </span>
         </div>
       </div>
 
-      <div className="contribution-policy-note">
-        <span className="policy-note-icon">📌</span>
-        <p className="policy-note-text">
-          Under the current assumptions, the model projects that maintaining a regular investment of{' '}
-          <strong>{formatINR(requiredMonthlyContribution)}/month</strong> aligns with reaching your target FIRE corpus at retirement. Projections assume steady market returns and long-term discipline.
+      <div className="plan-policy-note">
+        <Info size={16} className="plan-policy-note-icon" />
+        <p className="plan-policy-note-text">
+          Under current assumptions, the model estimates that maintaining a regular investment of{' '}
+          <strong>{formatINR(requiredMonthlyContribution)}/month</strong> aligns with reaching the estimated FIRE target at retirement. Projections assume steady market returns and long-term discipline.
         </p>
       </div>
     </div>

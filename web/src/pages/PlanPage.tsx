@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { RefreshCw } from 'lucide-react';
 import { PlanTabs, type PlanTabKey } from '../components/plan/PlanTabs';
 
 // Net Worth Components
@@ -40,21 +41,10 @@ import { Button } from '../components/ui/Button';
 import type { Asset, Goal } from '../types';
 
 const TabLoadingSkeleton: React.FC<{ height?: string }> = ({ height = '260px' }) => (
-  <div
-    className="plan-card animate-pulse"
-    style={{
-      height,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      backgroundColor: 'var(--bg-surface-subtle, #f8fafc)',
-      borderRadius: '12px',
-      border: '1px solid var(--border-color, #e2e8f0)',
-    }}
-  >
-    <div style={{ textAlign: 'center', color: 'var(--text-muted, #94a3b8)' }}>
-      <div className="skeleton-spinner" style={{ margin: '0 auto 12px' }} />
-      <span>Loading planning analytics...</span>
+  <div className="plan-skeleton" style={{ height }}>
+    <div className="plan-skeleton-inner">
+      <div className="plan-spinner" />
+      <span>Loading planning analytics…</span>
     </div>
   </div>
 );
@@ -176,16 +166,17 @@ export const PlanPage: React.FC = () => {
   };
 
   return (
-    <div className="plan-page-container">
+    <div className="plan-page">
       {/* Page Header */}
-      <div className="plan-header-row">
+      <div className="page-header-section">
         <div>
-          <h1 className="plan-main-title">Financial Planning Workspace</h1>
-          <p className="plan-main-subtitle">
-            Where am I financially heading, and how can I improve the outcome?
+          <span className="page-header-eyebrow">WEALTH PLANNING</span>
+          <h1 className="page-header-title">Plan</h1>
+          <p className="page-header-subtitle">
+            Model your financial trajectory and prepare for long-term goals.
           </p>
         </div>
-        <div className="plan-header-actions">
+        <div className="page-header-actions">
           <Button
             type="button"
             variant="outline"
@@ -193,7 +184,7 @@ export const PlanPage: React.FC = () => {
             onClick={handleGlobalRefresh}
             className="refresh-btn"
           >
-            ↻ Refresh Data
+            <RefreshCw size={14} /> Refresh
           </Button>
         </div>
       </div>
@@ -202,14 +193,14 @@ export const PlanPage: React.FC = () => {
       <PlanTabs activeTab={activeTab} onTabChange={handleTabChange} />
 
       {/* TAB CONTENT AREAS */}
-      <div className="plan-tab-content-wrapper">
+      <div className="plan-tab-content">
         {/* 1. NET WORTH TAB */}
         {activeTab === 'net-worth' && (
-          <div className="plan-tab-pane">
+          <div className="plan-tab-pane plan-tab-pane--enter">
             {netWorth.loading ? (
               <TabLoadingSkeleton height="380px" />
             ) : netWorth.error ? (
-              <div className="plan-card error-card">
+              <div className="plan-surface-card plan-error-card">
                 <h4>Error loading Net Worth</h4>
                 <p>{netWorth.error}</p>
                 <Button variant="outline" size="sm" onClick={() => netWorth.refresh(true)}>
@@ -240,11 +231,11 @@ export const PlanPage: React.FC = () => {
 
         {/* 2. ASSETS TAB */}
         {activeTab === 'assets' && (
-          <div className="plan-tab-pane">
+          <div className="plan-tab-pane plan-tab-pane--enter">
             {assetsDomain.loading ? (
               <TabLoadingSkeleton height="380px" />
             ) : assetsDomain.error ? (
-              <div className="plan-card error-card">
+              <div className="plan-surface-card plan-error-card">
                 <h4>Error loading Assets</h4>
                 <p>{assetsDomain.error}</p>
                 <Button variant="outline" size="sm" onClick={() => assetsDomain.refresh(true)}>
@@ -264,11 +255,11 @@ export const PlanPage: React.FC = () => {
 
         {/* 3. GOALS TAB */}
         {activeTab === 'goals' && (
-          <div className="plan-tab-pane">
+          <div className="plan-tab-pane plan-tab-pane--enter">
             {goalsDomain.loading ? (
               <TabLoadingSkeleton height="380px" />
             ) : goalsDomain.error ? (
-              <div className="plan-card error-card">
+              <div className="plan-surface-card plan-error-card">
                 <h4>Error loading Goals</h4>
                 <p>{goalsDomain.error}</p>
                 <Button variant="outline" size="sm" onClick={() => goalsDomain.refresh(true)}>
@@ -291,11 +282,11 @@ export const PlanPage: React.FC = () => {
 
         {/* 4. FIRE TAB */}
         {activeTab === 'fire' && (
-          <div className="plan-tab-pane">
+          <div className="plan-tab-pane plan-tab-pane--enter">
             {fireDomain.loading ? (
               <TabLoadingSkeleton height="420px" />
             ) : fireDomain.error ? (
-              <div className="plan-card error-card">
+              <div className="plan-surface-card plan-error-card">
                 <h4>Error loading FIRE Projections</h4>
                 <p>{fireDomain.error}</p>
                 <Button variant="outline" size="sm" onClick={() => fireDomain.refresh(true)}>
@@ -335,11 +326,11 @@ export const PlanPage: React.FC = () => {
 
         {/* 5. SCENARIO LAB TAB */}
         {activeTab === 'scenarios' && (
-          <div className="plan-tab-pane">
+          <div className="plan-tab-pane plan-tab-pane--enter">
             {scenarioLab.loadingBaseline ? (
               <TabLoadingSkeleton height="420px" />
             ) : scenarioLab.error && !scenarioLab.baselineSnapshot ? (
-              <div className="plan-card error-card">
+              <div className="plan-surface-card plan-error-card">
                 <h4>Error loading Scenario Lab</h4>
                 <p>{scenarioLab.error}</p>
                 <Button variant="outline" size="sm" onClick={() => scenarioLab.resetToBaseline()}>
@@ -371,7 +362,7 @@ export const PlanPage: React.FC = () => {
                   evaluating={scenarioLab.evaluating}
                 />
                 {scenarioLab.error && (
-                  <div className="scenario-eval-error">
+                  <div className="plan-eval-error">
                     <span>⚠️ Evaluation notice: {scenarioLab.error}</span>
                   </div>
                 )}

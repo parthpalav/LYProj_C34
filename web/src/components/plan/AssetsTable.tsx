@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import { TrendingUp, Pencil, Trash2, Flame, Ban, Plus } from 'lucide-react';
 import type { Asset } from '../../types';
 import { getAssetClassLabel, getAssetLiquidityLabel } from '../../hooks/useAssets';
 
@@ -19,44 +20,80 @@ export const AssetsTable: React.FC<AssetsTableProps> = ({
   onEditAsset,
   onDeleteAsset,
 }) => {
+  // Presentation-only aggregation by assetClass — uses exact persisted values
+  const classSummary = useMemo(() => {
+    const map: Record<string, number> = {};
+    let total = 0;
+    assets.forEach((a) => {
+      const cls = a.assetClass || 'OTHER';
+      map[cls] = (map[cls] || 0) + (Number(a.currentValue) || 0);
+      total += Number(a.currentValue) || 0;
+    });
+    return { map, total };
+  }, [assets]);
+
   return (
-    <div className="assets-table-container">
-      <div className="assets-table-header">
+    <div className="plan-surface-card">
+      <div className="plan-section-header plan-section-header--row">
         <div>
-          <h3 className="assets-title">Financial Assets Ledger</h3>
-          <p className="assets-subtitle">
+          <h3 className="plan-section-title">Financial Assets Ledger</h3>
+          <p className="plan-section-subtitle">
             Manage your investment portfolio, liquid reserves, and capital assets
           </p>
         </div>
         <button
           type="button"
-          className="btn btn-primary add-asset-btn"
+          className="btn btn-primary plan-add-btn"
           onClick={onAddAsset}
         >
-          + Add New Asset
+          <Plus size={15} /> Add Asset
         </button>
       </div>
 
+      {/* Summary Strip — classification of asset records */}
+      {assets.length > 0 && (
+        <div className="plan-assets-summary-strip">
+          <div className="plan-assets-summary-item">
+            <span className="plan-assets-summary-label">Total Assets</span>
+            <span className="plan-assets-summary-value">{formatINR(classSummary.total)}</span>
+          </div>
+          {classSummary.map.FIRE_INVESTABLE !== undefined && (
+            <div className="plan-assets-summary-item">
+              <span className="plan-assets-summary-label">FIRE Investable</span>
+              <span className="plan-assets-summary-value">{formatINR(classSummary.map.FIRE_INVESTABLE || 0)}</span>
+            </div>
+          )}
+          {classSummary.map.SEMI_LIQUID !== undefined && (
+            <div className="plan-assets-summary-item">
+              <span className="plan-assets-summary-label">Semi-Liquid</span>
+              <span className="plan-assets-summary-value">{formatINR(classSummary.map.SEMI_LIQUID || 0)}</span>
+            </div>
+          )}
+          {classSummary.map.NON_INVESTABLE !== undefined && (
+            <div className="plan-assets-summary-item">
+              <span className="plan-assets-summary-label">Non-Investable</span>
+              <span className="plan-assets-summary-value">{formatINR(classSummary.map.NON_INVESTABLE || 0)}</span>
+            </div>
+          )}
+        </div>
+      )}
+
       {assets.length === 0 ? (
-        <div className="assets-empty-state">
-          <div className="empty-icon">📈</div>
-          <h4 className="empty-title">No assets recorded yet</h4>
-          <p className="empty-desc">
-            Add assets to build a clearer view of your financial independence and retirement projections.
+        <div className="plan-empty-state">
+          <TrendingUp size={40} className="plan-empty-icon" />
+          <h4 className="plan-empty-title">No assets recorded yet</h4>
+          <p className="plan-empty-desc">
+            Add assets to include them in your financial planning view.
           </p>
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={onAddAsset}
-          >
+          <button type="button" className="btn btn-primary" onClick={onAddAsset}>
             Record Your First Asset
           </button>
         </div>
       ) : (
         <>
           {/* Desktop Table View */}
-          <div className="assets-table-wrapper desktop-only">
-            <table className="assets-table">
+          <div className="plan-table-wrapper desktop-only">
+            <table className="plan-table">
               <thead>
                 <tr>
                   <th>Asset Name</th>
@@ -75,6 +112,7 @@ export const AssetsTable: React.FC<AssetsTableProps> = ({
                     asset.annualReturnRate !== undefined && asset.annualReturnRate !== null
                       ? `${(asset.annualReturnRate * 100).toFixed(1)}%`
                       : 'Default (8.0%)';
+                  const hasExplicitReturn = asset.annualReturnRate !== undefined && asset.annualReturnRate !== null;
 
                   return (
                     <tr key={asset.id}>
@@ -83,43 +121,53 @@ export const AssetsTable: React.FC<AssetsTableProps> = ({
                         {asset.notes && <span className="td-notes">{asset.notes}</span>}
                       </td>
                       <td>
-                        <span className="badge badge-type">{asset.assetType}</span>
+                        <span className="plan-badge plan-badge--type">{asset.assetType}</span>
                       </td>
                       <td>
-                        <span className={`badge badge-class badge-${asset.assetClass.toLowerCase()}`}>
+                        <span className={`plan-badge plan-badge--class plan-badge--${asset.assetClass.toLowerCase()}`}>
                           {getAssetClassLabel(asset.assetClass)}
                         </span>
                       </td>
                       <td>
-                        <span className="badge badge-liquidity">
+                        <span className="plan-badge plan-badge--liquidity">
                           {getAssetLiquidityLabel(asset.liquidity)}
                         </span>
                       </td>
-                      <td className="td-return">{returnRateStr}</td>
+                      <td className="td-return">
+                        <span className={hasExplicitReturn ? '' : 'plan-text-muted'}>
+                          {returnRateStr}
+                        </span>
+                      </td>
                       <td className="td-value">{formatINR(asset.currentValue)}</td>
                       <td>
                         {asset.includedInFireCorpus ? (
-                          <span className="fire-badge fire-included">🔥 In FIRE</span>
+                          <span className="plan-fire-badge plan-fire-badge--in">
+                            <Flame size={12} /> Included in FIRE corpus
+                          </span>
                         ) : (
-                          <span className="fire-badge fire-excluded">Excluded</span>
+                          <span className="plan-fire-badge plan-fire-badge--out">
+                            <Ban size={12} /> Excluded from FIRE corpus
+                          </span>
                         )}
                       </td>
                       <td className="td-actions">
                         <button
                           type="button"
-                          className="btn-action edit"
+                          className="plan-icon-btn plan-icon-btn--edit"
                           onClick={() => onEditAsset(asset)}
                           aria-label={`Edit ${asset.name}`}
+                          title="Edit"
                         >
-                          Edit
+                          <Pencil size={14} />
                         </button>
                         <button
                           type="button"
-                          className="btn-action delete"
+                          className="plan-icon-btn plan-icon-btn--delete"
                           onClick={() => onDeleteAsset(asset)}
                           aria-label={`Delete ${asset.name}`}
+                          title="Delete"
                         >
-                          Delete
+                          <Trash2 size={14} />
                         </button>
                       </td>
                     </tr>
@@ -130,7 +178,7 @@ export const AssetsTable: React.FC<AssetsTableProps> = ({
           </div>
 
           {/* Mobile Cards View */}
-          <div className="assets-cards-wrapper mobile-only">
+          <div className="plan-cards-stack mobile-only">
             {assets.map((asset) => {
               const returnRateStr =
                 asset.annualReturnRate !== undefined && asset.annualReturnRate !== null
@@ -138,49 +186,55 @@ export const AssetsTable: React.FC<AssetsTableProps> = ({
                   : 'Default (8.0%)';
 
               return (
-                <div key={asset.id} className="asset-mobile-card">
-                  <div className="card-top">
-                    <div className="card-identity">
-                      <h4 className="card-name">{asset.name}</h4>
-                      <span className="badge badge-type">{asset.assetType}</span>
+                <div key={asset.id} className="plan-asset-card">
+                  <div className="plan-asset-card-top">
+                    <div className="plan-asset-card-identity">
+                      <h4 className="plan-asset-card-name">{asset.name}</h4>
+                      <span className="plan-badge plan-badge--type">{asset.assetType}</span>
                     </div>
-                    <span className="card-value">{formatINR(asset.currentValue)}</span>
+                    <span className="plan-asset-card-value">{formatINR(asset.currentValue)}</span>
                   </div>
 
-                  <div className="card-badges">
-                    <span className={`badge badge-class badge-${asset.assetClass.toLowerCase()}`}>
+                  <div className="plan-asset-card-badges">
+                    <span className={`plan-badge plan-badge--class plan-badge--${asset.assetClass.toLowerCase()}`}>
                       {getAssetClassLabel(asset.assetClass)}
                     </span>
-                    <span className="badge badge-liquidity">
+                    <span className="plan-badge plan-badge--liquidity">
                       {getAssetLiquidityLabel(asset.liquidity)}
                     </span>
                     {asset.includedInFireCorpus ? (
-                      <span className="fire-badge fire-included">🔥 In FIRE</span>
+                      <span className="plan-fire-badge plan-fire-badge--in">
+                        <Flame size={11} /> In FIRE
+                      </span>
                     ) : (
-                      <span className="fire-badge fire-excluded">Excluded</span>
+                      <span className="plan-fire-badge plan-fire-badge--out">
+                        <Ban size={11} /> Excluded
+                      </span>
                     )}
                   </div>
 
-                  <div className="card-meta">
+                  <div className="plan-asset-card-meta">
                     <span>Expected Return: <strong>{returnRateStr}</strong></span>
                   </div>
 
-                  {asset.notes && <p className="card-notes">{asset.notes}</p>}
+                  {asset.notes && <p className="plan-asset-card-notes">{asset.notes}</p>}
 
-                  <div className="card-actions">
+                  <div className="plan-asset-card-actions">
                     <button
                       type="button"
-                      className="btn-action edit"
+                      className="plan-icon-btn plan-icon-btn--edit"
                       onClick={() => onEditAsset(asset)}
+                      aria-label={`Edit ${asset.name}`}
                     >
-                      Edit
+                      <Pencil size={13} /> Edit
                     </button>
                     <button
                       type="button"
-                      className="btn-action delete"
+                      className="plan-icon-btn plan-icon-btn--delete"
                       onClick={() => onDeleteAsset(asset)}
+                      aria-label={`Delete ${asset.name}`}
                     >
-                      Delete
+                      <Trash2 size={13} /> Delete
                     </button>
                   </div>
                 </div>

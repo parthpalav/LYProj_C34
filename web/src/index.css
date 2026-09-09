@@ -4642,14 +4642,25 @@ a:focus-visible {
    PLANNING WORKSPACE STYLES (PART 6 SPECIFICATION)
    ========================================================================== */
 
-.plan-page-container {
+.plan-page {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 1.5rem;
   width: 100%;
   max-width: 1280px;
   margin: 0 auto;
-  padding-bottom: 40px;
+  padding-bottom: 3rem;
+}
+
+/* Also support .plan-page-container if any wrapper uses it */
+.plan-page-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-bottom: 3rem;
 }
 
 .plan-header-row {
@@ -4722,40 +4733,119 @@ a:focus-visible {
   font-size: 1rem;
 }
 
-.plan-tab-content-wrapper {
+.plan-tab-content-wrapper,
+.plan-tab-content {
   width: 100%;
 }
 
 .plan-tab-pane {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 1.5rem;
+}
+
+.plan-tab-pane--enter {
+  animation: fadeInScale 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Tab Loading Skeleton */
+.plan-skeleton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl, 16px);
+  box-shadow: var(--shadow-sm);
+  width: 100%;
+}
+
+.plan-skeleton-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--text-tertiary);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.plan-spinner {
+  width: 28px;
+  height: 28px;
+  border: 2.5px solid var(--border-default);
+  border-top-color: var(--accent-primary, #6366f1);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.plan-surface-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl, 16px);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.plan-error-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
+  border-color: rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.04);
+}
+
+.plan-error-card h4 {
+  margin: 0;
+  color: #ef4444;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.plan-error-card p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
 }
 
 /* ── Net Worth Styles ─────────────────────────────────────────────────────── */
 .net-worth-summary-grid {
   display: grid;
   grid-template-columns: 1.2fr 2fr;
-  gap: 20px;
+  gap: 1.25rem;
 }
 
 .net-worth-hero-card {
-  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-  border: 1px solid #334155;
+  background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-surface-subtle, #f8fafc) 100%);
+  border: 1px solid var(--border-default);
+  border-top: 3px solid var(--accent-primary, #6366f1);
   border-radius: var(--radius-xl, 16px);
-  padding: 28px;
-  color: #ffffff;
+  padding: 1.75rem;
   display: flex;
   flex-direction: column;
-  justifyContent: center;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.net-worth-hero-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 160px;
+  height: 160px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
+  pointer-events: none;
 }
 
 .net-worth-hero-header {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  margin-bottom: 12px;
+  gap: 0.25rem;
+  margin-bottom: 0.75rem;
 }
 
 .net-worth-hero-badge {
@@ -4763,45 +4853,42 @@ a:focus-visible {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-weight: 700;
-  color: #38bdf8;
-}
-
-.net-worth-hero-subtitle {
-  font-size: 0.85rem;
-  color: #94a3b8;
+  color: var(--accent-primary, #6366f1);
 }
 
 .net-worth-hero-title {
   font-size: 1.1rem;
   font-weight: 600;
-  color: #cbd5e1;
-  margin: 0 0 6px 0;
+  color: var(--text-secondary);
+  margin: 0 0 0.375rem 0;
 }
 
 .net-worth-hero-value {
-  font-size: 2.75rem;
+  font-size: 2.5rem;
   font-weight: 800;
   letter-spacing: -0.03em;
-  color: #ffffff;
-  margin-bottom: 16px;
-  background: linear-gradient(90deg, #38bdf8 0%, #818cf8 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
   font-variant-numeric: tabular-nums;
 }
 
 .net-worth-hero-meta {
-  font-size: 0.9rem;
-  color: #94a3b8;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.375rem;
 }
 
 .net-worth-hero-meta strong {
-  color: #f1f5f9;
+  color: var(--text-primary);
+  font-weight: 600;
 }
 
 .meta-sep {
-  margin: 0 8px;
-  color: #475569;
+  margin: 0 0.25rem;
+  color: var(--border-default);
 }
 
 .net-worth-aux-grid {
@@ -5428,21 +5515,36 @@ a:focus-visible {
 
 /* ── FIRE Cockpit Styles ─────────────────────────────────────────────────── */
 .fire-hero-container {
-  background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%);
-  border: 1px solid #312e81;
+  background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-surface-subtle, #f8fafc) 100%);
+  border: 1px solid var(--border-default);
+  border-top: 3px solid #f59e0b;
   border-radius: var(--radius-xl, 16px);
-  padding: 28px;
-  color: #ffffff;
+  padding: 1.75rem;
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.2);
+  gap: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.fire-hero-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.08) 0%, transparent 70%);
+  pointer-events: none;
 }
 
 .fire-hero-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 0.75rem;
 }
 
 .fire-hero-badge {
@@ -5450,99 +5552,112 @@ a:focus-visible {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-weight: 700;
-  color: #fbbf24;
+  color: #d97706;
 }
 
 .fire-hero-title {
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   font-weight: 800;
-  margin: 4px 0 0 0;
-  color: #ffffff;
+  margin: 0.25rem 0 0 0;
+  color: var(--text-primary);
 }
 
 .fire-status-pill .pill-success {
-  background-color: rgba(16, 185, 129, 0.2);
-  color: #34d399;
-  padding: 6px 14px;
+  background-color: rgba(16, 185, 129, 0.12);
+  color: #059669;
+  padding: 0.375rem 0.875rem;
   border-radius: 9999px;
   font-size: 0.8rem;
   font-weight: 700;
-  border: 1px solid rgba(16, 185, 129, 0.4);
+  border: 1px solid rgba(16, 185, 129, 0.3);
 }
 
 .fire-status-pill .pill-warning {
-  background-color: rgba(245, 158, 11, 0.2);
-  color: #fbbf24;
-  padding: 6px 14px;
+  background-color: rgba(245, 158, 11, 0.12);
+  color: #d97706;
+  padding: 0.375rem 0.875rem;
   border-radius: 9999px;
   font-size: 0.8rem;
   font-weight: 700;
-  border: 1px solid rgba(245, 158, 11, 0.4);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.fire-status-pill .pill-neutral {
+  background-color: var(--bg-surface-subtle, #f8fafc);
+  color: var(--text-secondary);
+  padding: 0.375rem 0.875rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: 1px solid var(--border-default);
 }
 
 .fire-hero-main-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  gap: 1.25rem;
 }
 
 .fire-hero-stat {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 0.25rem;
 }
 
 .hero-stat-label {
   font-size: 0.8rem;
-  color: #94a3b8;
+  color: var(--text-secondary);
   font-weight: 600;
 }
 
 .hero-stat-value {
-  font-size: 1.75rem;
+  font-size: 1.6rem;
   font-weight: 800;
-  color: #ffffff;
+  color: var(--text-primary);
   letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
 }
 
 .primary-gradient-text {
-  background: linear-gradient(90deg, #fbbf24 0%, #f59e0b 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #d97706;
 }
 
 .accent-text {
-  color: #38bdf8;
+  color: var(--accent-primary, #6366f1);
 }
 
 .hero-stat-desc {
   font-size: 0.75rem;
-  color: #64748b;
+  color: var(--text-tertiary);
   line-height: 1.4;
 }
 
 .fire-progress-card {
-  background-color: rgba(15, 23, 42, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-default);
   border-radius: var(--radius-lg, 12px);
-  padding: 16px;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0.625rem;
 }
 
 .fire-progress-header {
   display: flex;
   justify-content: space-between;
   font-size: 0.85rem;
-  color: #cbd5e1;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.fire-progress-header strong {
+  color: var(--text-primary);
 }
 
 .fire-progress-track {
   width: 100%;
   height: 10px;
-  background-color: #334155;
+  background-color: var(--border-subtle, #f1f5f9);
   border-radius: 9999px;
   overflow: hidden;
 }
@@ -5551,7 +5666,7 @@ a:focus-visible {
   height: 100%;
   background: linear-gradient(90deg, #f59e0b 0%, #10b981 100%);
   border-radius: 9999px;
-  transition: width 300ms ease;
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* FIRE Scenarios Table */
@@ -5962,57 +6077,60 @@ a:focus-visible {
 }
 
 .mc-prob-card {
-  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-  border: 1px solid #334155;
+  background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-surface-subtle, #f8fafc) 100%);
+  border: 1px solid var(--border-default);
+  border-top: 3px solid var(--accent-primary, #6366f1);
   border-radius: var(--radius-lg, 12px);
-  padding: 24px;
-  color: #ffffff;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0.625rem;
+  box-shadow: var(--shadow-sm);
 }
 
 .prob-label {
   font-size: 0.85rem;
-  color: #94a3b8;
+  color: var(--text-secondary);
   font-weight: 600;
 }
 
 .prob-value {
-  font-size: 3rem;
+  font-size: 2.75rem;
   font-weight: 800;
-  color: #38bdf8;
+  color: var(--accent-primary, #6366f1);
   line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 
 .prob-desc {
   font-size: 0.8rem;
-  color: #94a3b8;
+  color: var(--text-secondary);
   line-height: 1.4;
-  margin: 0 0 10px 0;
+  margin: 0 0 0.625rem 0;
 }
 
 .funded-ages-row {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  border-top: 1px solid #334155;
-  padding-top: 12px;
+  gap: 0.375rem;
+  border-top: 1px solid var(--border-subtle, #f1f5f9);
+  padding-top: 0.75rem;
 }
 
 .funded-age-item {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   font-size: 0.85rem;
 }
 
 .fage-label {
-  color: #94a3b8;
+  color: var(--text-secondary);
 }
 
 .fage-val {
   font-weight: 700;
-  color: #f1f5f9;
+  color: var(--text-primary);
 }
 
 .mc-percentiles-card {
@@ -6314,16 +6432,23 @@ a:focus-visible {
   padding: 2px 8px;
   border-radius: 4px;
   align-self: flex-start;
+  font-variant-numeric: tabular-nums;
 }
 
-.badge-positive {
-  background-color: rgba(16, 185, 129, 0.12);
-  color: #059669;
+.badge-neutral {
+  background-color: var(--bg-surface);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-default);
 }
 
-.badge-negative {
-  background-color: rgba(239, 68, 68, 0.12);
-  color: #dc2626;
+.badge-increase {
+  background-color: rgba(99, 102, 241, 0.1);
+  color: var(--accent-primary, #6366f1);
+}
+
+.badge-decrease {
+  background-color: rgba(245, 158, 11, 0.1);
+  color: #d97706;
 }
 
 .comparison-table-wrapper {
@@ -6358,6 +6483,13 @@ a:focus-visible {
 
 .comparison-table tbody tr:hover {
   background-color: var(--bg-surface-subtle);
+}
+
+/* Modal Form within Plan Workspace */
+.plan-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 /* Responsive Media Queries for Planning Workspace */

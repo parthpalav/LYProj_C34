@@ -1,6 +1,8 @@
 /* oxlint-disable react/set-state-in-effect */
 import React, { useState, useEffect } from 'react';
 import type { Asset, AssetClass, AssetLiquidity } from '../../types';
+import { Modal } from '../ui/Modal';
+import { Button } from '../ui/Button';
 
 interface AssetModalProps {
   isOpen: boolean;
@@ -75,8 +77,6 @@ export const AssetModal: React.FC<AssetModalProps> = ({
     }
   };
 
-  if (!isOpen) return null;
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -125,165 +125,175 @@ export const AssetModal: React.FC<AssetModalProps> = ({
   const isNonInvestable = assetClass === 'NON_INVESTABLE';
 
   return (
-    <div className="modal-overlay" role="dialog" aria-modal="true">
-      <div className="modal-card">
-        <div className="modal-header">
-          <h3 className="modal-title">{assetToEdit ? 'Edit Financial Asset' : 'Add New Financial Asset'}</h3>
-          <button type="button" className="btn-close" onClick={onClose} aria-label="Close">
-            ✕
-          </button>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={assetToEdit ? 'Edit Financial Asset' : 'Record New Asset'}
+      subtitle={
+        assetToEdit
+          ? 'Update valuation, expected growth return, or FIRE allocation'
+          : 'Track holdings across investments, liquid funds, or property'
+      }
+      maxWidth="560px"
+    >
+      <form onSubmit={handleSubmit} className="plan-modal-form">
+        {error && (
+          <div className="form-error-banner" role="alert">
+            <span>{error}</span>
+          </div>
+        )}
+
+        <div className="form-group">
+          <label htmlFor="asset-name" className="form-label">
+            Asset Name <span className="text-danger">*</span>
+          </label>
+          <input
+            id="asset-name"
+            type="text"
+            className="form-input"
+            placeholder="e.g. Nifty 50 Index Fund, SBI Fixed Deposit"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
         </div>
 
-        <form onSubmit={handleSubmit} className="modal-form">
-          {error && <div className="form-error-banner">{error}</div>}
-
-          <div className="form-group">
-            <label htmlFor="asset-name" className="form-label">
-              Asset Name *
+        <div className="form-row">
+          <div className="form-group flex-1">
+            <label htmlFor="asset-type" className="form-label">
+              Asset Type
             </label>
-            <input
-              id="asset-name"
-              type="text"
-              className="form-input"
-              placeholder="e.g. Nifty 50 Index Fund SIP, SBI Fixed Deposit"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
+            <select
+              id="asset-type"
+              className="form-select"
+              value={assetType}
+              onChange={(e) => setAssetType(e.target.value)}
+            >
+              {COMMON_ASSET_TYPES.map((t) => (
+                <option key={t} value={t}>
+                  {t}
+                </option>
+              ))}
+            </select>
           </div>
 
-          <div className="form-row">
-            <div className="form-group flex-1">
-              <label htmlFor="asset-type" className="form-label">
-                Asset Type
-              </label>
-              <select
-                id="asset-type"
-                className="form-select"
-                value={assetType}
-                onChange={(e) => setAssetType(e.target.value)}
-              >
-                {COMMON_ASSET_TYPES.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="form-group flex-1">
-              <label htmlFor="asset-class" className="form-label">
-                Classification *
-              </label>
-              <select
-                id="asset-class"
-                className="form-select"
-                value={assetClass}
-                onChange={(e) => handleClassChange(e.target.value as AssetClass)}
-              >
-                <option value="FIRE_INVESTABLE">FIRE Investable (Core Portfolio)</option>
-                <option value="SEMI_LIQUID">Semi-Liquid (Emergency / Buffer)</option>
-                <option value="NON_INVESTABLE">Non-Investable (Primary Home / Lifestyle)</option>
-              </select>
-            </div>
+          <div className="form-group flex-1">
+            <label htmlFor="asset-class" className="form-label">
+              Classification <span className="text-danger">*</span>
+            </label>
+            <select
+              id="asset-class"
+              className="form-select"
+              value={assetClass}
+              onChange={(e) => handleClassChange(e.target.value as AssetClass)}
+            >
+              <option value="FIRE_INVESTABLE">FIRE Investable (Core Portfolio)</option>
+              <option value="SEMI_LIQUID">Semi-Liquid (Emergency / Buffer)</option>
+              <option value="NON_INVESTABLE">Non-Investable (Primary Residence / Locked)</option>
+            </select>
           </div>
+        </div>
 
-          <div className="form-row">
-            <div className="form-group flex-1">
-              <label htmlFor="current-value" className="form-label">
-                Current Value (₹) *
-              </label>
+        <div className="form-row">
+          <div className="form-group flex-1">
+            <label htmlFor="current-value" className="form-label">
+              Current Value (₹) <span className="text-danger">*</span>
+            </label>
+            <div className="input-currency-wrapper">
+              <span className="currency-prefix">₹</span>
               <input
                 id="current-value"
                 type="number"
                 step="any"
                 min="0"
-                className="form-input"
-                placeholder="₹ Amount"
+                className="form-input currency-input"
+                placeholder="0.00"
                 value={currentValue}
                 onChange={(e) => setCurrentValue(e.target.value)}
                 required
               />
             </div>
-
-            <div className="form-group flex-1">
-              <label htmlFor="annual-return" className="form-label">
-                Expected Annual Return (%)
-              </label>
-              <input
-                id="annual-return"
-                type="number"
-                step="0.1"
-                min="0"
-                max="100"
-                className="form-input"
-                placeholder="e.g. 10.0"
-                value={annualReturnRate}
-                onChange={(e) => setAnnualReturnRate(e.target.value)}
-              />
-              <span className="input-hint">Leave blank to use profile default (8%)</span>
-            </div>
           </div>
 
-          <div className="form-row">
-            <div className="form-group flex-1">
-              <label htmlFor="asset-liquidity" className="form-label">
-                Liquidity
-              </label>
-              <select
-                id="asset-liquidity"
-                className="form-select"
-                value={liquidity}
-                onChange={(e) => setLiquidity(e.target.value as AssetLiquidity)}
-              >
-                <option value="liquid">Liquid (Ready Cash, Savings, Stocks)</option>
-                <option value="locked">Locked (PPF, EPF, Real Estate, Term FD)</option>
-                <option value="restricted">Restricted (Lock-in Period / Penalties)</option>
-              </select>
-            </div>
-
-            <div className="form-group flex-1 checkbox-group">
-              <label className="checkbox-label">
-                <input
-                  type="checkbox"
-                  checked={includedInFireCorpus}
-                  disabled={isNonInvestable}
-                  onChange={(e) => setIncludedInFireCorpus(e.target.checked)}
-                />
-                <span>Include in FIRE Retirement Corpus</span>
-              </label>
-              {isNonInvestable && (
-                <span className="input-hint hint-warning">
-                  Non-investable assets cannot count toward the FIRE corpus.
-                </span>
-              )}
-            </div>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="asset-notes" className="form-label">
-              Notes / Description (Optional)
+          <div className="form-group flex-1">
+            <label htmlFor="annual-return" className="form-label">
+              Expected Return (% / yr)
             </label>
-            <textarea
-              id="asset-notes"
-              className="form-textarea"
-              rows={2}
-              placeholder="Account numbers, folio info, maturity date..."
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
+            <input
+              id="annual-return"
+              type="number"
+              step="0.1"
+              min="0"
+              max="100"
+              className="form-input"
+              placeholder="e.g. 10.0"
+              value={annualReturnRate}
+              onChange={(e) => setAnnualReturnRate(e.target.value)}
             />
+            <span className="input-hint">Default is profile baseline (8%)</span>
+          </div>
+        </div>
+
+        <div className="form-row">
+          <div className="form-group flex-1">
+            <label htmlFor="asset-liquidity" className="form-label">
+              Liquidity Profile
+            </label>
+            <select
+              id="asset-liquidity"
+              className="form-select"
+              value={liquidity}
+              onChange={(e) => setLiquidity(e.target.value as AssetLiquidity)}
+            >
+              <option value="liquid">Liquid (Readily convertible cash / stocks)</option>
+              <option value="locked">Locked (PPF, EPF, Real Estate, Term FD)</option>
+              <option value="restricted">Restricted (Lock-in period / exit penalty)</option>
+            </select>
           </div>
 
-          <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" onClick={onClose} disabled={saving}>
-              Cancel
-            </button>
-            <button type="submit" className="btn btn-primary" disabled={saving}>
-              {saving ? 'Saving...' : assetToEdit ? 'Save Changes' : 'Record Asset'}
-            </button>
+          <div className="form-group flex-1 checkbox-group" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', paddingTop: '18px' }}>
+            <label className="checkbox-label" style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: isNonInvestable ? 'not-allowed' : 'pointer' }}>
+              <input
+                type="checkbox"
+                checked={includedInFireCorpus}
+                disabled={isNonInvestable}
+                onChange={(e) => setIncludedInFireCorpus(e.target.checked)}
+              />
+              <span style={{ fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-primary)' }}>
+                Include in FIRE Corpus
+              </span>
+            </label>
+            {isNonInvestable && (
+              <span className="input-hint hint-warning" style={{ fontSize: '0.75rem', color: '#f59e0b', marginTop: '4px' }}>
+                Non-investable assets cannot count toward FIRE corpus.
+              </span>
+            )}
           </div>
-        </form>
-      </div>
-    </div>
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="asset-notes" className="form-label">
+            Notes (Optional)
+          </label>
+          <textarea
+            id="asset-notes"
+            className="form-textarea"
+            rows={2}
+            placeholder="Account numbers, folio info, maturity date..."
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+          />
+        </div>
+
+        <div className="modal-footer" style={{ marginTop: '20px', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+          <Button type="button" variant="outline" onClick={onClose} disabled={saving}>
+            Cancel
+          </Button>
+          <Button type="submit" variant="primary" disabled={saving}>
+            {saving ? 'Saving...' : assetToEdit ? 'Save Changes' : 'Record Asset'}
+          </Button>
+        </div>
+      </form>
+    </Modal>
   );
 };

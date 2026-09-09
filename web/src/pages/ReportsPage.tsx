@@ -54,11 +54,12 @@ export const ReportsPage: React.FC = () => {
   return (
     <div className="reports-page-wrapper">
       {/* Page Header */}
-      <div className="page-header no-print">
-        <div>
-          <h1 className="page-title">Financial Reports</h1>
-          <p className="page-subtitle">
-            Historical accounting summaries, period pacing, and secure portfolio exports
+      <div className="activity-header-block no-print">
+        <div className="activity-title-group">
+          <span className="overview-eyebrow">FINANCIAL REVIEW</span>
+          <h1 className="activity-main-heading">Reports</h1>
+          <p className="activity-sub-heading">
+            Review how your financial activity changes over time. Weekly, monthly, and historical views built from your recorded activity.
           </p>
         </div>
       </div>
@@ -69,50 +70,58 @@ export const ReportsPage: React.FC = () => {
       {/* Tab Contents */}
       <div className="report-tab-content">
         {activeTab === 'weekly' && (
-          <WeeklyReportView
-            report={weekly.weeklyReport}
-            pacing={weekly.pacingReport}
-            loading={weekly.loading}
-            error={weekly.error}
-          />
+          <div key="weekly" className="report-tab-pane report-tab-pane--enter">
+            <WeeklyReportView
+              report={weekly.weeklyReport}
+              pacing={weekly.pacingReport}
+              loading={weekly.loading}
+              error={weekly.error}
+            />
+          </div>
         )}
 
         {activeTab === 'monthly' && (
-          <MonthlyReportView
-            report={monthly.report}
-            loading={monthly.loading}
-            error={monthly.error}
-            selectedYear={monthly.selectedYear}
-            selectedMonth={monthly.selectedMonth}
-            availableMonths={monthly.availableMonths}
-            onSelectPeriod={monthly.selectPeriod}
-          />
+          <div key="monthly" className="report-tab-pane report-tab-pane--enter">
+            <MonthlyReportView
+              report={monthly.report}
+              loading={monthly.loading}
+              error={monthly.error}
+              selectedYear={monthly.selectedYear}
+              selectedMonth={monthly.selectedMonth}
+              availableMonths={monthly.availableMonths}
+              onSelectPeriod={monthly.selectPeriod}
+            />
+          </div>
         )}
 
         {activeTab === 'history' && (
-          <HistoryReportView
-            summaries={history.summaries}
-            range={history.range}
-            loading={history.loading}
-            error={history.error}
-            onSelectRange={history.setRange}
-            onInspectMonth={handleInspectMonth}
-          />
+          <div key="history" className="report-tab-pane report-tab-pane--enter">
+            <HistoryReportView
+              summaries={history.summaries}
+              range={history.range}
+              loading={history.loading}
+              error={history.error}
+              onSelectRange={history.setRange}
+              onInspectMonth={handleInspectMonth}
+            />
+          </div>
         )}
 
         {activeTab === 'export' && (
-          <ExportReportView
-            counts={exportHook.counts}
-            monthlyRows={monthlyCsvRows}
-            isExporting={exportHook.isExporting}
-            activeKind={exportHook.activeKind}
-            error={exportHook.error}
-            onExportTransactions={exportHook.exportTransactions}
-            onExportIncome={exportHook.exportIncome}
-            onExportLiabilities={exportHook.exportLiabilities}
-            onExportMonthlySummaries={exportHook.exportMonthlySummaries}
-            onPrint={exportHook.printReport}
-          />
+          <div key="export" className="report-tab-pane report-tab-pane--enter">
+            <ExportReportView
+              counts={exportHook.counts}
+              monthlyRows={monthlyCsvRows}
+              isExporting={exportHook.isExporting}
+              activeKind={exportHook.activeKind}
+              error={exportHook.error}
+              onExportTransactions={exportHook.exportTransactions}
+              onExportIncome={exportHook.exportIncome}
+              onExportLiabilities={exportHook.exportLiabilities}
+              onExportMonthlySummaries={exportHook.exportMonthlySummaries}
+              onPrint={exportHook.printReport}
+            />
+          </div>
         )}
       </div>
     </div>

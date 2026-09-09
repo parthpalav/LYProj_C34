@@ -8,7 +8,9 @@ import {
   AlertTriangle,
   Printer,
   ArrowRight,
-  Info
+  Info,
+  Calendar,
+  Gauge
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import type { WeeklyReport, PacingReport } from '../../types';
@@ -46,7 +48,7 @@ export const WeeklyReportView: React.FC<WeeklyReportViewProps> = ({
   if (error || !report) {
     return (
       <div className="report-error-card">
-        <AlertTriangle size={24} className="text-amber-400" />
+        <AlertTriangle size={24} className="text-amber-400 shrink-0" />
         <div>
           <h4>Weekly Report Unavailable</h4>
           <p>{error || 'Not enough financial activity yet to generate a meaningful weekly report.'}</p>
@@ -58,33 +60,106 @@ export const WeeklyReportView: React.FC<WeeklyReportViewProps> = ({
   const netFlow = report.totalIncome - report.totalSpend;
   const isPositiveNet = netFlow >= 0;
 
+  // Calculate weekly spending mix from pacing if available (as pacing tracks actuals for current month cycle)
+  const pacingTotal = pacing ? pacing.Needs.actual + pacing.Wants.actual + pacing.Investments.actual : 0;
+
   return (
     <div className="report-view-container printable-document">
-      {/* Header Bar */}
+      {/* Editorial Report Header Banner */}
       <div className="report-header-banner">
         <div className="report-header-info">
-          <div className="report-type-badge">Rolling 7-Day Window</div>
-          <h2 className="report-title">Weekly Financial Report</h2>
+          <div className="report-type-badge">
+            <Calendar size={12} className="inline mr-1" />
+            Rolling 7-Day Window
+          </div>
+          <h2 className="report-title">Weekly Financial Review</h2>
           <p className="report-period-text">{periodLabel}</p>
         </div>
         <button
           className="report-print-btn no-print"
           onClick={() => window.print()}
           title="Print or save as PDF"
+          type="button"
         >
-          <Printer size={16} />
+          <Printer size={15} />
           <span>Print / Save PDF</span>
         </button>
       </div>
 
-      {/* KPI Cards Grid */}
+      {/* Hero Review Card */}
+      <div className="report-hero-card">
+        <div className="report-hero-header">
+          <span className="report-eyebrow-label">THIS WEEK'S NET POSITION</span>
+          <span className="report-hero-status-pill">
+            {isPositiveNet ? 'Cash Surplus' : 'Deficit Outflow'}
+          </span>
+        </div>
+
+        <div className="report-hero-main-stat">
+          <div className="report-hero-primary-val-wrap">
+            <span className="report-hero-currency">₹</span>
+            <span className={`report-hero-primary-val tabular-nums ${isPositiveNet ? 'text-positive' : 'text-negative'}`}>
+              {isPositiveNet ? '+' : ''}{netFlow.toLocaleString('en-IN')}
+            </span>
+          </div>
+          <p className="report-hero-sub-metric">
+            {isPositiveNet
+              ? 'Retained surplus from past 7 days inflows after meeting expenditures'
+              : 'Expenditures exceeded recorded inflows during this 7-day period'}
+          </p>
+        </div>
+
+        <div className="report-hero-metrics-strip">
+          <div className="report-hero-subitem">
+            <span className="subitem-label">
+              <TrendingUp size={14} className="text-emerald-500 inline mr-1" />
+              Recorded Inflows
+            </span>
+            <span className="subitem-val text-emerald-600 tabular-nums">
+              ₹{report.totalIncome.toLocaleString('en-IN')}
+            </span>
+          </div>
+
+          <div className="report-hero-subitem">
+            <span className="subitem-label">
+              <TrendingDown size={14} className="text-rose-500 inline mr-1" />
+              Recorded Outflows
+            </span>
+            <span className="subitem-val text-rose-600 tabular-nums">
+              ₹{report.totalSpend.toLocaleString('en-IN')}
+            </span>
+          </div>
+
+          <div className="report-hero-subitem">
+            <span className="subitem-label">
+              <Percent size={14} className="text-cyan-600 inline mr-1" />
+              Savings Rate
+            </span>
+            <span className="subitem-val text-cyan-600 tabular-nums">
+              {report.savingsRate}%
+            </span>
+          </div>
+
+          <div className="report-hero-subitem">
+            <span className="subitem-label">
+              <ShieldCheck size={14} className="text-indigo-600 inline mr-1" />
+              FMI Snapshot
+            </span>
+            <span className="subitem-val text-indigo-600 tabular-nums">
+              {report.fmiAvg > 0 ? `${report.fmiAvg}/100` : '—'}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {/* KPI Metric Strip */}
       <div className="report-kpi-grid">
         <div className="report-kpi-card">
           <div className="report-kpi-header">
             <span className="report-kpi-label">Weekly Outflow</span>
-            <TrendingDown size={18} className="text-rose-400" />
+            <TrendingDown size={16} className="text-rose-500" />
           </div>
-          <div className="report-kpi-val text-rose-400">
+          <div className="report-kpi-val text-rose-600 tabular-nums">
             ₹{report.totalSpend.toLocaleString('en-IN')}
           </div>
           <div className="report-kpi-subtext">Total recorded expenditures</div>
@@ -93,9 +168,9 @@ export const WeeklyReportView: React.FC<WeeklyReportViewProps> = ({
         <div className="report-kpi-card">
           <div className="report-kpi-header">
             <span className="report-kpi-label">Weekly Inflow</span>
-            <TrendingUp size={18} className="text-emerald-400" />
+            <TrendingUp size={16} className="text-emerald-500" />
           </div>
-          <div className="report-kpi-val text-emerald-400">
+          <div className="report-kpi-val text-emerald-600 tabular-nums">
             ₹{report.totalIncome.toLocaleString('en-IN')}
           </div>
           <div className="report-kpi-subtext">Total recorded inflows</div>
@@ -104,22 +179,22 @@ export const WeeklyReportView: React.FC<WeeklyReportViewProps> = ({
         <div className="report-kpi-card">
           <div className="report-kpi-header">
             <span className="report-kpi-label">Net Cash Flow</span>
-            <Scale size={18} className={isPositiveNet ? 'text-emerald-400' : 'text-rose-400'} />
+            <Scale size={16} className={isPositiveNet ? 'text-emerald-500' : 'text-rose-500'} />
           </div>
-          <div className={`report-kpi-val ${isPositiveNet ? 'text-emerald-400' : 'text-rose-400'}`}>
+          <div className={`report-kpi-val tabular-nums ${isPositiveNet ? 'text-emerald-600' : 'text-rose-600'}`}>
             {isPositiveNet ? '+' : ''}₹{netFlow.toLocaleString('en-IN')}
           </div>
           <div className="report-kpi-subtext">
-            {isPositiveNet ? 'Surplus retained this week' : 'Deficit spent from reserves'}
+            {isPositiveNet ? 'Surplus retained this week' : 'Deficit drawn from balance'}
           </div>
         </div>
 
         <div className="report-kpi-card">
           <div className="report-kpi-header">
             <span className="report-kpi-label">Savings Rate</span>
-            <Percent size={18} className="text-cyan-400" />
+            <Percent size={16} className="text-cyan-600" />
           </div>
-          <div className="report-kpi-val text-cyan-400">
+          <div className="report-kpi-val text-cyan-600 tabular-nums">
             {report.savingsRate}%
           </div>
           <div className="report-kpi-subtext">Envelope savings share</div>
@@ -127,10 +202,10 @@ export const WeeklyReportView: React.FC<WeeklyReportViewProps> = ({
 
         <div className="report-kpi-card">
           <div className="report-kpi-header">
-            <span className="report-kpi-label">Average FMI</span>
-            <ShieldCheck size={18} className="text-indigo-400" />
+            <span className="report-kpi-label">FMI Average</span>
+            <ShieldCheck size={16} className="text-indigo-500" />
           </div>
-          <div className="report-kpi-val text-indigo-400">
+          <div className="report-kpi-val text-indigo-600 tabular-nums">
             {report.fmiAvg > 0 ? report.fmiAvg : '—'}
           </div>
           <div className="report-kpi-subtext">
@@ -141,21 +216,24 @@ export const WeeklyReportView: React.FC<WeeklyReportViewProps> = ({
         <div className="report-kpi-card">
           <div className="report-kpi-header">
             <span className="report-kpi-label">Flagged Anomalies</span>
-            <AlertTriangle size={18} className={report.anomalyCount > 0 ? 'text-amber-400' : 'text-slate-400'} />
+            <AlertTriangle size={16} className={report.anomalyCount > 0 ? 'text-amber-500' : 'text-slate-400'} />
           </div>
-          <div className={`report-kpi-val ${report.anomalyCount > 0 ? 'text-amber-400' : 'text-slate-200'}`}>
+          <div className={`report-kpi-val tabular-nums ${report.anomalyCount > 0 ? 'text-amber-600' : 'text-slate-700'}`}>
             {report.anomalyCount}
           </div>
           <div className="report-kpi-subtext">Out-of-pattern transactions</div>
         </div>
       </div>
 
-      {/* Main Analysis Section: 2 Columns */}
+      {/* Main Analysis Section: Top Categories & Budget Pacing */}
       <div className="report-sections-grid">
         {/* Top Categories */}
         <div className="report-card">
           <div className="report-card-header">
-            <h3>Top Spending Categories</h3>
+            <div>
+              <span className="report-eyebrow-label">EXPENDITURE RANKING</span>
+              <h3>Top Spending Categories</h3>
+            </div>
             <span className="report-card-badge">{report.topCategories.length} Categories</span>
           </div>
 
@@ -165,12 +243,15 @@ export const WeeklyReportView: React.FC<WeeklyReportViewProps> = ({
             </div>
           ) : (
             <div className="report-categories-list">
-              {report.topCategories.map((cat) => (
+              {report.topCategories.map((cat, idx) => (
                 <div key={cat.category} className="report-category-row">
                   <div className="report-cat-meta">
-                    <span className="report-cat-name">{cat.category}</span>
+                    <div className="flex items-center gap-2">
+                      <span className="report-cat-rank">#{idx + 1}</span>
+                      <span className="report-cat-name">{cat.category}</span>
+                    </div>
                     <div className="report-cat-amounts">
-                      <span className="report-cat-val">₹{cat.amount.toLocaleString('en-IN')}</span>
+                      <span className="report-cat-val tabular-nums">₹{cat.amount.toLocaleString('en-IN')}</span>
                       <span className="report-cat-pct">({cat.pct}%)</span>
                     </div>
                   </div>
@@ -189,8 +270,13 @@ export const WeeklyReportView: React.FC<WeeklyReportViewProps> = ({
         {/* 50/30/20 Budget Pacing */}
         <div className="report-card">
           <div className="report-card-header">
-            <h3>50/30/20 Spending Pacing</h3>
-            <span className="report-card-badge">Monthly Budget Target</span>
+            <div>
+              <span className="report-eyebrow-label">BUDGET PACING BENCHMARK</span>
+              <h3>Monthly Cycle Pacing</h3>
+            </div>
+            <span className="report-card-badge flex items-center gap-1">
+              <Gauge size={12} /> Target Limits
+            </span>
           </div>
 
           {!pacing ? (
@@ -203,12 +289,12 @@ export const WeeklyReportView: React.FC<WeeklyReportViewProps> = ({
               <div className="report-pacing-row">
                 <div className="report-pacing-meta">
                   <div>
-                    <div className="report-pacing-name">Essential Needs (50%)</div>
+                    <div className="report-pacing-name">Essential Needs (50% target)</div>
                     <div className="report-pacing-details">
                       ₹{pacing.Needs.actual.toLocaleString('en-IN')} of ₹{pacing.Needs.limit.toLocaleString('en-IN')} limit
                     </div>
                   </div>
-                  <span className="report-pacing-status">
+                  <span className="report-pacing-status tabular-nums">
                     {pacing.Needs.limit > 0
                       ? `${Math.round((pacing.Needs.actual / pacing.Needs.limit) * 100)}%`
                       : '—'}
@@ -217,7 +303,7 @@ export const WeeklyReportView: React.FC<WeeklyReportViewProps> = ({
                 <div className="report-cat-bar-bg">
                   <div
                     className={`report-cat-bar-fill ${
-                      pacing.Needs.actual > pacing.Needs.limit ? 'bg-rose-500' : 'bg-cyan-500'
+                      pacing.Needs.actual > pacing.Needs.limit ? 'bg-rose-500' : 'bg-cyan-600'
                     }`}
                     style={{
                       width: `${Math.min(
@@ -233,12 +319,12 @@ export const WeeklyReportView: React.FC<WeeklyReportViewProps> = ({
               <div className="report-pacing-row">
                 <div className="report-pacing-meta">
                   <div>
-                    <div className="report-pacing-name">Discretionary Wants (30%)</div>
+                    <div className="report-pacing-name">Discretionary Wants (30% target)</div>
                     <div className="report-pacing-details">
                       ₹{pacing.Wants.actual.toLocaleString('en-IN')} of ₹{pacing.Wants.limit.toLocaleString('en-IN')} limit
                     </div>
                   </div>
-                  <span className="report-pacing-status">
+                  <span className="report-pacing-status tabular-nums">
                     {pacing.Wants.limit > 0
                       ? `${Math.round((pacing.Wants.actual / pacing.Wants.limit) * 100)}%`
                       : '—'}
@@ -263,12 +349,12 @@ export const WeeklyReportView: React.FC<WeeklyReportViewProps> = ({
               <div className="report-pacing-row">
                 <div className="report-pacing-meta">
                   <div>
-                    <div className="report-pacing-name">Investments & Savings (20%)</div>
+                    <div className="report-pacing-name">Investments & Savings (20% target)</div>
                     <div className="report-pacing-details">
                       ₹{pacing.Investments.actual.toLocaleString('en-IN')} of ₹{pacing.Investments.limit.toLocaleString('en-IN')} target
                     </div>
                   </div>
-                  <span className="report-pacing-status">
+                  <span className="report-pacing-status tabular-nums">
                     {pacing.Investments.limit > 0
                       ? `${Math.round((pacing.Investments.actual / pacing.Investments.limit) * 100)}%`
                       : '—'}
@@ -288,6 +374,12 @@ export const WeeklyReportView: React.FC<WeeklyReportViewProps> = ({
                   />
                 </div>
               </div>
+
+              {pacingTotal > 0 && (
+                <div className="report-pacing-legend-note">
+                  Benchmark limits are derived from your recorded monthly income baseline.
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -296,15 +388,18 @@ export const WeeklyReportView: React.FC<WeeklyReportViewProps> = ({
       {/* Behavioral Risk Patterns */}
       <div className="report-card">
         <div className="report-card-header">
-          <h3>Detected Weekly Behavioural Patterns</h3>
+          <div>
+            <span className="report-eyebrow-label">DIAGNOSTIC SURVEILLANCE</span>
+            <h3>Detected Weekly Behavioural Patterns</h3>
+          </div>
           <span className="report-card-badge">{report.patterns.length} Flagged</span>
         </div>
 
         {report.patterns.length === 0 ? (
           <div className="report-empty-state">
-            <ShieldCheck size={32} className="text-emerald-400 mb-2" />
-            <p className="text-slate-300 font-medium">No behavioral risk patterns detected this week.</p>
-            <p className="text-slate-400 text-sm">
+            <ShieldCheck size={32} className="text-emerald-500 mb-2" />
+            <p className="text-slate-800 font-semibold">No behavioral risk patterns detected this week.</p>
+            <p className="text-slate-500 text-sm">
               Your spending discipline adhered to healthy baseline thresholds without late-night surges or impulse clusters.
             </p>
           </div>
@@ -330,9 +425,9 @@ export const WeeklyReportView: React.FC<WeeklyReportViewProps> = ({
       {/* Cross-Section Navigation & Scope Notice */}
       <div className="report-footer-bar no-print">
         <div className="report-footer-notice">
-          <Info size={16} className="text-cyan-400 shrink-0" />
+          <Info size={16} className="text-cyan-600 shrink-0" />
           <span>
-            Weekly metrics evaluate the past 7 days of activity. For calendar month breakdowns and historical trends,
+            Weekly metrics evaluate the rolling past 7 days of activity. For calendar month breakdowns and historical trends,
             explore the Monthly or History tabs.
           </span>
         </div>

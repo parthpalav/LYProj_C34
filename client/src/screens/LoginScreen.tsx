@@ -7,6 +7,7 @@ import {
 import { useAuthStore } from '../store/useAuthStore';
 import { RegisterScreen } from './RegisterScreen';
 import { ForgotPasswordScreen } from './ForgotPasswordScreen';
+import { Ionicons } from '@expo/vector-icons';
 
 const finauraLogo = require('../assets/finaura_logo.png');
 
@@ -15,6 +16,7 @@ const BLUE = '#3B3BDE';
 export function LoginScreen(): React.ReactElement {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const { login, loading, authError, fieldErrors, clearErrors } = useAuthStore();
@@ -92,16 +94,32 @@ export function LoginScreen(): React.ReactElement {
               <Text style={styles.forgotText}>Forgot?</Text>
             </TouchableOpacity>
           </View>
-          <TextInput
-            style={[styles.input, fieldErrors.password && styles.inputError]}
-            placeholder="••••••••"
-            placeholderTextColor="#9CA3AF"
-            secureTextEntry
-            value={password}
-            onChangeText={setPassword}
-            editable={!loading}
-            onSubmitEditing={handleLogin}
-          />
+          <View style={styles.passwordFieldWrap}>
+            <TextInput
+              style={[styles.input, styles.passwordInput, fieldErrors.password && styles.inputError]}
+              placeholder="••••••••"
+              placeholderTextColor="#9CA3AF"
+              secureTextEntry={!showPassword}
+              value={password}
+              onChangeText={setPassword}
+              editable={!loading}
+              onSubmitEditing={handleLogin}
+            />
+            <TouchableOpacity
+              style={styles.visibilityToggle}
+              onPress={() => setShowPassword((prev) => !prev)}
+              accessibilityRole="button"
+              accessibilityLabel={showPassword ? 'Hide password' : 'Show password'}
+              hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+              activeOpacity={0.7}
+            >
+              <Ionicons
+                name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+                size={20}
+                color="#6B7280"
+              />
+            </TouchableOpacity>
+          </View>
           {fieldErrors.password ? <Text style={styles.fieldError}>{fieldErrors.password}</Text> : null}
         </View>
 
@@ -227,6 +245,22 @@ const styles = StyleSheet.create({
   },
   inputError: {
     borderColor: '#EF4444',
+  },
+  passwordFieldWrap: {
+    position: 'relative',
+    justifyContent: 'center',
+    width: '100%',
+  },
+  passwordInput: {
+    paddingRight: 46,
+  },
+  visibilityToggle: {
+    position: 'absolute',
+    right: 14,
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 4,
   },
   fieldError: {
     color: '#EF4444',

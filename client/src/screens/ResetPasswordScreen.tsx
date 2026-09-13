@@ -12,11 +12,14 @@ import {
 } from 'react-native';
 import { useAuthStore } from '../store/useAuthStore';
 import { evaluatePasswordStrength } from '../utils/authValidation';
+import { Ionicons } from '@expo/vector-icons';
 
 export function ResetPasswordScreen({ onBack, onComplete }: { onBack: () => void; onComplete: () => void }): React.ReactElement {
   const [token, setToken] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const { resetPassword, loading, authError, fieldErrors, clearErrors } = useAuthStore();
@@ -71,14 +74,30 @@ export function ResetPasswordScreen({ onBack, onComplete }: { onBack: () => void
 
           <View style={styles.inputGroup}>
             <Text style={styles.label}>New Password</Text>
-            <TextInput
-              style={[styles.input, fieldErrors.password && styles.inputError]}
-              placeholder="Min. 8 chars, mixed case, number & symbol"
-              placeholderTextColor="#9CA3AF"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-            />
+            <View style={styles.passwordFieldWrap}>
+              <TextInput
+                style={[styles.input, styles.passwordInput, fieldErrors.password && styles.inputError]}
+                placeholder="Min. 8 chars, mixed case, number & symbol"
+                placeholderTextColor="#9CA3AF"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry={!showPassword}
+              />
+              <TouchableOpacity
+                style={styles.visibilityToggle}
+                onPress={() => setShowPassword((prev) => !prev)}
+                accessibilityRole="button"
+                accessibilityLabel={showPassword ? 'Hide password' : 'Show password'}
+                hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+                activeOpacity={0.7}
+              >
+                <Ionicons
+                  name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+                  size={20}
+                  color="#6B7280"
+                />
+              </TouchableOpacity>
+            </View>
             {password ? (
               <View style={styles.strengthContainer}>
                 <View style={[styles.strengthBar, { backgroundColor: strength.color, width: `${(strength.score / 4) * 100}%` }]} />
@@ -90,14 +109,30 @@ export function ResetPasswordScreen({ onBack, onComplete }: { onBack: () => void
 
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Confirm New Password</Text>
-            <TextInput
-              style={[styles.input, fieldErrors.confirmPassword && styles.inputError]}
-              placeholder="Re-enter password"
-              placeholderTextColor="#9CA3AF"
-              value={confirmPassword}
-              onChangeText={setConfirmPassword}
-              secureTextEntry
-            />
+            <View style={styles.passwordFieldWrap}>
+              <TextInput
+                style={[styles.input, styles.passwordInput, fieldErrors.confirmPassword && styles.inputError]}
+                placeholder="Re-enter password"
+                placeholderTextColor="#9CA3AF"
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+                secureTextEntry={!showConfirmPassword}
+              />
+              <TouchableOpacity
+                style={styles.visibilityToggle}
+                onPress={() => setShowConfirmPassword((prev) => !prev)}
+                accessibilityRole="button"
+                accessibilityLabel={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}
+                hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+                activeOpacity={0.7}
+              >
+                <Ionicons
+                  name={showConfirmPassword ? 'eye-off-outline' : 'eye-outline'}
+                  size={20}
+                  color="#6B7280"
+                />
+              </TouchableOpacity>
+            </View>
             {fieldErrors.confirmPassword ? <Text style={styles.fieldError}>{fieldErrors.confirmPassword}</Text> : null}
           </View>
 
@@ -167,6 +202,22 @@ const styles = StyleSheet.create({
   },
   inputError: {
     borderColor: '#EF4444'
+  },
+  passwordFieldWrap: {
+    position: 'relative',
+    justifyContent: 'center',
+    width: '100%'
+  },
+  passwordInput: {
+    paddingRight: 46
+  },
+  visibilityToggle: {
+    position: 'absolute',
+    right: 14,
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 4
   },
   fieldError: {
     color: '#EF4444',

@@ -4,11 +4,23 @@ import * as liabilityController from '../controllers/liabilityController.js';
 import * as predictabilityController from '../controllers/predictabilityController.js';
 import * as assetController from '../controllers/assetController.js';
 import * as reportController from '../controllers/reportController.js';
+import * as familyController from '../controllers/familyController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 
 const router = Router();
 
 router.use(controllerRouter);
+
+// Family routes
+router.get('/family/current', authMiddleware, familyController.getCurrentFamily);
+router.post('/family/invitations', authMiddleware, familyController.sendInvitation);
+router.get('/family/invitations/received', authMiddleware, familyController.getReceivedInvitations);
+router.get('/family/invitations/sent', authMiddleware, familyController.getSentInvitations);
+router.post('/family/invitations/:id/accept', authMiddleware, familyController.acceptInvitation);
+router.post('/family/invitations/:id/decline', authMiddleware, familyController.declineInvitation);
+router.delete('/family/invitations/:id', authMiddleware, familyController.cancelInvitation);
+router.post('/family/leave', authMiddleware, familyController.leaveFamily);
+router.post('/family/members/:userId/remove', authMiddleware, familyController.removeFamilyMember);
 
 // Predictability routes
 router.get('/predictability', authMiddleware, predictabilityController.getPredictability);

@@ -1,5 +1,6 @@
 import * as FamilyService from '../services/FamilyService.js';
 import * as FamilyAggregationService from '../services/FamilyAggregationService.js';
+import * as FamilyFMIService from '../services/FamilyFMIService.js';
 import { logger } from '../utils/logger.js';
 
 function getUserId(req) {
@@ -217,9 +218,12 @@ export async function getFamilyDashboard(req, res, next) {
       });
     }
 
+    const fmi = await FamilyFMIService.getFamilyFMI(userId, summary);
+
     return res.json({
       success: true,
-      ...summary
+      ...summary,
+      fmi
     });
   } catch (error) {
     if (error.status) {

@@ -84,6 +84,9 @@ transactionSchema.index(
 // Compound index to support fast liability payment history and summary queries
 transactionSchema.index({ userId: 1, liabilityId: 1, timestamp: -1 });
 
+// Compound index to support fast user and household date-range time-series queries
+transactionSchema.index({ userId: 1, timestamp: -1 });
+
 // Export schema constants for use in controllers/validators
 export { VALID_CATEGORIES, VALID_TYPES };
 export default mongoose.model('Transaction', transactionSchema);

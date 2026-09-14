@@ -13,6 +13,7 @@ router.use(controllerRouter);
 
 // Family routes
 router.get('/family/current', authMiddleware, familyController.getCurrentFamily);
+router.get('/family/dashboard', authMiddleware, familyController.getFamilyDashboard);
 router.post('/family/invitations', authMiddleware, familyController.sendInvitation);
 router.get('/family/invitations/received', authMiddleware, familyController.getReceivedInvitations);
 router.get('/family/invitations/sent', authMiddleware, familyController.getSentInvitations);

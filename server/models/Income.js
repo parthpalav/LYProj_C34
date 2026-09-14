@@ -12,4 +12,7 @@ const incomeSchema = new mongoose.Schema(
   { versionKey: false }
 );
 
+// Compound index to support fast user and household date-range time-series queries
+incomeSchema.index({ userId: 1, timestamp: -1 });
+
 export default mongoose.model('Income', incomeSchema);

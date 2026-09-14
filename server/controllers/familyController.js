@@ -1,4 +1,5 @@
 import * as FamilyService from '../services/FamilyService.js';
+import * as FamilyAggregationService from '../services/FamilyAggregationService.js';
 import { logger } from '../utils/logger.js';
 
 function getUserId(req) {
@@ -195,6 +196,40 @@ export async function removeFamilyMember(req, res, next) {
       });
     }
     logger.error('[familyController] removeFamilyMember error:', error);
+    next(error);
+  }
+}
+
+/**
+ * GET /api/family/dashboard
+ * Returns pooled household financial aggregates for the authenticated user's active family.
+ * If user has no active family, returns { success: true, family: null, dashboard: null }.
+ */
+export async function getFamilyDashboard(req, res, next) {
+  try {
+    const userId = getUserId(req);
+    const summary = await FamilyAggregationService.getHouseholdSummary(userId);
+    if (!summary) {
+      return res.json({
+        success: true,
+        family: null,
+        dashboard: null
+      });
+    }
+
+    return res.json({
+      success: true,
+      ...summary
+    });
+  } catch (error) {
+    if (error.status) {
+      return res.status(error.status).json({
+        success: false,
+        error: error.message,
+        message: error.message
+      });
+    }
+    logger.error('[familyController] getFamilyDashboard error:', error);
     next(error);
   }
 }

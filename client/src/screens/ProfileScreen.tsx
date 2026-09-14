@@ -637,6 +637,24 @@ export function ProfileScreen(): React.ReactElement {
             <Ionicons name="chevron-forward" size={16} color={TEXT_MUTED} />
           </TouchableOpacity>
 
+          <View style={{ height: 1, backgroundColor: '#F1F5F9', marginLeft: 50 }} />
+
+          <TouchableOpacity
+            style={infoStyles.row}
+            onPress={() => (navigation as any).navigate('Family')}
+            activeOpacity={0.7}
+            accessibilityLabel="Family & Household, Combined finances, shared insights & invitations"
+          >
+            <View style={[infoStyles.iconWrap, { backgroundColor: '#F5F3FF' }]}>
+              <Ionicons name="people-outline" size={18} color={PURPLE} />
+            </View>
+            <View style={infoStyles.textCol}>
+              <Text style={infoStyles.label}>Family & Household</Text>
+              <Text style={infoStyles.value}>Combined finances, shared insights & invitations ↗</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={16} color={TEXT_MUTED} />
+          </TouchableOpacity>
+
         </View>
 
 

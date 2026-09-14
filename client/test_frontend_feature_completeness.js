@@ -54,7 +54,7 @@ test('1. AppNavigator registers all primary tabs and stack screens', () => {
   }
 
   // Verify Stack Screens
-  const expectedStacks = ['MainTabs', 'FinancialOutlook', 'FMI', 'IncomeFlow', 'Assets'];
+  const expectedStacks = ['MainTabs', 'FinancialOutlook', 'FMI', 'IncomeFlow', 'Assets', 'Family'];
   for (const stack of expectedStacks) {
     assert.ok(
       content.includes(`name="${stack}"`),

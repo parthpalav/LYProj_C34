@@ -7,7 +7,7 @@ import {
   FISData, FMIRecord, FMIResponse, Goal, IncomeFlowData, IncomeRecord,
   Transaction, WeeklyReport, User, Liability, LiabilityPaymentSummary,
   LiabilityPaymentHistoryResponse, PredictabilitySnapshot, PredictabilityResponse,
-  Asset, PredictabilityQueryOptions
+  Asset, PredictabilityQueryOptions, FamilySummary, FamilyInvitation, FamilyDashboard, FamilyDashboardResponse
 } from '../types';
 
 export interface NewTransaction {
@@ -497,4 +497,59 @@ export async function getPredictability(options?: PredictabilityQueryOptions): P
   }
   const { data } = await api.get<PredictabilityResponse>('/api/predictability', { params });
   return data.data;
+}
+
+// ── Family & Household APIs ───────────────────────────────────
+
+export async function getCurrentFamily(): Promise<FamilySummary | null> {
+  const { data } = await api.get<{ success: boolean; family: FamilySummary | null }>('/api/family/current');
+  return data.family;
+}
+
+export async function sendFamilyInvitation(email: string): Promise<FamilyInvitation> {
+  const { data } = await api.post<{ success: boolean; data: FamilyInvitation }>('/api/family/invitations', { email });
+  return data.data;
+}
+
+export async function getReceivedFamilyInvitations(): Promise<FamilyInvitation[]> {
+  const { data } = await api.get<{ success: boolean; data: FamilyInvitation[] }>('/api/family/invitations/received');
+  return data.data || [];
+}
+
+export async function getSentFamilyInvitations(): Promise<FamilyInvitation[]> {
+  const { data } = await api.get<{ success: boolean; data: FamilyInvitation[] }>('/api/family/invitations/sent');
+  return data.data || [];
+}
+
+export async function acceptFamilyInvitation(id: string): Promise<{ success: boolean; message: string; family: FamilySummary }> {
+  const { data } = await api.post(`/api/family/invitations/${id}/accept`);
+  return data;
+}
+
+export async function declineFamilyInvitation(id: string): Promise<{ success: boolean; message: string }> {
+  const { data } = await api.post(`/api/family/invitations/${id}/decline`);
+  return data;
+}
+
+export async function cancelFamilyInvitation(id: string): Promise<{ success: boolean; message: string }> {
+  const { data } = await api.delete(`/api/family/invitations/${id}`);
+  return data;
+}
+
+export async function getFamilyDashboard(): Promise<FamilyDashboard | null> {
+  const { data } = await api.get<FamilyDashboardResponse>('/api/family/dashboard');
+  if (!data || !data.family || !data.fmi) {
+    return null;
+  }
+  return data as unknown as FamilyDashboard;
+}
+
+export async function leaveFamily(): Promise<{ success: boolean; message: string }> {
+  const { data } = await api.post('/api/family/leave');
+  return data;
+}
+
+export async function removeFamilyMember(userId: string): Promise<{ success: boolean; message: string }> {
+  const { data } = await api.post(`/api/family/members/${userId}/remove`);
+  return data;
 }

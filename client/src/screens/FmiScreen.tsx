@@ -12,8 +12,8 @@ import {
 } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
-import { getFMI } from '../services/api';
-import { FMIRecord, FMIResponse } from '../types';
+import { getFMI, getCurrentFamily, getFamilyDashboard } from '../services/api';
+import { FMIRecord, FMIResponse, FamilySummary, FamilyDashboard } from '../types';
 
 const BLUE = '#2563EB';
 const GREEN = '#10B981';
@@ -252,12 +252,52 @@ export function FmiScreen(): React.ReactElement {
   const navigation = useNavigation();
   const [history, setHistory] = useState<FMIRecord[]>([]);
   const [current, setCurrent] = useState<FMIResponse | null>(null);
+  const [familySummary, setFamilySummary] = useState<FamilySummary | null>(null);
+  const [familyDashboard, setFamilyDashboard] = useState<FamilyDashboard | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  // ── Explicit Household Visibility Condition ──────────────
+  const hasActiveHousehold =
+    !!familySummary &&
+    (
+      typeof familySummary.memberCount === 'number'
+        ? familySummary.memberCount > 1
+        : Array.isArray(familySummary.members) && familySummary.members.length > 1
+    );
+
+  const fetchFamilyContext = useCallback(async () => {
+    try {
+      const fam = await getCurrentFamily();
+      if (!fam) {
+        setFamilySummary(null);
+        setFamilyDashboard(null);
+        return;
+      }
+      const isMulti =
+        typeof fam.memberCount === 'number'
+          ? fam.memberCount > 1
+          : Array.isArray(fam.members) && fam.members.length > 1;
+      setFamilySummary(fam);
+      if (!isMulti) {
+        setFamilyDashboard(null);
+        return;
+      }
+      const dash = await getFamilyDashboard();
+      setFamilyDashboard(dash);
+    } catch {
+      setFamilySummary(null);
+      setFamilyDashboard(null);
+    }
+  }, []);
+
   const fetchFmi = useCallback(async (isRefresh = false) => {
     try {
-      if (isRefresh) setRefreshing(true);
+      if (isRefresh) {
+        setRefreshing(true);
+        setFamilyDashboard(null);
+      }
+      void fetchFamilyContext();
       const data = await getFMI();
       setCurrent(data.current);
       setHistory(data.history || []);
@@ -267,7 +307,7 @@ export function FmiScreen(): React.ReactElement {
       setLoading(false);
       setRefreshing(false);
     }
-  }, []);
+  }, [fetchFamilyContext]);
 
   useFocusEffect(
     useCallback(() => {
@@ -331,6 +371,30 @@ export function FmiScreen(): React.ReactElement {
           <Gauge score={score} label={label} />
           <StatusBadge status={status} />
         </View>
+
+        {/* ── Contextual Household FMI Navigation Card ─────────── */}
+        {hasActiveHousehold && familyDashboard?.fmi ? (
+          <TouchableOpacity
+            style={s.householdNavCard}
+            onPress={() => (navigation as any).navigate('Family')}
+            activeOpacity={0.85}
+            accessibilityRole="button"
+            accessibilityLabel={`Household Financial Maturity Index, ${Math.round(familyDashboard.fmi.score)} out of 100, ${familyDashboard.fmi.fmiLabel}. View household details.`}
+          >
+            <View style={s.householdIconWrap}>
+              <Ionicons name="people" size={18} color="#7C3AED" />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={s.householdNavTitle}>Household Financial Maturity</Text>
+              <Text style={s.householdNavSub}>Combined score for your family</Text>
+            </View>
+            <View style={s.householdScoreBadge}>
+              <Text style={s.householdScoreNum}>{Math.round(familyDashboard.fmi.score)}</Text>
+              <Text style={s.householdScoreDenom}>/100</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={16} color="#64748B" />
+          </TouchableOpacity>
+        ) : null}
 
         {/* ── 3 Pillar Cards ──────────────────────────────────── */}
         {pillars && (
@@ -611,4 +675,60 @@ const s = StyleSheet.create({
   infoCard: { backgroundColor: '#EEF2FF', borderRadius: 20, padding: 18, borderWidth: 1, borderColor: '#C7D2FE' },
   infoTitle: { fontSize: 14, fontWeight: '700', color: INDIGO, marginBottom: 6 },
   infoText: { fontSize: 12, color: '#4338CA', lineHeight: 18 },
+
+  // Contextual Household Nav Card
+  householdNavCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: BORDER,
+    gap: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.03,
+    shadowRadius: 4,
+    elevation: 1,
+  },
+  householdIconWrap: {
+    width: 36,
+    height: 36,
+    borderRadius: 10,
+    backgroundColor: '#F3E8FF',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  householdNavTitle: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: DARK,
+  },
+  householdNavSub: {
+    fontSize: 11,
+    color: GRAY,
+    marginTop: 2,
+  },
+  householdScoreBadge: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    backgroundColor: '#F8FAFC',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: BORDER,
+  },
+  householdScoreNum: {
+    fontSize: 16,
+    fontWeight: '800',
+    color: '#7C3AED',
+  },
+  householdScoreDenom: {
+    fontSize: 10,
+    fontWeight: '600',
+    color: '#94A3B8',
+    marginLeft: 1,
+  },
 });

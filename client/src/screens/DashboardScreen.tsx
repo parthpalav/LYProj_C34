@@ -20,7 +20,9 @@ import {
   getFMI,
   getUserProfile,
   getAssets,
-  getIncome
+  getIncome,
+  getCurrentFamily,
+  getFamilyDashboard,
 } from '../services/api';
 import { useStore } from '../store/useStore';
 import {
@@ -30,8 +32,11 @@ import {
   FMIResponse,
   User,
   Asset,
-  IncomeRecord
+  IncomeRecord,
+  FamilySummary,
+  FamilyDashboard,
 } from '../types';
+import { FamilyOverviewCard } from '../components/family/FamilyOverviewCard';
 import { UpdateBalanceScreen } from './UpdateBalanceScreen';
 
 const { width: SCREEN_W } = Dimensions.get('window');
@@ -100,10 +105,70 @@ export function DashboardScreen(): React.ReactElement {
   const [income, setIncome] = useState<IncomeRecord[] | null>(null);
   const [dataLoaded, setDataLoaded] = useState(false);
 
+  // Household subsystem data (Contextual / Multi-member only)
+  const [familySummary, setFamilySummary] = useState<FamilySummary | null>(null);
+  const [familyDashboard, setFamilyDashboard] = useState<FamilyDashboard | null>(null);
+
+  // ── Explicit Household Visibility Condition ──────────────
+  const hasActiveHousehold =
+    !!familySummary &&
+    (
+      typeof familySummary.memberCount === 'number'
+        ? familySummary.memberCount > 1
+        : Array.isArray(familySummary.members) && familySummary.members.length > 1
+    );
+
+  // ── Supplemental Family Data Fetcher (Non-Blocking) ──────
+  const fetchFamilyContext = useCallback(async () => {
+    try {
+      const fam = await getCurrentFamily();
+      if (!fam) {
+        setFamilySummary(null);
+        setFamilyDashboard(null);
+        return;
+      }
+
+      const isMultiMember =
+        typeof fam.memberCount === 'number'
+          ? fam.memberCount > 1
+          : Array.isArray(fam.members) && fam.members.length > 1;
+
+      setFamilySummary(fam);
+
+      if (!isMultiMember) {
+        // Sole member: immediately clear dashboard, do not fetch dashboard
+        setFamilyDashboard(null);
+        return;
+      }
+
+      // Only fetch family dashboard when an active multi-member family exists
+      const dash = await getFamilyDashboard();
+      setFamilyDashboard(dash);
+    } catch {
+      // Failure isolation: never throw or break personal Home
+      setFamilySummary(null);
+      setFamilyDashboard(null);
+    }
+  }, []);
+
+  // Clear family context when authenticated user changes
+  useEffect(() => {
+    setFamilySummary(null);
+    setFamilyDashboard(null);
+  }, [user?.id, user?.email]);
+
   // ── Parallel Data Fetcher with Failure Isolation ─────────
   const fetchAllData = useCallback(async (isRefresh = false) => {
-    if (isRefresh) setRefreshing(true);
-    else if (!dataLoaded) setLoading(true);
+    if (isRefresh) {
+      setRefreshing(true);
+      // Clear stale family state on refresh before re-evaluation
+      setFamilyDashboard(null);
+    } else if (!dataLoaded) {
+      setLoading(true);
+    }
+
+    // Trigger supplemental family fetch in parallel without blocking main spinner
+    void fetchFamilyContext();
 
     try {
       const results = await Promise.allSettled([
@@ -158,7 +223,7 @@ export function DashboardScreen(): React.ReactElement {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [dataLoaded, setDashboard, setUser]);
+  }, [dataLoaded, fetchFamilyContext, setDashboard, setUser]);
 
   useEffect(() => {
     fetchAllData();
@@ -636,6 +701,14 @@ export function DashboardScreen(): React.ReactElement {
             </View>
           </View>
         </View>
+
+        {/* ── CONTEXTUAL HOUSEHOLD OVERVIEW ───────────────── */}
+        {hasActiveHousehold && familyDashboard ? (
+          <FamilyOverviewCard
+            dashboard={familyDashboard}
+            onPressViewDetails={() => (navigation as any).navigate('Family')}
+          />
+        ) : null}
 
         {/* ── F. PREDICTABILITY SNAPSHOT (FUTURE OUTLOOK) ───── */}
         <TouchableOpacity

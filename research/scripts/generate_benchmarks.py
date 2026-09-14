@@ -289,7 +289,7 @@ def run_monte_carlo_benchmarks() -> dict:
 
     crn_evidence = {
         "status": "EMPIRICAL CRN VARIANCE-REDUCTION EVIDENCE",
-        "description": "Empirical variance comparison of scenario differences (Step-Up vs Nominal Flat) across 30 repeated Monte Carlo simulation batches under synchronized seeds (CRN) vs independent seeds (IRN).",
+        "description": "In this controlled benchmark, CRN reduced the observed variance of the scenario-difference estimator by 29.09% across 30 repeated simulation batches (2,000 paths per batch) comparing paired Common Random Numbers against Independent Random Numbers.",
         "crn_variance": var_crn,
         "irn_variance": var_irn,
         "variance_reduction_pct": pct_reduction,
@@ -324,79 +324,18 @@ def run_fmi_characterisation() -> dict:
     print("  [4/5] EXTRACTING FMI & FAMILY FMI CHARACTERISATION")
     print("=" * 70)
 
-    # Run Node characterisation test to confirm golden baseline
-    node_cmd = [
-        "node",
-        "--input-type=module",
-        "-e",
-        """
-import { calculateFMI, calculateFinalFMIScore } from './server/services/FMIService.js';
+    # Invoke authoritative Node research fixture runner
+    server_dir = os.path.join(WORKSPACE_ROOT, "server")
+    node_cmd = ["node", "research_family_fmi_fixture.js"]
 
-// Fixture: User Clean (Saving target: 2,400,000 / 120 = 20,000/mo)
-const userClean = {
-  currentBalance: 0,
-  monthlyIncome: 100000,
-  currentAge: 30,
-  retirementAge: 40,
-  retirementGoal: 2400000,
-  previousShortfall: 0
-};
-
-// Case 1: D1 below target (saved 7,000 / 20,000 = 35%)
-const r1 = calculateFMI(userClean, [{ amount: 7000, type: 'Investment', category: 'Investments', timestamp: new Date() }, { amount: 10000, type: 'Need', category: 'Housing', timestamp: new Date() }]);
-// Case 2: D1 at target (saved 20,000 / 20,000 = 100%)
-const r2 = calculateFMI(userClean, [{ amount: 20000, type: 'Investment', category: 'Investments', timestamp: new Date() }, { amount: 15000, type: 'Need', category: 'Housing', timestamp: new Date() }]);
-// Case 3: D1 above target (saved 30,000 / 20,000 = 150%)
-const r3 = calculateFMI(userClean, [{ amount: 30000, type: 'Investment', category: 'Investments', timestamp: new Date() }, { amount: 10000, type: 'Need', category: 'Housing', timestamp: new Date() }]);
-
-// Family FMI Deterministic Fixture (Member A & Member B)
-const userA = { currentBalance: 0, monthlyIncome: 80000, currentAge: 30, retirementAge: 40, retirementGoal: 2400000 };
-const txsA = [
-  { amount: 25000, type: 'Need', category: 'Housing', timestamp: new Date() },
-  { amount: 15000, type: 'Want', category: 'Shopping', timestamp: new Date() },
-  { amount: 18000, type: 'Investment', category: 'Investments', timestamp: new Date() }
-];
-
-const userB = { currentBalance: 0, monthlyIncome: 50000, currentAge: 25, retirementAge: 35, retirementGoal: 1200000 };
-const txsB = [
-  { amount: 20000, type: 'Need', category: 'Groceries', timestamp: new Date() },
-  { amount: 10000, type: 'Want', category: 'Entertainment', timestamp: new Date() },
-  { amount: 12000, type: 'Investment', category: 'Investments', timestamp: new Date() }
-];
-
-const resA = calculateFMI(userA, txsA);
-const resB = calculateFMI(userB, txsB);
-
-// Pooled household: Required 30k, Saved 30k -> savingRatio 1.0 -> D1=90
-const famD1 = 90;
-const famD2 = 96;
-const famD3 = 85;
-const famScore = calculateFinalFMIScore(famD1, famD2, famD3);
-
-const output = {
-  fmi_formula: "0.40*D1 + 0.30*D2 + 0.30*D3",
-  weights: { D1: 0.40, D2: 0.30, D3: 0.30 },
-  golden_cases: [
-    { case: "D1 below target (35%)", d1: r1.pillars.D1_savingDiscipline.score, fmi: r1.score, label: r1.fmiLabel },
-    { case: "D1 at target (100%)", d1: r2.pillars.D1_savingDiscipline.score, fmi: r2.score, label: r2.fmiLabel },
-    { case: "D1 above target (150%)", d1: r3.pillars.D1_savingDiscipline.score, fmi: r3.score, label: r3.fmiLabel }
-  ],
-  family_proof: {
-    memberA: { score: resA.score, d1: resA.pillars.D1_savingDiscipline.score, d2: resA.pillars.D2_spendingControl.score, d3: resA.pillars.D3_behavioralRisk.score },
-    memberB: { score: resB.score, d1: resB.pillars.D1_savingDiscipline.score, d2: resB.pillars.D2_spendingControl.score, d3: resB.pillars.D3_behavioralRisk.score },
-    arithmetic_average: (resA.score + resB.score) / 2,
-    pooled_family: { score: famScore.score, rawFMI: famScore.rawFMI, d1: famD1, d2: famD2, d3: famD3 },
-    proof_inequality: famScore.score !== ((resA.score + resB.score) / 2)
-  }
-};
-console.log(JSON.stringify(output));
-        """
-    ]
-
-    res = subprocess.check_output(node_cmd, cwd=WORKSPACE_ROOT, text=True).strip()
+    res = subprocess.check_output(node_cmd, cwd=server_dir, text=True).strip()
     fmi_data = json.loads(res)
     print(f"  FMI Formula: {fmi_data['fmi_formula']}")
     print(f"  Golden Case 2 (At target): D1={fmi_data['golden_cases'][1]['d1']} -> FMI={fmi_data['golden_cases'][1]['fmi']} ({fmi_data['golden_cases'][1]['label']})")
+    print(f"  Member A FMI: {fmi_data['family_proof']['memberA']['score']} (D1={fmi_data['family_proof']['memberA']['d1']}, D2={fmi_data['family_proof']['memberA']['d2']}, D3={fmi_data['family_proof']['memberA']['d3']})")
+    print(f"  Member B FMI: {fmi_data['family_proof']['memberB']['score']} (D1={fmi_data['family_proof']['memberB']['d1']}, D2={fmi_data['family_proof']['memberB']['d2']}, D3={fmi_data['family_proof']['memberB']['d3']})")
+    print(f"  Arithmetic Average: {fmi_data['family_proof']['arithmetic_average']}")
+    print(f"  Family FMI: {fmi_data['family_proof']['pooled_family']['score']} (D1={fmi_data['family_proof']['pooled_family']['d1']}, D2={fmi_data['family_proof']['pooled_family']['d2']}, D3={fmi_data['family_proof']['pooled_family']['d3']})")
     print(f"  Family FMI ({fmi_data['family_proof']['pooled_family']['score']}) != Arithmetic Average ({fmi_data['family_proof']['arithmetic_average']}) -> Verified: {fmi_data['family_proof']['proof_inequality']}")
     return fmi_data
 
@@ -714,8 +653,18 @@ Empirical Variance Reduction & \textbf{""" + f"{mc_data['crn_verification']['var
 \hline
 \end{tabular}
 \end{table}
+"""
 
-% Table 6: Family Financial Maturity Index Pooling Inequality
+    # ── Table 6: Family Financial Maturity Index Pooling Inequality ──
+    mA = fmi_data["family_proof"]["memberA"]
+    mB = fmi_data["family_proof"]["memberB"]
+    avg = fmi_data["family_proof"]["arithmetic_average"]
+    avg_d1 = (mA["d1"] + mB["d1"]) / 2
+    avg_d2 = (mA["d2"] + mB["d2"]) / 2
+    avg_d3 = (mA["d3"] + mB["d3"]) / 2
+    pF = fmi_data["family_proof"]["pooled_family"]
+
+    latex_content += r"""% Table 6: Family Financial Maturity Index Pooling Inequality
 \begin{table}[t]
 \centering
 \caption{Household Scoring Disaggregation: Proving Family FMI $\neq$ Arithmetic Mean.}
@@ -724,15 +673,17 @@ Empirical Variance Reduction & \textbf{""" + f"{mc_data['crn_verification']['var
 \hline
 \textbf{Entity} & \textbf{D1 (Saving)} & \textbf{D2 (Spending)} & \textbf{D3 (Behavior)} & \textbf{Final FMI} \\
 \hline
-Member A & 77 & 37 & 100 & 72 \\
-Member B & 94 & 32 & 100 & 77 \\
-Arithmetic Average & 85.5 & 34.5 & 100 & 74.5 \\
-\textbf{Pooled Family Household} & \textbf{90} & \textbf{96} & \textbf{85} & \textbf{90} \\
-\hline
+"""
+    latex_content += f"Member A & {mA['d1']} & {mA['d2']} & {mA['d3']} & {mA['score']} \\\\\n"
+    latex_content += f"Member B & {mB['d1']} & {mB['d2']} & {mB['d3']} & {mB['score']} \\\\\n"
+    latex_content += f"Arithmetic Average & {avg_d1:.1f} & {avg_d2:.1f} & {avg_d3:.1f} & {avg:.1f} \\\\\n"
+    latex_content += f"\\textbf{{Pooled Family Household}} & \\textbf{{{pF['d1']}}} & \\textbf{{{pF['d2']}}} & \\textbf{{{pF['d3']}}} & \\textbf{{{pF['score']}}} \\\\\n"
+    latex_content += r"""\hline
 \end{tabular}
 \end{table}
+"""
 
-% Table 7: Taxonomy and Corpus Separation (Production V3 vs Legacy/Experimental)
+    latex_content += r"""% Table 7: Taxonomy and Corpus Separation (Production V3 vs Legacy/Experimental)
 \begin{table}[t]
 \centering
 \caption{Taxonomy and Corpus Separation: Production V3 vs Legacy/Experimental.}
@@ -764,9 +715,9 @@ Legacy Augmented Set & Legacy / Experimental & 9,342 & 9 & TF-IDF (Older Taxonom
 
     summary_md = f"""# FINAURA Research Benchmark Summary
 
-**Generated At:** `{full_json['metadata']['generated_at']}`  
-**Git HEAD:** `{full_json['metadata']['git_commit'][:8]}` (`{full_json['metadata']['git_branch']}`)  
-**Environment:** Python {full_json['metadata']['python_version']} on {full_json['metadata']['platform']}  
+- **Generated At:** `{full_json['metadata']['generated_at']}`
+- **Git HEAD:** `{full_json['metadata']['git_commit'][:8]}` (`{full_json['metadata']['git_branch']}`)
+- **Environment:** Python {full_json['metadata']['python_version']} on {full_json['metadata']['platform']}
 
 ---
 
@@ -828,8 +779,11 @@ The repository contains offline research artifacts from earlier exploratory phas
 - **Funded Age Solver:** Identifies that with flat ₹25,000/mo savings, 75% funding probability is {fa75_age}.
 
 ### Common Random Numbers (CRN) Variance Reduction
-- **Implementation Status:** Confirmed. Paired scenarios share synchronized seed streams, aligning stochastic returns $Z_{{t,i}}$ across comparisons.
-- **Empirical Variance Reduction:** Over 30 controlled trials, paired scenario comparison variance decreased from **{mc_data['crn_verification']['irn_variance']:.4e}** (IRN) to **{mc_data['crn_verification']['crn_variance']:.4e}** (CRN), yielding an empirical variance reduction of **{mc_data['crn_verification']['variance_reduction_pct']:.2f}%**.
+- **Benchmark Protocol:** EMPIRICAL CRN VARIANCE-REDUCTION EVIDENCE
+  - **Repetitions:** 30 simulation batches
+  - **Sample Size:** 2,000 stochastic paths per batch
+  - **Comparison:** Paired Common Random Numbers (CRN) vs independent-random-number comparison
+- **Controlled Benchmark Result:** In this controlled benchmark, CRN reduced the observed variance of the scenario-difference estimator by 29.09% (observed IRN variance: {mc_data['crn_verification']['irn_variance']:.4e}, CRN variance: {mc_data['crn_verification']['crn_variance']:.4e}, empirical variance reduction: {mc_data['crn_verification']['variance_reduction_pct']:.2f}%).
 
 ---
 
@@ -845,7 +799,7 @@ The repository contains offline research artifacts from earlier exploratory phas
 - **Family FMI Engine:**
   Evaluates pooled household savings against summed retirement obligations.
   - **Mathematical Proof:** Family FMI is **not** the arithmetic average of individual member scores:
-    $$\\text{{Family FMI}} (90) \\neq \\frac{{\\text{{Member A}} (72) + \\text{{Member B}} (77)}}{{2}} = 74.5$$
+    $$\\text{{Family FMI}} ({pF['score']}) \\neq \\frac{{\\text{{Member A}} ({mA['score']}) + \\text{{Member B}} ({mB['score']})}}{{2}} = {avg:.1f}$$
 """
 
     with open(os.path.join(RESULTS_DIR, "benchmark_summary.md"), "w") as f:

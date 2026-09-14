@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "generated_at": "2026-09-14T11:26:58.524456+00:00",
-    "git_commit": "9303d7d36c4398c270ec8b7f9f0136774e3073ae",
+    "generated_at": "2026-09-14T14:47:20.008161+00:00",
+    "git_commit": "692af460e1481fd0a123f6b4b8fb669a5871dfda",
     "git_branch": "main",
     "python_version": "3.13.12",
     "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
@@ -230,12 +230,12 @@
       }
     },
     "runtimes_ms": {
-      "nominal_flat": 22.922992706298828,
-      "step_up_10pct": 23.127079010009766,
-      "step_up": 23.127079010009766,
-      "real_constant": 22.502899169921875,
-      "contribution_solver": 37.870168685913086,
-      "funded_age_solver": 76.3089656829834
+      "nominal_flat": 22.94468879699707,
+      "step_up_10pct": 22.496938705444336,
+      "step_up": 22.496938705444336,
+      "real_constant": 22.7200984954834,
+      "contribution_solver": 37.71018981933594,
+      "funded_age_solver": 85.03580093383789
     },
     "contribution_solver": {
       "solved": true,
@@ -298,7 +298,7 @@
     },
     "crn_verification": {
       "status": "EMPIRICAL CRN VARIANCE-REDUCTION EVIDENCE",
-      "description": "Empirical variance comparison of scenario differences (Step-Up vs Nominal Flat) across 30 repeated Monte Carlo simulation batches under synchronized seeds (CRN) vs independent seeds (IRN).",
+      "description": "In this controlled benchmark, CRN reduced the observed variance of the scenario-difference estimator by 29.09% across 30 repeated simulation batches (2,000 paths per batch) comparing paired Common Random Numbers against Independent Random Numbers.",
       "crn_variance": 4.801264367816089e-05,
       "irn_variance": 6.771379310344832e-05,
       "variance_reduction_pct": 29.094736127378685,
@@ -349,11 +349,10 @@
       },
       "arithmetic_average": 74.5,
       "pooled_family": {
-        "score": 90,
-        "rawFMI": 90.3,
+        "score": 77,
         "d1": 90,
-        "d2": 96,
-        "d3": 85
+        "d2": 35,
+        "d3": 100
       },
       "proof_inequality": true
     }

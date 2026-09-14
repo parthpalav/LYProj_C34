@@ -107,4 +107,8 @@ $$\text{Growth Factor}_{t,i} = (1 + r_{\text{geom}})^{1/12} \cdot \exp\left(\fra
 ### 4. Common Random Numbers (CRN) Variance Reduction
 When comparing alternative scenario $B$ against baseline scenario $A$:
 $$\text{Var}(W_B - W_A) = \text{Var}(W_B) + \text{Var}(W_A) - 2 \text{Cov}(W_A, W_B)$$
-By synchronizing random variates $Z_{t,i}$ across paired scenarios ($r_{A,B} > 0$), estimation variance of scenario differences is reduced by **~29%** in empirical tests.
+By synchronizing random variates $Z_{t,i}$ across paired scenarios ($r_{A,B} > 0$), estimation variance of scenario differences is significantly reduced.
+
+**EMPIRICAL CRN VARIANCE-REDUCTION EVIDENCE:**
+- Protocol: 30 repetitions, 2,000 paths per batch, paired CRN comparison vs independent-random-number comparison.
+- Observation: In this controlled benchmark, CRN reduced the observed variance of the scenario-difference estimator by 29.09%.

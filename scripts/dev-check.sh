@@ -152,10 +152,11 @@ if [ -f "$SERVER_ENV" ]; then
         log_warn "server/MONGO_URI: Missing from server/.env (will fallback to default)"
     fi
 
-    # Check JWT_SECRET fallback
+    # Check JWT_SECRET fallback (hash-based check to avoid literal secret in script)
     if grep -q "^JWT_SECRET=" "$SERVER_ENV"; then
         JWT_VAL=$(grep "^JWT_SECRET=" "$SERVER_ENV" | cut -d= -f2- | tr -d ' "')
-        if [ "$JWT_VAL" = "finaura_jwt_s3cr3t_k3y_2026_xK9mP2qL7wN4" ] || [ -z "$JWT_VAL" ]; then
+        JWT_HASH=$(printf "%s" "$JWT_VAL" | shasum -a 256 2>/dev/null | awk '{print $1}')
+        if [ "$JWT_HASH" = "892db4002114dfa64ff1072f1a551dd912d72462850338ee5407e38753fab735" ] || [ -z "$JWT_VAL" ] || [ "$JWT_VAL" = "your_jwt_access_secret_key_here" ]; then
             log_warn "server/JWT_SECRET: DEFAULT/FALLBACK DETECTED (Phase 9 security item; dev mode safe)"
         else
             log_pass "server/JWT_SECRET: Custom secret configured (masked)"

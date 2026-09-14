@@ -1,8 +1,8 @@
 # FINAURA Research Benchmark Summary
 
-**Generated At:** `2026-09-14T11:26:58.524456+00:00`  
-**Git HEAD:** `9303d7d3` (`main`)  
-**Environment:** Python 3.13.12 on macOS-26.6.2-arm64-arm-64bit-Mach-O  
+- **Generated At:** `2026-09-14T14:47:20.008161+00:00`
+- **Git HEAD:** `692af460` (`main`)
+- **Environment:** Python 3.13.12 on macOS-26.6.2-arm64-arm-64bit-Mach-O
 
 ---
 
@@ -64,8 +64,11 @@ The repository contains offline research artifacts from earlier exploratory phas
 - **Funded Age Solver:** Identifies that with flat ₹25,000/mo savings, 75% funding probability is achieved at age 77.75.
 
 ### Common Random Numbers (CRN) Variance Reduction
-- **Implementation Status:** Confirmed. Paired scenarios share synchronized seed streams, aligning stochastic returns $Z_{t,i}$ across comparisons.
-- **Empirical Variance Reduction:** Over 30 controlled trials, paired scenario comparison variance decreased from **6.7714e-05** (IRN) to **4.8013e-05** (CRN), yielding an empirical variance reduction of **29.09%**.
+- **Benchmark Protocol:** EMPIRICAL CRN VARIANCE-REDUCTION EVIDENCE
+  - **Repetitions:** 30 simulation batches
+  - **Sample Size:** 2,000 stochastic paths per batch
+  - **Comparison:** Paired Common Random Numbers (CRN) vs independent-random-number comparison
+- **Controlled Benchmark Result:** In this controlled benchmark, CRN reduced the observed variance of the scenario-difference estimator by 29.09% (observed IRN variance: 6.7714e-05, CRN variance: 4.8013e-05, empirical variance reduction: 29.09%).
 
 ---
 
@@ -81,4 +84,4 @@ The repository contains offline research artifacts from earlier exploratory phas
 - **Family FMI Engine:**
   Evaluates pooled household savings against summed retirement obligations.
   - **Mathematical Proof:** Family FMI is **not** the arithmetic average of individual member scores:
-    $$\text{Family FMI} (90) \neq \frac{\text{Member A} (72) + \text{Member B} (77)}{2} = 74.5$$
+    $$\text{Family FMI} (77) \neq \frac{\text{Member A} (72) + \text{Member B} (77)}{2} = 74.5$$

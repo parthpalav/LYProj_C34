@@ -35,3 +35,7 @@ ml-service/classifier/*.pyc
 
 # Database backups
 .backup/
+
+# Local runtime logs and process tracking
+.logs/
+.run/

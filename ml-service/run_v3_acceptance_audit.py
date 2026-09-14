@@ -37,106 +37,110 @@ CANONICAL_V3_CATEGORIES = [
 ]
 
 def clean_text(text: str) -> str:
-    text = text.lower()
+    text = str(text).lower()
     text = re.sub(r"(₹|rs\.?|inr)\s*\d+|\d+\s*(₹|rs\.?|inr)", " ", text)
     text = re.sub(r"\b\d+\b", " ", text)
     text = re.sub(r"[^a-z\s]", " ", text)
     text = re.sub(r"\s+", " ", text).strip()
     return text
 
-print("=" * 70)
-print("  FINAURA TAXONOMY V3 PRE-COMMIT ACCEPTANCE AUDIT")
-print("=" * 70)
+def load_and_clean_dataset(csv_path: str = None) -> pd.DataFrame:
+    if csv_path is None:
+        csv_path = os.path.join(BASE_DIR, "dataset.csv")
+    df = pd.read_csv(csv_path).dropna(subset=["text", "category"])
+    df["text"] = df["text"].astype(str).str.strip()
+    df["category"] = df["category"].astype(str).str.strip()
+    df["clean"] = df["text"].apply(clean_text)
+    return df
 
-# ── 1. Dataset Verification ──
-df = pd.read_csv(os.path.join(BASE_DIR, "dataset.csv")).dropna(subset=["text", "category"])
-df["text"] = df["text"].astype(str).str.strip()
-df["category"] = df["category"].astype(str).str.strip()
-df["clean"] = df["text"].apply(clean_text)
+def evaluate_v3_held_out(df: pd.DataFrame = None) -> dict:
+    if df is None:
+        df = load_and_clean_dataset()
+    X = df["clean"]
+    y = df["category"]
 
-dataset_categories = sorted(df["category"].unique())
-print(f"\n1. DATASET AUDIT:")
-print(f"   Total Samples: {len(df)}")
-print(f"   Categories ({len(dataset_categories)}): {dataset_categories}")
-assert dataset_categories == sorted(CANONICAL_V3_CATEGORIES), "Dataset classes do not match Canonical V3!"
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.20, random_state=42, stratify=y
+    )
 
-# ── 2. Stratified 80/20 Held-Out Evaluation ──
-X = df["clean"]
-y = df["category"]
+    vec = TfidfVectorizer(lowercase=True, stop_words="english", ngram_range=(1, 2), max_features=5000, sublinear_tf=True)
+    X_train_vec = vec.fit_transform(X_train)
+    X_test_vec = vec.transform(X_test)
 
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.20, random_state=42, stratify=y
-)
+    clf = LogisticRegression(max_iter=500, solver="lbfgs", C=5.0, class_weight="balanced", random_state=42)
+    clf.fit(X_train_vec, y_train)
 
-vec = TfidfVectorizer(lowercase=True, stop_words="english", ngram_range=(1, 2), max_features=5000, sublinear_tf=True)
-X_train_vec = vec.fit_transform(X_train)
-X_test_vec = vec.transform(X_test)
+    y_pred = clf.predict(X_test_vec)
 
-clf = LogisticRegression(max_iter=500, solver="lbfgs", C=5.0, class_weight="balanced", random_state=42)
-clf.fit(X_train_vec, y_train)
+    acc = accuracy_score(y_test, y_pred)
+    macro_p, macro_r, macro_f1, _ = precision_recall_fscore_support(y_test, y_pred, average="macro", zero_division=0)
+    weighted_p, weighted_r, weighted_f1, _ = precision_recall_fscore_support(y_test, y_pred, average="weighted", zero_division=0)
+    report_dict = classification_report(y_test, y_pred, output_dict=True, zero_division=0)
+    report_text = classification_report(y_test, y_pred, zero_division=0)
 
-y_pred = clf.predict(X_test_vec)
+    classes = sorted(list(y.unique()))
+    cm = confusion_matrix(y_test, y_pred, labels=classes)
+    cm_df = pd.DataFrame(cm, index=classes, columns=classes)
 
-acc = accuracy_score(y_test, y_pred)
-macro_p, macro_r, macro_f1, _ = precision_recall_fscore_support(y_test, y_pred, average="macro", zero_division=0)
-weighted_p, weighted_r, weighted_f1, _ = precision_recall_fscore_support(y_test, y_pred, average="weighted", zero_division=0)
+    confusions = []
+    for i, true_cls in enumerate(classes):
+        for j, pred_cls in enumerate(classes):
+            if i != j and cm[i, j] > 0:
+                confusions.append((true_cls, pred_cls, int(cm[i, j])))
+    confusions.sort(key=lambda x: x[2], reverse=True)
 
-print(f"\n2. HELD-OUT 80/20 EVALUATION (N={len(y_test)}):")
-print(f"   Accuracy:     {acc*100:.2f}%")
-print(f"   Macro Prec:   {macro_p*100:.2f}%")
-print(f"   Macro Recall: {macro_r*100:.2f}%")
-print(f"   Macro F1:     {macro_f1*100:.2f}%")
-print(f"   Weighted F1:  {weighted_f1*100:.2f}%")
+    return {
+        "n_test": len(y_test),
+        "accuracy": float(acc),
+        "macro_precision": float(macro_p),
+        "macro_recall": float(macro_r),
+        "macro_f1": float(macro_f1),
+        "weighted_f1": float(weighted_f1),
+        "report_dict": report_dict,
+        "report_text": report_text,
+        "confusion_matrix": cm,
+        "confusion_matrix_df": cm_df,
+        "classes": classes,
+        "top_confusions": confusions,
+    }
 
-print("\n3. PER-CLASS HELD-OUT METRICS:")
-print(classification_report(y_test, y_pred, zero_division=0))
+def evaluate_v3_cross_validation(df: pd.DataFrame = None, n_splits: int = 5) -> dict:
+    if df is None:
+        df = load_and_clean_dataset()
+    X = df["clean"]
+    y = df["category"]
 
-classes = sorted(list(y.unique()))
-cm = confusion_matrix(y_test, y_pred, labels=classes)
-cm_df = pd.DataFrame(cm, index=classes, columns=classes)
-print("4. CONFUSION MATRIX (Rows: True, Cols: Predicted):")
-print(cm_df.to_string())
+    skf = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=42)
+    cv_accs, cv_macro_f1s = [], []
+    fold_details = []
+    for fold, (train_idx, val_idx) in enumerate(skf.split(X, y), 1):
+        X_tr, y_tr = X.iloc[train_idx], y.iloc[train_idx]
+        X_va, y_va = X.iloc[val_idx], y.iloc[val_idx]
 
-# Find major confusion pairs
-confusions = []
-for i, true_cls in enumerate(classes):
-    for j, pred_cls in enumerate(classes):
-        if i != j and cm[i, j] > 0:
-            confusions.append((true_cls, pred_cls, cm[i, j]))
+        v = TfidfVectorizer(lowercase=True, stop_words="english", ngram_range=(1, 2), max_features=5000, sublinear_tf=True)
+        X_tr_v = v.fit_transform(X_tr)
+        X_va_v = v.transform(X_va)
 
-confusions.sort(key=lambda x: x[2], reverse=True)
-print("\n5. TOP CONFUSION PAIRS (True -> Predicted: Count):")
-for true_c, pred_c, cnt in confusions:
-    print(f"   {true_c} -> {pred_c} ({cnt})")
+        m = LogisticRegression(max_iter=500, solver="lbfgs", C=5.0, class_weight="balanced", random_state=42)
+        m.fit(X_tr_v, y_tr)
+        pred_va = m.predict(X_va_v)
 
-# ── 3. 5-Fold Stratified Cross-Validation ──
-print("\n6. 5-FOLD STRATIFIED CROSS-VALIDATION:")
-skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
-cv_accs, cv_macro_f1s = [], []
-for fold, (train_idx, val_idx) in enumerate(skf.split(X, y), 1):
-    X_tr, y_tr = X.iloc[train_idx], y.iloc[train_idx]
-    X_va, y_va = X.iloc[val_idx], y.iloc[val_idx]
-    
-    v = TfidfVectorizer(lowercase=True, stop_words="english", ngram_range=(1, 2), max_features=5000, sublinear_tf=True)
-    X_tr_v = v.fit_transform(X_tr)
-    X_va_v = v.transform(X_va)
-    
-    m = LogisticRegression(max_iter=500, solver="lbfgs", C=5.0, class_weight="balanced", random_state=42)
-    m.fit(X_tr_v, y_tr)
-    pred_va = m.predict(X_va_v)
-    
-    fold_acc = accuracy_score(y_va, pred_va)
-    fold_macro_f1 = precision_recall_fscore_support(y_va, pred_va, average="macro", zero_division=0)[2]
-    cv_accs.append(fold_acc)
-    cv_macro_f1s.append(fold_macro_f1)
-    print(f"   Fold {fold}: Accuracy={fold_acc*100:.2f}%, Macro F1={fold_macro_f1*100:.2f}%")
+        fold_acc = float(accuracy_score(y_va, pred_va))
+        fold_macro_f1 = float(precision_recall_fscore_support(y_va, pred_va, average="macro", zero_division=0)[2])
+        cv_accs.append(fold_acc)
+        cv_macro_f1s.append(fold_macro_f1)
+        fold_details.append({"fold": fold, "accuracy": fold_acc, "macro_f1": fold_macro_f1})
 
-print(f"   Mean CV Accuracy: {np.mean(cv_accs)*100:.2f}% (+/- {np.std(cv_accs)*100:.2f}%)")
-print(f"   Mean CV Macro F1: {np.mean(cv_macro_f1s)*100:.2f}% (+/- {np.std(cv_macro_f1s)*100:.2f}%)")
-
-# ── 4. Blind Hybrid Pipeline Evaluation ──
-print("\n7. BLIND HYBRID PIPELINE EVALUATION (Unseen queries across all 14 categories):")
-classifier = HybridClassifier(BASE_DIR)
+    return {
+        "n_splits": n_splits,
+        "fold_details": fold_details,
+        "cv_accs": cv_accs,
+        "cv_macro_f1s": cv_macro_f1s,
+        "mean_accuracy": float(np.mean(cv_accs)),
+        "std_accuracy": float(np.std(cv_accs)),
+        "mean_macro_f1": float(np.mean(cv_macro_f1s)),
+        "std_macro_f1": float(np.std(cv_macro_f1s)),
+    }
 
 blind_test_set = [
     # Food & Dining (Want)
@@ -236,29 +240,111 @@ blind_test_set = [
     ("Miscellaneous transaction debit", "Misc", "Need"),
 ]
 
-cat_correct = 0
-type_correct = 0
-rules_used = 0
-tfidf_used = 0
-review_flagged = 0
+def evaluate_hybrid_blind(classifier=None, test_set=None) -> dict:
+    if classifier is None:
+        classifier = HybridClassifier(BASE_DIR)
+    if test_set is None:
+        test_set = blind_test_set
 
-for text, exp_cat, exp_type in blind_test_set:
-    res = classifier.classify(text)
-    is_cat_match = (res["category"] == exp_cat)
-    is_type_match = (res["type"] == exp_type)
-    if is_cat_match: cat_correct += 1
-    if is_type_match: type_correct += 1
-    if res["classificationSource"] == "merchant_rule": rules_used += 1
-    else: tfidf_used += 1
-    if res["needsReview"]: review_flagged += 1
+    cat_correct = 0
+    type_correct = 0
+    rules_used = 0
+    tfidf_used = 0
+    review_flagged = 0
+    samples = []
 
-total_blind = len(blind_test_set)
-print(f"   Total Blind Test Cases: {total_blind}")
-print(f"   Hybrid Category Accuracy: {cat_correct}/{total_blind} ({cat_correct/total_blind*100:.1f}%)")
-print(f"   Hybrid Type Accuracy:     {type_correct}/{total_blind} ({type_correct/total_blind*100:.1f}%)")
-print(f"   Rule vs Model Split:      {rules_used} rules ({rules_used/total_blind*100:.1f}%) vs {tfidf_used} TF-IDF ({tfidf_used/total_blind*100:.1f}%)")
-print(f"   Review Flag Rate:         {review_flagged}/{total_blind} ({review_flagged/total_blind*100:.1f}%)")
+    for text, exp_cat, exp_type in test_set:
+        res = classifier.classify(text)
+        is_cat_match = (res["category"] == exp_cat)
+        is_type_match = (res["type"] == exp_type)
+        if is_cat_match: cat_correct += 1
+        if is_type_match: type_correct += 1
+        if res["classificationSource"] == "merchant_rule": rules_used += 1
+        else: tfidf_used += 1
+        if res["needsReview"]: review_flagged += 1
+        samples.append({
+            "text": text,
+            "expected_category": exp_cat,
+            "predicted_category": res["category"],
+            "category_correct": is_cat_match,
+            "expected_type": exp_type,
+            "predicted_type": res["type"],
+            "type_correct": is_type_match,
+            "classification_source": res["classificationSource"],
+            "category_confidence": float(res.get("categoryConfidence", res.get("confidence", 0.0))),
+            "type_confidence": float(res.get("typeConfidence", 0.0)),
+            "needs_review": bool(res["needsReview"]),
+        })
 
-print("\n" + "=" * 70)
-print("  AUDIT SCRIPT COMPLETE")
-print("=" * 70)
+    total_blind = len(test_set)
+    return {
+        "total": total_blind,
+        "category_correct": cat_correct,
+        "category_accuracy": float(cat_correct / total_blind),
+        "type_correct": type_correct,
+        "type_accuracy": float(type_correct / total_blind),
+        "rules_used": rules_used,
+        "rules_pct": float(rules_used / total_blind),
+        "tfidf_used": tfidf_used,
+        "tfidf_pct": float(tfidf_used / total_blind),
+        "review_flagged": review_flagged,
+        "review_flag_rate": float(review_flagged / total_blind),
+        "samples": samples,
+    }
+
+def run_audit():
+    print("=" * 70)
+    print("  FINAURA TAXONOMY V3 PRE-COMMIT ACCEPTANCE AUDIT")
+    print("=" * 70)
+
+    # 1. Dataset Verification
+    df = load_and_clean_dataset()
+    dataset_categories = sorted(df["category"].unique())
+    print(f"\n1. DATASET AUDIT:")
+    print(f"   Total Samples: {len(df)}")
+    print(f"   Categories ({len(dataset_categories)}): {dataset_categories}")
+    assert dataset_categories == sorted(CANONICAL_V3_CATEGORIES), "Dataset classes do not match Canonical V3!"
+
+    # 2. Stratified 80/20 Held-Out Evaluation
+    held_out = evaluate_v3_held_out(df)
+    print(f"\n2. HELD-OUT 80/20 EVALUATION (N={held_out['n_test']}):")
+    print(f"   Accuracy:     {held_out['accuracy']*100:.2f}%")
+    print(f"   Macro Prec:   {held_out['macro_precision']*100:.2f}%")
+    print(f"   Macro Recall: {held_out['macro_recall']*100:.2f}%")
+    print(f"   Macro F1:     {held_out['macro_f1']*100:.2f}%")
+    print(f"   Weighted F1:  {held_out['weighted_f1']*100:.2f}%")
+
+    print("\n3. PER-CLASS HELD-OUT METRICS:")
+    print(held_out["report_text"])
+
+    print("4. CONFUSION MATRIX (Rows: True, Cols: Predicted):")
+    print(held_out["confusion_matrix_df"].to_string())
+
+    print("\n5. TOP CONFUSION PAIRS (True -> Predicted: Count):")
+    for true_c, pred_c, cnt in held_out["top_confusions"]:
+        print(f"   {true_c} -> {pred_c} ({cnt})")
+
+    # 3. 5-Fold Stratified Cross-Validation
+    print("\n6. 5-FOLD STRATIFIED CROSS-VALIDATION:")
+    cv = evaluate_v3_cross_validation(df)
+    for fold_item in cv["fold_details"]:
+        print(f"   Fold {fold_item['fold']}: Accuracy={fold_item['accuracy']*100:.2f}%, Macro F1={fold_item['macro_f1']*100:.2f}%")
+
+    print(f"   Mean CV Accuracy: {cv['mean_accuracy']*100:.2f}% (+/- {cv['std_accuracy']*100:.2f}%)")
+    print(f"   Mean CV Macro F1: {cv['mean_macro_f1']*100:.2f}% (+/- {cv['std_macro_f1']*100:.2f}%)")
+
+    # 4. Blind Hybrid Pipeline Evaluation
+    print("\n7. BLIND HYBRID PIPELINE EVALUATION (Unseen queries across all 14 categories):")
+    hybrid = evaluate_hybrid_blind()
+    print(f"   Total Blind Test Cases: {hybrid['total']}")
+    print(f"   Hybrid Category Accuracy: {hybrid['category_correct']}/{hybrid['total']} ({hybrid['category_accuracy']*100:.1f}%)")
+    print(f"   Hybrid Type Accuracy:     {hybrid['type_correct']}/{hybrid['total']} ({hybrid['type_accuracy']*100:.1f}%)")
+    print(f"   Rule vs Model Split:      {hybrid['rules_used']} rules ({hybrid['rules_pct']*100:.1f}%) vs {hybrid['tfidf_used']} TF-IDF ({hybrid['tfidf_pct']*100:.1f}%)")
+    print(f"   Review Flag Rate:         {hybrid['review_flagged']}/{hybrid['total']} ({hybrid['review_flag_rate']*100:.1f}%)")
+
+    print("\n" + "=" * 70)
+    print("  AUDIT SCRIPT COMPLETE")
+    print("=" * 70)
+
+if __name__ == "__main__":
+    run_audit()

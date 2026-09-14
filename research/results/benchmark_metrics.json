@@ -1,0 +1,361 @@
+{
+  "metadata": {
+    "generated_at": "2026-09-14T11:26:58.524456+00:00",
+    "git_commit": "9303d7d36c4398c270ec8b7f9f0136774e3073ae",
+    "git_branch": "main",
+    "python_version": "3.13.12",
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+    "random_seed": 42
+  },
+  "production_v3": {
+    "dataset": {
+      "file": "ml-service/dataset.csv",
+      "samples": 697,
+      "categories_count": 14,
+      "categories": [
+        "Food & Dining",
+        "Groceries",
+        "Transport & Travel",
+        "Housing",
+        "Utilities & Bills",
+        "Debt & Loan Payments",
+        "Shopping",
+        "Entertainment",
+        "Health",
+        "Education",
+        "Personal Care",
+        "Insurance",
+        "Investments",
+        "Misc"
+      ]
+    },
+    "category_model": {
+      "architecture": "TF-IDF + Logistic Regression",
+      "held_out": {
+        "n_test": 140,
+        "accuracy": 0.7928571428571428,
+        "macro_precision": 0.8054112554112555,
+        "macro_recall": 0.7851576994434136,
+        "macro_f1": 0.7853856600915424,
+        "weighted_f1": 0.7914105175869882
+      },
+      "cross_validation": {
+        "n_splits": 5,
+        "mean_accuracy": 0.7948098663926002,
+        "std_accuracy": 0.012082677328789983,
+        "mean_macro_f1": 0.7845635085460577,
+        "std_macro_f1": 0.014044643826918465
+      }
+    },
+    "hybrid_blind_challenge": {
+      "status": "HYBRID BLIND CHALLENGE EVALUATION",
+      "total_queries": 68,
+      "category_accuracy": 0.9852941176470589,
+      "type_accuracy": 0.9117647058823529,
+      "rule_coverage": 0.5588235294117647,
+      "ml_fallback_coverage": 0.4411764705882353,
+      "review_flag_rate": 0.35294117647058826
+    }
+  },
+  "model_architecture": {
+    "category_classifier": {
+      "architecture": "TF-IDF + Logistic Regression",
+      "model_artifact": "ml-service/tfidf_v2_category_model.pkl",
+      "vectorizer_artifact": "ml-service/tfidf_v2_category_vectorizer.pkl",
+      "dataset": "ml-service/dataset.csv",
+      "sample_count": 697,
+      "classes_count": 14,
+      "hyperparameters": {
+        "vectorizer": {
+          "ngram_range": [
+            1,
+            2
+          ],
+          "max_features": 5000,
+          "sublinear_tf": true
+        },
+        "classifier": {
+          "C": 5.0,
+          "class_weight": "balanced",
+          "solver": "lbfgs",
+          "max_iter": 500
+        }
+      },
+      "confidence_threshold": 0.6,
+      "margin_threshold": 0.15
+    },
+    "type_classifier": {
+      "architecture": "MiniLM Embeddings + Logistic Regression Head",
+      "model_name": "sentence-transformers/all-MiniLM-L6-v2",
+      "embedding_dimension": 384,
+      "head_artifact": "ml-service/minilm_v2_type_model.pkl",
+      "classes": [
+        "Need",
+        "Want",
+        "Investment"
+      ],
+      "classes_count": 3,
+      "confidence_threshold": 0.75
+    },
+    "pipeline_orchestration": {
+      "order": "1. Deterministic Merchant Rules (rules.py) -> 2. Statistical ML Fallback",
+      "merchant_rules_source": "ml-service/classifier/rules.py",
+      "fallback_handler": "ml-service/classifier/hybrid_pipeline.py"
+    }
+  },
+  "legacy_experimental_corpus": [
+    {
+      "filename": "ml-service/classifier/exp2_train_data.csv",
+      "purpose": "Experiment 2 Synthetic Training Corpus",
+      "row_count": 10300,
+      "categories": 9,
+      "status": "LEGACY / EXPERIMENTAL \u2014 NOT PRODUCTION V3",
+      "comparability": "Incompatible with Production V3 14-category taxonomy"
+    },
+    {
+      "filename": "ml-service/classifier/exp2_val_data.csv",
+      "purpose": "Experiment 2 Validation Corpus",
+      "row_count": 1500,
+      "categories": 9,
+      "status": "LEGACY / EXPERIMENTAL \u2014 NOT PRODUCTION V3",
+      "comparability": "Incompatible with Production V3 14-category taxonomy"
+    },
+    {
+      "filename": "ml-service/classifier/exp2_test_data.csv",
+      "purpose": "Experiment 2 Test Corpus",
+      "row_count": 2650,
+      "categories": 9,
+      "status": "LEGACY / EXPERIMENTAL \u2014 NOT PRODUCTION V3",
+      "comparability": "Incompatible with Production V3 14-category taxonomy"
+    },
+    {
+      "filename": "ml-service/classifier/finaura_training_data.csv",
+      "purpose": "Legacy Augmented Training Set",
+      "row_count": 9342,
+      "categories": 9,
+      "status": "LEGACY / EXPERIMENTAL \u2014 NOT PRODUCTION V3",
+      "comparability": "Incompatible with Production V3 14-category taxonomy"
+    },
+    {
+      "filename": "ml-service/Finaura Dataset V2.csv",
+      "purpose": "Intermediate V2 Exploratory Dataset",
+      "row_count": 1000,
+      "categories": 10,
+      "status": "LEGACY / EXPERIMENTAL \u2014 NOT PRODUCTION V3",
+      "comparability": "Incompatible with Production V3 14-category taxonomy"
+    }
+  ],
+  "monte_carlo": {
+    "scenarios": {
+      "nominal_flat": {
+        "probabilityFundedAtTargetAge": 0.0242,
+        "probabilityReachedFireByTargetAge": 0.0337,
+        "corpusPercentiles": {
+          "p10": 4673890.447208164,
+          "p25": 6288140.4739368595,
+          "p50": 8826026.24244907,
+          "p75": 12569355.366458805,
+          "p90": 17517710.830979463
+        },
+        "firstCrossing": {
+          "percentCrossed": 0.0337,
+          "p25Month": 208,
+          "p50Month": 223,
+          "p75Month": 233
+        },
+        "userGoal": null,
+        "centralPath": {
+          "finalCorpusNominal": 27603423.11311904,
+          "finalCorpusReal": 8606877.804907091
+        },
+        "simulationCount": 10000,
+        "seed": 42,
+        "monthsSimulated": 240,
+        "contributionMode": "NOMINAL_FLAT",
+        "annualContributionGrowthRate": null
+      },
+      "step_up_10pct": {
+        "probabilityFundedAtTargetAge": 0.1669,
+        "probabilityReachedFireByTargetAge": 0.2061,
+        "corpusPercentiles": {
+          "p10": 9731735.585889934,
+          "p25": 12364492.922903473,
+          "p50": 16269111.60173881,
+          "p75": 21860669.05528208,
+          "p90": 28894155.96546617
+        },
+        "firstCrossing": {
+          "percentCrossed": 0.2061,
+          "p25Month": 204,
+          "p50Month": 219,
+          "p75Month": 231
+        },
+        "userGoal": null,
+        "centralPath": {
+          "finalCorpusNominal": 50963785.78397657,
+          "finalCorpusReal": 15890749.307453688
+        },
+        "simulationCount": 10000,
+        "seed": 42,
+        "monthsSimulated": 240,
+        "contributionMode": "STEP_UP",
+        "annualContributionGrowthRate": 0.1
+      },
+      "real_constant": {
+        "probabilityFundedAtTargetAge": 0.0824,
+        "probabilityReachedFireByTargetAge": 0.104,
+        "corpusPercentiles": {
+          "p10": 7218757.168811769,
+          "p25": 9409136.376357615,
+          "p50": 12736132.567141844,
+          "p75": 17507982.516066693,
+          "p90": 23711672.17767474
+        },
+        "firstCrossing": {
+          "percentCrossed": 0.104,
+          "p25Month": 205,
+          "p50Month": 221,
+          "p75Month": 233
+        },
+        "userGoal": null,
+        "centralPath": {
+          "finalCorpusNominal": 39827264.646188244,
+          "finalCorpusReal": 12418329.375624502
+        },
+        "simulationCount": 10000,
+        "seed": 42,
+        "monthsSimulated": 240,
+        "contributionMode": "REAL_CONSTANT",
+        "annualContributionGrowthRate": null
+      }
+    },
+    "runtimes_ms": {
+      "nominal_flat": 22.922992706298828,
+      "step_up_10pct": 23.127079010009766,
+      "step_up": 23.127079010009766,
+      "real_constant": 22.502899169921875,
+      "contribution_solver": 37.870168685913086,
+      "funded_age_solver": 76.3089656829834
+    },
+    "contribution_solver": {
+      "solved": true,
+      "targetProbability": 0.75,
+      "targetType": "ESTIMATED_FIRE",
+      "currentMonthlyContribution": 25000.0,
+      "currentProbabilityFunded": 0.0242,
+      "requiredMonthlyContributionRaw": 113959.50317382812,
+      "recommendedMonthlyContribution": 114000.0,
+      "recommendedInitialMonthlyContribution": 114000.0,
+      "annualContributionGrowthRate": null,
+      "additionalMonthlyContributionRequired": 89000.0,
+      "achievedProbabilityFunded": 0.75,
+      "recommendationIncrement": 100.0,
+      "iterations": 17,
+      "bracketExpansions": 2,
+      "simulationCount": 10000,
+      "seed": 42,
+      "monthsSimulated": 240,
+      "contributionMode": "NOMINAL_FLAT"
+    },
+    "funded_age_solver": {
+      "targetType": "ESTIMATED_FIRE",
+      "currentAge": 30.0,
+      "searchStartAge": 30.0,
+      "maxSearchAge": 90.0,
+      "monthsSimulated": 720,
+      "simulationCount": 10000,
+      "seed": 42,
+      "contributionMode": "NOMINAL_FLAT",
+      "fundedAges": {
+        "fundedAge50": {
+          "reached": true,
+          "ageYears": 67.3333,
+          "monthsFromNow": 448,
+          "probabilityAtAge": 0.5017
+        },
+        "fundedAge75": {
+          "reached": true,
+          "ageYears": 77.75,
+          "monthsFromNow": 573,
+          "probabilityAtAge": 0.7508
+        }
+      },
+      "fundedAge50": {
+        "reached": true,
+        "ageYears": 67.3333,
+        "monthsFromNow": 448,
+        "probabilityAtAge": 0.5017
+      },
+      "fundedAge75": {
+        "reached": true,
+        "ageYears": 77.75,
+        "monthsFromNow": 573,
+        "probabilityAtAge": 0.7508
+      },
+      "userGoalFundedAges": null,
+      "userGoalFundedAge50": null,
+      "userGoalFundedAge75": null
+    },
+    "crn_verification": {
+      "status": "EMPIRICAL CRN VARIANCE-REDUCTION EVIDENCE",
+      "description": "Empirical variance comparison of scenario differences (Step-Up vs Nominal Flat) across 30 repeated Monte Carlo simulation batches under synchronized seeds (CRN) vs independent seeds (IRN).",
+      "crn_variance": 4.801264367816089e-05,
+      "irn_variance": 6.771379310344832e-05,
+      "variance_reduction_pct": 29.094736127378685,
+      "paths_per_batch": 2000,
+      "trials": 30,
+      "seed_alignment_verified": true
+    }
+  },
+  "fmi_characterisation": {
+    "fmi_formula": "0.40*D1 + 0.30*D2 + 0.30*D3",
+    "weights": {
+      "D1": 0.4,
+      "D2": 0.3,
+      "D3": 0.3
+    },
+    "golden_cases": [
+      {
+        "case": "D1 below target (35%)",
+        "d1": 40,
+        "fmi": 74,
+        "label": "Good"
+      },
+      {
+        "case": "D1 at target (100%)",
+        "d1": 90,
+        "fmi": 93,
+        "label": "Excellent"
+      },
+      {
+        "case": "D1 above target (150%)",
+        "d1": 100,
+        "fmi": 98,
+        "label": "Excellent"
+      }
+    ],
+    "family_proof": {
+      "memberA": {
+        "score": 72,
+        "d1": 77,
+        "d2": 37,
+        "d3": 100
+      },
+      "memberB": {
+        "score": 77,
+        "d1": 94,
+        "d2": 32,
+        "d3": 100
+      },
+      "arithmetic_average": 74.5,
+      "pooled_family": {
+        "score": 90,
+        "rawFMI": 90.3,
+        "d1": 90,
+        "d2": 96,
+        "d3": 85
+      },
+      "proof_inequality": true
+    }
+  }
+}

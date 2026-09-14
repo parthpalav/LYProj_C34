@@ -1,0 +1,15 @@
+category,precision,recall,f1_score,support
+Food & Dining,100.0,80.0,88.89,10
+Groceries,80.0,80.0,80.0,10
+Transport & Travel,75.0,60.0,66.67,10
+Housing,73.33,100.0,84.62,11
+Utilities & Bills,58.33,70.0,63.64,10
+Debt & Loan Payments,100.0,100.0,100.0,10
+Shopping,46.67,70.0,56.0,10
+Entertainment,83.33,45.45,58.82,11
+Health,70.0,70.0,70.0,10
+Education,90.91,90.91,90.91,11
+Personal Care,100.0,100.0,100.0,10
+Insurance,100.0,100.0,100.0,10
+Investments,90.0,90.0,90.0,10
+Misc,60.0,42.86,50.0,7

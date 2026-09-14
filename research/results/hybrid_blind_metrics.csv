@@ -1,0 +1,7 @@
+metric,value
+Blind Challenge Queries (N),68
+Hybrid Category Accuracy,98.5% (67/68)
+Hybrid Type Accuracy,91.2% (62/68)
+Deterministic Rule Coverage,55.9% (38/68)
+ML Fallback Coverage,44.1% (30/68)
+Human Review Flag Rate,35.3% (24/68)

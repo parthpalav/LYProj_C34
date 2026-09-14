@@ -1,0 +1,8 @@
+metric,value,n
+Held-Out Accuracy,79.29%,140
+Held-Out Macro Precision,80.54%,140
+Held-Out Macro Recall,78.52%,140
+Held-Out Macro F1,78.54%,140
+Held-Out Weighted F1,79.14%,140
+5-Fold CV Mean Accuracy,79.48% (±1.21%),697
+5-Fold CV Mean Macro F1,78.46% (±1.40%),697

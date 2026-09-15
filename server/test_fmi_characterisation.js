@@ -64,6 +64,7 @@ const res4 = calculateFMI(userClean, expenses4);
 
 // Case 5: D2 overspending (predicted spend exceeds availableMoney)
 const now = new Date();
+now.setHours(12, 0, 0, 0);
 const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
 const daysPassed = now.getDate();
 // spend sufficient to exceed availableMoney = 80,000

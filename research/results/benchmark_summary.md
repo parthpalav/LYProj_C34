@@ -1,7 +1,7 @@
 # FINAURA Research Benchmark Summary
 
-- **Generated At:** `2026-09-14T15:34:09.687781+00:00`
-- **Git HEAD:** `259fb37f` (`main`)
+- **Generated At:** `2026-09-15T16:54:48.541028+00:00`
+- **Git HEAD:** `cdaf3ab5` (`main`)
 - **Environment:** Python 3.13.12 on macOS-26.6.2-arm64-arm-64bit-Mach-O
 
 ---
@@ -84,4 +84,4 @@ The repository contains offline research artifacts from earlier exploratory phas
 - **Family FMI Engine:**
   Evaluates pooled household savings against summed retirement obligations.
   - **Mathematical Proof:** Family FMI is **not** the arithmetic average of individual member scores:
-    $$\text{Family FMI} (77) \neq \frac{\text{Member A} (72) + \text{Member B} (77)}{2} = 74.5$$
+    $$\text{Family FMI} (77) \neq \frac{\text{Member A} (73) + \text{Member B} (78)}{2} = 75.5$$

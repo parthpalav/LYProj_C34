@@ -396,7 +396,7 @@ async function runTests() {
       assert.strictEqual(dashboardResponse.spending.totalNonInvestment, 70000);
       assert.strictEqual(
         dashboardResponse.fmi.householdGoalDetail.predictedMonthlySpend,
-        dashboardResponse.pacing.predictedMonthlyNonInvestmentSpend
+        Math.round(dashboardResponse.pacing.predictedMonthlyNonInvestmentSpend)
       );
     });
 

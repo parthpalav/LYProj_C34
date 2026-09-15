@@ -1,4 +1,4 @@
 case,d1,fmi,label
-D1 below target (35%),40,74,Good
-D1 at target (100%),90,93,Excellent
-D1 above target (150%),100,98,Excellent
+D1 below target (35%),40,69,Good
+D1 at target (100%),90,88,Excellent
+D1 above target (150%),100,93,Excellent

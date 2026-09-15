@@ -120,7 +120,8 @@ async function runTests() {
 
   await test('2.1 Standard Auto-Deduct: ₹10,000 liability debits ₹50,000 balance to ₹40,000', async () => {
     await resetDB();
-    const scheduledDate = new Date('2026-08-01T00:00:00Z');
+    const now = new Date();
+    const scheduledDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
 
     const l = await Liability.create({
       id: 'L-auto-1',

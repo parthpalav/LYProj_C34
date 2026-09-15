@@ -121,7 +121,7 @@ VALID_CONTRIBUTION_MODES = frozenset({
 MAX_ANNUAL_GROWTH_RATE = 0.50  # Up to 50% annual contribution growth in V1
 
 MIN_SIMULATION_COUNT = 100
-MAX_SIMULATION_COUNT = 100_000
+MAX_SIMULATION_COUNT = 50_000
 MAX_MONTHS = 1200  # 100 years, matches financialRules.js
 
 

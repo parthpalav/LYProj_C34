@@ -5,6 +5,7 @@
  * for FINAURA ML / Classification Pipeline.
  */
 
+import './test/setupEnv.js';
 import mongoose from 'mongoose';
 import assert from 'node:assert/strict';
 import jwt from 'jsonwebtoken';
@@ -14,7 +15,7 @@ import Income from './models/Income.js';
 import { calculateFMI } from './services/FMIService.js';
 import { getPredictabilitySnapshot } from './services/PredictabilityService.js';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'finaura_jwt_s3cr3t_k3y_2026_xK9mP2qL7wN4';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 console.log('='.repeat(64));
 console.log('  FINAURA ML CLASSIFIER PRESENTATION CONTRACT SUITE');

@@ -15,9 +15,9 @@ import {
   DEFAULT_LIFESTYLE_RATIO,
   DEFAULT_EMERGENCY_MONTHS
 } from '../config/financialRules.js';
+import { getJwtSecret, config } from '../config/env.js';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'finaura_jwt_s3cr3t_k3y_2026_xK9mP2qL7wN4';
-const BCRYPT_ROUNDS = Number(process.env.BCRYPT_ROUNDS) || 10;
+const BCRYPT_ROUNDS = config.BCRYPT_ROUNDS;
 
 const MAX_FAILED_ATTEMPTS = 5;
 const LOCK_TIME_MS = 15 * 60 * 1000; // 15 minutes
@@ -88,8 +88,8 @@ export function issueAccessToken(user) {
   const userId = user.id || user._id?.toString();
   return jwt.sign(
     { id: userId, _id: user._id?.toString(), email: user.email },
-    JWT_SECRET,
-    { expiresIn: '15m' }
+    getJwtSecret(),
+    { algorithm: 'HS256', expiresIn: '15m' }
   );
 }
 

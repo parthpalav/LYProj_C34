@@ -1,6 +1,9 @@
 // Structured logger utility with automatic redaction of sensitive credentials
 
-const SENSITIVE_KEYS = ['password', 'token', 'accessToken', 'refreshToken', 'secret', 'passwordHash', 'resetToken'];
+const SENSITIVE_KEYS = [
+  'password', 'token', 'accessToken', 'refreshToken', 'secret', 'passwordHash',
+  'resetToken', 'jwt', 'jwt_secret', 'gemini', 'apiKey', 'authorization', 'cookie'
+];
 
 function sanitize(obj) {
   if (!obj || typeof obj !== 'object') return obj;

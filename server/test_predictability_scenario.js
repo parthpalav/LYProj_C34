@@ -13,6 +13,7 @@
  *  8. Numerical safety (zero NaN or Infinity)
  */
 
+import './test/setupEnv.js';
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
@@ -28,7 +29,7 @@ import Liability from './models/Liability.js';
 
 dotenv.config({ path: '.env' });
 
-const JWT_SECRET = process.env.JWT_SECRET || 'finaura_jwt_s3cr3t_k3y_2026_xK9mP2qL7wN4';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 function generateTestToken(user) {
   return jwt.sign(
@@ -342,6 +343,7 @@ async function runTests() {
   } finally {
     await cleanupUsers();
     server.close();
+    await mongoose.disconnect();
   }
 }
 

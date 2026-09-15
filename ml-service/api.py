@@ -19,6 +19,7 @@ import os
 import re
 import pickle
 import logging
+import math
 
 from flask import Flask, jsonify, request
 from flask_cors import CORS
@@ -36,7 +37,17 @@ MODEL_BACKEND = os.getenv("MODEL_BACKEND", "legacy").lower()
 
 # ─── App setup ────────────────────────────────────────────────────────────────
 app = Flask(__name__)
+app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024  # 1 MB maximum payload
 CORS(app)  # allow Express server to call this service
+
+@app.errorhandler(413)
+def request_entity_too_large(error):
+    return jsonify({
+        "error": {
+            "code": "PAYLOAD_TOO_LARGE",
+            "message": "Request payload exceeds maximum allowed size of 1MB."
+        }
+    }), 413
 
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
@@ -91,9 +102,13 @@ def health():
 
 @app.post('/sentiment')
 def sentiment_endpoint():
-    payload = request.get_json(force=True)
-    text    = payload.get('text', '')
-    score   = score_sentiment(text)
+    payload = request.get_json(force=True, silent=True)
+    if not payload or not isinstance(payload, dict):
+        return jsonify({'error': 'Invalid JSON body'}), 400
+    text = str(payload.get('text', '')).strip()
+    if len(text) > 1000:
+        return jsonify({'error': 'Text exceeds maximum length of 1000 characters'}), 400
+    score = score_sentiment(text)
     return jsonify({'score': score})
 
 
@@ -198,9 +213,18 @@ def fmi_score_endpoint():
 
 @app.post('/predict')
 def predict_endpoint():
-    payload    = request.get_json(force=True)
-    series     = payload.get('spending_series', [])
-    balance    = float(payload.get('balance', 0))
+    payload = request.get_json(force=True, silent=True)
+    if not payload or not isinstance(payload, dict):
+        return jsonify({'error': 'Invalid JSON body'}), 400
+    series = payload.get('spending_series', [])
+    if not isinstance(series, list) or len(series) > 1000:
+        return jsonify({'error': 'spending_series must be a list of up to 1000 numbers'}), 400
+    try:
+        balance = float(payload.get('balance', 0))
+        if math.isnan(balance) or math.isinf(balance):
+            return jsonify({'error': 'balance must be a finite number'}), 400
+    except (TypeError, ValueError):
+        return jsonify({'error': 'balance must be a finite number'}), 400
     prediction = detect_threshold_alerts(series, balance)
     return jsonify(prediction)
 
@@ -270,9 +294,29 @@ def classify_expense():
       "verdict":              "Discretionary spend — think before you pay!"
     }
     """
-    payload = request.get_json(force=True)
-    raw     = payload.get('text', '').strip()
+    payload = request.get_json(force=True, silent=True)
+    if not payload or not isinstance(payload, dict):
+        return jsonify({'error': 'Invalid JSON body'}), 400
 
+    raw_text = payload.get('text')
+    if raw_text is None or not isinstance(raw_text, str):
+        return jsonify({
+            "error": "No text provided",
+            "category": "Misc",
+            "type": "Need",
+            "confidence": 0.0,
+            "confidenceScore": 0.0,
+            "all_probs": {},
+            "classificationSource": "fallback",
+            "needsReview": True,
+            "flagged_for_review": True,
+            "sentiment": "neutral",
+            "sentiment_emoji": "🔵",
+            "sentiment_label": "Neutral Spend",
+            "verdict": "No input provided."
+        }), 400
+
+    raw = raw_text.strip()
     if not raw:
         return jsonify({
             "error": "No text provided",
@@ -289,6 +333,9 @@ def classify_expense():
             "sentiment_label": "Neutral Spend",
             "verdict": "No input provided."
         }), 400
+
+    if len(raw) > 1000:
+        return jsonify({'error': 'Text exceeds maximum length of 1000 characters'}), 400
 
     # Unified Hybrid Pipeline (Merchant Rules -> TF-IDF Category + MiniLM Type)
     result = _hybrid_classifier.classify(raw)

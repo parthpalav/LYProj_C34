@@ -20,13 +20,34 @@ export const getLiabilities = async (req, res, next) => {
 export const createLiability = async (req, res, next) => {
   try {
     const userId = req.user.id || req.user._id;
-    const payload = req.body;
+    const payload = req.body || {};
+
+    if (!payload.name || typeof payload.name !== 'string' || !payload.name.trim()) {
+      return res.status(400).json({ success: false, error: 'Liability name is required' });
+    }
+    if (payload.name.trim().length > 100) {
+      return res.status(400).json({ success: false, error: 'Liability name cannot exceed 100 characters' });
+    }
+
+    const numAmount = Number(payload.amount);
+    if (!Number.isFinite(numAmount) || numAmount <= 0) {
+      return res.status(400).json({ success: false, error: 'Amount must be a finite positive number' });
+    }
+
+    const VALID_FREQUENCIES = ['daily', 'weekly', 'monthly', 'yearly'];
+    if (!payload.frequency || !VALID_FREQUENCIES.includes(payload.frequency)) {
+      return res.status(400).json({ success: false, error: 'Frequency must be one of: ' + VALID_FREQUENCIES.join(', ') });
+    }
+
+    if (!payload.startDate || isNaN(new Date(payload.startDate).getTime())) {
+      return res.status(400).json({ success: false, error: 'Valid startDate is required' });
+    }
 
     const newLiability = new Liability({
       id: crypto.randomUUID(),
       userId: String(userId),
-      name: payload.name,
-      amount: payload.amount,
+      name: payload.name.trim(),
+      amount: numAmount,
       category: payload.category,
       type: payload.type,
       autoDeduct: payload.autoDeduct || false,
@@ -62,15 +83,35 @@ export const updateLiability = async (req, res, next) => {
     }
 
     // Only update allowed fields
-    if (payload.name !== undefined) liability.name = payload.name;
-    if (payload.amount !== undefined) liability.amount = payload.amount;
+    if (payload.name !== undefined) {
+      if (typeof payload.name !== 'string' || !payload.name.trim()) {
+        return res.status(400).json({ success: false, error: 'Liability name cannot be empty' });
+      }
+      if (payload.name.trim().length > 100) {
+        return res.status(400).json({ success: false, error: 'Liability name cannot exceed 100 characters' });
+      }
+      liability.name = payload.name.trim();
+    }
+    if (payload.amount !== undefined) {
+      const numAmount = Number(payload.amount);
+      if (!Number.isFinite(numAmount) || numAmount <= 0) {
+        return res.status(400).json({ success: false, error: 'Amount must be a finite positive number' });
+      }
+      liability.amount = numAmount;
+    }
     if (payload.category !== undefined) liability.category = payload.category;
     if (payload.type !== undefined) liability.type = payload.type;
     
     let frequencyChanged = false;
-    if (payload.frequency !== undefined && payload.frequency !== liability.frequency) {
-      liability.frequency = payload.frequency;
-      frequencyChanged = true;
+    if (payload.frequency !== undefined) {
+      const VALID_FREQUENCIES = ['daily', 'weekly', 'monthly', 'yearly'];
+      if (!VALID_FREQUENCIES.includes(payload.frequency)) {
+        return res.status(400).json({ success: false, error: 'Frequency must be one of: ' + VALID_FREQUENCIES.join(', ') });
+      }
+      if (payload.frequency !== liability.frequency) {
+        liability.frequency = payload.frequency;
+        frequencyChanged = true;
+      }
     }
     if (payload.startDate !== undefined) {
       const newStartDate = new Date(payload.startDate);

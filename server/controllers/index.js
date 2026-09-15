@@ -13,7 +13,12 @@ import { smoothIncomeFlow } from '../services/IncomeFlowService.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 import * as authService from '../services/authService.js';
 import * as emailService from '../services/emailService.js';
-import { authRateLimiter, passwordResetRateLimiter } from '../middleware/rateLimiter.js';
+import {
+  authRateLimiter,
+  passwordResetRateLimiter,
+  aiChatRateLimiter,
+  classifyRateLimiter
+} from '../middleware/rateLimiter.js';
 import {
   validate,
   registerSchema,
@@ -452,44 +457,63 @@ router.put('/user/profile', async (req, res, next) => {
     if (payload.emergencyFundTargetMonths !== undefined) updateFields.emergencyFundTargetMonths = Number(payload.emergencyFundTargetMonths);
 
     // Validation checks
+    if (updateFields.age !== undefined) {
+      const age = updateFields.age;
+      if (!Number.isInteger(age) || age < 0 || age > 120) {
+        return res.status(400).json({ success: false, error: 'Age must be an integer between 0 and 120' });
+      }
+    }
+    if (updateFields.currentBalance !== undefined) {
+      const bal = updateFields.currentBalance;
+      if (!Number.isFinite(bal)) {
+        return res.status(400).json({ success: false, error: 'Current balance must be a finite number' });
+      }
+    }
     if (updateFields.retirementAge !== undefined) {
       const rage = updateFields.retirementAge;
-      if (isNaN(rage) || rage < 40 || rage > 100) {
+      if (!Number.isInteger(rage) || rage < 40 || rage > 100) {
         return res.status(400).json({ success: false, error: 'Retirement age must be an integer between 40 and 100' });
       }
     }
     if (updateFields.monthlyIncome !== undefined) {
-      if (isNaN(updateFields.monthlyIncome) || updateFields.monthlyIncome < 0) {
+      const inc = updateFields.monthlyIncome;
+      if (!Number.isFinite(inc) || inc < 0) {
         return res.status(400).json({ success: false, error: 'Monthly income must be a positive number' });
       }
     }
     if (updateFields.retirementCorpusGoal !== undefined) {
-      if (isNaN(updateFields.retirementCorpusGoal) || updateFields.retirementCorpusGoal < 0) {
+      const goal = updateFields.retirementCorpusGoal;
+      if (!Number.isFinite(goal) || goal < 0) {
         return res.status(400).json({ success: false, error: 'Retirement corpus goal must be a non-negative number' });
       }
     }
     if (updateFields.expectedReturnRate !== undefined) {
-      if (isNaN(updateFields.expectedReturnRate) || updateFields.expectedReturnRate < 0 || updateFields.expectedReturnRate > 1) {
+      const r = updateFields.expectedReturnRate;
+      if (!Number.isFinite(r) || r < 0 || r > 1) {
         return res.status(400).json({ success: false, error: 'Expected return rate must be between 0% and 100%' });
       }
     }
     if (updateFields.expectedInflationRate !== undefined) {
-      if (isNaN(updateFields.expectedInflationRate) || updateFields.expectedInflationRate < 0 || updateFields.expectedInflationRate > 1) {
+      const inf = updateFields.expectedInflationRate;
+      if (!Number.isFinite(inf) || inf < 0 || inf > 1) {
         return res.status(400).json({ success: false, error: 'Expected inflation rate must be between 0% and 100%' });
       }
     }
     if (updateFields.expectedWithdrawalRate !== undefined) {
-      if (isNaN(updateFields.expectedWithdrawalRate) || updateFields.expectedWithdrawalRate <= 0 || updateFields.expectedWithdrawalRate > 1) {
+      const w = updateFields.expectedWithdrawalRate;
+      if (!Number.isFinite(w) || w <= 0 || w > 1) {
         return res.status(400).json({ success: false, error: 'Expected withdrawal rate must be between 0% and 100%' });
       }
     }
     if (updateFields.lifestyleAdjustmentRatio !== undefined) {
-      if (isNaN(updateFields.lifestyleAdjustmentRatio) || updateFields.lifestyleAdjustmentRatio <= 0 || updateFields.lifestyleAdjustmentRatio > 2) {
+      const l = updateFields.lifestyleAdjustmentRatio;
+      if (!Number.isFinite(l) || l <= 0 || l > 2) {
         return res.status(400).json({ success: false, error: 'Lifestyle adjustment ratio must be between 0% and 200%' });
       }
     }
     if (updateFields.emergencyFundTargetMonths !== undefined) {
-      if (isNaN(updateFields.emergencyFundTargetMonths) || updateFields.emergencyFundTargetMonths < 0 || updateFields.emergencyFundTargetMonths > 36) {
+      const em = updateFields.emergencyFundTargetMonths;
+      if (!Number.isInteger(em) || em < 0 || em > 36) {
         return res.status(400).json({ success: false, error: 'Emergency fund target must be between 0 and 36 months' });
       }
     }
@@ -550,8 +574,8 @@ router.put('/user/:id/retirement-age', async (req, res, next) => {
       return res.status(400).json({ error: 'Retirement age is required' });
     }
     
-    const age = parseInt(retirementAge, 10);
-    if (isNaN(age) || age < 40 || age > 100) {
+    const age = Number(retirementAge);
+    if (!Number.isInteger(age) || age < 40 || age > 100) {
       return res.status(400).json({ error: 'Retirement age must be between 40 and 100' });
     }
     
@@ -582,8 +606,8 @@ router.put('/user/:id/monthly-income', async (req, res, next) => {
       return res.status(400).json({ error: 'Monthly income is required' });
     }
     
-    const income = parseFloat(monthlyIncome);
-    if (isNaN(income) || income < 0) {
+    const income = Number(monthlyIncome);
+    if (!Number.isFinite(income) || income < 0) {
       return res.status(400).json({ error: 'Monthly income must be a positive number' });
     }
     
@@ -674,8 +698,8 @@ router.put('/user/:id/current-balance', async (req, res, next) => {
     }
 
     if (currentBalance !== undefined && currentBalance !== null) {
-      const absoluteBalance = parseFloat(currentBalance);
-      if (isNaN(absoluteBalance)) {
+      const absoluteBalance = Number(currentBalance);
+      if (!Number.isFinite(absoluteBalance)) {
         return res.status(400).json({ error: 'Current balance must be a valid number' });
       }
       nextBalance = absoluteBalance;
@@ -688,8 +712,8 @@ router.put('/user/:id/current-balance', async (req, res, next) => {
         return res.status(400).json({ error: 'Operation must be credit or debit' });
       }
 
-      const parsedAmount = parseFloat(amount);
-      if (isNaN(parsedAmount) || parsedAmount <= 0) {
+      const parsedAmount = Number(amount);
+      if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
         return res.status(400).json({ error: 'Amount must be a positive number' });
       }
 
@@ -742,6 +766,11 @@ router.post('/transactions', async (req, res, next) => {
       return res.status(400).json({ error: 'Transaction amount must be a finite positive number' });
     }
 
+    const rawDesc = typeof req.body.description === 'string' ? req.body.description.trim() : '';
+    if (rawDesc.length > 500) {
+      return res.status(400).json({ error: 'Description cannot exceed 500 characters' });
+    }
+
     const debitAmount = Math.abs(amount);
 
     const userExists = await User.findOne({ id: userId });
@@ -750,7 +779,7 @@ router.post('/transactions', async (req, res, next) => {
     }
 
     // Call sentiment analyzer and ML classifier (graceful fallback if ML is offline)
-    const sentimentResult = analyzeSentiment(req.body.description, new Date());
+    const sentimentResult = analyzeSentiment(rawDesc, new Date());
     let classificationSource = req.body.classificationSource || 'manual';
     let mlData = {
       category: null,
@@ -1006,6 +1035,13 @@ router.put('/transactions/:id', async (req, res, next) => {
         return res.status(400).json({ error: 'Amount must be a finite positive number' });
       }
       sanitized.amount = Math.abs(amt);
+    }
+
+    // Validate description if provided
+    if (sanitized.description !== undefined) {
+      if (typeof sanitized.description !== 'string' || sanitized.description.length > 500) {
+        return res.status(400).json({ error: 'Description cannot exceed 500 characters' });
+      }
     }
 
     // Validate confidenceScore if provided
@@ -1415,10 +1451,19 @@ router.get('/agent/history', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
-router.post('/agent/chat', async (req, res, next) => {
+router.post('/agent/chat', aiChatRateLimiter, async (req, res, next) => {
   try {
     const userId = req.user.id;
-    const message = req.body.message || '';
+    if (req.body.message === undefined || req.body.message === null) {
+      return res.status(400).json({ error: 'Message is required' });
+    }
+    const message = typeof req.body.message === 'string' ? req.body.message.trim() : '';
+    if (!message) {
+      return res.status(400).json({ error: 'Message cannot be empty' });
+    }
+    if (message.length > 2000) {
+      return res.status(400).json({ error: 'Message cannot exceed 2000 characters' });
+    }
 
     // 1. Fetch prior conversation history before saving current user message (deduplication guarantee)
     const priorHistoryDocs = await AgentMemory.find({ userId }).sort({ timestamp: -1 }).limit(10).lean();
@@ -1532,6 +1577,13 @@ router.post('/income', async (req, res, next) => {
       return res.status(400).json({ error: 'Income amount must be a finite positive number' });
     }
 
+    if (source !== undefined && (typeof source !== 'string' || source.length > 200)) {
+      return res.status(400).json({ error: 'Source cannot exceed 200 characters' });
+    }
+    if (description !== undefined && (typeof description !== 'string' || description.length > 500)) {
+      return res.status(400).json({ error: 'Description cannot exceed 500 characters' });
+    }
+
     const userExists = await User.findOne({ id: userId });
     if (!userExists) {
       return res.status(404).json({ error: 'User not found' });
@@ -1572,8 +1624,18 @@ router.put('/income/:id', async (req, res, next) => {
     const userId = req.user.id;
     const { amount, source, description, timestamp, date } = req.body;
     const update = {};
-    if (source !== undefined) update.source = source;
-    if (description !== undefined) update.description = description;
+    if (source !== undefined) {
+      if (typeof source !== 'string' || source.length > 200) {
+        return res.status(400).json({ error: 'Source cannot exceed 200 characters' });
+      }
+      update.source = source;
+    }
+    if (description !== undefined) {
+      if (typeof description !== 'string' || description.length > 500) {
+        return res.status(400).json({ error: 'Description cannot exceed 500 characters' });
+      }
+      update.description = description;
+    }
     if (timestamp !== undefined || date !== undefined) {
       const d = new Date(timestamp || date);
       if (!isNaN(d.getTime())) update.timestamp = d;
@@ -1947,10 +2009,16 @@ function classifyLocally(rawText) {
   };
 }
 
-router.post('/classify', async (req, res, next) => {
+router.post('/classify', classifyRateLimiter, async (req, res, next) => {
   try {
-    const text = (req.body.text || '').trim();
+    if (typeof req.body.text !== 'string') {
+      return res.status(400).json({ error: 'text field is required and must be a string' });
+    }
+    const text = req.body.text.trim();
     if (!text) return res.status(400).json({ error: 'text field is required' });
+    if (text.length > 1000) {
+      return res.status(400).json({ error: 'text cannot exceed 1000 characters' });
+    }
 
     // Try the Flask ML service first (higher-quality TF-IDF + LogReg model)
     try {
@@ -1975,12 +2043,6 @@ router.post('/classify', async (req, res, next) => {
     console.error('[classify] error:', err);
     return res.json(classifyLocally(req.body.text || ''));
   }
-});
-
-// ── Global error handler ─────────────────────────────────────
-router.use((error, _req, res, _next) => {
-  console.error(error);
-  res.status(500).json({ message: 'Internal server error' });
 });
 
 export default router;

@@ -1,6 +1,5 @@
 import jwt from 'jsonwebtoken';
-
-const JWT_SECRET = process.env.JWT_SECRET || 'finaura_jwt_s3cr3t_k3y_2026_xK9mP2qL7wN4';
+import { getJwtSecret } from '../config/env.js';
 
 export function authMiddleware(req, res, next) {
   const header = req.headers.authorization || '';
@@ -16,7 +15,7 @@ export function authMiddleware(req, res, next) {
   }
 
   try {
-    const payload = jwt.verify(token, JWT_SECRET);
+    const payload = jwt.verify(token, getJwtSecret(), { algorithms: ['HS256'] });
     req.user = payload;
     return next();
   } catch (err) {

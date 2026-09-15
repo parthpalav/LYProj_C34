@@ -27,6 +27,7 @@
  * 23. individual data unchanged after dashboard request
  */
 
+import './test/setupEnv.js';
 import assert from 'node:assert/strict';
 import express from 'express';
 import jwt from 'jsonwebtoken';
@@ -41,7 +42,7 @@ import Income from './models/Income.js';
 import * as FamilyService from './services/FamilyService.js';
 import * as FamilyAggregationService from './services/FamilyAggregationService.js';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'finaura_jwt_s3cr3t_k3y_2026_xK9mP2qL7wN4';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 function generateTestToken(user) {
   return jwt.sign(

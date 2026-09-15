@@ -2,13 +2,12 @@ import mongoose from 'mongoose';
 import { seedDatabase } from '../utils/seedDatabase.js';
 import User from '../models/User.js';
 import Transaction from '../models/Transaction.js';
-
-const DEFAULT_MONGO_URI = 'mongodb://127.0.0.1:27017/lyproj';
+import { config } from './env.js';
 
 async function connectDB() {
-  const mongoUri = process.env.MONGO_URI || DEFAULT_MONGO_URI;
+  const mongoUri = config.MONGO_URI;
   await mongoose.connect(mongoUri);
-  console.log(`MongoDB connected: ${mongoUri}`);
+  console.log('MongoDB connected successfully');
 
   // Sync schema indexes in non-production or when explicitly requested
   if (process.env.NODE_ENV !== 'production' || process.env.SYNC_INDEXES === 'true') {

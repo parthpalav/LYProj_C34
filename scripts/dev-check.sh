@@ -152,17 +152,21 @@ if [ -f "$SERVER_ENV" ]; then
         log_warn "server/MONGO_URI: Missing from server/.env (will fallback to default)"
     fi
 
-    # Check JWT_SECRET fallback (hash-based check to avoid literal secret in script)
+    # Check JWT_SECRET (Required in all server runtimes, minimum 32 chars, no placeholders)
     if grep -q "^JWT_SECRET=" "$SERVER_ENV"; then
-        JWT_VAL=$(grep "^JWT_SECRET=" "$SERVER_ENV" | cut -d= -f2- | tr -d ' "')
-        JWT_HASH=$(printf "%s" "$JWT_VAL" | shasum -a 256 2>/dev/null | awk '{print $1}')
-        if [ "$JWT_HASH" = "892db4002114dfa64ff1072f1a551dd912d72462850338ee5407e38753fab735" ] || [ -z "$JWT_VAL" ] || [ "$JWT_VAL" = "your_jwt_access_secret_key_here" ]; then
-            log_warn "server/JWT_SECRET: DEFAULT/FALLBACK DETECTED (Phase 9 security item; dev mode safe)"
+        JWT_VAL=$(grep "^JWT_SECRET=" "$SERVER_ENV" | cut -d= -f2- | tr -d ' "' | tr -d "'")
+        JWT_LEN=${#JWT_VAL}
+        if [ -z "$JWT_VAL" ]; then
+            log_fail "server/JWT_SECRET: Empty secret (strictly required; min 32 chars)"
+        elif [ "$JWT_LEN" -lt 32 ]; then
+            log_fail "server/JWT_SECRET: Secret is too short (${JWT_LEN} chars; minimum 32 required)"
+        elif echo "$JWT_VAL" | grep -qi "placeholder\|your_jwt_\|change_this\|replace_with"; then
+            log_fail "server/JWT_SECRET: Placeholder detected (must provide a real secure secret; min 32 chars)"
         else
-            log_pass "server/JWT_SECRET: Custom secret configured (masked)"
+            log_pass "server/JWT_SECRET: Valid secret configured (masked, ${JWT_LEN} characters)"
         fi
     else
-        log_warn "server/JWT_SECRET: Unset; hardcoded development fallback will be used (Phase 9 security item)"
+        log_fail "server/JWT_SECRET: Unset in server/.env (strictly required; min 32 chars)"
     fi
 
     # Check ML_SERVICE_URL
@@ -172,7 +176,7 @@ if [ -f "$SERVER_ENV" ]; then
         log_warn "server/ML_SERVICE_URL: Not found in server/.env (defaults to http://localhost:5001)"
     fi
 else
-    log_warn "server/.env file: Not found. Remedy: copy server/.env.example to server/.env"
+    log_fail "server/.env file: Not found. Remedy: copy server/.env.example to server/.env and set JWT_SECRET"
 fi
 
 # ML Service .env

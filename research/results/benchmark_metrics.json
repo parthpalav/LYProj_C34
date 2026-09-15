@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "generated_at": "2026-09-14T14:47:20.008161+00:00",
-    "git_commit": "692af460e1481fd0a123f6b4b8fb669a5871dfda",
+    "generated_at": "2026-09-14T15:34:09.687781+00:00",
+    "git_commit": "259fb37f7edc73902f7007c0f2268023da421365",
     "git_branch": "main",
     "python_version": "3.13.12",
     "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
@@ -230,12 +230,12 @@
       }
     },
     "runtimes_ms": {
-      "nominal_flat": 22.94468879699707,
-      "step_up_10pct": 22.496938705444336,
-      "step_up": 22.496938705444336,
-      "real_constant": 22.7200984954834,
-      "contribution_solver": 37.71018981933594,
-      "funded_age_solver": 85.03580093383789
+      "nominal_flat": 22.79496192932129,
+      "step_up_10pct": 22.887229919433594,
+      "step_up": 22.887229919433594,
+      "real_constant": 24.40500259399414,
+      "contribution_solver": 41.63312911987305,
+      "funded_age_solver": 85.6330394744873
     },
     "contribution_solver": {
       "solved": true,

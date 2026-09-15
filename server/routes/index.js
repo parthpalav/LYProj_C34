@@ -6,6 +6,7 @@ import * as assetController from '../controllers/assetController.js';
 import * as reportController from '../controllers/reportController.js';
 import * as familyController from '../controllers/familyController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
+import { computeRateLimiter } from '../middleware/rateLimiter.js';
 
 const router = Router();
 
@@ -25,7 +26,7 @@ router.post('/family/members/:userId/remove', authMiddleware, familyController.r
 
 // Predictability routes
 router.get('/predictability', authMiddleware, predictabilityController.getPredictability);
-router.post('/predictability/scenario', authMiddleware, predictabilityController.evaluateScenario);
+router.post('/predictability/scenario', authMiddleware, computeRateLimiter, predictabilityController.evaluateScenario);
 
 // Report routes
 router.get('/reports/monthly', authMiddleware, reportController.getMonthlyReport);

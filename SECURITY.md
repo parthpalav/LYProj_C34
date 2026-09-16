@@ -4,6 +4,8 @@
 
 > [!IMPORTANT]
 > **FINAURA is an educational and research financial-planning application and NOT a regulated financial institution, banking service, registered investment advisor, or custodial platform.** It does not execute monetary transactions, hold real deposits, or provide certified accounting advice.
+>
+> *Phase 9 security hardening complete within the project's current architecture.*
 
 ---
 

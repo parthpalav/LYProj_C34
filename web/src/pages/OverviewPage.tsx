@@ -22,6 +22,9 @@ import { AlertsPanel } from '../components/dashboard/AlertsPanel';
 import { UpcomingLiabilities } from '../components/dashboard/UpcomingLiabilities';
 import { RecentActivityTable } from '../components/dashboard/RecentActivityTable';
 import { FutureOutlookPanel } from '../components/dashboard/FutureOutlookPanel';
+import { getFamilyDashboard } from '../services/api';
+import type { FamilyDashboard } from '../types';
+import { FamilyOverviewCard } from '../components/family/FamilyOverviewCard';
 
 export const OverviewPage: React.FC = () => {
   const { user } = useAuth();
@@ -74,6 +77,33 @@ export const OverviewPage: React.FC = () => {
 
   const greetingHeadline = user?.name ? `${getGreeting()}, ${firstName}` : `${getGreeting()}`;
 
+  // Supplemental Family Dashboard State (Isolated from personal overview failures)
+  const [familyDashboard, setFamilyDashboard] = React.useState<FamilyDashboard | null>(null);
+
+  React.useEffect(() => {
+    let isMounted = true;
+    if (user) {
+      getFamilyDashboard()
+        .then((dash) => {
+          if (isMounted) setFamilyDashboard(dash);
+        })
+        .catch(() => {
+          // Isolated failure: do not impact personal dashboard
+          if (isMounted) setFamilyDashboard(null);
+        });
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [user]);
+
+  const handleRefresh = () => {
+    refetch();
+    getFamilyDashboard()
+      .then((dash) => setFamilyDashboard(dash))
+      .catch(() => setFamilyDashboard(null));
+  };
+
   return (
     <div className="overview-page">
       {/* Page Header */}
@@ -95,7 +125,7 @@ export const OverviewPage: React.FC = () => {
           <Button
             variant="outline"
             size="sm"
-            onClick={refetch}
+            onClick={handleRefresh}
             disabled={isRefreshing || isLoading}
             leftIcon={<RotateCcw size={14} className={isRefreshing ? 'animate-spin' : ''} />}
           >
@@ -177,6 +207,14 @@ export const OverviewPage: React.FC = () => {
           </>
         )}
       </section>
+
+      {/* Contextual Family Overview — Strictly rendered for genuine active multi-member households (memberCount > 1) */}
+      {familyDashboard?.family &&
+        ((familyDashboard.family.memberCount ?? 0) > 1 || (familyDashboard.family.members?.length ?? 0) > 1) && (
+          <section className="overview-family-section" aria-label="Household Overview">
+            <FamilyOverviewCard dashboard={familyDashboard} />
+          </section>
+        )}
 
       {/* Primary Charts Row: Cash Flow & Spending Breakdown */}
       <section className="overview-charts-grid overview-section-1">

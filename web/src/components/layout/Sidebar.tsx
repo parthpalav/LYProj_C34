@@ -7,6 +7,7 @@ import {
   TrendingUp,
   FileText,
   User as UserIcon,
+  Users,
   Settings,
   LogOut,
   X,
@@ -83,6 +84,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen = false, onClose }) => 
           <NavLink to="/app/insights" className={getLinkClass} onClick={onClose}>
             <ChartNoAxesCombined size={18} />
             <span>Insights</span>
+          </NavLink>
+          <NavLink to="/app/family" className={getLinkClass} onClick={onClose}>
+            <Users size={18} />
+            <span>Family</span>
           </NavLink>
 
           <div className="sidebar-section-label">Future</div>

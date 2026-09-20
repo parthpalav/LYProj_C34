@@ -16,6 +16,9 @@ import { FmiPillarsGrid } from '../components/insights/FmiPillarsGrid';
 import { FmiHistoryChart } from '../components/insights/FmiHistoryChart';
 import { FmiDeltaSummary } from '../components/insights/FmiDeltaSummary';
 import { FmiFactorsPanel } from '../components/insights/FmiFactorsPanel';
+import { getFamilyDashboard } from '../services/api';
+import type { FamilyDashboard } from '../types';
+import { HouseholdFmiInsightCard } from '../components/family/HouseholdFmiInsightCard';
 
 // Behaviour Components
 import { BehaviorSummaryStrip } from '../components/insights/BehaviorSummaryStrip';
@@ -79,6 +82,25 @@ export const InsightsPage: React.FC = () => {
   const fmi = useFmiInsights();
   const behavior = useBehaviorInsights();
   const income = useIncomeInsights();
+
+  // Supplemental Family Dashboard State for FMI tab integration
+  const [familyDashboard, setFamilyDashboard] = React.useState<FamilyDashboard | null>(null);
+
+  React.useEffect(() => {
+    let isMounted = true;
+    if (activeTab === 'fmi') {
+      getFamilyDashboard()
+        .then((dash) => {
+          if (isMounted) setFamilyDashboard(dash);
+        })
+        .catch(() => {
+          if (isMounted) setFamilyDashboard(null);
+        });
+    }
+    return () => {
+      isMounted = false;
+    };
+  }, [activeTab]);
 
   const handleRefreshCurrentTab = () => {
     switch (activeTab) {
@@ -217,6 +239,12 @@ export const InsightsPage: React.FC = () => {
                   factors={fmi.neutralFactors}
                 />
               </div>
+
+              {/* Secondary Household Financial Maturity Card (Strictly multi-member family only) */}
+              {familyDashboard?.family &&
+                ((familyDashboard.family.memberCount ?? 0) > 1 || (familyDashboard.family.members?.length ?? 0) > 1) && (
+                  <HouseholdFmiInsightCard dashboard={familyDashboard} />
+                )}
             </div>
           )}
         </div>

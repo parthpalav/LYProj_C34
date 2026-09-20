@@ -670,3 +670,6 @@ export interface HistoricalMonthSummary {
   transactionCount: number;
   incomeCount: number;
 }
+
+// ── Family & Household System ─────────────────────────────────
+export * from './family';

@@ -18,6 +18,7 @@ const ActivityPage = React.lazy(() => import('./pages/ActivityPage').then((m) =>
 const InsightsPage = React.lazy(() => import('./pages/InsightsPage').then((m) => ({ default: m.InsightsPage })));
 const PlanPage = React.lazy(() => import('./pages/PlanPage').then((m) => ({ default: m.PlanPage })));
 const ReportsPage = React.lazy(() => import('./pages/ReportsPage').then((m) => ({ default: m.ReportsPage })));
+const FamilyPage = React.lazy(() => import('./pages/FamilyPage').then((m) => ({ default: m.FamilyPage })));
 
 /**
  * Route wrapper requiring valid authenticated session.
@@ -125,6 +126,9 @@ export const App: React.FC = () => {
             {/* Documents / Reports Workspace */}
             <Route path="reports" element={<ReportsPage />} />
 
+            {/* Family & Household Workspace */}
+            <Route path="family" element={<FamilyPage />} />
+
             {/* Profile Placeholder */}
             <Route
               path="profile"
@@ -136,6 +140,11 @@ export const App: React.FC = () => {
                     {
                       name: 'Personal Information',
                       description: 'Full name, email address, avatar, date of birth, and derived age.',
+                    },
+                    {
+                      name: 'Family & Household',
+                      description: 'Manage family members, pending invitations, and shared household financial overview.',
+                      link: '/app/family',
                     },
                     {
                       name: 'Income & Retirement Targets',
@@ -175,6 +184,9 @@ export const App: React.FC = () => {
               }
             />
           </Route>
+
+          {/* Canonical Convenience Redirect */}
+          <Route path="/family" element={<Navigate to="/app/family" replace />} />
 
           {/* 404 Catch-All */}
           <Route path="*" element={<NotFoundPage />} />

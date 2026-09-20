@@ -1,10 +1,12 @@
 import React from 'react';
 import { PageHeader } from '../components/ui/PageHeader';
 import { Layers, ArrowUpRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 export interface PlannedSectionItem {
   name: string;
   description: string;
+  link?: string;
 }
 
 export interface PlaceholderPageProps {
@@ -135,6 +137,23 @@ export const PlaceholderPage: React.FC<PlaceholderPageProps> = ({
                     >
                       {item.description}
                     </p>
+                    {item.link && (
+                      <Link
+                        to={item.link}
+                        style={{
+                          marginTop: '0.75rem',
+                          fontSize: '0.8125rem',
+                          color: 'var(--accent-primary)',
+                          fontWeight: 500,
+                          textDecoration: 'none',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '4px',
+                        }}
+                      >
+                        Open {item.name} &rarr;
+                      </Link>
+                    )}
                   </div>
 
                   <div

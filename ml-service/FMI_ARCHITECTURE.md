@@ -1,315 +1,298 @@
-# FMI Architecture: Financial Maturity Index Scoring Engine
+# Financial Maturity Index (FMI) Architecture
 
 ## Overview
 
-The **Financial Maturity Index (FMI)** is a transparent, mathematically-grounded financial wellness score that measures a user's retirement readiness. It is **NOT** a supervised machine learning model.
+The Financial Maturity Index (FMI) is an objective, deterministic financial health metric that evaluates a user's current-month personal finance discipline on a scale of 0 to 100. It measures whether current financial behavior aligns with long-term financial stability and retirement readiness.
 
-### Core Principle
+FMI is computed entirely through deterministic financial logic inside the Express backend ([FMIService.js](../server/services/FMIService.js)).
 
-```
-FMI = 50 when user saves exactly the required amount to hit retirement goal
-FMI < 50 when user is behind target
-FMI > 50 when user is ahead of target
-```
+FMI is explicitly NOT:
+- A machine learning or regression model
+- An artificial intelligence or LLM-generated score
+- A Monte Carlo simulation output
+- A credit score or loan underwriting algorithm
+- A retirement probability percentage
 
-## Why Not ML?
+## Design Goals
 
-The initial implementation attempted to use supervised ML (RandomForest) with engineered labels. This approach had critical flaws:
+1. **Deterministic:** Identical financial profiles and monthly transactions produce identical scores.
+2. **Explainable:** Every point gained or deducted is traceable to published mathematical formulas.
+3. **Goal-Oriented:** Evaluates performance against individualized retirement savings requirements rather than raw bank balances.
+4. **Calendar-Paced:** Evaluates current-month spending pacing dynamically throughout the month.
+5. **Separation of Concerns:** Consumes transaction category and type classifications, but does not rely on machine learning for scoring.
 
-### 1. **No Ground Truth**
-- The 32k financial dataset contains no real retirement outcomes (no FMI labels)
-- Labels were artificially engineered post-hoc using a deterministic formula
-- ML models cannot learn genuine patterns without observed ground truth
+## Core Formula
 
-### 2. **Label Leakage**
-- Features used directly in the label computation:
-  - `retirement_goal` → appears both in formula AND as input feature
-  - `current_retirement_savings` → appears both in formula AND as input feature  
-  - `monthly_savings` → appears both in formula AND as input feature
-  - `debt` → appears both in formula AND as input feature
-- This creates circular dependency where model learns to invert the formula, not predict outcomes
+FMI is computed as a weighted sum of three distinct behavioral pillars:
 
-### 3. **Perfect Accuracy is Red Flag**
-- Achieved R² ~0.998 on test set
-- This isn't surprising because the model is learning: `f(inputs) ≈ engineered_formula(inputs)`
-- A high-accuracy model with leakage is not a valid predictor
-
-### 4. **Not Academically Defensible**
-- For a final-year engineering project, calling this "ML-based prediction" is misleading
-- Reviewers would immediately identify label leakage
-- The system provides no new insights beyond the formula itself
-
-## Solution: Transparent Scoring Engine
-
-Instead of ML, FMI uses **financial mathematics** to compute retirement readiness directly.
-
-### Mathematical Foundation
-
-The system uses the **Future Value (FV) equation** from finance:
-
-```
-FV = PV(1+r)^n + PMT * [((1+r)^n - 1) / r]
+$$\text{FMI} = \text{clamp}\left(\text{round}\left(0.40 \cdot D_1 + 0.30 \cdot D_2 + 0.30 \cdot D_3\right), 0, 100\right)$$
 
 Where:
-  FV  = Future Value (retirement goal)
-  PV  = Present Value (current savings)
-  r   = Monthly interest rate (annual rate / 12)
-  n   = Number of months until retirement
-  PMT = Monthly payment (what we solve for)
-```
-
-### Required Monthly Contribution
-
-To hit a retirement goal, the algorithm solves for the monthly contribution needed:
-
-```
-Rearranging FV equation to solve for PMT:
-PMT = (FV - PV(1+r)^n) / [((1+r)^n - 1) / r]
-```
-
-This is the **required monthly savings** to reach the goal on schedule.
-
-### Projected Retirement Corpus
-
-Given actual monthly savings, the system projects the final amount:
-
-```
-Projected = PV(1+r)^n + Actual_Monthly * [((1+r)^n - 1) / r]
-```
-
-### FMI Scoring Algorithm
-
-1. **Base Score** (derived from savings ratio):
-   ```
-   base_fmi = 50 + (actual - required) / required * 25
-   ```
-   - Ratio = 1.0 (on-target) → score = 50
-   - Ratio = 2.0 (double target) → score = 75
-   - Ratio = 0.5 (half target) → score = 25
-
-2. **Debt Penalty**:
-   ```
-   debt_penalty = min(20, debt_to_income_ratio * 100)
-   ```
-   - Each 1% of DTI subtracts 1 point (capped at -20)
-
-3. **Consistency Bonus**:
-   ```
-   consistency_adjustment = (savings_consistency - 0.5) * 20
-   ```
-   - Perfect consistency (+0.5 above baseline) → +10 points
-   - Poor consistency (-0.5 below baseline) → -10 points
-
-4. **Readiness Adjustment**:
-   ```
-   readiness_adjustment = (retirement_readiness_pct - 100) / 4
-   ```
-   - At 100% of goal → +0 adjustment
-   - At 150% of goal → +12.5 points
-   - At 200% of goal → +25 points (capped)
-
-5. **Final Score**:
-   ```
-   FMI = clamp(base_fmi - debt_penalty + consistency + readiness, 0, 100)
-   ```
-
-### FMI Status Bands
-
-| Score | Status | Interpretation |
-|-------|--------|-----------------|
-| 0–30 | Critical | Severely behind on savings target |
-| 31–45 | Behind | Trending behind; needs intervention |
-| 46–55 | On Track | Meeting retirement savings goals |
-| 56–75 | Ahead | Exceeding targets; building surplus |
-| 76–100 | Excellent | Well ahead; could consider adjusting goals |
-
-## Implementation
-
-### File Structure
-
-```
-ml-service/
-  ├── fmi_engine.py          # Core FMI calculation (pure Python)
-  ├── api.py                 # Flask endpoint: POST /fmi-score
-  ├── fmi_model.py           # Deprecated (points to new engine)
-  └── classifier_model.pkl   # Expense classifier (still uses ML, intentionally)
-
-server/
-  └── services/
-      └── FMIService.js      # Calls FMI microservice
-```
-
-### FMI Engine API
-
-**File:** `ml-service/fmi_engine.py`
-
-**Main Function:**
-```python
-calculate_fmi(
-    age: int,
-    retirement_age: int,
-    current_retirement_savings: float,
-    retirement_goal: float,
-    monthly_income: float,
-    monthly_savings: float,
-    investment_contribution: float = 0.0,
-    debt: float = 0.0,
-    savings_consistency: float = 0.7,
-    annual_interest_rate: float = 0.05,
-    annual_inflation_rate: float = 0.03
-) -> FMIResult
-```
-
-**Returns:** Fully structured result with score, status, explainability factors, and assumptions.
-
-### Flask Endpoint
-
-**URL:** `POST http://localhost:5001/fmi-score`
-
-**Request:**
-```json
-{
-  "age": 45,
-  "retirement_age": 65,
-  "current_retirement_savings": 500000,
-  "retirement_goal": 2000000,
-  "monthly_income": 8000,
-  "monthly_savings": 1500,
-  "investment_contribution": 500,
-  "debt": 50000,
-  "savings_consistency": 0.8,
-  "annual_interest_rate": 0.05,
-  "annual_inflation_rate": 0.03
-}
-```
-
-**Response:**
-```json
-{
-  "score": 60.55,
-  "status": "Ahead",
-  "required_monthly_savings": 1234.56,
-  "actual_monthly_savings": 2000.0,
-  "monthly_gap": 765.44,
-  "projected_retirement_corpus": 2500000.0,
-  "years_remaining": 20,
-  "months_remaining": 240,
-  "savings_rate_performance": 1.621,
-  "debt_to_income_ratio": 0.052,
-  "savings_consistency_score": 0.8,
-  "retirement_readiness_pct": 125.0,
-  "assumptions": {
-    "annual_interest_rate": 0.05,
-    "annual_inflation_rate": 0.03,
-    "retirement_goal_dollars": 2000000,
-    "current_age": 45,
-    "retirement_age": 65
-  },
-  "warnings": []
-}
-```
-
-### Node.js Integration
-
-**File:** `server/services/FMIService.js`
-
-Exports async function `calculateFMI(profile)` that:
-1. Calls Flask `/fmi-score` endpoint
-2. Transforms response for backend consumers
-3. Returns structured result with score, status, risk, and factors
-4. Provides safe fallback if microservice unavailable
-
-## Why This is Better for Academic Project
-
-### ✅ **Fully Explainable**
-Every component of the score can be explained using financial mathematics. Reviewers can verify the logic by hand.
-
-### ✅ **No Label Leakage**
-Features don't directly construct the target. The scoring algorithm is independent.
-
-### ✅ **Legitimate Use of ML**
-Expense classification (TF-IDF + LogReg) remains ML-based for actual pattern learning. FMI uses ML only where appropriate.
-
-### ✅ **Defensible Architecture**
-The system design is:
-- Transparent (mathematics, not black-box)
-- Reproducible (same inputs always yield same outputs)
-- Auditable (every step is documented)
-- Realistic (based on financial principles, not synthetic labels)
-
-### ✅ **Practical Value**
-FMI provides genuine financial insights:
-- "You need to save $X more per month"
-- "At current rate, you'll have $Y at retirement"
-- "You're tracking {ahead/behind/on-target}"
-
-### ✅ **Room for Real ML**
-If needed in future, real ML could enhance FMI through:
-- Predicting future savings consistency from behavioral patterns
-- Forecasting expense categories using transaction history
-- Detecting anomalies in spending patterns
-- Personalized recommendation systems
-
-All of these are legitimate supervised learning tasks with observable ground truth.
-
-## Configuration & Assumptions
-
-Default financial assumptions (tunable):
-- **Annual Portfolio Return:** 5% (conservative for diversified portfolio)
-- **Annual Inflation Rate:** 3% (historical average)
-- **Savings Consistency:** 0.7 (70% - assumes user saves target most months)
-- **Debt-to-Income Calculation:** Assumes 5% annual debt cost or 30% of income for repayment
-
-These can be modified per user profile or region.
-
-## Future Enhancements
-
-### Data-Driven Adjustments
-- Analyze historical user data to estimate realistic `savings_consistency` per segment
-- Calculate region-specific inflation and return rate assumptions
-- Personalize expected returns based on user's stated investment strategy
-
-### ML Integrations (Legitimate Use Cases)
-1. **Behavioral Prediction:** Use transaction history to forecast `savings_consistency`
-2. **Expense Forecasting:** ML model for category-level spending trends
-3. **Anomaly Detection:** Flag unusual spending patterns
-4. **Recommendations:** Suggest category-specific savings opportunities
-
-### UI Enhancements
-- Breakdown FMI by contributing factors
-- "What-if" scenarios: "If I save $X more, FMI becomes..."
-- Sensitivity analysis: "FMI is most sensitive to {savings_rate / returns / debt}"
-- Goal adjustments: "To reach FMI={X}, adjust goal to ${Y}"
-
-## Testing & Validation
-
-### Unit Tests
-All financial formulas are tested against manual calculations and financial textbooks.
-
-### Integration Tests
-- Backend builds profile correctly from MongoDB
-- Flask endpoint responds with valid FMI
-- Frontend displays scores accurately
-
-### Comparison Tests
-- Example profiles compared with online retirement calculators
-- Results validated with financial advisor inputs (if available)
-
-## Academic Integrity Note
-
-This system is **academically defensible** because:
-1. It uses established financial mathematics (FV equations from corporate finance)
-2. It explicitly rejects label-leakage ML approaches
-3. It is fully transparent and auditable
-4. It provides legitimate business value
-5. It demonstrates proper engineering judgment in technology selection
-
-It is **not** an ML project by design—it is a financially-informed scoring system that could include ML components where appropriate.
+- **$D_1$ (Saving Discipline, 40% weight):** Measures actual monthly investment flow against the user's required monthly savings target.
+- **$D_2$ (Spending Control, 30% weight):** Measures non-investment consumption pacing against the user's available monthly disposable budget.
+- **$D_3$ (Behavioral Stability, 30% weight):** Evaluates risk factors including late-night spending, impulse clusters, and discretionary imbalances.
 
 ---
 
-## References
+## Pillar D1: Saving Discipline (40%)
 
-- **Future Value Equation:** Ross, S. A., Westerfield, R. W., & Jaffe, J. F. (2013). Corporate Finance.
-- **Retirement Planning Math:** Moshe Milevsky. King of the Mountain: The Secret Financial Life of the Wealthy.
-- **Financial Wellness:** CFP Board. Standards of Professional Conduct.
+Pillar $D_1$ measures how well the user fulfills their monthly savings obligation.
+
+### Inputs
+- **`totalSaved`:** Sum of transaction amounts in the current calendar month where `type === 'Investment'`.
+- **`requiredThisMonth`:** Target savings for the current month:
+  $$\text{requiredThisMonth} = \text{requiredMonthlySaving} + \text{previousShortfall}$$
+  where:
+  $$\text{requiredMonthlySaving} = \frac{\max(0, \text{retirementGoal} - \text{currentBalance})}{\text{monthsLeft}}$$
+  $$\text{monthsLeft} = \max(1, \text{retirementAge} - \text{currentAge}) \cdot 12$$
+
+If no explicit retirement goal is configured, the system uses a default target corpus of $20 \times \text{annual income}$ ($\text{monthlyIncome} \cdot 12 \cdot 20$).
+
+### Scoring Logic
+When $\text{requiredThisMonth} \le 0$ (goal already met or no target set):
+- If $\text{totalSaved} > 0$: Score = 95
+- If $\text{totalSaved} = 0$: Score = 75
+
+When $\text{requiredThisMonth} > 0$, the algorithm computes the savings ratio:
+$$\text{savingRatio} = \frac{\text{totalSaved}}{\text{requiredThisMonth}}$$
+
+Piecewise evaluation:
+1. **$\text{savingRatio} \ge 1.0$ (Target met or exceeded):**
+   $$\text{Score} = \text{lerp}\left(\min(\text{savingRatio} - 1, 0.5) \cdot 2, 90, 100\right)$$
+   Yields 90 at 100% target up to 100 at 150%+ target.
+2. **$0.70 \le \text{savingRatio} < 1.0$ (On pace, slight gap):**
+   $$\text{Score} = \text{lerp}\left(\frac{\text{savingRatio} - 0.70}{0.30}, 60, 85\right)$$
+   Yields 60 to 85.
+3. **$\text{savingRatio} < 0.70$ (Behind target):**
+   $$\text{Score} = \text{lerp}\left(\frac{\text{savingRatio}}{0.70}, 20, 60\right)$$
+   Yields 20 to 60.
+
+Output is clamped to $[0, 100]$.
+
+---
+
+## Pillar D2: Spending Control (30%)
+
+Pillar $D_2$ measures whether the user's ongoing daily consumption will fit within their available monthly disposable budget.
+
+### Inputs
+- **`totalSpent`:** Sum of non-investment transactions in the current calendar month (`type === 'Need'` or `type === 'Want'`).
+- **`availableMoney`:** Monthly income remaining after reserving required savings:
+  $$\text{availableMoney} = \max(0, \text{monthlyIncome} - \text{requiredThisMonth})$$
+
+### Calendar Pacing Model
+$D_2$ does not wait until month-end to evaluate spending. It projects month-end consumption using calendar-aware daily run-rates:
+$$\text{avgDailySpend} = \frac{\text{totalSpent}}{\text{daysPassed}}$$
+$$\text{predictedMonthlySpend} = \text{avgDailySpend} \cdot \text{daysInMonth}$$
+
+### Scoring Logic
+When $\text{availableMoney} \le 0$ (income is fully committed to savings or debt):
+- If $\text{totalSpent} = 0$: Score = 80
+- If $\text{totalSpent} > 0$:
+  $$\text{Score} = \text{clamp}\left(\text{round}\left(40 - \frac{\text{totalSpent}}{\max(1, \text{monthlyIncome})} \cdot 20\right), 0, 100\right)$$
+
+When $\text{availableMoney} > 0$, the algorithm computes the spend ratio:
+$$\text{spendRatio} = \frac{\text{predictedMonthlySpend}}{\text{availableMoney}}$$
+
+Piecewise evaluation:
+1. **$\text{spendRatio} \le 0.70$ (Well controlled, budget surplus):**
+   $$\text{Score} = \text{lerp}\left(1 - \frac{\text{spendRatio}}{0.70}, 80, 100\right)$$
+   Yields 80 to 100.
+2. **$0.70 < \text{spendRatio} \le 1.0$ (Moderate consumption, within budget):**
+   $$\text{Score} = \text{lerp}\left(\frac{1 - \text{spendRatio}}{0.30}, 50, 80\right)$$
+   Yields 50 to 80.
+3. **$\text{spendRatio} > 1.0$ (Projected overspending):**
+   $$\text{Score} = \text{lerp}\left(\max(0, 2 - \text{spendRatio}), 20, 50\right)$$
+   Yields 20 to 50, reaching a minimum floor of 20 when projected spending exceeds $2 \times \text{available budget}$.
+
+---
+
+## Pillar D3: Behavioral Stability (30%)
+
+Pillar $D_3$ evaluates transaction patterns for impulsive, volatile, or disproportionate financial behaviors via [BehaviorService.js](../server/services/BehaviorService.js).
+
+### Scoring Logic
+$D_3$ starts at a baseline score of 100 points and applies additive penalties for detected risk patterns:
+
+| Behavioral Risk Pattern | Trigger Condition | Point Deduction |
+| :--- | :--- | :--- |
+| **Late-Night Spending** | Transactions recorded between 11:00 PM and 5:00 AM | -15 |
+| **Discretionary Imbalance** | Current-month Wants exceed Needs ($\text{wantsTotal} > \text{needsTotal}$) | -15 |
+| **Anomaly Cluster** | Multiple statistically anomalous transaction amounts detected | -10 |
+| **Impulse Shopping** | Rapid burst of retail or discretionary shopping purchases | -8 |
+| **Food Spending Spike** | Dining and delivery outlays significantly exceeding normal run-rate | -5 |
+
+The final score is clamped:
+$$D_3 = \text{clamp}(100 - \sum \text{penalties}, 0, 100)$$
+
+If no risky patterns are detected in current-month activity, $D_3 = 100$.
+
+---
+
+## Evaluation Window
+
+Personal FMI operates strictly on the **current calendar month**:
+- Start: First calendar day of the month at 00:00:00 local time.
+- End: Last calendar day of the month at 23:59:59 local time.
+- Transactions from prior calendar months are excluded from the current FMI calculation.
+- On the first day of a new month, FMI resets automatically based on baseline income and zero initial expenses.
+
+---
+
+## Relationship to Transaction Classification
+
+Transaction classification is performed upstream by a hybrid pipeline (deterministic merchant rules + TF-IDF category classifier + MiniLM spend-type classifier).
+
+FMI relies on the resulting transaction `type`:
+- `Investment`: Inflow to wealth assets, counted in $D_1$.
+- `Need`: Essential consumption, counted in $D_2$ and $D_3$.
+- `Want`: Discretionary consumption, counted in $D_2$ and $D_3$.
+
+**Architecture Boundary:** Machine learning assists in categorizing text descriptions, but machine learning plays zero role in the calculation of FMI. If a user manually overrides a transaction type (e.g., reclassifying a purchase from `Want` to `Need`), FMI recalculates deterministically based on the user's manual classification.
+
+---
+
+## Runtime Data Flow
+
+```mermaid
+flowchart TD
+    Client["Client App"] -->|GET /api/fmi| Controller["server/controllers/index.js"]
+    Controller --> Auth["authMiddleware (verify JWT)"]
+    Auth --> Fetch["Fetch User, Goals, and Month-to-Date Transactions"]
+    Fetch --> Engine["server/services/FMIService.js"]
+
+    subgraph Computation["Deterministic FMI Computation"]
+        Engine --> D1["D1: Saving Discipline (40%)\n(Investments vs Required Monthly Saving)"]
+        Engine --> D2["D2: Spending Control (30%)\n(Paced Outflow vs Available Budget)"]
+        Engine --> D3["D3: Behavioral Stability (30%)\n(100 - Risk Penalties)"]
+        D1 --> Combine["Weighted Sum & Rounding\nround(0.4*D1 + 0.3*D2 + 0.3*D3)"]
+        D2 --> Combine
+        D3 --> Combine
+    end
+
+    Combine --> Snapshot["Upsert Snapshot in FMIHistory\n(1 record per user per calendar day)"]
+    Snapshot --> JSON["JSON Response DTO"]
+    JSON --> Client
+```
+
+---
+
+## Score Labels
+
+FMI scores map to five qualitative status bands:
+
+| Score Range | Status Label | Qualitative Interpretation |
+| :--- | :--- | :--- |
+| **80 to 100** | `Excellent` | Optimal savings rate and strict spending control. |
+| **65 to 79** | `Good` | On track to hit retirement targets with minor variances. |
+| **45 to 64** | `Fair` | Meeting basic obligations but susceptible to budget strain. |
+| **25 to 44** | `Needs Attention` | Trailing monthly savings targets or overspending budget. |
+| **0 to 24** | `Critical` | Severe budget deficit or critical savings shortfall. |
+
+---
+
+## Worked Example (Illustrative)
+
+Consider an illustrative user profile:
+- Monthly income: ₹100,000
+- Required monthly retirement saving: ₹20,000
+- Available monthly budget: ₹80,000
+- Mid-month day 15 of 30:
+  - Investments made: ₹20,000 (100% of target) $\rightarrow D_1 = 90$
+  - Non-investment spending: ₹34,000 (daily run-rate: ₹2,266.67, projected month-end: ₹68,000, spend ratio: 85%) $\rightarrow D_2 = 65$
+  - Behavior: One late-night order (-15 penalty) $\rightarrow D_3 = 85$
+
+Calculation:
+$$\text{Raw FMI} = (0.40 \cdot 90) + (0.30 \cdot 65) + (0.30 \cdot 85) = 36.0 + 19.5 + 25.5 = 81.0$$
+$$\text{Final FMI} = 81 \quad (\text{Status: } \text{Excellent})$$
+
+---
+
+## API Contract
+
+Endpoint: `GET /api/fmi` (Authenticated via Bearer JWT)
+
+### Response Structure (Excerpt)
+```json
+{
+  "score": 81,
+  "FMI": 81,
+  "fmiLabel": "Excellent",
+  "status": "below",
+  "requiredMonthlySaving": 20000,
+  "requiredThisMonth": 20000,
+  "totalSaved": 20000,
+  "totalSpent": 34000,
+  "predictedMonthlySpend": 68000,
+  "availableMoney": 80000,
+  "pillars": {
+    "D1_savingDiscipline": { "score": 90, "weight": 0.4, "detail": "Saving 100% of target - excellent" },
+    "D2_spendingControl": { "score": 65, "weight": 0.3, "detail": "Predicted spend is 85% of budget - moderate" },
+    "D3_behavioralRisk": { "score": 85, "weight": 0.3, "detail": "1 risk factor(s) detected" }
+  },
+  "insights": [
+    "Great discipline! You are on track to save ₹12,000 extra this month",
+    "You have met your savings target for this month - keep it up!"
+  ],
+  "alerts": [],
+  "prediction": {
+    "daysPassed": 15,
+    "daysInMonth": 30,
+    "avgDailySpend": 2267,
+    "predictedMonthlySpend": 68000
+  },
+  "goalDetail": {
+    "retirementGoal": 2400000,
+    "remainingGoal": 2400000,
+    "monthsLeft": 120,
+    "yearsLeft": 10
+  },
+  "timestamp": "2026-09-22T00:00:00.000Z"
+}
+```
+
+---
+
+## Relationship to Other FINAURA Systems
+
+### FMI vs FIRE
+- **FMI:** Measures short-term (current-month) behavioral pacing and savings execution.
+- **FIRE Planning:** Models multi-decade accumulation milestones, real retirement targets, and withdrawal horizons.
+- FMI uses the user's required monthly savings target as an input for $D_1$, but FMI is not a FIRE number and does not predict retirement age.
+
+### FMI vs Predictability & Scenario Analysis
+- Predictability evaluates future wealth trajectories across alternative contribution and market return scenarios.
+- FMI evaluates present-month discipline. Predictability and scenario simulations do not inject FMI into stochastic return equations.
+
+### FMI vs Monte Carlo Simulation
+- Monte Carlo simulation is a stochastic engine modeling probabilistic investment returns across thousands of market paths.
+- FMI is completely deterministic. Monte Carlo does not produce FMI, and FMI does not alter simulation shocks.
+
+### Personal FMI vs Family FMI
+- **Personal FMI:** Evaluates an individual's private accounts and behaviors ([FMIService.js](../server/services/FMIService.js)).
+- **Family FMI:** Evaluates pooled household savings flows against pooled required monthly saving across all family members ([FamilyFMIService.js](../server/services/FamilyFMIService.js)).
+- Family FMI is calculated from pooled household cash flows rather than computing an arithmetic average of member scores. Family members cannot inspect each other's individual FMI scores, transactions, or personal retirement goals.
+
+---
+
+## Testing and Characterization
+
+FMI calculations are covered by deterministic characterization test suites:
+- [server/test_fmi_characterisation.js](../server/test_fmi_characterisation.js): Validates golden test fixtures across low, target, and surplus savings ratios.
+- [server/test_fmi_history_pillars_persistence.js](../server/test_fmi_history_pillars_persistence.js): Verifies daily snapshot upsert semantics and pillar persistence in MongoDB.
+- [server/test_fmi_history_idempotency.js](../server/test_fmi_history_idempotency.js): Ensures that multiple calculations within the same calendar day update the same daily snapshot without duplicate records.
+
+---
+
+## Security and Privacy
+
+1. **Authentication:** Access to `GET /api/fmi` requires a verified JSON Web Token (`authMiddleware`).
+2. **Tenant Isolation:** All financial metrics are scoped strictly to `req.user.id`.
+3. **Server-Side Authority:** All FMI scores, status labels, and pillars are computed authoritatively on the server; clients cannot mutate scores directly.
+4. **Data Minimization:** Household endpoints present only aggregated family-level metrics to prevent cross-member financial surveillance.
+
+---
+
+## Historical Note
+
+Earlier prototype iterations explored training a supervised regression model on synthetic financial datasets to predict retirement readiness scores, as well as an initial single-equation future-value gap formula. Both approaches were rejected because supervised models lacked real-world ground truth and introduced label leakage. The current architecture uses the explainable, three-pillar deterministic model documented above.

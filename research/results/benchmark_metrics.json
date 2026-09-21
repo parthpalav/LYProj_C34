@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "generated_at": "2026-09-15T16:54:48.541028+00:00",
-    "git_commit": "cdaf3ab5132729136ab3e8a30bc5354fd6ec639f",
+    "generated_at": "2026-09-21T19:25:09.238897+00:00",
+    "git_commit": "f1e0f18afc50b62bde677f4eef0a58d1f558cfe9",
     "git_branch": "main",
     "python_version": "3.13.12",
     "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
@@ -230,12 +230,12 @@
       }
     },
     "runtimes_ms": {
-      "nominal_flat": 23.12493324279785,
-      "step_up_10pct": 22.336959838867188,
-      "step_up": 22.336959838867188,
-      "real_constant": 22.383928298950195,
-      "contribution_solver": 39.44206237792969,
-      "funded_age_solver": 85.02078056335449
+      "nominal_flat": 22.8121280670166,
+      "step_up_10pct": 22.658824920654297,
+      "step_up": 22.658824920654297,
+      "real_constant": 22.788047790527344,
+      "contribution_solver": 40.45295715332031,
+      "funded_age_solver": 84.96499061584473
     },
     "contribution_solver": {
       "solved": true,
@@ -318,40 +318,40 @@
       {
         "case": "D1 below target (35%)",
         "d1": 40,
-        "fmi": 69,
+        "fmi": 70,
         "label": "Good"
       },
       {
         "case": "D1 at target (100%)",
         "d1": 90,
-        "fmi": 88,
+        "fmi": 89,
         "label": "Excellent"
       },
       {
         "case": "D1 above target (150%)",
         "d1": 100,
-        "fmi": 93,
+        "fmi": 94,
         "label": "Excellent"
       }
     ],
     "family_proof": {
       "memberA": {
-        "score": 73,
+        "score": 79,
         "d1": 77,
-        "d2": 40,
+        "d2": 59,
         "d3": 100
       },
       "memberB": {
-        "score": 78,
+        "score": 82,
         "d1": 94,
-        "d2": 35,
+        "d2": 49,
         "d3": 100
       },
-      "arithmetic_average": 75.5,
+      "arithmetic_average": 80.5,
       "pooled_family": {
-        "score": 77,
+        "score": 83,
         "d1": 90,
-        "d2": 38,
+        "d2": 55,
         "d3": 100
       },
       "proof_inequality": true

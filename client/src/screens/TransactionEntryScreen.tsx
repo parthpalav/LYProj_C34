@@ -21,20 +21,20 @@ import { useStore } from '../store/useStore';
 import { Liability } from '../types';
 
 const CATEGORIES = [
-  { label: 'Food & Dining',        emoji: '🍽️', ml: 'Food & Dining'        },
-  { label: 'Groceries',            emoji: '🛒', ml: 'Groceries'            },
-  { label: 'Transport & Travel',   emoji: '🚕', ml: 'Transport & Travel'   },
-  { label: 'Housing',              emoji: '🏠', ml: 'Housing'              },
-  { label: 'Utilities & Bills',    emoji: '💡', ml: 'Utilities & Bills'    },
+  { label: 'Food & Dining', emoji: '🍽️', ml: 'Food & Dining' },
+  { label: 'Groceries', emoji: '🛒', ml: 'Groceries' },
+  { label: 'Transport & Travel', emoji: '🚕', ml: 'Transport & Travel' },
+  { label: 'Housing', emoji: '🏠', ml: 'Housing' },
+  { label: 'Utilities & Bills', emoji: '💡', ml: 'Utilities & Bills' },
   { label: 'Debt & Loan Payments', emoji: '💳', ml: 'Debt & Loan Payments' },
-  { label: 'Shopping',             emoji: '🛍️', ml: 'Shopping'             },
-  { label: 'Entertainment',        emoji: '🎬', ml: 'Entertainment'        },
-  { label: 'Health',               emoji: '🏥', ml: 'Health'               },
-  { label: 'Education',            emoji: '🎓', ml: 'Education'            },
-  { label: 'Personal Care',        emoji: '✂️', ml: 'Personal Care'        },
-  { label: 'Insurance',            emoji: '🛡️', ml: 'Insurance'            },
-  { label: 'Investments',          emoji: '📈', ml: 'Investments'          },
-  { label: 'Misc',                 emoji: '📦', ml: 'Misc'                 },
+  { label: 'Shopping', emoji: '🛍️', ml: 'Shopping' },
+  { label: 'Entertainment', emoji: '🎬', ml: 'Entertainment' },
+  { label: 'Health', emoji: '🏥', ml: 'Health' },
+  { label: 'Education', emoji: '🎓', ml: 'Education' },
+  { label: 'Personal Care', emoji: '✂️', ml: 'Personal Care' },
+  { label: 'Insurance', emoji: '🛡️', ml: 'Insurance' },
+  { label: 'Investments', emoji: '📈', ml: 'Investments' },
+  { label: 'Misc', emoji: '📦', ml: 'Misc' },
 ];
 
 const SPEND_TYPES = ['Need', 'Want', 'Investment'] as const;
@@ -51,8 +51,8 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
   const [selectedCategory, setSelectedCategory] = useState(CATEGORIES[0]);
   const [selectedType, setSelectedType] = useState<SpendType>('Want');
   const [showCategoryModal, setShowCategoryModal] = useState(false);
-  const [logged,   setLogged]   = useState(false);
-  const [saving,   setSaving]   = useState(false);
+  const [logged, setLogged] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [liabilities, setLiabilities] = useState<Liability[]>([]);
   const [selectedLiability, setSelectedLiability] = useState<Liability | null>(null);
   const [showLiabilityModal, setShowLiabilityModal] = useState(false);
@@ -73,9 +73,9 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
   }, []);
 
   // ── AI Classifier state ─────────────────────────────────────
-  const [aiResult,       setAiResult]       = useState<ClassifyResult | null>(null);
-  const [aiLoading,      setAiLoading]      = useState(false);
-  const [typeConfirmed,  setTypeConfirmed]  = useState(true);
+  const [aiResult, setAiResult] = useState<ClassifyResult | null>(null);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [typeConfirmed, setTypeConfirmed] = useState(true);
   const badgeAnim = useRef(new Animated.Value(0)).current;
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const requestIdRef = useRef(0);
@@ -120,7 +120,7 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
         // Animate badge in
         badgeAnim.setValue(0);
         Animated.spring(badgeAnim, { toValue: 1, useNativeDriver: true, tension: 120, friction: 8 }).start();
-        
+
         // ML suggests: only pre-select if user has not manually chosen type
         if (!userOverrodeTypeRef.current) {
           if (result.type && (SPEND_TYPES as readonly string[]).includes(result.type)) {
@@ -130,7 +130,7 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
             else if (result.sentiment === 'negative') setSelectedType('Want');
             else setSelectedType('Need');
           }
-          
+
           if (result.needsReview) {
             setTypeConfirmed(false);
           } else {
@@ -165,7 +165,7 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
     .filter(t => new Date(t.timestamp) > startOfWeek && t.type !== 'Investment')
     .reduce((s, t) => s + Math.abs(t.amount), 0) + (selectedType !== 'Investment' ? parsedAmount : 0);
 
-  const wantsRatio = transactions.length > 0 
+  const wantsRatio = transactions.length > 0
     ? Math.round((transactions.filter(t => t.sentiment === 'negative').length / transactions.length) * 100)
     : 0;
 
@@ -209,20 +209,20 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
 
       // The user's selectedType is the single source of truth from the form
       const newTx = await addTransaction({
-        amount:              parsedAmount,
-        category:            categoryKey,
-        sentiment:           finalSentiment,
-        description:         description.trim() || selectedCategory.label,
-        type:                selectedType,
-        confidenceScore:     aiResult?.confidenceScore ?? aiResult?.confidence ?? 0,
-        categorySource:      userOverrodeCategoryRef.current ? 'manual' : aiResult?.categorySource,
-        typeSource:          userOverrodeTypeRef.current ? 'manual' : aiResult?.typeSource,
-        categoryConfidence:  userOverrodeCategoryRef.current ? 1.0 : aiResult?.categoryConfidence,
-        typeConfidence:      userOverrodeTypeRef.current ? 1.0 : aiResult?.typeConfidence,
-        needsReview:         aiResult?.needsReview,
-        liabilityId:         selectedLiability ? selectedLiability.id : undefined,
+        amount: parsedAmount,
+        category: categoryKey,
+        sentiment: finalSentiment,
+        description: description.trim() || selectedCategory.label,
+        type: selectedType,
+        confidenceScore: aiResult?.confidenceScore ?? aiResult?.confidence ?? 0,
+        categorySource: userOverrodeCategoryRef.current ? 'manual' : aiResult?.categorySource,
+        typeSource: userOverrodeTypeRef.current ? 'manual' : aiResult?.typeSource,
+        categoryConfidence: userOverrodeCategoryRef.current ? 1.0 : aiResult?.categoryConfidence,
+        typeConfidence: userOverrodeTypeRef.current ? 1.0 : aiResult?.typeConfidence,
+        needsReview: aiResult?.needsReview,
+        liabilityId: selectedLiability ? selectedLiability.id : undefined,
         expectedScheduledFor: selectedLiability && selectedLiability.autoDeduct && markAsPaid && selectedLiability.nextDueDate ? selectedLiability.nextDueDate.toString() : undefined,
-        timestamp:           new Date().toISOString(),
+        timestamp: new Date().toISOString(),
       });
       addToStore(newTx);
       setLogged(true);
@@ -249,274 +249,274 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
 
           {/* Bottom Sheet Card */}
           <View style={styles.sheet}>
-          {/* Drag handle */}
-          <View style={styles.dragHandle} />
+            {/* Drag handle */}
+            <View style={styles.dragHandle} />
 
-          {/* Header */}
-          <View style={styles.header}>
-            <Text style={styles.headerTitle}>Entry</Text>
-            <TouchableOpacity onPress={onClose} style={styles.closeBtn} activeOpacity={0.7}>
-              <Text style={styles.closeIcon}>✕</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Amount Field Label */}
-          <Text style={styles.fieldLabel}>Amount</Text>
-
-          {/* Amount Input Container */}
-          <TouchableOpacity
-            style={[
-              styles.amountContainer,
-              isAmountFocused && styles.amountContainerFocused,
-            ]}
-            activeOpacity={1}
-            onPress={() => amountInputRef.current?.focus()}
-            accessibilityRole="button"
-            accessibilityLabel="Transaction amount"
-          >
-            <View pointerEvents="none" style={styles.currencyPrefixWrap}>
-              <Text style={[styles.currencyPrefix, isAmountFocused && styles.currencyPrefixFocused]}>
-                ₹
-              </Text>
+            {/* Header */}
+            <View style={styles.header}>
+              <Text style={styles.headerTitle}>Entry</Text>
+              <TouchableOpacity onPress={onClose} style={styles.closeBtn} activeOpacity={0.7}>
+                <Text style={styles.closeIcon}>✕</Text>
+              </TouchableOpacity>
             </View>
-            <TextInput
-              ref={amountInputRef}
-              style={styles.amountInput}
-              value={amount}
-              onChangeText={(t) => {
-                const cleaned = t.replace(/[^0-9.]/g, '');
-                const parts = cleaned.split('.');
-                if (parts.length > 2) {
-                  setAmount(`${parts[0]}.${parts.slice(1).join('')}`);
-                } else {
-                  setAmount(cleaned);
-                }
-              }}
-              keyboardType="decimal-pad"
-              placeholder="0"
-              placeholderTextColor="#94A3B8"
-              onFocus={() => setIsAmountFocused(true)}
-              onBlur={() => setIsAmountFocused(false)}
-              accessibilityLabel="Amount value"
-            />
-          </TouchableOpacity>
 
-          {/* Description */}
-          <Text style={styles.fieldLabel}>Description</Text>
-          <TextInput
-            style={styles.textInput}
-            value={description}
-            onChangeText={setDescription}
-            placeholder="e.g. Pizza, Uber ride, Book…"
-            placeholderTextColor="#A0AEC0"
-          />
+            {/* Amount Field Label */}
+            <Text style={styles.fieldLabel}>Amount</Text>
 
-          {/* AI Suggestion Badge */}
-          {aiLoading && (
-            <View style={styles.aiBadgeRow}>
-              <ActivityIndicator size="small" color={BRAND_BLUE} />
-              <Text style={styles.aiBadgeLoadingText}>AI classifying…</Text>
-            </View>
-          )}
-          {!aiLoading && aiResult && aiResult.confidence > 0 && (
-            <Animated.View style={[
-              styles.aiBadgeContainer,
-              { opacity: badgeAnim, transform: [{ scale: badgeAnim }] }
-            ]}>
-              <View style={styles.aiBadgeHeader}>
-                <Text style={styles.aiBadgeIcon}>🤖</Text>
-                <Text style={styles.aiBadgeLabel}>AI Suggestion</Text>
-                <Text style={styles.aiAppliedText}>Auto-applied ✓</Text>
-              </View>
-
-              {/* Main row: Category + Sentiment */}
-              <View style={styles.aiMainPred}>
-                <Text style={styles.aiMainCategory}>
-                  {CATEGORIES.find(c => c.ml === aiResult.category)?.emoji ?? '📦'}  {aiResult.category}
+            {/* Amount Input Container */}
+            <TouchableOpacity
+              style={[
+                styles.amountContainer,
+                isAmountFocused && styles.amountContainerFocused,
+              ]}
+              activeOpacity={1}
+              onPress={() => amountInputRef.current?.focus()}
+              accessibilityRole="button"
+              accessibilityLabel="Transaction amount"
+            >
+              <View pointerEvents="none" style={styles.currencyPrefixWrap}>
+                <Text style={[styles.currencyPrefix, isAmountFocused && styles.currencyPrefixFocused]}>
+                  ₹
                 </Text>
-                <Text style={styles.aiConfidence}>{Math.round(aiResult.confidence * 100)}%</Text>
               </View>
-              
-              {/* Sentiment Info */}
-              {aiResult.sentiment && (
-                <View style={styles.sentimentContainer}>
-                  <Text style={styles.sentimentLabel}>
-                    {aiResult.sentiment_emoji} {aiResult.sentiment_label}
+              <TextInput
+                ref={amountInputRef}
+                style={styles.amountInput}
+                value={amount}
+                onChangeText={(t) => {
+                  const cleaned = t.replace(/[^0-9.]/g, '');
+                  const parts = cleaned.split('.');
+                  if (parts.length > 2) {
+                    setAmount(`${parts[0]}.${parts.slice(1).join('')}`);
+                  } else {
+                    setAmount(cleaned);
+                  }
+                }}
+                keyboardType="decimal-pad"
+                placeholder="0"
+                placeholderTextColor="#94A3B8"
+                onFocus={() => setIsAmountFocused(true)}
+                onBlur={() => setIsAmountFocused(false)}
+                accessibilityLabel="Amount value"
+              />
+            </TouchableOpacity>
+
+            {/* Description */}
+            <Text style={styles.fieldLabel}>Description</Text>
+            <TextInput
+              style={styles.textInput}
+              value={description}
+              onChangeText={setDescription}
+              placeholder="e.g. Pizza, Uber ride, Book…"
+              placeholderTextColor="#A0AEC0"
+            />
+
+            {/* AI Suggestion Badge */}
+            {aiLoading && (
+              <View style={styles.aiBadgeRow}>
+                <ActivityIndicator size="small" color={BRAND_BLUE} />
+                <Text style={styles.aiBadgeLoadingText}>AI classifying…</Text>
+              </View>
+            )}
+            {!aiLoading && aiResult && aiResult.confidence > 0 && (
+              <Animated.View style={[
+                styles.aiBadgeContainer,
+                { opacity: badgeAnim, transform: [{ scale: badgeAnim }] }
+              ]}>
+                <View style={styles.aiBadgeHeader}>
+                  <Text style={styles.aiBadgeIcon}>🤖</Text>
+                  <Text style={styles.aiBadgeLabel}>AI Suggestion</Text>
+                  <Text style={styles.aiAppliedText}>Auto-applied ✓</Text>
+                </View>
+
+                {/* Main row: Category + Sentiment */}
+                <View style={styles.aiMainPred}>
+                  <Text style={styles.aiMainCategory}>
+                    {CATEGORIES.find(c => c.ml === aiResult.category)?.emoji ?? '📦'}  {aiResult.category}
                   </Text>
-                  <Text style={styles.verdictText}>{aiResult.verdict}</Text>
+                  <Text style={styles.aiConfidence}>{Math.round(aiResult.confidence * 100)}%</Text>
                 </View>
-              )}
 
-              {/* Top 3 mini bars */}
-              <View style={{ marginTop: 8 }}>
-                {Object.entries(aiResult.all_probs)
-                  .sort((a, b) => b[1] - a[1])
-                  .slice(0, 3)
-                  .map(([cat, prob]) => (
-                    <View key={cat} style={styles.aiBarRow}>
-                      <Text style={styles.aiBarLabel}>
-                        {CATEGORIES.find(c => c.ml === cat)?.emoji ?? '📦'} {cat}
-                      </Text>
-                      <View style={styles.aiBarTrack}>
-                        <View style={[styles.aiBarFill, { width: `${Math.round(prob * 100)}%` }]} />
+                {/* Sentiment Info */}
+                {aiResult.sentiment && (
+                  <View style={styles.sentimentContainer}>
+                    <Text style={styles.sentimentLabel}>
+                      {aiResult.sentiment_emoji} {aiResult.sentiment_label}
+                    </Text>
+                    <Text style={styles.verdictText}>{aiResult.verdict}</Text>
+                  </View>
+                )}
+
+                {/* Top 3 mini bars */}
+                <View style={{ marginTop: 8 }}>
+                  {Object.entries(aiResult.all_probs)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 3)
+                    .map(([cat, prob]) => (
+                      <View key={cat} style={styles.aiBarRow}>
+                        <Text style={styles.aiBarLabel}>
+                          {CATEGORIES.find(c => c.ml === cat)?.emoji ?? '📦'} {cat}
+                        </Text>
+                        <View style={styles.aiBarTrack}>
+                          <View style={[styles.aiBarFill, { width: `${Math.round(prob * 100)}%` }]} />
+                        </View>
+                        <Text style={styles.aiBarPct}>{Math.round(prob * 100)}%</Text>
                       </View>
-                      <Text style={styles.aiBarPct}>{Math.round(prob * 100)}%</Text>
-                    </View>
-                  ))
-                }
-              </View>
-            </Animated.View>
-          )}
-
-          {/* Category */}
-          <Text style={[styles.fieldLabel, { marginTop: 16 }]}>Category</Text>
-          <TouchableOpacity
-            style={styles.categoryPicker}
-            onPress={() => setShowCategoryModal(true)}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.categoryText}>
-              {selectedCategory.label}
-            </Text>
-            <View style={styles.categoryRight}>
-              <Text style={styles.categoryEmoji}>{selectedCategory.emoji}</Text>
-              <Text style={styles.chevron}>⌄</Text>
-            </View>
-          </TouchableOpacity>
-
-          {/* Spend Type Radio Buttons */}
-          <Text style={[styles.fieldLabel, { marginTop: 16 }]}>Transaction Type</Text>
-          <View style={styles.radioGroup}>
-            {SPEND_TYPES.map((type) => (
-              <TouchableOpacity
-                key={type}
-                style={styles.radioItem}
-                onPress={() => handleSelectTypeManually(type)}
-                activeOpacity={0.7}
-              >
-                <View style={[styles.radioOuter, selectedType === type && styles.radioOuterActive]}>
-                  {selectedType === type && <View style={styles.radioDot} />}
+                    ))
+                  }
                 </View>
-                <Text style={styles.radioLabel}>{type}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
+              </Animated.View>
+            )}
 
-          {/* AI Type Confirmation Banner */}
-          {!typeConfirmed && aiResult && (
-            <View style={styles.aiConfirmationBanner}>
-              <Text style={styles.aiConfirmationText}>
-                ⚠️ AI suggested: <Text style={{ fontWeight: '700' }}>{selectedType}</Text> (Low Confidence)
+            {/* Category */}
+            <Text style={[styles.fieldLabel, { marginTop: 16 }]}>Category</Text>
+            <TouchableOpacity
+              style={styles.categoryPicker}
+              onPress={() => setShowCategoryModal(true)}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.categoryText}>
+                {selectedCategory.label}
               </Text>
-              <TouchableOpacity style={styles.aiConfirmButton} onPress={() => setTypeConfirmed(true)} activeOpacity={0.7}>
-                <Text style={styles.aiConfirmButtonText}>Confirm Suggestion</Text>
-              </TouchableOpacity>
-            </View>
-          )}
+              <View style={styles.categoryRight}>
+                <Text style={styles.categoryEmoji}>{selectedCategory.emoji}</Text>
+                <Text style={styles.chevron}>⌄</Text>
+              </View>
+            </TouchableOpacity>
 
-          {/* Optional Liability Linking */}
-          {liabilities.length > 0 && (
-            <View style={styles.liabilitySection}>
-              <Text style={styles.fieldLabel}>Link to Liability (Optional)</Text>
-              {!selectedLiability ? (
+            {/* Spend Type Radio Buttons */}
+            <Text style={[styles.fieldLabel, { marginTop: 16 }]}>Transaction Type</Text>
+            <View style={styles.radioGroup}>
+              {SPEND_TYPES.map((type) => (
                 <TouchableOpacity
-                  style={styles.linkLiabilityBtn}
-                  onPress={() => setShowLiabilityModal(true)}
+                  key={type}
+                  style={styles.radioItem}
+                  onPress={() => handleSelectTypeManually(type)}
                   activeOpacity={0.7}
                 >
-                  <Ionicons name="link-outline" size={16} color={BRAND_BLUE} />
-                  <Text style={styles.linkLiabilityBtnText}>+ Select a liability to link</Text>
+                  <View style={[styles.radioOuter, selectedType === type && styles.radioOuterActive]}>
+                    {selectedType === type && <View style={styles.radioDot} />}
+                  </View>
+                  <Text style={styles.radioLabel}>{type}</Text>
                 </TouchableOpacity>
-              ) : (
-                <View style={styles.linkedLiabilityCard}>
-                  <TouchableOpacity
-                    style={styles.linkedLiabilityInfo}
-                    onPress={() => setShowLiabilityModal(true)}
-                    activeOpacity={0.8}
-                  >
-                    <View style={styles.linkedIconWrap}>
-                      <Ionicons name="calendar" size={18} color={BRAND_BLUE} />
-                    </View>
-                    <View style={{ flex: 1 }}>
-                      <Text style={styles.linkedLiabilityName} numberOfLines={1}>
-                        {selectedLiability.name}
-                      </Text>
-                      <Text style={styles.linkedLiabilityMeta}>
-                        ₹{selectedLiability.amount.toLocaleString()} · {selectedLiability.category} · {selectedLiability.type}
-                        {selectedLiability.autoDeduct ? ' · Auto Deduct' : ''}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.unlinkBtn}
-                    onPress={() => setSelectedLiability(null)}
-                    hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-                  >
-                    <Ionicons name="close-circle" size={20} color="#94A3B8" />
-                  </TouchableOpacity>
-                </View>
-              )}
-
-              {/* Informational note & Toggle for Auto Deduct liabilities */}
-              {selectedLiability && selectedLiability.autoDeduct && selectedLiability.nextDueDate && (
-                <View style={styles.autoDeductControlContainer}>
-                  <TouchableOpacity
-                    style={styles.markAsPaidToggle}
-                    activeOpacity={0.7}
-                    onPress={() => setMarkAsPaid(!markAsPaid)}
-                  >
-                    <View style={[styles.checkbox, markAsPaid && styles.checkboxActive]}>
-                      {markAsPaid && <Ionicons name="checkmark" size={12} color="#FFFFFF" />}
-                    </View>
-                    <View style={{ flex: 1, marginLeft: 8 }}>
-                      <Text style={styles.markAsPaidTitle}>Mark next scheduled payment as paid</Text>
-                      <Text style={styles.markAsPaidDesc}>
-                        {markAsPaid
-                          ? `Satisfies payment due ${new Date(selectedLiability.nextDueDate).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })} and prevents duplicate auto-deduction.`
-                          : 'Added to payment history. Next Auto Deduct date remains unchanged.'}
-                      </Text>
-                    </View>
-                  </TouchableOpacity>
-                </View>
-              )}
+              ))}
             </View>
-          )}
 
-          {/* Log Button */}
-          <TouchableOpacity
-            style={[styles.logButton, logged && styles.logButtonSuccess]}
-            onPress={handleLog}
-            activeOpacity={0.85}
-            disabled={saving}
-          >
-            {saving ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text style={styles.logButtonText}>
-                {logged ? '✓ Logged!' : 'Log Transaction'}
-              </Text>
+            {/* AI Type Confirmation Banner */}
+            {!typeConfirmed && aiResult && (
+              <View style={styles.aiConfirmationBanner}>
+                <Text style={styles.aiConfirmationText}>
+                  ⚠️ AI suggested: <Text style={{ fontWeight: '700' }}>{selectedType}</Text> (Low Confidence)
+                </Text>
+                <TouchableOpacity style={styles.aiConfirmButton} onPress={() => setTypeConfirmed(true)} activeOpacity={0.7}>
+                  <Text style={styles.aiConfirmButtonText}>Confirm Suggestion</Text>
+                </TouchableOpacity>
+              </View>
             )}
-          </TouchableOpacity>
 
-          {/* Summary Footer */}
-          <View style={styles.summaryRow}>
-            <View style={styles.summaryItem}>
-              <Text style={styles.summaryLabel}>Today's Spend</Text>
-              <Text style={styles.summaryValue}>
-                ₹{todaySpend.toFixed(0)}
-              </Text>
+            {/* Optional Liability Linking */}
+            {liabilities.length > 0 && (
+              <View style={styles.liabilitySection}>
+                <Text style={styles.fieldLabel}>Link to Liability (Optional)</Text>
+                {!selectedLiability ? (
+                  <TouchableOpacity
+                    style={styles.linkLiabilityBtn}
+                    onPress={() => setShowLiabilityModal(true)}
+                    activeOpacity={0.7}
+                  >
+                    <Ionicons name="link-outline" size={16} color={BRAND_BLUE} />
+                    <Text style={styles.linkLiabilityBtnText}>+ Select a liability to link</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <View style={styles.linkedLiabilityCard}>
+                    <TouchableOpacity
+                      style={styles.linkedLiabilityInfo}
+                      onPress={() => setShowLiabilityModal(true)}
+                      activeOpacity={0.8}
+                    >
+                      <View style={styles.linkedIconWrap}>
+                        <Ionicons name="calendar" size={18} color={BRAND_BLUE} />
+                      </View>
+                      <View style={{ flex: 1 }}>
+                        <Text style={styles.linkedLiabilityName} numberOfLines={1}>
+                          {selectedLiability.name}
+                        </Text>
+                        <Text style={styles.linkedLiabilityMeta}>
+                          ₹{selectedLiability.amount.toLocaleString()} · {selectedLiability.category} · {selectedLiability.type}
+                          {selectedLiability.autoDeduct ? ' · Auto Deduct' : ''}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.unlinkBtn}
+                      onPress={() => setSelectedLiability(null)}
+                      hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                    >
+                      <Ionicons name="close-circle" size={20} color="#94A3B8" />
+                    </TouchableOpacity>
+                  </View>
+                )}
+
+                {/* Informational note & Toggle for Auto Deduct liabilities */}
+                {selectedLiability && selectedLiability.autoDeduct && selectedLiability.nextDueDate && (
+                  <View style={styles.autoDeductControlContainer}>
+                    <TouchableOpacity
+                      style={styles.markAsPaidToggle}
+                      activeOpacity={0.7}
+                      onPress={() => setMarkAsPaid(!markAsPaid)}
+                    >
+                      <View style={[styles.checkbox, markAsPaid && styles.checkboxActive]}>
+                        {markAsPaid && <Ionicons name="checkmark" size={12} color="#FFFFFF" />}
+                      </View>
+                      <View style={{ flex: 1, marginLeft: 8 }}>
+                        <Text style={styles.markAsPaidTitle}>Mark next scheduled payment as paid</Text>
+                        <Text style={styles.markAsPaidDesc}>
+                          {markAsPaid
+                            ? `Satisfies payment due ${new Date(selectedLiability.nextDueDate).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })} and prevents duplicate auto-deduction.`
+                            : 'Added to payment history. Next Auto Deduct date remains unchanged.'}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </View>
+            )}
+
+            {/* Log Button */}
+            <TouchableOpacity
+              style={[styles.logButton, logged && styles.logButtonSuccess]}
+              onPress={handleLog}
+              activeOpacity={0.85}
+              disabled={saving}
+            >
+              {saving ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text style={styles.logButtonText}>
+                  {logged ? '✓ Logged!' : 'Log Transaction'}
+                </Text>
+              )}
+            </TouchableOpacity>
+
+            {/* Summary Footer */}
+            <View style={styles.summaryRow}>
+              <View style={styles.summaryItem}>
+                <Text style={styles.summaryLabel}>Today's Spend</Text>
+                <Text style={styles.summaryValue}>
+                  ₹{todaySpend.toFixed(0)}
+                </Text>
+              </View>
+              <View style={styles.summaryDivider} />
+              <View style={styles.summaryItem}>
+                <Text style={styles.summaryLabel}>7-Day Spend</Text>
+                <Text style={styles.summaryValue}>₹{weekSpend.toFixed(0)}</Text>
+              </View>
+              <View style={styles.summaryDivider} />
+              <View style={styles.summaryItem}>
+                <Text style={styles.summaryLabel}>Wants Ratio</Text>
+                <Text style={styles.summaryValue}>{wantsRatio}%</Text>
+              </View>
             </View>
-            <View style={styles.summaryDivider} />
-            <View style={styles.summaryItem}>
-              <Text style={styles.summaryLabel}>7-Day Spend</Text>
-              <Text style={styles.summaryValue}>₹{weekSpend.toFixed(0)}</Text>
-            </View>
-            <View style={styles.summaryDivider} />
-            <View style={styles.summaryItem}>
-              <Text style={styles.summaryLabel}>Wants Ratio</Text>
-              <Text style={styles.summaryValue}>{wantsRatio}%</Text>
-            </View>
-          </View>
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -659,9 +659,9 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
 }
 
 const BRAND_BLUE = '#3B3BDE';
-const GREEN      = '#3DBE7B';
-const AI_BG      = '#F0F0FF';
-const AI_BORDER  = '#C7C7FF';
+const GREEN = '#3DBE7B';
+const AI_BG = '#F0F0FF';
+const AI_BORDER = '#C7C7FF';
 
 const styles = StyleSheet.create({
   safe: {

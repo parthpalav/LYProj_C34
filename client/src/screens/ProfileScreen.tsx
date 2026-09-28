@@ -973,7 +973,7 @@ const s = StyleSheet.create({
   avatarText: { fontSize: 28, fontWeight: '800', color: '#FFFFFF', letterSpacing: 1 },
   avatarImg: { width: 80, height: 80, borderRadius: 40 },
   avatarBusy: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     borderRadius: 40,
     backgroundColor: 'rgba(15,23,42,0.45)',
     alignItems: 'center',

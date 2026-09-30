@@ -155,13 +155,14 @@ test('10. Dashboard Assets card fetches from Assets API independently without du
   assert.ok(code.includes('getAssets'), 'getAssets is imported and called');
   assert.ok(code.includes("Asset"), 'Asset type is imported');
   assert.ok(code.includes('assetSummary'), 'Direct asset summary computation exists');
-  assert.ok(code.includes('assetDisplay'), 'Asset display composition exists');
-  assert.ok(code.includes('Total Recorded Assets'), 'Total Recorded Assets label for direct summary');
+  // Unified manage card uses previewAssets (earliest-created preview) instead of legacy assetDisplay
+  assert.ok(code.includes('previewAssets'), 'Asset preview composition exists (previewAssets useMemo)');
+  assert.ok(code.includes('manageCard'), 'Unified manage card layout exists');
   
   // Dashboard must NOT compute its own FIRE corpus or liquid buffer
   const assetSummaryCode = code.substring(
     code.indexOf('const assetSummary = useMemo'),
-    code.indexOf('const assetDisplay = useMemo')
+    code.indexOf('const previewAssets = useMemo')
   );
   assert.ok(
     !assetSummaryCode.includes('includedInFireCorpus'),
@@ -183,7 +184,7 @@ test('11. Dashboard Assets card works for new users and error states', () => {
     code.includes("Track your FDs") || code.includes("mutual funds"),
     'Pre-load placeholder message'
   );
-  assert.ok(code.includes('View Assets'), 'View Assets action link always present');
+  assert.ok(code.includes('View all assets'), 'View all assets action link always present');
   assert.ok(code.includes("navigate('Assets')"), 'Assets navigation always available');
 });
 

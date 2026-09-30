@@ -325,10 +325,10 @@ def run_fmi_characterisation() -> dict:
     print("=" * 70)
 
     # Invoke authoritative Node research fixture runner
-    server_dir = os.path.join(WORKSPACE_ROOT, "server")
-    node_cmd = ["node", "research_family_fmi_fixture.js"]
+    fixture_script = os.path.join(WORKSPACE_ROOT, "research", "scripts", "research_family_fmi_fixture.js")
+    node_cmd = ["node", fixture_script]
 
-    res = subprocess.check_output(node_cmd, cwd=server_dir, text=True).strip()
+    res = subprocess.check_output(node_cmd, cwd=WORKSPACE_ROOT, text=True).strip()
     fmi_data = json.loads(res)
     print(f"  FMI Formula: {fmi_data['fmi_formula']}")
     print(f"  Golden Case 2 (At target): D1={fmi_data['golden_cases'][1]['d1']} -> FMI={fmi_data['golden_cases'][1]['fmi']} ({fmi_data['golden_cases'][1]['label']})")

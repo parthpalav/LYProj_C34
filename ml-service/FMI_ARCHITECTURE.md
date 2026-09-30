@@ -278,9 +278,9 @@ Endpoint: `GET /api/fmi` (Authenticated via Bearer JWT)
 ## Testing and Characterization
 
 FMI calculations are covered by deterministic characterization test suites:
-- [server/test_fmi_characterisation.js](../server/test_fmi_characterisation.js): Validates golden test fixtures across low, target, and surplus savings ratios.
-- [server/test_fmi_history_pillars_persistence.js](../server/test_fmi_history_pillars_persistence.js): Verifies daily snapshot upsert semantics and pillar persistence in MongoDB.
-- [server/test_fmi_history_idempotency.js](../server/test_fmi_history_idempotency.js): Ensures that multiple calculations within the same calendar day update the same daily snapshot without duplicate records.
+- [server/tests/fmi/fmiCharacterisation.test.js](../server/tests/fmi/fmiCharacterisation.test.js): Validates golden test fixtures across low, target, and surplus savings ratios.
+- [server/tests/fmi/fmiHistoryPillarsPersistence.test.js](../server/tests/fmi/fmiHistoryPillarsPersistence.test.js): Verifies daily snapshot upsert semantics and pillar persistence in MongoDB.
+- [server/tests/fmi/fmiHistoryIdempotency.test.js](../server/tests/fmi/fmiHistoryIdempotency.test.js): Ensures that multiple calculations within the same calendar day update the same daily snapshot without duplicate records.
 
 ---
 

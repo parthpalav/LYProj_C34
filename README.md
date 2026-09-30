@@ -431,10 +431,20 @@ Press `i` to launch in the iOS Simulator, `a` for the Android Emulator, or scan 
 
 FINAURA includes comprehensive test suites spanning client UX, backend business logic, security boundaries, and ML correctness.
 
-### Full Stack Orchestration Verification
-Runs pre-flight diagnostics, process management checks, authoritative benchmark generation, and scientific invariant validation:
+### Quick Test Runners
+FINAURA provides unified test commands across subsystems:
 ```bash
-./scripts/test_phase8_orchestration.sh
+# Core regression tests (fast deterministic: client, web, ML)
+npm run test:core
+
+# Individual subsystem suites
+npm run test:client
+npm run test:web
+npm run test:ml
+npm run test:server
+
+# Cross-service integration tests (requires MongoDB & ML microservice)
+npm run test:integration
 ```
 
 ### Web Application Tests
@@ -445,8 +455,9 @@ npm --prefix web run typecheck
 # Lint with Oxlint
 npm --prefix web run lint
 
-# End-to-end Family Web workflow test
-node web/test_family_web.js
+# Web regression suite (Family workflow & CSV export)
+node web/tests/family/familyWeb.test.js
+node web/tests/utils/csvExport.test.js
 ```
 
 ### Mobile Application Tests
@@ -454,44 +465,61 @@ node web/test_family_web.js
 # Typecheck TypeScript definitions
 npm --prefix client run typecheck
 
-# Verify Password Visibility Toggle UX
-node client/test_password_visibility_ux.js
+# Consolidated Screen & Navigation UX tests
+node client/tests/screens/dashboard.test.js
+node client/tests/screens/transactionEntry.test.js
+node client/tests/navigation/routeCompleteness.test.js
+node client/tests/family/familyUx.test.js
 
-# Verify Family Mobile UX flows
-node client/test_family_ux.js
+# Auth UX tests
+node client/tests/auth/passwordVisibilityUx.test.js
+node client/tests/auth/welcomeFlowUx.test.js
 ```
 
 ### Backend API Tests
 ```bash
 # Security hardening and authentication boundary tests
-node server/test_security_hardening.js
+node server/tests/security/securityHardening.test.js
 
 # Family system and privacy isolation tests
-node server/test_family_system.js
+node server/tests/family/familySystem.test.js
 
 # Liability scheduler and recurring deduction tests
-node server/test_liability_feature.js
+node server/tests/liabilities/liabilityFeature.test.js
 
 # Asset CRUD and FIRE classification tests
-node server/test_asset_crud.js
+node server/tests/assets/assetCrud.test.js
 
-# Predictability and Monte Carlo integration tests
-node server/test_predictability_foundation.js
+# Predictability math and foundation tests
+node server/tests/predictability/financialMath.test.js
+node server/tests/predictability/predictabilityFoundation.test.js
+
+# Financial Maturity Index characterisation
+node server/tests/fmi/fmiCharacterisation.test.js
 ```
 
 ### Machine Learning Tests
 ```bash
 # Security payload limits and input boundaries
-python3 ml-service/test_security_boundaries.py
+python3 ml-service/tests/test_security_boundaries.py
 
 # Hybrid classifier pipeline test
-python3 ml-service/test_hybrid_classifier.py
+python3 ml-service/tests/test_hybrid_classifier.py
 
 # Monte Carlo simulation core test
-python3 ml-service/test_monte_carlo.py
+python3 ml-service/tests/test_monte_carlo.py
 
-# Acceptance audit on Production V3 dataset
-python3 ml-service/run_v3_acceptance_audit.py
+# Solvers & Step-Up contribution tests
+python3 ml-service/tests/test_contribution_solver.py
+python3 ml-service/tests/test_funded_age_solver.py
+python3 ml-service/tests/test_step_up_contributions.py
+```
+
+### Research Benchmarks & Reproducibility
+Research benchmark evaluation scripts are intentionally segregated from routine regression runs:
+```bash
+# Authoritative Production V3 acceptance audit
+python3 ml-service/benchmarks/run_v3_acceptance_audit.py
 ```
 
 ---

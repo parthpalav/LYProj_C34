@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,128}$/;
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d\s])\S{8,128}$/;
 
 export const registerSchema = z.object({
   name: z.string()
@@ -15,7 +15,7 @@ export const registerSchema = z.object({
     .min(8, { message: 'Password must be at least 8 characters long' })
     .max(128, { message: 'Password cannot exceed 128 characters' })
     .regex(passwordRegex, {
-      message: 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&)'
+      message: 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (e.g. @ # $ - _ !), with no spaces'
     }),
   incomeType: z.string().optional(),
   goals: z.array(z.string()).optional()

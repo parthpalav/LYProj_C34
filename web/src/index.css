@@ -8118,6 +8118,27 @@ a:focus-visible {
   margin-bottom: 2.5rem;
 }
 
+/* The landing page is always dark, so the light-theme outline/ghost button
+   tokens would render near-black text on #0b0f19. */
+.landing-page-root .btn-outline {
+  color: #f8fafc;
+  border-color: rgba(255, 255, 255, 0.24);
+}
+
+.landing-page-root .btn-outline:hover:not(:disabled) {
+  background-color: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.landing-page-root .btn-ghost {
+  color: #cbd5e1;
+}
+
+.landing-page-root .btn-ghost:hover:not(:disabled) {
+  background-color: rgba(255, 255, 255, 0.06);
+  color: #f8fafc;
+}
+
 .landing-hero-trust,
 .landing-trust-strip {
   display: flex;

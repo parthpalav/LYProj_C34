@@ -22,8 +22,9 @@ export const RegisterPage: React.FC = () => {
   const hasUpper = /[A-Z]/.test(password);
   const hasLower = /[a-z]/.test(password);
   const hasNumber = /\d/.test(password);
-  const hasSpecial = /[@$!%*?&]/.test(password);
-  const isPasswordValid = hasMinLength && hasUpper && hasLower && hasNumber && hasSpecial;
+  const hasSpecial = /[^A-Za-z\d\s]/.test(password);
+  const hasNoSpaces = !/\s/.test(password);
+  const isPasswordValid = hasMinLength && hasUpper && hasLower && hasNumber && hasSpecial && hasNoSpaces;
   const passwordsMatch = password.length > 0 && password === confirmPassword;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -146,7 +147,8 @@ export const RegisterPage: React.FC = () => {
             {renderRule('Uppercase letter', hasUpper)}
             {renderRule('Lowercase letter', hasLower)}
             {renderRule('Number (0-9)', hasNumber)}
-            {renderRule('Special symbol (@$!%*?&)', hasSpecial)}
+            {renderRule('Special symbol (e.g. @ # - _ !)', hasSpecial)}
+            {renderRule('No spaces', hasNoSpaces)}
           </div>
         </div>
 

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,128}$/;
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d\s])\S{8,128}$/;
 
 export const loginClientSchema = z.object({
   email: z.string()
@@ -23,7 +23,7 @@ export const registerClientSchema = z.object({
   password: z.string()
     .min(8, { message: 'Password must be at least 8 characters long' })
     .regex(passwordRegex, {
-      message: 'Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character (@$!%*?&)'
+      message: 'Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character (e.g. @ # $ - _ !), with no spaces'
     }),
   confirmPassword: z.string()
     .min(1, { message: 'Please confirm your password' })
@@ -44,7 +44,7 @@ export const resetPasswordClientSchema = z.object({
   password: z.string()
     .min(8, { message: 'Password must be at least 8 characters long' })
     .regex(passwordRegex, {
-      message: 'Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character'
+      message: 'Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character, with no spaces'
     }),
   confirmPassword: z.string()
     .min(1, { message: 'Please confirm your password' })
@@ -59,7 +59,7 @@ export function evaluatePasswordStrength(password: string): { score: number; lab
   if (password.length >= 8) score++;
   if (/[A-Z]/.test(password)) score++;
   if (/[0-9]/.test(password)) score++;
-  if (/[@$!%*?&]/.test(password)) score++;
+  if (/[^A-Za-z0-9\s]/.test(password)) score++;
 
   if (score <= 1) return { score: 1, label: 'Weak', color: '#EF4444' };
   if (score === 2) return { score: 2, label: 'Fair', color: '#F59E0B' };

@@ -4,6 +4,7 @@ import './index.css'
 import './styles/utilities.css'
 import './styles/plan.css'
 import './styles/insights.css'
+import './styles/reports.css'
 import App from './App.tsx'
 
 createRoot(document.getElementById('root')!).render(

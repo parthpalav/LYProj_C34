@@ -9,9 +9,22 @@
 .flex-1 { flex: 1 1 0%; min-width: 0; }
 .flex-shrink-0 { flex-shrink: 0; }
 .items-center { align-items: center; }
+.gap-1 { gap: 0.25rem; }
 .gap-1\.5 { gap: 0.375rem; }
 
+.shrink-0 { flex-shrink: 0; }
+.gap-2 { gap: 0.5rem; }
+.inline { display: inline; }
+svg.inline { vertical-align: -0.125em; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+.max-w-md { max-width: 28rem; }
+.mt-1 { margin-top: 0.25rem; }
+.mr-1 { margin-right: 0.25rem; }
+.mb-1 { margin-bottom: 0.25rem; }
 .mb-2 { margin-bottom: 0.5rem; }
+.mb-6 { margin-bottom: 1.5rem; }
+.mb-8 { margin-bottom: 2rem; }
+.italic { font-style: italic; }
 
 /* Typography helpers */
 .text-xs { font-size: 0.75rem; line-height: 1.4; }
@@ -34,6 +47,24 @@
 .text-amber-500 { color: #d97706; }
 .text-emerald { color: #059669; }
 .text-blue { color: var(--accent-primary); }
+
+/* Tailwind palette shades used by the Reports components (same hex values) */
+.text-slate-400 { color: #94a3b8; }
+.text-slate-500 { color: #64748b; }
+.text-slate-700 { color: #334155; }
+.text-slate-800 { color: #1e293b; }
+.text-emerald-500 { color: #10b981; }
+.text-emerald-600 { color: #059669; }
+.text-rose-500 { color: #f43f5e; }
+.text-rose-600 { color: #e11d48; }
+.text-amber-400 { color: #fbbf24; }
+.text-amber-600 { color: #d97706; }
+.text-cyan-600 { color: #0891b2; }
+.text-cyan-700 { color: #0e7490; }
+.text-indigo-500 { color: #6366f1; }
+.text-indigo-600 { color: #4f46e5; }
+.bg-emerald-500\/10 { background-color: rgba(16, 185, 129, 0.1); }
+.bg-amber-500\/10 { background-color: rgba(245, 158, 11, 0.1); }
 
 /* Loading placeholder */
 @keyframes utility-pulse {

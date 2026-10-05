@@ -1,0 +1,46 @@
+/* ==========================================================================
+   Reports page
+   Class names used by pages/ReportsPage.tsx and components/reports/* that
+   were never defined in index.css. Colour/spacing helpers live in
+   utilities.css; the page header classes live in insights.css.
+   ========================================================================== */
+
+/* Same gutter as .overview-page / .activity-page; the app layout adds none. */
+.reports-page-wrapper {
+  padding: 24px 24px 48px;
+}
+
+.report-tab-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.report-tab-icon {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Loading spinner (same look as .plan-spinner) */
+.spinner {
+  width: 28px;
+  height: 28px;
+  border: 2.5px solid var(--border-default);
+  border-top-color: var(--accent-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.report-mix-legend-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+@media (max-width: 480px) {
+  .reports-page-wrapper { padding: 16px 16px 40px; }
+}
+
+@media print {
+  .reports-page-wrapper { padding: 0; }
+}

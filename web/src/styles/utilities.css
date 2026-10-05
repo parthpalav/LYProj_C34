@@ -43,6 +43,7 @@ svg.inline { vertical-align: -0.125em; }
 .text-tertiary { color: var(--text-tertiary); }
 .text-danger { color: var(--danger); }
 .text-warning { color: var(--warning); }
+.text-success { color: #059669; }
 .text-amber,
 .text-amber-500 { color: #d97706; }
 .text-emerald { color: #059669; }

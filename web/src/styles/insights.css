@@ -313,9 +313,15 @@
 .pattern-type-code { display: block; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
 .pattern-message { margin: 10px 0 0; line-height: 1.5; }
 
+/* Also used in the Activity ledgers, so it sets its own size */
 .category-tag {
-  padding: 1px 6px;
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  font-size: 11px;
+  line-height: 1.6;
   font-weight: 600;
+  white-space: nowrap;
   color: var(--text-secondary);
   background: var(--bg-surface-subtle);
   border-radius: var(--radius-sm);

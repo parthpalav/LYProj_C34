@@ -1,0 +1,103 @@
+/* ==========================================================================
+   Shared utilities & form aliases
+   Small helpers referenced across components that index.css never defined.
+   Loaded after index.css (see main.tsx).
+   ========================================================================== */
+
+/* Layout helpers */
+.flex { display: flex; }
+.flex-1 { flex: 1 1 0%; min-width: 0; }
+.flex-shrink-0 { flex-shrink: 0; }
+.items-center { align-items: center; }
+.gap-1\.5 { gap: 0.375rem; }
+
+/* Text colour helpers */
+.text-danger { color: var(--danger); }
+.text-amber-500 { color: var(--warning); }
+
+/* Generic button: same base + medium size as the shared <Button> component */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5625rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  transition: background-color var(--transition-fast), color var(--transition-fast),
+    border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
+}
+
+.btn:hover:not(:disabled) { transform: translateY(-1px); }
+.btn:active:not(:disabled) { transform: scale(0.98); }
+.btn:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+/* Form aliases used by the Plan modals (mirror .form-grid-2, .input-prefix, etc.) */
+.form-row {
+  display: flex;
+  gap: 12px;
+}
+
+.form-textarea {
+  padding: 9px 12px;
+  font-size: 14px;
+  font-family: inherit;
+  line-height: 1.5;
+  min-height: 72px;
+  resize: vertical;
+  background-color: var(--bg-app);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.form-textarea:focus {
+  border-color: var(--accent-primary);
+  background-color: var(--bg-surface);
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.currency-prefix {
+  position: absolute;
+  left: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  pointer-events: none;
+}
+
+.form-input.currency-input {
+  width: 100%;
+  padding-left: 28px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.input-hint {
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+.input-hint.hint-warning { color: var(--warning-text); }
+
+.checkbox-label input[type='checkbox'] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent-primary);
+}
+
+.emoji-name-row { align-items: flex-end; }
+.emoji-select { width: 100%; }
+
+@media (max-width: 640px) {
+  .form-row { flex-direction: column; }
+  .emoji-name-row { flex-direction: row; }
+}

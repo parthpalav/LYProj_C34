@@ -1,0 +1,1250 @@
+/* ==========================================================================
+   Plan workspace
+   Styles for the class names introduced in 88ac7e6 (plan-nw-*, plan-fire-*,
+   plan-goal-*, plan-mc-*, unified-tab-*, page-header-*, ...), which were
+   never defined in index.css. Uses the design tokens from index.css :root.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Page shell & header & tabs
+   -------------------------------------------------------------------------- */
+
+/* Same gutter as .overview-page / .activity-page; the app layout adds none. */
+.plan-page {
+  padding: 24px 24px 48px;
+}
+
+.page-header-section {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.page-header-eyebrow {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-primary);
+}
+
+.page-header-subtitle {
+  margin: 0;
+  max-width: 640px;
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+}
+
+.refresh-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 0.875rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: color var(--transition-fast), border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.refresh-btn:hover:not(:disabled) {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+  background: var(--bg-surface-subtle);
+}
+
+.refresh-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.unified-tab-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px;
+  width: fit-content;
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+}
+
+.unified-tab-container::-webkit-scrollbar { display: none; }
+
+.unified-tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: color var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.unified-tab-btn:hover { color: var(--text-primary); background-color: var(--bg-surface-subtle); }
+.unified-tab-btn:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+.unified-tab-btn.active {
+  color: var(--text-inverse);
+  background-color: var(--accent-primary);
+  border-color: var(--accent-primary);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+}
+
+/* --------------------------------------------------------------------------
+   Shared section pieces
+   -------------------------------------------------------------------------- */
+
+.plan-section-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 1.25rem;
+}
+
+/* Also used on its own (e.g. the Goals summary card), so it sets display itself */
+.plan-section-header--row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.plan-section-title {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.plan-section-subtitle {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.plan-section-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.plan-section-eyebrow--accent { color: var(--accent-primary); }
+.plan-section-eyebrow--success { color: var(--success); }
+.plan-section-eyebrow--warning { color: var(--warning); }
+
+.plan-add-btn { flex-shrink: 0; }
+
+.plan-text-bold { font-weight: 700; }
+.plan-text-muted { color: var(--text-tertiary); }
+.plan-text-success { color: var(--success-text); }
+.plan-text-warning { color: var(--warning-text); }
+.plan-text-danger { color: var(--danger); }
+
+.plan-chart-wrapper { margin-bottom: 1rem; }
+
+.custom-tooltip {
+  padding: 0.625rem 0.75rem;
+  font-size: 0.8125rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+}
+
+.custom-tooltip p { margin: 0.125rem 0 0; }
+
+.custom-tooltip .tooltip-label {
+  margin: 0 0 0.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* Info / policy notices */
+.plan-info-notice,
+.plan-policy-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  background: var(--accent-subtle);
+  border: 1px solid rgba(37, 99, 235, 0.18);
+  border-radius: var(--radius-lg);
+}
+
+.plan-policy-note { margin-top: 1.25rem; }
+
+.plan-info-notice-icon,
+.plan-policy-note-icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--accent-primary);
+}
+
+.plan-info-notice-content { flex: 1; }
+
+.plan-info-notice-text,
+.plan-policy-note-text {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--accent-text);
+}
+
+/* Empty state */
+.plan-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 2.5rem 1rem;
+  text-align: center;
+}
+
+.plan-empty-icon { color: var(--text-tertiary); margin-bottom: 0.25rem; }
+
+.plan-empty-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.plan-empty-desc {
+  margin: 0 0 0.75rem;
+  max-width: 420px;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+/* Icon buttons (edit / delete) */
+.plan-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 8px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.plan-icon-btn:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.plan-icon-btn--edit:hover { color: var(--accent-primary); background: var(--accent-subtle); border-color: rgba(37, 99, 235, 0.3); }
+.plan-icon-btn--delete:hover { color: var(--danger); background: var(--danger-subtle); border-color: rgba(239, 68, 68, 0.3); }
+
+/* Badges & pills */
+.plan-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--text-secondary);
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-full);
+}
+
+.plan-badge--fire_investable { color: var(--success-text); background: var(--success-subtle); border-color: rgba(16, 185, 129, 0.25); }
+.plan-badge--semi_liquid { color: var(--warning-text); background: var(--warning-subtle); border-color: rgba(245, 158, 11, 0.25); }
+.plan-badge--non_investable { color: var(--text-secondary); }
+
+.plan-fire-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  border-radius: var(--radius-full);
+}
+
+.plan-fire-badge--in { color: var(--success-text); background: var(--success-subtle); }
+.plan-fire-badge--out { color: var(--text-tertiary); background: var(--bg-surface-subtle); }
+
+.plan-status-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  border-radius: var(--radius-full);
+}
+
+.plan-status-pill--active { color: var(--success-text); background: var(--success-subtle); }
+.plan-status-pill--inactive { color: var(--text-secondary); background: var(--bg-surface-subtle); }
+
+.plan-scenario-tag {
+  display: inline-flex;
+  padding: 2px 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+  border-radius: var(--radius-full);
+}
+
+.plan-scenario-tag--conservative { color: var(--warning-text); background: var(--warning-subtle); }
+.plan-scenario-tag--base { color: var(--accent-text); background: var(--accent-subtle); }
+.plan-scenario-tag--optimistic { color: var(--success-text); background: var(--success-subtle); }
+
+/* Tables */
+.plan-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+}
+
+.plan-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.plan-table th {
+  padding: 0.625rem 0.875rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-align: left;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--text-secondary);
+  background: var(--bg-surface-subtle);
+  border-bottom: 1px solid var(--border-default);
+}
+
+.plan-table td {
+  padding: 0.75rem 0.875rem;
+  vertical-align: middle;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-subtle);
+  font-variant-numeric: tabular-nums;
+}
+
+.plan-table tbody tr:last-child td { border-bottom: none; }
+.plan-table tbody tr:hover { background: var(--bg-surface-subtle); }
+.plan-table tbody tr.plan-table-highlight { background: var(--accent-subtle); }
+.plan-table .th-actions { text-align: right; }
+.plan-table .td-actions { justify-content: flex-end; }
+.plan-table .td-return { white-space: nowrap; }
+
+/* --------------------------------------------------------------------------
+   Net Worth tab
+   -------------------------------------------------------------------------- */
+
+.plan-nw-summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 1rem;
+}
+
+.plan-nw-hero {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1.75rem;
+  background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-surface-subtle) 100%);
+  border: 1px solid var(--border-default);
+  border-top: 3px solid var(--accent-primary);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+}
+
+.plan-nw-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 160px;
+  height: 160px;
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.plan-nw-hero-eyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-primary);
+}
+
+.plan-nw-hero-label {
+  margin: 0.5rem 0 0.25rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.plan-nw-hero-value {
+  margin-bottom: 1rem;
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.plan-nw-hero-breakdown {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.plan-nw-breakdown-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.plan-nw-breakdown-item svg { color: var(--success); }
+.plan-nw-breakdown-liab svg { color: var(--danger); }
+.plan-nw-breakdown-item strong { color: var(--text-primary); }
+.plan-nw-breakdown-sep { color: var(--text-tertiary); }
+
+.plan-nw-aux-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.plan-nw-aux-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+  padding: 1rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.plan-nw-aux-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+}
+
+.plan-nw-aux-icon--assets { color: var(--success); background: var(--success-subtle); }
+.plan-nw-aux-icon--liab { color: var(--danger); background: var(--danger-subtle); }
+.plan-nw-aux-icon--fire { color: var(--warning); background: var(--warning-subtle); }
+.plan-nw-aux-icon--shield { color: var(--accent-primary); background: var(--accent-subtle); }
+
+.plan-nw-aux-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.plan-nw-aux-label { font-size: 0.8125rem; font-weight: 600; color: var(--text-secondary); }
+
+.plan-nw-aux-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.plan-nw-aux-value--danger { color: var(--danger); }
+.plan-nw-aux-hint { font-size: 0.75rem; color: var(--text-tertiary); }
+
+/* Composition lists */
+.plan-composition-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.plan-composition-col { min-width: 0; }
+
+.plan-composition-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin: 0 0 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  border-bottom: 2px solid var(--border-default);
+}
+
+.plan-composition-heading--assets { border-bottom-color: var(--success); }
+.plan-composition-heading--liab { border-bottom-color: var(--danger); }
+
+.plan-composition-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.plan-composition-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.plan-composition-item:last-child { border-bottom: none; }
+
+.plan-composition-item-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+.plan-composition-item-name { font-size: 0.875rem; font-weight: 600; color: var(--text-primary); }
+
+.plan-composition-item-badge {
+  padding: 1px 6px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--bg-surface-subtle);
+  border-radius: var(--radius-sm);
+}
+
+.plan-composition-item-value {
+  flex-shrink: 0;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--success-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.plan-composition-item-value--liab { color: var(--danger); }
+
+.plan-composition-empty {
+  margin: 0;
+  padding: 0.75rem 0;
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+}
+
+/* Emergency fund & liability overhang */
+.plan-emergency-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1rem;
+}
+
+.plan-emergency-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.plan-emergency-metrics > div,
+.plan-overhang-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.plan-emergency-label,
+.plan-overhang-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.plan-emergency-value,
+.plan-overhang-value {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.plan-overhang-value { color: var(--warning-text); }
+
+.plan-emergency-footer {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.plan-emergency-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+}
+
+.plan-emergency-note svg { flex-shrink: 0; margin-top: 2px; }
+.plan-emergency-note--gap { color: var(--warning-text); }
+.plan-emergency-note--ok { color: var(--success-text); }
+
+.plan-overhang-card { border-left: 3px solid var(--warning); }
+
+.plan-overhang-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.plan-overhang-explanation {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+}
+
+/* --------------------------------------------------------------------------
+   Assets tab
+   -------------------------------------------------------------------------- */
+
+.plan-assets-summary-strip {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.plan-assets-summary-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0.75rem 1rem;
+  background: var(--bg-surface-subtle);
+  border-radius: var(--radius-lg);
+}
+
+.plan-assets-summary-label { font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); }
+
+.plan-assets-summary-value {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.plan-cards-stack {
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.plan-asset-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  padding: 1rem;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+}
+
+.plan-asset-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.plan-asset-card-identity {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  min-width: 0;
+}
+
+.plan-asset-card-name { margin: 0; font-size: 0.9375rem; font-weight: 700; }
+
+.plan-asset-card-value {
+  flex-shrink: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.plan-asset-card-badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.plan-asset-card-meta { font-size: 0.8125rem; color: var(--text-secondary); }
+.plan-asset-card-notes { margin: 0; font-size: 0.8125rem; color: var(--text-tertiary); }
+.plan-asset-card-actions { display: flex; justify-content: flex-end; gap: 8px; }
+
+/* --------------------------------------------------------------------------
+   Goals tab
+   -------------------------------------------------------------------------- */
+
+.plan-goals-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.plan-goals-summary-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.plan-goals-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-top: 0.75rem;
+}
+
+.plan-goals-stat { display: flex; flex-direction: column; gap: 2px; }
+.plan-goals-stat-label { font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); }
+
+.plan-goals-stat-value {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.plan-goals-stat-value--saved { color: var(--success-text); }
+
+.plan-goals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.plan-goal-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  padding: 1.25rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.plan-goal-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
+.plan-goal-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.plan-goal-identity {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.plan-goal-emoji {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  font-size: 1.25rem;
+  background: var(--bg-surface-subtle);
+  border-radius: var(--radius-md);
+}
+
+.plan-goal-title-group { display: flex; flex-direction: column; min-width: 0; }
+.plan-goal-name { margin: 0; font-size: 1rem; font-weight: 700; overflow-wrap: anywhere; }
+.plan-goal-date { font-size: 0.75rem; color: var(--text-tertiary); }
+.plan-goal-actions { display: flex; gap: 6px; flex-shrink: 0; }
+
+.plan-goal-values {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.plan-goal-values > div { display: flex; flex-direction: column; gap: 2px; }
+.plan-goal-values > .text-right { align-items: flex-end; }
+.plan-goal-val-label { font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); }
+
+.plan-goal-val-number {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.plan-goal-val-number--saved { color: var(--success-text); }
+
+.plan-goal-progress-track,
+.plan-fire-progress-track {
+  width: 100%;
+  height: 8px;
+  overflow: hidden;
+  background: var(--bg-surface-subtle);
+  border-radius: var(--radius-full);
+}
+
+.plan-goal-progress-fill,
+.plan-fire-progress-fill {
+  height: 100%;
+  max-width: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.plan-goal-progress-fill {
+  width: var(--goal-progress-width, 0%);
+  background: var(--accent-primary);
+}
+
+.plan-goal-progress-fill--complete { background: var(--success); }
+
+.plan-goal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  font-size: 0.8125rem;
+}
+
+.plan-goal-progress-text { font-weight: 600; color: var(--text-primary); }
+.plan-goal-remaining { color: var(--text-tertiary); }
+
+.plan-goal-monthly {
+  padding-top: 0.75rem;
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* --------------------------------------------------------------------------
+   FIRE tab
+   -------------------------------------------------------------------------- */
+
+.plan-fire-hero {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.75rem;
+  background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-surface-subtle) 100%);
+  border: 1px solid var(--border-default);
+  border-top: 3px solid var(--warning);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+}
+
+.plan-fire-hero-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.plan-fire-hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--warning);
+}
+
+.plan-fire-hero-title { margin: 0.25rem 0 0; font-size: 1.375rem; font-weight: 800; }
+
+.plan-fire-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 6px 12px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  border-radius: var(--radius-full);
+}
+
+.plan-fire-status-pill--reached { color: var(--success-text); background: var(--success-subtle); }
+.plan-fire-status-pill--gap { color: var(--warning-text); background: var(--warning-subtle); }
+
+.plan-fire-hero-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.plan-fire-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 1rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+}
+
+.plan-fire-stat-label { font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); }
+
+.plan-fire-stat-value {
+  font-size: 1.375rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.plan-fire-stat-value--primary { color: var(--accent-primary); }
+.plan-fire-stat-value--accent { color: var(--warning-text); }
+.plan-fire-stat-desc { font-size: 0.75rem; color: var(--text-tertiary); }
+
+.plan-fire-progress { display: flex; flex-direction: column; gap: 0.5rem; }
+
+.plan-fire-progress-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+}
+
+.plan-fire-progress-fill {
+  width: var(--fire-progress-width, 0%);
+  background: linear-gradient(90deg, var(--warning) 0%, var(--success) 100%);
+}
+
+/* Contribution requirements */
+.plan-contrib-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.plan-contrib-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 1rem;
+  background: var(--bg-surface-subtle);
+  border: 1px solid transparent;
+  border-radius: var(--radius-lg);
+}
+
+.plan-contrib-card--warning { background: var(--warning-subtle); border-color: rgba(245, 158, 11, 0.25); }
+.plan-contrib-card--ok { background: var(--success-subtle); border-color: rgba(16, 185, 129, 0.25); }
+.plan-contrib-label { font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); }
+
+.plan-contrib-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.plan-contrib-value--primary { color: var(--accent-primary); }
+.plan-contrib-card--warning .plan-contrib-value { color: var(--warning-text); }
+.plan-contrib-card--ok .plan-contrib-value { color: var(--success-text); }
+.plan-contrib-hint { font-size: 0.75rem; color: var(--text-tertiary); }
+
+/* Monte Carlo */
+.plan-mc-offline {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: var(--bg-surface-subtle);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+}
+
+.plan-mc-offline-icon { flex-shrink: 0; color: var(--text-tertiary); }
+.plan-mc-offline-content { display: flex; flex-direction: column; gap: 0.25rem; }
+.plan-mc-offline-title { margin: 0; font-size: 0.9375rem; font-weight: 700; }
+.plan-mc-offline-desc { margin: 0; font-size: 0.875rem; color: var(--text-secondary); }
+
+.plan-mc-results {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) minmax(0, 2fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.plan-mc-prob-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.25rem;
+  background: var(--accent-subtle);
+  border: 1px solid rgba(37, 99, 235, 0.18);
+  border-radius: var(--radius-lg);
+}
+
+.plan-mc-prob-label { font-size: 0.8125rem; font-weight: 600; color: var(--accent-text); }
+
+.plan-mc-prob-value {
+  font-size: 2.25rem;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--accent-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.plan-mc-prob-desc { margin: 0; font-size: 0.8125rem; color: var(--text-secondary); }
+
+.plan-mc-funded-ages {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(37, 99, 235, 0.18);
+}
+
+.plan-mc-funded-age-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.8125rem;
+}
+
+.plan-mc-funded-label { color: var(--text-secondary); }
+.plan-mc-funded-val { font-weight: 700; color: var(--text-primary); white-space: nowrap; }
+
+.plan-mc-percentiles { min-width: 0; }
+.plan-mc-percentiles-title { margin: 0; font-size: 0.9375rem; font-weight: 700; }
+.plan-mc-percentiles-subtitle { margin: 0.25rem 0 0.75rem; font-size: 0.8125rem; color: var(--text-secondary); }
+
+.plan-facts-section {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.plan-facts-title { margin: 0 0 0.75rem; font-size: 0.875rem; font-weight: 700; }
+.plan-facts-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+.plan-fact-chip {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+}
+
+.plan-fact-code {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.plan-fact-metric { font-size: 0.8125rem; color: var(--text-secondary); }
+
+/* --------------------------------------------------------------------------
+   Scenario Lab tab
+   -------------------------------------------------------------------------- */
+
+.plan-presets-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.plan-presets-label { font-size: 0.8125rem; font-weight: 600; color: var(--text-secondary); }
+.plan-presets-group { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+.plan-preset-btn {
+  padding: 6px 12px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: color var(--transition-fast), border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.plan-preset-btn:hover:not(:disabled) {
+  color: var(--accent-primary);
+  border-color: rgba(37, 99, 235, 0.4);
+  background: var(--accent-subtle);
+}
+
+.plan-preset-btn:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.plan-preset-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.plan-controls-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem 1.5rem;
+}
+
+.plan-control-field { display: flex; flex-direction: column; gap: 0.5rem; }
+
+.plan-control-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.plan-control-label { font-size: 0.8125rem; font-weight: 600; color: var(--text-secondary); }
+
+.plan-control-value {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.plan-control-hint { font-size: 0.75rem; color: var(--text-tertiary); }
+
+.plan-range-input {
+  width: 100%;
+  accent-color: var(--accent-primary);
+  cursor: pointer;
+}
+
+.plan-controls-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.plan-run-btn .plan-spinner { width: 14px; height: 14px; border-width: 2px; }
+
+.plan-eval-error {
+  margin-top: 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--warning-text);
+}
+
+/* Scenario comparison deltas. The component does not say whether a change is
+   good or bad (e.g. a lower FIRE age gets --decrease), so these stay neutral. */
+.plan-delta-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.plan-delta-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: var(--bg-surface-subtle);
+  border-radius: var(--radius-lg);
+}
+
+.plan-delta-label { font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); }
+
+.plan-delta-values {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  flex-wrap: wrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.plan-delta-base { font-size: 0.875rem; color: var(--text-tertiary); }
+.plan-delta-arrow { color: var(--text-tertiary); }
+.plan-delta-scen { font-size: 1rem; font-weight: 700; color: var(--text-primary); }
+
+.plan-delta-badge {
+  padding: 2px 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+  border-radius: var(--radius-full);
+}
+
+.plan-delta-badge--increase { color: var(--accent-text); background: var(--accent-subtle); }
+.plan-delta-badge--decrease { color: var(--warning-text); background: var(--warning-subtle); }
+.plan-delta-badge--neutral { color: var(--text-secondary); background: var(--bg-surface); }
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 1100px) {
+  .plan-fire-hero-grid,
+  .plan-delta-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .plan-mc-results { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 1024px) {
+  .plan-nw-summary { grid-template-columns: 1fr; }
+  .plan-assets-summary-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 768px) {
+  .plan-contrib-grid,
+  .plan-controls-grid,
+  .plan-composition-grid { grid-template-columns: 1fr; }
+  .plan-emergency-metrics { grid-template-columns: 1fr; }
+  .plan-emergency-grid { grid-template-columns: 1fr; }
+  .plan-nw-hero-value { font-size: 2rem; }
+}
+
+@media (max-width: 480px) {
+  .plan-page { padding: 16px 16px 40px; }
+  .plan-nw-hero,
+  .plan-fire-hero { padding: 1.25rem; }
+
+  .plan-nw-aux-grid,
+  .plan-fire-hero-grid,
+  .plan-delta-grid,
+  .plan-assets-summary-strip { grid-template-columns: 1fr; }
+  .plan-controls-actions { flex-direction: column-reverse; }
+  .plan-controls-actions .btn { width: 100%; }
+}

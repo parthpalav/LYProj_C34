@@ -1,0 +1,22 @@
+/* ==========================================================================
+   Landing page
+   The hero uses .hero-stagger-1..4, which were never defined; index.css has
+   the same entrance animation as .stagger-1..4 (@keyframes fadeInStagger).
+   Slightly longer delays suit the larger hero blocks.
+   ========================================================================== */
+
+.hero-stagger-1 { animation: fadeInStagger 0.5s ease 0.05s both; }
+.hero-stagger-2 { animation: fadeInStagger 0.5s ease 0.15s both; }
+.hero-stagger-3 { animation: fadeInStagger 0.5s ease 0.25s both; }
+.hero-stagger-4 { animation: fadeInStagger 0.5s ease 0.35s both; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-stagger-1,
+  .hero-stagger-2,
+  .hero-stagger-3,
+  .hero-stagger-4 {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

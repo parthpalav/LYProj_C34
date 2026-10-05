@@ -8,6 +8,7 @@ import './styles/reports.css'
 import './styles/activity.css'
 import './styles/overview.css'
 import './styles/auth.css'
+import './styles/landing.css'
 import App from './App.tsx'
 
 createRoot(document.getElementById('root')!).render(

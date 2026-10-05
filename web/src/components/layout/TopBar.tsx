@@ -14,6 +14,7 @@ const ROUTE_TITLES: Record<string, string> = {
   '/app/insights': 'Insights',
   '/app/plan': 'Plan',
   '/app/reports': 'Reports',
+  '/app/family': 'Family',
   '/app/profile': 'Profile',
   '/app/settings': 'Settings',
 };

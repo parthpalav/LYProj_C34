@@ -1,0 +1,385 @@
+/* ==========================================================================
+   Insights page
+   Class names used by pages/InsightsPage.tsx and components/insights/* that
+   were never defined in index.css. The page header classes are shared with
+   the Reports page. Uses the design tokens from index.css :root.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Page shell & header (also used by ReportsPage)
+   -------------------------------------------------------------------------- */
+
+/* Mirrors .activity-page */
+.activity-page-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px 24px 48px;
+}
+
+/* Mirrors .overview-header */
+.activity-header-block {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-default);
+}
+
+.activity-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+/* Mirrors .overview-context-badge */
+.overview-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--accent-primary);
+}
+
+/* Mirrors .overview-title / .overview-subtitle */
+.activity-main-heading {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text-primary);
+}
+
+.activity-sub-heading {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.activity-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* --------------------------------------------------------------------------
+   Tabs (InsightsTabs reuses .activity-tab-btn; adds a two-line label)
+   -------------------------------------------------------------------------- */
+
+.tab-label-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.2;
+}
+
+.tab-label { font-size: 0.875rem; font-weight: 600; }
+
+.tab-sublabel {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--text-tertiary);
+}
+
+.activity-tab-active .tab-sublabel { color: var(--accent-primary); opacity: 0.75; }
+
+.insights-tab-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* --------------------------------------------------------------------------
+   Loading skeleton grids
+   -------------------------------------------------------------------------- */
+
+.insights-loading-grid { display: flex; flex-direction: column; }
+
+.two-col-grid,
+.three-col-grid {
+  display: grid;
+  gap: 20px;
+}
+
+.two-col-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.three-col-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+/* --------------------------------------------------------------------------
+   Card header variants & shared bits
+   -------------------------------------------------------------------------- */
+
+.card-header-flex {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.card-text-action-btn {
+  flex-shrink: 0;
+  padding: 4px 8px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--accent-primary);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.card-text-action-btn:hover { background: var(--accent-subtle); }
+.card-text-action-btn:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+.chart-svg-container { min-width: 0; }
+
+.tooltip-legend-dot {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  margin-right: 6px;
+  border-radius: 50%;
+}
+
+/* --------------------------------------------------------------------------
+   FMI hero
+   -------------------------------------------------------------------------- */
+
+.hero-content-row {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.hero-score-cluster {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex: 1;
+  min-width: 0;
+}
+
+.score-radial-ring {
+  position: relative;
+  flex-shrink: 0;
+  width: 104px;
+  height: 104px;
+}
+
+.score-ring-svg { display: block; }
+
+.score-radial-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  padding-top: 34px;
+}
+
+.score-radial-inner .hero-score-value { font-size: 1.75rem; line-height: 1; }
+.hero-score-denom { margin-left: 1px; font-size: 0.75rem; font-weight: 600; }
+
+.hero-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.hero-label-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+.hero-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+
+.hero-fmi-badge-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+.badge-fmi-label {
+  padding: 3px 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent-text);
+  background: var(--accent-subtle);
+  border-radius: var(--radius-full);
+}
+
+.fmi-delta-pill {
+  padding: 3px 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: var(--radius-full);
+}
+
+.hero-subtitle { margin: 0; max-width: 620px; }
+
+/* --------------------------------------------------------------------------
+   Spending tab
+   -------------------------------------------------------------------------- */
+
+.insights-spending-hero-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.hero-stat-caption { margin: 6px 0 0; }
+
+.insights-type-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.type-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.type-card-desc { margin-top: 10px; }
+
+.type-card-needs { border-top: 3px solid var(--accent-primary); }
+.type-card-wants { border-top: 3px solid var(--warning); }
+.type-card-investments { border-top: 3px solid var(--success); }
+
+.mom-trend-pill { white-space: nowrap; }
+
+/* Category movement & ranking */
+.movement-cat-name { font-size: 0.875rem; }
+
+.movement-flow {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.movement-badge { white-space: nowrap; }
+.movement-diff-text { display: block; margin-top: 4px; text-align: right; }
+
+.rank-category-name { font-size: 0.875rem; min-width: 0; overflow-wrap: anywhere; }
+.rank-category-amount { font-size: 0.875rem; white-space: nowrap; }
+
+/* --------------------------------------------------------------------------
+   FMI Health tab
+   -------------------------------------------------------------------------- */
+
+.stat-unit-label { text-transform: uppercase; letter-spacing: 0.04em; }
+.pillar-deltas-title { white-space: nowrap; }
+.chip-name { white-space: nowrap; }
+.chip-val { white-space: nowrap; }
+.pillar-unavailable-notice { line-height: 1.5; }
+
+.pillar-detail { margin: 10px 0 0; line-height: 1.5; }
+
+.pillar-fill.fill-emerald { background: var(--success); }
+.pillar-fill.fill-blue { background: var(--accent-primary); }
+.pillar-fill.fill-amber { background: var(--warning); }
+.pillar-fill.fill-danger { background: var(--danger); }
+
+.insight-text { line-height: 1.5; }
+.factor-text { line-height: 1.4; }
+
+/* --------------------------------------------------------------------------
+   Behaviour tab
+   -------------------------------------------------------------------------- */
+
+.pattern-icon-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  background: var(--warning-subtle);
+  border-radius: var(--radius-md);
+}
+
+.pattern-title { display: block; font-size: 0.9375rem; }
+.pattern-type-code { display: block; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.pattern-message { margin: 10px 0 0; line-height: 1.5; }
+
+.category-tag {
+  padding: 1px 6px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  background: var(--bg-surface-subtle);
+  border-radius: var(--radius-sm);
+}
+
+.meta-separator { color: var(--text-tertiary); }
+
+.anomaly-item-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.insights-notice-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+}
+
+.notice-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Income tab
+   -------------------------------------------------------------------------- */
+
+.stat-card-icon-wrap.icon-neutral { color: var(--text-secondary); background: var(--bg-surface-subtle); }
+.stat-card-icon-wrap.icon-emerald { color: #059669; background: var(--success-subtle); }
+.stat-card-icon-wrap.icon-amber { color: #d97706; background: var(--warning-subtle); }
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+
+@media (max-width: 1024px) {
+  .three-col-grid,
+  .insights-type-cards-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 768px) {
+  .two-col-grid,
+  .three-col-grid,
+  .insights-type-cards-grid { grid-template-columns: 1fr; }
+
+  .hero-content-row,
+  .hero-score-cluster {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .tab-sublabel { display: none; }
+}
+
+@media (max-width: 480px) {
+  .activity-page-layout { padding: 16px 16px 40px; }
+  .activity-main-heading { font-size: 22px; }
+}

@@ -23,7 +23,7 @@ export const RegisterPage: React.FC = () => {
   const hasLower = /[a-z]/.test(password);
   const hasNumber = /\d/.test(password);
   const hasSpecial = /[^A-Za-z\d\s]/.test(password);
-  const hasNoSpaces = !/\s/.test(password);
+  const hasNoSpaces = password.length > 0 && !/\s/.test(password);
   const isPasswordValid = hasMinLength && hasUpper && hasLower && hasNumber && hasSpecial && hasNoSpaces;
   const passwordsMatch = password.length > 0 && password === confirmPassword;
 

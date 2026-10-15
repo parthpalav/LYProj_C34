@@ -1,10 +1,12 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import {
   Wallet,
   Activity,
   TrendingUp,
   Percent,
   RotateCcw,
+  Plus,
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { useOverview } from '../hooks/useOverview';
@@ -25,6 +27,8 @@ import { FutureOutlookPanel } from '../components/dashboard/FutureOutlookPanel';
 import { getFamilyDashboard } from '../services/api';
 import type { FamilyDashboard } from '../types';
 import { FamilyOverviewCard } from '../components/family/FamilyOverviewCard';
+import { NextStep } from '../components/ui/NextStep';
+import { FMI_NAME } from '../utils/presentation';
 
 export const OverviewPage: React.FC = () => {
   const { user } = useAuth();
@@ -46,6 +50,7 @@ export const OverviewPage: React.FC = () => {
     alerts,
     liabilities,
     transactions,
+    incomes,
     predictability,
     cashFlowHistory,
     currentMonthIncome,
@@ -112,11 +117,12 @@ export const OverviewPage: React.FC = () => {
           <span className="overview-context-badge">Financial Intelligence</span>
           <h1 className="overview-title">{greetingHeadline}</h1>
           <p className="overview-subtitle">
-            Here’s your financial picture today.
+            Your personal finances · {new Date().toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })}
           </p>
         </div>
 
         <div className="overview-header-right">
+          <Link className="next-step-action" to="/app/activity?entry=new"><Plus size={16} aria-hidden="true" />Record expense</Link>
           {lastUpdated && (
             <span className="overview-last-updated">
               Updated {lastUpdated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -173,7 +179,7 @@ export const OverviewPage: React.FC = () => {
                     }
                   : undefined
               }
-              subtext={fmiScoreChange === null ? 'Financial Momentum Index' : undefined}
+              subtext={fmiScoreChange === null ? FMI_NAME : undefined}
               icon={Activity}
             />
 
@@ -208,6 +214,17 @@ export const OverviewPage: React.FC = () => {
         )}
       </section>
 
+      {!isLoading && !sectionErrors.transactions && transactions.length === 0 && (
+        <NextStep
+          eyebrow="LET’S GET STARTED"
+          title="Give your financial picture its first detail"
+          description="Record an expense or income to start seeing your cash flow and spending patterns."
+          action="Record first expense"
+          to="/app/activity?entry=new"
+          icon={<Wallet size={25} />}
+        />
+      )}
+
       {/* Contextual Family Overview — Strictly rendered for genuine active multi-member households (memberCount > 1) */}
       {familyDashboard?.family &&
         ((familyDashboard.family.memberCount ?? 0) > 1 || (familyDashboard.family.members?.length ?? 0) > 1) && (
@@ -217,7 +234,7 @@ export const OverviewPage: React.FC = () => {
         )}
 
       {/* Primary Charts Row: Cash Flow & Spending Breakdown */}
-      <section className="overview-charts-grid overview-section-1">
+      <section className={`overview-charts-grid overview-section-1 ${!isLoading && transactions.length === 0 && incomes.length === 0 ? 'overview-charts-empty' : ''}`}>
         <SectionCard
           title="Cash Flow Trend"
           subtitle="Monthly inflow vs outflow across the trailing 6 calendar months"

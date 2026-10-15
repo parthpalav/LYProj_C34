@@ -455,7 +455,7 @@ export const MonthlyReportView: React.FC<MonthlyReportViewProps> = ({
               <div className="report-card-header">
                 <div>
                   <span className="report-eyebrow-label">DIAGNOSTIC MOMENTUM</span>
-                  <h3>Financial Mind Index (FMI)</h3>
+                  <h3>Financial Maturity Index (FMI)</h3>
                 </div>
                 <span className="report-card-badge">Monthly Evolution</span>
               </div>

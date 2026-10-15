@@ -1,12 +1,14 @@
 import React from 'react';
 import { Moon, Utensils, ShoppingBag, AlertTriangle, Activity, CheckCircle2 } from 'lucide-react';
 import type { BehaviorPattern } from '../../types';
+import { NextStep } from '../ui/NextStep';
 
 export interface BehaviorSignalCardsProps {
   patterns: BehaviorPattern[];
+  analyzedCount: number;
 }
 
-export const BehaviorSignalCards: React.FC<BehaviorSignalCardsProps> = ({ patterns }) => {
+export const BehaviorSignalCards: React.FC<BehaviorSignalCardsProps> = ({ patterns, analyzedCount }) => {
   const getSeverityBadge = (sev: string) => {
     const s = sev?.toLowerCase();
     const label = s ? s.charAt(0).toUpperCase() + s.slice(1) : 'Medium';
@@ -48,6 +50,17 @@ export const BehaviorSignalCards: React.FC<BehaviorSignalCardsProps> = ({ patter
         return type.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
     }
   };
+
+  if (analyzedCount === 0) {
+    return <NextStep
+      eyebrow="WAITING FOR YOUR FIRST RECORD"
+      title="Let’s build a picture of your spending"
+      description="No transactions have been analyzed yet. Add expenses to start identifying patterns in your spending."
+      action="Record an expense"
+      to="/app/activity?entry=new"
+      icon={<Activity size={25} />}
+    />;
+  }
 
   if (patterns.length === 0) {
     return (

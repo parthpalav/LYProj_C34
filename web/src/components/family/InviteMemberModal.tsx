@@ -83,7 +83,6 @@ export const InviteMemberModal: React.FC<InviteMemberModalProps> = ({
             }}
             leftIcon={<Mail size={16} />}
             helperText="They'll need an existing FINAURA account using this email."
-            autoFocus
             required
             disabled={isLoading}
           />

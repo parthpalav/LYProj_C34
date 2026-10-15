@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useId } from 'react';
 import { X } from 'lucide-react';
 
 export interface ModalProps {
@@ -19,24 +19,48 @@ export const Modal: React.FC<ModalProps> = ({
   maxWidth = '540px',
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
+  const closeRef = useRef(onClose);
+  const titleId = useId();
+  useEffect(() => { closeRef.current = onClose; }, [onClose]);
 
   useEffect(() => {
+    if (!isOpen) return;
+    const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const previousOverflow = document.body.style.overflow;
+    const focusable = () => Array.from(modalRef.current?.querySelectorAll<HTMLElement>(
+      'button:not(:disabled), input:not(:disabled), select:not(:disabled), textarea:not(:disabled), a[href], [tabindex="0"]'
+    ) ?? []).filter((element) => element.getClientRects().length > 0);
+    const frame = requestAnimationFrame(() => {
+      const preferred = modalRef.current?.querySelector<HTMLElement>('input:not(:disabled), select:not(:disabled)');
+      (preferred ?? focusable()[0] ?? modalRef.current)?.focus();
+    });
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
-        onClose();
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        closeRef.current();
+      }
+      if (e.key === 'Tab') {
+        const elements = focusable();
+        const first = elements[0];
+        const last = elements[elements.length - 1];
+        if (!first) { e.preventDefault(); modalRef.current?.focus(); return; }
+        if (!modalRef.current?.contains(document.activeElement) || (!e.shiftKey && document.activeElement === last)) {
+          e.preventDefault(); first.focus();
+        } else if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault(); last.focus();
+        }
       }
     };
-
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-      window.addEventListener('keydown', handleKeyDown);
-    }
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', handleKeyDown);
 
     return () => {
-      document.body.style.overflow = '';
+      cancelAnimationFrame(frame);
+      document.body.style.overflow = previousOverflow;
       window.removeEventListener('keydown', handleKeyDown);
+      if (opener?.isConnected) opener.focus();
     };
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -50,17 +74,18 @@ export const Modal: React.FC<ModalProps> = ({
       }}
       role="dialog"
       aria-modal="true"
-      aria-labelledby="modal-title"
+      aria-labelledby={titleId}
     >
       <div
         className="modal-container"
         style={{ maxWidth }}
         ref={modalRef}
+        tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="modal-header">
           <div className="modal-header-text">
-            <h2 id="modal-title" className="modal-title">
+            <h2 id={titleId} className="modal-title">
               {title}
             </h2>
             {subtitle && <p className="modal-subtitle">{subtitle}</p>}

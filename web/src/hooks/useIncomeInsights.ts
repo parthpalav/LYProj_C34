@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
+import { percentileForDisplay } from '../utils/presentation';
 import { getIncome, getIncomeFlow, getPredictability } from '../services/api';
 import type {
   IncomeRecord,
@@ -135,7 +136,7 @@ export function useIncomeInsights() {
   // Authoritative Predictability Engine Statistics
   const incomeStats = useMemo(() => {
     const inc = predictability?.income;
-    const percentile = inc?.percentileUsed ?? 25;
+    const percentile = percentileForDisplay(inc?.percentileUsed);
 
     // Volatility: format CV as percentage
     let volatilityPct: number | null = null;

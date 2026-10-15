@@ -223,7 +223,7 @@ export const LandingPage: React.FC = () => {
                   Explainable behavioral analysis, not black-box scores.
                 </h3>
                 <p className="landing-narrative-desc">
-                  The Financial Momentum Index (FMI) measures financial discipline across three weighted dimensions. Instead of an opaque score, FINAURA explains exactly what influenced your momentum—whether it was high discretionary spending, impulse transactions, or an accelerated savings rate.
+                  The Financial Maturity Index (FMI) measures financial discipline across three weighted dimensions. Instead of an opaque score, FINAURA explains exactly what influenced your momentum—whether it was high discretionary spending, impulse transactions, or an accelerated savings rate.
                 </p>
                 <ul className="landing-narrative-checklist">
                   <li>Transparent 40% / 30% / 30% pillar weight distribution</li>
@@ -235,7 +235,7 @@ export const LandingPage: React.FC = () => {
               <div className="landing-narrative-visual" aria-hidden="true">
                 <div className="landing-visual-card">
                   <div className="landing-visual-card-head">
-                    <span className="landing-visual-title">Financial Momentum Index (FMI) Diagnostic</span>
+                    <span className="landing-visual-title">Financial Maturity Index (FMI) Diagnostic</span>
                     <span className="landing-preview-watermark-pill">Sample diagnostic</span>
                   </div>
 

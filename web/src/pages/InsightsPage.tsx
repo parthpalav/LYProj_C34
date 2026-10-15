@@ -273,7 +273,7 @@ export const InsightsPage: React.FC = () => {
               <BehaviorHistoryNotice />
 
               {/* Detected Behavioral Patterns */}
-              <BehaviorSignalCards patterns={behavior.patterns} />
+              <BehaviorSignalCards patterns={behavior.patterns} analyzedCount={behavior.analyzedCount} />
 
               {/* Anomalous Transactions List */}
               <AnomalousTransactionsList transactions={behavior.anomalousTransactions} />

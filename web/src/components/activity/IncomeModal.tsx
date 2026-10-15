@@ -129,7 +129,6 @@ export const IncomeModal: React.FC<IncomeModalProps> = ({
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               required
-              autoFocus={!isEditing}
             />
           </div>
           <span className="form-help-text">Directly credits your available current balance.</span>

@@ -78,7 +78,7 @@ export const FmiScoreHero: React.FC<FmiScoreHeroProps> = ({ fmi, deltaSummary })
           <div className="hero-meta">
             <div className="hero-label-row">
               <span className="overview-context-badge">DIAGNOSTIC COMPOSITE</span>
-              <h2 className="hero-title">Financial Momentum Index (FMI)</h2>
+              <h2 className="hero-title">Financial Maturity Index (FMI)</h2>
               <div className="hero-fmi-badge-row">
                 <span className="badge-fmi-label">{label}</span>
                 {deltaSummary?.hasComparison && (

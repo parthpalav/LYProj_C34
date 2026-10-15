@@ -35,6 +35,8 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const amountError = amount !== '' && (!Number.isFinite(Number(amount)) || Number(amount) <= 0)
+    ? 'Enter an amount greater than ₹0.' : null;
 
   // Initialize form
   useEffect(() => {
@@ -162,11 +164,12 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={isEditing ? 'Edit Transaction' : 'Record New Transaction'}
+      title={isEditing ? 'Edit Transaction' : 'Record an expense'}
       subtitle={isEditing ? 'Update transaction details or correct classification' : 'Add an expense to your financial ledger'}
-      maxWidth="520px"
+      maxWidth="560px"
     >
       <form onSubmit={handleSubmit} className="activity-form">
+        <div className="entry-section-title"><span>1</span> Payment details <small>Fields marked * are required</small></div>
         {formError && (
           <div className="form-error-banner animate-fade-in" role="alert">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -195,10 +198,11 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               required
-              autoFocus={!isEditing}
+              aria-invalid={amountError ? true : undefined}
+              aria-describedby={amountError ? 'tx-amount-error' : 'tx-amount-help'}
             />
           </div>
-          <span className="form-help-text">Recorded as positive outflow; deducted from your balance.</span>
+          {amountError ? <span id="tx-amount-error" className="entry-field-error" role="status">{amountError}</span> : <span id="tx-amount-help" className="form-help-text">Enter the amount paid. It will be recorded as an expense.</span>}
         </div>
 
         {/* Description Input */}
@@ -250,6 +254,8 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
         )}
 
         {/* Category & Type in 2 cols */}
+        <div className="entry-section-title"><span>2</span> Review classification</div>
+        <p className="entry-section-help">Check the category and spend type before saving. You can correct them at any time.</p>
         <div className="form-grid-2">
           <div className="form-group">
             <label htmlFor="tx-category" className="form-label">
@@ -280,7 +286,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
               id="tx-type"
               className="form-select"
               value={type}
-              onChange={(e) => setType(e.target.value as TransactionType)}
+              onChange={(e) => { setType(e.target.value as TransactionType); setUserTouchedCategory(true); }}
             >
               {VALID_TRANSACTION_TYPES.map((t) => (
                 <option key={t} value={t}>

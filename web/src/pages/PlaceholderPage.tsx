@@ -1,14 +1,10 @@
 import React from 'react';
 import { PageHeader } from '../components/ui/PageHeader';
-import { Layers, ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, CheckCircle2, UserRound } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
 
-export interface PlannedSectionItem {
-  name: string;
-  description: string;
-  link?: string;
-}
-
+export interface PlannedSectionItem { name: string; description: string; link?: string; }
 export interface PlaceholderPageProps {
   title: string;
   category?: string;
@@ -17,177 +13,30 @@ export interface PlaceholderPageProps {
   partNotice?: string;
 }
 
-export const PlaceholderPage: React.FC<PlaceholderPageProps> = ({
-  title,
-  category,
-  description,
-  plannedFeatures = [],
-  partNotice = 'This module is slated for a future release. Core financial activity, insights, planning, and historical reports are fully active in V1.',
-}) => {
+export const PlaceholderPage: React.FC<PlaceholderPageProps> = ({ title, plannedFeatures = [] }) => {
+  const { user } = useAuth();
+  const isSettings = title === 'Settings';
+  const baseline = user?.monthlyIncome ?? user?.income;
+  const details = isSettings ? [
+    ['Session', 'Signed in on this browser'],
+    ['Account email', user?.email ?? 'Not available'],
+    ['Email verification', user?.isEmailVerified === undefined ? 'Not available' : user.isEmailVerified ? 'Verified' : 'Not verified'],
+  ] : [
+    ['Full name', user?.name ?? 'Not set'],
+    ['Email address', user?.email ?? 'Not set'],
+    ['Monthly income baseline', baseline == null ? 'Not set' : `₹${baseline.toLocaleString('en-IN')}`],
+    ['Retirement age', user?.retirementAge == null ? 'Not set' : `${user.retirementAge} years`],
+  ];
   return (
-    <div>
-      <PageHeader
-        title={title}
-        category={category || 'COMING SOON'}
-        description={description}
-      />
-
-      <div style={{ padding: '0 2rem 2rem', maxWidth: '1000px' }}>
-        {/* Foundation Notice Card */}
-        <div
-          style={{
-            padding: '1.25rem 1.5rem',
-            backgroundColor: 'var(--bg-surface)',
-            borderRadius: 'var(--radius-lg)',
-            border: '1px solid var(--border-default)',
-            borderLeft: '4px solid var(--accent-primary)',
-            boxShadow: 'var(--shadow-sm)',
-            marginBottom: '1.75rem',
-            display: 'flex',
-            alignItems: 'flex-start',
-            gap: '1rem',
-          }}
-        >
-          <div
-            style={{
-              padding: '0.5rem',
-              borderRadius: 'var(--radius-md)',
-              backgroundColor: 'var(--accent-subtle)',
-              color: 'var(--accent-primary)',
-              flexShrink: 0,
-            }}
-          >
-            <Layers size={20} />
-          </div>
-          <div>
-            <h2 style={{ fontSize: '0.9375rem', fontWeight: 600, color: 'var(--text-primary)', margin: '0 0 0.25rem 0' }}>
-              Future Release Roadmap
-            </h2>
-            <p style={{ fontSize: '0.8125rem', color: 'var(--text-secondary)', margin: 0, lineHeight: 1.5 }}>
-              {partNotice}
-            </p>
-          </div>
-        </div>
-
-        {/* Planned Subsections Grid */}
-        {plannedFeatures.length > 0 && (
-          <div>
-            <h2
-              style={{
-                fontSize: '0.875rem',
-                fontWeight: 700,
-                color: 'var(--text-tertiary)',
-                textTransform: 'uppercase',
-                letterSpacing: '0.5px',
-                margin: '0 0 1rem 0',
-              }}
-            >
-              Planned Capabilities in this Section
-            </h2>
-
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                gap: '1rem',
-              }}
-            >
-              {plannedFeatures.map((item, index) => (
-                <div
-                  key={index}
-                  style={{
-                    padding: '1.25rem',
-                    backgroundColor: 'var(--bg-surface)',
-                    borderRadius: 'var(--radius-md)',
-                    border: '1px solid var(--border-default)',
-                    boxShadow: 'var(--shadow-sm)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                  }}
-                >
-                  <div>
-                    <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        marginBottom: '0.375rem',
-                      }}
-                    >
-                      <h3
-                        style={{
-                          fontSize: '0.9375rem',
-                          fontWeight: 600,
-                          color: 'var(--text-primary)',
-                          margin: 0,
-                        }}
-                      >
-                        {item.name}
-                      </h3>
-                      <ArrowUpRight size={14} style={{ color: 'var(--text-tertiary)' }} />
-                    </div>
-                    <p
-                      style={{
-                        fontSize: '0.8125rem',
-                        color: 'var(--text-secondary)',
-                        margin: 0,
-                        lineHeight: 1.5,
-                      }}
-                    >
-                      {item.description}
-                    </p>
-                    {item.link && (
-                      <Link
-                        to={item.link}
-                        style={{
-                          marginTop: '0.75rem',
-                          fontSize: '0.8125rem',
-                          color: 'var(--accent-primary)',
-                          fontWeight: 500,
-                          textDecoration: 'none',
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '4px',
-                        }}
-                      >
-                        Open {item.name} &rarr;
-                      </Link>
-                    )}
-                  </div>
-
-                  <div
-                    style={{
-                      marginTop: '1rem',
-                      paddingTop: '0.75rem',
-                      borderTop: '1px solid var(--border-subtle)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      fontSize: '0.6875rem',
-                      color: 'var(--text-tertiary)',
-                      fontWeight: 500,
-                    }}
-                  >
-                    <span>Status</span>
-                    <span
-                      style={{
-                        padding: '0.125rem 0.5rem',
-                        borderRadius: 'var(--radius-sm)',
-                        backgroundColor: 'var(--accent-subtle)',
-                        color: 'var(--accent-primary)',
-                        fontWeight: 600,
-                      }}
-                    >
-                      Coming Soon
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
+    <div className="account-page">
+      <PageHeader title={isSettings ? 'Settings' : 'Your profile'} category="YOUR ACCOUNT" description={isSettings ? 'Your current session and account status.' : 'Your personal details and saved financial baseline.'} />
+      <section className="account-summary">
+        <div className="account-summary-heading"><UserRound size={22} aria-hidden="true" /><h2>{isSettings ? 'Session and security' : 'Account details'}</h2><span><CheckCircle2 size={14} aria-hidden="true" /> Signed in</span></div>
+        <dl>{details.map(([label, value]) => <div key={label}><dt>{label}</dt><dd>{value}</dd></div>)}</dl>
+        <p className="account-view-note">{isSettings ? 'Use Logout in the navigation to end this browser session.' : 'These details are read-only on the web. Use the mobile app to update your financial profile.'}</p>
+      </section>
+      <div className="account-available"><div><span className="next-step-eyebrow">AVAILABLE NOW</span><h2>{isSettings ? 'Keep a copy of your records' : 'Manage your household'}</h2><p>{isSettings ? 'Download your financial records from Reports.' : 'View members and invitations while keeping personal accounts private.'}</p></div><Link className="next-step-action" to={isSettings ? '/app/reports?tab=export' : '/app/family'}>{isSettings ? 'Open exports' : 'Open Family'}<ArrowUpRight size={16} aria-hidden="true" /></Link></div>
+      <details className="account-planned"><summary>Planned web features</summary><ul>{plannedFeatures.filter((item) => !item.link).map((item) => <li key={item.name}><strong>{item.name}</strong><p>{item.description}</p></li>)}</ul></details>
     </div>
   );
 };

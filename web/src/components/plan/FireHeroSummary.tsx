@@ -35,7 +35,8 @@ export const FireHeroSummary: React.FC<FireHeroSummaryProps> = ({
   // isFireReached = projectedFire.reached from backend
   // This indicates whether the model projects the corpus reaching the FIRE target
   // within the savings horizon (via monthsToTarget projection)
-  const statusText = isFireReached
+  const hasProjection = targetFireCorpus > 0 && projectedCorpusAtRetirement !== null;
+  const statusText = !hasProjection ? 'Planning details needed' : isFireReached
     ? 'Projected corpus reaches target'
     : 'Projected corpus below target';
 
@@ -57,7 +58,7 @@ export const FireHeroSummary: React.FC<FireHeroSummaryProps> = ({
         {/* Target FIRE Corpus */}
         <div className="plan-fire-stat">
           <span className="plan-fire-stat-label">Estimated FIRE Target</span>
-          <span className="plan-fire-stat-value plan-fire-stat-value--primary">{formatINR(targetFireCorpus)}</span>
+          <span className="plan-fire-stat-value plan-fire-stat-value--primary">{targetFireCorpus > 0 ? formatINR(targetFireCorpus) : 'Not set'}</span>
           <span className="plan-fire-stat-desc">
             Estimated capital required for sustainable withdrawal
           </span>
@@ -87,7 +88,7 @@ export const FireHeroSummary: React.FC<FireHeroSummaryProps> = ({
         <div className="plan-fire-stat">
           <span className="plan-fire-stat-label">Projected FIRE Age</span>
           <span className="plan-fire-stat-value plan-fire-stat-value--accent">
-            {projectedFireAge !== null ? `${projectedFireAge.toFixed(1)} yrs` : 'Not in horizon'}
+            {projectedFireAge !== null ? `${projectedFireAge.toFixed(1)} yrs` : hasProjection ? 'Not in horizon' : 'Not calculated'}
           </span>
           <span className="plan-fire-stat-desc">
             {currentAge !== null && targetRetirementAge !== null

@@ -30,13 +30,14 @@ export const IncomeMetricsGrid: React.FC<IncomeMetricsGridProps> = ({ stats }) =
     <div className="insights-card" role="region" aria-label="Income Central Tendency & Volatility">
       <div className="card-header-row">
         <div>
-          <h3 className="card-title">Income Central Tendency &amp; Volatility</h3>
+          <h3 className="card-title">How dependable is your income?</h3>
           <p className="card-subtitle">
-            Authoritative predictability metrics derived from your historical cash inflows
+            Compare your typical monthly earnings with a more cautious planning baseline.
           </p>
         </div>
       </div>
 
+      <div className="income-explainer"><ShieldCheck size={18} aria-hidden="true" /><p><strong>What does the {stats.percentileUsed}th percentile mean?</strong> It is a cautious baseline: about {stats.percentileUsed}% of the observed monthly values fall at or below it. Add income history to make these comparisons useful.</p></div>
       <div className="income-stats-grid">
         {/* Mean Monthly Income */}
         <div className="income-stat-card">

@@ -43,7 +43,7 @@ export const AuthLayout: React.FC<AuthLayoutProps> = ({
               <div className="auth-motif-head">
                 <div className="auth-motif-title-row">
                   <Activity size={16} className="auth-motif-icon" />
-                  <span className="auth-motif-title">Financial Momentum Index</span>
+                  <span className="auth-motif-title">Financial Maturity Index</span>
                 </div>
                 <span className="auth-motif-watermark">Illustrative</span>
               </div>

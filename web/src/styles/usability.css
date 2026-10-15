@@ -1,0 +1,68 @@
+/* Shared presentation and interaction refinements. */
+:root { --text-tertiary: #64748b; }
+.next-step { display:flex; align-items:center; gap:20px; padding:25px 28px; border:1px solid #bfdbfe; border-radius:16px; background:linear-gradient(110deg,#eff6ff,#fff); margin:22px 0; }
+.next-step-icon { display:grid; place-items:center; width:52px; height:52px; flex-shrink:0; background:#dbeafe; color:#1d4ed8; border-radius:14px; }
+.next-step-copy { flex:1; min-width:0; }
+.next-step-eyebrow { display:block; font-size:11px; font-weight:750; letter-spacing:1.1px; color:#1e40af; margin-bottom:7px; }
+.next-step h2, .account-available h2 { font-size:21px; line-height:1.35; margin:0 0 7px; color:var(--text-primary); letter-spacing:-.35px; }
+.next-step p, .account-available p { font-size:14px; color:#475569; margin:0; line-height:1.6; }
+.next-step-action { display:inline-flex; justify-content:center; align-items:center; gap:8px; flex-shrink:0; padding:12px 17px; background:#2563eb; color:white; border:1px solid #2563eb; border-radius:9px; font-size:13px; font-weight:650; line-height:1.4; text-decoration:none; }
+.next-step-action:hover { background:#1d4ed8; color:white; }
+.overview-charts-empty .chart-empty-state { min-height:130px; height:auto; padding:24px 12px; }
+.filter-toolbar-heading { display:flex; flex-wrap:wrap; align-items:center; gap:12px; margin:0 0 14px; font-size:13px; }
+.filter-toolbar-heading span { color:#475569; font-size:12px; }
+.ledger-empty-card { border:1px dashed #93c5fd; background:linear-gradient(180deg,#f8fbff,white); margin-top:18px; padding:24px 10px; }
+.ledger-empty-card h3 { font-size:21px; color:#0f172a; }
+.ledger-empty-card .empty-state-message { max-width:440px; }
+.entry-section-title { display:flex; align-items:center; gap:9px; font-weight:700; font-size:13px; color:#0f172a; margin:3px 0 16px; }
+.entry-section-title>span { display:grid; place-items:center; background:#dbeafe; color:#1e40af; width:24px; height:24px; border-radius:50%; font-size:12px; }
+.entry-section-title small { font-weight:400; color:#475569; margin-left:auto; font-size:11px; }
+.entry-section-help { font-size:12px; line-height:1.6; color:#475569; margin:-8px 0 16px; }
+.entry-field-error { display:block; color:#991b1b; font-size:12px; line-height:1.5; margin-top:7px; }
+input[aria-invalid=true] { border-color:#b91c1c; background:#fffafa; }
+.income-explainer { display:flex; align-items:flex-start; gap:12px; padding:17px 20px; margin:5px 0 22px; background:#eff6ff; border:1px solid #bfdbfe; border-radius:10px; color:#1e40af; }
+.income-explainer svg { flex-shrink:0; margin-top:2px; }
+.income-explainer p { margin:0; color:#334155; line-height:1.65; font-size:13px; }
+.income-explainer strong { display:block; color:#1e3a8a; margin-bottom:3px; }
+.range-field label { display:flex; justify-content:space-between; margin-bottom:12px; }
+.range-unit { font-size:12px; color:#475569; font-weight:500; }
+.range-field-inputs { display:flex; gap:18px; align-items:center; }
+.range-field-inputs .plan-range-input { flex:1; min-width:0; }
+.range-exact-input { width:115px; flex-shrink:0; padding:11px 12px; color:#0f172a; border:1px solid #94a3b8; border-radius:8px; font-size:15px; font-weight:650; background:#fff; }
+.contribution-unavailable { background:#f1f5f9; border:1px dashed #94a3b8; }
+.contribution-unavailable .plan-contrib-value { color:#334155; font-size:23px; }
+.export-format-details { padding:15px 18px; margin:0 0 22px; background:white; border:1px solid #cbd5e1; border-radius:10px; color:#334155; font-size:13px; }
+.export-format-details summary { display:flex; align-items:center; gap:9px; cursor:pointer; font-weight:650; }
+.export-format-details summary span { margin-left:auto; font-weight:400; color:#475569; }
+.export-format-details p { margin:12px 0 0; line-height:1.65; }
+.household-steps { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; list-style:none; padding:0 0 25px; margin:0 0 25px; border-bottom:1px solid #cbd5e1; }
+.household-steps li { display:flex; gap:10px; align-items:center; }
+.household-steps li>span { display:grid; place-items:center; width:30px; height:30px; flex-shrink:0; border-radius:50%; background:#dbeafe; color:#1e40af; font-weight:700; font-size:13px; }
+.household-steps strong { display:block; font-size:13px; }
+.household-steps small { display:block; font-size:11px; color:#475569; margin-top:4px; line-height:1.5; }
+.account-page { max-width:1200px; margin:0 auto; padding-bottom:36px; }
+.account-summary, .account-available, .account-planned { margin:0 32px 24px; padding:26px; border:1px solid #cbd5e1; background:#fff; border-radius:14px; }
+.account-summary-heading { display:flex; align-items:center; gap:12px; color:#1e40af; }
+.account-summary-heading h2 { margin:0; font-size:19px; color:#0f172a; }
+.account-summary-heading>span { margin-left:auto; display:flex; align-items:center; gap:5px; font-size:12px; color:#065f46; background:#ecfdf5; padding:6px 10px; border-radius:20px; }
+.account-summary dl { display:grid; grid-template-columns:1fr 1fr; gap:0 28px; margin:20px 0; }
+.account-summary dl>div { padding:17px 0; border-bottom:1px solid #e2e8f0; min-width:0; }
+.account-summary dt { font-size:12px; color:#475569; margin-bottom:7px; }
+.account-summary dd { font-size:16px; font-weight:650; margin:0; overflow-wrap:anywhere; }
+.account-view-note { font-size:12px; color:#475569; margin:16px 0 0; line-height:1.6; }
+.account-available { display:flex; align-items:center; gap:20px; justify-content:space-between; background:#eff6ff; border-color:#bfdbfe; }
+.account-planned { font-size:13px; color:#475569; }
+.account-planned summary { cursor:pointer; font-weight:650; }
+.account-planned li { margin:16px 0; }
+.account-planned li p { margin:5px 0 0; line-height:1.6; }
+@media(max-width:768px) {
+  .next-step { align-items:flex-start; flex-wrap:wrap; padding:22px; }
+  .next-step-icon { width:40px; height:40px; }
+  .next-step-copy { flex-basis:calc(100% - 60px); }
+  .next-step-action { white-space:normal; }
+  .household-steps { grid-template-columns:1fr; }
+  .account-summary, .account-available, .account-planned { margin:0 16px 18px; padding:21px; }
+  .account-summary dl { grid-template-columns:1fr; }
+  .account-available { align-items:flex-start; flex-direction:column; }
+  .range-exact-input { width:100px; }
+}

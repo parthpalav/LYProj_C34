@@ -65,7 +65,13 @@ export const ActivityPage: React.FC = () => {
   }, [toast]);
 
   // Transaction modals & actions state
-  const [isTxModalOpen, setIsTxModalOpen] = useState(false);
+  const [isTxModalOpen, setIsTxModalOpen] = useState(searchParams.get('entry') === 'new');
+  const closeTransaction = () => {
+    setIsTxModalOpen(false);
+    if (searchParams.has('entry')) {
+      setSearchParams((previous) => { const next = new URLSearchParams(previous); next.delete('entry'); return next; }, { replace: true });
+    }
+  };
   const [editingTx, setEditingTx] = useState<Transaction | null>(null);
   const [deletingTx, setDeletingTx] = useState<Transaction | null>(null);
   const [isDeletingTx, setIsDeletingTx] = useState(false);
@@ -317,6 +323,8 @@ export const ActivityPage: React.FC = () => {
                 onDelete={(tx) => setDeletingTx(tx)}
                 onAddClick={handleOpenAddTx}
                 totalFilteredCount={txState.filteredTransactions.length}
+                hasRecordedTransactions={txState.transactions.length > 0}
+                onClearFilters={txState.resetFilters}
               />
             </>
           )}
@@ -324,7 +332,7 @@ export const ActivityPage: React.FC = () => {
           {/* Add / Edit Transaction Modal */}
           <TransactionModal
             isOpen={isTxModalOpen}
-            onClose={() => setIsTxModalOpen(false)}
+            onClose={closeTransaction}
             onSubmit={handleSaveTx}
             initialTransaction={editingTx}
           />

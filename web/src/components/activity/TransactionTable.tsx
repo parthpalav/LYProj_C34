@@ -32,6 +32,8 @@ export interface TransactionTableProps {
   onDelete: (tx: Transaction) => void;
   onAddClick: () => void;
   totalFilteredCount: number;
+  hasRecordedTransactions: boolean;
+  onClearFilters: () => void;
 }
 
 export const TransactionTable: React.FC<TransactionTableProps> = ({
@@ -43,16 +45,19 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({
   onDelete,
   onAddClick,
   totalFilteredCount,
+  hasRecordedTransactions,
+  onClearFilters,
 }) => {
   if (totalFilteredCount === 0) {
     return (
-      <div className="activity-card-container">
+      <div className="activity-card-container ledger-empty-card">
         <EmptyState
-          title="No transactions found"
-          message="No transactions match your current search or filter criteria. Try adjusting your filters or record a new transaction."
+          icon={Receipt}
+          title={hasRecordedTransactions ? 'No matching transactions' : 'Your transaction story starts here'}
+          message={hasRecordedTransactions ? 'Your ledger has entries, but none match these filters. Clear the filters to see all records.' : 'Record your first expense to see where your money goes. We’ll help you choose its category.'}
           action={
-            <Button type="button" variant="primary" size="sm" onClick={onAddClick}>
-              + Add Transaction
+            <Button type="button" variant="primary" size="md" onClick={hasRecordedTransactions ? onClearFilters : onAddClick}>
+              {hasRecordedTransactions ? 'Clear filters' : '+ Record first expense'}
             </Button>
           }
         />

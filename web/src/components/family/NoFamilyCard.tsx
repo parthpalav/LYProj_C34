@@ -9,6 +9,11 @@ export interface NoFamilyCardProps {
 export const NoFamilyCard: React.FC<NoFamilyCardProps> = ({ onOpenInviteModal }) => {
   return (
     <div className="no-family-card">
+      <ol className="household-steps" aria-label="How to start a household">
+        <li><span>1</span><div><strong>Send an invitation</strong><small>Use their FINAURA email address</small></div></li>
+        <li><span>2</span><div><strong>They choose to join</strong><small>Your household starts on acceptance</small></div></li>
+        <li><span>3</span><div><strong>See the shared picture</strong><small>Only combined household totals</small></div></li>
+      </ol>
       <div className="no-family-grid">
         {/* Left Column: Value Proposition & Invariants */}
         <div className="no-family-info">
@@ -31,7 +36,7 @@ export const NoFamilyCard: React.FC<NoFamilyCardProps> = ({ onOpenInviteModal })
                 <Shield size={16} />
               </div>
               <div>
-                <strong className="no-family-pillar-title">100% Privacy-Preserving</strong>
+                <strong className="no-family-pillar-title">Your records remain personal</strong>
                 <p className="no-family-pillar-desc">
                   Zero raw transaction exposure. No one sees your individual purchases, income, or accounts.
                 </p>
@@ -60,7 +65,7 @@ export const NoFamilyCard: React.FC<NoFamilyCardProps> = ({ onOpenInviteModal })
 
           <h3 className="no-family-action-title">Start Your Household</h3>
           <p className="no-family-action-text">
-            Invite your partner or family member to start seeing combined financial insights.
+            Invite someone with an existing FINAURA account. Their acceptance creates your household.
           </p>
 
           <Button

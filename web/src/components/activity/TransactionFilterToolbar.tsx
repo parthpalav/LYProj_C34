@@ -53,6 +53,7 @@ export const TransactionFilterToolbar: React.FC<TransactionFilterToolbarProps> =
 }) => {
   return (
     <div className="activity-toolbar-wrapper">
+      <div className="filter-toolbar-heading"><strong>Find a transaction</strong><span>Search your ledger or narrow it by category, type, and date.</span></div>
       <div className="activity-toolbar">
         {/* Search Input */}
         <div className="toolbar-search-wrap">

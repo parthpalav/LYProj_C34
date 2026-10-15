@@ -9,7 +9,6 @@ import {
   CreditCard,
   Wallet,
   CalendarRange,
-  Lock,
   CheckCircle2
 } from 'lucide-react';
 import type { MonthlyCsvRow } from '../../utils/csvExport';
@@ -51,11 +50,11 @@ export const ExportReportView: React.FC<ExportReportViewProps> = ({
         <div className="report-header-info">
           <div className="report-type-badge">
             <Download size={12} className="inline mr-1" />
-            Data Portability &amp; Ledger Exports
+            YOUR RECORDS
           </div>
-          <h2 className="report-title">Financial Records &amp; Reports Export</h2>
+          <h2 className="report-title">Download your financial records</h2>
           <p className="report-period-text">
-            Export authoritative financial ledgers, liability records, and period reports in secure, RFC-compliant CSV formats
+            Choose the records you need. CSV files open in Excel and Google Sheets.
           </p>
         </div>
       </div>
@@ -67,25 +66,10 @@ export const ExportReportView: React.FC<ExportReportViewProps> = ({
         </div>
       )}
 
-      {/* Security & Sanitization Notice Card */}
-      <div className="report-security-badge-card mb-6">
-        <div className="report-security-icon-wrap">
-          <ShieldCheck size={26} className="text-cyan-700" />
-        </div>
-        <div className="report-security-info">
-          <div className="flex items-center gap-2 mb-1">
-            <h4>Spreadsheet Formula-Injection Protected</h4>
-            <span className="report-security-pill flex items-center gap-1">
-              <Lock size={11} /> RFC 4180 + UTF-8 BOM
-            </span>
-          </div>
-          <p>
-            All text fields (descriptions, sources, categories) are automatically sanitized against malicious
-            formula execution (<code className="code-tag">=</code>, <code className="code-tag">+</code>,{' '}
-            <code className="code-tag">-</code>, <code className="code-tag">@</code>, tab, carriage return). Numeric values are strictly preserved as raw unformatted numbers for direct calculations in Microsoft Excel, Google Sheets, or LibreOffice Calc.
-          </p>
-        </div>
-      </div>
+      <details className="export-format-details">
+        <summary><ShieldCheck size={17} aria-hidden="true" /> Safe spreadsheet downloads <span>Format details</span></summary>
+        <p>CSV files use RFC 4180 formatting and UTF-8 BOM encoding. Text fields are protected against spreadsheet formula injection; numeric amounts remain available for calculations.</p>
+      </details>
 
       {/* Export Cards Grid */}
       <div className="report-export-cards-grid mb-8">

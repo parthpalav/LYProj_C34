@@ -18,6 +18,7 @@ export const Input: React.FC<InputProps> = ({
   fullWidth = true,
   id,
   className = '',
+  'aria-describedby': describedBy,
   ...props
 }) => {
   const generatedId = useId();
@@ -40,6 +41,8 @@ export const Input: React.FC<InputProps> = ({
 
         <input
           id={inputId}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={[describedBy, error ? `${inputId}-error` : helperText ? `${inputId}-help` : ''].filter(Boolean).join(' ') || undefined}
           className={[
             'input-field',
             leftIcon ? 'input-has-left-icon' : '',
@@ -58,9 +61,9 @@ export const Input: React.FC<InputProps> = ({
       </div>
 
       {error ? (
-        <p className="input-error-text">{error}</p>
+        <p id={`${inputId}-error`} className="input-error-text">{error}</p>
       ) : helperText ? (
-        <p className="input-helper-text">{helperText}</p>
+        <p id={`${inputId}-help`} className="input-helper-text">{helperText}</p>
       ) : null}
     </div>
   );

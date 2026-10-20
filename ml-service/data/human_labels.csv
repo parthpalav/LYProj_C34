@@ -1,0 +1,698 @@
+text,category,type,orig_category,orig_type
+swiggy food order,Food & Dining,Want,Food & Dining,Want
+zomato lunch delivery,Food & Dining,Want,Food & Dining,Want
+starbucks coffee and pastry,Food & Dining,Want,Food & Dining,Want
+mcdonalds burger meal,Food & Dining,Want,Food & Dining,Want
+dominos pizza delivery,Food & Dining,Want,Food & Dining,Want
+restaurant dinner with family,Food & Dining,Want,Food & Dining,Want
+cafe mocha and sandwich,Food & Dining,Want,Food & Dining,Want
+subway roasted chicken sub,Food & Dining,Want,Food & Dining,Want
+kfc fried chicken bucket,Food & Dining,Want,Food & Dining,Want
+burger king whopper,Food & Dining,Want,Food & Dining,Want
+pizza hut cheese burst,Food & Dining,Want,Food & Dining,Want
+biryani by kilo dinner,Food & Dining,Want,Food & Dining,Want
+haldirams thali and snacks,Food & Dining,Want,Food & Dining,Want
+behrouz biryani order,Food & Dining,Want,Food & Dining,Want
+faasos wraps lunch,Food & Dining,Want,Food & Dining,Want
+chaayos tea and bun maska,Food & Dining,Want,Food & Dining,Want
+chai point ginger tea,Food & Dining,Want,Food & Dining,Want
+dunkin donuts box,Food & Dining,Want,Food & Dining,Want
+costa coffee cappuccino,Food & Dining,Want,Food & Dining,Want
+barbeque nation buffet,Food & Dining,Want,Food & Dining,Want
+mainland china dinner,Food & Dining,Want,Food & Dining,Want
+baskin robbins ice cream scoop,Food & Dining,Want,Food & Dining,Want
+naturals ice cream cone,Food & Dining,Want,Food & Dining,Want
+theobroma brownie box,Food & Dining,Want,Food & Dining,Want
+belgian waffle chocolate,Food & Dining,Want,Food & Dining,Want
+chinese wok noodles meal,Food & Dining,Want,Food & Dining,Want
+south indian dosa and idli,Food & Dining,Want,Food & Dining,Want
+punjabi dhaba dinner,Food & Dining,Want,Food & Dining,Want
+street food chaat pav bhaji,Food & Dining,Want,Food & Dining,Want
+momos platter eating out,Food & Dining,Want,Food & Dining,Want
+office canteen lunch,Food & Dining,Need,Food & Dining,Need
+breakfast cafe eggs and toast,Food & Dining,Want,Food & Dining,Want
+bakery bread cake snacks,Food & Dining,Want,Food & Dining,Want
+shawarma roll takeaway,Food & Dining,Want,Food & Dining,Want
+sushi roll japanese restaurant,Food & Dining,Want,Food & Dining,Want
+pasta and garlic bread cafe,Food & Dining,Want,Food & Dining,Want
+tacos and nachos dinner,Food & Dining,Want,Food & Dining,Want
+salad bowl healthy meal,Food & Dining,Want,Food & Dining,Want
+smoothie and fresh juice bar,Food & Dining,Want,Food & Dining,Want
+coffee shop meeting drinks,Food & Dining,Want,Food & Dining,Want
+birthday dinner at restaurant,Food & Dining,Want,Food & Dining,Want
+dinner buffet fine dining,Food & Dining,Want,Food & Dining,Want
+swiggy instafood snack delivery,Food & Dining,Want,Food & Dining,Want
+zomato gold dining discount,Food & Dining,Want,Food & Dining,Want
+eatsure meal delivery,Food & Dining,Want,Food & Dining,Want
+box8 desi meal box,Food & Dining,Want,Food & Dining,Want
+freshmenu gourmet dinner,Food & Dining,Want,Food & Dining,Want
+rooftop bar tapas snacks,Entertainment,Want,Food & Dining,Want
+ice cream sundae parlour,Food & Dining,Want,Food & Dining,Want
+evening snacks samosa tea,Food & Dining,Want,Food & Dining,Want
+dmart monthly grocery shopping,Groceries,Need,Groceries,Need
+blinkit quick groceries delivery,Groceries,Need,Groceries,Need
+zepto 10 min groceries delivery,Groceries,Need,Groceries,Need
+instamart vegetables and fruits,Groceries,Need,Groceries,Need
+bigbasket weekly staple groceries,Groceries,Need,Groceries,Need
+supermarket household items,Groceries,Need,Groceries,Need
+fresh vegetables and fruits local market,Groceries,Need,Groceries,Need
+amul milk packets daily,Groceries,Need,Groceries,Need
+brown bread and farm eggs,Groceries,Need,Groceries,Need
+atta rice lentils pulses,Groceries,Need,Groceries,Need
+cooking sunflower oil and ghee,Groceries,Need,Groceries,Need
+spices masala and salt sugar,Groceries,Need,Groceries,Need
+paneer and dairy products,Groceries,Need,Groceries,Need
+oats muesli breakfast cereal,Groceries,Need,Groceries,Need
+tea leaves and coffee powder,Groceries,Need,Groceries,Need
+reliance fresh store shopping,Groceries,Need,Groceries,Need
+nature basket organic vegetables,Groceries,Need,Groceries,Need
+more retail supermarket supplies,Groceries,Need,Groceries,Need
+spencer retail grocery cart,Groceries,Need,Groceries,Need
+kirana store daily rations,Groceries,Need,Groceries,Need
+curd yogurt and butter spread,Groceries,Need,Groceries,Need
+whole wheat flour 10kg sack,Groceries,Need,Groceries,Need
+basmati rice bag 5kg,Groceries,Need,Groceries,Need
+toor dal moong dal lentils,Groceries,Need,Groceries,Need
+organic honey and jaggery,Groceries,Need,Groceries,Need
+frozen peas and sweet corn,Groceries,Need,Groceries,Need
+biscuits cookies and rusks,Groceries,Want,Groceries,Want
+noodles pasta and ketchup staples,Groceries,Need,Groceries,Want
+dry fruits almonds walnuts raisins,Groceries,Want,Groceries,Want
+potatoes onions tomatoes weekly batch,Groceries,Need,Groceries,Need
+fresh green vegetables spinach coriander,Groceries,Need,Groceries,Need
+apples bananas oranges fruit basket,Groceries,Need,Groceries,Want
+coconut water and fresh produce,Groceries,Need,Groceries,Want
+cleaning soap and detergent grocery,Groceries,Need,Groceries,Need
+dishwashing liquid and sponges,Groceries,Need,Groceries,Need
+paper towels and garbage bags,Groceries,Need,Groceries,Need
+country delight pure milk subscription,Groceries,Need,Groceries,Want
+bb daily morning milk eggs,Groceries,Need,Groceries,Want
+star bazaar grocery hypermarket,Groceries,Need,Groceries,Want
+apna bazaar local grocery store,Groceries,Need,Groceries,Want
+grocery staples monthly restock,Groceries,Need,Groceries,Need
+olive oil and cooking herbs,Groceries,Need,Groceries,Want
+almond milk and plant based dairy,Groceries,Need,Groceries,Want
+peanut butter and fruit jam,Groceries,Need,Groceries,Want
+packaged mineral water 20l can,Groceries,Need,Groceries,Want
+instant noodles maggi pack,Groceries,Want,Groceries,Want
+namkeen and potato chips snack grocery,Groceries,Want,Groceries,Want
+baking soda yeast flour ingredients,Groceries,Need,Groceries,Need
+kitchen spices turmeric cumin mustard,Groceries,Need,Groceries,Need
+whole spices cardamom cinnamon clove,Groceries,Need,Groceries,Need
+uber cab ride to office,Transport & Travel,Want,Transport & Travel,Want
+ola auto fare city commute,Transport & Travel,Want,Transport & Travel,Want
+rapido bike taxi trip,Transport & Travel,Want,Transport & Travel,Want
+petrol refill hp petrol pump,Transport & Travel,Need,Transport & Travel,Need
+diesel fuel bharat petroleum,Transport & Travel,Need,Transport & Travel,Need
+cng fuel station gas refill,Transport & Travel,Need,Transport & Travel,Need
+mumbai metro smart card recharge,Transport & Travel,Need,Transport & Travel,Need
+delhi metro card topup,Transport & Travel,Need,Transport & Travel,Need
+bengaluru metro smart token,Transport & Travel,Need,Transport & Travel,Need
+irctc train ticket booking,Transport & Travel,Want,Transport & Travel,Want
+indian railways tatkal reservation,Transport & Travel,Want,Transport & Travel,Want
+indigo airlines flight tickets,Transport & Travel,Want,Transport & Travel,Want
+air india domestic flight,Transport & Travel,Want,Transport & Travel,Want
+spicejet round trip tickets,Transport & Travel,Want,Transport & Travel,Want
+vistara flight booking holiday,Transport & Travel,Want,Transport & Travel,Want
+makemytrip hotel stay booking,Transport & Travel,Want,Transport & Travel,Want
+goibibo hotel reservation,Transport & Travel,Want,Transport & Travel,Want
+airbnb vacation rental apartment,Transport & Travel,Want,Transport & Travel,Want
+fastag toll plaza automated debit,Transport & Travel,Need,Transport & Travel,Need
+highway toll booth cash payment,Transport & Travel,Need,Transport & Travel,Need
+car parking charges mall,Transport & Travel,Need,Transport & Travel,Need
+airport parking overnight fee,Transport & Travel,Need,Transport & Travel,Need
+redbus intercity bus ticket,Transport & Travel,Want,Transport & Travel,Want
+abhibus sleeper bus booking,Transport & Travel,Want,Transport & Travel,Want
+zoomcar self drive rental,Transport & Travel,Want,Transport & Travel,Want
+revv car subscription weekly,Transport & Travel,Want,Transport & Travel,Want
+car service maintenance repair,Transport & Travel,Need,Transport & Travel,Need
+bike general servicing and oil change,Transport & Travel,Need,Transport & Travel,Need
+car wash and interior detailing,Transport & Travel,Want,Transport & Travel,Want
+tyre puncture repair wheel alignment,Transport & Travel,Need,Transport & Travel,Need
+ev charging station payment,Transport & Travel,Need,Transport & Travel,Want
+local train monthly season pass,Transport & Travel,Need,Transport & Travel,Need
+city bus pass monthly renewal,Transport & Travel,Need,Transport & Travel,Need
+ferry boat ticket river crossing,Transport & Travel,Want,Transport & Travel,Want
+outstation taxi rental trip,Transport & Travel,Want,Transport & Travel,Want
+airport express metro ticket,Transport & Travel,Need,Transport & Travel,Want
+car battery replacement exide,Transport & Travel,Need,Transport & Travel,Need
+motorcycle helmet and riding gear,Transport & Travel,Want,Transport & Travel,Want
+interstate toll charges express highway,Transport & Travel,Need,Transport & Travel,Need
+booking com hotel stay resort,Transport & Travel,Want,Transport & Travel,Want
+oyo rooms budget hotel night,Transport & Travel,Want,Transport & Travel,Want
+travel agency tour package booking,Transport & Travel,Want,Transport & Travel,Want
+visa application fee embassy travel,Transport & Travel,Want,Transport & Travel,Want
+travel agent international flight booking,Transport & Travel,Want,Transport & Travel,Want
+auto rickshaw fare meter payment,Transport & Travel,Need,Transport & Travel,Need
+bicycle repair and chain replacement,Transport & Travel,Need,Transport & Travel,Need
+valet parking fee restaurant,Transport & Travel,Need,Transport & Travel,Need
+railway platform ticket and snacks,Transport & Travel,Need,Transport & Travel,Need
+airport lounge access fee,Transport & Travel,Want,Transport & Travel,Want
+chhatrapati shivaji airport shuttle cab,Transport & Travel,Want,Transport & Travel,Want
+monthly house rent payment,Housing,Need,Housing,Need
+apartment rent transfer to owner,Housing,Need,Housing,Need
+flat rent to landlord,Housing,Need,Housing,Need
+residential society monthly maintenance,Housing,Need,Housing,Need
+building society charges quarterly,Housing,Need,Housing,Need
+housing society sinking fund contribution,Housing,Need,Housing,Need
+plumber charges bathroom pipe repair,Housing,Need,Housing,Need
+electrician home wiring repair work,Housing,Need,Housing,Need
+carpenter charges wooden door fix,Housing,Need,Housing,Need
+house painting work contractor payment,Housing,Need,Housing,Need
+pest control service apartment,Housing,Need,Housing,Need
+water tank cleaning charges,Housing,Need,Housing,Need
+home deep cleaning service urban company,Housing,Need,Housing,Need
+air conditioner service gas refill,Housing,Need,Housing,Need
+refrigerator repair home appliance,Housing,Need,Housing,Need
+washing machine service repair,Housing,Need,Housing,Need
+kitchen chimney cleaning service,Housing,Need,Housing,Need
+ro water purifier service and filter change,Housing,Need,Housing,Need
+geyser installation bathroom repair,Housing,Need,Housing,Need
+house security guard salary share,Housing,Need,Housing,Need
+maid domestic helper monthly salary,Housing,Need,Housing,Need
+cook monthly salary payment,Housing,Need,Housing,Need
+driver monthly salary home,Housing,Need,Housing,Need
+gardener charges residential lawn,Housing,Need,Housing,Need
+house lock replacement locksmith,Housing,Need,Housing,Need
+window glass repair window pane,Housing,Need,Housing,Need
+waterproofing leakage repair roof,Housing,Need,Housing,Need
+property municipal tax payment,Housing,Need,Housing,Need
+gram panchayat house tax,Housing,Need,Housing,Need
+apartment intercom maintenance,Housing,Need,Housing,Need
+elevator lift maintenance society,Housing,Need,Housing,Need
+solar rooftop panel maintenance,Housing,Need,Housing,Need
+generator diesel charge society maintenance,Housing,Need,Housing,Need
+garbage collection monthly municipal fee,Housing,Need,Housing,Need
+sofa dry cleaning urban company,Housing,Need,Housing,Need
+mattress sanitization cleaning home,Housing,Need,Housing,Need
+door curtain rod installation carpenter,Housing,Need,Housing,Need
+tile repair masonry work floor,Housing,Need,Housing,Need
+balcony safety net installation,Housing,Need,Housing,Need
+residential parking slot maintenance fee,Housing,Need,Housing,Need
+clubhouse maintenance charges society,Housing,Need,Housing,Need
+flat rental agreement registration stamp duty,Housing,Need,Housing,Need
+brokerage fee rental house real estate agent,Housing,Need,Housing,Need
+home security cctv maintenance camera,Housing,Need,Housing,Need
+ro water purifier annual maintenance contract amc,Housing,Need,Housing,Need
+kitchen gas pipeline maintenance mgl,Housing,Need,Housing,Need
+septic tank cleaning charges,Housing,Need,Housing,Need
+roof shed repair rain protection,Housing,Need,Housing,Need
+wooden flooring polish home,Housing,Need,Housing,Need
+flat security deposit transfer to landlord,Housing,Need,Housing,Need
+security deposit for rental apartment,Housing,Need,Housing,Need
+rental flat security deposit,Housing,Need,Housing,Need
+home equity improvement renovation,Housing,Need,Housing,Need
+equity in home value property,Housing,Need,Housing,Need
+electricity bill payment adani power,Utilities & Bills,Need,Utilities & Bills,Need
+tata power monthly electricity bill,Utilities & Bills,Need,Utilities & Bills,Need
+bescom electricity bill bangalore,Utilities & Bills,Need,Utilities & Bills,Need
+mahavitaran msedcl light bill,Utilities & Bills,Need,Utilities & Bills,Need
+bses rajdhani electricity payment,Utilities & Bills,Need,Utilities & Bills,Need
+piped natural gas bill mgl mahanagar gas,Utilities & Bills,Need,Utilities & Bills,Need
+igl indraprastha gas cylinder bill,Utilities & Bills,Need,Utilities & Bills,Need
+lpg gas cylinder refill bharat gas,Utilities & Bills,Need,Utilities & Bills,Need
+indane gas cylinder booking payment,Utilities & Bills,Need,Utilities & Bills,Need
+hp gas refill online payment,Utilities & Bills,Need,Utilities & Bills,Need
+water supply municipal bill bmc,Utilities & Bills,Need,Utilities & Bills,Need
+bwssb water bill payment,Utilities & Bills,Need,Utilities & Bills,Need
+delhi jal board water bill,Utilities & Bills,Need,Utilities & Bills,Need
+jio fiber broadband monthly bill,Utilities & Bills,Need,Utilities & Bills,Need
+airtel xstream broadband payment,Utilities & Bills,Need,Utilities & Bills,Need
+act fibernet internet bill,Utilities & Bills,Need,Utilities & Bills,Need
+tata play dth recharge cable tv,Utilities & Bills,Need,Utilities & Bills,Need
+airtel dth television recharge,Utilities & Bills,Need,Utilities & Bills,Need
+dish tv recharge online,Utilities & Bills,Need,Utilities & Bills,Need
+jio prepaid mobile recharge 84 days,Utilities & Bills,Need,Utilities & Bills,Need
+airtel postpaid mobile bill,Utilities & Bills,Need,Utilities & Bills,Need
+vi vodafone idea mobile recharge,Utilities & Bills,Need,Utilities & Bills,Need
+bsnl landline and broadband bill,Utilities & Bills,Need,Utilities & Bills,Need
+fastag recharge toll wallet,Transport & Travel,Need,Utilities & Bills,Need
+municipal sewage and drainage tax,Utilities & Bills,Need,Utilities & Bills,Need
+cable tv monthly operator charges,Utilities & Bills,Need,Utilities & Bills,Need
+cloud storage google one subscription,Utilities & Bills,Need,Utilities & Bills,Need
+icloud 50gb monthly storage bill,Utilities & Bills,Need,Utilities & Bills,Need
+microsoft 365 office annual subscription,Utilities & Bills,Need,Utilities & Bills,Need
+domain registration godaddy renewal,Utilities & Bills,Need,Utilities & Bills,Need
+web hosting namecheap monthly bill,Utilities & Bills,Need,Utilities & Bills,Need
+mobile phone bill corporate postpaid,Utilities & Bills,Need,Utilities & Bills,Need
+high speed wifi router recharge,Utilities & Bills,Need,Utilities & Bills,Need
+landline telephone bill mtnl,Utilities & Bills,Need,Utilities & Bills,Need
+dth annual pack recharge tata sky,Utilities & Bills,Need,Utilities & Bills,Need
+broadband speed boost addon,Utilities & Bills,Need,Utilities & Bills,Need
+postpaid family plan mobile bill airtel,Utilities & Bills,Need,Utilities & Bills,Need
+electricity arrears bill settlement,Utilities & Bills,Need,Utilities & Bills,Need
+piped gas meter reading bill igl,Utilities & Bills,Need,Utilities & Bills,Need
+drinking water tanker delivery charges,Utilities & Bills,Need,Utilities & Bills,Need
+evernote premium note subscription,Utilities & Bills,Need,Utilities & Bills,Need
+dropbox plus annual storage bill,Utilities & Bills,Need,Utilities & Bills,Need
+notion personal pro annual plan,Utilities & Bills,Need,Utilities & Bills,Need
+canva pro design software subscription,Utilities & Bills,Need,Utilities & Bills,Need
+zoom pro video conferencing bill,Utilities & Bills,Need,Utilities & Bills,Need
+github copilot developer subscription,Utilities & Bills,Need,Utilities & Bills,Need
+chatgpt plus subscription openai,Utilities & Bills,Need,Utilities & Bills,Need
+midjourney ai subscription fee,Utilities & Bills,Need,Utilities & Bills,Need
+newspaper monthly delivery bill,Utilities & Bills,Need,Utilities & Bills,Need
+magazine monthly subscription reader digest,Utilities & Bills,Need,Utilities & Bills,Need
+home loan emi hdfc bank deduction,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+sbi home loan monthly emi installment,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+icici car loan emi auto debit,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+axis bank personal loan emi,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+kotak education loan monthly installment,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+bajaj finserv consumer durable emi,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+two wheeler bike loan emi tvs credit,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+hdfc credit card bill total payment,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+icici credit card outstanding settlement,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+sbi card minimum due payment,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+axis bank credit card bill cleared,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+amex credit card monthly payment,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+personal loan foreclosure payment,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+gold loan interest payment manappuram,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+muthoot gold loan principal repayment,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+lap loan against property emi,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+business loan monthly repayment,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+education loan prepayment sbi,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+car loan principal part payment,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+hdfc flexipay loan repayment,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+icici paylater dues settlement,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+simpl buy now pay later bill,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+lazypay credit bill settlement,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+amazon pay later monthly repayment,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+flipkart pay later dues cleared,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+kreditbee instant loan emi,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+navi personal loan monthly debit,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+moneytap credit line emi,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+zestmoney emi monthly installment,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+home renovation loan emi pnb,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+used car loan emi mahindra finance,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+credit card emi conversion installment,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+no cost emi smartphone purchase bajaj,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+laptop purchase 6 month emi,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+overdraft account interest settlement,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+mortgage loan repayment monthly,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+peer to peer loan repayment faircent,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+microfinance loan repayment bandhan,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+vehicle finance installment tata capital,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+debt consolidation loan payment,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+credit line interest debit rbl bank,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+student loan federal repayment,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+auto loan financing bank of baroda,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+credit card balance transfer repayment,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+medical emergency loan installment,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+commercial vehicle loan emi shriram,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+loan repayment via nach auto debit,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+e-mandate loan emi deduction,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+credit card outstanding partial payment,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+prepayment of home loan principal,Debt & Loan Payments,Need,Debt & Loan Payments,Need
+amazon online shopping electronics,Shopping,Want,Shopping,Want
+flipkart apparel and clothes,Shopping,Want,Shopping,Want
+myntra fashion sneakers and jeans,Shopping,Want,Shopping,Want
+ajio trendy tshirts and hoodies,Shopping,Want,Shopping,Want
+zara casual cotton shirt,Shopping,Want,Shopping,Want
+h&m winter jacket sweater,Shopping,Want,Shopping,Want
+uniqlo thermal wear and trousers,Shopping,Want,Shopping,Want
+nike running shoes air max,Shopping,Want,Shopping,Want
+adidas sports shoes and trackpants,Shopping,Want,Shopping,Want
+puma gym wear and training shoes,Shopping,Want,Shopping,Want
+apple store iphone 15 purchase,Shopping,Want,Shopping,Want
+croma electronics smart tv,Shopping,Want,Shopping,Want
+reliance digital wireless headphones,Shopping,Want,Shopping,Want
+vijay sales microwave oven,Shopping,Want,Shopping,Want
+ikea wooden study desk table,Shopping,Want,Shopping,Want
+urban ladder ergonomic office chair,Shopping,Want,Shopping,Want
+pepperfry bookshelf furniture,Shopping,Want,Shopping,Want
+decathlon sports gear badminton racket,Shopping,Want,Shopping,Want
+tanishq gold pendant jewellery,Shopping,Want,Shopping,Want
+caratlane silver ring jewellery,Shopping,Want,Shopping,Want
+kalyan jewellers gold earrings,Shopping,Want,Shopping,Want
+fossil analog wrist watch,Shopping,Want,Shopping,Want
+casio g-shock digital watch,Shopping,Want,Shopping,Want
+titan eyeplus reading glasses frame,Shopping,Need,Shopping,Need
+lenskart polarized sunglasses,Shopping,Want,Shopping,Want
+samsonite trolley luggage suitcase,Shopping,Want,Shopping,Want
+wildcraft travel backpack,Shopping,Want,Shopping,Want
+boat bluetooth wireless earbuds,Shopping,Want,Shopping,Want
+sony noise cancelling headphones,Shopping,Want,Shopping,Want
+kindle paperwhite ereader amazon,Shopping,Want,Shopping,Want
+logitech wireless keyboard and mouse,Shopping,Want,Shopping,Want
+laptop charger replacement adapter,Shopping,Need,Shopping,Want
+mobile phone back cover and temper glass,Shopping,Want,Shopping,Want
+powerbank 20000mah fast charging,Shopping,Want,Shopping,Want
+home decor cushion covers bedsheet,Shopping,Want,Shopping,Want
+bombay dyeing cotton bedsheet set,Shopping,Want,Shopping,Want
+cookware non-stick frying pan prestige,Shopping,Want,Shopping,Want
+milton insulated water bottle flask,Shopping,Want,Shopping,Want
+gift hamper for friend wedding,Shopping,Want,Shopping,Want
+board games and puzzles kids toy,Shopping,Want,Shopping,Want
+lego classic building blocks toy,Shopping,Want,Shopping,Want
+stationery notebook and fountain pens,Shopping,Want,Shopping,Want
+cross ballpoint pen gift set,Shopping,Want,Shopping,Want
+leather wallet men park avenue,Shopping,Want,Shopping,Want
+handbag ladies lavie purse,Shopping,Want,Shopping,Want
+formal leather shoes bata,Shopping,Want,Shopping,Want
+woodland outdoor trekking boots,Shopping,Want,Shopping,Want
+crocs classic clogs footwear,Shopping,Want,Shopping,Want
+umbrella and raincoat monsoon shopping,Shopping,Need,Shopping,Want
+festive diwali shopping clothes gifts,Shopping,Want,Shopping,Want
+apple store retail gadgets purchase,Shopping,Want,Shopping,Want
+apple store iphone case purchase,Shopping,Want,Shopping,Want
+netflix 4k monthly streaming plan,Entertainment,Want,Entertainment,Want
+spotify individual premium subscription,Entertainment,Want,Entertainment,Want
+youtube premium ad-free family plan,Entertainment,Want,Entertainment,Want
+amazon prime video annual membership,Entertainment,Want,Entertainment,Want
+disney plus hotstar super plan,Entertainment,Want,Entertainment,Want
+sony liv premium annual subscription,Entertainment,Want,Entertainment,Want
+zee5 all access streaming pass,Entertainment,Want,Entertainment,Want
+apple music monthly subscription,Entertainment,Want,Entertainment,Want
+bookmyshow movie tickets pvr cinemas,Entertainment,Want,Entertainment,Want
+inox multiplex recliner movie seats,Entertainment,Want,Entertainment,Want
+cinepolis 3d movie tickets and popcorn,Entertainment,Want,Entertainment,Want
+playstation plus deluxe annual plan,Entertainment,Want,Entertainment,Want
+steam video game purchase summer sale,Entertainment,Want,Entertainment,Want
+xbox game pass ultimate monthly,Entertainment,Want,Entertainment,Want
+nintendo switch online subscription,Entertainment,Want,Entertainment,Want
+music concert live passes coldplay,Entertainment,Want,Entertainment,Want
+standup comedy show ticket zakir khan,Entertainment,Want,Entertainment,Want
+theatre drama play passes ncp,Entertainment,Want,Entertainment,Want
+amusement park entry imagica tickets,Entertainment,Want,Entertainment,Want
+water park passes wet n joy,Entertainment,Want,Entertainment,Want
+escape room game with friends,Entertainment,Want,Entertainment,Want
+bowling alley gaming smaash,Entertainment,Want,Entertainment,Want
+arcade games and vr simulator funzone,Entertainment,Want,Entertainment,Want
+nightclub entry passes saturday night,Entertainment,Want,Entertainment,Want
+brewery craft beer tasting party,Entertainment,Want,Entertainment,Want
+cocktail bar drinks with friends,Entertainment,Want,Entertainment,Want
+pub party drinks and finger food,Entertainment,Want,Entertainment,Want
+birthday party venue celebration,Entertainment,Want,Entertainment,Want
+anniversary party celebration hall,Entertainment,Want,Entertainment,Want
+bachelor party celebration weekend,Entertainment,Want,Entertainment,Want
+housewarming party drinks and snacks,Entertainment,Want,Entertainment,Want
+dj night dance club passes,Entertainment,Want,Entertainment,Want
+board game cafe entry and games,Entertainment,Want,Entertainment,Want
+art gallery museum exhibition pass,Entertainment,Want,Entertainment,Want
+laser tag arena group match,Entertainment,Want,Entertainment,Want
+go karting racing laps track,Entertainment,Want,Entertainment,Want
+audible audiobooks monthly credit,Entertainment,Want,Entertainment,Want
+kindle unlimited books subscription,Entertainment,Want,Entertainment,Want
+gaming in-app purchase valorant skins,Entertainment,Want,Entertainment,Want
+battlegrounds pubg uc game topup,Entertainment,Want,Entertainment,Want
+ipl cricket match stadium tickets,Entertainment,Want,Entertainment,Want
+football match live stadium pass,Entertainment,Want,Entertainment,Want
+f1 racing live stream subscription,Entertainment,Want,Entertainment,Want
+karaoke lounge singing room hourly,Entertainment,Want,Entertainment,Want
+magic show passes for family,Entertainment,Want,Entertainment,Want
+circus entry tickets weekend show,Entertainment,Want,Entertainment,Want
+board games club weekend meetup,Entertainment,Want,Entertainment,Want
+craft beer growler brewery party,Entertainment,Want,Entertainment,Want
+pool snooker table hourly charges,Entertainment,Want,Entertainment,Want
+paintball arena shooting game,Entertainment,Want,Entertainment,Want
+bond with friends celebration party,Entertainment,Want,Entertainment,Want
+social gathering and bond with friends,Entertainment,Want,Entertainment,Want
+doctor general physician consultation fee,Health,Need,Health,Need
+pediatrician child clinic visit,Health,Need,Health,Need
+cardiologist heart checkup hospital,Health,Need,Health,Need
+dermatologist skin consultation clinic,Health,Need,Health,Need
+orthopedic joint doctor consultation,Health,Need,Health,Need
+ent specialist ear checkup clinic,Health,Need,Health,Need
+ophthalmologist eye exam eye clinic,Health,Need,Health,Need
+dentist teeth cleaning root canal,Health,Need,Health,Need
+dental braces adjustment orthodontist,Health,Need,Health,Need
+apollo pharmacy prescription medicines,Health,Need,Health,Need
+medplus pharmacy medicine bill,Health,Need,Health,Need
+tata 1mg online medicine delivery,Health,Need,Health,Need
+pharmeasy prescription tablet order,Health,Need,Health,Need
+blood test full body checkup lal pathlabs,Health,Need,Health,Need
+thyrocare comprehensive diagnostic test,Health,Need,Health,Need
+metropolis pathology urine blood test,Health,Need,Health,Need
+mri scan diagnostic imaging center,Health,Need,Health,Need
+ct scan radiology clinic payment,Health,Need,Health,Need
+x-ray chest orthopedic imaging,Health,Need,Health,Need
+ultrasound scan diagnostic lab,Health,Need,Health,Need
+physiotherapy session back pain recovery,Health,Need,Health,Need
+chiropractor spine adjustment therapy,Health,Need,Health,Need
+mental health therapy session psychologist,Health,Need,Health,Need
+psychiatrist consultation and medicine,Health,Need,Health,Need
+counselling session online therapist,Health,Need,Health,Need
+hospital emergency room admission charges,Health,Need,Health,Need
+hospital surgical procedure operation fee,Health,Need,Health,Need
+nursing care home service daily,Health,Need,Health,Need
+ambulance emergency transfer service,Health,Need,Health,Need
+health checkup annual corporate package,Health,Need,Health,Need
+ayurvedic treatment panchakarma clinic,Health,Need,Health,Need
+homeopathy doctor consultation medicines,Health,Need,Health,Need
+dietitian nutrition consultation plan,Health,Need,Health,Need
+first aid kit bandage antiseptic dettol,Health,Need,Health,Need
+blood pressure monitor omron machine,Health,Need,Health,Need
+glucometer blood sugar strips accu-chek,Health,Need,Health,Need
+pulse oximeter finger oxygen monitor,Health,Need,Health,Need
+thermometer digital fever scanner,Health,Need,Health,Need
+knee brace orthopedic compression support,Health,Need,Health,Need
+wheelchair medical mobility equipment,Health,Need,Health,Need
+crutches orthopedic walking support,Health,Need,Health,Need
+nebulizer machine asthma breathing kit,Health,Need,Health,Need
+vaccination injection flu shot clinic,Health,Need,Health,Need
+allergy test immunology diagnostic,Health,Need,Health,Need
+hearing aid machine battery service,Health,Need,Health,Need
+prescription antibiotics cough syrup tablets,Health,Need,Health,Need
+pain relief spray iodex volini ointment,Health,Need,Health,Need
+vitamin d and b12 deficiency injections,Health,Need,Health,Need
+calcium supplement tablets multivitamin,Health,Need,Health,Need
+ecg test heart rate clinic report,Health,Need,Health,Need
+college semester tuition fees,Education,Investment,Education,Need
+university degree program fee installment,Education,Investment,Education,Need
+school term fees quarterly payment,Education,Need,Education,Need
+private coaching class fees jee neet,Education,Investment,Education,Need
+tuition tutor hourly home fee,Education,Need,Education,Need
+udemy python web development course,Education,Investment,Education,Investment
+coursera machine learning specialization,Education,Investment,Education,Investment
+edx professional certificate program,Education,Investment,Education,Investment
+upgrad data science post graduate diploma,Education,Investment,Education,Investment
+unacademy subscription upsc prep,Education,Investment,Education,Investment
+physics wallah online batch subscription,Education,Investment,Education,Investment
+byjus learning tablet program fee,Education,Investment,Education,Investment
+skillshare annual creative subscription,Education,Investment,Education,Investment
+linkedin learning monthly membership,Education,Investment,Education,Investment
+masterclass annual all access pass,Education,Investment,Education,Investment
+ielts exam registration test fee,Education,Investment,Education,Need
+toefl international english exam fee,Education,Investment,Education,Need
+gre test registration ets,Education,Investment,Education,Need
+gmat exam appointment booking,Education,Investment,Education,Need
+cat entrance exam application fee,Education,Investment,Education,Need
+gate engineering exam application form,Education,Investment,Education,Need
+upsc civil services exam form fee,Education,Investment,Education,Need
+ca foundation examination fee icai,Education,Investment,Education,Need
+cfa level 1 exam registration,Education,Investment,Education,Need
+frm financial risk manager exam fee,Education,Investment,Education,Need
+aws certified solutions architect exam,Education,Investment,Education,Need
+google cloud professional certification fee,Education,Investment,Education,Need
+pmp project management certification exam,Education,Investment,Education,Need
+college engineering textbooks purchase,Education,Investment,Education,Need
+medical mbbs anatomy textbook books,Education,Investment,Education,Need
+ncert school books and guides,Education,Need,Education,Need
+competitive exam reference books arihant,Education,Investment,Education,Investment
+university library membership annual fee,Education,Investment,Education,Need
+scientific calculator casio engineering,Education,Investment,Education,Need
+coding bootcamp fee full stack,Education,Investment,Education,Need
+data analytics offline workshop fee,Education,Investment,Education,Need
+foreign language learning french class,Education,Investment,Education,Investment
+german language course goethe institut,Education,Investment,Education,Investment
+music school piano learning classes,Education,Investment,Education,Investment
+guitar lessons monthly tutor fee,Education,Investment,Education,Investment
+art and painting weekend workshop,Education,Investment,Education,Investment
+drama and public speaking class fee,Education,Investment,Education,Investment
+chess coaching academy training fee,Education,Investment,Education,Investment
+swimming lessons training coach fee,Education,Investment,Education,Investment
+tennis academy coaching monthly fee,Education,Investment,Education,Investment
+karate martial arts classes fee,Education,Investment,Education,Investment
+study abroad consultation counseling fee,Education,Investment,Education,Investment
+research paper publishing fee journal,Education,Investment,Education,Need
+stationery exam pen notebook geometry box,Education,Need,Education,Need
+book purchase for study course,Education,Investment,Education,Need
+educational textbook and book purchase,Education,Investment,Education,Need
+novel and study book reading,Education,Investment,Education,Investment
+securities certification exam course,Education,Investment,Education,Need
+nism securities market exam study,Education,Investment,Education,Need
+haircut and hair wash salon,Personal Care,Want,Personal Care,Want
+barbershop beard trim and shave,Personal Care,Want,Personal Care,Want
+hair coloring highlights salon service,Personal Care,Want,Personal Care,Want
+hair spa and deep conditioning treatment,Personal Care,Want,Personal Care,Want
+keratin hair smoothening treatment salon,Personal Care,Want,Personal Care,Want
+facial cleanup glow treatment parlour,Personal Care,Want,Personal Care,Want
+threading and waxing beauty parlour,Personal Care,Want,Personal Care,Want
+manicure and pedicure nail care salon,Personal Care,Want,Personal Care,Want
+nail art gel extensions polish,Personal Care,Want,Personal Care,Want
+full body massage spa relaxation,Personal Care,Want,Personal Care,Want
+ayurvedic abhyanga body massage spa,Personal Care,Want,Personal Care,Want
+thai massage therapy spa wellness,Personal Care,Want,Personal Care,Want
+enrich salon hair styling service,Personal Care,Want,Personal Care,Want
+jawed habib hair cut grooming,Personal Care,Want,Personal Care,Want
+geetanjali salon bridal makeup package,Personal Care,Want,Personal Care,Want
+urban company salon at home haircut,Personal Care,Want,Personal Care,Want
+urban company pedicure facial home,Personal Care,Want,Personal Care,Want
+nykaa cosmetics lipstick foundation makeup,Personal Care,Want,Personal Care,Want
+sephora luxury perfume fragrance,Personal Care,Want,Personal Care,Want
+mac cosmetics eyeliner blush compact,Personal Care,Want,Personal Care,Want
+forest essentials herbal skincare oil,Personal Care,Want,Personal Care,Want
+kama ayurveda face cleanser scrub,Personal Care,Want,Personal Care,Want
+the body shop shower gel body butter,Personal Care,Want,Personal Care,Want
+loreal shampoo and hair conditioner,Personal Care,Need,Personal Care,Want
+head and shoulders anti dandruff shampoo,Personal Care,Need,Personal Care,Want
+dove moisturizing body lotion cream,Personal Care,Want,Personal Care,Want
+nivea soft moisturizer face cream,Personal Care,Want,Personal Care,Want
+cetaphil gentle skin cleanser facewash,Personal Care,Want,Personal Care,Want
+neutrogena sunscreen spf 50 lotion,Personal Care,Want,Personal Care,Want
+minimalist salicylic acid serum skincare,Personal Care,Want,Personal Care,Want
+the ordinary niacinamide face serum,Personal Care,Want,Personal Care,Want
+gillette shaving razor cartridges foam,Personal Care,Need,Personal Care,Want
+bombay shaving company beard oil kit,Personal Care,Want,Personal Care,Want
+beardo hair styling wax clay,Personal Care,Want,Personal Care,Want
+ustraa cologne and beard wash,Personal Care,Want,Personal Care,Want
+deodorant spray and body mist axe nivea,Personal Care,Want,Personal Care,Want
+electric beard trimmer philips,Personal Care,Want,Personal Care,Want
+hair dryer styling blower darty,Personal Care,Want,Personal Care,Want
+hair straightener ceramic iron nova,Personal Care,Want,Personal Care,Want
+electric toothbrush oral-b heads,Personal Care,Want,Personal Care,Want
+lip balm moisturizer vaseline,Personal Care,Want,Personal Care,Want
+facial sheet masks pack korean skincare,Personal Care,Want,Personal Care,Want
+sunscreen matte gel derma co,Personal Care,Want,Personal Care,Want
+face scrub apricot walnut exfoliator,Personal Care,Want,Personal Care,Want
+hair serum argan oil streax,Personal Care,Want,Personal Care,Want
+scented body wash bath shower gel,Personal Care,Need,Personal Care,Want
+bath salts and essential oils aromatherapy,Personal Care,Want,Personal Care,Want
+tanning removal detan pack salon,Personal Care,Want,Personal Care,Want
+laser hair reduction clinic session,Personal Care,Want,Personal Care,Want
+skin clinic chemical peel treatment,Personal Care,Want,Personal Care,Want
+star health insurance annual premium,Insurance,Need,Insurance,Need
+care health insurance family floater premium,Insurance,Need,Insurance,Need
+hdfc ergo health insurance policy payment,Insurance,Need,Insurance,Need
+niva bupa health companion premium,Insurance,Need,Insurance,Need
+icici lombard complete health insurance,Insurance,Need,Insurance,Need
+aditya birla active health premium,Insurance,Need,Insurance,Need
+manipal cigna prohealth premium,Insurance,Need,Insurance,Need
+bajaj allianz health guard policy,Insurance,Need,Insurance,Need
+max life term insurance policy premium,Insurance,Need,Insurance,Need
+hdfc life click 2 protect term plan,Insurance,Need,Insurance,Need
+icici prudential iprotect term life premium,Insurance,Need,Insurance,Need
+tata aia sampoorna raksha term policy,Insurance,Need,Insurance,Need
+lic jeevan umang policy premium,Insurance,Need,Insurance,Need
+lic jeevan labh premium payment,Insurance,Need,Insurance,Need
+lic term insurance policy renewal,Insurance,Need,Insurance,Need
+sbi life ergo term insurance premium,Insurance,Need,Insurance,Need
+pnb metlife term plan annual payment,Insurance,Need,Insurance,Need
+car insurance comprehensive renewal policy,Insurance,Need,Insurance,Need
+icici lombard motor car insurance,Insurance,Need,Insurance,Need
+hdfc ergo car insurance zero dep policy,Insurance,Need,Insurance,Need
+bajaj allianz vehicle insurance premium,Insurance,Need,Insurance,Need
+acko car insurance annual policy payment,Insurance,Need,Insurance,Need
+digit car insurance third party policy,Insurance,Need,Insurance,Need
+two wheeler bike insurance policy renewal,Insurance,Need,Insurance,Need
+acko bike insurance annual premium,Insurance,Need,Insurance,Need
+digit bike insurance comprehensive cover,Insurance,Need,Insurance,Need
+commercial vehicle insurance policy,Insurance,Need,Insurance,Need
+home insurance structure fire policy,Insurance,Need,Insurance,Need
+hdfc ergo home insurance content cover,Insurance,Need,Insurance,Need
+icici lombard home shield premium,Insurance,Need,Insurance,Need
+travel insurance international trip policy,Insurance,Need,Insurance,Need
+tata aig overseas travel insurance,Insurance,Need,Insurance,Need
+religare travel explore insurance cover,Insurance,Need,Insurance,Need
+critical illness rider insurance premium,Insurance,Need,Insurance,Need
+personal accident insurance policy cover,Insurance,Need,Insurance,Need
+cyber insurance personal online fraud cover,Insurance,Need,Insurance,Need
+pet insurance dog medical policy premium,Insurance,Need,Insurance,Need
+super topup health insurance policy payment,Insurance,Need,Insurance,Need
+hdfc ergo my health medisure topup,Insurance,Need,Insurance,Need
+group health insurance topup employee share,Insurance,Need,Insurance,Need
+senior citizen health insurance red carpet star,Insurance,Need,Insurance,Need
+marine cargo transit insurance premium,Insurance,Need,Insurance,Need
+directors and officers liability insurance,Insurance,Need,Insurance,Need
+professional indemnity insurance premium,Insurance,Need,Insurance,Need
+policybazaar insurance policy comparison buy,Insurance,Need,Insurance,Need
+coverfox vehicle insurance policy renewal,Insurance,Need,Insurance,Need
+insurance renewal premium payment online,Insurance,Need,Insurance,Need
+annuity pension plan premium payment lic,Insurance,Need,Insurance,Need
+unit linked insurance plan ulip premium hdfc,Insurance,Need,Insurance,Need
+guaranteed return insurance plan premium,Insurance,Need,Insurance,Need
+nifty 50 index fund monthly sip,Investments,Investment,Investments,Investment
+nifty50 etf units purchase,Investments,Investment,Investments,Investment
+uti nifty index fund direct growth,Investments,Investment,Investments,Investment
+sbi nifty index fund monthly investment,Investments,Investment,Investments,Investment
+hdfc top 100 large cap mutual fund sip,Investments,Investment,Investments,Investment
+icici prudential bluechip fund units,Investments,Investment,Investments,Investment
+mirae asset large cap fund sip,Investments,Investment,Investments,Investment
+parag parikh flexi cap fund direct sip,Investments,Investment,Investments,Investment
+quant small cap fund units allotment,Investments,Investment,Investments,Investment
+nippon india small cap mutual fund,Investments,Investment,Investments,Investment
+motilal oswal midcap fund investment,Investments,Investment,Investments,Investment
+zerodha kite stock equity purchase,Investments,Investment,Investments,Investment
+groww app mutual fund lump sum payment,Investments,Investment,Investments,Investment
+upstox shares equity delivery purchase,Investments,Investment,Investments,Investment
+angel one stock market share purchase,Investments,Investment,Investments,Investment
+kuvera mutual fund portfolio purchase,Investments,Investment,Investments,Investment
+smallcase all weather investing basket,Investments,Investment,Investments,Investment
+indmoney us stocks investment apple meta,Investments,Investment,Investments,Investment
+etmoney mutual fund sip debit,Investments,Investment,Investments,Investment
+dhan trading demat shares purchase,Investments,Investment,Investments,Investment
+bought nvidia shares tech portfolio,Investments,Investment,Investments,Investment
+bought apple stock long term holding,Investments,Investment,Investments,Investment
+bought reliance industries equity shares,Investments,Investment,Investments,Investment
+tcs shares equity trading purchase,Investments,Investment,Investments,Investment
+infosys shares long term wealth portfolio,Investments,Investment,Investments,Investment
+tata motors equity shares investment,Investments,Investment,Investments,Investment
+hdfc bank shares stock investment,Investments,Investment,Investments,Investment
+s&p 500 index fund vanguard us equity,Investments,Investment,Investments,Investment
+nasdaq 100 etf units investment,Investments,Investment,Investments,Investment
+mon100 motilal nasdaq etf purchase,Investments,Investment,Investments,Investment
+gold bees etf units accumulation,Investments,Investment,Investments,Investment
+silver bees etf investment nippon,Investments,Investment,Investments,Investment
+sovereign gold bond sgb tranche investment,Investments,Investment,Investments,Investment
+rbi floating rate savings bond investment,Investments,Investment,Investments,Investment
+government securities g-sec bond purchase,Investments,Investment,Investments,Investment
+treasury bills t-bills 91 days rbi retail,Investments,Investment,Investments,Investment
+corporate bond investment 9 percent yield,Investments,Investment,Investments,Investment
+fixed deposit fd opening hdfc bank,Investments,Investment,Investments,Investment
+recurring deposit rd monthly installment sbi,Investments,Investment,Investments,Investment
+public provident fund ppf deposit post office,Investments,Investment,Investments,Investment
+ppf account annual contribution deposit,Investments,Investment,Investments,Investment
+national pension system nps tier 1 contribution,Investments,Investment,Investments,Investment
+nps tier 2 investment voluntary account,Investments,Investment,Investments,Investment
+employee provident fund epf voluntary vpf,Investments,Investment,Investments,Investment
+demat account annual maintenance amc charge,Investments,Investment,Investments,Investment
+ipo application subscription asba payment,Investments,Investment,Investments,Investment
+reit real estate investment trust embassy units,Investments,Investment,Investments,Investment
+inviit powergrid infrastructure trust units,Investments,Investment,Investments,Investment
+liquid fund parked savings investment,Investments,Investment,Investments,Investment
+arbitrage fund low risk tax efficient investment,Investments,Investment,Investments,Investment
+miscellaneous cash expense petty cash,Misc,Need,Misc,Need
+unclassified payment general merchant,Misc,Need,Misc,Want
+general store miscellaneous purchase,Misc,Need,Misc,Want
+cash withdrawal atm personal expense,Misc,Need,Misc,Need
+fund transfer to friend miscellaneous,Misc,Need,Misc,Want
+reimbursement adjustment payment,Misc,Need,Misc,Need
+lost item replacement miscellaneous,Misc,Need,Misc,Want
+currency exchange fee forex counter,Misc,Need,Misc,Want
+notary affidavit stamp paper legal fee,Misc,Need,Misc,Want
+government document xerox photocopy,Misc,Need,Misc,Want
+courier delivery charges dhl bluedart,Misc,Need,Misc,Want
+speed post parcel delivery post office,Misc,Need,Misc,Want
+tipping server and delivery rider tip,Misc,Want,Misc,Want
+charity donation blind school relief fund,Misc,Want,Misc,Want
+temple trust pooja donation offering,Misc,Want,Misc,Want
+ngo contribution prime minister relief fund,Misc,Want,Misc,Want
+bank locker annual fee debit,Misc,Need,Misc,Need
+cheque book issuance fee bank charge,Misc,Need,Misc,Need
+debit card annual maintenance fee bank,Misc,Need,Misc,Need
+account minimum balance penalty charge,Misc,Need,Misc,Need
+unidentified upi transaction merchant,Misc,Need,Misc,Want
+random street payment barcode scan,Misc,Need,Misc,Want
+pos unknown retail counter swipe,Misc,Need,Misc,Want
+convenience fee online portal processing,Misc,Need,Misc,Want
+late payment penalty charges fine,Misc,Need,Misc,Need
+traffic police challan fine payment,Misc,Need,Misc,Need
+passport seva application processing fee,Misc,Need,Misc,Need
+rto driving license renewal fee,Misc,Need,Misc,Need
+court fee legal stamp stamp paper,Misc,Need,Misc,Need
+trade license municipal fee miscellaneous,Misc,Need,Misc,Need
+scrap dealer raddi paper sale adjustment,Misc,Need,Misc,Want
+key duplicate locksmith charges,Misc,Need,Misc,Want
+watch battery replacement local shop,Misc,Need,Misc,Want
+cobbler shoe repair stitching charges,Misc,Need,Misc,Want
+tailor alteration charges clothing fix,Misc,Need,Misc,Need

@@ -1,31 +1,34 @@
 """
 classifier/generate_llm_dataset.py
 ----------------------------------
-Builds the v4 training corpus with a local LLM (Ollama, default qwen2.5:7b).
+Builds the training corpus with local LLMs (Ollama). Labels follow data/CATEGORY_RUBRIC.md.
 
 Stage 1 (LLM, resumable): per category, generate Indian merchants and natural
 spend phrases (incl. Hinglish), each labelled Need / Want / Investment.
-Cached under data/v4_lexicon/<category>__<kind>__<batch>.json.
+Cached under data/<tag>_lexicon/<category>__<kind>__<batch>.json.
 
-Stage 1b (LLM, resumable): blind verification. The LLM re-labels every item
-against the full taxonomy without seeing the intended category; only items whose
-category agrees are kept; if generator and verifier disagree on type, the
-category's default type is used. Removes category drift.
+Stage 1b (LLM, resumable): blind verification. Each --verifiers model re-labels every
+item against the full taxonomy without seeing the intended category (cached per model).
+The generator's label plus the verifiers' labels vote: an item is kept only when a strict
+majority agrees on the category; type is the majority type among those votes, else the
+category's default type. Removes category drift and single-model label noise.
 
 Stage 2 (script): expand every lexicon item into the input styles users actually
 produce (bare merchant, merchant + amount, UPI / POS / bank strings, sentences,
 typos), then split 80/10/10 by merchant so test merchants are never seen in training.
 
-Run:
-    ollama serve &  &&  ollama pull qwen2.5:7b
+Stage 3: split the hand-reviewed data/human_labels.csv (dataset.csv + rubric types) 80/20
+exactly like benchmarks/run_v3_acceptance_audit.py (stratified on the original category,
+random_state=42), so the held-out rows are the same ones v4 was tested on.
+
+Run (resumable: re-run the same command after any interruption):
+    ollama serve   (separate terminal)   &&  ollama pull qwen2.5:14b && ollama pull llama3.1:8b
     cd ml-service && python3 -m classifier.generate_llm_dataset
-Stage 3 (LLM, resumable): add Need/Want/Investment types to the human-written
-dataset.csv (it only has categories) and split it 80/20 exactly like
-benchmarks/run_v3_acceptance_audit.py (stratified, random_state=42).
+v4 corpus was built with: --tag v4 --model qwen2.5:7b --verifiers qwen2.5:7b --n 50 (and the 3+3 FOCI then in use).
 
 Outputs:
-    data/v4_train.csv, data/v4_val.csv, data/v4_test.csv
-    data/v4_human_train.csv, data/v4_human_test.csv
+    data/<tag>_train.csv, data/<tag>_val.csv, data/<tag>_test.csv
+    data/<tag>_human_train.csv, data/<tag>_human_test.csv
 """
 
 import os
@@ -44,7 +47,8 @@ from classifier.exp2_generate_data import generate_amount, add_noise
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(BASE_DIR, "data")
-LEXICON_DIR = os.path.join(DATA_DIR, "v4_lexicon")
+LEXICON_DIR = os.path.join(DATA_DIR, "v5_lexicon")  # set from --tag in main()
+RUBRIC = open(os.path.join(DATA_DIR, "CATEGORY_RUBRIC.md")).read().split("## Category boundaries", 1)[1].strip()
 OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434/api/chat")
 
 CATEGORY_GUIDE = {
@@ -83,14 +87,16 @@ PROMPTS = {
     "merchant": (
         "List {n} distinct real merchants, brands, apps or shop names that people in India pay for "
         "\"{category}\" ({guide}). Focus: {focus}. Give only the merchant/shop name as it would appear on a "
-        "bill or UPI screen (1-4 words, no descriptions). Label each with type Need, Want or Investment "
-        "following the rule above. Avoid these already-used names: {avoid}. Reply as JSON."
+        "bill or UPI screen (1-4 words, no descriptions). Only include names that belong in \"{category}\" under "
+        "these labelling rules:\n{rubric}\nLabel each with type Need, Want or Investment following the type rules. "
+        "Avoid these already-used names: {avoid}. Reply as JSON."
     ),
     "phrase": (
         "Write {n} distinct short descriptions (2-8 words) an Indian user would type into an expense app "
         "for \"{category}\" ({guide}). Focus: {focus}. Mix English, Hinglish (e.g. 'sabzi wala', 'chai sutta', "
-        "'doodh'), lowercase and casual typing. Do not include amounts. Label each with type Need, Want or "
-        "Investment following the rule above. Reply as JSON."
+        "'doodh'), lowercase and casual typing. Do not include amounts. Only include spends that belong in "
+        "\"{category}\" under these labelling rules:\n{rubric}\nLabel each with type Need, Want or Investment "
+        "following the type rules. Reply as JSON."
     ),
 }
 FOCI = {
@@ -98,8 +104,14 @@ FOCI = {
         "well-known national chains, apps and brands (real names only)",
         "real regional chains and brands from different Indian states and cities (real names only, no invented names)",
         "typical local shop names that include the shop type, like 'Balaji Medical Store', 'Sharma Kirana', 'New Krishna Hair Salon'",
+        "apps, subscriptions, online services and D2C brands (real names only)",
+        "the registered company or legal name that shows on bank statements, like 'Bundl Technologies' (Swiggy) or 'Reliance Retail Ltd'",
+        "businesses common in tier-2 and tier-3 towns and small cities (real or typical names)",
     ],
-    "phrase": ["everyday common spends", "less common or specific spends", "Hinglish and very casual short notes"],
+    "phrase": ["everyday common spends", "less common or specific spends", "Hinglish and very casual short notes",
+               "the specific item or service bought, named plainly (e.g. 'new pressure cooker', 'ac gas refill')",
+               "notes that mention a person or occasion (e.g. 'gift for mom birthday', 'office farewell')",
+               "spends that are easy to confuse with another category, placed correctly by the labelling rules"],
 }
 
 VERIFY_SCHEMA = {
@@ -134,7 +146,7 @@ def _ollama(prompt: str, model: str, schema: dict = ITEM_SCHEMA, key: str = "ite
         "messages": [{"role": "user", "content": prompt}],
         "format": schema,
         "stream": False,
-        "options": {"temperature": temperature, "num_predict": 3000},
+        "options": {"temperature": temperature, "num_predict": 3000, "num_ctx": 8192},  # default ctx truncates the rubric
     }).encode()
     req = urllib.request.Request(OLLAMA_URL, data=body, headers={"Content-Type": "application/json"})
     with urllib.request.urlopen(req, timeout=900) as resp:
@@ -144,7 +156,7 @@ def _ollama(prompt: str, model: str, schema: dict = ITEM_SCHEMA, key: str = "ite
 
 def build_lexicon(model: str, n: int) -> pd.DataFrame:
     os.makedirs(LEXICON_DIR, exist_ok=True)
-    rows = []
+    rows, failed = [], 0
     for category in FINAURA_CATEGORIES:
         for kind, foci in FOCI.items():
             seen: set[str] = set()
@@ -154,12 +166,13 @@ def build_lexicon(model: str, n: int) -> pd.DataFrame:
                     items = json.load(open(path))
                 else:
                     prompt = PROMPTS[kind].format(n=n, category=category, guide=CATEGORY_GUIDE[category], focus=focus,
-                                                  avoid=", ".join(sorted(seen)[:60]) or "none")
+                                                  rubric=RUBRIC, avoid=", ".join(sorted(seen)[:60]) or "none")
                     print(f"[LLM] {category} / {kind} / {focus} ...", flush=True)
                     try:
                         items = _ollama(prompt, model)
                     except Exception as e:  # keep going; a rerun retries only the missing batches
                         print(f"   ! failed: {e}")
+                        failed += 1
                         continue
                     json.dump(items, open(path, "w"), indent=1, ensure_ascii=False)
                 for it in items:
@@ -173,6 +186,8 @@ def build_lexicon(model: str, n: int) -> pd.DataFrame:
                         spend_type = ALLOWED_TYPES[category][0]  # LLM picked a type invalid for this category
                     seen.add(text.lower())
                     rows.append({"text": text, "category": category, "type": spend_type, "kind": kind})
+    if failed:  # verification caches are keyed by lexicon position, so never verify a partial lexicon
+        raise SystemExit(f"{failed} generation batches failed; re-run the same command to retry only those")
     lex = pd.DataFrame(rows)
     # Same string generated under two categories is ambiguous: drop it rather than teach noise.
     dup = lex.assign(k=lex["text"].str.lower()).groupby("k")["category"].nunique()
@@ -180,89 +195,57 @@ def build_lexicon(model: str, n: int) -> pd.DataFrame:
     return lex.reset_index(drop=True)
 
 
-def verify_lexicon(lex: pd.DataFrame, model: str) -> pd.DataFrame:
+def verify_lexicon(lex: pd.DataFrame, verifiers: list[str]) -> pd.DataFrame:
     guide = "\n".join(f"- {c}: {g}" for c, g in CATEGORY_GUIDE.items())
-    verdicts: dict[int, dict] = {}
-    for start in range(0, len(lex), VERIFY_BATCH):
-        path = os.path.join(LEXICON_DIR, f"verify__{start:05d}.json")
-        chunk = lex.iloc[start:start + VERIFY_BATCH]
-        if os.path.exists(path):
-            labels = json.load(open(path))
-        else:
-            items = "\n".join(f"{i}. {t}" for i, t in zip(chunk.index, chunk["text"]))
-            prompt = (
-                "You label expenses for an Indian personal finance app. Categories and type rules:\n"
-                f"{guide}\n\nFor each numbered item below (a merchant name or a short expense note), give its "
-                "category and type (Need, Want or Investment) following the rules exactly. Reply as JSON with one "
-                f"label for every item, using the item number as i.\n\n{items}"
-            )
-            print(f"[VERIFY] items {start}-{start + len(chunk) - 1} ...", flush=True)
-            try:
-                labels = _ollama(prompt, model, VERIFY_SCHEMA, "labels", temperature=0.0)
-            except Exception as e:  # rerun retries only the missing batches
-                print(f"   ! failed: {e}")
-                continue
-            json.dump(labels, open(path, "w"), indent=1)
-        for lab in labels:
-            verdicts[int(lab.get("i", -1))] = lab
+    votes: dict[int, list[dict]] = {i: [{"category": r["category"], "type": r["type"]}] for i, r in lex.iterrows()}
+    failed = 0
+    for model in verifiers:  # one model at a time: Ollama keeps only one large model in 16 GB
+        slug = re.sub(r"[^a-z0-9]+", "-", model.lower())
+        for start in range(0, len(lex), VERIFY_BATCH):
+            path = os.path.join(LEXICON_DIR, f"verify__{slug}__{start:05d}.json")
+            chunk = lex.iloc[start:start + VERIFY_BATCH]
+            if os.path.exists(path):
+                labels = json.load(open(path))
+            else:
+                items = "\n".join(f"{i}. {t}" for i, t in zip(chunk.index, chunk["text"]))
+                prompt = (
+                    "You label expenses for an Indian personal finance app. Categories:\n"
+                    f"{guide}\n\nLabelling rules (these win over the list above):\n{RUBRIC}\n\n"
+                    "For each numbered item below (a merchant name or a short expense note), give its "
+                    "category and type (Need, Want or Investment) following the rules exactly. Reply as JSON with one "
+                    f"label for every item, using the item number as i.\n\n{items}"
+                )
+                print(f"[VERIFY {model}] items {start}-{start + len(chunk) - 1} of {len(lex)} ...", flush=True)
+                try:
+                    labels = _ollama(prompt, model, VERIFY_SCHEMA, "labels", temperature=0.0)
+                except Exception as e:  # rerun retries only the missing batches
+                    print(f"   ! failed: {e}")
+                    failed += 1
+                    continue
+                json.dump(labels, open(path, "w"), indent=1)
+            for lab in labels:
+                if int(lab.get("i", -1)) in votes and start <= int(lab["i"]) < start + VERIFY_BATCH:
+                    votes[int(lab["i"])].append(lab)
+    if failed:  # a missing vote would silently drop its items
+        raise SystemExit(f"{failed} verification batches failed; re-run the same command to retry only those")
     keep = []
     for i, r in lex.iterrows():
-        v = verdicts.get(i)
-        if not v or v.get("category") != r["category"]:
-            continue
-        spend_type = r["type"] if v.get("type") == r["type"] else ALLOWED_TYPES[r["category"]][0]
-        keep.append({**r.to_dict(), "type": spend_type})
+        cats = pd.Series([v.get("category") for v in votes[i]]).value_counts()
+        category = cats.index[0]
+        if cats.iloc[0] * 2 <= len(verifiers) + 1 or category not in ALLOWED_TYPES:
+            continue  # no strict majority on the category
+        types = pd.Series([v.get("type") for v in votes[i] if v.get("category") == category]).value_counts()
+        top = types.index[0] if len(types) == 1 or types.iloc[0] > types.iloc[1] else None
+        spend_type = top if top in ALLOWED_TYPES[category] else ALLOWED_TYPES[category][0]
+        keep.append({**r.to_dict(), "category": category, "type": spend_type})
     out = pd.DataFrame(keep)
-    print(f"[VERIFY] kept {len(out)}/{len(lex)} items ({len(out) / max(len(lex), 1):.0%} category agreement)")
+    print(f"[VERIFY] kept {len(out)}/{len(lex)} items ({len(out) / max(len(lex), 1):.0%} majority agreement)")
     return out.reset_index(drop=True)
 
 
-TYPE_SCHEMA = {
-    "type": "object",
-    "properties": {
-        "labels": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "properties": {"i": {"type": "integer"}, "type": {"type": "string", "enum": ["Need", "Want", "Investment"]}},
-                "required": ["i", "type"],
-            },
-        }
-    },
-    "required": ["labels"],
-}
-
-
-def label_human_types(model: str) -> pd.DataFrame:
-    human = pd.read_csv(os.path.join(BASE_DIR, "dataset.csv")).dropna(subset=["text", "category"]).reset_index(drop=True)
-    types: dict[int, str] = {}
-    for start in range(0, len(human), VERIFY_BATCH):
-        path = os.path.join(LEXICON_DIR, f"human_types__{start:05d}.json")
-        chunk = human.iloc[start:start + VERIFY_BATCH]
-        if os.path.exists(path):
-            labels = json.load(open(path))
-        else:
-            items = "\n".join(f"{i}. [{c}] {t}" for i, t, c in zip(chunk.index, chunk["text"], chunk["category"]))
-            prompt = (
-                "You label expenses for an Indian personal finance app. Type rules per category:\n"
-                + "\n".join(f"- {c}: {g}" for c, g in CATEGORY_GUIDE.items())
-                + "\n\nEach numbered item below shows its category in brackets. Give its type (Need, Want or "
-                f"Investment) following the rules exactly. Reply as JSON with one label for every item.\n\n{items}"
-            )
-            print(f"[TYPES] human rows {start}-{start + len(chunk) - 1} ...", flush=True)
-            try:
-                labels = _ollama(prompt, model, TYPE_SCHEMA, "labels", temperature=0.0)
-            except Exception as e:  # rerun retries only the missing batches
-                print(f"   ! failed: {e}")
-                continue
-            json.dump(labels, open(path, "w"), indent=1)
-        for lab in labels:
-            types[int(lab.get("i", -1))] = lab.get("type")
-    human["type"] = [
-        types.get(i) if types.get(i) in ALLOWED_TYPES[c] else ALLOWED_TYPES[c][0]
-        for i, c in zip(human.index, human["category"])
-    ]
-    return human
+def load_human_labels() -> pd.DataFrame:
+    """dataset.csv rows with rubric-reviewed category/type (data/human_labels.csv keeps the originals too)."""
+    return pd.read_csv(os.path.join(DATA_DIR, "human_labels.csv"))
 
 
 def _ref(n: int) -> str:
@@ -284,6 +267,7 @@ def expand_merchant(m: str) -> list[tuple[str, str]]:
             f"{up} TXN POS PURCHASE",
             f"BIL/ONL/{_ref(12)}/{up}/{random.choice(BANKS)}",
             f"ECOM PUR {up} {random.choice(STATES)}",
+            f"NEFT DR-{random.choice(BANKS)}N{_ref(9)}-{up}",
         ]), "bank_statement"),
         (random.choice(SENTENCE_TEMPLATES).format(m=random.choice([m, m.lower()])), "natural_language"),
     ]
@@ -338,25 +322,33 @@ def expand(lex: pd.DataFrame) -> pd.DataFrame:
 
 
 def main():
+    global LEXICON_DIR
     ap = argparse.ArgumentParser()
-    ap.add_argument("--model", default="qwen2.5:7b")
-    ap.add_argument("--n", type=int, default=50, help="items per LLM batch")
+    ap.add_argument("--tag", default="v5", help="prefix for the cache dir and output files")
+    ap.add_argument("--model", default="qwen2.5:14b", help="generator")
+    ap.add_argument("--verifiers", default="qwen2.5:14b,llama3.1:8b", help="comma-separated blind re-labellers")
+    ap.add_argument("--n", type=int, default=60, help="items per LLM batch")
     args = ap.parse_args()
     random.seed(42)
     np.random.seed(42)
+    LEXICON_DIR = os.path.join(DATA_DIR, f"{args.tag}_lexicon")
+    out = lambda name: os.path.join(DATA_DIR, f"{args.tag}_{name}.csv")
 
     lex = build_lexicon(args.model, args.n)
-    lex.to_csv(os.path.join(DATA_DIR, "v4_lexicon_raw.csv"), index=False)
-    lex = verify_lexicon(lex, args.model)
-    lex.to_csv(os.path.join(DATA_DIR, "v4_lexicon.csv"), index=False)
+    lex.to_csv(out("lexicon_raw"), index=False)
+    lex = verify_lexicon(lex, [m for m in args.verifiers.split(",") if m])
+    lex.to_csv(out("lexicon"), index=False)
     print(f"[OK] Lexicon: {len(lex)} items\n{lex.groupby(['category', 'type']).size().to_string()}")
 
     df = expand(lex)
-    human = label_human_types(args.model)
-    human_train, human_test = train_test_split(human, test_size=0.20, random_state=42, stratify=human["category"])
-    human_train.to_csv(os.path.join(DATA_DIR, "v4_human_train.csv"), index=False)
-    human_test.to_csv(os.path.join(DATA_DIR, "v4_human_test.csv"), index=False)
-    print(f"[SAVED] v4_human_train.csv: {len(human_train)} rows, v4_human_test.csv: {len(human_test)} rows")
+    human = load_human_labels()
+    human_train, human_test = train_test_split(human, test_size=0.20, random_state=42, stratify=human["orig_category"])
+    v4_test = os.path.join(DATA_DIR, "v4_human_test.csv")
+    if os.path.exists(v4_test):  # same held-out rows as v4, so the two versions are comparable
+        assert set(human_test["text"]) == set(pd.read_csv(v4_test)["text"]), "human split drifted from v4"
+    human_train.to_csv(out("human_train"), index=False)
+    human_test.to_csv(out("human_test"), index=False)
+    print(f"[SAVED] {args.tag}_human_train.csv: {len(human_train)} rows, {args.tag}_human_test.csv: {len(human_test)} rows")
 
     # Human held-out rows must never leak into the LLM corpus.
     held = set(human_test["text"].str.lower().str.strip())
@@ -374,8 +366,8 @@ def main():
     }
     assert not set(splits["train"]["merchant"]) & set(splits["test"]["merchant"]), "merchant leakage"
     for name, part in splits.items():
-        part.sample(frac=1.0, random_state=42).to_csv(os.path.join(DATA_DIR, f"v4_{name}.csv"), index=False)
-        print(f"[SAVED] v4_{name}.csv: {len(part):,} rows")
+        part.sample(frac=1.0, random_state=42).to_csv(out(name), index=False)
+        print(f"[SAVED] {args.tag}_{name}.csv: {len(part):,} rows")
 
 
 if __name__ == "__main__":

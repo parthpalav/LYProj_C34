@@ -4,8 +4,8 @@ Unified Classification Pipeline for FINAURA.
 
 Orchestration:
 1. Deterministic Merchant / Rule Layer (rules.py)
-2. Fine-tuned v4 encoder (models/finaura-v4): one joint (category, type) label,
-   temperature-calibrated, so category and type never contradict.
+2. Fine-tuned joint encoder(s): models/active_model.json ensemble, else models/finaura-v4.
+   One joint (category, type) label, temperature-calibrated, so category and type never contradict.
 3. Legacy fallback when v4 is not trained: TF-IDF category + MiniLM type head.
 
 Contract:
@@ -101,38 +101,52 @@ class HybridClassifier:
         self.v4_model = None
         self._v4_checked = False
 
-    def load_v4(self) -> bool:
-        if self._v4_checked:
+    def load_v4(self, members: Optional[list] = None) -> bool:
+        """Load the joint encoder(s). models/active_model.json (written by train_v4 --ensemble) lists the
+        model dirs whose calibrated probs are averaged; without it, models/finaura-v4 is used alone."""
+        if self._v4_checked and members is None:
             return self.v4_model is not None
         self._v4_checked = True
-        model_dir = os.path.join(self.base_dir, "models", "finaura-v4")
-        if not os.path.exists(os.path.join(model_dir, "v4_meta.json")):
-            log.warning("⚠️ models/finaura-v4 not found — using legacy TF-IDF + MiniLM type head")
-            return False
+        models_dir = os.path.join(self.base_dir, "models")
+        active_path = os.path.join(models_dir, "active_model.json")
+        active = json.load(open(active_path)) if members is None and os.path.exists(active_path) else {}
+        members = members or active.get("members") or ["finaura-v4"]
         try:
             import torch
             from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
-            with open(os.path.join(model_dir, "v4_meta.json")) as f:
-                self.v4_meta = json.load(f)
-            self.v4_tokenizer = AutoTokenizer.from_pretrained(model_dir)
-            model = AutoModelForSequenceClassification.from_pretrained(model_dir)
-            model.eval()
-            self.v4_model = model
+            self.v4_members = []
+            for name in members:
+                model_dir = os.path.join(models_dir, name)
+                with open(os.path.join(model_dir, "v4_meta.json")) as f:
+                    meta = json.load(f)
+                model = AutoModelForSequenceClassification.from_pretrained(model_dir).eval()
+                self.v4_members.append((AutoTokenizer.from_pretrained(model_dir), model, meta))
+            self.v4_meta = self.v4_members[0][2]
+            assert all(m["labels"] == self.v4_meta["labels"] for _, _, m in self.v4_members), "members disagree on labels"
+            self.v4_threshold = active.get("review_threshold", self.v4_meta["review_threshold"])
+            self.v4_model = self.v4_members[0][1]
             self._torch = torch
-            log.info("✅ finaura-v4 joint classifier loaded in HybridPipeline")
+            log.info(f"✅ joint classifier loaded in HybridPipeline: {members}")
             return True
         except Exception as e:
-            log.warning(f"⚠️ Failed to load finaura-v4: {e}")
+            log.warning(f"⚠️ Failed to load {members} ({e}) — using legacy TF-IDF + MiniLM type head")
             self.v4_model = None
             return False
 
-    def _classify_v4(self, cleaned: str):
+    def _classify_v4_probs(self, cleaned: str) -> np.ndarray:
+        """Mean of the members' temperature-calibrated joint-label probabilities."""
         torch = self._torch
-        inputs = self.v4_tokenizer(cleaned, return_tensors="pt", truncation=True, max_length=48)
-        with torch.no_grad():
-            logits = self.v4_model(**inputs).logits[0]
-        probs = torch.softmax(logits / self.v4_meta["temperature"], dim=-1).numpy()
+        probs = 0
+        for tokenizer, model, meta in self.v4_members:
+            inputs = tokenizer(cleaned, return_tensors="pt", truncation=True, max_length=48)
+            with torch.no_grad():
+                logits = model(**inputs).logits[0]
+            probs = probs + torch.softmax(logits / meta["temperature"], dim=-1).numpy() / len(self.v4_members)
+        return probs
+
+    def _classify_v4(self, cleaned: str):
+        probs = self._classify_v4_probs(cleaned)
         labels = self.v4_meta["labels"]
         best = int(probs.argmax())
         category, spend_type = labels[best].split("|")
@@ -141,7 +155,7 @@ class HybridClassifier:
             cat = label.split("|")[0]
             cat_probs[cat] = cat_probs.get(cat, 0.0) + float(p)
         joint_conf = float(probs[best])
-        needs_review = joint_conf < self.v4_meta["review_threshold"]
+        needs_review = joint_conf < self.v4_threshold
         all_probs = {c: round(p, 4) for c, p in cat_probs.items()}
         return category, spend_type, cat_probs[category], joint_conf, all_probs, needs_review
 

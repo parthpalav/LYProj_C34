@@ -1,20 +1,23 @@
 """
 evaluation/evaluate_v4.py
 -------------------------
-Legacy pipeline (rules -> TF-IDF category + MiniLM type head) vs v4 pipeline
-(rules -> finaura-v4 joint model) on three sets:
-  a) data/v4_test.csv          — synthetic, merchants unseen in training
-  b) data/v4_human_test.csv    — 140 human-written rows of dataset.csv, held out exactly like
-                                 benchmarks/run_v3_acceptance_audit.py; for a fair comparison the
-                                 legacy TF-IDF is retrained on the same 80% split
+Legacy pipeline (rules -> TF-IDF category + MiniLM type head) vs v4 (rules -> finaura-v4) vs v5
+(rules -> models/active_model.json ensemble, when present) on:
+  a) data/v5_test.csv (else v4_test.csv) — synthetic, merchants unseen in that corpus's training
+     (v4 may have seen some v5 test merchants in its own training split, which favours v4)
+  b) 140 held-out human-written rows of dataset.csv (same rows for every model), labelled by
+     data/CATEGORY_RUBRIC.md (data/human_labels.csv); for a fair comparison the legacy TF-IDF is
+     retrained on the same 80% split
+  b0) the same 140 rows with their original labels (dataset.csv category + LLM type, as v4 was scored)
   c) evaluation/challenge_v4.csv — hand-written adversarial set (UPI/POS strings, Hinglish, ambiguity)
+  d) evaluation/real_transactions.csv (text,category,type), if present — real statements, never trained on
 
 Note: both pipelines share the current (tightened) rules.py, so the gap shown is the model gap.
 
 Run:
     cd ml-service && python3 -m evaluation.evaluate_v4
 Outputs:
-    ../research/results/classifier_v4_eval.{json,md}
+    ../research/results/classifier_v5_eval.{json,md}
 """
 
 import os
@@ -33,11 +36,23 @@ logging.disable(logging.CRITICAL)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RESULTS_DIR = os.path.join(os.path.dirname(BASE_DIR), "research", "results")
 
-SETS = {
-    "a_v4_test_unseen_merchants": os.path.join(BASE_DIR, "data", "v4_test.csv"),
-    "b_human_held_out": os.path.join(BASE_DIR, "data", "v4_human_test.csv"),
-    "c_challenge_adversarial": os.path.join(BASE_DIR, "evaluation", "challenge_v4.csv"),
-}
+DATA = os.path.join(BASE_DIR, "data")
+
+
+def load_sets() -> dict:
+    a = os.path.join(DATA, "v5_test.csv")
+    held = pd.read_csv(os.path.join(DATA, "v4_human_test.csv"))
+    rubric = pd.read_csv(os.path.join(DATA, "human_labels.csv"))
+    sets = {
+        "a_synthetic_unseen_merchants": pd.read_csv(a if os.path.exists(a) else os.path.join(DATA, "v4_test.csv")),
+        "b_human_held_out_rubric": rubric[rubric["text"].isin(held["text"])].reset_index(drop=True),
+        "b0_human_held_out_original_labels": held,
+        "c_challenge_adversarial": pd.read_csv(os.path.join(BASE_DIR, "evaluation", "challenge_v4.csv")),
+    }
+    real = os.path.join(BASE_DIR, "evaluation", "real_transactions.csv")
+    if os.path.exists(real):
+        sets["d_real_transactions"] = pd.read_csv(real)
+    return sets
 
 
 def legacy_pipeline(retrain_on_human_split: bool = False) -> HybridClassifier:
@@ -91,38 +106,44 @@ def evaluate(clf: HybridClassifier, df: pd.DataFrame) -> dict:
 
 def main():
     pipelines = {"legacy": legacy_pipeline(), "v4": HybridClassifier(BASE_DIR)}
-    if not pipelines["v4"].load_v4():
+    if not pipelines["v4"].load_v4(["finaura-v4"]):
         raise SystemExit("models/finaura-v4 missing: run python3 -m classifier.train_v4 first")
+    if os.path.exists(os.path.join(BASE_DIR, "models", "active_model.json")):
+        pipelines["v5"] = HybridClassifier(BASE_DIR)
+        pipelines["v5"].load_v4()
+    names = list(pipelines)
 
     results = {}
-    for set_name, path in SETS.items():
-        df = pd.read_csv(path)
-        if "expected_category" in df.columns:
-            df = df.rename(columns={"expected_category": "category", "expected_type": "type"})
-        runs = dict(pipelines, legacy=legacy_pipeline(True)) if set_name.startswith("b_") else pipelines
+    for set_name, df in load_sets().items():
+        runs = dict(pipelines, legacy=legacy_pipeline(True)) if set_name.startswith("b") else pipelines
         results[set_name] = {name: evaluate(clf, df) for name, clf in runs.items()}
 
     os.makedirs(RESULTS_DIR, exist_ok=True)
-    with open(os.path.join(RESULTS_DIR, "classifier_v4_eval.json"), "w") as f:
+    with open(os.path.join(RESULTS_DIR, "classifier_v5_eval.json"), "w") as f:
         json.dump(results, f, indent=2)
 
     metrics = ["category_accuracy", "category_macro_f1", "type_accuracy", "joint_accuracy",
                "auto_accept_coverage", "auto_accept_precision", "rule_share", "p50_latency_ms"]
-    lines = ["# Classifier v4 evaluation", "", "Legacy = rules + TF-IDF category + MiniLM type head. v4 = rules + finaura-v4 joint model.",
-             "Both share the current rules.py. On set b the legacy TF-IDF is refit on the same 80% human split.", ""]
+    members = json.load(open(os.path.join(BASE_DIR, "models", "active_model.json")))["members"] if "v5" in names else []
+    lines = ["# Classifier v5 evaluation", "",
+             "Legacy = rules + TF-IDF category + MiniLM type head. v4 = rules + finaura-v4."
+             + (f" v5 = rules + ensemble {members}." if members else ""),
+             "All share the current rules.py. On sets b/b0 the legacy TF-IDF is refit on the same 80% human split.", ""]
+    best = names[-1]
     for set_name, res in results.items():
-        lines += [f"## {set_name} (n={res['v4']['n']})", "", "| metric | legacy | v4 |", "|---|---|---|"]
+        lines += [f"## {set_name} (n={res[best]['n']})", "", "| metric | " + " | ".join(names) + " |",
+                  "|---" * (len(names) + 1) + "|"]
         for m in metrics:
-            lv, vv = res["legacy"].get(m), res["v4"].get(m)
-            if lv is None and vv is None:
+            vals = [res[n].get(m) for n in names]
+            if all(v is None for v in vals):
                 continue
             fmt = (lambda x: f"{x:.1f}") if m == "p50_latency_ms" else (lambda x: "—" if x is None else f"{x * 100:.1f}%")
-            lines.append(f"| {m} | {fmt(lv)} | {fmt(vv)} |")
-        lines += ["", "v4 errors (first 40):", ""]
-        lines += [f"- `{e['text']}` expected {e['expected']}, got {e['got']} ({e['source']})" for e in res["v4"]["errors"]]
+            lines.append(f"| {m} | " + " | ".join(fmt(v) for v in vals) + " |")
+        lines += ["", f"{best} errors (first 40):", ""]
+        lines += [f"- `{e['text']}` expected {e['expected']}, got {e['got']} ({e['source']})" for e in res[best]["errors"]]
         lines.append("")
     report = "\n".join(lines)
-    with open(os.path.join(RESULTS_DIR, "classifier_v4_eval.md"), "w") as f:
+    with open(os.path.join(RESULTS_DIR, "classifier_v5_eval.md"), "w") as f:
         f.write(report)
     print(report)
 

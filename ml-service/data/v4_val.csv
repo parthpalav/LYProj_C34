@@ -1,0 +1,927 @@
+text,category,type,style,merchant
+BIL/ONL/164170053718/MEGHALAYA POWER/AXIS,Utilities & Bills,Need,bank_statement,merchant:845
+paid to Guru Gobind Singh,Education,Investment,natural_language,merchant:1771
+la martiniere,Food & Dining,Want,merchant,merchant:47
+"paid ₹2937 for gold bond, for savings",Investments,Investment,phrase_amount,phrase:2375
+UPI/223461446627/NHPC/nhpc@ibl/HDFC,Utilities & Bills,Need,upi,merchant:780
+street kachori 2533,Food & Dining,Want,phrase_amount,phrase:119
+auto taxi,Transport & Travel,Want,natural_language,phrase:487
+Rs 765 Bangalore Metro,Transport & Travel,Need,merchant_amount,merchant:425
+life insurance with death benefit,Insurance,Need,natural_language,phrase:2183
+UPI/CR/044656594836/FATIMA JOSHI/YESB,Misc,Need,upi,person:Fatima-Joshi
+Rs 923 litti chokha,Food & Dining,Want,phrase_amount,phrase:129
+healthwaay,Health,Need,typo,merchant:1570
+1295 dth recharge,Utilities & Bills,Need,phrase_amount,phrase:889
+stadia  pro,Entertainment,Want,typo,merchant:1333
+Rs 4482 Holiday Packages,Transport & Travel,Want,merchant_amount,merchant:470
+toll for vacation,Transport & Travel,Need,natural_language,phrase:612
+jewellery box 4734,Shopping,Want,phrase_amount,phrase:1203
+BIL/ONL/904268181845/FRESHWAY/SBI,Food & Dining,Want,bank_statement,merchant:70
+UPI/DR/713766708060/SAKSHAM CLASSES/ibl,Education,Investment,upi,merchant:1762
+UPI/029087182749/FABHOTELS/fabhotels@ibl/KOTAK,Transport & Travel,Want,upi,merchant:418
+UPI-SANTIKRIYA-926060@upi,Health,Need,upi,merchant:1601
+ODISHA POWER TXN POS PURCHASE,Utilities & Bills,Need,bank_statement,merchant:835
+UPI/CR/534215199624/JOSEPH JOSHI/ICICI,Misc,Need,upi,person:Joseph-Joshi
+bharti mobile,Utilities & Bills,Need,merchant,merchant:877
+UPI-GAURAVTELECOM-398590@axl,Utilities & Bills,Need,upi,merchant:876
+4466 Surat Estates,Housing,Need,merchant_amount,merchant:658
+paid Rs 255 for piped gas connection,Utilities & Bills,Need,phrase_amount,phrase:933
+harrita ayurved,Health,Need,typo,merchant:1614
+UPI/CR/767149838648/NEHA SHARMA/KOTAK,Misc,Need,upi,person:Neha-Sharma
+IMPS/P2A/774341467170/KARAN RAO/SBI0645273,Misc,Need,bank_statement,person:Karan-Rao
+₹668 personal finance course,Education,Investment,phrase_amount,phrase:1853
+bihr power,Utilities & Bills,Need,typo,merchant:841
+deepk k,Groceries,Need,typo,merchant:250
+paid 1913.00 for comic,Entertainment,Want,phrase_amount,phrase:1511
+vitabond bill,Health,Need,natural_language,merchant:1583
+POS 2855 INOX PUNE,Entertainment,Want,bank_statement,merchant:1309
+olacbs,Transport & Travel,Want,typo,merchant:396
+₹3346 home decor,Housing,Need,phrase_amount,phrase:697
+UPI-PUNE-723414@okicici,Misc,Need,upi,merchant:2378
+AirAsia 2023.00,Transport & Travel,Want,merchant_amount,merchant:404
+rahul healthh,Health,Need,typo,merchant:1620
+amusement pass,Entertainment,Want,natural_language,phrase:1431
+Manglapur Cinemas,Entertainment,Want,merchant,merchant:1359
+Bihar Power,Utilities & Bills,Need,merchant,merchant:841
+ISO 31000,Health,Need,merchant,merchant:1557
+cigarettes ₹4200,Entertainment,Want,phrase_amount,phrase:1417
+samosa plate,Food & Dining,Want,natural_language,phrase:132
+61.00 school van,Education,Need,phrase_amount,phrase:1895
+dbbawala prime,Food & Dining,Need,typo,merchant:28
+hollywood,Entertainment,Want,merchant,merchant:1354
+UPI/DR/828723244079/DEEPAK K/okhdfcbank,Groceries,Need,upi,merchant:250
+surat  estates,Housing,Need,typo,merchant:658
+ECOM PUR GARNIER DELHI,Personal Care,Want,bank_statement,merchant:1959
+ECOM PUR APOLLO MUNICH DELHI,Insurance,Need,bank_statement,merchant:2077
+4730 wallpapering,Housing,Need,phrase_amount,phrase:720
+vtabond,Health,Need,typo,merchant:1583
+at rituals,Personal Care,Want,natural_language,merchant:1966
+Tata Power ₹1298,Misc,Need,merchant_amount,merchant:2386
+Healthway Rs 1516,Health,Need,merchant_amount,merchant:1570
+paid Holiday Packages,Transport & Travel,Want,natural_language,merchant:470
+paid 4209.00 for safflower oil,Groceries,Need,phrase_amount,phrase:342
+fixed term fd,Investments,Investment,natural_language,phrase:2342
+UPI/DR/633613179854/CES/okaxis,Utilities & Bills,Need,upi,merchant:783
+theme park,Entertainment,Want,natural_language,phrase:1428
+alu puri tiffin,Food & Dining,Want,natural_language,phrase:131
+POS 8651 COURSERA DELHI,Education,Investment,bank_statement,merchant:1716
+amusement pass Rs 831,Entertainment,Want,phrase_amount,phrase:1431
+tat aig,Insurance,Need,typo,merchant:2074
+GARNIER FRUCTIS TXN POS PURCHASE,Personal Care,Want,bank_statement,merchant:1961
+Holiday Packages,Transport & Travel,Want,merchant,merchant:470
+Railway Station ₹4996,Transport & Travel,Need,merchant_amount,merchant:461
+Ramesh Theatre,Entertainment,Want,merchant,merchant:1397
+UPI/241797497350/MANDI BAZAAR/mandibazaar@okicici/SBI,Food & Dining,Want,upi,merchant:75
+₹386 Tata AIG,Insurance,Need,merchant_amount,merchant:2074
+parking fine,Misc,Need,natural_language,phrase:2409
+UPI-UDAIPURREALMS-500493@okhdfcbank,Housing,Need,upi,merchant:639
+Rs 4725 life insurance with disability benefit,Insurance,Need,phrase_amount,phrase:2192
+UPI-NAGALANDPOWER-991984@upi,Utilities & Bills,Need,upi,merchant:846
+garnier fructis,Personal Care,Want,merchant,merchant:1961
+skool fees,Education,Need,natural_language,phrase:1912
+paid to Lalchand,Groceries,Need,natural_language,merchant:209
+Vivekananda Learning purchase,Education,Investment,natural_language,merchant:1769
+1327 Apollo Munich,Insurance,Need,merchant_amount,merchant:2077
+paid aig,Insurance,Need,natural_language,merchant:2084
+olacabs purchase,Transport & Travel,Want,natural_language,merchant:396
+botanical garden 4510,Entertainment,Want,phrase_amount,phrase:1464
+NEFT/HDFCN074401436/SANJAY FERNANDES,Misc,Need,bank_statement,person:Sanjay-Fernandes
+property tax bill,Housing,Need,natural_language,phrase:771
+sukumar wwealth,Investments,Investment,typo,merchant:2252
+lemon water,Food & Dining,Want,natural_language,phrase:113
+buy stocks 1151,Investments,Investment,phrase_amount,phrase:2271
+UPI/224696318158/CETAPHIL/cetaphil@ibl/SBI,Personal Care,Want,upi,merchant:1958
+UPI/278988524991/VIRTUSA/virtusa@ibl/SBI,Shopping,Want,upi,merchant:1135
+Harita Ayurved,Health,Need,merchant,merchant:1614
+ECOM PUR CHANDRAPUR K DELHI,Groceries,Need,bank_statement,merchant:237
+paid Rs 1270 for gas connection check,Utilities & Bills,Need,phrase_amount,phrase:992
+litti chokha,Food & Dining,Want,natural_language,phrase:129
+DDK Hyderabad bill,Utilities & Bills,Need,natural_language,merchant:857
+UPI-DIVYASHAIKH-099220@upi,Misc,Need,upi,person:Divya-Shaikh
+Krishna Vidyapeeth,Education,Investment,merchant,merchant:1772
+UPI-HEALTHWAY-696095@ibl,Health,Need,upi,merchant:1570
+bhakti ciinemas,Entertainment,Want,typo,merchant:1376
+L&T 2464,Housing,Need,merchant_amount,merchant:621
+paid ₹3483 for skool fees,Education,Need,phrase_amount,phrase:1912
+UPI/005428635740/APOLLO MUNICH/apollomunich@upi/KOTAK,Insurance,Need,upi,merchant:2077
+UPI/CR/097245955212/LAKSHMI MEHTA/HDFC,Misc,Need,upi,person:Lakshmi-Mehta
+nagalnd power,Utilities & Bills,Need,typo,merchant:846
+Mumbai Transport ₹2970,Transport & Travel,Need,merchant_amount,merchant:433
+bhopal dwellings,Housing,Need,merchant,merchant:665
+neha fotwear,Shopping,Want,typo,merchant:1176
+UPI/DR/436503504969/DIVYA PATEL/okicici,Misc,Need,upi,person:Divya-Patel
+idli sambhar,Food & Dining,Want,natural_language,phrase:157
+Inox,Entertainment,Want,merchant,merchant:1309
+paid to Gitanjali,Shopping,Want,natural_language,merchant:1144
+NEFT/SBIN483970523/GURPREET SHARMA,Misc,Need,bank_statement,person:Gurpreet-Sharma
+paid tata power,Misc,Need,natural_language,merchant:2386
+premier multiplex order,Entertainment,Want,natural_language,merchant:1361
+UPI-MANOJMEHTA-637895@okicici,Misc,Need,upi,person:Manoj-Mehta
+paid 4585.00 for dth subscription renewal,Utilities & Bills,Need,phrase_amount,phrase:1004
+karmayog,Education,Investment,typo,merchant:1759
+₹2909 Inox,Entertainment,Want,merchant_amount,merchant:1309
+UPI/779932469649/VIJAY INSURANCE/vijayinsurance@okicici/KOTAK,Insurance,Need,upi,merchant:2112
+Bhakti Cinemas,Entertainment,Want,merchant,merchant:1376
+gaming 1880.00,Entertainment,Want,phrase_amount,phrase:1494
+cigarettes,Entertainment,Want,natural_language,phrase:1417
+BIL/ONL/564135474168/TATA PHOTON PLUS/ICICI,Utilities & Bills,Need,bank_statement,merchant:803
+CES ₹942,Utilities & Bills,Need,merchant_amount,merchant:783
+face wash,Personal Care,Need,natural_language,phrase:1986
+OYO TXN POS PURCHASE,Transport & Travel,Want,bank_statement,merchant:419
+268 life insuraan for siblings,Insurance,Need,phrase_amount,phrase:2140
+jaipr rentals,Housing,Need,typo,merchant:640
+gru gobind singh,Education,Investment,typo,merchant:1771
+gold,Investments,Investment,natural_language,phrase:2306
+NHPC,Utilities & Bills,Need,merchant,merchant:780
+green tea,Food & Dining,Want,natural_language,phrase:175
+Rs 1987 gasiyan gas,Utilities & Bills,Need,phrase_amount,phrase:894
+paid ₹2958 for weekend getaway,Transport & Travel,Want,phrase_amount,phrase:495
+bus ticket to city,Transport & Travel,Need,natural_language,phrase:557
+spent at JCB,Misc,Need,natural_language,merchant:2390
+ECOM PUR VIVEKANANDA LEARNING JAIPUR,Education,Investment,bank_statement,merchant:1769
+paid 3995 for vaccination,Health,Need,phrase_amount,phrase:1675
+UPI/DR/235963472624/PRAMATI INSURANCE/axl,Insurance,Need,upi,merchant:2105
+1189 dahi vada shop,Food & Dining,Want,phrase_amount,phrase:123
+POS 3794 AIRASIA HYDERABAD,Transport & Travel,Want,bank_statement,merchant:404
+UPI-ODISHAPOWER-482873@okicici,Utilities & Bills,Need,upi,merchant:835
+ferry srvices,Transport & Travel,Need,typo,merchant:466
+books for exams,Education,Need,natural_language,phrase:1812
+health insurance,Insurance,Need,natural_language,phrase:2143
+UPI/DR/571749058496/MANIPUR POWER/upi,Utilities & Bills,Need,upi,merchant:848
+UPI/DR/752606654311/PRIYA MISHRA/okhdfcbank,Misc,Need,upi,person:Priya-Mishra
+jaipur rentals,Housing,Need,merchant,merchant:640
+paid to l&t,Housing,Need,natural_language,merchant:621
+Yummy Dhaba ₹3143,Food & Dining,Want,merchant_amount,merchant:80
+UPI/DR/440057997984/RITUALS/okhdfcbank,Personal Care,Want,upi,merchant:1966
+UPI/333149325485/HARITA AYURVED/haritaayurved@okicici/KOTAK,Health,Need,upi,merchant:1614
+Airport Taxi 2814.00,Transport & Travel,Want,merchant_amount,merchant:463
+at Dharmesh Cinema,Entertainment,Want,natural_language,merchant:1401
+HOLLYWOOD TXN POS PURCHASE,Entertainment,Want,bank_statement,merchant:1354
+UPI/DR/633468839354/KARAN RAO/paytm,Misc,Need,upi,person:Karan-Rao
+masala dabba,Shopping,Want,natural_language,phrase:1237
+hotel for weekend,Transport & Travel,Want,natural_language,phrase:593
+BIL/ONL/138367024103/LA MARTINIERE/KOTAK,Food & Dining,Want,bank_statement,merchant:47
+La Martiniere 2043.00,Food & Dining,Want,merchant_amount,merchant:47
+sanitary pads Rs 4426,Personal Care,Need,phrase_amount,phrase:1983
+UPI/CR/449927110837/FATIMA JOSHI/KOTAK,Misc,Need,upi,person:Fatima-Joshi
+healthway payment,Health,Need,natural_language,merchant:1570
+UPI-STADIAPRO-096474@okicici,Entertainment,Want,upi,merchant:1333
+at deepak k,Groceries,Need,natural_language,merchant:250
+₹3940 idli sambhar,Food & Dining,Want,phrase_amount,phrase:157
+Andhra Bank,Investments,Investment,merchant,merchant:2224
+manglapur cinems,Entertainment,Want,typo,merchant:1359
+lalchand,Groceries,Need,merchant,merchant:209
+paid iso 50001,Health,Need,natural_language,merchant:1558
+sbi muutual,Investments,Investment,typo,merchant:2233
+BIL/ONL/782425658293/MANGLAPUR CINEMAS/KOTAK,Entertainment,Want,bank_statement,merchant:1359
+UPI/DR/177613500788/BIHAR POWER/okhdfcbank,Utilities & Bills,Need,upi,merchant:841
+sil mutual fund,Investments,Investment,merchant,merchant:2206
+Nagaland Power,Utilities & Bills,Need,merchant,merchant:846
+paid didi 1451,Misc,Need,natural_language,person:Aditya-Reddy
+ddineout,Food & Dining,Want,typo,merchant:3
+street food,Food & Dining,Want,natural_language,phrase:83
+tata power,Misc,Need,merchant,merchant:2386
+UPI-MARYVERMA-451059@ibl,Misc,Need,upi,person:Mary-Verma
+paid Rs 2112 for coaching fees,Education,Need,phrase_amount,phrase:1823
+chllans,Misc,Need,typo,merchant:2399
+paid to Chandrapur K,Groceries,Need,natural_language,merchant:237
+solo vacation flight,Transport & Travel,Want,natural_language,phrase:541
+face peel pack,Personal Care,Want,natural_language,phrase:2026
+POS 4389 SAKSHAM CLASSES BANGALORE,Education,Investment,bank_statement,merchant:1762
+UPI/DR/121455664457/VIKRAM DAS/axl,Misc,Need,upi,person:Vikram-Das
+₹2188 Dharmesh Cinema,Entertainment,Want,merchant_amount,merchant:1401
+buy gold,Investments,Investment,natural_language,phrase:2276
+Kashi Dhaba 2889,Food & Dining,Want,merchant_amount,merchant:45
+UPI-LALCHAND-473950@okaxis,Groceries,Need,upi,merchant:209
+uber food bill,Food & Dining,Want,natural_language,merchant:8
+Bharti Mobile Rs 2632,Utilities & Bills,Need,merchant_amount,merchant:877
+Meghalaya Power Rs 3504,Utilities & Bills,Need,merchant_amount,merchant:845
+jewellery box,Shopping,Want,natural_language,phrase:1203
+Apollo Munich,Insurance,Need,merchant,merchant:2077
+NEFT/ICICIN992271595/GURPREET SHARMA,Misc,Need,bank_statement,person:Gurpreet-Sharma
+3642.00 cashews,Groceries,Need,phrase_amount,phrase:319
+Tata Photon Plus order,Utilities & Bills,Need,natural_language,merchant:803
+Manipur Power,Utilities & Bills,Need,merchant,merchant:848
+kashi dhaaba,Food & Dining,Want,typo,merchant:45
+Rs 1405 street food,Food & Dining,Want,phrase_amount,phrase:83
+2516 Manglapur Cinemas,Entertainment,Want,merchant_amount,merchant:1359
+tata phton plus,Utilities & Bills,Need,typo,merchant:803
+UPI/199526145782/KISHAN CLASSES/kishanclasses@ybl/ICICI,Education,Investment,upi,merchant:1790
+Surat Estates,Housing,Need,merchant,merchant:658
+railwy station,Transport & Travel,Need,typo,merchant:461
+Virtusa,Shopping,Want,merchant,merchant:1135
+paid Rs 4928 for khaman dhokla,Food & Dining,Want,phrase_amount,phrase:186
+emi payment due paylater,Debt & Loan Payments,Need,natural_language,phrase:1077
+paid Rs 976 for toaster oven,Shopping,Want,phrase_amount,phrase:1251
+paid Rs 407 for dietary advice,Health,Need,phrase_amount,phrase:1704
+cook service,Housing,Need,natural_language,phrase:763
+sukanya scheme,Investments,Investment,natural_language,phrase:2337
+Ferry Services Rs 2190,Transport & Travel,Need,merchant_amount,merchant:466
+UPI/075360511716/HOLIDAY PACKAGES/holidaypackages@okaxis/HDFC,Transport & Travel,Want,upi,merchant:470
+POS 2697 RAKESH'S PHARMACY IN,Health,Need,bank_statement,merchant:1628
+cetaaphil,Personal Care,Want,typo,merchant:1958
+tata photon plus,Utilities & Bills,Need,merchant,merchant:803
+piped gas connection,Utilities & Bills,Need,natural_language,phrase:933
+UPI-RAHULHEALTH-216609@paytm,Health,Need,upi,merchant:1620
+Reliance Life ₹3150,Insurance,Need,merchant_amount,merchant:2078
+UPI/DR/090933186839/SBI MUTUAL/upi,Investments,Investment,upi,merchant:2233
+saree for puja Rs 4008,Shopping,Want,phrase_amount,phrase:1206
+personal finance course,Education,Investment,natural_language,phrase:1853
+POS 0254 PRAMATI INSURANCE MUMBAI,Insurance,Need,bank_statement,merchant:2105
+toaster oven,Shopping,Want,natural_language,phrase:1251
+3054.00 bbq chicken,Food & Dining,Want,phrase_amount,phrase:108
+travel insurance for backpacking,Insurance,Need,natural_language,phrase:2179
+school van,Education,Need,natural_language,phrase:1895
+ECOM PUR CHALLANS CHENNAI,Misc,Need,bank_statement,merchant:2399
+2376.00 AIG,Insurance,Need,merchant_amount,merchant:2084
+Krishna Vidyapeeth Rs 4808,Education,Investment,merchant_amount,merchant:1772
+UPI-DIVYASHAIKH-878137@oksbi,Misc,Need,upi,person:Divya-Shaikh
+Uber Food ₹2235,Food & Dining,Want,merchant_amount,merchant:8
+UPI/320718116944/RAKESH'S PHARMACY/rakesh'spharmacy@oksbi/YESB,Health,Need,upi,merchant:1628
+pun travels,Transport & Travel,Want,typo,merchant:409
+gas connection check,Utilities & Bills,Need,natural_language,phrase:992
+UPI/DR/264236245884/BHAKTI CINEMAS/ibl,Entertainment,Want,upi,merchant:1376
+UPI/DR/731584776863/RAHUL K/ybl,Groceries,Need,upi,merchant:242
+UPI/DR/010956797564/AIRPORT TAXI/oksbi,Transport & Travel,Want,upi,merchant:463
+Inox payment,Entertainment,Want,natural_language,merchant:1309
+paid ₹1134 for pipelining for water,Utilities & Bills,Need,phrase_amount,phrase:942
+ECOM PUR NEHA BARBER SHOP IN,Personal Care,Want,bank_statement,merchant:1978
+JCB 1495,Misc,Need,merchant_amount,merchant:2390
+high voltage warning ₹3403,Utilities & Bills,Need,phrase_amount,phrase:941
+2985 Cetaphil,Personal Care,Want,merchant_amount,merchant:1958
+3638.00 Stadia Pro,Entertainment,Want,merchant_amount,merchant:1333
+UPI/DR/464676478562/INOX/paytm,Entertainment,Want,upi,merchant:1309
+UPI/DR/763116566701/DINEOUT/okaxis,Food & Dining,Want,upi,merchant:3
+music festival,Entertainment,Want,natural_language,phrase:1433
+ECOM PUR ISO 50001 AHMEDABAD,Health,Need,bank_statement,merchant:1558
+Kishan Classes bill,Education,Investment,natural_language,merchant:1790
+wallpapering,Housing,Need,natural_language,phrase:720
+Vitabond ₹2383,Health,Need,merchant_amount,merchant:1583
+sanjay upi,Misc,Need,natural_language,person:Sanjay-Gupta
+KARMAYOGI TXN POS PURCHASE,Education,Investment,bank_statement,merchant:1759
+NEFT/SBIN517201353/KARAN SINGH,Misc,Need,bank_statement,person:Karan-Singh
+santkriya,Health,Need,typo,merchant:1601
+guru gobind singh,Education,Investment,merchant,merchant:1771
+emi payment due loan due credit card bill,Debt & Loan Payments,Need,natural_language,phrase:1084
+sukumar wealth,Investments,Investment,merchant,merchant:2252
+gaming,Entertainment,Want,natural_language,phrase:1494
+nhpc bill,Utilities & Bills,Need,natural_language,merchant:780
+garnier fructis purchase,Personal Care,Want,natural_language,merchant:1961
+POS 8863 HOLIDAY PACKAGES KOLKATA,Transport & Travel,Want,bank_statement,merchant:470
+4770 green tea,Food & Dining,Want,phrase_amount,phrase:175
+spent at vistara,Transport & Travel,Want,natural_language,merchant:405
+NEFT/YESBN817441170/DIVYA PATEL,Misc,Need,bank_statement,person:Divya-Patel
+saree pleats maker,Shopping,Want,natural_language,phrase:1264
+ECOM PUR RAHUL HEALTH PUNE,Health,Need,bank_statement,merchant:1620
+Neha Footwear bill,Shopping,Want,natural_language,merchant:1176
+Odisha Power 3803,Utilities & Bills,Need,merchant_amount,merchant:835
+Olacabs 2703.00,Transport & Travel,Want,merchant_amount,merchant:396
+movies,Entertainment,Want,natural_language,phrase:1489
+NEFT/KOTAKN345129195/JOSEPH JOSHI,Misc,Need,bank_statement,person:Joseph-Joshi
+mobile service,Utilities & Bills,Need,natural_language,phrase:956
+Vicks,Personal Care,Want,merchant,merchant:1953
+₹3822 Vicks,Personal Care,Want,merchant_amount,merchant:1953
+cigarettes pack Rs 832,Entertainment,Want,phrase_amount,phrase:1452
+UPI-ANJALISHAIKH-015513@okhdfcbank,Misc,Need,upi,person:Anjali-Shaikh
+SIL MUTUAL FUND TXN POS PURCHASE,Investments,Investment,bank_statement,merchant:2206
+vcks,Personal Care,Want,typo,merchant:1953
+odisha power order,Utilities & Bills,Need,natural_language,merchant:835
+bangaloree metro,Transport & Travel,Need,typo,merchant:425
+travel insurance for backpacking 2481,Insurance,Need,phrase_amount,phrase:2179
+₹3117 Manipur Power,Utilities & Bills,Need,merchant_amount,merchant:848
+UPI/DR/166286603498/BHARTI MOBILE/okicici,Utilities & Bills,Need,upi,merchant:877
+ECOM PUR TATA POWER HYDERABAD,Misc,Need,bank_statement,merchant:2386
+UPI/926764921518/TAJ/taj@okicici/AXIS,Groceries,Need,upi,merchant:223
+UPI/CR/510656886738/RAVI REDDY/YESB,Misc,Need,upi,person:Ravi-Reddy
+UPI/921821925967/RAVINDRA TRAVELS/ravindratravels@okaxis/KOTAK,Transport & Travel,Want,upi,merchant:452
+UPI/CR/159973643507/ANJALI SHAIKH/SBI,Misc,Need,upi,person:Anjali-Shaikh
+3880.00 Pune,Misc,Need,merchant_amount,merchant:2378
+paid Rs 1959 for dal chawal canteen,Food & Dining,Want,phrase_amount,phrase:130
+property tax bill Rs 2823,Housing,Need,phrase_amount,phrase:771
+ola purchase,Transport & Travel,Want,natural_language,merchant:393
+BIL/ONL/225517419258/CES/SBI,Utilities & Bills,Need,bank_statement,merchant:783
+bhartii mobile,Utilities & Bills,Need,typo,merchant:877
+garden of life,Health,Want,merchant,merchant:1546
+POS 6039 OLACABS DELHI,Transport & Travel,Want,bank_statement,merchant:396
+UPI/DR/222990775608/OYO/paytm,Transport & Travel,Want,upi,merchant:419
+at Kashi Dhaba,Food & Dining,Want,natural_language,merchant:45
+iso 310000,Health,Need,typo,merchant:1557
+UPI-RAILWAYSTATION-220190@axl,Transport & Travel,Need,upi,merchant:461
+Nagaland Power 2513,Utilities & Bills,Need,merchant_amount,merchant:846
+Saksham Classes payment,Education,Investment,natural_language,merchant:1762
+UPI/DR/876230391114/BANGALORE METRO/okicici,Transport & Travel,Need,upi,merchant:425
+santikriya bill,Health,Need,natural_language,merchant:1601
+UPI/913098107964/AIRASIA/airasia@ibl/AXIS,Transport & Travel,Want,upi,merchant:404
+Mumbai Transport,Transport & Travel,Need,merchant,merchant:433
+Uber Food,Food & Dining,Want,merchant,merchant:8
+UPI-VIVEKANANDALEARNING-625691@paytm,Education,Investment,upi,merchant:1769
+BIL/ONL/779680768790/KRISHNA VIDYAPEETH/HDFC,Education,Investment,bank_statement,merchant:1772
+₹2375 samosa plate,Food & Dining,Want,phrase_amount,phrase:132
+data analyst course Rs 4251,Education,Investment,phrase_amount,phrase:1873
+tata aig,Insurance,Need,merchant,merchant:2074
+drama nights,Entertainment,Want,natural_language,phrase:1440
+3432 Vistara,Transport & Travel,Want,merchant_amount,merchant:405
+city trip bus fare 1483.00,Transport & Travel,Need,phrase_amount,phrase:560
+paid ₹4411 for air travel,Transport & Travel,Want,phrase_amount,phrase:498
+gitanjali,Shopping,Want,merchant,merchant:1144
+UPI/DR/465045696062/DHFL PRUDENTIAL/upi,Insurance,Need,upi,merchant:2076
+olacabs,Transport & Travel,Want,merchant,merchant:396
+paid to dettol,Personal Care,Need,natural_language,merchant:1947
+Gaurav Telecom,Utilities & Bills,Need,merchant,merchant:876
+rakesh travels,Transport & Travel,Want,merchant,merchant:454
+freshwy,Food & Dining,Want,typo,merchant:70
+body lotion,Personal Care,Want,natural_language,phrase:2038
+ECOM PUR DEEPAK K AHMEDABAD,Groceries,Need,bank_statement,merchant:250
+PREMIER MULTIPLEX TXN POS PURCHASE,Entertainment,Want,bank_statement,merchant:1361
+paratha wala,Food & Dining,Want,natural_language,phrase:87
+water connection,Utilities & Bills,Need,natural_language,phrase:902
+gardn of life,Health,Want,typo,merchant:1546
+ISO 50001,Health,Need,merchant,merchant:1558
+Kashi Dhaba,Food & Dining,Want,merchant,merchant:45
+TATA AIG TXN POS PURCHASE,Insurance,Need,bank_statement,merchant:2074
+Guru Gobind Singh 4067.00,Education,Investment,merchant_amount,merchant:1771
+NEFT/AXISN247548892/JOSEPH PILLAI,Misc,Need,bank_statement,person:Joseph-Pillai
+DDK Hyderabad,Utilities & Bills,Need,merchant,merchant:857
+BIL/ONL/314659116655/YUMMY DHABA/HDFC,Food & Dining,Want,bank_statement,merchant:80
+UPI/082204484351/DHARMESH CINEMA/dharmeshcinema@axl/KOTAK,Entertainment,Want,upi,merchant:1401
+donation for church,Misc,Want,natural_language,phrase:2417
+saksham classes,Education,Investment,merchant,merchant:1762
+spent at surat estates,Housing,Need,natural_language,merchant:658
+dharmesh cinnema,Entertainment,Want,typo,merchant:1401
+data analyst course,Education,Investment,natural_language,phrase:1873
+sksham classes,Education,Investment,typo,merchant:1762
+vivekananda lerning,Education,Investment,typo,merchant:1769
+Dabbawala Prime,Food & Dining,Need,merchant,merchant:28
+BIL/ONL/430926204824/CETAPHIL/SBI,Personal Care,Want,bank_statement,merchant:1958
+IMPS/P2A/005111277613/NEHA DAS/KOTAK0672938,Misc,Need,bank_statement,person:Neha-Das
+water connection 724.00,Utilities & Bills,Need,phrase_amount,phrase:902
+1968 Lalchand,Groceries,Need,merchant_amount,merchant:209
+lemon water 593.00,Food & Dining,Want,phrase_amount,phrase:113
+home repairs,Housing,Need,natural_language,phrase:692
+2340 new bathroom tile,Housing,Need,phrase_amount,phrase:739
+bharti mobile payment,Utilities & Bills,Need,natural_language,merchant:877
+paid 3309 for emi payment due paylater,Debt & Loan Payments,Need,phrase_amount,phrase:1077
+zookeeper talk,Entertainment,Want,natural_language,phrase:1487
+Fresh Dishes,Food & Dining,Want,merchant,merchant:17
+ECOM PUR RAVINDRA TRAVELS JAIPUR,Transport & Travel,Want,bank_statement,merchant:452
+dhfll prudential,Insurance,Need,typo,merchant:2076
+paid Rs 2072 for urine test strip,Health,Need,phrase_amount,phrase:1666
+hotel for friends,Transport & Travel,Want,natural_language,phrase:510
+ECOM PUR HEALTHWAY LUCKNOW,Health,Need,bank_statement,merchant:1570
+paid to Pramati Insurance,Insurance,Need,natural_language,merchant:2105
+UPI-SUKUMARWEALTH-632515@okhdfcbank,Investments,Investment,upi,merchant:2252
+POS 2890 STADIA PRO JAIPUR,Entertainment,Want,bank_statement,merchant:1333
+3110.00 Santikriya,Health,Need,merchant_amount,merchant:1601
+Vivekananda Learning,Education,Investment,merchant,merchant:1769
+ECOM PUR MUMBAI TRANSPORT AHMEDABAD,Transport & Travel,Need,bank_statement,merchant:433
+books for exams ₹546,Education,Need,phrase_amount,phrase:1812
+UPI/DR/798053081695/KARAN SINGH/axl,Misc,Need,upi,person:Karan-Singh
+UPI/DR/762109028057/ISO 50001/paytm,Health,Need,upi,merchant:1558
+OYO 1506.00,Transport & Travel,Want,merchant_amount,merchant:419
+udaipur realms,Housing,Need,merchant,merchant:639
+online exam prep,Education,Investment,natural_language,phrase:1840
+equity oriented,Investments,Investment,natural_language,phrase:2345
+broadband security Rs 848,Utilities & Bills,Need,phrase_amount,phrase:996
+gobi manchurian,Food & Dining,Want,natural_language,phrase:147
+flour,Groceries,Need,natural_language,phrase:293
+healthway,Health,Need,merchant,merchant:1570
+BIL/ONL/686177307909/ISO 31000/KOTAK,Health,Need,bank_statement,merchant:1557
+rrahul k,Groceries,Need,typo,merchant:242
+3983 flour,Groceries,Need,phrase_amount,phrase:293
+botanical garden,Entertainment,Want,natural_language,phrase:1464
+Taj payment,Groceries,Need,natural_language,merchant:223
+gold 1578.00,Investments,Investment,phrase_amount,phrase:2306
+Taj 1983,Groceries,Need,merchant_amount,merchant:223
+manipur power payment,Utilities & Bills,Need,natural_language,merchant:848
+UPI-IMRANJOSHI-769990@oksbi,Misc,Need,upi,person:Imran-Joshi
+donation for church ₹3158,Misc,Want,phrase_amount,phrase:2417
+UPI/CR/507588376308/PRIYA SINGH/ICICI,Misc,Need,upi,person:Priya-Singh
+rakesh's pharmacy payment,Health,Need,natural_language,merchant:1628
+rahul health,Health,Need,merchant,merchant:1620
+NEFT/KOTAKN411172346/PRIYA MISHRA,Misc,Need,bank_statement,person:Priya-Mishra
+1066 Chandrapur K,Groceries,Need,merchant_amount,merchant:237
+uber foood,Food & Dining,Want,typo,merchant:8
+UPI/772011040838/GITANJALI/gitanjali@ybl/HDFC,Shopping,Want,upi,merchant:1144
+ramsh theatre,Entertainment,Want,typo,merchant:1397
+1554 Mandi Bazaar,Food & Dining,Want,merchant_amount,merchant:75
+mandi bazaar,Food & Dining,Want,merchant,merchant:75
+BIL/ONL/043368957967/NAGALAND POWER/YESB,Utilities & Bills,Need,bank_statement,merchant:846
+Bangalore Metro,Transport & Travel,Need,merchant,merchant:425
+stock market,Investments,Investment,natural_language,phrase:2323
+spent at SIL Mutual Fund,Investments,Investment,natural_language,merchant:2206
+paid 460 for makeup remover oil,Personal Care,Want,phrase_amount,phrase:2033
+693.00 Rahul K,Groceries,Need,merchant_amount,merchant:242
+muumbai transport,Transport & Travel,Need,typo,merchant:433
+UPI-GURUGOBINDSINGH-285141@okhdfcbank,Education,Investment,upi,merchant:1771
+ulip scheme 644,Investments,Investment,phrase_amount,phrase:2340
+paid garnier,Personal Care,Want,natural_language,merchant:1959
+mumbai transport purchase,Transport & Travel,Need,natural_language,merchant:433
+ulip scheme,Investments,Investment,natural_language,phrase:2340
+UPI/DR/322062480727/SIL MUTUAL FUND/ybl,Investments,Investment,upi,merchant:2206
+pramati insurance,Insurance,Need,merchant,merchant:2105
+sap certification,Education,Investment,natural_language,phrase:1881
+paid ₹4391 for emi payment due loan due credit card bill,Debt & Loan Payments,Need,phrase_amount,phrase:1084
+POS 8019 JAIPUR RENTALS DELHI,Housing,Need,bank_statement,merchant:640
+UPI/432978671542/VITABOND/vitabond@paytm/YESB,Health,Need,upi,merchant:1583
+BIL/ONL/324535279111/MANIPUR POWER/SBI,Utilities & Bills,Need,bank_statement,merchant:848
+urine test strip,Health,Need,natural_language,phrase:1666
+BIL/ONL/904228421020/FRESH DISHES/ICICI,Food & Dining,Want,bank_statement,merchant:17
+DINEOUT TXN POS PURCHASE,Food & Dining,Want,bank_statement,merchant:3
+dholki,Entertainment,Want,natural_language,phrase:1498
+UPI/DR/026676527284/JAIPUR RENTALS/paytm,Housing,Need,upi,merchant:640
+art house cinema,Entertainment,Want,natural_language,phrase:1438
+Rs 1796 khwab se,Misc,Want,phrase_amount,phrase:2429
+vijay insurancee,Insurance,Need,typo,merchant:2112
+vrtusa,Shopping,Want,typo,merchant:1135
+paid ₹1673 for cabs for date night,Transport & Travel,Want,phrase_amount,phrase:500
+ravindra travels,Transport & Travel,Want,merchant,merchant:452
+paid 4190 for art house cinema,Entertainment,Want,phrase_amount,phrase:1438
+UPI/DR/395007867755/PREMIER MULTIPLEX/okaxis,Entertainment,Want,upi,merchant:1361
+spent at meghalaya power,Utilities & Bills,Need,natural_language,merchant:845
+UPI/DR/405589723591/KARMAYOGI/upi,Education,Investment,upi,merchant:1759
+BIL/ONL/806990162720/UBER FOOD/ICICI,Food & Dining,Want,bank_statement,merchant:8
+Udaipur Realms 123.00,Housing,Need,merchant_amount,merchant:639
+Dabbawala Prime bill,Food & Dining,Need,natural_language,merchant:28
+dth recharge,Utilities & Bills,Need,natural_language,phrase:889
+cabs for date night,Transport & Travel,Want,natural_language,phrase:500
+engineering coaching,Education,Investment,natural_language,phrase:1821
+Sukumar Wealth 2927.00,Investments,Investment,merchant_amount,merchant:2252
+UPI/CR/356606404153/JOSEPH PILLAI/AXIS,Misc,Need,upi,person:Joseph-Pillai
+4583.00 Harita Ayurved,Health,Need,merchant_amount,merchant:1614
+UPI/DR/996276861273/DDK HYDERABAD/ybl,Utilities & Bills,Need,upi,merchant:857
+paid to stadia pro,Entertainment,Want,natural_language,merchant:1333
+UPI/CR/123778746187/FATIMA CHAUHAN/HDFC,Misc,Need,upi,person:Fatima-Chauhan
+ECOM PUR VITABOND BANGALORE,Health,Need,bank_statement,merchant:1583
+ferry services,Transport & Travel,Need,merchant,merchant:466
+Karmayogi order,Education,Investment,natural_language,merchant:1759
+premier multiplex,Entertainment,Want,merchant,merchant:1361
+cab ride to airport,Transport & Travel,Need,natural_language,phrase:607
+Chandrapur K,Groceries,Need,merchant,merchant:237
+ISO 31000 Rs 1388,Health,Need,merchant_amount,merchant:1557
+buy stocks,Investments,Investment,natural_language,phrase:2271
+UPI/DR/068127561040/COURSERA/upi,Education,Investment,upi,merchant:1716
+POS 8676 KARNATAKA BANK JAIPUR,Investments,Investment,bank_statement,merchant:2228
+new bathroom tile,Housing,Need,natural_language,phrase:739
+ravindr travels,Transport & Travel,Want,typo,merchant:452
+BIL/ONL/996801266993/VIJAY INSURANCE/SBI,Insurance,Need,bank_statement,merchant:2112
+Hollywood Rs 2450,Entertainment,Want,merchant_amount,merchant:1354
+buy etfs now,Investments,Investment,natural_language,phrase:2295
+PUNE TRAVELS TXN POS PURCHASE,Transport & Travel,Want,bank_statement,merchant:409
+gobi manchurian 740.00,Food & Dining,Want,phrase_amount,phrase:147
+premier mltiplex,Entertainment,Want,typo,merchant:1361
+Rituals,Personal Care,Want,merchant,merchant:1966
+UPI/CR/506294204763/ANJALI MISHRA/HDFC,Misc,Need,upi,person:Anjali-Mishra
+plumbing fix 4796.00,Housing,Need,phrase_amount,phrase:715
+dal chawal canteen,Food & Dining,Want,natural_language,phrase:130
+Premier Multiplex ₹4035,Entertainment,Want,merchant_amount,merchant:1361
+Karmayogi 1978.00,Education,Investment,merchant_amount,merchant:1759
+ECOM PUR RAKESH TRAVELS JAIPUR,Transport & Travel,Want,bank_statement,merchant:454
+bhopal dwellngs,Housing,Need,typo,merchant:665
+3123.00 Neha Barber Shop,Personal Care,Want,merchant_amount,merchant:1978
+rrituals,Personal Care,Want,typo,merchant:1966
+paid Rs 14 for hotel for weekend,Transport & Travel,Want,phrase_amount,phrase:593
+taj,Groceries,Need,merchant,merchant:223
+UPI-AXISMUTUAL-980457@ibl,Investments,Investment,upi,merchant:2232
+cashews,Groceries,Need,natural_language,phrase:319
+baking soda,Groceries,Need,natural_language,phrase:365
+paid 963.00 for life insurance with death benefit,Insurance,Need,phrase_amount,phrase:2183
+2588.00 hoa maintenance,Housing,Need,phrase_amount,phrase:769
+₹2740 cab ride to airport,Transport & Travel,Need,phrase_amount,phrase:607
+DineOut,Food & Dining,Want,merchant,merchant:3
+transfer to Ravi Reddy,Misc,Need,natural_language,person:Ravi-Reddy
+friend ko paise bheje,Misc,Need,natural_language,person:Karan-Iyer
+NEFT/YESBN664998959/SHREYA SHARMA,Misc,Need,bank_statement,person:Shreya-Sharma
+Rs 3735 Gitanjali,Shopping,Want,merchant_amount,merchant:1144
+paid Harita Ayurved,Health,Need,natural_language,merchant:1614
+531.00 baking soda,Groceries,Need,phrase_amount,phrase:365
+floor tiling,Housing,Need,natural_language,phrase:719
+POS 1127 DHFL PRUDENTIAL MUMBAI,Insurance,Need,bank_statement,merchant:2076
+paid ₹1911 for himalayan salt,Groceries,Need,phrase_amount,phrase:303
+at vishal theatre,Entertainment,Want,natural_language,merchant:1403
+paid 2716.00 for solo vacation flight,Transport & Travel,Want,phrase_amount,phrase:541
+deettol,Personal Care,Need,typo,merchant:1947
+BIL/ONL/476917135951/SUKUMAR WEALTH/YESB,Investments,Investment,bank_statement,merchant:2252
+paid Rs 4451 for paratha wala,Food & Dining,Want,phrase_amount,phrase:87
+vitabond,Health,Need,merchant,merchant:1583
+home decor,Housing,Need,natural_language,phrase:697
+Bihar Power bill,Utilities & Bills,Need,natural_language,merchant:841
+paid 4845.00 for online exam prep,Education,Investment,phrase_amount,phrase:1840
+vistara,Transport & Travel,Want,merchant,merchant:405
+UPI-VICKS-609471@upi,Personal Care,Want,upi,merchant:1953
+SIL Mutual Fund 2068,Investments,Investment,merchant_amount,merchant:2206
+Challans 3234,Misc,Need,merchant_amount,merchant:2399
+UPI/CR/234315759451/AMIT RAO/SBI,Misc,Need,upi,person:Amit-Rao
+mobile service ₹211,Utilities & Bills,Need,phrase_amount,phrase:956
+UPI/564614974597/BHOPAL DWELLINGS/bhopaldwellings@okhdfcbank/SBI,Housing,Need,upi,merchant:665
+paid mandi bazaar,Food & Dining,Want,natural_language,merchant:75
+gauraav telecom,Utilities & Bills,Need,typo,merchant:876
+Railway Station purchase,Transport & Travel,Need,natural_language,merchant:461
+UPI/CR/912729983361/AMIT VERMA/ICICI,Misc,Need,upi,person:Amit-Verma
+Karnataka Bank,Investments,Investment,merchant,merchant:2228
+RITUALS TXN POS PURCHASE,Personal Care,Want,bank_statement,merchant:1966
+SURAT ESTATES TXN POS PURCHASE,Housing,Need,bank_statement,merchant:658
+paid manglapur cinemas,Entertainment,Want,natural_language,merchant:1359
+online vid course 2827,Education,Investment,phrase_amount,phrase:1905
+UPI/DR/094907634153/TATA PHOTON PLUS/paytm,Utilities & Bills,Need,upi,merchant:803
+POS 8881 DDK HYDERABAD LUCKNOW,Utilities & Bills,Need,bank_statement,merchant:857
+UPI-VENKATSHARMA-710603@ybl,Misc,Need,upi,person:Venkat-Sharma
+vistaraa,Transport & Travel,Want,typo,merchant:405
+3787 salt packets,Groceries,Need,phrase_amount,phrase:354
+₹2920 IDFC Mutual,Investments,Investment,merchant_amount,merchant:2231
+UPI/641686227837/YUMMY DHABA/yummydhaba@ibl/YESB,Food & Dining,Want,upi,merchant:80
+ECOM PUR BHARTI MOBILE LUCKNOW,Utilities & Bills,Need,bank_statement,merchant:877
+sent money to wife,Misc,Need,natural_language,person:Venkat-Sharma
+spent at airasia,Transport & Travel,Want,natural_language,merchant:404
+Vishal Theatre Rs 369,Entertainment,Want,merchant_amount,merchant:1403
+gitanjjali,Shopping,Want,typo,merchant:1144
+courser,Education,Investment,typo,merchant:1716
+meghalaya power,Utilities & Bills,Need,merchant,merchant:845
+4479.00 Dabbawala Prime,Food & Dining,Need,merchant_amount,merchant:28
+car insuraan,Insurance,Need,natural_language,phrase:2131
+JCB,Misc,Need,merchant,merchant:2390
+₹3447 health insuraan,Insurance,Need,phrase_amount,phrase:2125
+2074 mobile screen repair,Shopping,Need,phrase_amount,phrase:1201
+santikriya,Health,Need,merchant,merchant:1601
+pramat insurance,Insurance,Need,typo,merchant:2105
+UPI-FRESHWAY-302146@paytm,Food & Dining,Want,upi,merchant:70
+UPI/840911225288/MUMBAI TRANSPORT/mumbaitransport@okhdfcbank/AXIS,Transport & Travel,Need,upi,merchant:433
+UPI-L&T-281444@axl,Housing,Need,upi,merchant:621
+Andhra Bank 4953,Investments,Investment,merchant_amount,merchant:2224
+₹2702 engineering coaching,Education,Investment,phrase_amount,phrase:1821
+₹3867 face peel pack,Personal Care,Want,phrase_amount,phrase:2026
+sbi mutual order,Investments,Investment,natural_language,merchant:2233
+pune travels purchase,Transport & Travel,Want,natural_language,merchant:409
+paid 417 for cook service,Housing,Need,phrase_amount,phrase:763
+khwab se,Misc,Want,natural_language,phrase:2429
+freesh dishes,Food & Dining,Want,typo,merchant:17
+Ola,Transport & Travel,Want,merchant,merchant:393
+UPI/129889728426/MEGHALAYA POWER/meghalayapower@upi/SBI,Utilities & Bills,Need,upi,merchant:845
+2861.00 Jaipur Rentals,Housing,Need,merchant_amount,merchant:640
+tata aig bill,Insurance,Need,natural_language,merchant:2074
+UPI-ARUNFERNANDES-491792@okicici,Misc,Need,upi,person:Arun-Fernandes
+rakesh travvels,Transport & Travel,Want,typo,merchant:454
+himalayan salt,Groceries,Need,natural_language,phrase:303
+vaccination,Health,Need,natural_language,phrase:1675
+Ravindra Travels Rs 510,Transport & Travel,Want,merchant_amount,merchant:452
+ces order,Utilities & Bills,Need,natural_language,merchant:783
+UPI/CR/948870934674/KAVYA FERNANDES/YESB,Misc,Need,upi,person:Kavya-Fernandes
+Cetaphil,Personal Care,Want,merchant,merchant:1958
+garnnier,Personal Care,Want,typo,merchant:1959
+apollo muunich,Insurance,Need,typo,merchant:2077
+pune,Misc,Need,merchant,merchant:2378
+spent at iso 31000,Health,Need,natural_language,merchant:1557
+UPI-RAHULSHAIKH-541388@axl,Misc,Need,upi,person:Rahul-Shaikh
+ECOM PUR MANDI BAZAAR HYDERABAD,Food & Dining,Want,bank_statement,merchant:75
+POS 8250 JCB JAIPUR,Misc,Need,bank_statement,merchant:2390
+721 FabHotels,Transport & Travel,Want,merchant_amount,merchant:418
+paid Neha Barber Shop,Personal Care,Want,natural_language,merchant:1978
+paid to Bangalore Metro,Transport & Travel,Need,natural_language,merchant:425
+paid Fresh Dishes,Food & Dining,Want,natural_language,merchant:17
+paid Garden of Life,Health,Want,natural_language,merchant:1546
+Yummy Dhaba,Food & Dining,Want,merchant,merchant:80
+bhai ko paise bheje,Misc,Need,natural_language,person:Lalitha-Rao
+UPI/CR/188718798823/ARJUN IYER/ICICI,Misc,Need,upi,person:Arjun-Iyer
+UPI/890345446843/ISO 31000/iso31000@okicici/SBI,Health,Need,upi,merchant:1557
+sap me,Education,Investment,natural_language,phrase:1890
+theme park 874,Entertainment,Want,phrase_amount,phrase:1428
+new AC unit ₹3217,Housing,Need,phrase_amount,phrase:723
+UPI/181433586283/KRISHNA VIDYAPEETH/krishnavidyapeeth@paytm/KOTAK,Education,Investment,upi,merchant:1772
+cabs for kids,Transport & Travel,Need,natural_language,phrase:538
+UPI/DR/899940438983/KASHI DHABA/ibl,Food & Dining,Want,upi,merchant:45
+Reliance Life,Insurance,Need,merchant,merchant:2078
+spent at hollywood,Entertainment,Want,natural_language,merchant:1354
+UPI/CR/449392318205/ROHIT JOSHI/KOTAK,Misc,Need,upi,person:Rohit-Joshi
+high voltage warning,Utilities & Bills,Need,natural_language,phrase:941
+trip to parents house taxi,Transport & Travel,Need,natural_language,phrase:551
+Freshway 3158.00,Food & Dining,Want,merchant_amount,merchant:70
+IMPS/P2A/184492336550/IMRAN JOSHI/KOTAK0153413,Misc,Need,bank_statement,person:Imran-Joshi
+broadband security,Utilities & Bills,Need,natural_language,phrase:996
+Vishal Theatre,Entertainment,Want,merchant,merchant:1403
+UPI/DR/685508441016/IMRAN NAIR/axl,Misc,Need,upi,person:Imran-Nair
+AXIS MUTUAL TXN POS PURCHASE,Investments,Investment,bank_statement,merchant:2232
+Garnier Fructis 3647,Personal Care,Want,merchant_amount,merchant:1961
+RAILWAY STATION TXN POS PURCHASE,Transport & Travel,Need,bank_statement,merchant:461
+SBI Mutual,Investments,Investment,merchant,merchant:2233
+spent at Sukumar Wealth,Investments,Investment,natural_language,merchant:2252
+khol,Entertainment,Want,natural_language,phrase:1500
+IMPS/P2A/108432312014/MANOJ JOSHI/KOTAK0735446,Misc,Need,bank_statement,person:Manoj-Joshi
+POS 9905 ANDHRA BANK BANGALORE,Investments,Investment,bank_statement,merchant:2224
+karmayogi,Education,Investment,merchant,merchant:1759
+NEFT/YESBN788600939/FATIMA JOSHI,Misc,Need,bank_statement,person:Fatima-Joshi
+oyo,Transport & Travel,Want,merchant,merchant:419
+paid DHFL Prudential,Insurance,Need,natural_language,merchant:2076
+UPI/919457575747/PUNE TRAVELS/punetravels@paytm/KOTAK,Transport & Travel,Want,upi,merchant:409
+Rs 3994 law entrance prep,Education,Investment,phrase_amount,phrase:1854
+UPI-FATIMAJOSHI-894278@okhdfcbank,Misc,Need,upi,person:Fatima-Joshi
+makeup remover oil,Personal Care,Want,natural_language,phrase:2033
+chocolate cake mix,Groceries,Want,natural_language,phrase:285
+paid 2241 for cabs for kids,Transport & Travel,Need,phrase_amount,phrase:538
+Rs 398 sap me,Education,Investment,phrase_amount,phrase:1890
+spent at Rahul K,Groceries,Need,natural_language,merchant:242
+paid ₹241 for saree pleats maker,Shopping,Want,phrase_amount,phrase:1264
+paid 2836 for wooden dining set,Shopping,Want,phrase_amount,phrase:1256
+Saksham Classes Rs 2896,Education,Investment,merchant_amount,merchant:1762
+safflower oil,Groceries,Need,natural_language,phrase:342
+yummy  dhaba,Food & Dining,Want,typo,merchant:80
+1797.00 Pune Travels,Transport & Travel,Want,merchant_amount,merchant:409
+ECOM PUR NEHA FOOTWEAR BANGALORE,Shopping,Want,bank_statement,merchant:1176
+UPI/DR/433813201607/VIKRAM SINGH/ibl,Misc,Need,upi,person:Vikram-Singh
+ferry services order,Transport & Travel,Need,natural_language,merchant:466
+Axis Mutual purchase,Investments,Investment,natural_language,merchant:2232
+UPI-JCB-529910@okaxis,Misc,Need,upi,merchant:2390
+UPI/688937346706/UBER FOOD/uberfood@paytm/YESB,Food & Dining,Want,upi,merchant:8
+health insuraan,Insurance,Need,natural_language,phrase:2125
+Freshway,Food & Dining,Want,merchant,merchant:70
+Bhakti Cinemas 1625,Entertainment,Want,merchant_amount,merchant:1376
+udaaipur realms,Housing,Need,typo,merchant:639
+Tata Photon Plus 3548,Utilities & Bills,Need,merchant_amount,merchant:803
+sanitary pads,Personal Care,Need,natural_language,phrase:1983
+dietary advice,Health,Need,natural_language,phrase:1704
+coding bootcamp,Education,Investment,natural_language,phrase:1849
+vicks order,Personal Care,Want,natural_language,merchant:1953
+₹1695 Garnier,Personal Care,Want,merchant_amount,merchant:1959
+UPI-SURATESTATES-469333@paytm,Housing,Need,upi,merchant:658
+Kishan Classes Rs 4351,Education,Investment,merchant_amount,merchant:1790
+CES,Utilities & Bills,Need,merchant,merchant:783
+air purifier filter,Shopping,Want,natural_language,phrase:1248
+Pune Travels,Transport & Travel,Want,merchant,merchant:409
+IDFC Mutual payment,Investments,Investment,natural_language,merchant:2231
+paid 937 for certi for job,Education,Investment,phrase_amount,phrase:1906
+"sips, for now ₹2940",Investments,Investment,phrase_amount,phrase:2368
+Rahul Health Rs 3571,Health,Need,merchant_amount,merchant:1620
+ECOM PUR AIG CHENNAI,Insurance,Need,bank_statement,merchant:2084
+584.00 drama nights,Entertainment,Want,phrase_amount,phrase:1440
+VISTARA TXN POS PURCHASE,Transport & Travel,Want,bank_statement,merchant:405
+UPI/DR/767555628333/VISTARA/okhdfcbank,Transport & Travel,Want,upi,merchant:405
+UPI/858407343190/GARNIER/garnier@upi/ICICI,Personal Care,Want,upi,merchant:1959
+NEFT/HDFCN167855576/IMRAN RAO,Misc,Need,bank_statement,person:Imran-Rao
+Vijay Insurance ₹2806,Insurance,Need,merchant_amount,merchant:2112
+paid to gaurav telecom,Utilities & Bills,Need,natural_language,merchant:876
+dharmesh cinema,Entertainment,Want,merchant,merchant:1401
+mghalaya power,Utilities & Bills,Need,typo,merchant:845
+1451.00 Rakesh Travels,Transport & Travel,Want,merchant_amount,merchant:454
+salt packets,Groceries,Need,natural_language,phrase:354
+aaxis mutual,Investments,Investment,typo,merchant:2232
+krishnaa vidyapeeth,Education,Investment,typo,merchant:1772
+airaasia,Transport & Travel,Want,typo,merchant:404
+UPI/DR/949746923760/VIKRAM DAS/oksbi,Misc,Need,upi,person:Vikram-Das
+airport taxi,Transport & Travel,Want,merchant,merchant:463
+kishan classes,Education,Investment,merchant,merchant:1790
+floor tiling ₹1161,Housing,Need,phrase_amount,phrase:719
+1980.00 NHPC,Utilities & Bills,Need,merchant_amount,merchant:780
+Neha Footwear,Shopping,Want,merchant,merchant:1176
+paid 3358.00 for flour kg,Groceries,Need,phrase_amount,phrase:352
+at ravindra travels,Transport & Travel,Want,natural_language,merchant:452
+airrport taxi,Transport & Travel,Want,typo,merchant:463
+hollywoood,Entertainment,Want,typo,merchant:1354
+ECOM PUR L&T JAIPUR,Housing,Need,bank_statement,merchant:621
+₹628 air purifier filter,Shopping,Want,phrase_amount,phrase:1248
+UPI-TATAAIG-231414@okicici,Insurance,Need,upi,merchant:2074
+transfer to Imran Rao,Misc,Need,natural_language,person:Imran-Rao
+UPI-OLA-603202@okaxis,Transport & Travel,Want,upi,merchant:393
+online vid course,Education,Investment,natural_language,phrase:1905
+UPI/156415330706/NEHA FOOTWEAR/nehafootwear@ibl/AXIS,Shopping,Want,upi,merchant:1176
+UPI/DR/631059507614/RELIANCE LIFE/okaxis,Insurance,Need,upi,merchant:2078
+1982 DHFL Prudential,Insurance,Need,merchant_amount,merchant:2076
+UPI/DR/759257977668/CHALLANS/okaxis,Misc,Need,upi,merchant:2399
+air travel,Transport & Travel,Want,natural_language,phrase:498
+school stationery,Education,Need,natural_language,phrase:1908
+challans order,Misc,Need,natural_language,merchant:2399
+₹2955 lakdi ka toothbrush,Personal Care,Need,phrase_amount,phrase:1995
+parking fine ₹1615,Misc,Need,phrase_amount,phrase:2409
+coding bootcamp 250,Education,Investment,phrase_amount,phrase:1849
+karnataka bank order,Investments,Investment,natural_language,merchant:2228
+NEFT/ICICIN646433384/VENKAT MEHTA,Misc,Need,bank_statement,person:Venkat-Mehta
+emi rbi paid,Debt & Loan Payments,Need,natural_language,phrase:1109
+UPI/CR/820581076938/IMRAN IYER/SBI,Misc,Need,upi,person:Imran-Iyer
+UPI/269636427212/GARDEN OF LIFE/gardenoflife@ibl/ICICI,Health,Want,upi,merchant:1546
+Bhopal Dwellings 317,Housing,Need,merchant_amount,merchant:665
+life insurance with disability benefit,Insurance,Need,natural_language,phrase:2192
+UPI/DR/318342900249/MANGLAPUR CINEMAS/okicici,Entertainment,Want,upi,merchant:1359
+₹1296 zookeeper talk,Entertainment,Want,phrase_amount,phrase:1487
+2445.00 chocolate cake mix,Groceries,Want,phrase_amount,phrase:285
+lakdi ka toothbrush,Personal Care,Need,natural_language,phrase:1995
+1050.00 bus ticket to city,Transport & Travel,Need,phrase_amount,phrase:557
+buy gold Rs 1204,Investments,Investment,phrase_amount,phrase:2276
+spent at krishna vidyapeeth,Education,Investment,natural_language,merchant:1772
+UPI/DR/565553040743/GARNIER FRUCTIS/okhdfcbank,Personal Care,Want,upi,merchant:1961
+4155.00 mobile battery issue,Utilities & Bills,Need,phrase_amount,phrase:993
+UPI/CR/481636172967/AMIT VERMA/SBI,Misc,Need,upi,person:Amit-Verma
+UPI/681278889012/IDFC MUTUAL/idfcmutual@okicici/AXIS,Investments,Investment,upi,merchant:2231
+city trip bus fare,Transport & Travel,Need,natural_language,phrase:560
+"gold bond, for savings",Investments,Investment,natural_language,phrase:2375
+₹1649 Rituals,Personal Care,Want,merchant_amount,merchant:1966
+POS 2312 BIHAR POWER IN,Utilities & Bills,Need,bank_statement,merchant:841
+DETTOL TXN POS PURCHASE,Personal Care,Need,bank_statement,merchant:1947
+saree for puja,Shopping,Want,natural_language,phrase:1206
+paid to pune,Misc,Need,natural_language,merchant:2378
+dhfl prudential,Insurance,Need,merchant,merchant:2076
+gasiyan gas,Utilities & Bills,Need,natural_language,phrase:894
+Jaipur Rentals bill,Housing,Need,natural_language,merchant:640
+law entrance prep,Education,Investment,natural_language,phrase:1854
+sap certification Rs 4671,Education,Investment,phrase_amount,phrase:1881
+new AC unit,Housing,Need,natural_language,phrase:723
+dth subscription renewal,Utilities & Bills,Need,natural_language,phrase:1004
+nbfc loan paid,Debt & Loan Payments,Need,natural_language,phrase:1100
+hotel for friends Rs 2809,Transport & Travel,Want,phrase_amount,phrase:510
+UPI/CR/420512532206/RAVI MEHTA/YESB,Misc,Need,upi,person:Ravi-Mehta
+paid Rs 4390 for health insurance,Insurance,Need,phrase_amount,phrase:2143
+ECOM PUR VISHAL THEATRE DELHI,Entertainment,Want,bank_statement,merchant:1403
+ECOM PUR GAURAV TELECOM CHENNAI,Utilities & Bills,Need,bank_statement,merchant:876
+comic,Entertainment,Want,natural_language,phrase:1511
+certi for job,Education,Investment,natural_language,phrase:1906
+UPI/CR/514946801046/SANJAY GUPTA/AXIS,Misc,Need,upi,person:Sanjay-Gupta
+IMPS/P2A/868910087292/JOSEPH JOSHI/ICICI0299906,Misc,Need,bank_statement,person:Joseph-Joshi
+tata powr,Misc,Need,typo,merchant:2386
+coaching fees,Education,Need,natural_language,phrase:1823
+SBI Mutual Rs 2361,Investments,Investment,merchant_amount,merchant:2233
+Dettol,Personal Care,Need,merchant,merchant:1947
+idfc mutal,Investments,Investment,typo,merchant:2231
+Rs 1361 Rakesh's Pharmacy,Health,Need,merchant_amount,merchant:1628
+IMPS/P2A/303231109387/RITU IYER/KOTAK0812956,Misc,Need,bank_statement,person:Ritu-Iyer
+coursera payment,Education,Investment,natural_language,merchant:1716
+POS 1026 LALCHAND IN,Groceries,Need,bank_statement,merchant:209
+cab for airport ₹1319,Transport & Travel,Need,phrase_amount,phrase:617
+body lotion 3796,Personal Care,Want,phrase_amount,phrase:2038
+ECOM PUR FABHOTELS BANGALORE,Transport & Travel,Want,bank_statement,merchant:418
+iso  50001,Health,Need,typo,merchant:1558
+la martinire,Food & Dining,Want,typo,merchant:47
+POS 8246 SANTIKRIYA HYDERABAD,Health,Need,bank_statement,merchant:1601
+ECOM PUR BANGALORE METRO PUNE,Transport & Travel,Need,bank_statement,merchant:425
+VICKS TXN POS PURCHASE,Personal Care,Want,bank_statement,merchant:1953
+"mutual funs, for now",Investments,Investment,natural_language,phrase:2374
+equity oriented ₹3447,Investments,Investment,phrase_amount,phrase:2345
+UPI/CR/181306121268/VIKRAM DAS/HDFC,Misc,Need,upi,person:Vikram-Das
+NEFT/SBIN850102643/LALITHA RAO,Misc,Need,bank_statement,person:Lalitha-Rao
+Pramati Insurance ₹1836,Insurance,Need,merchant_amount,merchant:2105
+UPI/DR/895516874090/CHANDRAPUR K/okhdfcbank,Groceries,Need,upi,merchant:237
+pre-workout,Health,Want,natural_language,phrase:1644
+₹2156 toll for vacation,Transport & Travel,Need,phrase_amount,phrase:612
+at vijay insurance,Insurance,Need,natural_language,merchant:2112
+₹3682 Coursera,Education,Investment,merchant_amount,merchant:1716
+₹2328 face wash,Personal Care,Need,phrase_amount,phrase:1986
+ECOM PUR RAMESH THEATRE LUCKNOW,Entertainment,Want,bank_statement,merchant:1397
+rahul health purchase,Health,Need,natural_language,merchant:1620
+paid 2465 for stock market,Investments,Investment,phrase_amount,phrase:2323
+POS 2117 FERRY SERVICES MUMBAI,Transport & Travel,Need,bank_statement,merchant:466
+virtusa purchase,Shopping,Want,natural_language,merchant:1135
+GITANJALI TXN POS PURCHASE,Shopping,Want,bank_statement,merchant:1144
+UPI/DR/024193508054/ANDHRA BANK/okicici,Investments,Investment,upi,merchant:2224
+3592.00 Axis Mutual,Investments,Investment,merchant_amount,merchant:2232
+weekend getaway,Transport & Travel,Want,natural_language,phrase:495
+dineout bill,Food & Dining,Want,natural_language,merchant:3
+andhra bank payment,Investments,Investment,natural_language,merchant:2224
+school stationery 2731,Education,Need,phrase_amount,phrase:1908
+POS 5964 PUNE JAIPUR,Misc,Need,bank_statement,merchant:2378
+ECOM PUR KISHAN CLASSES PUNE,Education,Investment,bank_statement,merchant:1790
+Vijay Insurance,Insurance,Need,merchant,merchant:2112
+POS 2066 HARITA AYURVED KOLKATA,Health,Need,bank_statement,merchant:1614
+spent at reliance life,Insurance,Need,natural_language,merchant:2078
+UPI-NEHABARBERSHOP-085966@paytm,Personal Care,Want,upi,merchant:1978
+cchandrapur k,Groceries,Need,typo,merchant:237
+aig,Insurance,Need,merchant,merchant:2084
+Coursera,Education,Investment,merchant,merchant:1716
+mobile screen repair,Shopping,Need,natural_language,phrase:1201
+paid 423.00 for dholki,Entertainment,Want,phrase_amount,phrase:1498
+manndi bazaar,Food & Dining,Want,typo,merchant:75
+UPI/759738320603/LA MARTINIERE/lamartiniere@upi/ICICI,Food & Dining,Want,upi,merchant:47
+ECOM PUR IDFC MUTUAL HYDERABAD,Investments,Investment,bank_statement,merchant:2231
+POS 8103 AIRPORT TAXI MUMBAI,Transport & Travel,Want,bank_statement,merchant:463
+UPI-OLACABS-609191@oksbi,Transport & Travel,Want,upi,merchant:396
+KASHI DHABA TXN POS PURCHASE,Food & Dining,Want,bank_statement,merchant:45
+sukanya scheme 3577,Investments,Investment,phrase_amount,phrase:2337
+trip to parents house taxi 4142,Transport & Travel,Need,phrase_amount,phrase:551
+cigarettes pack,Entertainment,Want,natural_language,phrase:1452
+UPI/096888831149/KARNATAKA BANK/karnatakabank@ibl/HDFC,Investments,Investment,upi,merchant:2228
+emi on loan,Debt & Loan Payments,Need,natural_language,phrase:1060
+hoa maintenance,Housing,Need,natural_language,phrase:769
+wooden dining set,Shopping,Want,natural_language,phrase:1256
+garnier fruuctis,Personal Care,Want,typo,merchant:1961
+BIL/ONL/855373043763/VIRTUSA/SBI,Shopping,Want,bank_statement,merchant:1135
+Rs 650 Vivekananda Learning,Education,Investment,merchant_amount,merchant:1769
+paid ₹1632 for movies,Entertainment,Want,phrase_amount,phrase:1489
+AirAsia,Transport & Travel,Want,merchant,merchant:404
+street kachori,Food & Dining,Want,natural_language,phrase:119
+UPI/DR/929184899454/VISHAL THEATRE/ybl,Entertainment,Want,upi,merchant:1403
+UPI/DR/411486297832/DETTOL/upi,Personal Care,Need,upi,merchant:1947
+2063.00 Ola,Transport & Travel,Want,merchant_amount,merchant:393
+UPI/CR/194466445370/LAKSHMI CHAUHAN/YESB,Misc,Need,upi,person:Lakshmi-Chauhan
+Rs 1774 ISO 50001,Health,Need,merchant_amount,merchant:1558
+dahi vada shop,Food & Dining,Want,natural_language,phrase:123
+UPI/DR/179640537735/FRESH DISHES/oksbi,Food & Dining,Want,upi,merchant:17
+FabHotels,Transport & Travel,Want,merchant,merchant:418
+at freshway,Food & Dining,Want,natural_language,merchant:70
+theme park pass Rs 4840,Entertainment,Want,phrase_amount,phrase:1456
+emi on loan 638,Debt & Loan Payments,Need,phrase_amount,phrase:1060
+UPI-RAKESHTRAVELS-328946@okhdfcbank,Transport & Travel,Want,upi,merchant:454
+siil mutual fund,Investments,Investment,typo,merchant:2206
+paid Rs 4643 for auto taxi,Transport & Travel,Want,phrase_amount,phrase:487
+POS 7321 SBI MUTUAL JAIPUR,Investments,Investment,bank_statement,merchant:2233
+paid yummy dhaba,Food & Dining,Want,natural_language,merchant:80
+manipurr power,Utilities & Bills,Need,typo,merchant:848
+life insuraan for siblings,Insurance,Need,natural_language,phrase:2140
+apollo munich bill,Insurance,Need,natural_language,merchant:2077
+RELIANCE LIFE TXN POS PURCHASE,Insurance,Need,bank_statement,merchant:2078
+ECOM PUR NHPC KOLKATA,Utilities & Bills,Need,bank_statement,merchant:780
+eyebrow pencil,Personal Care,Want,natural_language,phrase:2063
+UDAIPUR REALMS TXN POS PURCHASE,Housing,Need,bank_statement,merchant:639
+reliance lfe,Insurance,Need,typo,merchant:2078
+ramesh theatre payment,Entertainment,Want,natural_language,merchant:1397
+spent at bhakti cinemas,Entertainment,Want,natural_language,merchant:1376
+transfer to Venkat Sharma,Misc,Need,natural_language,person:Venkat-Sharma
+paid 3243 for fixed term fd,Investments,Investment,phrase_amount,phrase:2342
+BIL/ONL/849149860995/BHOPAL DWELLINGS/ICICI,Housing,Need,bank_statement,merchant:665
+airport taxi payment,Transport & Travel,Want,natural_language,merchant:463
+fabbhotels,Transport & Travel,Want,typo,merchant:418
+rakesh's pharmacy,Health,Need,merchant,merchant:1628
+UPI-AIG-191779@upi,Insurance,Need,upi,merchant:2084
+Neha Footwear Rs 1915,Shopping,Want,merchant_amount,merchant:1176
+₹502 eyebrow pencil,Personal Care,Want,phrase_amount,phrase:2063
+south indian cinema ₹774,Entertainment,Want,phrase_amount,phrase:1411
+"mutual funs, for now ₹2834",Investments,Investment,phrase_amount,phrase:2374
+Rs 3093 Karnataka Bank,Investments,Investment,merchant_amount,merchant:2228
+Deepak K,Groceries,Need,merchant,merchant:250
+blood pressure check,Health,Need,natural_language,phrase:1664
+Virtusa Rs 2633,Shopping,Want,merchant_amount,merchant:1135
+DineOut Rs 1959,Food & Dining,Want,merchant_amount,merchant:3
+UPI/DR/146002530095/LALITHA KULKARNI/upi,Misc,Need,upi,person:Lalitha-Kulkarni
+cough syrup,Health,Need,natural_language,phrase:1636
+khaman dhokla,Food & Dining,Want,natural_language,phrase:186
+UPI-FERRYSERVICES-782116@okaxis,Transport & Travel,Need,upi,merchant:466
+La Martiniere order,Food & Dining,Want,natural_language,merchant:47
+karnataka bannk,Investments,Investment,typo,merchant:2228
+1284.00 Garden of Life,Health,Want,merchant_amount,merchant:1546
+Stadia Pro,Entertainment,Want,merchant,merchant:1333
+BIL/ONL/942443793666/BHAKTI CINEMAS/SBI,Entertainment,Want,bank_statement,merchant:1376
+pipelining for water,Utilities & Bills,Need,natural_language,phrase:942
+BIL/ONL/718981312920/TAJ/KOTAK,Groceries,Need,bank_statement,merchant:223
+DDK Hyderabad 2488.00,Utilities & Bills,Need,merchant_amount,merchant:857
+pre-workout ₹1037,Health,Want,phrase_amount,phrase:1644
+Gaurav Telecom 4629.00,Utilities & Bills,Need,merchant_amount,merchant:876
+idfc mutual,Investments,Investment,merchant,merchant:2231
+cab for airport,Transport & Travel,Need,natural_language,phrase:617
+Rs 4435 Fresh Dishes,Food & Dining,Want,merchant_amount,merchant:17
+₹2521 Bihar Power,Utilities & Bills,Need,merchant_amount,merchant:841
+GURU GOBIND SINGH TXN POS PURCHASE,Education,Investment,bank_statement,merchant:1771
+paid Rs 1776 for emi rbi paid,Debt & Loan Payments,Need,phrase_amount,phrase:1109
+home repairs ₹3776,Housing,Need,phrase_amount,phrase:692
+at OYO,Transport & Travel,Want,natural_language,merchant:419
+challans,Misc,Need,merchant,merchant:2399
+UPI/DR/900901934347/DEEPAK NAIR/ibl,Misc,Need,upi,person:Deepak-Nair
+87 Dettol,Personal Care,Need,merchant_amount,merchant:1947
+"sips, for now",Investments,Investment,natural_language,phrase:2368
+Rs 1889 music festival,Entertainment,Want,phrase_amount,phrase:1433
+UPI-JOSEPHJOSHI-198219@upi,Misc,Need,upi,person:Joseph-Joshi
+khol 645.00,Entertainment,Want,phrase_amount,phrase:1500
+UPI-TATAPOWER-098604@okhdfcbank,Misc,Need,upi,merchant:2386
+l&t,Housing,Need,merchant,merchant:621
+1663.00 blood pressure check,Health,Need,phrase_amount,phrase:1664
+UPI/CR/175247693895/ARUN FERNANDES/SBI,Misc,Need,upi,person:Arun-Fernandes
+₹2672 cough syrup,Health,Need,phrase_amount,phrase:1636
+neha barber sshop,Personal Care,Want,typo,merchant:1978
+rakesh travels purchase,Transport & Travel,Want,natural_language,merchant:454
+Axis Mutual,Investments,Investment,merchant,merchant:2232
+makeup artist,Personal Care,Want,natural_language,phrase:2049
+south indian cinema,Entertainment,Want,natural_language,phrase:1411
+neha barber shop,Personal Care,Want,merchant,merchant:1978
+GARDEN OF LIFE TXN POS PURCHASE,Health,Want,bank_statement,merchant:1546
+bbq chicken,Food & Dining,Want,natural_language,phrase:108
+vvishal theatre,Entertainment,Want,typo,merchant:1403
+rakesh's phrmacy,Health,Need,typo,merchant:1628
+UPI/DR/635352277480/IMRAN NAIR/axl,Misc,Need,upi,person:Imran-Nair
+car insuraan 676,Insurance,Need,phrase_amount,phrase:2131
+Udaipur Realms bill,Housing,Need,natural_language,merchant:639
+ECOM PUR DABBAWALA PRIME KOLKATA,Food & Dining,Need,bank_statement,merchant:28
+odsha power,Utilities & Bills,Need,typo,merchant:835
+UPI/DR/979508046606/RAMESH THEATRE/okhdfcbank,Entertainment,Want,upi,merchant:1397
+FabHotels order,Transport & Travel,Want,natural_language,merchant:418
+plumbing fix,Housing,Need,natural_language,phrase:715
+Railway Station,Transport & Travel,Need,merchant,merchant:461
+paid 2220.00 for nbfc loan paid,Debt & Loan Payments,Need,phrase_amount,phrase:1100
+paid 1650 for buy etfs now,Investments,Investment,phrase_amount,phrase:2295
+paid 4361 for masala dabba,Shopping,Want,phrase_amount,phrase:1237
+theme park pass,Entertainment,Want,natural_language,phrase:1456
+ddk hyderrabad,Utilities & Bills,Need,typo,merchant:857
+andhra baank,Investments,Investment,typo,merchant:2224
+odisha power,Utilities & Bills,Need,merchant,merchant:835
+paid to Cetaphil,Personal Care,Want,natural_language,merchant:1958
+POS 9487 OLA PUNE,Transport & Travel,Want,bank_statement,merchant:393
+Garnier,Personal Care,Want,merchant,merchant:1959
+UPI/DR/234299264769/DIVYA PATEL/ibl,Misc,Need,upi,person:Divya-Patel
+Rahul K,Groceries,Need,merchant,merchant:242
+mobile battery issue,Utilities & Bills,Need,natural_language,phrase:993
+llchand,Groceries,Need,typo,merchant:209
+1367.00 Ramesh Theatre,Entertainment,Want,merchant_amount,merchant:1397
+spent at Nagaland Power,Utilities & Bills,Need,natural_language,merchant:846
+holiday packags,Transport & Travel,Want,typo,merchant:470
+DHARMESH CINEMA TXN POS PURCHASE,Entertainment,Want,bank_statement,merchant:1401
+flour kg,Groceries,Need,natural_language,phrase:352
+kishn classes,Education,Investment,typo,merchant:1790
+UPI-DABBAWALAPRIME-925556@okicici,Food & Dining,Need,upi,merchant:28
+paid 1671 for makeup artist,Personal Care,Want,phrase_amount,phrase:2049
+3276.00 alu puri tiffin,Food & Dining,Want,phrase_amount,phrase:131
+Deepak K 2390,Groceries,Need,merchant_amount,merchant:250
+Bhopal Dwellings bill,Housing,Need,natural_language,merchant:665
+UPI/DR/857433116478/IMRAN NAIR/ibl,Misc,Need,upi,person:Imran-Nair
+UPI/DR/869664811051/HOLLYWOOD/okicici,Entertainment,Want,upi,merchant:1354
+BIL/ONL/208496498560/RAHUL K/SBI,Groceries,Need,bank_statement,merchant:242

@@ -52,7 +52,7 @@ const transactionSchema = new mongoose.Schema(
     isAnomaly: { type: Boolean, default: false },
     classificationSource: {
       type: String,
-      enum: ['ml', 'merchant_rule', 'tfidf', 'tfidf_v2', 'minilm', 'fallback', 'manual', 'liability', 'unknown'],
+      enum: ['ml', 'merchant_rule', 'tfidf', 'tfidf_v2', 'minilm', 'finaura_v4', 'user_memory', 'fallback', 'manual', 'liability', 'unknown'],
       default: 'unknown'
     },
     categorySource: { type: String, default: 'unknown' },
@@ -88,5 +88,5 @@ transactionSchema.index({ userId: 1, liabilityId: 1, timestamp: -1 });
 transactionSchema.index({ userId: 1, timestamp: -1 });
 
 // Export schema constants for use in controllers/validators
-export { VALID_CATEGORIES, VALID_TYPES };
+export { CANONICAL_V3_CATEGORIES, VALID_CATEGORIES, VALID_TYPES };
 export default mongoose.model('Transaction', transactionSchema);

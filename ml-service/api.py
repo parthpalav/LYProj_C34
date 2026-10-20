@@ -337,7 +337,7 @@ def classify_expense():
     if len(raw) > 1000:
         return jsonify({'error': 'Text exceeds maximum length of 1000 characters'}), 400
 
-    # Unified Hybrid Pipeline (Merchant Rules -> TF-IDF Category + MiniLM Type)
+    # Unified Hybrid Pipeline (Merchant Rules -> finaura-v4 joint model, legacy TF-IDF fallback)
     result = _hybrid_classifier.classify(raw)
     return jsonify(result)
 
@@ -467,7 +467,8 @@ def simulate_endpoint():
 
 # ─── Run ──────────────────────────────────────────────────────────────────────
 if __name__ == '__main__':
-    _hybrid_classifier.load_category()   # pre-load on startup
-    _hybrid_classifier.load_type()       # pre-load on startup
+    if not _hybrid_classifier.load_v4():     # pre-load on startup
+        _hybrid_classifier.load_category()   # legacy fallback models
+        _hybrid_classifier.load_type()
     app.run(host='0.0.0.0', port=5001, debug=True)
 

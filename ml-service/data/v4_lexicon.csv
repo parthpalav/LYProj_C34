@@ -1,0 +1,2441 @@
+text,category,type,kind
+Freshmenu,Food & Dining,Want,merchant
+FreshTable,Food & Dining,Want,merchant
+FreshToHome,Food & Dining,Want,merchant
+DineOut,Food & Dining,Want,merchant
+Tiffin Time,Food & Dining,Need,merchant
+Dunzo,Food & Dining,Want,merchant
+GoFood,Food & Dining,Want,merchant
+Zomato Delivery,Food & Dining,Want,merchant
+Uber Food,Food & Dining,Want,merchant
+Swiggy Delivery,Food & Dining,Want,merchant
+Grubhub,Food & Dining,Want,merchant
+Delhi Canteen,Food & Dining,Want,merchant
+Mum's Kitchen,Food & Dining,Want,merchant
+Tiffin Mart,Food & Dining,Need,merchant
+Dabbawala,Food & Dining,Need,merchant
+Tiffin Hub,Food & Dining,Need,merchant
+Canteen Plus,Food & Dining,Need,merchant
+Fresh Dishes,Food & Dining,Want,merchant
+FoodMart,Food & Dining,Want,merchant
+MealMela,Food & Dining,Want,merchant
+Foodie Plus,Food & Dining,Want,merchant
+Fresh Bites,Food & Dining,Want,merchant
+Daily Dishes,Food & Dining,Want,merchant
+Tiffin Box,Food & Dining,Need,merchant
+Dabbawala Pro,Food & Dining,Need,merchant
+Dabbawala Express,Food & Dining,Need,merchant
+Fresh Dabbas,Food & Dining,Need,merchant
+Dabbawala Plus,Food & Dining,Need,merchant
+Dabbawala Prime,Food & Dining,Need,merchant
+Dabbawala Premier,Food & Dining,Need,merchant
+Dabbawala Elite,Food & Dining,Need,merchant
+Dabbawala Premium,Food & Dining,Need,merchant
+Dabbawala Gold,Food & Dining,Need,merchant
+Dabbawala Platinum,Food & Dining,Need,merchant
+Dabbawala Diamond,Food & Dining,Need,merchant
+Aashirvaad Dabba,Food & Dining,Need,merchant
+Bikanervala,Food & Dining,Want,merchant
+Chikki Corner,Food & Dining,Need,merchant
+Cafe Parle,Food & Dining,Need,merchant
+Dairy Farmers,Food & Dining,Want,merchant
+Doodhs Chutki,Food & Dining,Want,merchant
+Eternal Biryani,Food & Dining,Want,merchant
+Famosa,Food & Dining,Want,merchant
+Gokul Dhaba,Food & Dining,Want,merchant
+Handique Street Bazaar,Food & Dining,Want,merchant
+Kashi Dhaba,Food & Dining,Want,merchant
+Kismat Khana,Food & Dining,Want,merchant
+La Martiniere,Food & Dining,Want,merchant
+Lal Bagh,Food & Dining,Want,merchant
+Mamta Sweets,Food & Dining,Want,merchant
+Mangal Pandey,Food & Dining,Want,merchant
+Mazdoor Dhaba,Food & Dining,Want,merchant
+Nehru Dhaba,Food & Dining,Want,merchant
+Palika Bazaar,Food & Dining,Want,merchant
+Papad Factory,Food & Dining,Want,merchant
+Patel Biscuit,Food & Dining,Want,merchant
+Puneet Sweets,Food & Dining,Want,merchant
+Rajdhani Dhaba,Food & Dining,Want,merchant
+Rashtrapati Khana,Food & Dining,Want,merchant
+Shivaji Dhaba,Food & Dining,Want,merchant
+Sweets and More,Food & Dining,Want,merchant
+Tawa Khana,Food & Dining,Want,merchant
+Vivek Bhojan,Food & Dining,Want,merchant
+Wheats,Food & Dining,Want,merchant
+XpressBEES,Food & Dining,Want,merchant
+Yum Hub,Food & Dining,Want,merchant
+Zee Biscuit,Food & Dining,Want,merchant
+Butter Milk,Food & Dining,Want,merchant
+Cobra,Food & Dining,Want,merchant
+Dairy Land,Food & Dining,Want,merchant
+Freshway,Food & Dining,Want,merchant
+Girvan,Food & Dining,Want,merchant
+Happy Dhaba,Food & Dining,Want,merchant
+Jeevan Dhaba,Food & Dining,Want,merchant
+Kisan Dhaba,Food & Dining,Want,merchant
+Mandi Bazaar,Food & Dining,Want,merchant
+Nest,Food & Dining,Want,merchant
+Paradise,Food & Dining,Want,merchant
+Quilla,Food & Dining,Want,merchant
+Wah Dhaba,Food & Dining,Want,merchant
+Yummy Dhaba,Food & Dining,Want,merchant
+mess everyday,Food & Dining,Need,phrase
+tiffin box,Food & Dining,Need,phrase
+street food,Food & Dining,Want,phrase
+dahi puri,Food & Dining,Want,phrase
+pav bhaji,Food & Dining,Want,phrase
+veg thali,Food & Dining,Want,phrase
+paratha wala,Food & Dining,Want,phrase
+pizza hut,Food & Dining,Want,phrase
+zomato delivery,Food & Dining,Want,phrase
+manchurian,Food & Dining,Want,phrase
+momos,Food & Dining,Want,phrase
+pizza,Food & Dining,Want,phrase
+burger,Food & Dining,Want,phrase
+sandwich,Food & Dining,Want,phrase
+biryani,Food & Dining,Want,phrase
+chicken tikka,Food & Dining,Want,phrase
+veg biryani,Food & Dining,Want,phrase
+mughlai pulao,Food & Dining,Want,phrase
+thali combo,Food & Dining,Want,phrase
+samosa,Food & Dining,Want,phrase
+dabeli,Food & Dining,Want,phrase
+vada pav,Food & Dining,Want,phrase
+dahi vada,Food & Dining,Want,phrase
+panipuri,Food & Dining,Want,phrase
+chaat,Food & Dining,Want,phrase
+kathi rolls,Food & Dining,Want,phrase
+fried chicken,Food & Dining,Want,phrase
+bbq chicken,Food & Dining,Want,phrase
+cappuccino,Food & Dining,Want,phrase
+latte,Food & Dining,Want,phrase
+filter coffee,Food & Dining,Want,phrase
+brewed tea,Food & Dining,Want,phrase
+lemon water,Food & Dining,Want,phrase
+mess at college,Food & Dining,Need,phrase
+night vada pav,Food & Dining,Want,phrase
+office tiffin,Food & Dining,Need,phrase
+sabzi wala nearby,Food & Dining,Want,phrase
+tiffin delivery,Food & Dining,Want,phrase
+street kachori,Food & Dining,Want,phrase
+sweet shop mithai,Food & Dining,Want,phrase
+doodh at local dukaan,Food & Dining,Want,phrase
+coffee shop latte,Food & Dining,Want,phrase
+dahi vada shop,Food & Dining,Want,phrase
+roti sabzi near office,Food & Dining,Want,phrase
+pakoda walla,Food & Dining,Want,phrase
+bhel puri tiffin,Food & Dining,Want,phrase
+momos delivery,Food & Dining,Want,phrase
+biryani takeaway,Food & Dining,Want,phrase
+litti chokha,Food & Dining,Want,phrase
+dal chawal canteen,Food & Dining,Want,phrase
+alu puri tiffin,Food & Dining,Want,phrase
+samosa plate,Food & Dining,Want,phrase
+pakistani kabab,Food & Dining,Want,phrase
+chana masala stall,Food & Dining,Want,phrase
+rice & dal canteen,Food & Dining,Want,phrase
+biryani tiffin,Food & Dining,Want,phrase
+rajma chawal,Food & Dining,Want,phrase
+chana bhatura,Food & Dining,Want,phrase
+thali meal,Food & Dining,Want,phrase
+paratha walla,Food & Dining,Want,phrase
+paan jalebi,Food & Dining,Want,phrase
+pakora tiffin,Food & Dining,Want,phrase
+pizza delivery,Food & Dining,Want,phrase
+bhel puri mess,Food & Dining,Need,phrase
+butter chicken,Food & Dining,Want,phrase
+puri aloo,Food & Dining,Want,phrase
+gobi manchurian,Food & Dining,Want,phrase
+tandoori roti,Food & Dining,Want,phrase
+rajma canteen,Food & Dining,Need,phrase
+paneer tikka,Food & Dining,Want,phrase
+chicken fry,Food & Dining,Want,phrase
+egg masala,Food & Dining,Want,phrase
+chana masala tiffin,Food & Dining,Want,phrase
+pav bhaji canteen,Food & Dining,Want,phrase
+poha breakfast,Food & Dining,Want,phrase
+kothu parotta,Food & Dining,Want,phrase
+idli sambhar,Food & Dining,Want,phrase
+vada pav stall,Food & Dining,Want,phrase
+masala dosa,Food & Dining,Want,phrase
+pani puri,Food & Dining,Want,phrase
+cha tra,Food & Dining,Want,phrase
+dal tadka,Food & Dining,Want,phrase
+bhel puri,Food & Dining,Want,phrase
+chowmin,Food & Dining,Want,phrase
+chhole bhature,Food & Dining,Want,phrase
+paratha,Food & Dining,Want,phrase
+pakora,Food & Dining,Want,phrase
+tikki,Food & Dining,Want,phrase
+puri,Food & Dining,Want,phrase
+jalebi,Food & Dining,Want,phrase
+thandai,Food & Dining,Want,phrase
+rava ka halwa,Food & Dining,Want,phrase
+rasgulla,Food & Dining,Want,phrase
+kheer,Food & Dining,Want,phrase
+green tea,Food & Dining,Want,phrase
+coff-ee,Food & Dining,Want,phrase
+chaani,Food & Dining,Want,phrase
+pakka paratha,Food & Dining,Want,phrase
+kachori,Food & Dining,Want,phrase
+dahi wada,Food & Dining,Want,phrase
+golgappa,Food & Dining,Want,phrase
+bhelpuri,Food & Dining,Want,phrase
+aloo tikki,Food & Dining,Want,phrase
+sandwiche,Food & Dining,Want,phrase
+kati roll,Food & Dining,Want,phrase
+khaman dhokla,Food & Dining,Want,phrase
+BigBasket,Groceries,Need,merchant
+Grofers,Groceries,Need,merchant
+BigC,Groceries,Need,merchant
+Reliance Fresh,Groceries,Need,merchant
+FreshOK,Groceries,Need,merchant
+FreshGo,Groceries,Need,merchant
+Kroogers,Groceries,Need,merchant
+Mylife,Groceries,Need,merchant
+Netaji,Groceries,Need,merchant
+FreshChoice,Groceries,Need,merchant
+FreshMart,Groceries,Need,merchant
+FreshPro,Groceries,Need,merchant
+Aashray,Groceries,Need,merchant
+Ankur,Groceries,Need,merchant
+Bikanerwala,Groceries,Need,merchant
+Edelweiss,Groceries,Need,merchant
+FamilyMart,Groceries,Need,merchant
+FutureMart,Groceries,Need,merchant
+Godrej,Groceries,Need,merchant
+Goodday,Groceries,Need,merchant
+Hayati,Groceries,Need,merchant
+Kapil,Groceries,Need,merchant
+Lalchand,Groceries,Need,merchant
+Maruti,Groceries,Need,merchant
+Max,Groceries,Need,merchant
+Mithaiwala,Groceries,Need,merchant
+Neha,Groceries,Need,merchant
+Parle,Groceries,Need,merchant
+Patel,Groceries,Need,merchant
+Prabhat,Groceries,Need,merchant
+Punjab,Groceries,Need,merchant
+Rakhi,Groceries,Need,merchant
+Rajdhani,Groceries,Need,merchant
+Shakti,Groceries,Need,merchant
+Sindu,Groceries,Need,merchant
+Sunil,Groceries,Need,merchant
+Taj,Groceries,Need,merchant
+Thane,Groceries,Need,merchant
+Balaji Grocery,Groceries,Need,merchant
+Sharma K,Groceries,Need,merchant
+Raj Kumar Shop,Groceries,Need,merchant
+Anand Super,Groceries,Need,merchant
+Pooja Mart,Groceries,Need,merchant
+Vasant Kala,Groceries,Need,merchant
+Lalita Shop,Groceries,Need,merchant
+Ganesh K,Groceries,Need,merchant
+Sita Super,Groceries,Need,merchant
+Suresh Grocery,Groceries,Need,merchant
+Narayan K,Groceries,Need,merchant
+Gaurav Super,Groceries,Need,merchant
+Chandrapur K,Groceries,Need,merchant
+Kisan K,Groceries,Need,merchant
+Vivek K,Groceries,Need,merchant
+Sunil Grocery,Groceries,Need,merchant
+Suresh K,Groceries,Need,merchant
+Rahul K,Groceries,Need,merchant
+Vijay K,Groceries,Need,merchant
+Gaurav K,Groceries,Need,merchant
+Rajesh K,Groceries,Need,merchant
+Rakesh K,Groceries,Need,merchant
+Rohit K,Groceries,Need,merchant
+Vinod K,Groceries,Need,merchant
+Niraj K,Groceries,Need,merchant
+Deepak K,Groceries,Need,merchant
+Shiv K,Groceries,Need,merchant
+daily veggies,Groceries,Need,phrase
+fridge milk,Groceries,Need,phrase
+chawal aata,Groceries,Need,phrase
+chawal,Groceries,Need,phrase
+atta,Groceries,Need,phrase
+poha,Groceries,Need,phrase
+masala powder,Groceries,Need,phrase
+teh,Groceries,Need,phrase
+biscuits,Groceries,Want,phrase
+chocolate,Groceries,Want,phrase
+coffee,Groceries,Want,phrase
+candy,Groceries,Want,phrase
+milk chocolate,Groceries,Want,phrase
+chocolate bar,Groceries,Want,phrase
+instant noodles,Groceries,Need,phrase
+sabzi,Groceries,Need,phrase
+masala wala,Groceries,Need,phrase
+dals,Groceries,Need,phrase
+butter,Groceries,Want,phrase
+vanilla extract,Groceries,Want,phrase
+snacks,Groceries,Want,phrase
+cereal,Groceries,Need,phrase
+tea leaves,Groceries,Need,phrase
+chocolate cookies,Groceries,Want,phrase
+coffee beans,Groceries,Want,phrase
+chocolate milk,Groceries,Want,phrase
+tea,Groceries,Need,phrase
+chocolate milkshake,Groceries,Want,phrase
+coconut milk,Groceries,Need,phrase
+popcorn,Groceries,Want,phrase
+honey,Groceries,Want,phrase
+masala,Groceries,Need,phrase
+chocolate chips,Groceries,Want,phrase
+chocolate cake mix,Groceries,Want,phrase
+sweets,Groceries,Want,phrase
+snacks wala,Groceries,Want,phrase
+instant coffee,Groceries,Want,phrase
+dairy products,Groceries,Need,phrase
+crackers,Groceries,Want,phrase
+milk chocolate bar,Groceries,Want,phrase
+sugar,Groceries,Need,phrase
+flour,Groceries,Need,phrase
+salt,Groceries,Need,phrase
+vanilla pods,Groceries,Want,phrase
+butter cookies,Groceries,Want,phrase
+tomato sabzi,Groceries,Need,phrase
+red chili powder,Groceries,Need,phrase
+green chutney,Groceries,Need,phrase
+bottle gourd,Groceries,Need,phrase
+chilli vada,Groceries,Want,phrase
+vanilla milk,Groceries,Want,phrase
+himalayan salt,Groceries,Need,phrase
+black pepper,Groceries,Need,phrase
+masala paste,Groceries,Need,phrase
+pomegranate seeds,Groceries,Want,phrase
+cardamom pods,Groceries,Need,phrase
+ginger,Groceries,Need,phrase
+turmeric,Groceries,Need,phrase
+saffron strands,Groceries,Want,phrase
+vanilla pod,Groceries,Want,phrase
+ghee,Groceries,Need,phrase
+tapioca pearls,Groceries,Want,phrase
+lemon juice,Groceries,Need,phrase
+cumin seeds,Groceries,Need,phrase
+black beans,Groceries,Need,phrase
+moong dal,Groceries,Need,phrase
+almonds,Groceries,Need,phrase
+cashews,Groceries,Need,phrase
+dates,Groceries,Need,phrase
+sunflower seeds,Groceries,Need,phrase
+turkey meat,Groceries,Need,phrase
+organic eggs,Groceries,Need,phrase
+brown rice,Groceries,Need,phrase
+quinoa,Groceries,Need,phrase
+amaranth seeds,Groceries,Need,phrase
+cottage cheese,Groceries,Need,phrase
+mushroom,Groceries,Need,phrase
+onion,Groceries,Need,phrase
+garlic,Groceries,Need,phrase
+ginger root,Groceries,Need,phrase
+hing,Groceries,Need,phrase
+lemon,Groceries,Need,phrase
+lime,Groceries,Need,phrase
+pomegranate,Groceries,Need,phrase
+dragon fruit,Groceries,Need,phrase
+starfruit,Groceries,Need,phrase
+ginger tea bag,Groceries,Need,phrase
+cinnamon sticks,Groceries,Need,phrase
+cacao powder,Groceries,Need,phrase
+matcha powder,Groceries,Need,phrase
+safflower oil,Groceries,Need,phrase
+olive oil,Groceries,Need,phrase
+sesame oil,Groceries,Need,phrase
+caramel syrup,Groceries,Need,phrase
+dark chocolate bar,Groceries,Want,phrase
+ginger ale,Groceries,Want,phrase
+kirana store,Groceries,Need,phrase
+local veggies,Groceries,Need,phrase
+milk daily,Groceries,Need,phrase
+bread loaf,Groceries,Need,phrase
+flour kg,Groceries,Need,phrase
+atta masala,Groceries,Need,phrase
+salt packets,Groceries,Need,phrase
+dried fruits,Groceries,Need,phrase
+toilet paper,Groceries,Need,phrase
+chocolates,Groceries,Want,phrase
+snacks imported,Groceries,Want,phrase
+coffee pods,Groceries,Want,phrase
+juice bottles,Groceries,Want,phrase
+chai powder,Groceries,Need,phrase
+biscuits pack,Groceries,Want,phrase
+detergent liquid,Groceries,Need,phrase
+soap bar,Groceries,Need,phrase
+baking soda,Groceries,Need,phrase
+sponges,Groceries,Need,phrase
+paper towels,Groceries,Need,phrase
+ketchup bottle,Groceries,Need,phrase
+mayo jar,Groceries,Need,phrase
+mango chutney,Groceries,Need,phrase
+sugar packets,Groceries,Need,phrase
+chips pack,Groceries,Want,phrase
+tea bags,Groceries,Need,phrase
+pasta shapes,Groceries,Need,phrase
+"onion, garlic",Groceries,Need,phrase
+oil liter,Groceries,Need,phrase
+tomato sauce,Groceries,Need,phrase
+yogurt,Groceries,Need,phrase
+jam jar,Groceries,Need,phrase
+juice carton,Groceries,Need,phrase
+pasta sauce,Groceries,Need,phrase
+milk packet,Groceries,Need,phrase
+butter tub,Groceries,Need,phrase
+mustard oil,Groceries,Need,phrase
+bread slices,Groceries,Need,phrase
+juice box,Groceries,Need,phrase
+biscuit tin,Groceries,Need,phrase
+"onion, capsicum",Groceries,Need,phrase
+detergent powder,Groceries,Need,phrase
+paper cups,Groceries,Need,phrase
+milk,Groceries,Need,phrase
+mango lassi,Groceries,Need,phrase
+Ola,Transport & Travel,Want,merchant
+Uber,Transport & Travel,Want,merchant
+AutoRICKSHA,Transport & Travel,Want,merchant
+Olacabs,Transport & Travel,Want,merchant
+Lyft,Transport & Travel,Want,merchant
+IRCTC,Transport & Travel,Need,merchant
+MakeMyTrip,Transport & Travel,Want,merchant
+Yatra,Transport & Travel,Want,merchant
+Cleartrip,Transport & Travel,Want,merchant
+Etihad Airways,Transport & Travel,Need,merchant
+Qatar Airways,Transport & Travel,Need,merchant
+AirAsia,Transport & Travel,Want,merchant
+Vistara,Transport & Travel,Want,merchant
+SUV Travels,Transport & Travel,Want,merchant
+Deccan Travels,Transport & Travel,Want,merchant
+Bihar Travels,Transport & Travel,Want,merchant
+Pune Travels,Transport & Travel,Want,merchant
+Delhi Travel,Transport & Travel,Want,merchant
+Trivago,Transport & Travel,Want,merchant
+Expedia,Transport & Travel,Want,merchant
+Booking.com,Transport & Travel,Want,merchant
+Agoda,Transport & Travel,Want,merchant
+Airbnb,Transport & Travel,Want,merchant
+OYO Rooms,Transport & Travel,Want,merchant
+Treebo,Transport & Travel,Want,merchant
+FabHotels,Transport & Travel,Want,merchant
+OYO,Transport & Travel,Want,merchant
+Goibibo,Transport & Travel,Want,merchant
+RedBus,Transport & Travel,Need,merchant
+BookMyShow,Transport & Travel,Want,merchant
+Delhi Metro,Transport & Travel,Need,merchant
+Noida Metro,Transport & Travel,Need,merchant
+Bangalore Metro,Transport & Travel,Need,merchant
+Bhopal Metro,Transport & Travel,Need,merchant
+Kolkata Metro,Transport & Travel,Need,merchant
+Mumbai Local,Transport & Travel,Need,merchant
+Bengaluru Metro,Transport & Travel,Need,merchant
+Pune Metro,Transport & Travel,Need,merchant
+Hyderabad Metro,Transport & Travel,Need,merchant
+Delhi Transport,Transport & Travel,Need,merchant
+Mumbai Transport,Transport & Travel,Need,merchant
+Bangalore Transport,Transport & Travel,Need,merchant
+Pune Transport,Transport & Travel,Need,merchant
+Hyderabad Transport,Transport & Travel,Need,merchant
+XYZ Travels,Transport & Travel,Want,merchant
+ABC Tours,Transport & Travel,Want,merchant
+Raj Travels,Transport & Travel,Want,merchant
+Sai Tours & Travels,Transport & Travel,Want,merchant
+Sagar Travels,Transport & Travel,Want,merchant
+Surya Travels,Transport & Travel,Want,merchant
+Suresh Travels,Transport & Travel,Want,merchant
+Vijay Travels,Transport & Travel,Want,merchant
+Laxmi Travels,Transport & Travel,Want,merchant
+Kiran Travels,Transport & Travel,Want,merchant
+Ruchi Travels,Transport & Travel,Want,merchant
+Ravi Travels,Transport & Travel,Want,merchant
+Ramesh Travels,Transport & Travel,Want,merchant
+Rajesh Travels,Transport & Travel,Want,merchant
+Rajni Travels,Transport & Travel,Want,merchant
+Ravindra Travels,Transport & Travel,Want,merchant
+Rajendra Travels,Transport & Travel,Want,merchant
+Rakesh Travels,Transport & Travel,Want,merchant
+Rameshwari Travels,Transport & Travel,Want,merchant
+Rajkumar Travels,Transport & Travel,Want,merchant
+Rajeshwari Travels,Transport & Travel,Want,merchant
+Metro Link,Transport & Travel,Need,merchant
+City Bus,Transport & Travel,Need,merchant
+Auto Rides,Transport & Travel,Want,merchant
+Railway Station,Transport & Travel,Need,merchant
+Flight Services,Transport & Travel,Want,merchant
+Airport Taxi,Transport & Travel,Want,merchant
+Hotel Stay,Transport & Travel,Want,merchant
+Travel Agency,Transport & Travel,Need,merchant
+Ferry Services,Transport & Travel,Need,merchant
+Taxi Stand,Transport & Travel,Need,merchant
+Cab Services,Transport & Travel,Want,merchant
+Travel Booking,Transport & Travel,Need,merchant
+Holiday Packages,Transport & Travel,Want,merchant
+Car Rentals,Transport & Travel,Want,merchant
+Bus Stand,Transport & Travel,Need,merchant
+Flight Ticket,Transport & Travel,Need,merchant
+Hotel Booking,Transport & Travel,Need,merchant
+Airport Shuttle,Transport & Travel,Want,merchant
+Car Hire,Transport & Travel,Want,merchant
+Local Transport,Transport & Travel,Need,merchant
+Train Booking,Transport & Travel,Need,merchant
+Bus Ticket,Transport & Travel,Need,merchant
+Travel Agent,Transport & Travel,Need,merchant
+Flight Ticketing,Transport & Travel,Want,merchant
+Hotel Management,Transport & Travel,Need,merchant
+Travel Service,Transport & Travel,Need,merchant
+metro fare,Transport & Travel,Need,phrase
+bus ride,Transport & Travel,Need,phrase
+train ticket,Transport & Travel,Need,phrase
+auto taxi,Transport & Travel,Want,phrase
+flight to mumbai,Transport & Travel,Want,phrase
+hotel in delhi,Transport & Travel,Want,phrase
+holiday trip,Transport & Travel,Want,phrase
+cabs for office,Transport & Travel,Want,phrase
+flight tickets,Transport & Travel,Want,phrase
+hotel stay for 2,Transport & Travel,Want,phrase
+holidays with family,Transport & Travel,Want,phrase
+weekend getaway,Transport & Travel,Want,phrase
+flight to bangalore,Transport & Travel,Want,phrase
+hotel in ahmedabad,Transport & Travel,Want,phrase
+air travel,Transport & Travel,Want,phrase
+train journey to jaipur,Transport & Travel,Need,phrase
+cabs for date night,Transport & Travel,Want,phrase
+flight for work,Transport & Travel,Need,phrase
+hotel near airport,Transport & Travel,Need,phrase
+flight to kochi,Transport & Travel,Want,phrase
+trip to rishikesh,Transport & Travel,Want,phrase
+airplane ticket,Transport & Travel,Want,phrase
+bus ticket for vacation,Transport & Travel,Want,phrase
+flight to goa,Transport & Travel,Want,phrase
+hotel in goa,Transport & Travel,Want,phrase
+flight to matheran,Transport & Travel,Want,phrase
+hotel for friends,Transport & Travel,Want,phrase
+train to matheran,Transport & Travel,Need,phrase
+flight to visakhapatnam,Transport & Travel,Want,phrase
+hotel stay for 3,Transport & Travel,Want,phrase
+flight to kanyakumari,Transport & Travel,Want,phrase
+train to kanyakumari,Transport & Travel,Need,phrase
+cabs for night out,Transport & Travel,Want,phrase
+flight for weekend,Transport & Travel,Want,phrase
+hotel in pune,Transport & Travel,Want,phrase
+flight to amritsar,Transport & Travel,Want,phrase
+flight to goa with friends,Transport & Travel,Want,phrase
+train to goa,Transport & Travel,Need,phrase
+flight to jaipur with family,Transport & Travel,Want,phrase
+hotel in jaipur,Transport & Travel,Want,phrase
+flight to manipal,Transport & Travel,Want,phrase
+hotel in manipal,Transport & Travel,Want,phrase
+flight to kochi for vacation,Transport & Travel,Want,phrase
+flight to manipal with friends,Transport & Travel,Want,phrase
+train to manipal,Transport & Travel,Need,phrase
+flight to matheran with family,Transport & Travel,Want,phrase
+hotel in matheran,Transport & Travel,Want,phrase
+weekly metro pass,Transport & Travel,Need,phrase
+night train ride,Transport & Travel,Want,phrase
+airport taxi,Transport & Travel,Need,phrase
+flight layover hotel,Transport & Travel,Need,phrase
+solo trip train ticket,Transport & Travel,Want,phrase
+sunday temple bus,Transport & Travel,Need,phrase
+last mile auto,Transport & Travel,Need,phrase
+cabs for kids,Transport & Travel,Need,phrase
+holy site pilgrimage travel,Transport & Travel,Need,phrase
+flight lounge access,Transport & Travel,Want,phrase
+solo vacation flight,Transport & Travel,Want,phrase
+last minute hotel booking,Transport & Travel,Need,phrase
+flight upgrade for grandma,Transport & Travel,Want,phrase
+trip to hometown bus,Transport & Travel,Need,phrase
+sightseeing cab,Transport & Travel,Want,phrase
+night train sleeper,Transport & Travel,Want,phrase
+bus fare to festival,Transport & Travel,Need,phrase
+flight with legroom,Transport & Travel,Want,phrase
+cabin fees savings,Transport & Travel,Need,phrase
+flight to honeymoon destination,Transport & Travel,Need,phrase
+trip to parents house taxi,Transport & Travel,Need,phrase
+airport parking discount,Transport & Travel,Need,phrase
+flight to cricket match,Transport & Travel,Want,phrase
+trip to friend house train,Transport & Travel,Need,phrase
+sightseeing package flights,Transport & Travel,Want,phrase
+flight to cousin's wedding,Transport & Travel,Need,phrase
+bus ticket to city,Transport & Travel,Need,phrase
+flight with layover hotel,Transport & Travel,Need,phrase
+flight to cousin's house,Transport & Travel,Want,phrase
+city trip bus fare,Transport & Travel,Need,phrase
+solo travel train ticket,Transport & Travel,Want,phrase
+flight to sister's house,Transport & Travel,Want,phrase
+night train for adventure,Transport & Travel,Want,phrase
+solo trip plane ticket,Transport & Travel,Want,phrase
+flight to beach destination,Transport & Travel,Need,phrase
+solo travel hotel,Transport & Travel,Want,phrase
+night train for vacation,Transport & Travel,Want,phrase
+flight to family reunion,Transport & Travel,Need,phrase
+solo travel plane,Transport & Travel,Want,phrase
+flight for weekend getaway,Transport & Travel,Want,phrase
+solo trip hotel,Transport & Travel,Want,phrase
+flight to sister's city,Transport & Travel,Want,phrase
+night train for adventure travel,Transport & Travel,Want,phrase
+flight to brother's house,Transport & Travel,Want,phrase
+solo travel hotel booking,Transport & Travel,Want,phrase
+flight for family vacation,Transport & Travel,Need,phrase
+chai sutta metro,Transport & Travel,Need,phrase
+bus ticket for school,Transport & Travel,Need,phrase
+auto ride to mall,Transport & Travel,Need,phrase
+train fare to office,Transport & Travel,Need,phrase
+flight for vacation,Transport & Travel,Want,phrase
+hotel in mumbai,Transport & Travel,Want,phrase
+holiday trip to manali,Transport & Travel,Want,phrase
+toll charges for highway,Transport & Travel,Need,phrase
+parking at market,Transport & Travel,Need,phrase
+fuel for bike,Transport & Travel,Need,phrase
+flight return ticket,Transport & Travel,Need,phrase
+hotels for family,Transport & Travel,Want,phrase
+vacation in goa,Transport & Travel,Want,phrase
+holidays to shimla,Transport & Travel,Want,phrase
+auto for office,Transport & Travel,Need,phrase
+flight return to home,Transport & Travel,Need,phrase
+hotel for weekend,Transport & Travel,Want,phrase
+holidays in jammu,Transport & Travel,Want,phrase
+fuel for car,Transport & Travel,Need,phrase
+taxis to office,Transport & Travel,Need,phrase
+flight for business,Transport & Travel,Need,phrase
+hotel for 2 nights,Transport & Travel,Want,phrase
+toll for travel,Transport & Travel,Need,phrase
+cab for doctor,Transport & Travel,Need,phrase
+hotels for friends,Transport & Travel,Want,phrase
+holiday plan for family,Transport & Travel,Want,phrase
+flight to chennai,Transport & Travel,Want,phrase
+hotel for business,Transport & Travel,Need,phrase
+holiday in delhi,Transport & Travel,Want,phrase
+toll charges for journey,Transport & Travel,Need,phrase
+cab ride to airport,Transport & Travel,Need,phrase
+flight for honeymoon,Transport & Travel,Want,phrase
+hotel in delhi for 3 days,Transport & Travel,Want,phrase
+holidays in shimla,Transport & Travel,Want,phrase
+flight for trip,Transport & Travel,Want,phrase
+toll for vacation,Transport & Travel,Need,phrase
+cabs for meeting,Transport & Travel,Need,phrase
+hotel for girls trip,Transport & Travel,Want,phrase
+flight ticket to bangalore,Transport & Travel,Want,phrase
+holidays in manali,Transport & Travel,Want,phrase
+cab for airport,Transport & Travel,Need,phrase
+toll charges,Transport & Travel,Need,phrase
+APN HOMES,Housing,Need,merchant
+HAVELLS,Housing,Need,merchant
+L&T,Housing,Need,merchant
+INFRASTRUCTURE DEVELOPMENT COMPANY,Housing,Need,merchant
+KTK HOMES,Housing,Need,merchant
+CITYMART,Housing,Need,merchant
+DISHA INVESTMENTS,Housing,Need,merchant
+Gurgaon Estates,Housing,Need,merchant
+Pune Homes,Housing,Need,merchant
+Bangalore Properties,Housing,Need,merchant
+Hyderabad Houses,Housing,Need,merchant
+Chennai Rentals,Housing,Need,merchant
+Mumbai Realms,Housing,Need,merchant
+Kolkata Homes,Housing,Need,merchant
+Delhi Dwellings,Housing,Need,merchant
+Lucknow Living,Housing,Need,merchant
+Noida Nest,Housing,Need,merchant
+Jaipur Estates,Housing,Need,merchant
+Chandigarh Homes,Housing,Need,merchant
+Agra Dwellers,Housing,Need,merchant
+Udaipur Realms,Housing,Need,merchant
+Jaipur Rentals,Housing,Need,merchant
+Mysore Dwellings,Housing,Need,merchant
+Kochi Homes,Housing,Need,merchant
+Kozhikode Dwellers,Housing,Need,merchant
+Thrissur Estates,Housing,Need,merchant
+Trivandrum Dwellings,Housing,Need,merchant
+Bikaner Dwellers,Housing,Need,merchant
+Jodhpur Homes,Housing,Need,merchant
+Jaipur Dwellings,Housing,Need,merchant
+Amaravati Homes,Housing,Need,merchant
+Visakhapatnam Dwellings,Housing,Need,merchant
+Visakhapatanam Dwellings,Housing,Need,merchant
+Nagpur Dwellings,Housing,Need,merchant
+Nashik Homes,Housing,Need,merchant
+Solapur Dwellings,Housing,Need,merchant
+Pune Dwellers,Housing,Need,merchant
+Pune Dwellings,Housing,Need,merchant
+Rajkot Homes,Housing,Need,merchant
+Surat Estates,Housing,Need,merchant
+Surat Dwellings,Housing,Need,merchant
+Ahmedabad Homes,Housing,Need,merchant
+Ahmedabad Dwellings,Housing,Need,merchant
+Indore Dwellers,Housing,Need,merchant
+Indore Dwellings,Housing,Need,merchant
+Bhopal Estates,Housing,Need,merchant
+Bhopal Dwellings,Housing,Need,merchant
+Raipur Dwellers,Housing,Need,merchant
+Raipur Dwellings,Housing,Need,merchant
+Gwalior Homes,Housing,Need,merchant
+Gwalior Dwellings,Housing,Need,merchant
+Gwalior Estates,Housing,Need,merchant
+Ujjain Dwellings,Housing,Need,merchant
+Ujjain Estates,Housing,Need,merchant
+Ujjain Homes,Housing,Need,merchant
+Jabalpur Dwellings,Housing,Need,merchant
+Jabalpur Estates,Housing,Need,merchant
+Jabalpur Homes,Housing,Need,merchant
+Bhopal Homes,Housing,Need,merchant
+Indore Estates,Housing,Need,merchant
+Indore Homes,Housing,Need,merchant
+Raipur Estates,Housing,Need,merchant
+Raipur Homes,Housing,Need,merchant
+Sharma Paints,Housing,Need,merchant
+Kumar Plumber,Housing,Need,merchant
+Raj Electricals,Housing,Need,merchant
+Sita Cleaning,Housing,Need,merchant
+Ankur Repairs,Housing,Need,merchant
+Ravi Movers,Housing,Need,merchant
+Bharat Landlord,Housing,Need,merchant
+rent,Housing,Need,phrase
+society maintenance,Housing,Need,phrase
+property tax,Housing,Need,phrase
+home repairs,Housing,Need,phrase
+plumber,Housing,Need,phrase
+maid salary,Housing,Need,phrase
+cook salary,Housing,Need,phrase
+kitchen supplies,Housing,Need,phrase
+home decor,Housing,Need,phrase
+garden maintenance,Housing,Need,phrase
+home insurance,Housing,Need,phrase
+landscaping,Housing,Need,phrase
+home renovation,Housing,Need,phrase
+home cleaning,Housing,Need,phrase
+home gardening,Housing,Need,phrase
+home theater equipment,Housing,Need,phrase
+home cleaning services,Housing,Need,phrase
+home maintenance,Housing,Need,phrase
+home gardening supplies,Housing,Need,phrase
+home yoga mat,Housing,Need,phrase
+home meditation cushion,Housing,Need,phrase
+kitchen renovation,Housing,Need,phrase
+painting exterior,Housing,Need,phrase
+new roof,Housing,Need,phrase
+pest control,Housing,Need,phrase
+window repair,Housing,Need,phrase
+plumbing fix,Housing,Need,phrase
+electrical wiring update,Housing,Need,phrase
+septic tank cleaning,Housing,Need,phrase
+security camera install,Housing,Need,phrase
+floor tiling,Housing,Need,phrase
+wallpapering,Housing,Need,phrase
+new water heater,Housing,Need,phrase
+new dryer,Housing,Need,phrase
+new AC unit,Housing,Need,phrase
+new water filter,Housing,Need,phrase
+new kitchen faucet,Housing,Need,phrase
+new bathroom vanity,Housing,Need,phrase
+new bathtub,Housing,Need,phrase
+new shower head,Housing,Need,phrase
+new toilet,Housing,Need,phrase
+new sink,Housing,Need,phrase
+new water heater tank,Housing,Need,phrase
+new water tank,Housing,Need,phrase
+new water pump,Housing,Need,phrase
+new kitchen tap,Housing,Need,phrase
+new bathroom tap,Housing,Need,phrase
+new shower curtain,Housing,Need,phrase
+new bathtub cover,Housing,Need,phrase
+new toilet seat,Housing,Need,phrase
+new bathroom tile,Housing,Need,phrase
+new kitchen counter,Housing,Need,phrase
+new bathroom vanity countertop,Housing,Need,phrase
+flat rent,Housing,Need,phrase
+house repairs,Housing,Need,phrase
+maintenance fee,Housing,Need,phrase
+rental expense,Housing,Need,phrase
+hoa charges,Housing,Need,phrase
+home fix,Housing,Need,phrase
+repair work,Housing,Need,phrase
+cleaning service,Housing,Need,phrase
+laundry service,Housing,Need,phrase
+repair bill,Housing,Need,phrase
+repairs,Housing,Need,phrase
+electrician bill,Housing,Need,phrase
+plumber bill,Housing,Need,phrase
+property taxes,Housing,Need,phrase
+society taxes,Housing,Need,phrase
+society maintenance fee,Housing,Need,phrase
+flat maintenance,Housing,Need,phrase
+home repairs bill,Housing,Need,phrase
+plumbing,Housing,Need,phrase
+electrical,Housing,Need,phrase
+maid service,Housing,Need,phrase
+cook service,Housing,Need,phrase
+repair and maintenance,Housing,Need,phrase
+home fix bill,Housing,Need,phrase
+electrician services,Housing,Need,phrase
+plumber services,Housing,Need,phrase
+maintenance,Housing,Need,phrase
+hoa maintenance,Housing,Need,phrase
+society maintenance expense,Housing,Need,phrase
+property tax bill,Housing,Need,phrase
+home repair,Housing,Need,phrase
+rent payment,Housing,Need,phrase
+property tax payment,Housing,Need,phrase
+ABB,Utilities & Bills,Need,merchant
+DISCOM,Utilities & Bills,Need,merchant
+Mahindra & Mahzor,Utilities & Bills,Need,merchant
+Bengaluru Power,Utilities & Bills,Need,merchant
+CPL,Utilities & Bills,Need,merchant
+NHPC,Utilities & Bills,Need,merchant
+NHAI,Utilities & Bills,Need,merchant
+SERC,Utilities & Bills,Need,merchant
+CES,Utilities & Bills,Need,merchant
+BESCOM,Utilities & Bills,Need,merchant
+BSES Rajdhani,Utilities & Bills,Need,merchant
+BSES Yamuna,Utilities & Bills,Need,merchant
+Mera Bharat Mahaan,Utilities & Bills,Need,merchant
+FreeCharge,Utilities & Bills,Need,merchant
+Bharti Airtel,Utilities & Bills,Need,merchant
+Vodafone Idea,Utilities & Bills,Need,merchant
+MTS,Utilities & Bills,Need,merchant
+Idea,Utilities & Bills,Need,merchant
+Tata Photon,Utilities & Bills,Need,merchant
+BSNL,Utilities & Bills,Need,merchant
+Airtel Money,Utilities & Bills,Need,merchant
+Google Play,Utilities & Bills,Need,merchant
+Netmatic,Utilities & Bills,Need,merchant
+Piped Gas,Utilities & Bills,Need,merchant
+Cubical,Utilities & Bills,Need,merchant
+Energizer,Utilities & Bills,Need,merchant
+Spitfire,Utilities & Bills,Need,merchant
+BSNL Broadband,Utilities & Bills,Need,merchant
+Tata Photon Plus,Utilities & Bills,Need,merchant
+MTNL,Utilities & Bills,Need,merchant
+BSNL WiFi,Utilities & Bills,Need,merchant
+Reliance Broadband,Utilities & Bills,Need,merchant
+BSNL TV,Utilities & Bills,Need,merchant
+BSNL Mobile,Utilities & Bills,Need,merchant
+BSNL Internet,Utilities & Bills,Need,merchant
+BSNL Home,Utilities & Bills,Need,merchant
+BSNL Cable,Utilities & Bills,Need,merchant
+BSNL Video,Utilities & Bills,Need,merchant
+BSNL Landline,Utilities & Bills,Need,merchant
+BSNL Phone,Utilities & Bills,Need,merchant
+BSNL Land,Utilities & Bills,Need,merchant
+BSNL Fixed Line,Utilities & Bills,Need,merchant
+BSNL ADSL,Utilities & Bills,Need,merchant
+BSNL VoIP,Utilities & Bills,Need,merchant
+BSNL Voice,Utilities & Bills,Need,merchant
+Maha Discom,Utilities & Bills,Need,merchant
+Sarvottam Elect,Utilities & Bills,Need,merchant
+Hyd Power,Utilities & Bills,Need,merchant
+Bangalore Gas,Utilities & Bills,Need,merchant
+Delhi Discom,Utilities & Bills,Need,merchant
+Chennai Power,Utilities & Bills,Need,merchant
+Karnataka Discom,Utilities & Bills,Need,merchant
+TN Generation,Utilities & Bills,Need,merchant
+AP Discom,Utilities & Bills,Need,merchant
+Maharashtra Power,Utilities & Bills,Need,merchant
+Gujarat Power,Utilities & Bills,Need,merchant
+MP Discom,Utilities & Bills,Need,merchant
+Haryana Power,Utilities & Bills,Need,merchant
+Jharkhand Power,Utilities & Bills,Need,merchant
+Punjab Power,Utilities & Bills,Need,merchant
+Odisha Power,Utilities & Bills,Need,merchant
+Rajasthan Power,Utilities & Bills,Need,merchant
+West Bengal Power,Utilities & Bills,Need,merchant
+Kerala Power,Utilities & Bills,Need,merchant
+Tripura Power,Utilities & Bills,Need,merchant
+Assam Power,Utilities & Bills,Need,merchant
+Bihar Power,Utilities & Bills,Need,merchant
+Chhattisgarh Power,Utilities & Bills,Need,merchant
+Goa Discom,Utilities & Bills,Need,merchant
+Mizoram Power,Utilities & Bills,Need,merchant
+Meghalaya Power,Utilities & Bills,Need,merchant
+Nagaland Power,Utilities & Bills,Need,merchant
+Sikkim Power,Utilities & Bills,Need,merchant
+Manipur Power,Utilities & Bills,Need,merchant
+Sikkim Discom,Utilities & Bills,Need,merchant
+Arunachal Power,Utilities & Bills,Need,merchant
+DDK Bangalore,Utilities & Bills,Need,merchant
+DDK Mumbai,Utilities & Bills,Need,merchant
+DDK Pune,Utilities & Bills,Need,merchant
+DDK Chennai,Utilities & Bills,Need,merchant
+DDK Delhi,Utilities & Bills,Need,merchant
+DDK Kolkata,Utilities & Bills,Need,merchant
+DDK Hyderabad,Utilities & Bills,Need,merchant
+DDK Ahmedabad,Utilities & Bills,Need,merchant
+DDK Coimbatore,Utilities & Bills,Need,merchant
+DDK Jaipur,Utilities & Bills,Need,merchant
+DDK Lucknow,Utilities & Bills,Need,merchant
+DDK Surat,Utilities & Bills,Need,merchant
+DDK Nagpur,Utilities & Bills,Need,merchant
+DDK Visakhapatnam,Utilities & Bills,Need,merchant
+DDK Bhopal,Utilities & Bills,Need,merchant
+DDK Indore,Utilities & Bills,Need,merchant
+DDK Jodhpur,Utilities & Bills,Need,merchant
+DDK Mysuru,Utilities & Bills,Need,merchant
+DDK Thiruvananthapuram,Utilities & Bills,Need,merchant
+DDK Kochi,Utilities & Bills,Need,merchant
+DDK Kozhikode,Utilities & Bills,Need,merchant
+DDK Kannur,Utilities & Bills,Need,merchant
+DDK Calicut,Utilities & Bills,Need,merchant
+Energise Gas,Utilities & Bills,Need,merchant
+Vivek Gas,Utilities & Bills,Need,merchant
+Gaurav Telecom,Utilities & Bills,Need,merchant
+Bharti Mobile,Utilities & Bills,Need,merchant
+Rajesh Wireless,Utilities & Bills,Need,merchant
+Shyam Telecom,Utilities & Bills,Need,merchant
+Ganesh Telecom,Utilities & Bills,Need,merchant
+Poonam Telecom,Utilities & Bills,Need,merchant
+Laxmi Telecom,Utilities & Bills,Need,merchant
+Mohan Telecom,Utilities & Bills,Need,merchant
+electric bill,Utilities & Bills,Need,phrase
+gas cylinder refill,Utilities & Bills,Need,phrase
+piped gas bill,Utilities & Bills,Need,phrase
+broadband bill,Utilities & Bills,Need,phrase
+mobile recharge,Utilities & Bills,Need,phrase
+dth recharge,Utilities & Bills,Need,phrase
+light bill,Utilities & Bills,Need,phrase
+water meter,Utilities & Bills,Need,phrase
+net bill,Utilities & Bills,Need,phrase
+piped gas,Utilities & Bills,Need,phrase
+gasiyan gas,Utilities & Bills,Need,phrase
+gas connection,Utilities & Bills,Need,phrase
+wasser bill,Utilities & Bills,Need,phrase
+electricity meter,Utilities & Bills,Need,phrase
+broadband service,Utilities & Bills,Need,phrase
+mobile top up,Utilities & Bills,Need,phrase
+dth top up,Utilities & Bills,Need,phrase
+electric bill pay,Utilities & Bills,Need,phrase
+water connection,Utilities & Bills,Need,phrase
+gasiyan bill,Utilities & Bills,Need,phrase
+electricity meter reading,Utilities & Bills,Need,phrase
+electricity meter reading done,Utilities & Bills,Need,phrase
+water meter reading,Utilities & Bills,Need,phrase
+electricity bill paid,Utilities & Bills,Need,phrase
+water bill paid,Utilities & Bills,Need,phrase
+gas bill paid,Utilities & Bills,Need,phrase
+broadband bill paid,Utilities & Bills,Need,phrase
+mobile recharge done,Utilities & Bills,Need,phrase
+dth recharge done,Utilities & Bills,Need,phrase
+electricity bill due,Utilities & Bills,Need,phrase
+water bill due,Utilities & Bills,Need,phrase
+gas bill due,Utilities & Bills,Need,phrase
+broadband bill due,Utilities & Bills,Need,phrase
+mobile recharge due,Utilities & Bills,Need,phrase
+dth recharge due,Utilities & Bills,Need,phrase
+electricity bill reminder,Utilities & Bills,Need,phrase
+water bill reminder,Utilities & Bills,Need,phrase
+gas bill reminder,Utilities & Bills,Need,phrase
+broadband bill reminder,Utilities & Bills,Need,phrase
+mobile recharge reminder,Utilities & Bills,Need,phrase
+dth recharge reminder,Utilities & Bills,Need,phrase
+electricity bill alert,Utilities & Bills,Need,phrase
+water bill alert,Utilities & Bills,Need,phrase
+gas bill alert,Utilities & Bills,Need,phrase
+broadband bill alert,Utilities & Bills,Need,phrase
+mobile recharge alert,Utilities & Bills,Need,phrase
+dth recharge alert,Utilities & Bills,Need,phrase
+mobile recharge paid,Utilities & Bills,Need,phrase
+dth recharge paid,Utilities & Bills,Need,phrase
+piped gas connection,Utilities & Bills,Need,phrase
+broadband internet,Utilities & Bills,Need,phrase
+electric meter reading,Utilities & Bills,Need,phrase
+water leak fix,Utilities & Bills,Need,phrase
+gas leak check,Utilities & Bills,Need,phrase
+electrician visit,Utilities & Bills,Need,phrase
+water purifier maintenance,Utilities & Bills,Need,phrase
+electricity tariff,Utilities & Bills,Need,phrase
+high voltage warning,Utilities & Bills,Need,phrase
+pipelining for water,Utilities & Bills,Need,phrase
+smart meter installation,Utilities & Bills,Need,phrase
+solar panel setup,Utilities & Bills,Need,phrase
+water storage tank,Utilities & Bills,Need,phrase
+gas tank upgrade,Utilities & Bills,Need,phrase
+internet speed boost,Utilities & Bills,Need,phrase
+renewable energy source,Utilities & Bills,Need,phrase
+mobile phone upgrade,Utilities & Bills,Need,phrase
+dth subscription,Utilities & Bills,Need,phrase
+extra broadband,Utilities & Bills,Need,phrase
+electricity cut,Utilities & Bills,Need,phrase
+water shortage,Utilities & Bills,Need,phrase
+gas shortage,Utilities & Bills,Need,phrase
+internet outage,Utilities & Bills,Need,phrase
+mobile service,Utilities & Bills,Need,phrase
+dth channel pack,Utilities & Bills,Need,phrase
+electricity meter change,Utilities & Bills,Need,phrase
+water pressure issue,Utilities & Bills,Need,phrase
+gas cylinder replacement,Utilities & Bills,Need,phrase
+water tank cleaning,Utilities & Bills,Need,phrase
+electricity rebate,Utilities & Bills,Need,phrase
+gas leak alarm,Utilities & Bills,Need,phrase
+water conservation tips,Utilities & Bills,Need,phrase
+solar panel maintenance,Utilities & Bills,Need,phrase
+electricity meter test,Utilities & Bills,Need,phrase
+water filter installation,Utilities & Bills,Need,phrase
+electricity surcharge,Utilities & Bills,Need,phrase
+gas cylinder delivery,Utilities & Bills,Need,phrase
+broadband repair,Utilities & Bills,Need,phrase
+mobile contract renewal,Utilities & Bills,Need,phrase
+dth free trial,Utilities & Bills,Need,phrase
+broadband renewal,Utilities & Bills,Need,phrase
+electricity connection,Utilities & Bills,Need,phrase
+gas cylinder changed,Utilities & Bills,Need,phrase
+broadband speed up,Utilities & Bills,Need,phrase
+mobile plan upgrade,Utilities & Bills,Need,phrase
+dth package change,Utilities & Bills,Need,phrase
+broadband internet issues,Utilities & Bills,Need,phrase
+mobile service issue,Utilities & Bills,Need,phrase
+dth signal problem,Utilities & Bills,Need,phrase
+electricity fluctuation,Utilities & Bills,Need,phrase
+water leak,Utilities & Bills,Need,phrase
+broadband speed test,Utilities & Bills,Need,phrase
+mobile data limit,Utilities & Bills,Need,phrase
+dth recharge offer,Utilities & Bills,Need,phrase
+water tank service,Utilities & Bills,Need,phrase
+gas cylinder change,Utilities & Bills,Need,phrase
+broadband setup,Utilities & Bills,Need,phrase
+mobile plan update,Utilities & Bills,Need,phrase
+dth channel add,Utilities & Bills,Need,phrase
+gas connection check,Utilities & Bills,Need,phrase
+mobile battery issue,Utilities & Bills,Need,phrase
+electricity usage,Utilities & Bills,Need,phrase
+water filter service,Utilities & Bills,Need,phrase
+broadband security,Utilities & Bills,Need,phrase
+mobile insurance,Utilities & Bills,Need,phrase
+dth bundle deal,Utilities & Bills,Need,phrase
+electricity backup,Utilities & Bills,Need,phrase
+water heater service,Utilities & Bills,Need,phrase
+gas cylinder safety check,Utilities & Bills,Need,phrase
+broadband contract,Utilities & Bills,Need,phrase
+mobile protection plan,Utilities & Bills,Need,phrase
+dth subscription renewal,Utilities & Bills,Need,phrase
+gas connection fix,Utilities & Bills,Need,phrase
+Citibank,Debt & Loan Payments,Need,merchant
+NABARD,Debt & Loan Payments,Need,merchant
+ICICI Loans,Debt & Loan Payments,Need,merchant
+IndusInd Bank,Debt & Loan Payments,Need,merchant
+Bajaj Finance,Debt & Loan Payments,Need,merchant
+HSBC,Debt & Loan Payments,Need,merchant
+ICICI Axiata,Debt & Loan Payments,Need,merchant
+BorrowEasy,Debt & Loan Payments,Need,merchant
+CitrusPay,Debt & Loan Payments,Need,merchant
+MoneyTap,Debt & Loan Payments,Need,merchant
+PayU,Debt & Loan Payments,Need,merchant
+Bajaj Finserv Loan,Debt & Loan Payments,Need,merchant
+RBL Bank Loan,Debt & Loan Payments,Need,merchant
+RBL Bank Credit Card,Debt & Loan Payments,Need,merchant
+ICICI Credit Card,Debt & Loan Payments,Need,merchant
+HDFC Credit Card,Debt & Loan Payments,Need,merchant
+Citibank Credit Card,Debt & Loan Payments,Need,merchant
+Bajaj Finserv Credit Card,Debt & Loan Payments,Need,merchant
+Kotak Mahindra Credit Card,Debt & Loan Payments,Need,merchant
+SBI Credit Card,Debt & Loan Payments,Need,merchant
+Axis Credit Card,Debt & Loan Payments,Need,merchant
+ICICI Credit Line,Debt & Loan Payments,Need,merchant
+ICICI Cashback,Debt & Loan Payments,Need,merchant
+Bajaj Finance Loan,Debt & Loan Payments,Need,merchant
+Bajaj Finance Credit Card,Debt & Loan Payments,Need,merchant
+RBL Bank Loan EMI,Debt & Loan Payments,Need,merchant
+Bajaj Finserv EMI,Debt & Loan Payments,Need,merchant
+HDFC Loan EMI,Debt & Loan Payments,Need,merchant
+ICICI Loan EMI,Debt & Loan Payments,Need,merchant
+Kotak Mahindra EMI,Debt & Loan Payments,Need,merchant
+Citibank EMI,Debt & Loan Payments,Need,merchant
+ICICI Personal Loan,Debt & Loan Payments,Need,merchant
+Bajaj Finserv Personal Loan,Debt & Loan Payments,Need,merchant
+HDFC Personal Loan,Debt & Loan Payments,Need,merchant
+ICICI Home Loan,Debt & Loan Payments,Need,merchant
+Bajaj Finserv Home Loan,Debt & Loan Payments,Need,merchant
+ICICI Car Loan,Debt & Loan Payments,Need,merchant
+Kotak Mahindra Car Loan,Debt & Loan Payments,Need,merchant
+ICICI Bike Loan,Debt & Loan Payments,Need,merchant
+Bajaj Finance Bike Loan,Debt & Loan Payments,Need,merchant
+loan eMI,Debt & Loan Payments,Need,phrase
+credit card bill,Debt & Loan Payments,Need,phrase
+paylater dues,Debt & Loan Payments,Need,phrase
+nbfc loan,Debt & Loan Payments,Need,phrase
+personal loan,Debt & Loan Payments,Need,phrase
+emi home loan,Debt & Loan Payments,Need,phrase
+emi car loan,Debt & Loan Payments,Need,phrase
+credit card pay,Debt & Loan Payments,Need,phrase
+loan repayment,Debt & Loan Payments,Need,phrase
+personal loan eMI,Debt & Loan Payments,Need,phrase
+loan installment,Debt & Loan Payments,Need,phrase
+loan due,Debt & Loan Payments,Need,phrase
+emi due,Debt & Loan Payments,Need,phrase
+emi payment,Debt & Loan Payments,Need,phrase
+emi on loan,Debt & Loan Payments,Need,phrase
+emi credit card,Debt & Loan Payments,Need,phrase
+emi due date,Debt & Loan Payments,Need,phrase
+loan eMI payment,Debt & Loan Payments,Need,phrase
+nbfc loan due,Debt & Loan Payments,Need,phrase
+loan payment due,Debt & Loan Payments,Need,phrase
+loan due installment,Debt & Loan Payments,Need,phrase
+emi payment due,Debt & Loan Payments,Need,phrase
+emi payment due date,Debt & Loan Payments,Need,phrase
+emi payment due installment,Debt & Loan Payments,Need,phrase
+emi payment due credit card,Debt & Loan Payments,Need,phrase
+emi payment due personal loan,Debt & Loan Payments,Need,phrase
+emi payment due home loan,Debt & Loan Payments,Need,phrase
+emi payment due car loan,Debt & Loan Payments,Need,phrase
+emi payment due nbfc loan,Debt & Loan Payments,Need,phrase
+emi payment due eMI,Debt & Loan Payments,Need,phrase
+emi payment due credit card bill,Debt & Loan Payments,Need,phrase
+emi payment due paylater,Debt & Loan Payments,Need,phrase
+emi payment due loan,Debt & Loan Payments,Need,phrase
+emi payment due loan eMI,Debt & Loan Payments,Need,phrase
+emi payment due loan installment,Debt & Loan Payments,Need,phrase
+emi payment due loan due,Debt & Loan Payments,Need,phrase
+emi payment due loan due installment,Debt & Loan Payments,Need,phrase
+emi payment due loan due date,Debt & Loan Payments,Need,phrase
+emi payment due loan due credit card bill,Debt & Loan Payments,Need,phrase
+emi payment due loan due personal loan,Debt & Loan Payments,Need,phrase
+emi payment due loan due home loan,Debt & Loan Payments,Need,phrase
+emi payment due loan due car loan,Debt & Loan Payments,Need,phrase
+emi payment due loan due nbfc loan,Debt & Loan Payments,Need,phrase
+emi payment due loan due eMI,Debt & Loan Payments,Need,phrase
+emi payment due loan due paylater,Debt & Loan Payments,Need,phrase
+loan eMI grocery store,Debt & Loan Payments,Need,phrase
+personal loan market,Debt & Loan Payments,Need,phrase
+nbfc loan rent,Debt & Loan Payments,Need,phrase
+home loan eMI repair,Debt & Loan Payments,Need,phrase
+nbfc loan payment,Debt & Loan Payments,Need,phrase
+emis grocery,Debt & Loan Payments,Need,phrase
+loan eMI rent,Debt & Loan Payments,Need,phrase
+loan from hdfc,Debt & Loan Payments,Need,phrase
+emi citi card,Debt & Loan Payments,Need,phrase
+nbfc loan paid,Debt & Loan Payments,Need,phrase
+emi airasi,Debt & Loan Payments,Need,phrase
+emis due tomorrow,Debt & Loan Payments,Need,phrase
+pay zomato loan,Debt & Loan Payments,Need,phrase
+emi aadhar,Debt & Loan Payments,Need,phrase
+emi citi paid,Debt & Loan Payments,Need,phrase
+loan app payment,Debt & Loan Payments,Need,phrase
+emi paid yesterday,Debt & Loan Payments,Need,phrase
+emis due next month,Debt & Loan Payments,Need,phrase
+emi rbi paid,Debt & Loan Payments,Need,phrase
+loan payment today,Debt & Loan Payments,Need,phrase
+emis due this month,Debt & Loan Payments,Need,phrase
+emi sbi paid,Debt & Loan Payments,Need,phrase
+emi HDFC,Debt & Loan Payments,Need,phrase
+zomato loan emi,Debt & Loan Payments,Need,phrase
+loan app bill,Debt & Loan Payments,Need,phrase
+emi citi due,Debt & Loan Payments,Need,phrase
+emi axis paid,Debt & Loan Payments,Need,phrase
+emi citi today,Debt & Loan Payments,Need,phrase
+loan emi rbi,Debt & Loan Payments,Need,phrase
+loan payment,Debt & Loan Payments,Need,phrase
+emis due,Debt & Loan Payments,Need,phrase
+emi citi,Debt & Loan Payments,Need,phrase
+emi axis,Debt & Loan Payments,Need,phrase
+emi sbi,Debt & Loan Payments,Need,phrase
+emi zomato,Debt & Loan Payments,Need,phrase
+emi HDFC paid,Debt & Loan Payments,Need,phrase
+emi zomato due,Debt & Loan Payments,Need,phrase
+emi sbi due,Debt & Loan Payments,Need,phrase
+emi airasi due,Debt & Loan Payments,Need,phrase
+emi sbi today,Debt & Loan Payments,Need,phrase
+emi airasi paid,Debt & Loan Payments,Need,phrase
+Jabong,Shopping,Want,merchant
+Bata,Shopping,Want,merchant
+Woodlands,Shopping,Want,merchant
+Virtusa,Shopping,Want,merchant
+Titan,Shopping,Want,merchant
+Jain Jewellers,Shopping,Want,merchant
+Fabindia,Shopping,Want,merchant
+Vivara,Shopping,Want,merchant
+Jwellers,Shopping,Want,merchant
+Niki Wear,Shopping,Want,merchant
+Soho Home,Shopping,Want,merchant
+Sofista,Shopping,Want,merchant
+Gitanjali,Shopping,Want,merchant
+Tata Cliq,Shopping,Want,merchant
+Saphir,Shopping,Want,merchant
+Roshan,Shopping,Want,merchant
+Jain,Shopping,Want,merchant
+Safa Rana,Shopping,Want,merchant
+Zivame,Shopping,Want,merchant
+Urban Ladder,Shopping,Want,merchant
+Moglix,Shopping,Want,merchant
+Wishart,Shopping,Want,merchant
+Vijay Electronics,Shopping,Want,merchant
+Rahul's Jewellery,Shopping,Want,merchant
+Balaji Fabrics,Shopping,Want,merchant
+Sunil Stationery,Shopping,Want,merchant
+Gopal's Footwear,Shopping,Want,merchant
+Rajesh Watches,Shopping,Want,merchant
+Neha Electronics,Shopping,Want,merchant
+Guru Jewellers,Shopping,Want,merchant
+Rajesh Fabrics,Shopping,Want,merchant
+Ramesh Stationery,Shopping,Want,merchant
+Sujata Footwear,Shopping,Want,merchant
+Rohini Fabrics,Shopping,Want,merchant
+Guru Stationery,Shopping,Want,merchant
+Sujata Jewellery,Shopping,Want,merchant
+Ramesh Electronics,Shopping,Want,merchant
+Vijay Fabrics,Shopping,Want,merchant
+Rohini Footwear,Shopping,Want,merchant
+Neha Jewellery,Shopping,Want,merchant
+Ramesh Fabrics,Shopping,Want,merchant
+Vijay Footwear,Shopping,Want,merchant
+Sujata Electronics,Shopping,Want,merchant
+Vijay Stationery,Shopping,Want,merchant
+Neha Footwear,Shopping,Want,merchant
+Guru Electronics,Shopping,Want,merchant
+Guru Footwear,Shopping,Want,merchant
+Rahul's Electronics,Shopping,Want,merchant
+Sujata Stationery,Shopping,Want,merchant
+Vijay Jewellery,Shopping,Want,merchant
+Neha Fabrics,Shopping,Want,merchant
+Rahul's Stationery,Shopping,Want,merchant
+Rahul's Footwear,Shopping,Want,merchant
+Sujata Fabrics,Shopping,Want,merchant
+new pair shoes,Shopping,Want,phrase
+leather belt,Shopping,Want,phrase
+jeans for party,Shopping,Want,phrase
+saree for mom,Shopping,Want,phrase
+t-shirt for gym,Shopping,Want,phrase
+smartphone case,Shopping,Want,phrase
+gym wear,Shopping,Want,phrase
+laptop charger,Shopping,Need,phrase
+backpack for school,Shopping,Want,phrase
+office furniture,Shopping,Want,phrase
+home decor set,Shopping,Want,phrase
+sofa for sitting,Shopping,Want,phrase
+coffee machine,Shopping,Want,phrase
+gadget for travel,Shopping,Want,phrase
+electronics store,Shopping,Want,phrase
+mobile screen repair,Shopping,Need,phrase
+handloom saree,Shopping,Want,phrase
+jewellery box,Shopping,Want,phrase
+bangles set,Shopping,Want,phrase
+gifting saree,Shopping,Want,phrase
+saree for puja,Shopping,Want,phrase
+leather wallet,Shopping,Want,phrase
+electronics shop,Shopping,Want,phrase
+online shopping,Shopping,Want,phrase
+furniture store,Shopping,Want,phrase
+gift for friend,Shopping,Want,phrase
+new shoes,Shopping,Want,phrase
+mobile accessories,Shopping,Want,phrase
+online store,Shopping,Want,phrase
+fashion store,Shopping,Want,phrase
+jewellery shop,Shopping,Want,phrase
+school shoes,Shopping,Need,phrase
+gift pack,Shopping,Want,phrase
+laptop screen,Shopping,Want,phrase
+school bag,Shopping,Need,phrase
+gift set,Shopping,Want,phrase
+online gifts,Shopping,Want,phrase
+stationery store,Shopping,Want,phrase
+electronics online,Shopping,Want,phrase
+gadget repair,Shopping,Want,phrase
+laptop for office,Shopping,Want,phrase
+stationery shop,Shopping,Want,phrase
+jewellery boutique,Shopping,Want,phrase
+gym wear for kids,Shopping,Need,phrase
+electronic gadgets,Shopping,Want,phrase
+new sandals,Shopping,Want,phrase
+organic cotton t-shirt,Shopping,Want,phrase
+digital camera,Shopping,Want,phrase
+leather laptop bag,Shopping,Want,phrase
+spiral bound notebooks,Shopping,Want,phrase
+leather-bound journal,Shopping,Want,phrase
+masala dabba,Shopping,Want,phrase
+chocolate dispenser,Shopping,Want,phrase
+glassware set,Shopping,Want,phrase
+saree dupatta,Shopping,Want,phrase
+furniture polish,Shopping,Want,phrase
+cushion covers,Shopping,Want,phrase
+home decor lights,Shopping,Want,phrase
+spice grinder,Shopping,Want,phrase
+garden plants,Shopping,Want,phrase
+hand sanitizer refill,Shopping,Need,phrase
+mattress protector,Shopping,Want,phrase
+air purifier filter,Shopping,Want,phrase
+wireless earbuds,Shopping,Want,phrase
+power bank,Shopping,Want,phrase
+toaster oven,Shopping,Want,phrase
+kitchen tongs,Shopping,Want,phrase
+tea strainer,Shopping,Want,phrase
+handloom bedspread,Shopping,Want,phrase
+candle holder,Shopping,Want,phrase
+wooden dining set,Shopping,Want,phrase
+smartwatch,Shopping,Want,phrase
+travel backpack,Shopping,Want,phrase
+pet bed,Shopping,Want,phrase
+kitchen apron,Shopping,Want,phrase
+travel mug,Shopping,Want,phrase
+bathrobe,Shopping,Want,phrase
+garden tool kit,Shopping,Want,phrase
+saree pleats maker,Shopping,Want,phrase
+handcrafted jewelry,Shopping,Want,phrase
+toiletries kit,Shopping,Want,phrase
+wall decor,Shopping,Want,phrase
+indoor shoe rack,Shopping,Want,phrase
+smart home speaker,Shopping,Want,phrase
+diy craft kit,Shopping,Want,phrase
+saree pallu pin,Shopping,Want,phrase
+homemade skincare set,Shopping,Want,phrase
+new jeans,Shopping,Want,phrase
+leather shoes,Shopping,Want,phrase
+smartphone,Shopping,Want,phrase
+speaker for home,Shopping,Want,phrase
+sofa set,Shopping,Want,phrase
+bedsheet set,Shopping,Want,phrase
+mug set,Shopping,Want,phrase
+laptop for work,Shopping,Want,phrase
+repair laptop,Shopping,Need,phrase
+gift for aunt,Shopping,Want,phrase
+handcrafted jewellery,Shopping,Want,phrase
+diy decor kit,Shopping,Want,phrase
+kitchenware set,Shopping,Want,phrase
+kitchen gadgets,Shopping,Want,phrase
+e-commerce order,Shopping,Want,phrase
+perfume set,Shopping,Want,phrase
+household essentials,Shopping,Need,phrase
+home office supplies,Shopping,Want,phrase
+living room furniture,Shopping,Want,phrase
+bathroom tiles,Shopping,Want,phrase
+kitchen countertop,Shopping,Want,phrase
+garden lighting,Shopping,Want,phrase
+pet supplies,Shopping,Want,phrase
+dog collar,Shopping,Want,phrase
+cat toys,Shopping,Want,phrase
+outdoor furniture,Shopping,Want,phrase
+Zee5,Entertainment,Want,merchant
+Amazon Prime,Entertainment,Want,merchant
+Mubi,Entertainment,Want,merchant
+Vihaan,Entertainment,Want,merchant
+Bollywood Hungama,Entertainment,Want,merchant
+Filmyon,Entertainment,Want,merchant
+Bigg Boss,Entertainment,Want,merchant
+Cinepolis,Entertainment,Want,merchant
+PVR,Entertainment,Want,merchant
+AMC,Entertainment,Want,merchant
+Inox,Entertainment,Want,merchant
+Multiplex,Entertainment,Want,merchant
+TicketGoose,Entertainment,Want,merchant
+Eventbrite,Entertainment,Want,merchant
+OMG!,Entertainment,Want,merchant
+Zee Entertainment,Entertainment,Want,merchant
+Sony Entertainment,Entertainment,Want,merchant
+Dfilmy,Entertainment,Want,merchant
+Aayin,Entertainment,Want,merchant
+Dulhania,Entertainment,Want,merchant
+Cocacola,Entertainment,Want,merchant
+Pepsi,Entertainment,Want,merchant
+Google Stadia,Entertainment,Want,merchant
+Ubisoft,Entertainment,Want,merchant
+Epic Games,Entertainment,Want,merchant
+EA,Entertainment,Want,merchant
+Steam,Entertainment,Want,merchant
+Rockstar,Entertainment,Want,merchant
+Bethesda,Entertainment,Want,merchant
+Square Enix,Entertainment,Want,merchant
+Activision,Entertainment,Want,merchant
+PlayStation Plus,Entertainment,Want,merchant
+Xbox Live,Entertainment,Want,merchant
+EA Play,Entertainment,Want,merchant
+Stadia Pro,Entertainment,Want,merchant
+Disney+,Entertainment,Want,merchant
+HBO Max,Entertainment,Want,merchant
+Apple TV+,Entertainment,Want,merchant
+Prime Video,Entertainment,Want,merchant
+Starz Play,Entertainment,Want,merchant
+Sony LIV,Entertainment,Want,merchant
+Hotstar Kids,Entertainment,Want,merchant
+Hotstar Sports,Entertainment,Want,merchant
+Jio Cinema,Entertainment,Want,merchant
+SonyLIV,Entertainment,Want,merchant
+Ola Movies,Entertainment,Want,merchant
+Vi,Entertainment,Want,merchant
+Mangalam Theatres,Entertainment,Want,merchant
+Epicentertainment,Entertainment,Want,merchant
+Dolce Cinema,Entertainment,Want,merchant
+Star Cinema,Entertainment,Want,merchant
+MGM Cinemas,Entertainment,Want,merchant
+Bollywood Movies,Entertainment,Want,merchant
+Tollywood,Entertainment,Want,merchant
+Kollywood,Entertainment,Want,merchant
+Hollywood,Entertainment,Want,merchant
+Sony Play,Entertainment,Want,merchant
+Voot,Entertainment,Want,merchant
+Alt Balaji,Entertainment,Want,merchant
+Redwood Cinema,Entertainment,Want,merchant
+Manglapur Cinemas,Entertainment,Want,merchant
+Sundaram Cinemas,Entertainment,Want,merchant
+Premier Multiplex,Entertainment,Want,merchant
+Global Cinemas,Entertainment,Want,merchant
+Cine Max,Entertainment,Want,merchant
+Spectra Cinemas,Entertainment,Want,merchant
+Surya Cinemas,Entertainment,Want,merchant
+Golden Cinema,Entertainment,Want,merchant
+Tinkle Theatre,Entertainment,Want,merchant
+Ruby Cinemas,Entertainment,Want,merchant
+Vidya Cinema,Entertainment,Want,merchant
+Ravinder Cinema,Entertainment,Want,merchant
+Sharda Theatre,Entertainment,Want,merchant
+Jyoti Cinema,Entertainment,Want,merchant
+Kamla Cinema,Entertainment,Want,merchant
+Shree Cinema,Entertainment,Want,merchant
+Saraswati Cinemas,Entertainment,Want,merchant
+Bhakti Cinemas,Entertainment,Want,merchant
+Rajdhani Cinema,Entertainment,Want,merchant
+Gyan Cinemas,Entertainment,Want,merchant
+Ravi Theatre,Entertainment,Want,merchant
+Shivaji Cinema,Entertainment,Want,merchant
+Puneet Cinema,Entertainment,Want,merchant
+Rajnandini Cinema,Entertainment,Want,merchant
+Bharat Cinema,Entertainment,Want,merchant
+Anurag Cinema,Entertainment,Want,merchant
+Rajendra Cinemas,Entertainment,Want,merchant
+Bharat Theatre,Entertainment,Want,merchant
+Vishal Cinema,Entertainment,Want,merchant
+Bhawani Cinema,Entertainment,Want,merchant
+Rajesh Cinemas,Entertainment,Want,merchant
+Shubham Cinema,Entertainment,Want,merchant
+Gaurav Cinema,Entertainment,Want,merchant
+Shivam Cinemas,Entertainment,Want,merchant
+Ramesh Cinemas,Entertainment,Want,merchant
+Bharat Cinemas,Entertainment,Want,merchant
+Shivam Theatre,Entertainment,Want,merchant
+Kapil Cinemas,Entertainment,Want,merchant
+Ramesh Theatre,Entertainment,Want,merchant
+Sandeep Cinema,Entertainment,Want,merchant
+Ankur Cinema,Entertainment,Want,merchant
+Rajesh Cinema,Entertainment,Want,merchant
+Dharmesh Cinema,Entertainment,Want,merchant
+Shubham Theatre,Entertainment,Want,merchant
+Vishal Theatre,Entertainment,Want,merchant
+Vivek Cinema,Entertainment,Want,merchant
+Ankur Theatre,Entertainment,Want,merchant
+Rajesh Theatre,Entertainment,Want,merchant
+amazon prime,Entertainment,Want,phrase
+concert tickets,Entertainment,Want,phrase
+movie theater,Entertainment,Want,phrase
+indian movies,Entertainment,Want,phrase
+south indian cinema,Entertainment,Want,phrase
+hollywood flicks,Entertainment,Want,phrase
+pub hopping,Entertainment,Want,phrase
+bar crawl,Entertainment,Want,phrase
+alcohol,Entertainment,Want,phrase
+wine night,Entertainment,Want,phrase
+cigarettes,Entertainment,Want,phrase
+chill smoke,Entertainment,Want,phrase
+karaoke,Entertainment,Want,phrase
+tea time,Entertainment,Want,phrase
+chai pe charcha,Entertainment,Want,phrase
+movie marathon,Entertainment,Want,phrase
+board games,Entertainment,Want,phrase
+puzzle night,Entertainment,Want,phrase
+dnd session,Entertainment,Want,phrase
+amusement park,Entertainment,Want,phrase
+water park,Entertainment,Want,phrase
+theme park,Entertainment,Want,phrase
+carnival rides,Entertainment,Want,phrase
+arcade games,Entertainment,Want,phrase
+amusement pass,Entertainment,Want,phrase
+comic con,Entertainment,Want,phrase
+music festival,Entertainment,Want,phrase
+solo travel,Entertainment,Want,phrase
+travel budget,Entertainment,Want,phrase
+adventure tour,Entertainment,Want,phrase
+local theater,Entertainment,Want,phrase
+art house cinema,Entertainment,Want,phrase
+live music,Entertainment,Want,phrase
+drama nights,Entertainment,Want,phrase
+film fest,Entertainment,Want,phrase
+gaming meet-up,Entertainment,Want,phrase
+online gaming,Entertainment,Want,phrase
+e-sports tournament,Entertainment,Want,phrase
+streaming service,Entertainment,Want,phrase
+movies theater,Entertainment,Want,phrase
+concert ticket,Entertainment,Want,phrase
+gaming headset,Entertainment,Want,phrase
+pub crawl,Entertainment,Want,phrase
+bar hopping,Entertainment,Want,phrase
+alcohol samples,Entertainment,Want,phrase
+cigarettes pack,Entertainment,Want,phrase
+karaoke night,Entertainment,Want,phrase
+escapade adventure,Entertainment,Want,phrase
+video game subscription,Entertainment,Want,phrase
+theme park pass,Entertainment,Want,phrase
+museum entry,Entertainment,Want,phrase
+comic book store,Entertainment,Want,phrase
+live stream event,Entertainment,Want,phrase
+fancy cocktails,Entertainment,Want,phrase
+fireworks show,Entertainment,Want,phrase
+gourmet food night,Entertainment,Want,phrase
+zoo visit,Entertainment,Want,phrase
+botanical garden,Entertainment,Want,phrase
+cultural festival,Entertainment,Want,phrase
+stand-up comedy,Entertainment,Want,phrase
+indie film festival,Entertainment,Want,phrase
+botanical walk,Entertainment,Want,phrase
+puppet show,Entertainment,Want,phrase
+karaoke contest,Entertainment,Want,phrase
+live band,Entertainment,Want,phrase
+virtual reality experience,Entertainment,Want,phrase
+pachisi night,Entertainment,Want,phrase
+indie concert,Entertainment,Want,phrase
+photography exhibit,Entertainment,Want,phrase
+art workshop,Entertainment,Want,phrase
+cultural dance performance,Entertainment,Want,phrase
+indie bookstore,Entertainment,Want,phrase
+craft fair,Entertainment,Want,phrase
+film screening,Entertainment,Want,phrase
+wine tasting,Entertainment,Want,phrase
+hiking adventure,Entertainment,Want,phrase
+mystery dinner,Entertainment,Want,phrase
+space exhibition,Entertainment,Want,phrase
+indie theater,Entertainment,Want,phrase
+puppet theater,Entertainment,Want,phrase
+zookeeper talk,Entertainment,Want,phrase
+prime,Entertainment,Want,phrase
+movies,Entertainment,Want,phrase
+concert,Entertainment,Want,phrase
+pub,Entertainment,Want,phrase
+bar,Entertainment,Want,phrase
+video game,Entertainment,Want,phrase
+gaming,Entertainment,Want,phrase
+indian film,Entertainment,Want,phrase
+hollywood,Entertainment,Want,phrase
+sab ka hoga,Entertainment,Want,phrase
+dholki,Entertainment,Want,phrase
+party,Entertainment,Want,phrase
+khol,Entertainment,Want,phrase
+song,Entertainment,Want,phrase
+movie night,Entertainment,Want,phrase
+music fest,Entertainment,Want,phrase
+board game,Entertainment,Want,phrase
+escape room,Entertainment,Want,phrase
+indoor games,Entertainment,Want,phrase
+outdoor games,Entertainment,Want,phrase
+drama,Entertainment,Want,phrase
+play,Entertainment,Want,phrase
+theater,Entertainment,Want,phrase
+comic,Entertainment,Want,phrase
+comic book,Entertainment,Want,phrase
+novel,Entertainment,Want,phrase
+book,Entertainment,Want,phrase
+ebook,Entertainment,Want,phrase
+audiobook,Entertainment,Want,phrase
+film festival,Entertainment,Want,phrase
+book fair,Entertainment,Want,phrase
+reading,Entertainment,Want,phrase
+painting,Entertainment,Want,phrase
+craft,Entertainment,Want,phrase
+art,Entertainment,Want,phrase
+singing,Entertainment,Want,phrase
+singing class,Entertainment,Want,phrase
+dance,Entertainment,Want,phrase
+dance class,Entertainment,Want,phrase
+Apollo Hospitals,Health,Need,merchant
+Fortis Healthcare,Health,Need,merchant
+Manipal Hospitals,Health,Need,merchant
+BLK Super Speciality,Health,Need,merchant
+Netaji Subhas Chandra Bose,Health,Need,merchant
+Aakash Healthcare,Health,Need,merchant
+Fortis Malar,Health,Need,merchant
+Apollo Lifeline,Health,Need,merchant
+Max Healthcare,Health,Need,merchant
+Aakash Super Speciality,Health,Need,merchant
+Aster CMI,Health,Need,merchant
+Sankara Nethralaya,Health,Need,merchant
+Baidyanath,Health,Need,merchant
+NOW Foods,Health,Want,merchant
+Vitabase,Health,Want,merchant
+Nature's Way,Health,Want,merchant
+Life Span,Health,Want,merchant
+MusclePharm,Health,Want,merchant
+Dymatize,Health,Want,merchant
+Garden of Life,Health,Want,merchant
+Precision Nutrition,Health,Want,merchant
+Athena Health,Health,Need,merchant
+NABL,Health,Need,merchant
+ISO,Health,Need,merchant
+ISO 15189,Health,Need,merchant
+ISO 9001,Health,Need,merchant
+ISO 14001,Health,Need,merchant
+ISO 45001,Health,Need,merchant
+ISO 22000,Health,Need,merchant
+ISO 27001,Health,Need,merchant
+ISO 31000,Health,Need,merchant
+ISO 50001,Health,Need,merchant
+ISO 55000,Health,Need,merchant
+ISO 50550,Health,Need,merchant
+ISO 50001:2018,Health,Need,merchant
+ISO 55001:2014,Health,Need,merchant
+Anura Healthcare,Health,Need,merchant
+Baidyanath Ayurved,Health,Need,merchant
+Chennai MedCentre,Health,Need,merchant
+Dhanvantri Ayurved,Health,Need,merchant
+Epicure Nutrition,Health,Want,merchant
+Fithouse,Health,Want,merchant
+GymPlus,Health,Want,merchant
+Healthway,Health,Need,merchant
+Herbal Choice,Health,Need,merchant
+Infi Health,Health,Want,merchant
+Jaypee Hospital,Health,Need,merchant
+KIMS,Health,Need,merchant
+Lakshmi Apothecary,Health,Need,merchant
+Mahananda Herbal,Health,Need,merchant
+Nature's Edge,Health,Want,merchant
+OmniFit,Health,Want,merchant
+Quicksilver Scientific,Health,Want,merchant
+Rainbow Kids Clinic,Health,Need,merchant
+Saraswati Ayurved,Health,Need,merchant
+Tata Consumer,Health,Need,merchant
+Vitabond,Health,Need,merchant
+WeFit,Health,Want,merchant
+XtremeFit,Health,Want,merchant
+Yoga Care,Health,Need,merchant
+Zenith Healthcare,Health,Need,merchant
+Aveeno,Health,Want,merchant
+FitterLife,Health,Want,merchant
+Gyan Vitale,Health,Need,merchant
+Himalaya Healthcare,Health,Need,merchant
+Infit,Health,Want,merchant
+Jyoti Vitale,Health,Need,merchant
+Kokilaben Dhirubhai Ambani,Health,Need,merchant
+Maha Ayurved,Health,Need,merchant
+Natraj,Health,Need,merchant
+Olive Healthcare,Health,Need,merchant
+Patanjali Stores,Health,Need,merchant
+Qure Healthcare,Health,Need,merchant
+Rashtriya Ayurved,Health,Need,merchant
+Santikriya,Health,Need,merchant
+Tatulife,Health,Need,merchant
+Vedic Life Solutions,Health,Need,merchant
+Wellness Plus,Health,Need,merchant
+XtraFit,Health,Want,merchant
+Yoga Centre,Health,Need,merchant
+Zenith Nutrition,Health,Want,merchant
+Aroma World,Health,Want,merchant
+Bharat Ayurved,Health,Need,merchant
+Crescent Healthcare,Health,Need,merchant
+Dietline,Health,Need,merchant
+FitMind,Health,Want,merchant
+Greenway Biotech,Health,Need,merchant
+Harita Ayurved,Health,Need,merchant
+Anjali Herbal Shop,Health,Need,merchant
+Vivek Pharmacy,Health,Need,merchant
+Mohan Ayurved,Health,Need,merchant
+Guruji's Pharmacy,Health,Need,merchant
+Santosh Chemist,Health,Need,merchant
+Rahul Health,Health,Need,merchant
+Prem Vitale,Health,Need,merchant
+Gopal's Chemist,Health,Need,merchant
+Kishore Medical,Health,Need,merchant
+Rajendra Pharmacy,Health,Need,merchant
+Vishal's Pharmacy,Health,Need,merchant
+Ramesh's Pharmacy,Health,Need,merchant
+Lal's Chemist,Health,Need,merchant
+Rakesh's Pharmacy,Health,Need,merchant
+Pandey's Chemist,Health,Need,merchant
+Rajesh's Pharmacy,Health,Need,merchant
+Anil's Pharmacy,Health,Need,merchant
+Kishore's Pharmacy,Health,Need,merchant
+Rajesh's Chemist,Health,Need,merchant
+Ramesh's Chemist,Health,Need,merchant
+Laxmi's Pharmacy,Health,Need,merchant
+cough syrup,Health,Need,phrase
+bandages,Health,Need,phrase
+pain reliever,Health,Need,phrase
+antibiotic cream,Health,Need,phrase
+painkiller,Health,Need,phrase
+vitamin tablets,Health,Want,phrase
+fish oil,Health,Want,phrase
+protein powder,Health,Want,phrase
+pre-workout,Health,Want,phrase
+chiro adjustment,Health,Need,phrase
+sick child,Health,Need,phrase
+flu shot,Health,Need,phrase
+allergy medicine,Health,Need,phrase
+root canal,Health,Need,phrase
+bridges,Health,Need,phrase
+diet plan,Health,Want,phrase
+surgical mask,Health,Need,phrase
+bandage,Health,Need,phrase
+sore throat,Health,Need,phrase
+eye drops,Health,Need,phrase
+cold medicine,Health,Need,phrase
+healing herbs,Health,Need,phrase
+sick days,Health,Need,phrase
+doc visit,Health,Need,phrase
+prescription refill,Health,Need,phrase
+migraine tablets,Health,Need,phrase
+asthma inhaler,Health,Need,phrase
+joint pain cream,Health,Need,phrase
+blood pressure check,Health,Need,phrase
+diabetes test kit,Health,Need,phrase
+urine test strip,Health,Need,phrase
+lab test kit,Health,Need,phrase
+hearing aid battery,Health,Need,phrase
+asthma spray,Health,Need,phrase
+cold and flu medicine,Health,Need,phrase
+antibiotic,Health,Need,phrase
+sterile bandage,Health,Need,phrase
+allergy pill,Health,Need,phrase
+prescription pickup,Health,Need,phrase
+vaccination,Health,Need,phrase
+protein bar,Health,Want,phrase
+energy gels,Health,Want,phrase
+supplement pack,Health,Want,phrase
+pre-exercise snack,Health,Want,phrase
+post-workout shake,Health,Want,phrase
+healthy snack,Health,Want,phrase
+meal prep service,Health,Want,phrase
+weight loss pills,Health,Want,phrase
+health checkup,Health,Need,phrase
+kisi ke pass pain pill,Health,Need,phrase
+doctors appointment,Health,Need,phrase
+hospital room charge,Health,Need,phrase
+lab test report,Health,Need,phrase
+prescription medicine,Health,Need,phrase
+antibiotic injection,Health,Need,phrase
+dental filling,Health,Need,phrase
+tooth extraction,Health,Need,phrase
+dentist checkup,Health,Need,phrase
+bcaa supplements,Health,Want,phrase
+multivitamin,Health,Want,phrase
+gym fee,Health,Need,phrase
+dietician,Health,Need,phrase
+medicines for cold,Health,Need,phrase
+paracetamol,Health,Need,phrase
+treatment for allergy,Health,Need,phrase
+allergy tablets,Health,Need,phrase
+diet consultation,Health,Need,phrase
+nutrition plan,Health,Need,phrase
+dietary advice,Health,Need,phrase
+vitamin c tablet,Health,Want,phrase
+vit c tablet,Health,Want,phrase
+corporate gym membership,Health,Need,phrase
+company gym access,Health,Need,phrase
+personalized diet,Health,Need,phrase
+Vidyamandir Classes,Education,Investment,merchant
+BYJU'S,Education,Investment,merchant
+UpGrad,Education,Investment,merchant
+Unacademy,Education,Investment,merchant
+Times Higher Education,Education,Investment,merchant
+Udemy,Education,Investment,merchant
+Coursera,Education,Investment,merchant
+Khan Academy,Education,Investment,merchant
+FutureSchool,Education,Investment,merchant
+Princeton Review,Education,Investment,merchant
+TestFunda,Education,Investment,merchant
+Aakash EduTech,Education,Investment,merchant
+Vasudha School,Education,Need,merchant
+Disha Publication,Education,Investment,merchant
+Gyan Sarovar,Education,Investment,merchant
+Hariyali Publications,Education,Investment,merchant
+Sukhdev Publications,Education,Investment,merchant
+Prakash Book Depot,Education,Investment,merchant
+R.S. Aggarwal,Education,Investment,merchant
+NCERT,Education,Need,merchant
+LinkedIn Learning,Education,Investment,merchant
+Udacity,Education,Investment,merchant
+Coursera Pro,Education,Investment,merchant
+LinkedIn,Education,Investment,merchant
+Edx,Education,Investment,merchant
+Chegg,Education,Investment,merchant
+Chegg Textbook,Education,Need,merchant
+Capgemini,Education,Investment,merchant
+Deloitte,Education,Investment,merchant
+PwC,Education,Investment,merchant
+Accenture,Education,Investment,merchant
+TCS,Education,Investment,merchant
+Wipro,Education,Investment,merchant
+Cognizant,Education,Investment,merchant
+Tech Mahindra,Education,Investment,merchant
+Nirvana Institute of Management Studies,Education,Investment,merchant
+Symbiosis Institute of Computer Applications,Education,Investment,merchant
+Manipal University,Education,Investment,merchant
+VIT University,Education,Investment,merchant
+IIMB,Education,Investment,merchant
+Pune Institute of Business Management,Education,Investment,merchant
+NMIMS,Education,Investment,merchant
+KIIT,Education,Investment,merchant
+Gyan Ganga,Education,Investment,merchant
+Eduzone,Education,Investment,merchant
+Crescent Learning,Education,Investment,merchant
+Nirvana Education,Education,Investment,merchant
+Pinnacle Institute,Education,Investment,merchant
+Brainwave Education,Education,Investment,merchant
+Karmayogi,Education,Investment,merchant
+Vidya Mandir,Education,Investment,merchant
+Kiran Institute,Education,Investment,merchant
+Saksham Classes,Education,Investment,merchant
+EduCity,Education,Investment,merchant
+Guruvedam,Education,Investment,merchant
+Pride Academy,Education,Investment,merchant
+Vishwa Bharti,Education,Investment,merchant
+Saraswati Institute,Education,Investment,merchant
+Vishwa Vignan,Education,Investment,merchant
+Vivekananda Learning,Education,Investment,merchant
+Saraswati School,Education,Investment,merchant
+Guru Gobind Singh,Education,Investment,merchant
+Krishna Vidyapeeth,Education,Investment,merchant
+Vishnu Vidyapeeth,Education,Investment,merchant
+Saraswati Shishu Niketan,Education,Investment,merchant
+Guru Nanak Vidyapeeth,Education,Investment,merchant
+Saraswati Vidya Kendra,Education,Investment,merchant
+Saraswati Vidya Peeth,Education,Investment,merchant
+Krishna Vidya Kendra,Education,Investment,merchant
+Saraswati Vidyapeeth,Education,Investment,merchant
+Saraswati Vidyalaya,Education,Need,merchant
+Ankur Coaching,Education,Investment,merchant
+Niranjana Tuition,Education,Investment,merchant
+Shyam Learning Center,Education,Investment,merchant
+Disha Classes,Education,Investment,merchant
+Rama Coaching,Education,Investment,merchant
+Shyamala Publications,Education,Investment,merchant
+Saraswati Publications,Education,Investment,merchant
+Gyan Vihar,Education,Investment,merchant
+Vivek Vidyalaya,Education,Investment,merchant
+Kishan Classes,Education,Investment,merchant
+Guru Vidya Kendra,Education,Investment,merchant
+Saraswati Vidya Mandir,Education,Investment,merchant
+Saraswati Niketan,Education,Investment,merchant
+Krishna Vidya Mandir,Education,Investment,merchant
+Shri Krishna Vidyapeeth,Education,Investment,merchant
+Guru Vidyapeeth,Education,Investment,merchant
+Shyam Vidyapeeth,Education,Investment,merchant
+Rishi Vidyapeeth,Education,Investment,merchant
+Guru Vidyala,Education,Investment,merchant
+Shiv Vidyapeeth,Education,Investment,merchant
+Guru Vidyamandir,Education,Investment,merchant
+Krishna Vidyamandir,Education,Investment,merchant
+Saraswati Vidyamandir,Education,Investment,merchant
+Shyam Vidyamandir,Education,Investment,merchant
+Rishi Vidyamandir,Education,Investment,merchant
+Shiv Vidyamandir,Education,Investment,merchant
+Vishnu Vidyamandir,Education,Investment,merchant
+school fees,Education,Need,phrase
+college tuition,Education,Need,phrase
+exam prep classes,Education,Investment,phrase
+online course,Education,Investment,phrase
+books for exams,Education,Need,phrase
+certification fees,Education,Investment,phrase
+school van hire,Education,Need,phrase
+tuition fees,Education,Need,phrase
+iit coaching,Education,Investment,phrase
+gs course,Education,Investment,phrase
+gmat prep,Education,Investment,phrase
+cat coaching,Education,Investment,phrase
+school books,Education,Need,phrase
+engineering coaching,Education,Investment,phrase
+med coaching,Education,Investment,phrase
+coaching fees,Education,Need,phrase
+online math course,Education,Investment,phrase
+nptel course,Education,Investment,phrase
+upsc coaching,Education,Investment,phrase
+school uniforms,Education,Need,phrase
+exam fees,Education,Need,phrase
+neet coaching,Education,Investment,phrase
+cfa course,Education,Investment,phrase
+certification course,Education,Investment,phrase
+gk books,Education,Investment,phrase
+ielts course,Education,Investment,phrase
+khan academy,Education,Investment,phrase
+du admission fee,Education,Need,phrase
+iimx course,Education,Investment,phrase
+school fees paid,Education,Need,phrase
+exam prep classes paid,Education,Investment,phrase
+coaching center fees,Education,Need,phrase
+online exam prep,Education,Investment,phrase
+cbse coaching,Education,Investment,phrase
+neet coaching fees,Education,Investment,phrase
+upsc coaching fees,Education,Investment,phrase
+gs coaching,Education,Investment,phrase
+iit jee coaching,Education,Investment,phrase
+coaching center fee,Education,Need,phrase
+books for school,Education,Need,phrase
+certification exam fees,Education,Need,phrase
+coding bootcamp,Education,Investment,phrase
+language tuition,Education,Investment,phrase
+maths workshop,Education,Investment,phrase
+history coaching,Education,Investment,phrase
+personal finance course,Education,Investment,phrase
+law entrance prep,Education,Investment,phrase
+mba prep course,Education,Investment,phrase
+civil service exam,Education,Need,phrase
+data science training,Education,Investment,phrase
+certified public accountant,Education,Investment,phrase
+diploma in fashion,Education,Investment,phrase
+microsoft certification,Education,Investment,phrase
+ibps exam prep,Education,Investment,phrase
+ielts coaching,Education,Investment,phrase
+gre prep course,Education,Investment,phrase
+actuarial science,Education,Investment,phrase
+cpa exam fees,Education,Need,phrase
+chartered accountant,Education,Investment,phrase
+microsoft azure certification,Education,Investment,phrase
+certified scrum master,Education,Investment,phrase
+aws certification,Education,Investment,phrase
+pmp certification,Education,Investment,phrase
+java training,Education,Investment,phrase
+c++ programming,Education,Investment,phrase
+data analyst course,Education,Investment,phrase
+digital marketing course,Education,Investment,phrase
+ui/ux design,Education,Investment,phrase
+artificial intelligence,Education,Investment,phrase
+machine learning,Education,Investment,phrase
+cloud computing,Education,Investment,phrase
+aws cloud formation,Education,Investment,phrase
+azure devops,Education,Investment,phrase
+sap certification,Education,Investment,phrase
+sap hybris,Education,Investment,phrase
+sap hana,Education,Investment,phrase
+sap s/4hana,Education,Investment,phrase
+sap fico,Education,Investment,phrase
+sap pp,Education,Investment,phrase
+sap bw,Education,Investment,phrase
+sap pi,Education,Investment,phrase
+sap mrf,Education,Investment,phrase
+sap me,Education,Investment,phrase
+school fee,Education,Need,phrase
+coaching classes,Education,Investment,phrase
+certification,Education,Investment,phrase
+book for kid,Education,Investment,phrase
+school van,Education,Need,phrase
+tuition fee,Education,Need,phrase
+skipping rope,Education,Investment,phrase
+iPad for studies,Education,Investment,phrase
+exam prep,Education,Investment,phrase
+college fee,Education,Need,phrase
+books for coaching,Education,Investment,phrase
+skool bag,Education,Need,phrase
+exam kit,Education,Need,phrase
+skool uniform,Education,Need,phrase
+online vid course,Education,Investment,phrase
+certi for job,Education,Investment,phrase
+tuitions for kid,Education,Investment,phrase
+school stationery,Education,Need,phrase
+exam prep kit,Education,Investment,phrase
+skool shoes,Education,Investment,phrase
+edu loan,Education,Investment,phrase
+skool fees,Education,Need,phrase
+exam prep book,Education,Investment,phrase
+skool bag for kid,Education,Need,phrase
+exam kit for kid,Education,Need,phrase
+skool van,Education,Need,phrase
+school kit,Education,Need,phrase
+skool van fee,Education,Need,phrase
+books for exam,Education,Need,phrase
+skool books,Education,Need,phrase
+exam prep course,Education,Investment,phrase
+skool tuition,Education,Investment,phrase
+exam prep fee,Education,Need,phrase
+skool uniform for kid,Education,Need,phrase
+exam kit online,Education,Investment,phrase
+skool van charge,Education,Need,phrase
+books for kid,Education,Investment,phrase
+skool stationery,Education,Need,phrase
+exam prep materials,Education,Investment,phrase
+skool fees payment,Education,Need,phrase
+Kotex,Personal Care,Need,merchant
+Pears,Personal Care,Need,merchant
+Lux,Personal Care,Need,merchant
+Colgate,Personal Care,Need,merchant
+Watt-3,Personal Care,Need,merchant
+Vaseline,Personal Care,Need,merchant
+Dove,Personal Care,Need,merchant
+Luxury,Personal Care,Want,merchant
+Rexona,Personal Care,Need,merchant
+Clinique,Personal Care,Want,merchant
+La Roche-Posay,Personal Care,Want,merchant
+Bioderma,Personal Care,Want,merchant
+Cliniplan,Personal Care,Want,merchant
+Sofla,Personal Care,Want,merchant
+Sunsilk,Personal Care,Want,merchant
+Himalaya,Personal Care,Want,merchant
+Dettol,Personal Care,Need,merchant
+Nivea Men,Personal Care,Want,merchant
+Dove Men+,Personal Care,Want,merchant
+Gillette,Personal Care,Want,merchant
+Olay,Personal Care,Want,merchant
+Biotin,Personal Care,Want,merchant
+Vicks,Personal Care,Want,merchant
+Lysol,Personal Care,Want,merchant
+Pantene,Personal Care,Want,merchant
+Head & Shoulders,Personal Care,Want,merchant
+CeraVe,Personal Care,Want,merchant
+Cetaphil,Personal Care,Want,merchant
+Garnier,Personal Care,Want,merchant
+Dermalogica,Personal Care,Want,merchant
+Garnier Fructis,Personal Care,Want,merchant
+Garnier SkinActive,Personal Care,Want,merchant
+Bio-Gel,Personal Care,Want,merchant
+Bio-Oil,Personal Care,Want,merchant
+Kama Ayurveda,Personal Care,Want,merchant
+Rituals,Personal Care,Want,merchant
+Sarona,Personal Care,Want,merchant
+Vatika,Personal Care,Want,merchant
+Anand Beauty Parlour,Personal Care,Want,merchant
+Priya Barber Shop,Personal Care,Want,merchant
+Shree Medical Store,Personal Care,Want,merchant
+Sagar Beauty Parlour,Personal Care,Want,merchant
+Vivek Hair Salon,Personal Care,Want,merchant
+Krishna Medical Store,Personal Care,Want,merchant
+Anil Beauty Parlour,Personal Care,Want,merchant
+Bhagya Barber Shop,Personal Care,Want,merchant
+Raj Beauty Parlour,Personal Care,Want,merchant
+Neha Barber Shop,Personal Care,Want,merchant
+Rajesh Beauty Parlour,Personal Care,Want,merchant
+Sunita Barber Shop,Personal Care,Want,merchant
+Surya Beauty Parlour,Personal Care,Want,merchant
+Suresh Barber Shop,Personal Care,Want,merchant
+sanitary pads,Personal Care,Need,phrase
+bar of soap,Personal Care,Need,phrase
+shampoo bought,Personal Care,Need,phrase
+face wash,Personal Care,Need,phrase
+lotion for skin,Personal Care,Need,phrase
+grooming oils,Personal Care,Want,phrase
+perfume for event,Personal Care,Want,phrase
+makeup for party,Personal Care,Want,phrase
+grooming kit,Personal Care,Need,phrase
+must buy soap,Personal Care,Need,phrase
+grooming products,Personal Care,Need,phrase
+kajal packet,Personal Care,Want,phrase
+lakdi ka toothbrush,Personal Care,Need,phrase
+moisturizer for hands,Personal Care,Want,phrase
+bath bomb,Personal Care,Want,phrase
+hairspray,Personal Care,Want,phrase
+body scrub,Personal Care,Want,phrase
+eyebrow razor,Personal Care,Need,phrase
+sabun handwash,Personal Care,Need,phrase
+face mask pack,Personal Care,Want,phrase
+deodorant stick,Personal Care,Need,phrase
+shampoo bottle,Personal Care,Need,phrase
+facial toner,Personal Care,Want,phrase
+honey facial cream,Personal Care,Want,phrase
+sunscreen lotion,Personal Care,Need,phrase
+makeup remover wipe,Personal Care,Want,phrase
+hair oil bottle,Personal Care,Want,phrase
+lip gloss,Personal Care,Want,phrase
+anti-dandruff shampoo,Personal Care,Want,phrase
+moisturizing balm,Personal Care,Want,phrase
+hair straightener,Personal Care,Want,phrase
+nail clipper,Personal Care,Want,phrase
+cotton buds,Personal Care,Want,phrase
+shaving foam,Personal Care,Want,phrase
+eyebrow pomade,Personal Care,Want,phrase
+toothbrush holder,Personal Care,Want,phrase
+talcum powder,Personal Care,Want,phrase
+face wash gel,Personal Care,Need,phrase
+dandruff shampoo,Personal Care,Need,phrase
+lip scrub,Personal Care,Want,phrase
+nail file,Personal Care,Want,phrase
+hair detangler,Personal Care,Want,phrase
+lip balm tube,Personal Care,Want,phrase
+face peel pack,Personal Care,Want,phrase
+eyebrow scissors,Personal Care,Want,phrase
+moisturizing facewash,Personal Care,Want,phrase
+foot scrub,Personal Care,Want,phrase
+hair serum,Personal Care,Want,phrase
+facial cleanser,Personal Care,Want,phrase
+lipstick,Personal Care,Want,phrase
+makeup remover oil,Personal Care,Want,phrase
+shaving gel,Personal Care,Want,phrase
+bath soap bar,Personal Care,Want,phrase
+moisturizing hair mask,Personal Care,Want,phrase
+facial cleansing cloth,Personal Care,Want,phrase
+body lotion,Personal Care,Want,phrase
+nail polish remover,Personal Care,Want,phrase
+salon visit,Personal Care,Want,phrase
+barber shop,Personal Care,Want,phrase
+spa session,Personal Care,Want,phrase
+manicure salon,Personal Care,Want,phrase
+pedicure,Personal Care,Want,phrase
+facial treatment,Personal Care,Want,phrase
+hair oil,Personal Care,Want,phrase
+soul spa,Personal Care,Want,phrase
+skincare clinic,Personal Care,Want,phrase
+makeup artist,Personal Care,Want,phrase
+perfume store,Personal Care,Want,phrase
+deodorant spray,Personal Care,Want,phrase
+anti-perspirant,Personal Care,Want,phrase
+scented soap,Personal Care,Want,phrase
+razor,Personal Care,Want,phrase
+bath gel,Personal Care,Want,phrase
+eyebrow wax,Personal Care,Want,phrase
+shampoo,Personal Care,Want,phrase
+conditioner,Personal Care,Want,phrase
+oral rinse,Personal Care,Want,phrase
+eyeshadow,Personal Care,Want,phrase
+foundation,Personal Care,Want,phrase
+eye liner,Personal Care,Want,phrase
+eyebrow pencil,Personal Care,Want,phrase
+scented candles,Personal Care,Want,phrase
+sandalwood oil,Personal Care,Want,phrase
+aromatic oils,Personal Care,Want,phrase
+face scrub,Personal Care,Want,phrase
+menstrual cup,Personal Care,Need,phrase
+HDFC ERGO,Insurance,Need,merchant
+Reliance General,Insurance,Need,merchant
+Star Insurance,Insurance,Need,merchant
+SBI General,Insurance,Need,merchant
+ICICI Pru,Insurance,Need,merchant
+Tata AIG,Insurance,Need,merchant
+Acko,Insurance,Need,merchant
+DHFL Prudential,Insurance,Need,merchant
+Apollo Munich,Insurance,Need,merchant
+Reliance Life,Insurance,Need,merchant
+Future Generali,Insurance,Need,merchant
+AIA,Insurance,Need,merchant
+Aegon Life,Insurance,Need,merchant
+Aviva India,Insurance,Need,merchant
+Allianz,Insurance,Need,merchant
+AIG,Insurance,Need,merchant
+DHFL,Insurance,Need,merchant
+Arun Insurance,Insurance,Need,merchant
+Balaji Insurance,Insurance,Need,merchant
+Bharat Insurance,Insurance,Need,merchant
+Chola Insurance,Insurance,Need,merchant
+Crompton Insurance,Insurance,Need,merchant
+Dhanalakshmi Insurance,Insurance,Need,merchant
+Eastern Insurance,Insurance,Need,merchant
+Fortune Insurance,Insurance,Need,merchant
+Gaurav Insurance,Insurance,Need,merchant
+Guru Insurance,Insurance,Need,merchant
+Haribhakt Insurance,Insurance,Need,merchant
+Ispat Insurance,Insurance,Need,merchant
+Jai Insurance,Insurance,Need,merchant
+Kranti Insurance,Insurance,Need,merchant
+Laxmi Insurance,Insurance,Need,merchant
+Mahanagar Insurance,Insurance,Need,merchant
+Narayan Insurance,Insurance,Need,merchant
+Narula Insurance,Insurance,Need,merchant
+Oriental Insurance,Insurance,Need,merchant
+Pramati Insurance,Insurance,Need,merchant
+Rajdhani Insurance,Insurance,Need,merchant
+Saraswati Insurance,Insurance,Need,merchant
+Shrihari Insurance,Insurance,Need,merchant
+Shyam Insurance,Insurance,Need,merchant
+Sompo India,Insurance,Need,merchant
+Thapar Insurance,Insurance,Need,merchant
+Vijay Insurance,Insurance,Need,merchant
+Vidya Insurance,Insurance,Need,merchant
+Vikram Insurance,Insurance,Need,merchant
+life insurance policy,Insurance,Need,phrase
+term insurance bought,Insurance,Need,phrase
+motor insurance paid,Insurance,Need,phrase
+travel insurance paid,Insurance,Need,phrase
+car insurance premium,Insurance,Need,phrase
+health insuraan paid,Insurance,Need,phrase
+life insuraan,Insurance,Need,phrase
+term insuraan,Insurance,Need,phrase
+hospitalization premium,Insurance,Need,phrase
+motor insuraan,Insurance,Need,phrase
+health insuraan,Insurance,Need,phrase
+life insuraan premium,Insurance,Need,phrase
+term insuraan premium,Insurance,Need,phrase
+travel insuraan,Insurance,Need,phrase
+health insuraan for kids,Insurance,Need,phrase
+life insuraan for parents,Insurance,Need,phrase
+car insuraan,Insurance,Need,phrase
+travel insuraan paid,Insurance,Need,phrase
+travel insuraan premium,Insurance,Need,phrase
+health insuraan premium,Insurance,Need,phrase
+hospitalization insuraan,Insurance,Need,phrase
+motor insuraan premium,Insurance,Need,phrase
+health insuraan for family,Insurance,Need,phrase
+life insuraan for spouse,Insurance,Need,phrase
+term insuraan for parents,Insurance,Need,phrase
+life insuraan for siblings,Insurance,Need,phrase
+travel insuraan for trip,Insurance,Need,phrase
+hospitalization insuraan premium,Insurance,Need,phrase
+health insurance,Insurance,Need,phrase
+term insurance plan,Insurance,Need,phrase
+motor insurance premium,Insurance,Need,phrase
+travel insurance,Insurance,Need,phrase
+hospitalization cover,Insurance,Need,phrase
+critical illness policy,Insurance,Need,phrase
+family floater,Insurance,Need,phrase
+disability insurance,Insurance,Need,phrase
+long-term health cover,Insurance,Need,phrase
+critical illness rider,Insurance,Need,phrase
+auto insurance premium,Insurance,Need,phrase
+life insurance premium,Insurance,Need,phrase
+health insurance for parents,Insurance,Need,phrase
+health cover for kids,Insurance,Need,phrase
+travel insurance for seniors,Insurance,Need,phrase
+car insurance renewal,Insurance,Need,phrase
+health insurance upgrade,Insurance,Need,phrase
+life insurance for retirement,Insurance,Need,phrase
+critical illness add-on,Insurance,Need,phrase
+accident insurance,Insurance,Need,phrase
+health insurance with network,Insurance,Need,phrase
+term insurance with premium waiver,Insurance,Need,phrase
+pet insurance policy,Insurance,Need,phrase
+domestic insurance premium,Insurance,Need,phrase
+family health cover,Insurance,Need,phrase
+elderly health insurance,Insurance,Need,phrase
+medical insurance policy,Insurance,Need,phrase
+travel insurance for student,Insurance,Need,phrase
+travel insurance for backpackers,Insurance,Need,phrase
+life insurance with waiver,Insurance,Need,phrase
+motor insurance with cover,Insurance,Need,phrase
+life insurance with bonus,Insurance,Need,phrase
+travel insurance for families,Insurance,Need,phrase
+travel insurance for solo travelers,Insurance,Need,phrase
+health insurance with top-up,Insurance,Need,phrase
+life insurance with hospitalization,Insurance,Need,phrase
+travel insurance for backpacking,Insurance,Need,phrase
+pet insurance for dogs,Insurance,Need,phrase
+health insurance for seniors,Insurance,Need,phrase
+travel insurance with coverage,Insurance,Need,phrase
+life insurance with death benefit,Insurance,Need,phrase
+travel insurance with evacuation,Insurance,Need,phrase
+health insurance for chronic illness,Insurance,Need,phrase
+pet insurance with network,Insurance,Need,phrase
+travel insurance with trip cancellation,Insurance,Need,phrase
+health insurance with hospitalization benefit,Insurance,Need,phrase
+pet insurance for cats,Insurance,Need,phrase
+travel insurance with trip interruption,Insurance,Need,phrase
+health insurance with specialist cover,Insurance,Need,phrase
+life insurance with disability benefit,Insurance,Need,phrase
+travel insurance for elderly,Insurance,Need,phrase
+health insurance sab,Insurance,Need,phrase
+life insurance chai sutta,Insurance,Need,phrase
+term insurance doodh,Insurance,Need,phrase
+ICICI Direct,Investments,Investment,merchant
+Muthoot Paddi,Investments,Investment,merchant
+SBI Mutual Fund,Investments,Investment,merchant
+Reliance Mutual Fund,Investments,Investment,merchant
+HDFC Mutual Fund,Investments,Investment,merchant
+Kotak Securities,Investments,Investment,merchant
+Navi Mutual Fund,Investments,Investment,merchant
+Edelweiss Mutual Fund,Investments,Investment,merchant
+AXA Mutual Fund,Investments,Investment,merchant
+SIL Mutual Fund,Investments,Investment,merchant
+Tata Mutual Fund,Investments,Investment,merchant
+Mirae Asset Mutual Fund,Investments,Investment,merchant
+Aditya Birla Sun Life Mutual Fund,Investments,Investment,merchant
+ICICI Prudential Mutual Fund,Investments,Investment,merchant
+Jupiter Mutual Fund,Investments,Investment,merchant
+UTI Mutual Fund,Investments,Investment,merchant
+IDFC Mutual Fund,Investments,Investment,merchant
+LIC India,Investments,Investment,merchant
+HDFC Securities,Investments,Investment,merchant
+IDFC First Bank,Investments,Investment,merchant
+Axis Securities,Investments,Investment,merchant
+Indiabulls Housing,Investments,Investment,merchant
+HDFC Mutual,Investments,Investment,merchant
+ICICI Mutual,Investments,Investment,merchant
+JP Morgan India,Investments,Investment,merchant
+State Bank,Investments,Investment,merchant
+UCO Bank,Investments,Investment,merchant
+Andhra Bank,Investments,Investment,merchant
+Corp. Bank,Investments,Investment,merchant
+DCB Bank,Investments,Investment,merchant
+FED Bank,Investments,Investment,merchant
+Karnataka Bank,Investments,Investment,merchant
+Punjab & Sind Bank,Investments,Investment,merchant
+Canara Hobli,Investments,Investment,merchant
+IDFC Mutual,Investments,Investment,merchant
+Axis Mutual,Investments,Investment,merchant
+SBI Mutual,Investments,Investment,merchant
+Balaji Financials,Investments,Investment,merchant
+Sharma Wealth Management,Investments,Investment,merchant
+Rajesh Securities,Investments,Investment,merchant
+Suresh Mutual,Investments,Investment,merchant
+Kiran Financial,Investments,Investment,merchant
+Priya Wealth,Investments,Investment,merchant
+Ganesh SIPs,Investments,Investment,merchant
+Bharati Financial,Investments,Investment,merchant
+Aarti Mutual,Investments,Investment,merchant
+Mitra Securities,Investments,Investment,merchant
+Nitin Wealth,Investments,Investment,merchant
+Gopal Mutual,Investments,Investment,merchant
+Shyam Financial,Investments,Investment,merchant
+Dinesh Wealth,Investments,Investment,merchant
+Anand Securities,Investments,Investment,merchant
+Bharti Financial,Investments,Investment,merchant
+Rama Mutual,Investments,Investment,merchant
+Vimal Financial,Investments,Investment,merchant
+Sukumar Wealth,Investments,Investment,merchant
+Narayan Securities,Investments,Investment,merchant
+Naveen Wealth,Investments,Investment,merchant
+Manish Financial,Investments,Investment,merchant
+Priti Mutual,Investments,Investment,merchant
+Mukesh Securities,Investments,Investment,merchant
+Ruchi Wealth,Investments,Investment,merchant
+Kirti Financial,Investments,Investment,merchant
+Vinayak Wealth,Investments,Investment,merchant
+Ganesh Mutual,Investments,Investment,merchant
+Neha Securities,Investments,Investment,merchant
+Prakash Wealth,Investments,Investment,merchant
+Neha Financial,Investments,Investment,merchant
+Priyanka Mutual,Investments,Investment,merchant
+Ravish Securities,Investments,Investment,merchant
+Ramesh Wealth,Investments,Investment,merchant
+Rajni Mutual,Investments,Investment,merchant
+Mamta Securities,Investments,Investment,merchant
+Sunita Wealth,Investments,Investment,merchant
+buy stocks,Investments,Investment,phrase
+sips,Investments,Investment,phrase
+nps,Investments,Investment,phrase
+invest ppf,Investments,Investment,phrase
+etfs,Investments,Investment,phrase
+buy gold,Investments,Investment,phrase
+gold bond,Investments,Investment,phrase
+digital gold,Investments,Investment,phrase
+invest in stocks,Investments,Investment,phrase
+mutual funds,Investments,Investment,phrase
+buy stocks online,Investments,Investment,phrase
+invest in nps,Investments,Investment,phrase
+buy mutual fund,Investments,Investment,phrase
+gold bond buy,Investments,Investment,phrase
+sip in mutual fund,Investments,Investment,phrase
+invest in etf,Investments,Investment,phrase
+buy ppf,Investments,Investment,phrase
+buy etf,Investments,Investment,phrase
+sips in mutual funds,Investments,Investment,phrase
+invest in stocks now,Investments,Investment,phrase
+buy gold online,Investments,Investment,phrase
+gold bond purchase,Investments,Investment,phrase
+invest in gold,Investments,Investment,phrase
+mutual fund sips,Investments,Investment,phrase
+buy etfs now,Investments,Investment,phrase
+nps online,Investments,Investment,phrase
+ppf scheme,Investments,Investment,phrase
+buy stocks today,Investments,Investment,phrase
+invest in mutual fund,Investments,Investment,phrase
+buy gold bars,Investments,Investment,phrase
+buy etfs,Investments,Investment,phrase
+shares,Investments,Investment,phrase
+equities,Investments,Investment,phrase
+index funds,Investments,Investment,phrase
+bond,Investments,Investment,phrase
+gold,Investments,Investment,phrase
+nifty,Investments,Investment,phrase
+nfo,Investments,Investment,phrase
+elss,Investments,Investment,phrase
+govt bond,Investments,Investment,phrase
+tax saving,Investments,Investment,phrase
+dividends,Investments,Investment,phrase
+ppf,Investments,Investment,phrase
+real estate,Investments,Investment,phrase
+gold exchange,Investments,Investment,phrase
+gold etf,Investments,Investment,phrase
+fixed deposit,Investments,Investment,phrase
+fd,Investments,Investment,phrase
+recurring deposit,Investments,Investment,phrase
+rd,Investments,Investment,phrase
+stocks,Investments,Investment,phrase
+gold price,Investments,Investment,phrase
+stock market,Investments,Investment,phrase
+etf,Investments,Investment,phrase
+commodities,Investments,Investment,phrase
+silver,Investments,Investment,phrase
+crypto,Investments,Investment,phrase
+mutual fund scheme,Investments,Investment,phrase
+gold fund,Investments,Investment,phrase
+gold units,Investments,Investment,phrase
+index tracker,Investments,Investment,phrase
+growth fund,Investments,Investment,phrase
+dividend fund,Investments,Investment,phrase
+balanced fund,Investments,Investment,phrase
+tax saving scheme,Investments,Investment,phrase
+sukanya samriddhi,Investments,Investment,phrase
+sukanya scheme,Investments,Investment,phrase
+ulip,Investments,Investment,phrase
+ultra long term,Investments,Investment,phrase
+ulip scheme,Investments,Investment,phrase
+index fund scheme,Investments,Investment,phrase
+fixed term fd,Investments,Investment,phrase
+capital protection,Investments,Investment,phrase
+growth and dividend,Investments,Investment,phrase
+equity oriented,Investments,Investment,phrase
+debt fund,Investments,Investment,phrase
+mutual fun,Investments,Investment,phrase
+etf for mom,Investments,Investment,phrase
+ppf for kid,Investments,Investment,phrase
+"nps, please",Investments,Investment,phrase
+fd for savings,Investments,Investment,phrase
+regular stocks,Investments,Investment,phrase
+mutual funs,Investments,Investment,phrase
+doodh ka nps,Investments,Investment,phrase
+sip for long run,Investments,Investment,phrase
+ppf for now,Investments,Investment,phrase
+etf stocks,Investments,Investment,phrase
+sips for savings,Investments,Investment,phrase
+"fd, mom's",Investments,Investment,phrase
+ppf for retirement,Investments,Investment,phrase
+"gold bond, please",Investments,Investment,phrase
+"fd, for now",Investments,Investment,phrase
+sips for now,Investments,Investment,phrase
+"ppf, urgent",Investments,Investment,phrase
+"etf, for now",Investments,Investment,phrase
+fd for edu,Investments,Investment,phrase
+"nps, for now",Investments,Investment,phrase
+"sips, for now",Investments,Investment,phrase
+fd for future,Investments,Investment,phrase
+"gold bond, for now",Investments,Investment,phrase
+"sips, urgent",Investments,Investment,phrase
+"fd, for mom",Investments,Investment,phrase
+"nps, urgent",Investments,Investment,phrase
+"mutual funs, for now",Investments,Investment,phrase
+"gold bond, for savings",Investments,Investment,phrase
+"sips, for edu",Investments,Investment,phrase
+Navi Mumbai,Misc,Need,merchant
+Pune,Misc,Need,merchant
+Hyderabad,Misc,Need,merchant
+Delhi,Misc,Need,merchant
+Mumbai,Misc,Need,merchant
+Karnataka,Misc,Need,merchant
+Maharashtra,Misc,Need,merchant
+UP,Misc,Need,merchant
+Rural Areas,Misc,Need,merchant
+Tata Power,Misc,Need,merchant
+Hero,Misc,Need,merchant
+Tata,Misc,Need,merchant
+Mahindra,Misc,Need,merchant
+JCB,Misc,Need,merchant
+AXA General,Misc,Need,merchant
+Axa Insurance,Misc,Need,merchant
+Mobilink,Misc,Need,merchant
+Donate,Misc,Want,merchant
+Fund,Misc,Want,merchant
+Charity,Misc,Want,merchant
+Tips,Misc,Want,merchant
+Fees,Misc,Need,merchant
+Challans,Misc,Need,merchant
+Fine,Misc,Need,merchant
+Pune Coop,Misc,Need,merchant
+Karnataka Donation,Misc,Want,merchant
+Mumbai Donation,Misc,Want,merchant
+Pune Donation,Misc,Want,merchant
+Hyd Donation,Misc,Want,merchant
+Navi Muni Donation,Misc,Want,merchant
+babu ka donation,Misc,Want,phrase
+postcard to mom,Misc,Need,phrase
+parking fine,Misc,Need,phrase
+donation to temple,Misc,Want,phrase
+postage stamps,Misc,Need,phrase
+donation to charity,Misc,Want,phrase
+cash withdrawal,Misc,Need,phrase
+cash out,Misc,Need,phrase
+donation for NGO,Misc,Want,phrase
+donation for friend,Misc,Want,phrase
+donation for church,Misc,Want,phrase
+parking challan,Misc,Need,phrase
+donated to charity,Misc,Want,phrase
+family emergency,Misc,Need,phrase
+post office,Misc,Need,phrase
+fine bht,Misc,Need,phrase
+upi transfer,Misc,Need,phrase
+cash withdrw,Misc,Need,phrase
+challan,Misc,Need,phrase
+village bhalli,Misc,Need,phrase
+donate to,Misc,Want,phrase
+charity,Misc,Want,phrase
+khwab se,Misc,Want,phrase
+kya hai,Misc,Want,phrase
+tips for,Misc,Want,phrase
+service provider,Misc,Need,phrase
+donate to temple,Misc,Want,phrase
+village marriage,Misc,Need,phrase
+charity for,Misc,Want,phrase
+village festival,Misc,Need,phrase
+donate to NGO,Misc,Want,phrase
+charity event,Misc,Want,phrase
+charity drive,Misc,Want,phrase

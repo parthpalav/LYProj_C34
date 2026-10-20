@@ -136,7 +136,7 @@ class TestHybridClassifier(unittest.TestCase):
         self.assertIsNone(rule_res, "Ambiguous text should NOT trigger a deterministic rule")
 
         res = self.classifier.classify(ambiguous_text)
-        self.assertEqual(res["classificationSource"], "tfidf_v2")
+        self.assertIn(res["classificationSource"], ["finaura_v4", "tfidf_v2"])
         self.assertIn("all_probs", res)
         self.assertIsInstance(res["all_probs"], dict)
         self.assertEqual(len(res["all_probs"]), 14, "TF-IDF should return full probability distribution for 14 classes")

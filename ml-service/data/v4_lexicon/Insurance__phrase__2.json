@@ -1,0 +1,206 @@
+[
+ {
+  "text": "health insurance need",
+  "type": "Need"
+ },
+ {
+  "text": "life insurance want",
+  "type": "Want"
+ },
+ {
+  "text": "term insurance need",
+  "type": "Need"
+ },
+ {
+  "text": "motor insurance need",
+  "type": "Need"
+ },
+ {
+  "text": "travel insurance need",
+  "type": "Need"
+ },
+ {
+  "text": "health premium need",
+  "type": "Need"
+ },
+ {
+  "text": "life premium want",
+  "type": "Want"
+ },
+ {
+  "text": "term premium need",
+  "type": "Need"
+ },
+ {
+  "text": "motor premium need",
+  "type": "Need"
+ },
+ {
+  "text": "travel premium need",
+  "type": "Need"
+ },
+ {
+  "text": "apollo health need",
+  "type": "Need"
+ },
+ {
+  "text": "sun life want",
+  "type": "Want"
+ },
+ {
+  "text": "icici lombard need",
+  "type": "Need"
+ },
+ {
+  "text": "bharti aegade want",
+  "type": "Want"
+ },
+ {
+  "text": "tata aia need",
+  "type": "Need"
+ },
+ {
+  "text": "bajaj allianz need",
+  "type": "Need"
+ },
+ {
+  "text": "religare health want",
+  "type": "Want"
+ },
+ {
+  "text": "max bupa need",
+  "type": "Need"
+ },
+ {
+  "text": "healthcover want",
+  "type": "Want"
+ },
+ {
+  "text": "life cover need",
+  "type": "Need"
+ },
+ {
+  "text": "term plan need",
+  "type": "Need"
+ },
+ {
+  "text": "motor plan need",
+  "type": "Need"
+ },
+ {
+  "text": "travel plan need",
+  "type": "Need"
+ },
+ {
+  "text": "health insurance sab",
+  "type": "Need"
+ },
+ {
+  "text": "life insurance chai sutta",
+  "type": "Want"
+ },
+ {
+  "text": "term insurance doodh",
+  "type": "Need"
+ },
+ {
+  "text": "motor insurance need",
+  "type": "Need"
+ },
+ {
+  "text": "travel insurance need",
+  "type": "Need"
+ },
+ {
+  "text": "health ins need",
+  "type": "Need"
+ },
+ {
+  "text": "life ins want",
+  "type": "Want"
+ },
+ {
+  "text": "term ins need",
+  "type": "Need"
+ },
+ {
+  "text": "motor ins need",
+  "type": "Need"
+ },
+ {
+  "text": "travel ins need",
+  "type": "Need"
+ },
+ {
+  "text": "health ins premium need",
+  "type": "Need"
+ },
+ {
+  "text": "life ins premium want",
+  "type": "Want"
+ },
+ {
+  "text": "term ins premium need",
+  "type": "Need"
+ },
+ {
+  "text": "motor ins premium need",
+  "type": "Need"
+ },
+ {
+  "text": "travel ins premium need",
+  "type": "Need"
+ },
+ {
+  "text": "apollo health premium need",
+  "type": "Need"
+ },
+ {
+  "text": "sun life premium want",
+  "type": "Want"
+ },
+ {
+  "text": "icici lombard premium need",
+  "type": "Need"
+ },
+ {
+  "text": "bharti aegade premium want",
+  "type": "Want"
+ },
+ {
+  "text": "tata aia premium need",
+  "type": "Need"
+ },
+ {
+  "text": "bajaj allianz premium need",
+  "type": "Need"
+ },
+ {
+  "text": "religare health premium want",
+  "type": "Want"
+ },
+ {
+  "text": "max bupa premium need",
+  "type": "Need"
+ },
+ {
+  "text": "healthcover premium want",
+  "type": "Want"
+ },
+ {
+  "text": "life cover premium need",
+  "type": "Need"
+ },
+ {
+  "text": "term plan premium need",
+  "type": "Need"
+ },
+ {
+  "text": "motor plan premium need",
+  "type": "Need"
+ },
+ {
+  "text": "travel plan premium need",
+  "type": "Need"
+ }
+]

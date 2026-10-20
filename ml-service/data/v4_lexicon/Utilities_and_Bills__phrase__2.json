@@ -1,0 +1,214 @@
+[
+ {
+  "text": "electricity bill",
+  "type": "Need"
+ },
+ {
+  "text": "water bill",
+  "type": "Need"
+ },
+ {
+  "text": "gas cylinder refill",
+  "type": "Need"
+ },
+ {
+  "text": "piped gas connection",
+  "type": "Need"
+ },
+ {
+  "text": "broadband renewal",
+  "type": "Need"
+ },
+ {
+  "text": "mobile recharge",
+  "type": "Need"
+ },
+ {
+  "text": "dth recharge",
+  "type": "Need"
+ },
+ {
+  "text": "electricity connection",
+  "type": "Need"
+ },
+ {
+  "text": "water meter reading",
+  "type": "Need"
+ },
+ {
+  "text": "gas connection",
+  "type": "Need"
+ },
+ {
+  "text": "electricity cut",
+  "type": "Need"
+ },
+ {
+  "text": "gas cylinder changed",
+  "type": "Need"
+ },
+ {
+  "text": "broadband speed up",
+  "type": "Want"
+ },
+ {
+  "text": "mobile plan upgrade",
+  "type": "Want"
+ },
+ {
+  "text": "dth package change",
+  "type": "Want"
+ },
+ {
+  "text": "electricity bill reminder",
+  "type": "Need"
+ },
+ {
+  "text": "water filter installation",
+  "type": "Want"
+ },
+ {
+  "text": "broadband internet issues",
+  "type": "Need"
+ },
+ {
+  "text": "mobile service issue",
+  "type": "Need"
+ },
+ {
+  "text": "dth signal problem",
+  "type": "Need"
+ },
+ {
+  "text": "electricity fluctuation",
+  "type": "Need"
+ },
+ {
+  "text": "water leak",
+  "type": "Need"
+ },
+ {
+  "text": "gas cylinder delivery",
+  "type": "Need"
+ },
+ {
+  "text": "broadband speed test",
+  "type": "Want"
+ },
+ {
+  "text": "mobile data limit",
+  "type": "Need"
+ },
+ {
+  "text": "dth recharge offer",
+  "type": "Want"
+ },
+ {
+  "text": "electricity bill due",
+  "type": "Need"
+ },
+ {
+  "text": "water tank service",
+  "type": "Need"
+ },
+ {
+  "text": "gas cylinder change",
+  "type": "Need"
+ },
+ {
+  "text": "broadband setup",
+  "type": "Need"
+ },
+ {
+  "text": "mobile plan update",
+  "type": "Want"
+ },
+ {
+  "text": "dth channel add",
+  "type": "Want"
+ },
+ {
+  "text": "electricity bill paid",
+  "type": "Need"
+ },
+ {
+  "text": "water pressure issue",
+  "type": "Need"
+ },
+ {
+  "text": "gas connection check",
+  "type": "Need"
+ },
+ {
+  "text": "broadband repair",
+  "type": "Need"
+ },
+ {
+  "text": "mobile battery issue",
+  "type": "Need"
+ },
+ {
+  "text": "dth package change",
+  "type": "Want"
+ },
+ {
+  "text": "electricity usage",
+  "type": "Need"
+ },
+ {
+  "text": "water filter service",
+  "type": "Want"
+ },
+ {
+  "text": "gas bill reminder",
+  "type": "Need"
+ },
+ {
+  "text": "broadband security",
+  "type": "Investment"
+ },
+ {
+  "text": "mobile insurance",
+  "type": "Investment"
+ },
+ {
+  "text": "dth bundle deal",
+  "type": "Want"
+ },
+ {
+  "text": "electricity backup",
+  "type": "Investment"
+ },
+ {
+  "text": "water heater service",
+  "type": "Want"
+ },
+ {
+  "text": "gas cylinder safety check",
+  "type": "Need"
+ },
+ {
+  "text": "broadband contract",
+  "type": "Investment"
+ },
+ {
+  "text": "mobile protection plan",
+  "type": "Investment"
+ },
+ {
+  "text": "dth subscription renewal",
+  "type": "Need"
+ },
+ {
+  "text": "electricity meter reading",
+  "type": "Need"
+ },
+ {
+  "text": "water tank cleaning",
+  "type": "Want"
+ },
+ {
+  "text": "gas connection fix",
+  "type": "Need"
+ }
+]

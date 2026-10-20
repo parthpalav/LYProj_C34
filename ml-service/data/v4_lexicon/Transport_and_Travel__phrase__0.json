@@ -1,0 +1,206 @@
+[
+ {
+  "text": "filled gas tank",
+  "type": "Need"
+ },
+ {
+  "text": "metro fare",
+  "type": "Need"
+ },
+ {
+  "text": "bus ride",
+  "type": "Need"
+ },
+ {
+  "text": "train ticket",
+  "type": "Need"
+ },
+ {
+  "text": "auto taxi",
+  "type": "Want"
+ },
+ {
+  "text": "flight to mumbai",
+  "type": "Want"
+ },
+ {
+  "text": "hotel in delhi",
+  "type": "Want"
+ },
+ {
+  "text": "holiday trip",
+  "type": "Want"
+ },
+ {
+  "text": "fuel bill",
+  "type": "Need"
+ },
+ {
+  "text": "toll gate fee",
+  "type": "Need"
+ },
+ {
+  "text": "parking lot",
+  "type": "Need"
+ },
+ {
+  "text": "cabs for office",
+  "type": "Want"
+ },
+ {
+  "text": "flight tickets",
+  "type": "Want"
+ },
+ {
+  "text": "hotel stay for 2",
+  "type": "Want"
+ },
+ {
+  "text": "holidays with family",
+  "type": "Want"
+ },
+ {
+  "text": "weekend getaway",
+  "type": "Want"
+ },
+ {
+  "text": "flight to bangalore",
+  "type": "Want"
+ },
+ {
+  "text": "hotel in ahmedabad",
+  "type": "Want"
+ },
+ {
+  "text": "air travel",
+  "type": "Want"
+ },
+ {
+  "text": "train journey to jaipur",
+  "type": "Need"
+ },
+ {
+  "text": "cabs for date night",
+  "type": "Want"
+ },
+ {
+  "text": "flight for work",
+  "type": "Need"
+ },
+ {
+  "text": "hotel near airport",
+  "type": "Need"
+ },
+ {
+  "text": "flight to kochi",
+  "type": "Want"
+ },
+ {
+  "text": "trip to rishikesh",
+  "type": "Want"
+ },
+ {
+  "text": "airplane ticket",
+  "type": "Want"
+ },
+ {
+  "text": "bus ticket for vacation",
+  "type": "Want"
+ },
+ {
+  "text": "flight to goa",
+  "type": "Want"
+ },
+ {
+  "text": "hotel in goa",
+  "type": "Want"
+ },
+ {
+  "text": "flight to matheran",
+  "type": "Want"
+ },
+ {
+  "text": "hotel for friends",
+  "type": "Want"
+ },
+ {
+  "text": "train to matheran",
+  "type": "Need"
+ },
+ {
+  "text": "flight to visakhapatnam",
+  "type": "Want"
+ },
+ {
+  "text": "hotel stay for 3",
+  "type": "Want"
+ },
+ {
+  "text": "flight to kanyakumari",
+  "type": "Want"
+ },
+ {
+  "text": "train to kanyakumari",
+  "type": "Need"
+ },
+ {
+  "text": "cabs for night out",
+  "type": "Want"
+ },
+ {
+  "text": "flight for weekend",
+  "type": "Want"
+ },
+ {
+  "text": "hotel in pune",
+  "type": "Want"
+ },
+ {
+  "text": "flight to amritsar",
+  "type": "Want"
+ },
+ {
+  "text": "flight to goa with friends",
+  "type": "Want"
+ },
+ {
+  "text": "train to goa",
+  "type": "Need"
+ },
+ {
+  "text": "flight to jaipur with family",
+  "type": "Want"
+ },
+ {
+  "text": "hotel in jaipur",
+  "type": "Want"
+ },
+ {
+  "text": "flight to manipal",
+  "type": "Want"
+ },
+ {
+  "text": "hotel in manipal",
+  "type": "Want"
+ },
+ {
+  "text": "flight to kochi for vacation",
+  "type": "Want"
+ },
+ {
+  "text": "flight to manipal with friends",
+  "type": "Want"
+ },
+ {
+  "text": "train to manipal",
+  "type": "Need"
+ },
+ {
+  "text": "flight to matheran with family",
+  "type": "Want"
+ },
+ {
+  "text": "hotel in matheran",
+  "type": "Want"
+ }
+]

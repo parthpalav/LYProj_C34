@@ -1,0 +1,202 @@
+[
+ {
+  "i": 2080,
+  "category": "Groceries",
+  "type": "Need"
+ },
+ {
+  "i": 2081,
+  "category": "Groceries",
+  "type": "Want"
+ },
+ {
+  "i": 2082,
+  "category": "Groceries",
+  "type": "Want"
+ },
+ {
+  "i": 2083,
+  "category": "Groceries",
+  "type": "Want"
+ },
+ {
+  "i": 2084,
+  "category": "Groceries",
+  "type": "Want"
+ },
+ {
+  "i": 2085,
+  "category": "Groceries",
+  "type": "Need"
+ },
+ {
+  "i": 2086,
+  "category": "Groceries",
+  "type": "Need"
+ },
+ {
+  "i": 2087,
+  "category": "Groceries",
+  "type": "Want"
+ },
+ {
+  "i": 2088,
+  "category": "Groceries",
+  "type": "Want"
+ },
+ {
+  "i": 2089,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 2090,
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ {
+  "i": 2091,
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ {
+  "i": 2092,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 2093,
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ {
+  "i": 2094,
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ {
+  "i": 2095,
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ {
+  "i": 2096,
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ {
+  "i": 2097,
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ {
+  "i": 2098,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 2099,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 2100,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 2101,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 2102,
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ {
+  "i": 2103,
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ {
+  "i": 2104,
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ {
+  "i": 2105,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 2106,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 2107,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 2108,
+  "category": "Health",
+  "type": "Want"
+ },
+ {
+  "i": 2109,
+  "category": "Health",
+  "type": "Want"
+ },
+ {
+  "i": 2110,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 2111,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 2112,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 2113,
+  "category": "Education",
+  "type": "Need"
+ },
+ {
+  "i": 2114,
+  "category": "Education",
+  "type": "Need"
+ },
+ {
+  "i": 2115,
+  "category": "Education",
+  "type": "Need"
+ },
+ {
+  "i": 2116,
+  "category": "Education",
+  "type": "Need"
+ },
+ {
+  "i": 2117,
+  "category": "Education",
+  "type": "Need"
+ },
+ {
+  "i": 2118,
+  "category": "Education",
+  "type": "Need"
+ },
+ {
+  "i": 2119,
+  "category": "Education",
+  "type": "Need"
+ }
+]

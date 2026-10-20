@@ -106,3 +106,24 @@ CATEGORY_TYPE: dict[str, str] = {
     "Investments":           "Investment",
     "Misc":                  "Need",
 }
+
+# Valid (category, type) pairs. The v4 model predicts one of these joint labels,
+# so category and type can never contradict each other.
+ALLOWED_TYPES: dict[str, list[str]] = {
+    "Food & Dining":         ["Want", "Need"],
+    "Groceries":             ["Need", "Want"],
+    "Transport & Travel":    ["Need", "Want"],
+    "Housing":               ["Need"],
+    "Utilities & Bills":     ["Need"],
+    "Debt & Loan Payments":  ["Need"],
+    "Shopping":              ["Want", "Need"],
+    "Entertainment":         ["Want"],
+    "Health":                ["Need", "Want"],
+    "Education":             ["Investment", "Need"],
+    "Personal Care":         ["Want", "Need"],
+    "Insurance":             ["Need"],
+    "Investments":           ["Investment"],
+    "Misc":                  ["Need", "Want"],
+}
+
+JOINT_LABELS: list[str] = [f"{c}|{t}" for c in FINAURA_CATEGORIES for t in ALLOWED_TYPES[c]]

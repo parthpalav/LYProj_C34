@@ -4,8 +4,9 @@ Unified Classification Pipeline for FINAURA.
 
 Orchestration:
 1. Deterministic Merchant / Rule Layer (rules.py)
-2. Statistical Fallback: TF-IDF + Logistic Regression (legacy model)
-3. (Future): Semantic Embeddings / MiniLM Layer
+2. Fine-tuned v4 encoder (models/finaura-v4): one joint (category, type) label,
+   temperature-calibrated, so category and type never contradict.
+3. Legacy fallback when v4 is not trained: TF-IDF category + MiniLM type head.
 
 Contract:
 - category: str (Canonical FINAURA category)
@@ -13,7 +14,7 @@ Contract:
 - confidence: float (0.0 to 1.0)
 - confidenceScore: float (0.0 to 1.0)
 - all_probs: dict[str, float]
-- classificationSource: 'merchant_rule' | 'tfidf' | 'fallback'
+- classificationSource: 'merchant_rule' | 'finaura_v4' | 'tfidf' | 'fallback'
 - needsReview: bool
 - flagged_for_review: bool
 - sentiment: 'positive' | 'neutral' | 'negative'
@@ -24,12 +25,14 @@ Contract:
 
 import os
 import re
+import json
 import pickle
 import logging
 import numpy as np
 from typing import Dict, Any, Optional
 
 from classifier.rules import match_merchant_rule
+from classifier.normalize import clean_text
 
 log = logging.getLogger(__name__)
 
@@ -95,6 +98,52 @@ class HybridClassifier:
         self._category_loaded = False
         self._type_loaded = False
         self.minilm_type_available = False
+        self.v4_model = None
+        self._v4_checked = False
+
+    def load_v4(self) -> bool:
+        if self._v4_checked:
+            return self.v4_model is not None
+        self._v4_checked = True
+        model_dir = os.path.join(self.base_dir, "models", "finaura-v4")
+        if not os.path.exists(os.path.join(model_dir, "v4_meta.json")):
+            log.warning("⚠️ models/finaura-v4 not found — using legacy TF-IDF + MiniLM type head")
+            return False
+        try:
+            import torch
+            from transformers import AutoTokenizer, AutoModelForSequenceClassification
+
+            with open(os.path.join(model_dir, "v4_meta.json")) as f:
+                self.v4_meta = json.load(f)
+            self.v4_tokenizer = AutoTokenizer.from_pretrained(model_dir)
+            model = AutoModelForSequenceClassification.from_pretrained(model_dir)
+            model.eval()
+            self.v4_model = model
+            self._torch = torch
+            log.info("✅ finaura-v4 joint classifier loaded in HybridPipeline")
+            return True
+        except Exception as e:
+            log.warning(f"⚠️ Failed to load finaura-v4: {e}")
+            self.v4_model = None
+            return False
+
+    def _classify_v4(self, cleaned: str):
+        torch = self._torch
+        inputs = self.v4_tokenizer(cleaned, return_tensors="pt", truncation=True, max_length=48)
+        with torch.no_grad():
+            logits = self.v4_model(**inputs).logits[0]
+        probs = torch.softmax(logits / self.v4_meta["temperature"], dim=-1).numpy()
+        labels = self.v4_meta["labels"]
+        best = int(probs.argmax())
+        category, spend_type = labels[best].split("|")
+        cat_probs: Dict[str, float] = {}
+        for label, p in zip(labels, probs):
+            cat = label.split("|")[0]
+            cat_probs[cat] = cat_probs.get(cat, 0.0) + float(p)
+        joint_conf = float(probs[best])
+        needs_review = joint_conf < self.v4_meta["review_threshold"]
+        all_probs = {c: round(p, 4) for c, p in cat_probs.items()}
+        return category, spend_type, cat_probs[category], joint_conf, all_probs, needs_review
 
     def load_category(self) -> bool:
         if self._category_loaded and self.category_model is not None:
@@ -151,6 +200,7 @@ class HybridClassifier:
 
     def classify(self, raw_text: str) -> Dict[str, Any]:
         raw = (raw_text or "").strip()
+        cleaned = clean_text(raw)
         if not raw:
             return {
                 "error": "No text provided",
@@ -173,7 +223,7 @@ class HybridClassifier:
             }
 
         # ── Step 1: Deterministic Merchant / Rule Layer ────────────────────────
-        rule_match = match_merchant_rule(raw)
+        rule_match = match_merchant_rule(cleaned or raw)
         if rule_match is not None:
             category = rule_match["category"]
             spend_type = rule_match["type"]
@@ -187,7 +237,13 @@ class HybridClassifier:
             needs_review = False
             log.info(f"HybridClassifier [merchant_rule]: '{raw}' -> {category} ({spend_type}, {confidence*100:.0f}%)")
 
-        # ── Step 2: Fallback to ML / TF-IDF for Category and MiniLM for Type ──
+        # ── Step 2: Fine-tuned v4 joint classifier ────────────────────────────
+        elif self.load_v4():
+            category, spend_type, category_conf, type_conf, all_probs, needs_review = self._classify_v4(cleaned or raw.lower())
+            category_source = type_source = "finaura_v4"
+            log.info(f"HybridClassifier [finaura_v4]: '{raw}' -> {category} ({category_conf*100:.1f}%) | {spend_type} ({type_conf*100:.1f}%) | needsReview={needs_review}")
+
+        # ── Step 3: Legacy fallback: TF-IDF for Category and MiniLM for Type ──
         else:
             # 2a. Category Classification
             if not self.load_category():
@@ -211,8 +267,7 @@ class HybridClassifier:
                     "verdict": "Classifier not loaded."
                 }
 
-            cleaned = clean_tfidf_text(raw)
-            vec = self.category_vectorizer.transform([cleaned])
+            vec = self.category_vectorizer.transform([clean_tfidf_text(raw)])
             category = self.category_model.predict(vec)[0]
             probs = self.category_model.predict_proba(vec)[0]
             category_conf = float(probs.max())
@@ -253,7 +308,7 @@ class HybridClassifier:
             needs_review = category_needs_review or type_needs_review
             log.info(f"HybridClassifier [ML Fallback]: '{raw}' -> {category} (Conf: {category_conf*100:.1f}%, Source: {category_source}) | Type: {spend_type} (Conf: {type_conf*100:.1f}%, Source: {type_source}) | needsReview={needs_review}")
 
-        # ── Step 3: Build Sentiment & Metadata ─────────────────────────────────
+        # ── Step 4: Build Sentiment & Metadata ─────────────────────────────────
         sentiment = CATEGORY_SENTIMENT.get(category, "neutral")
         meta = SENTIMENT_META[sentiment]
 

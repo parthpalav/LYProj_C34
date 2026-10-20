@@ -1,0 +1,218 @@
+[
+ {
+  "text": "cough syrup",
+  "type": "Need"
+ },
+ {
+  "text": "bandages",
+  "type": "Need"
+ },
+ {
+  "text": "pain reliever",
+  "type": "Need"
+ },
+ {
+  "text": "antibiotic cream",
+  "type": "Need"
+ },
+ {
+  "text": "painkiller",
+  "type": "Need"
+ },
+ {
+  "text": "vitamin tablets",
+  "type": "Want"
+ },
+ {
+  "text": "fish oil",
+  "type": "Want"
+ },
+ {
+  "text": "protein powder",
+  "type": "Want"
+ },
+ {
+  "text": "pre-workout",
+  "type": "Want"
+ },
+ {
+  "text": "gym membership",
+  "type": "Investment"
+ },
+ {
+  "text": "gym t-shirt",
+  "type": "Want"
+ },
+ {
+  "text": "yoga mat",
+  "type": "Want"
+ },
+ {
+  "text": "running shoes",
+  "type": "Want"
+ },
+ {
+  "text": "yoga classes",
+  "type": "Want"
+ },
+ {
+  "text": "zumba class",
+  "type": "Want"
+ },
+ {
+  "text": "weight training",
+  "type": "Want"
+ },
+ {
+  "text": "chiro adjustment",
+  "type": "Need"
+ },
+ {
+  "text": "sick child",
+  "type": "Need"
+ },
+ {
+  "text": "flu shot",
+  "type": "Need"
+ },
+ {
+  "text": "allergy medicine",
+  "type": "Need"
+ },
+ {
+  "text": "toothpaste",
+  "type": "Need"
+ },
+ {
+  "text": "mouthwash",
+  "type": "Need"
+ },
+ {
+  "text": "toothbrush",
+  "type": "Need"
+ },
+ {
+  "text": "oral care",
+  "type": "Want"
+ },
+ {
+  "text": "toothpick",
+  "type": "Need"
+ },
+ {
+  "text": "floss",
+  "type": "Need"
+ },
+ {
+  "text": "dental checkup",
+  "type": "Need"
+ },
+ {
+  "text": "root canal",
+  "type": "Need"
+ },
+ {
+  "text": "bridges",
+  "type": "Need"
+ },
+ {
+  "text": "diet plan",
+  "type": "Want"
+ },
+ {
+  "text": "online coaching",
+  "type": "Want"
+ },
+ {
+  "text": "personal trainer",
+  "type": "Want"
+ },
+ {
+  "text": "sauna session",
+  "type": "Want"
+ },
+ {
+  "text": "meditation",
+  "type": "Want"
+ },
+ {
+  "text": "massager",
+  "type": "Want"
+ },
+ {
+  "text": "chiropractor",
+  "type": "Need"
+ },
+ {
+  "text": "acupuncture",
+  "type": "Need"
+ },
+ {
+  "text": "solarium",
+  "type": "Want"
+ },
+ {
+  "text": "tanning bed",
+  "type": "Want"
+ },
+ {
+  "text": "skin care",
+  "type": "Want"
+ },
+ {
+  "text": "lip balm",
+  "type": "Need"
+ },
+ {
+  "text": "suntan lotion",
+  "type": "Want"
+ },
+ {
+  "text": "moisturizer",
+  "type": "Want"
+ },
+ {
+  "text": "antioxidant cream",
+  "type": "Want"
+ },
+ {
+  "text": "deodorant",
+  "type": "Need"
+ },
+ {
+  "text": "shaving cream",
+  "type": "Need"
+ },
+ {
+  "text": "surgical mask",
+  "type": "Need"
+ },
+ {
+  "text": "bandage",
+  "type": "Need"
+ },
+ {
+  "text": "sore throat",
+  "type": "Need"
+ },
+ {
+  "text": "eye drops",
+  "type": "Need"
+ },
+ {
+  "text": "cold medicine",
+  "type": "Need"
+ },
+ {
+  "text": "healing herbs",
+  "type": "Want"
+ },
+ {
+  "text": "meditation app",
+  "type": "Want"
+ },
+ {
+  "text": "stress management",
+  "type": "Want"
+ }
+]

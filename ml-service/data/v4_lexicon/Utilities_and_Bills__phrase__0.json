@@ -1,0 +1,226 @@
+[
+ {
+  "text": "electric bill",
+  "type": "Need"
+ },
+ {
+  "text": "water bill",
+  "type": "Need"
+ },
+ {
+  "text": "gas cylinder refill",
+  "type": "Need"
+ },
+ {
+  "text": "piped gas bill",
+  "type": "Need"
+ },
+ {
+  "text": "broadband bill",
+  "type": "Need"
+ },
+ {
+  "text": "mobile recharge",
+  "type": "Need"
+ },
+ {
+  "text": "dth recharge",
+  "type": "Need"
+ },
+ {
+  "text": "light bill",
+  "type": "Need"
+ },
+ {
+  "text": "electricity bill",
+  "type": "Need"
+ },
+ {
+  "text": "water meter",
+  "type": "Need"
+ },
+ {
+  "text": "net bill",
+  "type": "Need"
+ },
+ {
+  "text": "piped gas",
+  "type": "Need"
+ },
+ {
+  "text": "gasiyan gas",
+  "type": "Need"
+ },
+ {
+  "text": "gas connection",
+  "type": "Need"
+ },
+ {
+  "text": "wasser bill",
+  "type": "Need"
+ },
+ {
+  "text": "electricity meter",
+  "type": "Need"
+ },
+ {
+  "text": "gas bill",
+  "type": "Need"
+ },
+ {
+  "text": "broadband service",
+  "type": "Need"
+ },
+ {
+  "text": "mobile top up",
+  "type": "Need"
+ },
+ {
+  "text": "dth top up",
+  "type": "Need"
+ },
+ {
+  "text": "electric bill pay",
+  "type": "Need"
+ },
+ {
+  "text": "water connection",
+  "type": "Need"
+ },
+ {
+  "text": "gasiyan bill",
+  "type": "Need"
+ },
+ {
+  "text": "electricity meter reading",
+  "type": "Need"
+ },
+ {
+  "text": "electricity meter reading done",
+  "type": "Need"
+ },
+ {
+  "text": "water meter reading",
+  "type": "Need"
+ },
+ {
+  "text": "electricity bill paid",
+  "type": "Need"
+ },
+ {
+  "text": "water bill paid",
+  "type": "Need"
+ },
+ {
+  "text": "gas bill paid",
+  "type": "Need"
+ },
+ {
+  "text": "broadband bill paid",
+  "type": "Need"
+ },
+ {
+  "text": "mobile recharge done",
+  "type": "Need"
+ },
+ {
+  "text": "dth recharge done",
+  "type": "Need"
+ },
+ {
+  "text": "electricity bill due",
+  "type": "Need"
+ },
+ {
+  "text": "water bill due",
+  "type": "Need"
+ },
+ {
+  "text": "gas bill due",
+  "type": "Need"
+ },
+ {
+  "text": "broadband bill due",
+  "type": "Need"
+ },
+ {
+  "text": "mobile recharge due",
+  "type": "Need"
+ },
+ {
+  "text": "dth recharge due",
+  "type": "Need"
+ },
+ {
+  "text": "electricity bill reminder",
+  "type": "Need"
+ },
+ {
+  "text": "water bill reminder",
+  "type": "Need"
+ },
+ {
+  "text": "gas bill reminder",
+  "type": "Need"
+ },
+ {
+  "text": "broadband bill reminder",
+  "type": "Need"
+ },
+ {
+  "text": "mobile recharge reminder",
+  "type": "Need"
+ },
+ {
+  "text": "dth recharge reminder",
+  "type": "Need"
+ },
+ {
+  "text": "electricity bill alert",
+  "type": "Need"
+ },
+ {
+  "text": "water bill alert",
+  "type": "Need"
+ },
+ {
+  "text": "gas bill alert",
+  "type": "Need"
+ },
+ {
+  "text": "broadband bill alert",
+  "type": "Need"
+ },
+ {
+  "text": "mobile recharge alert",
+  "type": "Need"
+ },
+ {
+  "text": "dth recharge alert",
+  "type": "Need"
+ },
+ {
+  "text": "electricity bill paid",
+  "type": "Need"
+ },
+ {
+  "text": "water bill paid",
+  "type": "Need"
+ },
+ {
+  "text": "gas bill paid",
+  "type": "Need"
+ },
+ {
+  "text": "broadband bill paid",
+  "type": "Need"
+ },
+ {
+  "text": "mobile recharge paid",
+  "type": "Need"
+ },
+ {
+  "text": "dth recharge paid",
+  "type": "Need"
+ }
+]

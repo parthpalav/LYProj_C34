@@ -1,0 +1,202 @@
+[
+ {
+  "text": "electricity bill",
+  "type": "Need"
+ },
+ {
+  "text": "water connection",
+  "type": "Need"
+ },
+ {
+  "text": "gas cylinder refill",
+  "type": "Need"
+ },
+ {
+  "text": "piped gas connection",
+  "type": "Need"
+ },
+ {
+  "text": "broadband internet",
+  "type": "Need"
+ },
+ {
+  "text": "mobile recharge",
+  "type": "Need"
+ },
+ {
+  "text": "dth recharge",
+  "type": "Need"
+ },
+ {
+  "text": "electric meter reading",
+  "type": "Need"
+ },
+ {
+  "text": "water leak fix",
+  "type": "Need"
+ },
+ {
+  "text": "gas leak check",
+  "type": "Need"
+ },
+ {
+  "text": "electrician visit",
+  "type": "Need"
+ },
+ {
+  "text": "water purifier maintenance",
+  "type": "Need"
+ },
+ {
+  "text": "electricity tariff",
+  "type": "Need"
+ },
+ {
+  "text": "high voltage warning",
+  "type": "Need"
+ },
+ {
+  "text": "pipelining for water",
+  "type": "Investment"
+ },
+ {
+  "text": "smart meter installation",
+  "type": "Investment"
+ },
+ {
+  "text": "solar panel setup",
+  "type": "Investment"
+ },
+ {
+  "text": "water storage tank",
+  "type": "Investment"
+ },
+ {
+  "text": "gas tank upgrade",
+  "type": "Investment"
+ },
+ {
+  "text": "internet speed boost",
+  "type": "Investment"
+ },
+ {
+  "text": "renewable energy source",
+  "type": "Investment"
+ },
+ {
+  "text": "mobile phone upgrade",
+  "type": "Want"
+ },
+ {
+  "text": "dth subscription",
+  "type": "Want"
+ },
+ {
+  "text": "extra broadband",
+  "type": "Want"
+ },
+ {
+  "text": "sabzi wala bill",
+  "type": "Need"
+ },
+ {
+  "text": "chai sutta",
+  "type": "Want"
+ },
+ {
+  "text": "doodh delivery",
+  "type": "Want"
+ },
+ {
+  "text": "electricity cut",
+  "type": "Need"
+ },
+ {
+  "text": "water shortage",
+  "type": "Need"
+ },
+ {
+  "text": "gas shortage",
+  "type": "Need"
+ },
+ {
+  "text": "internet outage",
+  "type": "Need"
+ },
+ {
+  "text": "mobile service",
+  "type": "Need"
+ },
+ {
+  "text": "dth channel pack",
+  "type": "Want"
+ },
+ {
+  "text": "electricity meter change",
+  "type": "Need"
+ },
+ {
+  "text": "water pressure issue",
+  "type": "Need"
+ },
+ {
+  "text": "gas cylinder replacement",
+  "type": "Need"
+ },
+ {
+  "text": "water tank cleaning",
+  "type": "Need"
+ },
+ {
+  "text": "electricity rebate",
+  "type": "Need"
+ },
+ {
+  "text": "water meter reading",
+  "type": "Need"
+ },
+ {
+  "text": "gas leak alarm",
+  "type": "Need"
+ },
+ {
+  "text": "electricity bill payment",
+  "type": "Need"
+ },
+ {
+  "text": "water conservation tips",
+  "type": "Need"
+ },
+ {
+  "text": "solar panel maintenance",
+  "type": "Investment"
+ },
+ {
+  "text": "electricity meter test",
+  "type": "Need"
+ },
+ {
+  "text": "water filter installation",
+  "type": "Investment"
+ },
+ {
+  "text": "electricity surcharge",
+  "type": "Need"
+ },
+ {
+  "text": "gas cylinder delivery",
+  "type": "Need"
+ },
+ {
+  "text": "broadband repair",
+  "type": "Need"
+ },
+ {
+  "text": "mobile contract renewal",
+  "type": "Want"
+ },
+ {
+  "text": "dth free trial",
+  "type": "Want"
+ }
+]

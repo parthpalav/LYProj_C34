@@ -1,0 +1,206 @@
+[
+ {
+  "text": "rent",
+  "type": "Need"
+ },
+ {
+  "text": "society maintenance",
+  "type": "Need"
+ },
+ {
+  "text": "property tax",
+  "type": "Need"
+ },
+ {
+  "text": "home repairs",
+  "type": "Need"
+ },
+ {
+  "text": "plumber",
+  "type": "Need"
+ },
+ {
+  "text": "electrician",
+  "type": "Need"
+ },
+ {
+  "text": "maid salary",
+  "type": "Need"
+ },
+ {
+  "text": "cook salary",
+  "type": "Need"
+ },
+ {
+  "text": "kitchen supplies",
+  "type": "Need"
+ },
+ {
+  "text": "home decor",
+  "type": "Want"
+ },
+ {
+  "text": "garden maintenance",
+  "type": "Want"
+ },
+ {
+  "text": "home insurance",
+  "type": "Investment"
+ },
+ {
+  "text": "landscaping",
+  "type": "Want"
+ },
+ {
+  "text": "water bill",
+  "type": "Need"
+ },
+ {
+  "text": "electricity bill",
+  "type": "Need"
+ },
+ {
+  "text": "gas bill",
+  "type": "Need"
+ },
+ {
+  "text": "internet bill",
+  "type": "Need"
+ },
+ {
+  "text": "phone bill",
+  "type": "Need"
+ },
+ {
+  "text": "society party",
+  "type": "Want"
+ },
+ {
+  "text": "housewarming party",
+  "type": "Want"
+ },
+ {
+  "text": "new furniture",
+  "type": "Want"
+ },
+ {
+  "text": "home theater",
+  "type": "Want"
+ },
+ {
+  "text": "home security",
+  "type": "Investment"
+ },
+ {
+  "text": "home automation",
+  "type": "Investment"
+ },
+ {
+  "text": "home theater setup",
+  "type": "Want"
+ },
+ {
+  "text": "home gym",
+  "type": "Want"
+ },
+ {
+  "text": "home office",
+  "type": "Want"
+ },
+ {
+  "text": "home renovation",
+  "type": "Investment"
+ },
+ {
+  "text": "home cleaning",
+  "type": "Need"
+ },
+ {
+  "text": "home gardening",
+  "type": "Want"
+ },
+ {
+  "text": "home theater equipment",
+  "type": "Want"
+ },
+ {
+  "text": "home movie night",
+  "type": "Want"
+ },
+ {
+  "text": "home yoga setup",
+  "type": "Want"
+ },
+ {
+  "text": "home meditation setup",
+  "type": "Want"
+ },
+ {
+  "text": "home gym equipment",
+  "type": "Want"
+ },
+ {
+  "text": "home office furniture",
+  "type": "Want"
+ },
+ {
+  "text": "home security system",
+  "type": "Investment"
+ },
+ {
+  "text": "home entertainment",
+  "type": "Want"
+ },
+ {
+  "text": "home tech gadgets",
+  "type": "Want"
+ },
+ {
+  "text": "home tech gadgets",
+  "type": "Want"
+ },
+ {
+  "text": "home entertainment system",
+  "type": "Want"
+ },
+ {
+  "text": "home decor items",
+  "type": "Want"
+ },
+ {
+  "text": "home party supplies",
+  "type": "Want"
+ },
+ {
+  "text": "home cleaning services",
+  "type": "Need"
+ },
+ {
+  "text": "home maintenance",
+  "type": "Need"
+ },
+ {
+  "text": "home gardening supplies",
+  "type": "Want"
+ },
+ {
+  "text": "home gym setup",
+  "type": "Want"
+ },
+ {
+  "text": "home tech setup",
+  "type": "Want"
+ },
+ {
+  "text": "home yoga mat",
+  "type": "Want"
+ },
+ {
+  "text": "home meditation cushion",
+  "type": "Want"
+ },
+ {
+  "text": "home tech accessories",
+  "type": "Want"
+ }
+]

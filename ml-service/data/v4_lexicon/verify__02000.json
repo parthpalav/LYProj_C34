@@ -1,0 +1,202 @@
+[
+ {
+  "i": 2000,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 2001,
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ {
+  "i": 2002,
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ {
+  "i": 2003,
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ {
+  "i": 2004,
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ {
+  "i": 2005,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 2006,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 2007,
+  "category": "Health",
+  "type": "Want"
+ },
+ {
+  "i": 2008,
+  "category": "Education",
+  "type": "Need"
+ },
+ {
+  "i": 2009,
+  "category": "Education",
+  "type": "Need"
+ },
+ {
+  "i": 2010,
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ {
+  "i": 2011,
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ {
+  "i": 2012,
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ {
+  "i": 2013,
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ {
+  "i": 2014,
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ {
+  "i": 2015,
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ {
+  "i": 2016,
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ {
+  "i": 2017,
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ {
+  "i": 2018,
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ {
+  "i": 2019,
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ {
+  "i": 2020,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 2021,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 2022,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 2023,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 2024,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 2025,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 2026,
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ {
+  "i": 2027,
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ {
+  "i": 2028,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 2029,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 2030,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 2031,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 2032,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 2033,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 2034,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 2035,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 2036,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 2037,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 2038,
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ {
+  "i": 2039,
+  "category": "Health",
+  "type": "Need"
+ }
+]

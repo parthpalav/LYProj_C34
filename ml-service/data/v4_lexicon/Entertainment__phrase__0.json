@@ -1,0 +1,202 @@
+[
+ {
+  "text": "netflix",
+  "type": "Need"
+ },
+ {
+  "text": "hotstar",
+  "type": "Need"
+ },
+ {
+  "text": "amazon prime",
+  "type": "Need"
+ },
+ {
+  "text": "zomato",
+  "type": "Want"
+ },
+ {
+  "text": "foodpanda",
+  "type": "Want"
+ },
+ {
+  "text": "concert tickets",
+  "type": "Want"
+ },
+ {
+  "text": "movie theater",
+  "type": "Want"
+ },
+ {
+  "text": "indian movies",
+  "type": "Want"
+ },
+ {
+  "text": "south indian cinema",
+  "type": "Want"
+ },
+ {
+  "text": "hollywood flicks",
+  "type": "Want"
+ },
+ {
+  "text": "gaming console",
+  "type": "Investment"
+ },
+ {
+  "text": "ps5",
+  "type": "Investment"
+ },
+ {
+  "text": "xbox",
+  "type": "Investment"
+ },
+ {
+  "text": "pc gaming setup",
+  "type": "Investment"
+ },
+ {
+  "text": "pub hopping",
+  "type": "Want"
+ },
+ {
+  "text": "bar crawl",
+  "type": "Want"
+ },
+ {
+  "text": "alcohol",
+  "type": "Want"
+ },
+ {
+  "text": "wine night",
+  "type": "Want"
+ },
+ {
+  "text": "cigarettes",
+  "type": "Want"
+ },
+ {
+  "text": "chill smoke",
+  "type": "Want"
+ },
+ {
+  "text": "karaoke",
+  "type": "Want"
+ },
+ {
+  "text": "sabzi wala",
+  "type": "Need"
+ },
+ {
+  "text": "chai sutta",
+  "type": "Need"
+ },
+ {
+  "text": "doodh",
+  "type": "Need"
+ },
+ {
+  "text": "tea time",
+  "type": "Want"
+ },
+ {
+  "text": "chai pe charcha",
+  "type": "Want"
+ },
+ {
+  "text": "movie marathon",
+  "type": "Want"
+ },
+ {
+  "text": "board games",
+  "type": "Investment"
+ },
+ {
+  "text": "puzzle night",
+  "type": "Investment"
+ },
+ {
+  "text": "dnd session",
+  "type": "Investment"
+ },
+ {
+  "text": "amusement park",
+  "type": "Want"
+ },
+ {
+  "text": "water park",
+  "type": "Want"
+ },
+ {
+  "text": "theme park",
+  "type": "Want"
+ },
+ {
+  "text": "carnival rides",
+  "type": "Want"
+ },
+ {
+  "text": "arcade games",
+  "type": "Want"
+ },
+ {
+  "text": "amusement pass",
+  "type": "Investment"
+ },
+ {
+  "text": "comic con",
+  "type": "Investment"
+ },
+ {
+  "text": "concert tickets",
+  "type": "Want"
+ },
+ {
+  "text": "music festival",
+  "type": "Want"
+ },
+ {
+  "text": "solo travel",
+  "type": "Investment"
+ },
+ {
+  "text": "travel budget",
+  "type": "Investment"
+ },
+ {
+  "text": "adventure tour",
+  "type": "Investment"
+ },
+ {
+  "text": "local theater",
+  "type": "Want"
+ },
+ {
+  "text": "art house cinema",
+  "type": "Want"
+ },
+ {
+  "text": "live music",
+  "type": "Want"
+ },
+ {
+  "text": "drama nights",
+  "type": "Want"
+ },
+ {
+  "text": "film fest",
+  "type": "Want"
+ },
+ {
+  "text": "gaming meet-up",
+  "type": "Want"
+ },
+ {
+  "text": "online gaming",
+  "type": "Need"
+ },
+ {
+  "text": "e-sports tournament",
+  "type": "Investment"
+ }
+]

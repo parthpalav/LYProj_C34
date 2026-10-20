@@ -10,6 +10,7 @@ import { routeDeterministicIntent } from '../services/ChatIntentRouter.js';
 import { analyzeSentiment, annotateTransactions } from '../services/SentimentService.js';
 import { detectBehavioralPatterns, calculateFIS, generateWeeklyReport } from '../services/BehaviorService.js';
 import { smoothIncomeFlow } from '../services/IncomeFlowService.js';
+import { recallMerchant, rememberMerchant, memoryResult } from '../services/MerchantMemoryService.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 import * as authService from '../services/authService.js';
 import * as emailService from '../services/emailService.js';
@@ -793,8 +794,13 @@ router.post('/transactions', async (req, res, next) => {
       needsReview: false
     };
 
-    // Only run ML/fallback classification if the client did NOT provide an explicit category
-    if (!req.body.category) {
+    // Only run ML/fallback classification if the client did NOT provide an explicit category.
+    // A label the user already gave this merchant wins over ML.
+    const remembered = req.body.category ? null : await recallMerchant(userId, rawDesc).catch(() => null);
+    if (remembered) {
+      mlData = memoryResult(remembered);
+      classificationSource = 'user_memory';
+    } else if (!req.body.category) {
       try {
         const resp = await fetch(`${ML_SERVICE_URL}/classify`, {
           method: 'POST',
@@ -966,6 +972,11 @@ router.post('/transactions', async (req, res, next) => {
       throw createError;
     }
 
+    if (categorySource === 'manual' || typeSource === 'manual') {
+      await rememberMerchant(userId, tx.description, tx.category, tx.type)
+        .catch((err) => logger.warn(`Merchant memory write failed: ${err.message}`));
+    }
+
     res.status(201).json(normalizeTransaction(tx));
   } catch (error) { next(error); }
 });
@@ -1105,6 +1116,11 @@ router.put('/transactions/:id', async (req, res, next) => {
         { new: true, runValidators: true }
       ).lean();
       if (!updated) return res.status(404).json({ error: 'Transaction not found' });
+    }
+
+    if ((sanitized.category || sanitized.type) && (updated.categorySource === 'manual' || updated.typeSource === 'manual')) {
+      await rememberMerchant(userId, updated.description, updated.category, updated.type)
+        .catch((err) => logger.warn(`Merchant memory write failed: ${err.message}`));
     }
 
     res.json(normalizeTransaction(updated));
@@ -2009,6 +2025,13 @@ function classifyLocally(rawText) {
   };
 }
 
+// Overlay the user's remembered label for this merchant onto a classifier result.
+async function withMerchantMemory(userId, text, base) {
+  const pref = await recallMerchant(userId, text).catch(() => null);
+  if (!pref) return base;
+  return { ...base, ...memoryResult(pref), sentiment: CATEGORY_SENTIMENT_MAP[pref.category] || 'neutral' };
+}
+
 router.post('/classify', classifyRateLimiter, async (req, res, next) => {
   try {
     if (typeof req.body.text !== 'string') {
@@ -2031,14 +2054,14 @@ router.post('/classify', classifyRateLimiter, async (req, res, next) => {
 
       if (response.ok) {
         const data = await response.json();
-        return res.json(data);
+        return res.json(await withMerchantMemory(req.user.id, text, data));
       }
     } catch (mlErr) {
       console.warn('[classify] ML service unreachable, using keyword fallback:', mlErr.message);
     }
 
     // Fallback: keyword-based classifier (still accurate, just simpler)
-    return res.json(classifyLocally(text));
+    return res.json(await withMerchantMemory(req.user.id, text, classifyLocally(text)));
   } catch (err) {
     console.error('[classify] error:', err);
     return res.json(classifyLocally(req.body.text || ''));

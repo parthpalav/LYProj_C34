@@ -1,0 +1,254 @@
+[
+ {
+  "text": "sick days",
+  "type": "Need"
+ },
+ {
+  "text": "doc visit",
+  "type": "Need"
+ },
+ {
+  "text": "prescription refill",
+  "type": "Need"
+ },
+ {
+  "text": "migraine tablets",
+  "type": "Need"
+ },
+ {
+  "text": "asthma inhaler",
+  "type": "Need"
+ },
+ {
+  "text": "eye drops",
+  "type": "Need"
+ },
+ {
+  "text": "joint pain cream",
+  "type": "Need"
+ },
+ {
+  "text": "blood pressure check",
+  "type": "Need"
+ },
+ {
+  "text": "diabetes test kit",
+  "type": "Need"
+ },
+ {
+  "text": "urine test strip",
+  "type": "Need"
+ },
+ {
+  "text": "lab test kit",
+  "type": "Need"
+ },
+ {
+  "text": "skin cream",
+  "type": "Need"
+ },
+ {
+  "text": "vitamin tablets",
+  "type": "Need"
+ },
+ {
+  "text": "pain reliever",
+  "type": "Need"
+ },
+ {
+  "text": "hearing aid battery",
+  "type": "Need"
+ },
+ {
+  "text": "asthma spray",
+  "type": "Need"
+ },
+ {
+  "text": "cold and flu medicine",
+  "type": "Need"
+ },
+ {
+  "text": "cough syrup",
+  "type": "Need"
+ },
+ {
+  "text": "antibiotic",
+  "type": "Need"
+ },
+ {
+  "text": "sterile bandage",
+  "type": "Need"
+ },
+ {
+  "text": "allergy pill",
+  "type": "Need"
+ },
+ {
+  "text": "prescription pickup",
+  "type": "Need"
+ },
+ {
+  "text": "flu shot",
+  "type": "Need"
+ },
+ {
+  "text": "vaccination",
+  "type": "Need"
+ },
+ {
+  "text": "medicine cabinet",
+  "type": "Need"
+ },
+ {
+  "text": "gym membership",
+  "type": "Want"
+ },
+ {
+  "text": "personal trainer",
+  "type": "Want"
+ },
+ {
+  "text": "fitness tracker",
+  "type": "Want"
+ },
+ {
+  "text": "protein powder",
+  "type": "Want"
+ },
+ {
+  "text": "pre-workout",
+  "type": "Want"
+ },
+ {
+  "text": "yoga mat",
+  "type": "Want"
+ },
+ {
+  "text": "weight lifting gear",
+  "type": "Want"
+ },
+ {
+  "text": "fitness class pass",
+  "type": "Want"
+ },
+ {
+  "text": "home gym setup",
+  "type": "Want"
+ },
+ {
+  "text": "stretching band",
+  "type": "Want"
+ },
+ {
+  "text": "barre classes",
+  "type": "Want"
+ },
+ {
+  "text": "cycling gear",
+  "type": "Want"
+ },
+ {
+  "text": "running shoes",
+  "type": "Want"
+ },
+ {
+  "text": "swimming lessons",
+  "type": "Want"
+ },
+ {
+  "text": "gym towel",
+  "type": "Want"
+ },
+ {
+  "text": "protein bar",
+  "type": "Want"
+ },
+ {
+  "text": "energy gels",
+  "type": "Want"
+ },
+ {
+  "text": "supplement pack",
+  "type": "Want"
+ },
+ {
+  "text": "pre-exercise snack",
+  "type": "Want"
+ },
+ {
+  "text": "post-workout shake",
+  "type": "Want"
+ },
+ {
+  "text": "fitness app subscription",
+  "type": "Want"
+ },
+ {
+  "text": "water bottle",
+  "type": "Want"
+ },
+ {
+  "text": "healthy snack",
+  "type": "Want"
+ },
+ {
+  "text": "meal prep service",
+  "type": "Want"
+ },
+ {
+  "text": "weight loss pills",
+  "type": "Want"
+ },
+ {
+  "text": "health checkup",
+  "type": "Investment"
+ },
+ {
+  "text": "annual体检",
+  "type": "Investment"
+ },
+ {
+  "text": "体检套餐",
+  "type": "Investment"
+ },
+ {
+  "text": "定期体检",
+  "type": "Investment"
+ },
+ {
+  "text": "健康保险",
+  "type": "Investment"
+ },
+ {
+  "text": "养生汤",
+  "type": "Need"
+ },
+ {
+  "text": "养生茶",
+  "type": "Need"
+ },
+ {
+  "text": "蜂蜜",
+  "type": "Need"
+ },
+ {
+  "text": "红枣",
+  "type": "Need"
+ },
+ {
+  "text": "枸杞",
+  "type": "Need"
+ },
+ {
+  "text": "菊花茶",
+  "type": "Need"
+ },
+ {
+  "text": "人参",
+  "type": "Investment"
+ },
+ {
+  "text": "燕窝",
+  "type": "Investment"
+ }
+]

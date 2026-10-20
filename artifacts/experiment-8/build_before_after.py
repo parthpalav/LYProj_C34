@@ -105,13 +105,45 @@ def border(cell,header=False):
     if header:
         shade=OxmlElement('w:shd'); shade.set(qn('w:fill'),'E8EEF8'); pr.append(shade)
 
+D.add_paragraph('Experiment 8','Title')
+p=D.add_paragraph('FINAURA frontend improvements through software design principles')
+p.paragraph_format.space_after=Pt(10)
+D.add_heading('Hypothetical user feedback',1)
+D.add_paragraph('These fabricated comments illustrate possible feedback that could motivate the UI changes. They are not collected participant responses. Person numbers match the numbered comparisons that follow.')
+feedback=[
+    "The overview is mostly empty charts. I cannot tell where to start or how to record my first expense.",
+    "I have not added any transactions, so why does the page say none match my filters? Please explain how to begin.",
+    "I am unsure which expense details to enter first and when to check the category. Please tell me beside the amount field if zero is invalid.",
+    "I have not recorded any spending yet. How can the app say my spending is disciplined? Show when there is too little data to analyze.",
+    "What does 0.25th percentile mean? I need a clear label and a short explanation of how the reliable income figure should be read.",
+    "I have not completed my retirement details, but the contribution panel says Fully Funded. Please show when a calculation is not available.",
+    "I want to try an exact monthly investment of 12750. The sliders make precise values difficult to enter and compare.",
+    "I just want to download my records. The large technical explanation distracts me from the download choices; make those details optional.",
+    "What happens after I invite someone to my family? Please show whether they must accept and when the shared household view becomes available.",
+    "The Profile page mainly shows future features. I want to see my current account details and saved financial information first."
+]
+t=D.add_table(rows=1,cols=2); t.autofit=False; t.alignment=WD_TABLE_ALIGNMENT.CENTER
+widths=[1.25,9.54]
+for col,width in zip(t.columns,widths): col.width=Inches(width)
+for cell,label in zip(t.rows[0].cells,['Person','Hypothetical feedback']): cell.text=label
+t.rows[0]._tr.get_or_add_trPr().append(OxmlElement('w:tblHeader'))
+for i,comment in enumerate(feedback,1):
+    cells=t.add_row().cells; cells[0].text=f'Person {i}'; cells[1].text=comment
+for ri,row in enumerate(t.rows):
+    row._tr.get_or_add_trPr().append(OxmlElement('w:cantSplit'))
+    for ci,cell in enumerate(row.cells):
+        cell.width=Inches(widths[ci]); cell.vertical_alignment=WD_CELL_VERTICAL_ALIGNMENT.CENTER
+        border(cell)
+        if ri==0:
+            shade=OxmlElement('w:shd'); shade.set(qn('w:fill'),'F2F2F2'); cell._tc.get_or_add_tcPr().append(shade)
+        for p in cell.paragraphs:
+            p.paragraph_format.space_after=Pt(0); p.paragraph_format.line_spacing=1.1
+            if ci==0:p.alignment=WD_ALIGN_PARAGRAPH.CENTER
+            for r in p.runs:r.font.size=Pt(11);r.bold=ri==0
+
 for idx,(title,old,new,before,after,principle) in enumerate(items):
-    if idx:
-        D.add_page_break()
-    else:
-        D.add_paragraph('Experiment 8','Title')
-        p=D.add_paragraph('FINAURA frontend improvements through software design principles')
-        p.paragraph_format.space_after=Pt(3)
+    D.add_page_break()
+    if idx==0:
         p=D.add_paragraph('Original UI on the left and implemented live UI on the right. Screenshots use the same local test account and are cropped to the relevant workspace.')
         p.paragraph_format.space_after=Pt(9)
         for r in p.runs:r.font.size=Pt(9)

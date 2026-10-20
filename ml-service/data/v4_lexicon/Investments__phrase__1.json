@@ -1,0 +1,202 @@
+[
+ {
+  "text": "shares",
+  "type": "Investment"
+ },
+ {
+  "text": "mutual fund",
+  "type": "Investment"
+ },
+ {
+  "text": "sips",
+  "type": "Investment"
+ },
+ {
+  "text": "equities",
+  "type": "Investment"
+ },
+ {
+  "text": "index funds",
+  "type": "Investment"
+ },
+ {
+  "text": "bond",
+  "type": "Investment"
+ },
+ {
+  "text": "gold",
+  "type": "Investment"
+ },
+ {
+  "text": "nifty",
+  "type": "Investment"
+ },
+ {
+  "text": "nfo",
+  "type": "Investment"
+ },
+ {
+  "text": "elss",
+  "type": "Investment"
+ },
+ {
+  "text": "govt bond",
+  "type": "Investment"
+ },
+ {
+  "text": "tax saving",
+  "type": "Investment"
+ },
+ {
+  "text": "dividends",
+  "type": "Investment"
+ },
+ {
+  "text": "nps",
+  "type": "Investment"
+ },
+ {
+  "text": "ppf",
+  "type": "Investment"
+ },
+ {
+  "text": "gold bond",
+  "type": "Investment"
+ },
+ {
+  "text": "digital gold",
+  "type": "Investment"
+ },
+ {
+  "text": "real estate",
+  "type": "Investment"
+ },
+ {
+  "text": "gold exchange",
+  "type": "Investment"
+ },
+ {
+  "text": "gold etf",
+  "type": "Investment"
+ },
+ {
+  "text": "fixed deposit",
+  "type": "Investment"
+ },
+ {
+  "text": "fd",
+  "type": "Investment"
+ },
+ {
+  "text": "recurring deposit",
+  "type": "Investment"
+ },
+ {
+  "text": "rd",
+  "type": "Investment"
+ },
+ {
+  "text": "stocks",
+  "type": "Investment"
+ },
+ {
+  "text": "gold price",
+  "type": "Investment"
+ },
+ {
+  "text": "stock market",
+  "type": "Investment"
+ },
+ {
+  "text": "etf",
+  "type": "Investment"
+ },
+ {
+  "text": "commodities",
+  "type": "Investment"
+ },
+ {
+  "text": "silver",
+  "type": "Investment"
+ },
+ {
+  "text": "crypto",
+  "type": "Investment"
+ },
+ {
+  "text": "mutual fund scheme",
+  "type": "Investment"
+ },
+ {
+  "text": "gold fund",
+  "type": "Investment"
+ },
+ {
+  "text": "gold units",
+  "type": "Investment"
+ },
+ {
+  "text": "index tracker",
+  "type": "Investment"
+ },
+ {
+  "text": "growth fund",
+  "type": "Investment"
+ },
+ {
+  "text": "dividend fund",
+  "type": "Investment"
+ },
+ {
+  "text": "balanced fund",
+  "type": "Investment"
+ },
+ {
+  "text": "tax saving scheme",
+  "type": "Investment"
+ },
+ {
+  "text": "sukanya samriddhi",
+  "type": "Investment"
+ },
+ {
+  "text": "sukanya scheme",
+  "type": "Investment"
+ },
+ {
+  "text": "ulip",
+  "type": "Investment"
+ },
+ {
+  "text": "ultra long term",
+  "type": "Investment"
+ },
+ {
+  "text": "ulip scheme",
+  "type": "Investment"
+ },
+ {
+  "text": "index fund scheme",
+  "type": "Investment"
+ },
+ {
+  "text": "fixed term fd",
+  "type": "Investment"
+ },
+ {
+  "text": "capital protection",
+  "type": "Investment"
+ },
+ {
+  "text": "growth and dividend",
+  "type": "Investment"
+ },
+ {
+  "text": "equity oriented",
+  "type": "Investment"
+ },
+ {
+  "text": "debt fund",
+  "type": "Investment"
+ }
+]

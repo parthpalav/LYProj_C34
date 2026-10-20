@@ -1,0 +1,202 @@
+[
+ {
+  "i": 3040,
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ {
+  "i": 3041,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 3042,
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ {
+  "i": 3043,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 3044,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 3045,
+  "category": "Food & Dining",
+  "type": "Need"
+ },
+ {
+  "i": 3046,
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ {
+  "i": 3047,
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ {
+  "i": 3048,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 3049,
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ {
+  "i": 3050,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 3051,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 3052,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 3053,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 3054,
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ {
+  "i": 3055,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 3056,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 3057,
+  "category": "Education",
+  "type": "Need"
+ },
+ {
+  "i": 3058,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 3059,
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ {
+  "i": 3060,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 3061,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 3062,
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ {
+  "i": 3063,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 3064,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 3065,
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ {
+  "i": 3066,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 3067,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 3068,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 3069,
+  "category": "Education",
+  "type": "Need"
+ },
+ {
+  "i": 3070,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 3071,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 3072,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 3073,
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ {
+  "i": 3074,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 3075,
+  "category": "Shopping",
+  "type": "Want"
+ },
+ {
+  "i": 3076,
+  "category": "Shopping",
+  "type": "Want"
+ },
+ {
+  "i": 3077,
+  "category": "Education",
+  "type": "Need"
+ },
+ {
+  "i": 3078,
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ {
+  "i": 3079,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ }
+]

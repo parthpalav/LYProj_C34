@@ -1,0 +1,149 @@
+# Classifier v5 evaluation
+
+Legacy = rules + TF-IDF category + MiniLM type head. v4 = rules + finaura-v4. v5 = rules + ensemble ['finaura-v5-bge-base-en-v1.5', 'finaura-v5-bge-large-en-v1.5'].
+All share the current rules.py. On sets b/b0 the legacy TF-IDF is refit on the same 80% human split.
+
+## a_synthetic_unseen_merchants (n=3468)
+
+| metric | legacy | v4 | v5 |
+|---|---|---|---|
+| category_accuracy | 45.0% | 73.1% | 90.3% |
+| category_macro_f1 | 48.9% | 72.3% | 89.7% |
+| type_accuracy | 62.9% | 77.5% | 91.8% |
+| joint_accuracy | 32.7% | 64.9% | 87.3% |
+| auto_accept_coverage | 17.0% | 53.7% | 83.3% |
+| auto_accept_precision | 92.4% | 82.4% | 95.5% |
+| rule_share | 14.0% | 14.0% | 14.0% |
+| p50_latency_ms | 4.4 | 4.1 | 62.5 |
+
+v5 errors (first 40):
+
+- `magic circs` expected Entertainment|Want, got Personal Care|Want (finaura_v4)
+- `gift card for office` expected Shopping|Want, got Misc|Want (finaura_v4)
+- `urbnest` expected Shopping|Want, got Housing|Need (finaura_v4)
+- `the good erth` expected Food & Dining|Want, got Personal Care|Want (finaura_v4)
+- `UPI/DR/964798094233/SPRING HEALTH/ibl` expected Health|Want, got Health|Need (finaura_v4)
+- `kedem` expected Personal Care|Want, got Utilities & Bills|Need (finaura_v4)
+- `chitra handcrafts` expected Misc|Need, got Shopping|Want (finaura_v4)
+- `bajaaj electricals` expected Utilities & Bills|Need, got Shopping|Want (finaura_v4)
+- `POS 0384 THE GOOD EARTH HYDERABAD` expected Food & Dining|Want, got Personal Care|Want (finaura_v4)
+- `BIL/ONL/141773133224/GURU'S EXAM PREP/YESB` expected Education|Need, got Education|Investment (finaura_v4)
+- `paid ₹890 for paint touch up` expected Housing|Need, got Personal Care|Want (finaura_v4)
+- `UPI/DR/279936551379/SLICE/axl` expected Debt & Loan Payments|Need, got Groceries|Need (finaura_v4)
+- `UPI-SRIVASTAVAHOUSEFEE-020331@paytm` expected Housing|Need, got Food & Dining|Want (finaura_v4)
+- `slice` expected Debt & Loan Payments|Need, got Groceries|Need (finaura_v4)
+- `UPI-NISHANAIR-946249@axl` expected Misc|Need, got Personal Care|Want (finaura_v4)
+- `primepek` expected Health|Want, got Personal Care|Want (finaura_v4)
+- `livspac` expected Housing|Need, got Personal Care|Want (finaura_v4)
+- `UPI/550933924578/STAR SPORTS CAFE/starsportscafe@paytm/YESB` expected Entertainment|Want, got Food & Dining|Want (merchant_rule)
+- `IDFC Bank 2912.00` expected Investments|Investment, got Debt & Loan Payments|Need (finaura_v4)
+- `Luxe payment` expected Personal Care|Want, got Entertainment|Want (finaura_v4)
+- `UPI-URBANEST-986081@okicici` expected Shopping|Want, got Personal Care|Want (finaura_v4)
+- `The Good Earth 256` expected Food & Dining|Want, got Personal Care|Want (finaura_v4)
+- `growmybsket` expected Groceries|Need, got Food & Dining|Want (finaura_v4)
+- `unilever order` expected Personal Care|Want, got Groceries|Need (finaura_v4)
+- `uulaa car` expected Transport & Travel|Want, got Insurance|Need (finaura_v4)
+- `sharma antiiquarian books` expected Misc|Need, got Education|Need (finaura_v4)
+- `2010 Medicare` expected Health|Need, got Insurance|Need (finaura_v4)
+- `Midea bill` expected Shopping|Want, got Utilities & Bills|Need (finaura_v4)
+- `ECOM PUR CHITRA HANDICRAFTS JAIPUR` expected Misc|Need, got Shopping|Want (finaura_v4)
+- `UPI/229380450308/PREMIUMPIES/premiumpies@okhdfcbank/ICICI` expected Food & Dining|Want, got Groceries|Want (finaura_v4)
+- `UPI/DR/364835512705/YATRA/ybl` expected Transport & Travel|Want, got Transport & Travel|Need (finaura_v4)
+- `new light bulbs` expected Housing|Need, got Shopping|Want (finaura_v4)
+- `music lessons for ria` expected Education|Need, got Education|Investment (finaura_v4)
+- `₹1766 teabags` expected Groceries|Need, got Food & Dining|Want (finaura_v4)
+- `UPI/554747640513/TATA PLAY GOLD/tataplaygold@ybl/YESB` expected Entertainment|Want, got Utilities & Bills|Need (merchant_rule)
+- `UPI/DR/884503983402/FOUNTAINHEAD/okhdfcbank` expected Education|Need, got Education|Investment (finaura_v4)
+- `NEFT DR-ICICIN142668952-BLINKIES` expected Personal Care|Want, got Groceries|Want (finaura_v4)
+- `gurugift` expected Shopping|Want, got Education|Need (finaura_v4)
+- `kishore waatches` expected Shopping|Want, got Food & Dining|Want (finaura_v4)
+- `driveehail` expected Transport & Travel|Need, got Transport & Travel|Want (finaura_v4)
+
+## b_human_held_out_rubric (n=140)
+
+| metric | legacy | v4 | v5 |
+|---|---|---|---|
+| category_accuracy | 85.7% | 90.7% | 92.1% |
+| category_macro_f1 | 84.8% | 89.4% | 91.7% |
+| type_accuracy | 84.3% | 91.4% | 97.1% |
+| joint_accuracy | 73.6% | 84.3% | 92.1% |
+| auto_accept_coverage | 55.0% | 73.6% | 87.9% |
+| auto_accept_precision | 97.4% | 98.1% | 96.7% |
+| rule_share | 52.1% | 52.1% | 52.1% |
+| p50_latency_ms | 0.0 | 0.0 | 0.0 |
+
+v5 errors (first 40):
+
+- `belgian waffle chocolate` expected Food & Dining|Want, got Groceries|Want (finaura_v4)
+- `rooftop bar tapas snacks` expected Entertainment|Want, got Food & Dining|Want (finaura_v4)
+- `motorcycle helmet and riding gear` expected Transport & Travel|Want, got Shopping|Need (finaura_v4)
+- `bicycle repair and chain replacement` expected Transport & Travel|Need, got Misc|Need (finaura_v4)
+- `ro water purifier annual maintenance contract amc` expected Housing|Need, got Utilities & Bills|Need (finaura_v4)
+- `kitchen gas pipeline maintenance mgl` expected Housing|Need, got Utilities & Bills|Need (finaura_v4)
+- `notion personal pro annual plan` expected Utilities & Bills|Need, got Insurance|Need (finaura_v4)
+- `canva pro design software subscription` expected Utilities & Bills|Need, got Education|Investment (finaura_v4)
+- `board game cafe entry and games` expected Entertainment|Want, got Food & Dining|Want (merchant_rule)
+- `fund transfer to friend miscellaneous` expected Misc|Need, got Investments|Investment (finaura_v4)
+- `pos unknown retail counter swipe` expected Misc|Need, got Shopping|Want (finaura_v4)
+
+## b0_human_held_out_original_labels (n=140)
+
+| metric | legacy | v4 | v5 |
+|---|---|---|---|
+| category_accuracy | 86.4% | 90.0% | 92.9% |
+| category_macro_f1 | 85.5% | 88.7% | 92.4% |
+| type_accuracy | 80.7% | 87.1% | 89.3% |
+| joint_accuracy | 72.1% | 81.4% | 84.3% |
+| auto_accept_coverage | 55.0% | 73.6% | 87.9% |
+| auto_accept_precision | 94.8% | 93.2% | 89.4% |
+| rule_share | 52.1% | 52.1% | 52.1% |
+| p50_latency_ms | 0.1 | 0.1 | 0.1 |
+
+v5 errors (first 40):
+
+- `coconut water and fresh produce` expected Groceries|Want, got Groceries|Need (finaura_v4)
+- `canva pro design software subscription` expected Utilities & Bills|Need, got Education|Investment (finaura_v4)
+- `bicycle repair and chain replacement` expected Transport & Travel|Need, got Misc|Need (finaura_v4)
+- `watch battery replacement local shop` expected Misc|Want, got Misc|Need (finaura_v4)
+- `toefl international english exam fee` expected Education|Need, got Education|Investment (merchant_rule)
+- `country delight pure milk subscription` expected Groceries|Want, got Groceries|Need (merchant_rule)
+- `fund transfer to friend miscellaneous` expected Misc|Want, got Investments|Investment (finaura_v4)
+- `ro water purifier annual maintenance contract amc` expected Housing|Need, got Utilities & Bills|Need (finaura_v4)
+- `coding bootcamp fee full stack` expected Education|Need, got Education|Investment (finaura_v4)
+- `notion personal pro annual plan` expected Utilities & Bills|Need, got Insurance|Need (finaura_v4)
+- `pos unknown retail counter swipe` expected Misc|Want, got Shopping|Want (finaura_v4)
+- `private coaching class fees jee neet` expected Education|Need, got Education|Investment (finaura_v4)
+- `university degree program fee installment` expected Education|Need, got Education|Investment (finaura_v4)
+- `kitchen gas pipeline maintenance mgl` expected Housing|Need, got Utilities & Bills|Need (finaura_v4)
+- `motorcycle helmet and riding gear` expected Transport & Travel|Want, got Shopping|Need (finaura_v4)
+- `belgian waffle chocolate` expected Food & Dining|Want, got Groceries|Want (finaura_v4)
+- `random street payment barcode scan` expected Misc|Want, got Misc|Need (finaura_v4)
+- `data analytics offline workshop fee` expected Education|Need, got Education|Investment (finaura_v4)
+- `peanut butter and fruit jam` expected Groceries|Want, got Groceries|Need (finaura_v4)
+- `board game cafe entry and games` expected Entertainment|Want, got Food & Dining|Want (merchant_rule)
+- `government document xerox photocopy` expected Misc|Want, got Misc|Need (finaura_v4)
+- `apples bananas oranges fruit basket` expected Groceries|Want, got Groceries|Need (finaura_v4)
+
+## c_challenge_adversarial (n=150)
+
+| metric | legacy | v4 | v5 |
+|---|---|---|---|
+| category_accuracy | 86.0% | 94.7% | 98.7% |
+| category_macro_f1 | 87.2% | 95.2% | 98.8% |
+| type_accuracy | 86.0% | 94.0% | 96.7% |
+| joint_accuracy | 76.0% | 90.0% | 95.3% |
+| auto_accept_coverage | 55.3% | 79.3% | 90.7% |
+| auto_accept_precision | 97.6% | 95.8% | 95.6% |
+| rule_share | 54.0% | 54.0% | 54.0% |
+| p50_latency_ms | 0.0 | 0.0 | 0.0 |
+
+v5 errors (first 40):
+
+- `chai sutta` expected Entertainment|Want, got Food & Dining|Want (finaura_v4)
+- `auto rickshaw fare` expected Transport & Travel|Need, got Transport & Travel|Want (finaura_v4)
+- `parking at phoenix mall` expected Transport & Travel|Need, got Transport & Travel|Want (finaura_v4)
+- `bus ticket to pune` expected Transport & Travel|Want, got Transport & Travel|Need (merchant_rule)
+- `school uniform` expected Shopping|Need, got Education|Need (finaura_v4)
+- `school fees` expected Education|Need, got Education|Investment (merchant_rule)
+- `coaching for jee` expected Education|Investment, got Education|Need (finaura_v4)
+

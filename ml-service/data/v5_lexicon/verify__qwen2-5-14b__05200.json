@@ -1,0 +1,202 @@
+[
+ {
+  "i": 5200,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5201,
+  "category": "Insurance",
+  "type": "Need"
+ },
+ {
+  "i": 5202,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5203,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5204,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5205,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5206,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5207,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5208,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5209,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5210,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5211,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5212,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5213,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5214,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5215,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5216,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5217,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5218,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5219,
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ {
+  "i": 5220,
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ {
+  "i": 5221,
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ {
+  "i": 5222,
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ {
+  "i": 5223,
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ {
+  "i": 5224,
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ {
+  "i": 5225,
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ {
+  "i": 5226,
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ {
+  "i": 5227,
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ {
+  "i": 5228,
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ {
+  "i": 5229,
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ {
+  "i": 5230,
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ {
+  "i": 5231,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5232,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5233,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5234,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5235,
+  "category": "Health",
+  "type": "Want"
+ },
+ {
+  "i": 5236,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5237,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5238,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5239,
+  "category": "Personal Care",
+  "type": "Want"
+ }
+]

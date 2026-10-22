@@ -1,0 +1,298 @@
+[
+ {
+  "text": "Apollo Hospitals",
+  "type": "Need"
+ },
+ {
+  "text": "Fortis Healthcare",
+  "type": "Need"
+ },
+ {
+  "text": "Cipla",
+  "type": "Need"
+ },
+ {
+  "text": "Dr. Reddy's",
+  "type": "Need"
+ },
+ {
+  "text": "Mankind",
+  "type": "Need"
+ },
+ {
+  "text": "Pharmeasy",
+  "type": "Need"
+ },
+ {
+  "text": "Netmeds",
+  "type": "Need"
+ },
+ {
+  "text": "Rxbooster",
+  "type": "Need"
+ },
+ {
+  "text": "Medlife",
+  "type": "Need"
+ },
+ {
+  "text": "1mg",
+  "type": "Need"
+ },
+ {
+  "text": "Healthkart",
+  "type": "Need"
+ },
+ {
+  "text": "Biotika",
+  "type": "Need"
+ },
+ {
+  "text": "Loyalty Life Sciences",
+  "type": "Need"
+ },
+ {
+  "text": "Savaay Health",
+  "type": "Need"
+ },
+ {
+  "text": "Dr. Lal PathLabs",
+  "type": "Need"
+ },
+ {
+  "text": "Portea Medical",
+  "type": "Need"
+ },
+ {
+  "text": "Medulance",
+  "type": "Need"
+ },
+ {
+  "text": "Milaap",
+  "type": "Need"
+ },
+ {
+  "text": "Curefit",
+  "type": "Need"
+ },
+ {
+  "text": "PurePills",
+  "type": "Need"
+ },
+ {
+  "text": "Practo",
+  "type": "Need"
+ },
+ {
+  "text": "Ziqitza Life Care",
+  "type": "Need"
+ },
+ {
+  "text": "Indus Health Plus",
+  "type": "Need"
+ },
+ {
+  "text": "HealthAssist",
+  "type": "Need"
+ },
+ {
+  "text": "Lybrate",
+  "type": "Need"
+ },
+ {
+  "text": "Medwin Hospitals",
+  "type": "Need"
+ },
+ {
+  "text": "Sparsh Hospitals",
+  "type": "Need"
+ },
+ {
+  "text": "Sir Ganga Ram Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Medanta",
+  "type": "Need"
+ },
+ {
+  "text": "Max Healthcare",
+  "type": "Need"
+ },
+ {
+  "text": "Nephro Plus",
+  "type": "Need"
+ },
+ {
+  "text": "BLK Super Speciality Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Manipal Hospitals",
+  "type": "Need"
+ },
+ {
+  "text": "Yashoda Hospitals",
+  "type": "Need"
+ },
+ {
+  "text": "Indraprastha Apollo Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Bhatia Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Rajiv Gandhi Cancer Institute",
+  "type": "Need"
+ },
+ {
+  "text": "Cloudnine Hospitals",
+  "type": "Need"
+ },
+ {
+  "text": "Kokilaben Dhirubhai Ambani Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Ankur Medical Store",
+  "type": "Need"
+ },
+ {
+  "text": "MedPlus",
+  "type": "Need"
+ },
+ {
+  "text": "Medicinebox",
+  "type": "Need"
+ },
+ {
+  "text": "Curestack",
+  "type": "Need"
+ },
+ {
+  "text": "Medxtra",
+  "type": "Need"
+ },
+ {
+  "text": "Pharmawise",
+  "type": "Need"
+ },
+ {
+  "text": "Safe Health Care",
+  "type": "Need"
+ },
+ {
+  "text": "HealthViv",
+  "type": "Need"
+ },
+ {
+  "text": "Medikart",
+  "type": "Need"
+ },
+ {
+  "text": "MyDoc",
+  "type": "Need"
+ },
+ {
+  "text": "Pharmatrade",
+  "type": "Need"
+ },
+ {
+  "text": "Healthkart+",
+  "type": "Need"
+ },
+ {
+  "text": "DoctorOnCall",
+  "type": "Need"
+ },
+ {
+  "text": "Wellthy Therapeutics",
+  "type": "Need"
+ },
+ {
+  "text": "Safal",
+  "type": "Need"
+ },
+ {
+  "text": "Vaidya",
+  "type": "Need"
+ },
+ {
+  "text": "Cure.fit",
+  "type": "Need"
+ },
+ {
+  "text": "SpiceHealth",
+  "type": "Need"
+ },
+ {
+  "text": "Practo Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "NephroPlus",
+  "type": "Need"
+ },
+ {
+  "text": "Milaap",
+  "type": "Need"
+ },
+ {
+  "text": "Dr. Reddy's Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "HealthAssist Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "PharmEasy Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "Netmeds Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "PurePills Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "Healthkart Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "HealthViv Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "Fitpass",
+  "type": "Want"
+ },
+ {
+  "text": "98Fit",
+  "type": "Want"
+ },
+ {
+  "text": "Isha Fit",
+  "type": "Want"
+ },
+ {
+  "text": "Protein Planet",
+  "type": "Want"
+ },
+ {
+  "text": "Nutrabay",
+  "type": "Want"
+ },
+ {
+  "text": "Protein Hub",
+  "type": "Want"
+ },
+ {
+  "text": "GNC India",
+  "type": "Want"
+ }
+]

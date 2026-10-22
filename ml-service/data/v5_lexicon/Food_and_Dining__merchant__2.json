@@ -1,0 +1,338 @@
+[
+ {
+  "text": "Anand Sweet House",
+  "type": "Want"
+ },
+ {
+  "text": "Bhagat Dhaba",
+  "type": "Want"
+ },
+ {
+  "text": "Chandu Street Food",
+  "type": "Want"
+ },
+ {
+  "text": "Dhaba Express",
+  "type": "Want"
+ },
+ {
+  "text": "Gulati's Sweets",
+  "type": "Want"
+ },
+ {
+  "text": "Hari's Tiffin",
+  "type": "Need"
+ },
+ {
+  "text": "Iyer's Madras Cafe",
+  "type": "Want"
+ },
+ {
+  "text": "Jassi's Dosa House",
+  "type": "Want"
+ },
+ {
+  "text": "Kannan Juice Center",
+  "type": "Want"
+ },
+ {
+  "text": "Lalita Dhaba",
+  "type": "Want"
+ },
+ {
+  "text": "Mehra's Tandoori",
+  "type": "Want"
+ },
+ {
+  "text": "Nandini Ice Cream",
+  "type": "Want"
+ },
+ {
+  "text": "Om Tiffin",
+  "type": "Need"
+ },
+ {
+  "text": "Pavani Sweet Stall",
+  "type": "Want"
+ },
+ {
+  "text": "Radha's Bakery",
+  "type": "Want"
+ },
+ {
+  "text": "Sagar Dosa Corner",
+  "type": "Want"
+ },
+ {
+  "text": "Sohrab Bakery",
+  "type": "Want"
+ },
+ {
+  "text": "Taj Ice Creams",
+  "type": "Want"
+ },
+ {
+  "text": "Vijay Tiffin",
+  "type": "Need"
+ },
+ {
+  "text": "Wale's Sweets",
+  "type": "Want"
+ },
+ {
+  "text": "Yash Tiffin",
+  "type": "Need"
+ },
+ {
+  "text": "Aarvi Ice Cream",
+  "type": "Want"
+ },
+ {
+  "text": "Baba Chicken Tandoori",
+  "type": "Want"
+ },
+ {
+  "text": "Chacha's Tea Stall",
+  "type": "Want"
+ },
+ {
+  "text": "Deepa Bakery",
+  "type": "Want"
+ },
+ {
+  "text": "Falaknuma Sweets",
+  "type": "Want"
+ },
+ {
+  "text": "Ganesh Juice Centre",
+  "type": "Want"
+ },
+ {
+  "text": "Hemal's Tiffin Service",
+  "type": "Need"
+ },
+ {
+  "text": "Jitendra Tiffin",
+  "type": "Need"
+ },
+ {
+  "text": "Kaveri Sweet House",
+  "type": "Want"
+ },
+ {
+  "text": "Laxmi Sweets",
+  "type": "Want"
+ },
+ {
+  "text": "Mukesh's Dhaba",
+  "type": "Want"
+ },
+ {
+  "text": "Nandini Thali",
+  "type": "Want"
+ },
+ {
+  "text": "Om Tiffin Express",
+  "type": "Need"
+ },
+ {
+  "text": "Poonam's Sweet Shop",
+  "type": "Want"
+ },
+ {
+  "text": "Radha's Ice Cream",
+  "type": "Want"
+ },
+ {
+  "text": "Sagar Sweets",
+  "type": "Want"
+ },
+ {
+  "text": "Sohrab's Bakery",
+  "type": "Want"
+ },
+ {
+  "text": "Taj Sweet House",
+  "type": "Want"
+ },
+ {
+  "text": "Vikas Tiffin",
+  "type": "Need"
+ },
+ {
+  "text": "Wale's Bakery",
+  "type": "Want"
+ },
+ {
+  "text": "Yash Dhaba",
+  "type": "Want"
+ },
+ {
+  "text": "Anjali's Dosa",
+  "type": "Want"
+ },
+ {
+  "text": "Babuji's Dhaba",
+  "type": "Want"
+ },
+ {
+  "text": "Chacha's Chaat Corner",
+  "type": "Want"
+ },
+ {
+  "text": "Deepak's Ice Cream",
+  "type": "Want"
+ },
+ {
+  "text": "Falaknuma Biryani",
+  "type": "Want"
+ },
+ {
+  "text": "Ganesh Thali",
+  "type": "Want"
+ },
+ {
+  "text": "Hemal's Tiffin House",
+  "type": "Need"
+ },
+ {
+  "text": "Jitendra's Sweets",
+  "type": "Want"
+ },
+ {
+  "text": "Kaveri Ice Cream",
+  "type": "Want"
+ },
+ {
+  "text": "Lalit Sweets",
+  "type": "Want"
+ },
+ {
+  "text": "Mukesh's Sweet Shop",
+  "type": "Want"
+ },
+ {
+  "text": "Nandini Tiffin",
+  "type": "Want"
+ },
+ {
+  "text": "Om Dhaba",
+  "type": "Want"
+ },
+ {
+  "text": "Poonam's Sweet Corner",
+  "type": "Want"
+ },
+ {
+  "text": "Radha's Biryani",
+  "type": "Want"
+ },
+ {
+  "text": "Sagar's Ice Cream",
+  "type": "Want"
+ },
+ {
+  "text": "Sohrab's Sweet House",
+  "type": "Want"
+ },
+ {
+  "text": "Taj Tiffin",
+  "type": "Want"
+ },
+ {
+  "text": "Vikas Sweets",
+  "type": "Want"
+ },
+ {
+  "text": "Wale's Ice Cream",
+  "type": "Want"
+ },
+ {
+  "text": "Yash's Dhaba",
+  "type": "Want"
+ },
+ {
+  "text": "Anjali's Dosa House",
+  "type": "Want"
+ },
+ {
+  "text": "Babuji's Dhaba Express",
+  "type": "Want"
+ },
+ {
+  "text": "Chacha's Chaat Express",
+  "type": "Want"
+ },
+ {
+  "text": "Deepak's Ice Cream Express",
+  "type": "Want"
+ },
+ {
+  "text": "Falaknuma Biryani Express",
+  "type": "Want"
+ },
+ {
+  "text": "Ganesh Thali Express",
+  "type": "Want"
+ },
+ {
+  "text": "Hemal's Tiffin House Express",
+  "type": "Need"
+ },
+ {
+  "text": "Jitendra's Sweets Express",
+  "type": "Want"
+ },
+ {
+  "text": "Kaveri Ice Cream Express",
+  "type": "Want"
+ },
+ {
+  "text": "Lalit Sweets Express",
+  "type": "Want"
+ },
+ {
+  "text": "Mukesh's Sweet Shop Express",
+  "type": "Want"
+ },
+ {
+  "text": "Nandini Tiffin Express",
+  "type": "Want"
+ },
+ {
+  "text": "Om Dhaba Express",
+  "type": "Want"
+ },
+ {
+  "text": "Poonam's Sweet Corner Express",
+  "type": "Want"
+ },
+ {
+  "text": "Radha's Biryani Express",
+  "type": "Want"
+ },
+ {
+  "text": "Sagar's Ice Cream Express",
+  "type": "Want"
+ },
+ {
+  "text": "Sohrab's Sweet House Express",
+  "type": "Want"
+ },
+ {
+  "text": "Taj Tiffin Express",
+  "type": "Want"
+ },
+ {
+  "text": "Vikas Sweets Express",
+  "type": "Want"
+ },
+ {
+  "text": "Wale's Ice Cream Express",
+  "type": "Want"
+ },
+ {
+  "text": "Yash's Dhaba Express",
+  "type": "Want"
+ }
+]

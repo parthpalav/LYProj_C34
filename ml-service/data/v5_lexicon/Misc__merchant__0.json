@@ -1,0 +1,374 @@
+[
+ {
+  "text": "UPI Transfer",
+  "type": "Need"
+ },
+ {
+  "text": "Cash Withdrawal",
+  "type": "Need"
+ },
+ {
+  "text": "Bank Charges",
+  "type": "Need"
+ },
+ {
+  "text": "Fine",
+  "type": "Need"
+ },
+ {
+  "text": "Challan",
+  "type": "Need"
+ },
+ {
+  "text": "Donation",
+  "type": "Want"
+ },
+ {
+  "text": "Tip",
+  "type": "Want"
+ },
+ {
+  "text": "Charity",
+  "type": "Want"
+ },
+ {
+  "text": "Volunteer",
+  "type": "Want"
+ },
+ {
+  "text": "Pledge",
+  "type": "Want"
+ },
+ {
+  "text": "Gratitude",
+  "type": "Want"
+ },
+ {
+  "text": "Help",
+  "type": "Want"
+ },
+ {
+  "text": "Support",
+  "type": "Want"
+ },
+ {
+  "text": "Crowdfunding",
+  "type": "Want"
+ },
+ {
+  "text": "Crowdfund",
+  "type": "Want"
+ },
+ {
+  "text": "GoFundMe",
+  "type": "Want"
+ },
+ {
+  "text": "Ketto",
+  "type": "Want"
+ },
+ {
+  "text": "Paytm",
+  "type": "Want"
+ },
+ {
+  "text": "SwiggyPay",
+  "type": "Want"
+ },
+ {
+  "text": "ZomatoPay",
+  "type": "Want"
+ },
+ {
+  "text": "GooglePay",
+  "type": "Want"
+ },
+ {
+  "text": "PhonePe",
+  "type": "Want"
+ },
+ {
+  "text": "BHIM UPI",
+  "type": "Want"
+ },
+ {
+  "text": "Razorpay",
+  "type": "Want"
+ },
+ {
+  "text": "Instamojo",
+  "type": "Want"
+ },
+ {
+  "text": "PayUmoney",
+  "type": "Want"
+ },
+ {
+  "text": "ICICI Bank",
+  "type": "Need"
+ },
+ {
+  "text": "HDFC Bank",
+  "type": "Need"
+ },
+ {
+  "text": "SBI",
+  "type": "Need"
+ },
+ {
+  "text": "Axis Bank",
+  "type": "Need"
+ },
+ {
+  "text": "Kotak Bank",
+  "type": "Need"
+ },
+ {
+  "text": "IDBI Bank",
+  "type": "Need"
+ },
+ {
+  "text": "Federal Bank",
+  "type": "Need"
+ },
+ {
+  "text": "Yes Bank",
+  "type": "Need"
+ },
+ {
+  "text": "Punjab National Bank",
+  "type": "Need"
+ },
+ {
+  "text": "Canara Bank",
+  "type": "Need"
+ },
+ {
+  "text": "IndusInd Bank",
+  "type": "Need"
+ },
+ {
+  "text": "Bandhan Bank",
+  "type": "Need"
+ },
+ {
+  "text": "Federal Bank",
+  "type": "Need"
+ },
+ {
+  "text": "RBL Bank",
+  "type": "Need"
+ },
+ {
+  "text": "DCB Bank",
+  "type": "Need"
+ },
+ {
+  "text": "Karur Vysya Bank",
+  "type": "Need"
+ },
+ {
+  "text": "IDFC First Bank",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Capital",
+  "type": "Need"
+ },
+ {
+  "text": "Reliance Bank",
+  "type": "Need"
+ },
+ {
+  "text": "Navi Bank",
+  "type": "Need"
+ },
+ {
+  "text": "NeoBanks",
+  "type": "Need"
+ },
+ {
+  "text": "Oxigen Wallet",
+  "type": "Want"
+ },
+ {
+  "text": "MobiKwik",
+  "type": "Want"
+ },
+ {
+  "text": "FreeCharge",
+  "type": "Want"
+ },
+ {
+  "text": "Bajaj Finserv",
+  "type": "Need"
+ },
+ {
+  "text": "Money Tap",
+  "type": "Want"
+ },
+ {
+  "text": "InstaMojo",
+  "type": "Want"
+ },
+ {
+  "text": "PayUmoney",
+  "type": "Want"
+ },
+ {
+  "text": "CRED",
+  "type": "Want"
+ },
+ {
+  "text": "PhonePe",
+  "type": "Want"
+ },
+ {
+  "text": "GooglePay",
+  "type": "Want"
+ },
+ {
+  "text": "Pepay",
+  "type": "Want"
+ },
+ {
+  "text": "BharatPe",
+  "type": "Want"
+ },
+ {
+  "text": "UnicornPay",
+  "type": "Want"
+ },
+ {
+  "text": "Razorpay",
+  "type": "Want"
+ },
+ {
+  "text": "Paytm Mall",
+  "type": "Want"
+ },
+ {
+  "text": "Shubhayan",
+  "type": "Need"
+ },
+ {
+  "text": "City Gas",
+  "type": "Need"
+ },
+ {
+  "text": "PGone",
+  "type": "Need"
+ },
+ {
+  "text": "Water Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Electricity Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Mobile Recharge",
+  "type": "Need"
+ },
+ {
+  "text": "Fuel Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Metro Charges",
+  "type": "Need"
+ },
+ {
+  "text": "Bus Ticket",
+  "type": "Need"
+ },
+ {
+  "text": "Auto Rickshaw",
+  "type": "Need"
+ },
+ {
+  "text": "Tiffin Service",
+  "type": "Need"
+ },
+ {
+  "text": "Office Canteen",
+  "type": "Need"
+ },
+ {
+  "text": "Hostel Mess",
+  "type": "Need"
+ },
+ {
+  "text": "School Fees",
+  "type": "Need"
+ },
+ {
+  "text": "School Books",
+  "type": "Need"
+ },
+ {
+  "text": "Kids Stationery",
+  "type": "Need"
+ },
+ {
+  "text": "School Van",
+  "type": "Need"
+ },
+ {
+  "text": "Home Tuition",
+  "type": "Need"
+ },
+ {
+  "text": "Eyewear",
+  "type": "Need"
+ },
+ {
+  "text": "Spectacles",
+  "type": "Need"
+ },
+ {
+  "text": "Rain Gear",
+  "type": "Need"
+ },
+ {
+  "text": "Work Charger",
+  "type": "Need"
+ },
+ {
+  "text": "School Uniform",
+  "type": "Need"
+ },
+ {
+  "text": "Replacement",
+  "type": "Need"
+ },
+ {
+  "text": "Salon Services",
+  "type": "Need"
+ },
+ {
+  "text": "Barber Services",
+  "type": "Need"
+ },
+ {
+  "text": "Spa Services",
+  "type": "Need"
+ },
+ {
+  "text": "Cosmetics",
+  "type": "Need"
+ },
+ {
+  "text": "Skincare",
+  "type": "Need"
+ },
+ {
+  "text": "Toiletries",
+  "type": "Need"
+ },
+ {
+  "text": "Grooming",
+  "type": "Need"
+ }
+]

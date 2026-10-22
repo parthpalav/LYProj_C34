@@ -207,21 +207,29 @@ def verify_lexicon(lex: pd.DataFrame, verifiers: list[str]) -> pd.DataFrame:
             if os.path.exists(path):
                 labels = json.load(open(path))
             else:
-                items = "\n".join(f"{i}. {t}" for i, t in zip(chunk.index, chunk["text"]))
-                prompt = (
-                    "You label expenses for an Indian personal finance app. Categories:\n"
-                    f"{guide}\n\nLabelling rules (these win over the list above):\n{RUBRIC}\n\n"
-                    "For each numbered item below (a merchant name or a short expense note), give its "
-                    "category and type (Need, Want or Investment) following the rules exactly. Reply as JSON with one "
-                    f"label for every item, using the item number as i.\n\n{items}"
-                )
+                def ask(part: pd.DataFrame) -> list:
+                    items = "\n".join(f"{i}. {t}" for i, t in zip(part.index, part["text"]))
+                    prompt = (
+                        "You label expenses for an Indian personal finance app. Categories:\n"
+                        f"{guide}\n\nLabelling rules (these win over the list above):\n{RUBRIC}\n\n"
+                        "For each numbered item below (a merchant name or a short expense note), give its "
+                        "category and type (Need, Want or Investment) following the rules exactly. Reply as JSON with one "
+                        f"label for every item, using the item number as i.\n\n{items}"
+                    )
+                    return _ollama(prompt, model, VERIFY_SCHEMA, "labels", temperature=0.0)
+
                 print(f"[VERIFY {model}] items {start}-{start + len(chunk) - 1} of {len(lex)} ...", flush=True)
                 try:
-                    labels = _ollama(prompt, model, VERIFY_SCHEMA, "labels", temperature=0.0)
-                except Exception as e:  # rerun retries only the missing batches
-                    print(f"   ! failed: {e}")
-                    failed += 1
-                    continue
+                    labels = ask(chunk)
+                except Exception as e:
+                    # temperature 0 repeats the same broken reply, so retry in smaller pieces instead
+                    print(f"   ! {e} — retrying in pieces of 10", flush=True)
+                    try:
+                        labels = [lab for k in range(0, len(chunk), 10) for lab in ask(chunk.iloc[k:k + 10])]
+                    except Exception as e:  # rerun retries only the missing batches
+                        print(f"   ! failed: {e}")
+                        failed += 1
+                        continue
                 json.dump(labels, open(path, "w"), indent=1)
             for lab in labels:
                 if int(lab.get("i", -1)) in votes and start <= int(lab["i"]) < start + VERIFY_BATCH:

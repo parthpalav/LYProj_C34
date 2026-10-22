@@ -1,0 +1,202 @@
+[
+ {
+  "i": 5120,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5121,
+  "category": "Groceries",
+  "type": "Need"
+ },
+ {
+  "i": 5122,
+  "category": "Groceries",
+  "type": "Want"
+ },
+ {
+  "i": 5123,
+  "category": "Shopping",
+  "type": "Want"
+ },
+ {
+  "i": 5124,
+  "category": "Shopping",
+  "type": "Want"
+ },
+ {
+  "i": 5125,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5126,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5127,
+  "category": "Health",
+  "type": "Want"
+ },
+ {
+  "i": 5128,
+  "category": "Health",
+  "type": "Want"
+ },
+ {
+  "i": 5129,
+  "category": "Health",
+  "type": "Want"
+ },
+ {
+  "i": 5130,
+  "category": "Health",
+  "type": "Want"
+ },
+ {
+  "i": 5131,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5132,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5133,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5134,
+  "category": "Insurance",
+  "type": "Need"
+ },
+ {
+  "i": 5135,
+  "category": "Groceries",
+  "type": "Want"
+ },
+ {
+  "i": 5136,
+  "category": "Insurance",
+  "type": "Need"
+ },
+ {
+  "i": 5137,
+  "category": "Insurance",
+  "type": "Need"
+ },
+ {
+  "i": 5138,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5139,
+  "category": "Health",
+  "type": "Want"
+ },
+ {
+  "i": 5140,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5141,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5142,
+  "category": "Health",
+  "type": "Want"
+ },
+ {
+  "i": 5143,
+  "category": "Health",
+  "type": "Want"
+ },
+ {
+  "i": 5144,
+  "category": "Insurance",
+  "type": "Need"
+ },
+ {
+  "i": 5145,
+  "category": "Insurance",
+  "type": "Need"
+ },
+ {
+  "i": 5146,
+  "category": "Insurance",
+  "type": "Need"
+ },
+ {
+  "i": 5147,
+  "category": "Insurance",
+  "type": "Need"
+ },
+ {
+  "i": 5148,
+  "category": "Insurance",
+  "type": "Need"
+ },
+ {
+  "i": 5149,
+  "category": "Insurance",
+  "type": "Need"
+ },
+ {
+  "i": 5150,
+  "category": "Insurance",
+  "type": "Need"
+ },
+ {
+  "i": 5151,
+  "category": "Insurance",
+  "type": "Need"
+ },
+ {
+  "i": 5152,
+  "category": "Insurance",
+  "type": "Need"
+ },
+ {
+  "i": 5153,
+  "category": "Insurance",
+  "type": "Need"
+ },
+ {
+  "i": 5154,
+  "category": "Insurance",
+  "type": "Need"
+ },
+ {
+  "i": 5155,
+  "category": "Insurance",
+  "type": "Need"
+ },
+ {
+  "i": 5156,
+  "category": "Insurance",
+  "type": "Need"
+ },
+ {
+  "i": 5157,
+  "category": "Health",
+  "type": "Want"
+ },
+ {
+  "i": 5158,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5159,
+  "category": "Health",
+  "type": "Need"
+ }
+]

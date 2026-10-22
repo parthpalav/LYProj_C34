@@ -1,0 +1,202 @@
+[
+ {
+  "i": 8000,
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ {
+  "i": 8001,
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ {
+  "i": 8002,
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ {
+  "i": 8003,
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ {
+  "i": 8004,
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ {
+  "i": 8005,
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ {
+  "i": 8006,
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ {
+  "i": 8007,
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ {
+  "i": 8008,
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ {
+  "i": 8009,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 8010,
+  "category": "Food & Dining",
+  "type": "Need"
+ },
+ {
+  "i": 8011,
+  "category": "Groceries",
+  "type": "Need"
+ },
+ {
+  "i": 8012,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 8013,
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ {
+  "i": 8014,
+  "category": "Food & Dining",
+  "type": "Need"
+ },
+ {
+  "i": 8015,
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ {
+  "i": 8016,
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ {
+  "i": 8017,
+  "category": "Education",
+  "type": "Need"
+ },
+ {
+  "i": 8018,
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ {
+  "i": 8019,
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ {
+  "i": 8020,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 8021,
+  "category": "Food & Dining",
+  "type": "Need"
+ },
+ {
+  "i": 8022,
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ {
+  "i": 8023,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 8024,
+  "category": "Groceries",
+  "type": "Need"
+ },
+ {
+  "i": 8025,
+  "category": "Shopping",
+  "type": "Want"
+ },
+ {
+  "i": 8026,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 8027,
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ {
+  "i": 8028,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 8029,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 8030,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 8031,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 8032,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 8033,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 8034,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 8035,
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ {
+  "i": 8036,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 8037,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 8038,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 8039,
+  "category": "Misc",
+  "type": "Need"
+ }
+]

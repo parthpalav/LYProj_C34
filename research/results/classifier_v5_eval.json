@@ -1,506 +1,759 @@
 {
   "a_synthetic_unseen_merchants": {
     "legacy": {
-      "n": 979,
-      "category_accuracy": 0.4279877425944842,
-      "category_macro_f1": 0.44905924704990413,
-      "auto_accept_coverage": 0.14504596527068436,
-      "p50_latency_ms": 4.6035830018809065,
-      "rule_share": 0.09193054136874361,
-      "type_accuracy": 0.6159346271705822,
-      "joint_accuracy": 0.2941777323799796,
-      "auto_accept_precision": 0.8450704225352113,
+      "n": 3468,
+      "category_accuracy": 0.4495386389850058,
+      "category_macro_f1": 0.48901020508092374,
+      "auto_accept_coverage": 0.1704152249134948,
+      "p50_latency_ms": 4.322958004195243,
+      "rule_share": 0.14013840830449828,
+      "type_accuracy": 0.6286043829296425,
+      "joint_accuracy": 0.3267012687427912,
+      "auto_accept_precision": 0.9238578680203046,
       "errors": [
         {
-          "text": "travel aggent",
-          "expected": "Transport & Travel|Need",
-          "got": "Transport & Travel|Want",
+          "text": "walmart online",
+          "expected": "Shopping|Want",
+          "got": "Health|Need",
           "source": "tfidf_v2"
         },
         {
-          "text": "BIL/ONL/799872569641/SHREE CINEMA/SBI",
-          "expected": "Entertainment|Want",
-          "got": "Debt & Loan Payments|Want",
+          "text": "at rentsafe",
+          "expected": "Housing|Need",
+          "got": "Shopping|Need",
           "source": "tfidf_v2"
         },
         {
-          "text": "spent at parle",
+          "text": "POS 5642 RESIRENT KOLKATA",
+          "expected": "Housing|Need",
+          "got": "Misc|Need",
+          "source": "tfidf_v2"
+        },
+        {
+          "text": "UPI-IYERKIRANA-030287@paytm",
           "expected": "Groceries|Need",
-          "got": "Shopping|Want",
+          "got": "Misc|Need",
           "source": "tfidf_v2"
         },
         {
-          "text": "UPI/168859266370/EVENTBRITE/eventbrite@okaxis/KOTAK",
-          "expected": "Entertainment|Want",
-          "got": "Misc|Want",
-          "source": "tfidf_v2"
-        },
-        {
-          "text": "himalaya",
+          "text": "paid Rs 2804 for face cream for winter",
           "expected": "Personal Care|Want",
-          "got": "Shopping|Want",
-          "source": "tfidf_v2"
-        },
-        {
-          "text": "UPI/038552882313/RAJESH CINEMAS/rajeshcinemas@okicici/KOTAK",
-          "expected": "Entertainment|Want",
-          "got": "Misc|Want",
-          "source": "tfidf_v2"
-        },
-        {
-          "text": "ECOM PUR HERBAL CHOICE KOLKATA",
-          "expected": "Health|Need",
           "got": "Personal Care|Need",
           "source": "tfidf_v2"
         },
         {
-          "text": "mutual fun",
-          "expected": "Investments|Investment",
-          "got": "Investments|Want",
-          "source": "tfidf_v2"
-        },
-        {
-          "text": "parlee",
-          "expected": "Groceries|Need",
-          "got": "Shopping|Want",
-          "source": "tfidf_v2"
-        },
-        {
-          "text": "ECOM PUR REDWOOD CINEMA BANGALORE",
-          "expected": "Entertainment|Want",
-          "got": "Utilities & Bills|Want",
-          "source": "tfidf_v2"
-        },
-        {
-          "text": "paid 3259.00 for flight return to home",
-          "expected": "Transport & Travel|Need",
-          "got": "Transport & Travel|Want",
-          "source": "merchant_rule"
-        },
-        {
-          "text": "UPI/DR/091436391025/PRABHAT/axl",
-          "expected": "Groceries|Need",
-          "got": "Misc|Investment",
-          "source": "tfidf_v2"
-        },
-        {
-          "text": "UPI/407034910740/VINOD K/vinodk@ibl/ICICI",
-          "expected": "Groceries|Need",
+          "text": "UPI/DR/080046358068/DEEPA BAKERY/upi",
+          "expected": "Food & Dining|Want",
           "got": "Misc|Need",
           "source": "tfidf_v2"
         },
         {
-          "text": "Niraj K payment",
-          "expected": "Groceries|Need",
-          "got": "Misc|Need",
-          "source": "tfidf_v2"
-        },
-        {
-          "text": "Bharti Financial",
-          "expected": "Investments|Investment",
-          "got": "Education|Need",
-          "source": "tfidf_v2"
-        },
-        {
-          "text": "netmatic",
-          "expected": "Utilities & Bills|Need",
-          "got": "Shopping|Want",
-          "source": "tfidf_v2"
-        },
-        {
-          "text": "UPI/481189172845/STARZ PLAY/starzplay@upi/ICICI",
-          "expected": "Entertainment|Want",
-          "got": "Misc|Need",
-          "source": "tfidf_v2"
-        },
-        {
-          "text": "Rs 1397 Tata Consumer",
-          "expected": "Health|Need",
-          "got": "Utilities & Bills|Need",
-          "source": "tfidf_v2"
-        },
-        {
-          "text": "Dermalogica purchase",
+          "text": "LAKME NATURALS TXN POS PURCHASE",
           "expected": "Personal Care|Want",
-          "got": "Investments|Want",
+          "got": "Investments|Need",
           "source": "tfidf_v2"
         },
         {
-          "text": "solar panel maintenance 1814",
+          "text": "POS 8067 DEN10 ULTRA PLUS HD PLUS LUCKNOW",
           "expected": "Utilities & Bills|Need",
-          "got": "Housing|Need",
+          "got": "Entertainment|Need",
           "source": "tfidf_v2"
         },
         {
-          "text": "new water pump",
-          "expected": "Housing|Need",
-          "got": "Utilities & Bills|Want",
-          "source": "tfidf_v2"
-        },
-        {
-          "text": "buttter milk",
-          "expected": "Food & Dining|Want",
-          "got": "Groceries|Need",
-          "source": "tfidf_v2"
-        },
-        {
-          "text": "paradise",
-          "expected": "Food & Dining|Want",
-          "got": "Shopping|Want",
-          "source": "tfidf_v2"
-        },
-        {
-          "text": "UPI-RAMESHELECTRONICS-671066@paytm",
-          "expected": "Shopping|Want",
-          "got": "Misc|Need",
-          "source": "tfidf_v2"
-        },
-        {
-          "text": "infrastructure development company order",
-          "expected": "Housing|Need",
-          "got": "Food & Dining|Want",
-          "source": "tfidf_v2"
-        },
-        {
-          "text": "redwood cinema bill",
-          "expected": "Entertainment|Want",
-          "got": "Shopping|Want",
-          "source": "tfidf_v2"
-        },
-        {
-          "text": "IMPS/P2A/068642348923/DEEPAK PATEL/HDFC0586664",
-          "expected": "Misc|Need",
-          "got": "Insurance|Need",
-          "source": "tfidf_v2"
-        },
-        {
-          "text": "dividends",
-          "expected": "Investments|Investment",
-          "got": "Shopping|Investment",
-          "source": "tfidf_v2"
-        },
-        {
-          "text": "NEFT/ICICIN343366712/FATIMA PATEL",
-          "expected": "Misc|Need",
-          "got": "Shopping|Need",
-          "source": "tfidf_v2"
-        },
-        {
-          "text": "moglix",
-          "expected": "Shopping|Want",
-          "got": "Shopping|Need",
-          "source": "tfidf_v2"
-        },
-        {
-          "text": "ndore homes",
-          "expected": "Housing|Need",
-          "got": "Shopping|Want",
-          "source": "tfidf_v2"
-        },
-        {
-          "text": "721 hotel in pune",
-          "expected": "Transport & Travel|Want",
+          "text": "new india general",
+          "expected": "Insurance|Need",
           "got": "Transport & Travel|Need",
           "source": "tfidf_v2"
         },
         {
-          "text": "at Gopal's Chemist",
-          "expected": "Health|Need",
+          "text": "Wella 2616",
+          "expected": "Personal Care|Want",
           "got": "Shopping|Need",
           "source": "tfidf_v2"
         },
         {
-          "text": "UPI/937191045141/VISHNU VIDYAMANDIR/vishnuvidyamandir@ybl/AXIS",
-          "expected": "Education|Investment",
-          "got": "Misc|Need",
+          "text": "IMPS/P2A/902862542723/KAVYA PATEL/ICICI0862982",
+          "expected": "Misc|Need",
+          "got": "Insurance|Need",
           "source": "tfidf_v2"
         },
         {
-          "text": "tomato sauce",
-          "expected": "Groceries|Need",
-          "got": "Shopping|Want",
+          "text": "paid livspace",
+          "expected": "Housing|Need",
+          "got": "Shopping|Investment",
           "source": "tfidf_v2"
         },
         {
-          "text": "nature's way payment",
-          "expected": "Health|Want",
+          "text": "UPI-BIRLASUNLIFEMUTUAL-416283@okicici",
+          "expected": "Investments|Investment",
           "got": "Misc|Want",
           "source": "tfidf_v2"
         },
         {
-          "text": "ganesh telecom",
-          "expected": "Utilities & Bills|Need",
+          "text": "UPI-DEEPIKABONDCORNER-364778@upi",
+          "expected": "Investments|Investment",
+          "got": "Misc|Need",
+          "source": "tfidf_v2"
+        },
+        {
+          "text": "paid \u20b94174 for music festival",
+          "expected": "Entertainment|Want",
+          "got": "Entertainment|Need",
+          "source": "tfidf_v2"
+        },
+        {
+          "text": "BIL/ONL/420949407929/CHANNA DA SAA/SBI",
+          "expected": "Food & Dining|Want",
+          "got": "Debt & Loan Payments|Need",
+          "source": "tfidf_v2"
+        },
+        {
+          "text": "the good erth",
+          "expected": "Food & Dining|Want",
+          "got": "Shopping|Want",
+          "source": "tfidf_v2"
+        },
+        {
+          "text": "NEFT DR-KOTAKN683043422-FRESHNESTPANTRYVEGGIES",
+          "expected": "Groceries|Need",
           "got": "Shopping|Need",
           "source": "tfidf_v2"
         },
         {
-          "text": "paid life span",
+          "text": "UPI-GROCERYGROWTHPLUS-611390@okaxis",
+          "expected": "Groceries|Need",
+          "got": "Misc|Need",
+          "source": "tfidf_v2"
+        },
+        {
+          "text": "Shanti Beauty Salon 487.00",
+          "expected": "Personal Care|Want",
+          "got": "Personal Care|Need",
+          "source": "tfidf_v2"
+        },
+        {
+          "text": "UPI/DR/669242473802/HSBC ORIENTAL LIFE/okaxis",
+          "expected": "Insurance|Need",
+          "got": "Misc|Need",
+          "source": "tfidf_v2"
+        },
+        {
+          "text": "virtual reality experience",
+          "expected": "Entertainment|Want",
+          "got": "Shopping|Want",
+          "source": "tfidf_v2"
+        },
+        {
+          "text": "UPI/DR/426758019006/NEXA EDUCATION/okhdfcbank",
+          "expected": "Education|Investment",
+          "got": "Misc|Investment",
+          "source": "tfidf_v2"
+        },
+        {
+          "text": "yash charites",
+          "expected": "Misc|Want",
+          "got": "Shopping|Want",
+          "source": "tfidf_v2"
+        },
+        {
+          "text": "emi for gold loan",
+          "expected": "Debt & Loan Payments|Need",
+          "got": "Debt & Loan Payments|Investment",
+          "source": "tfidf_v2"
+        },
+        {
+          "text": "UPI/DR/964798094233/SPRING HEALTH/ibl",
           "expected": "Health|Want",
           "got": "Insurance|Need",
           "source": "tfidf_v2"
         },
         {
-          "text": "BIL/ONL/761228685289/QUILLA/AXIS",
-          "expected": "Food & Dining|Want",
+          "text": "St Thomas Rs 874",
+          "expected": "Education|Need",
           "got": "Shopping|Need",
           "source": "tfidf_v2"
         },
         {
-          "text": "energizer",
-          "expected": "Utilities & Bills|Need",
+          "text": "kedem",
+          "expected": "Personal Care|Want",
           "got": "Shopping|Want",
+          "source": "tfidf_v2"
+        },
+        {
+          "text": "khan chacha sweet express",
+          "expected": "Food & Dining|Want",
+          "got": "Groceries|Want",
+          "source": "tfidf_v2"
+        },
+        {
+          "text": "NEFT DR-SBIN903049520-ISHA FIT",
+          "expected": "Health|Want",
+          "got": "Shopping|Need",
+          "source": "tfidf_v2"
+        },
+        {
+          "text": "chitra handcrafts",
+          "expected": "Misc|Need",
+          "got": "Shopping|Want",
+          "source": "tfidf_v2"
+        },
+        {
+          "text": "gold bond issue fee",
+          "expected": "Investments|Investment",
+          "got": "Education|Investment",
+          "source": "tfidf_v2"
+        },
+        {
+          "text": "ANAND SWEETS TXN POS PURCHASE",
+          "expected": "Food & Dining|Want",
+          "got": "Investments|Want",
+          "source": "tfidf_v2"
+        },
+        {
+          "text": "paid 2087.00 for tissues",
+          "expected": "Groceries|Need",
+          "got": "Shopping|Need",
+          "source": "tfidf_v2"
+        },
+        {
+          "text": "Renu Tailor",
+          "expected": "Shopping|Need",
+          "got": "Misc|Want",
+          "source": "tfidf_v2"
+        },
+        {
+          "text": "dinesh bond crner",
+          "expected": "Investments|Investment",
+          "got": "Investments|Want",
+          "source": "tfidf_v2"
+        },
+        {
+          "text": "SBI Credit Card 4442",
+          "expected": "Debt & Loan Payments|Need",
+          "got": "Debt & Loan Payments|Want",
+          "source": "tfidf_v2"
+        },
+        {
+          "text": "triyog health order",
+          "expected": "Health|Need",
+          "got": "Insurance|Need",
+          "source": "tfidf_v2"
+        },
+        {
+          "text": "UPI/330706634683/NEW INDIA GENERAL/newindiageneral@ibl/AXIS",
+          "expected": "Insurance|Need",
+          "got": "Misc|Need",
+          "source": "tfidf_v2"
+        },
+        {
+          "text": "HomeFixIndia",
+          "expected": "Housing|Need",
+          "got": "Shopping|Need",
           "source": "tfidf_v2"
         }
       ]
     },
     "v4": {
-      "n": 979,
-      "category_accuracy": 0.7997957099080695,
-      "category_macro_f1": 0.7958188341360309,
-      "auto_accept_coverage": 0.6455566905005107,
-      "p50_latency_ms": 4.175499998382293,
-      "rule_share": 0.09193054136874361,
-      "type_accuracy": 0.8335035750766088,
-      "joint_accuracy": 0.7620020429009193,
-      "auto_accept_precision": 0.9430379746835443,
+      "n": 3468,
+      "category_accuracy": 0.7306805074971164,
+      "category_macro_f1": 0.7226651799886944,
+      "auto_accept_coverage": 0.53719723183391,
+      "p50_latency_ms": 3.985708492109552,
+      "rule_share": 0.14013840830449828,
+      "type_accuracy": 0.7745098039215687,
+      "joint_accuracy": 0.649365628604383,
+      "auto_accept_precision": 0.8239398819108964,
       "errors": [
         {
-          "text": "travel aggent",
-          "expected": "Transport & Travel|Need",
-          "got": "Transport & Travel|Want",
+          "text": "walmart online",
+          "expected": "Shopping|Want",
+          "got": "Groceries|Need",
           "source": "finaura_v4"
         },
         {
-          "text": "UPI/168859266370/EVENTBRITE/eventbrite@okaxis/KOTAK",
-          "expected": "Entertainment|Want",
-          "got": "Education|Investment",
-          "source": "finaura_v4"
-        },
-        {
-          "text": "himalaya",
-          "expected": "Personal Care|Want",
-          "got": "Food & Dining|Want",
-          "source": "finaura_v4"
-        },
-        {
-          "text": "parlee",
-          "expected": "Groceries|Need",
-          "got": "Personal Care|Need",
-          "source": "finaura_v4"
-        },
-        {
-          "text": "paid 3259.00 for flight return to home",
-          "expected": "Transport & Travel|Need",
-          "got": "Transport & Travel|Want",
-          "source": "merchant_rule"
-        },
-        {
-          "text": "Luxury",
-          "expected": "Personal Care|Want",
-          "got": "Personal Care|Need",
-          "source": "finaura_v4"
-        },
-        {
-          "text": "UPI/DR/091436391025/PRABHAT/axl",
-          "expected": "Groceries|Need",
-          "got": "Food & Dining|Want",
-          "source": "finaura_v4"
-        },
-        {
-          "text": "repair bill",
+          "text": "POS 5642 RESIRENT KOLKATA",
           "expected": "Housing|Need",
-          "got": "Transport & Travel|Need",
-          "source": "finaura_v4"
-        },
-        {
-          "text": "netmatic",
-          "expected": "Utilities & Bills|Need",
-          "got": "Shopping|Want",
-          "source": "finaura_v4"
-        },
-        {
-          "text": "Rs 1397 Tata Consumer",
-          "expected": "Health|Need",
           "got": "Utilities & Bills|Need",
           "source": "finaura_v4"
         },
         {
-          "text": "buttter milk",
-          "expected": "Food & Dining|Want",
-          "got": "Groceries|Need",
-          "source": "finaura_v4"
-        },
-        {
-          "text": "paradise",
-          "expected": "Food & Dining|Want",
-          "got": "Groceries|Want",
-          "source": "finaura_v4"
-        },
-        {
-          "text": "infrastructure development company order",
-          "expected": "Housing|Need",
-          "got": "Education|Investment",
-          "source": "finaura_v4"
-        },
-        {
-          "text": "moglix",
-          "expected": "Shopping|Want",
-          "got": "Personal Care|Want",
-          "source": "finaura_v4"
-        },
-        {
-          "text": "paid life span",
-          "expected": "Health|Want",
-          "got": "Health|Need",
-          "source": "finaura_v4"
-        },
-        {
-          "text": "BIL/ONL/761228685289/QUILLA/AXIS",
-          "expected": "Food & Dining|Want",
-          "got": "Groceries|Need",
-          "source": "finaura_v4"
-        },
-        {
-          "text": "ECOM PUR NETMATIC BANGALORE",
-          "expected": "Utilities & Bills|Need",
-          "got": "Shopping|Want",
-          "source": "finaura_v4"
-        },
-        {
-          "text": "himmalaya",
-          "expected": "Personal Care|Want",
-          "got": "Misc|Need",
-          "source": "finaura_v4"
-        },
-        {
-          "text": "niki war",
-          "expected": "Shopping|Want",
-          "got": "Education|Investment",
-          "source": "finaura_v4"
-        },
-        {
-          "text": "UPI-PATEL-583938@ibl",
+          "text": "UPI-IYERKIRANA-030287@paytm",
           "expected": "Groceries|Need",
           "got": "Misc|Need",
           "source": "finaura_v4"
         },
         {
-          "text": "UPI/526356022939/ETIHAD AIRWAYS/etihadairways@ybl/AXIS",
-          "expected": "Transport & Travel|Need",
-          "got": "Transport & Travel|Want",
-          "source": "finaura_v4"
-        },
-        {
-          "text": "hydeerabad",
-          "expected": "Misc|Need",
-          "got": "Health|Need",
-          "source": "finaura_v4"
-        },
-        {
-          "text": "UPI-KOTEX-464557@paytm",
-          "expected": "Personal Care|Need",
-          "got": "Shopping|Want",
-          "source": "finaura_v4"
-        },
-        {
-          "text": "kitchen countertop",
-          "expected": "Shopping|Want",
-          "got": "Housing|Need",
-          "source": "finaura_v4"
-        },
-        {
-          "text": "UPI/403392132839/HYDERABAD/hyderabad@okaxis/AXIS",
-          "expected": "Misc|Need",
+          "text": "POS 8067 DEN10 ULTRA PLUS HD PLUS LUCKNOW",
+          "expected": "Utilities & Bills|Need",
           "got": "Entertainment|Want",
           "source": "finaura_v4"
         },
         {
-          "text": "himalaya purchase",
+          "text": "Wella 2616",
           "expected": "Personal Care|Want",
-          "got": "Groceries|Need",
+          "got": "Food & Dining|Want",
           "source": "finaura_v4"
         },
         {
-          "text": "paid Rs 4023 for healthy snack",
-          "expected": "Health|Want",
-          "got": "Groceries|Want",
+          "text": "UPI/985207489412/GODDESS TEMPLE/goddesstemple@ibl/ICICI",
+          "expected": "Misc|Need",
+          "got": "Personal Care|Want",
           "source": "finaura_v4"
         },
         {
-          "text": "at cognizant",
-          "expected": "Education|Investment",
+          "text": "UPI-DEEPIKABONDCORNER-364778@upi",
+          "expected": "Investments|Investment",
+          "got": "Shopping|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "urbnest",
+          "expected": "Shopping|Want",
           "got": "Health|Want",
           "source": "finaura_v4"
         },
         {
-          "text": "frshgo",
-          "expected": "Groceries|Need",
-          "got": "Utilities & Bills|Need",
+          "text": "the good erth",
+          "expected": "Food & Dining|Want",
+          "got": "Health|Need",
           "source": "finaura_v4"
         },
         {
-          "text": "spent at Patel",
-          "expected": "Groceries|Need",
-          "got": "Misc|Need",
-          "source": "finaura_v4"
-        },
-        {
-          "text": "BIL/ONL/453349569240/HERO/SBI",
-          "expected": "Misc|Need",
-          "got": "Entertainment|Want",
-          "source": "finaura_v4"
-        },
-        {
-          "text": "netmatic order",
-          "expected": "Utilities & Bills|Need",
-          "got": "Shopping|Want",
-          "source": "finaura_v4"
-        },
-        {
-          "text": "2871.00 Patanjali Stores",
-          "expected": "Health|Need",
-          "got": "Groceries|Need",
-          "source": "finaura_v4"
-        },
-        {
-          "text": "Moglix Rs 3575",
-          "expected": "Shopping|Want",
-          "got": "Personal Care|Want",
-          "source": "finaura_v4"
-        },
-        {
-          "text": "iPad for studies",
-          "expected": "Education|Investment",
-          "got": "Education|Need",
-          "source": "finaura_v4"
-        },
-        {
-          "text": "spent at hero",
-          "expected": "Misc|Need",
-          "got": "Entertainment|Want",
-          "source": "finaura_v4"
-        },
-        {
-          "text": "182 kitchen countertop",
-          "expected": "Shopping|Want",
-          "got": "Housing|Need",
-          "source": "finaura_v4"
-        },
-        {
-          "text": "at bookmyshow",
-          "expected": "Transport & Travel|Want",
-          "got": "Entertainment|Want",
-          "source": "merchant_rule"
-        },
-        {
-          "text": "Prabhat bill",
+          "text": "NEFT DR-KOTAKN683043422-FRESHNESTPANTRYVEGGIES",
           "expected": "Groceries|Need",
           "got": "Food & Dining|Want",
           "source": "finaura_v4"
         },
         {
-          "text": "UPI/DR/886359412307/HIMALAYA/paytm",
+          "text": "UPI/DR/669242473802/HSBC ORIENTAL LIFE/okaxis",
+          "expected": "Insurance|Need",
+          "got": "Debt & Loan Payments|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "yash charites",
+          "expected": "Misc|Want",
+          "got": "Housing|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "UPI/DR/964798094233/SPRING HEALTH/ibl",
+          "expected": "Health|Want",
+          "got": "Health|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "St Thomas Rs 874",
+          "expected": "Education|Need",
+          "got": "Personal Care|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "kedem",
           "expected": "Personal Care|Want",
+          "got": "Groceries|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "chitra handcrafts",
+          "expected": "Misc|Need",
+          "got": "Shopping|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "paid 2087.00 for tissues",
+          "expected": "Groceries|Need",
+          "got": "Personal Care|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "Renu Tailor",
+          "expected": "Shopping|Need",
+          "got": "Shopping|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "HomeFixIndia",
+          "expected": "Housing|Need",
+          "got": "Personal Care|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "bajaaj electricals",
+          "expected": "Utilities & Bills|Need",
+          "got": "Housing|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "\u20b9352 Bharti AXA General",
+          "expected": "Insurance|Need",
+          "got": "Misc|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "DEN10 ULTRA ULTRA HD PLUS Rs 4322",
+          "expected": "Utilities & Bills|Need",
+          "got": "Entertainment|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "POS 0384 THE GOOD EARTH HYDERABAD",
+          "expected": "Food & Dining|Want",
+          "got": "Health|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "BIL/ONL/141773133224/GURU'S EXAM PREP/YESB",
+          "expected": "Education|Need",
+          "got": "Education|Investment",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "UPI/DR/415501457004/HITTAXI/okaxis",
+          "expected": "Transport & Travel|Want",
+          "got": "Entertainment|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "Rs 4470 yoga suppli",
+          "expected": "Health|Want",
+          "got": "Health|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "new kurta for work",
+          "expected": "Shopping|Want",
+          "got": "Housing|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "hndustan auto parts",
+          "expected": "Transport & Travel|Need",
+          "got": "Transport & Travel|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "paid \u20b9890 for paint touch up",
+          "expected": "Housing|Need",
+          "got": "Personal Care|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "UPI/DR/279936551379/SLICE/axl",
+          "expected": "Debt & Loan Payments|Need",
+          "got": "Food & Dining|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "at DomesticStaffIndia",
+          "expected": "Housing|Need",
+          "got": "Personal Care|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "Barista Express",
+          "expected": "Food & Dining|Want",
+          "got": "Housing|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "NEFT DR-AXISN399241611-CRUNCHIES MART",
+          "expected": "Groceries|Want",
+          "got": "Groceries|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "spent at DEN10 ULTRA MAX HD",
+          "expected": "Utilities & Bills|Need",
+          "got": "Entertainment|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "UPI-SUNNYDENTALCLINIC-799319@okicici",
+          "expected": "Health|Need",
+          "got": "Personal Care|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "UPI/DR/673953874644/DEN10 PLUS MAX/oksbi",
+          "expected": "Utilities & Bills|Need",
+          "got": "Entertainment|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "DEN10 ULTRA PLUS HD PLUS",
+          "expected": "Utilities & Bills|Need",
+          "got": "Entertainment|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "UPI-SRIVASTAVAHOUSEFEE-020331@paytm",
+          "expected": "Housing|Need",
+          "got": "Health|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "slice",
+          "expected": "Debt & Loan Payments|Need",
+          "got": "Food & Dining|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "3475.00 Om Tiffin Express",
+          "expected": "Food & Dining|Want",
+          "got": "Food & Dining|Need",
+          "source": "finaura_v4"
+        }
+      ]
+    },
+    "v5": {
+      "n": 3468,
+      "category_accuracy": 0.8990772779700116,
+      "category_macro_f1": 0.893630375330247,
+      "auto_accept_coverage": 0.7817185697808535,
+      "p50_latency_ms": 15.194562511169352,
+      "rule_share": 0.14013840830449828,
+      "type_accuracy": 0.9132064590542099,
+      "joint_accuracy": 0.8682237600922722,
+      "auto_accept_precision": 0.9586868314275175,
+      "errors": [
+        {
+          "text": "gift card for office",
+          "expected": "Shopping|Want",
+          "got": "Misc|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "urbnest",
+          "expected": "Shopping|Want",
+          "got": "Housing|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "BIL/ONL/420949407929/CHANNA DA SAA/SBI",
+          "expected": "Food & Dining|Want",
+          "got": "Groceries|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "the good erth",
+          "expected": "Food & Dining|Want",
+          "got": "Health|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "UPI/DR/964798094233/SPRING HEALTH/ibl",
+          "expected": "Health|Want",
+          "got": "Health|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "kedem",
+          "expected": "Personal Care|Want",
+          "got": "Utilities & Bills|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "chitra handcrafts",
+          "expected": "Misc|Need",
+          "got": "Shopping|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "bajaaj electricals",
+          "expected": "Utilities & Bills|Need",
+          "got": "Shopping|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "POS 0384 THE GOOD EARTH HYDERABAD",
+          "expected": "Food & Dining|Want",
+          "got": "Personal Care|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "BIL/ONL/141773133224/GURU'S EXAM PREP/YESB",
+          "expected": "Education|Need",
+          "got": "Education|Investment",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "paid \u20b9890 for paint touch up",
+          "expected": "Housing|Need",
+          "got": "Personal Care|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "UPI/DR/279936551379/SLICE/axl",
+          "expected": "Debt & Loan Payments|Need",
+          "got": "Groceries|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "slice",
+          "expected": "Debt & Loan Payments|Need",
+          "got": "Groceries|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "UPI-NISHANAIR-946249@axl",
+          "expected": "Misc|Need",
+          "got": "Personal Care|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "primepek",
+          "expected": "Health|Want",
+          "got": "Education|Investment",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "livspac",
+          "expected": "Housing|Need",
+          "got": "Personal Care|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "UPI/550933924578/STAR SPORTS CAFE/starsportscafe@paytm/YESB",
+          "expected": "Entertainment|Want",
+          "got": "Food & Dining|Want",
+          "source": "merchant_rule"
+        },
+        {
+          "text": "1949.00 Channa da saa",
+          "expected": "Food & Dining|Want",
+          "got": "Groceries|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "IDFC Bank 2912.00",
+          "expected": "Investments|Investment",
+          "got": "Debt & Loan Payments|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "Luxe payment",
+          "expected": "Personal Care|Want",
+          "got": "Entertainment|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "UPI-URBANEST-986081@okicici",
+          "expected": "Shopping|Want",
+          "got": "Personal Care|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "The Good Earth 256",
+          "expected": "Food & Dining|Want",
+          "got": "Personal Care|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "growmybsket",
+          "expected": "Groceries|Need",
+          "got": "Food & Dining|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "unilever order",
+          "expected": "Personal Care|Want",
+          "got": "Groceries|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "uulaa car",
+          "expected": "Transport & Travel|Want",
+          "got": "Insurance|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "sharma antiiquarian books",
+          "expected": "Misc|Need",
+          "got": "Education|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "2010 Medicare",
+          "expected": "Health|Need",
+          "got": "Insurance|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "Midea bill",
+          "expected": "Shopping|Want",
+          "got": "Groceries|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "fancy favouritess",
+          "expected": "Groceries|Want",
+          "got": "Entertainment|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "UPI/229380450308/PREMIUMPIES/premiumpies@okhdfcbank/ICICI",
+          "expected": "Food & Dining|Want",
+          "got": "Groceries|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "UPI/DR/364835512705/YATRA/ybl",
+          "expected": "Transport & Travel|Want",
+          "got": "Transport & Travel|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "new light bulbs",
+          "expected": "Housing|Need",
+          "got": "Shopping|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "spent at Rajiv Coaching Classes",
+          "expected": "Education|Need",
+          "got": "Education|Investment",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "music lessons for ria",
+          "expected": "Education|Need",
+          "got": "Education|Investment",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "UPI/554747640513/TATA PLAY GOLD/tataplaygold@ybl/YESB",
+          "expected": "Entertainment|Want",
+          "got": "Utilities & Bills|Need",
+          "source": "merchant_rule"
+        },
+        {
+          "text": "rajiv coaching classes",
+          "expected": "Education|Need",
+          "got": "Education|Investment",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "UPI/DR/884503983402/FOUNTAINHEAD/okhdfcbank",
+          "expected": "Education|Need",
+          "got": "Shopping|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "NEFT DR-ICICIN142668952-BLINKIES",
+          "expected": "Personal Care|Want",
+          "got": "Groceries|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "gurugift",
+          "expected": "Shopping|Want",
+          "got": "Education|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "kishore waatches",
+          "expected": "Shopping|Want",
           "got": "Food & Dining|Want",
           "source": "finaura_v4"
         }
@@ -513,7 +766,7 @@
       "category_accuracy": 0.8571428571428571,
       "category_macro_f1": 0.84766694567283,
       "auto_accept_coverage": 0.55,
-      "p50_latency_ms": 0.03860400101984851,
+      "p50_latency_ms": 0.035041506635025144,
       "rule_share": 0.5214285714285715,
       "type_accuracy": 0.8428571428571429,
       "joint_accuracy": 0.7357142857142858,
@@ -748,7 +1001,7 @@
       "category_accuracy": 0.9071428571428571,
       "category_macro_f1": 0.8943728583590708,
       "auto_accept_coverage": 0.7357142857142858,
-      "p50_latency_ms": 0.04147900108364411,
+      "p50_latency_ms": 0.03762499545700848,
       "rule_share": 0.5214285714285715,
       "type_accuracy": 0.9142857142857143,
       "joint_accuracy": 0.8428571428571429,
@@ -887,6 +1140,91 @@
           "source": "finaura_v4"
         }
       ]
+    },
+    "v5": {
+      "n": 140,
+      "category_accuracy": 0.9214285714285714,
+      "category_macro_f1": 0.9183320148668302,
+      "auto_accept_coverage": 0.8214285714285714,
+      "p50_latency_ms": 0.038958489312790334,
+      "rule_share": 0.5214285714285715,
+      "type_accuracy": 0.9642857142857143,
+      "joint_accuracy": 0.9142857142857143,
+      "auto_accept_precision": 0.9826086956521739,
+      "errors": [
+        {
+          "text": "belgian waffle chocolate",
+          "expected": "Food & Dining|Want",
+          "got": "Groceries|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "rooftop bar tapas snacks",
+          "expected": "Entertainment|Want",
+          "got": "Food & Dining|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "motorcycle helmet and riding gear",
+          "expected": "Transport & Travel|Want",
+          "got": "Shopping|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "bicycle repair and chain replacement",
+          "expected": "Transport & Travel|Need",
+          "got": "Shopping|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "ro water purifier annual maintenance contract amc",
+          "expected": "Housing|Need",
+          "got": "Utilities & Bills|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "kitchen gas pipeline maintenance mgl",
+          "expected": "Housing|Need",
+          "got": "Utilities & Bills|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "notion personal pro annual plan",
+          "expected": "Utilities & Bills|Need",
+          "got": "Insurance|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "canva pro design software subscription",
+          "expected": "Utilities & Bills|Need",
+          "got": "Education|Investment",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "board game cafe entry and games",
+          "expected": "Entertainment|Want",
+          "got": "Food & Dining|Want",
+          "source": "merchant_rule"
+        },
+        {
+          "text": "electric toothbrush oral-b heads",
+          "expected": "Personal Care|Want",
+          "got": "Personal Care|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "fund transfer to friend miscellaneous",
+          "expected": "Misc|Need",
+          "got": "Investments|Investment",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "pos unknown retail counter swipe",
+          "expected": "Misc|Need",
+          "got": "Shopping|Want",
+          "source": "finaura_v4"
+        }
+      ]
     }
   },
   "b0_human_held_out_original_labels": {
@@ -895,7 +1233,7 @@
       "category_accuracy": 0.8642857142857143,
       "category_macro_f1": 0.8548098028156872,
       "auto_accept_coverage": 0.55,
-      "p50_latency_ms": 0.043895495764445513,
+      "p50_latency_ms": 0.043374995584599674,
       "rule_share": 0.5214285714285715,
       "type_accuracy": 0.8071428571428572,
       "joint_accuracy": 0.7214285714285714,
@@ -1142,7 +1480,7 @@
       "category_accuracy": 0.9,
       "category_macro_f1": 0.887394309363715,
       "auto_accept_coverage": 0.7357142857142858,
-      "p50_latency_ms": 0.047417004680028185,
+      "p50_latency_ms": 0.03945850767195225,
       "rule_share": 0.5214285714285715,
       "type_accuracy": 0.8714285714285714,
       "joint_accuracy": 0.8142857142857143,
@@ -1305,6 +1643,157 @@
           "source": "finaura_v4"
         }
       ]
+    },
+    "v5": {
+      "n": 140,
+      "category_accuracy": 0.9285714285714286,
+      "category_macro_f1": 0.9255594991619838,
+      "auto_accept_coverage": 0.8214285714285714,
+      "p50_latency_ms": 0.04389599780552089,
+      "rule_share": 0.5214285714285715,
+      "type_accuracy": 0.8857142857142857,
+      "joint_accuracy": 0.8357142857142857,
+      "auto_accept_precision": 0.9130434782608695,
+      "errors": [
+        {
+          "text": "coconut water and fresh produce",
+          "expected": "Groceries|Want",
+          "got": "Groceries|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "canva pro design software subscription",
+          "expected": "Utilities & Bills|Need",
+          "got": "Education|Investment",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "bicycle repair and chain replacement",
+          "expected": "Transport & Travel|Need",
+          "got": "Shopping|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "electric toothbrush oral-b heads",
+          "expected": "Personal Care|Want",
+          "got": "Personal Care|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "watch battery replacement local shop",
+          "expected": "Misc|Want",
+          "got": "Misc|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "toefl international english exam fee",
+          "expected": "Education|Need",
+          "got": "Education|Investment",
+          "source": "merchant_rule"
+        },
+        {
+          "text": "country delight pure milk subscription",
+          "expected": "Groceries|Want",
+          "got": "Groceries|Need",
+          "source": "merchant_rule"
+        },
+        {
+          "text": "fund transfer to friend miscellaneous",
+          "expected": "Misc|Want",
+          "got": "Investments|Investment",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "ro water purifier annual maintenance contract amc",
+          "expected": "Housing|Need",
+          "got": "Utilities & Bills|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "coding bootcamp fee full stack",
+          "expected": "Education|Need",
+          "got": "Education|Investment",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "notion personal pro annual plan",
+          "expected": "Utilities & Bills|Need",
+          "got": "Insurance|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "pos unknown retail counter swipe",
+          "expected": "Misc|Want",
+          "got": "Shopping|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "private coaching class fees jee neet",
+          "expected": "Education|Need",
+          "got": "Education|Investment",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "university degree program fee installment",
+          "expected": "Education|Need",
+          "got": "Education|Investment",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "kitchen gas pipeline maintenance mgl",
+          "expected": "Housing|Need",
+          "got": "Utilities & Bills|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "motorcycle helmet and riding gear",
+          "expected": "Transport & Travel|Want",
+          "got": "Shopping|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "belgian waffle chocolate",
+          "expected": "Food & Dining|Want",
+          "got": "Groceries|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "random street payment barcode scan",
+          "expected": "Misc|Want",
+          "got": "Misc|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "data analytics offline workshop fee",
+          "expected": "Education|Need",
+          "got": "Education|Investment",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "peanut butter and fruit jam",
+          "expected": "Groceries|Want",
+          "got": "Groceries|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "board game cafe entry and games",
+          "expected": "Entertainment|Want",
+          "got": "Food & Dining|Want",
+          "source": "merchant_rule"
+        },
+        {
+          "text": "government document xerox photocopy",
+          "expected": "Misc|Want",
+          "got": "Misc|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "apples bananas oranges fruit basket",
+          "expected": "Groceries|Want",
+          "got": "Groceries|Need",
+          "source": "finaura_v4"
+        }
+      ]
     }
   },
   "c_challenge_adversarial": {
@@ -1313,7 +1802,7 @@
       "category_accuracy": 0.86,
       "category_macro_f1": 0.8721202057018581,
       "auto_accept_coverage": 0.5533333333333333,
-      "p50_latency_ms": 0.022000498574925587,
+      "p50_latency_ms": 0.020937499357387424,
       "rule_share": 0.54,
       "type_accuracy": 0.86,
       "joint_accuracy": 0.76,
@@ -1542,7 +2031,7 @@
       "category_accuracy": 0.9466666666666667,
       "category_macro_f1": 0.9524002463693909,
       "auto_accept_coverage": 0.7933333333333333,
-      "p50_latency_ms": 0.02754149682004936,
+      "p50_latency_ms": 0.02506248711142689,
       "rule_share": 0.54,
       "type_accuracy": 0.94,
       "joint_accuracy": 0.9,
@@ -1630,6 +2119,73 @@
           "text": "tip to delivery guy",
           "expected": "Misc|Want",
           "got": "Food & Dining|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "gaming chair",
+          "expected": "Shopping|Want",
+          "got": "Entertainment|Want",
+          "source": "finaura_v4"
+        }
+      ]
+    },
+    "v5": {
+      "n": 150,
+      "category_accuracy": 0.9666666666666667,
+      "category_macro_f1": 0.9707816361466616,
+      "auto_accept_coverage": 0.8666666666666667,
+      "p50_latency_ms": 0.025958492187783122,
+      "rule_share": 0.54,
+      "type_accuracy": 0.9666666666666667,
+      "joint_accuracy": 0.94,
+      "auto_accept_precision": 0.9692307692307692,
+      "errors": [
+        {
+          "text": "sip of coffee at third wave",
+          "expected": "Food & Dining|Want",
+          "got": "Groceries|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "chai sutta",
+          "expected": "Entertainment|Want",
+          "got": "Food & Dining|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "auto rickshaw fare",
+          "expected": "Transport & Travel|Need",
+          "got": "Transport & Travel|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "parking at phoenix mall",
+          "expected": "Transport & Travel|Need",
+          "got": "Transport & Travel|Want",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "bus ticket to pune",
+          "expected": "Transport & Travel|Want",
+          "got": "Transport & Travel|Need",
+          "source": "merchant_rule"
+        },
+        {
+          "text": "school uniform",
+          "expected": "Shopping|Need",
+          "got": "Education|Need",
+          "source": "finaura_v4"
+        },
+        {
+          "text": "school fees",
+          "expected": "Education|Need",
+          "got": "Education|Investment",
+          "source": "merchant_rule"
+        },
+        {
+          "text": "traffic challan",
+          "expected": "Misc|Need",
+          "got": "Transport & Travel|Need",
           "source": "finaura_v4"
         },
         {

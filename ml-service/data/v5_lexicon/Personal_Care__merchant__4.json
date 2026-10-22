@@ -1,0 +1,334 @@
+[
+ {
+  "text": "Dabur",
+  "type": "Want"
+ },
+ {
+  "text": "Dove Essentials",
+  "type": "Want"
+ },
+ {
+  "text": "Forest Essentials",
+  "type": "Want"
+ },
+ {
+  "text": "Fogg",
+  "type": "Want"
+ },
+ {
+  "text": "Garnier",
+  "type": "Want"
+ },
+ {
+  "text": "Godrej",
+  "type": "Want"
+ },
+ {
+  "text": "Hair Salon India",
+  "type": "Want"
+ },
+ {
+  "text": "Herbalife",
+  "type": "Want"
+ },
+ {
+  "text": "Himalaya",
+  "type": "Want"
+ },
+ {
+  "text": "Hyatt Vellore",
+  "type": "Want"
+ },
+ {
+  "text": "Johnson & Johnson",
+  "type": "Want"
+ },
+ {
+  "text": "Kama Ayurveda",
+  "type": "Want"
+ },
+ {
+  "text": "Kiehl's",
+  "type": "Want"
+ },
+ {
+  "text": "Koran Hair",
+  "type": "Want"
+ },
+ {
+  "text": "Lakme",
+  "type": "Want"
+ },
+ {
+  "text": "L'Oreal",
+  "type": "Want"
+ },
+ {
+  "text": "Lux",
+  "type": "Want"
+ },
+ {
+  "text": "Mamaearth",
+  "type": "Want"
+ },
+ {
+  "text": "Molton Brown",
+  "type": "Want"
+ },
+ {
+  "text": "My Glamm",
+  "type": "Want"
+ },
+ {
+  "text": "Nivea",
+  "type": "Want"
+ },
+ {
+  "text": "Olay",
+  "type": "Want"
+ },
+ {
+  "text": "Patanjali",
+  "type": "Want"
+ },
+ {
+  "text": "Paul Mitchell",
+  "type": "Want"
+ },
+ {
+  "text": "Ponds",
+  "type": "Want"
+ },
+ {
+  "text": "Procter & Gamble",
+  "type": "Want"
+ },
+ {
+  "text": "Redken",
+  "type": "Want"
+ },
+ {
+  "text": "ReVLV",
+  "type": "Want"
+ },
+ {
+  "text": "Rimmel",
+  "type": "Want"
+ },
+ {
+  "text": "Salon India",
+  "type": "Want"
+ },
+ {
+  "text": "Sanford Spa",
+  "type": "Want"
+ },
+ {
+  "text": "Sara Lee",
+  "type": "Want"
+ },
+ {
+  "text": "Shahnaz Husain",
+  "type": "Want"
+ },
+ {
+  "text": "Sisley",
+  "type": "Want"
+ },
+ {
+  "text": "Sothys",
+  "type": "Want"
+ },
+ {
+  "text": "St Ives",
+  "type": "Want"
+ },
+ {
+  "text": "Tata Harper",
+  "type": "Want"
+ },
+ {
+  "text": "Tata Skincare",
+  "type": "Want"
+ },
+ {
+  "text": "The Body Shop",
+  "type": "Want"
+ },
+ {
+  "text": "The Face Shop",
+  "type": "Want"
+ },
+ {
+  "text": "The Nature Company",
+  "type": "Want"
+ },
+ {
+  "text": "TRESemmé",
+  "type": "Want"
+ },
+ {
+  "text": "Unilever",
+  "type": "Want"
+ },
+ {
+  "text": "Vichy",
+  "type": "Want"
+ },
+ {
+  "text": "Wella",
+  "type": "Want"
+ },
+ {
+  "text": "Walgreens",
+  "type": "Want"
+ },
+ {
+  "text": "Watsons",
+  "type": "Want"
+ },
+ {
+  "text": "Zenspa",
+  "type": "Want"
+ },
+ {
+  "text": "Beauticane",
+  "type": "Need"
+ },
+ {
+  "text": "Biosilk",
+  "type": "Need"
+ },
+ {
+  "text": "Biotique Bio",
+  "type": "Need"
+ },
+ {
+  "text": "Creme Blanche",
+  "type": "Need"
+ },
+ {
+  "text": "Dove Men+",
+  "type": "Need"
+ },
+ {
+  "text": "Godrej No More",
+  "type": "Need"
+ },
+ {
+  "text": "L'Oreal Paris",
+  "type": "Need"
+ },
+ {
+  "text": "Lipton",
+  "type": "Need"
+ },
+ {
+  "text": "Loreal Paris",
+  "type": "Need"
+ },
+ {
+  "text": "My Beauty Bar",
+  "type": "Need"
+ },
+ {
+  "text": "Nexxus",
+  "type": "Need"
+ },
+ {
+  "text": "Neutrogena",
+  "type": "Need"
+ },
+ {
+  "text": "OGX",
+  "type": "Need"
+ },
+ {
+  "text": "Patanjali Aloe Vera",
+  "type": "Need"
+ },
+ {
+  "text": "Ponds Men",
+  "type": "Need"
+ },
+ {
+  "text": "Sunsilk",
+  "type": "Need"
+ },
+ {
+  "text": "Sundown",
+  "type": "Need"
+ },
+ {
+  "text": "Sylk",
+  "type": "Need"
+ },
+ {
+  "text": "TRESemmé Naturals",
+  "type": "Need"
+ },
+ {
+  "text": "Tresemme",
+  "type": "Need"
+ },
+ {
+  "text": "Vaseline",
+  "type": "Need"
+ },
+ {
+  "text": "Vichy Normaderm",
+  "type": "Need"
+ },
+ {
+  "text": "Wella Professionals",
+  "type": "Need"
+ },
+ {
+  "text": "Zanobi",
+  "type": "Need"
+ },
+ {
+  "text": "Zara Hair",
+  "type": "Need"
+ },
+ {
+  "text": "Zara Parlor",
+  "type": "Need"
+ },
+ {
+  "text": "Bulldog",
+  "type": "Need"
+ },
+ {
+  "text": "Garnier Men",
+  "type": "Need"
+ },
+ {
+  "text": "Johnson's",
+  "type": "Need"
+ },
+ {
+  "text": "Lakme Naturals",
+  "type": "Need"
+ },
+ {
+  "text": "Lancôme",
+  "type": "Need"
+ },
+ {
+  "text": "L'Oreal Professionnel",
+  "type": "Need"
+ },
+ {
+  "text": "Pantene",
+  "type": "Need"
+ },
+ {
+  "text": "Pure Hands",
+  "type": "Need"
+ },
+ {
+  "text": "Reebok",
+  "type": "Need"
+ }
+]

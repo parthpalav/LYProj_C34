@@ -1,0 +1,242 @@
+[
+ {
+  "text": "stock trade",
+  "type": "Investment"
+ },
+ {
+  "text": "mutual fund inv",
+  "type": "Investment"
+ },
+ {
+  "text": "sip transfer",
+  "type": "Investment"
+ },
+ {
+  "text": "etf purchase",
+  "type": "Investment"
+ },
+ {
+  "text": "ppf deposit",
+  "type": "Investment"
+ },
+ {
+  "text": "nps payment",
+  "type": "Investment"
+ },
+ {
+  "text": "fd renewal",
+  "type": "Investment"
+ },
+ {
+  "text": "rd contribution",
+  "type": "Investment"
+ },
+ {
+  "text": "gold bond",
+  "type": "Investment"
+ },
+ {
+  "text": "digital gold",
+  "type": "Investment"
+ },
+ {
+  "text": "demat acct charges",
+  "type": "Investment"
+ },
+ {
+  "text": "sip auto debit",
+  "type": "Investment"
+ },
+ {
+  "text": "etf申购",
+  "type": "Investment"
+ },
+ {
+  "text": "mf switch",
+  "type": "Investment"
+ },
+ {
+  "text": "scrip buy",
+  "type": "Investment"
+ },
+ {
+  "text": "scrip sell",
+  "type": "Investment"
+ },
+ {
+  "text": "portfolio rebalance",
+  "type": "Investment"
+ },
+ {
+  "text": "crypto wallet fee",
+  "type": "Investment"
+ },
+ {
+  "text": "brokerage fee",
+  "type": "Investment"
+ },
+ {
+  "text": "stock dividend",
+  "type": "Investment"
+ },
+ {
+  "text": "mf dividend",
+  "type": "Investment"
+ },
+ {
+  "text": "gold etf",
+  "type": "Investment"
+ },
+ {
+  "text": "fd opened",
+  "type": "Investment"
+ },
+ {
+  "text": "rd opened",
+  "type": "Investment"
+ },
+ {
+  "text": "ppf account",
+  "type": "Investment"
+ },
+ {
+  "text": "nps account",
+  "type": "Investment"
+ },
+ {
+  "text": "sip started",
+  "type": "Investment"
+ },
+ {
+  "text": "etf investment",
+  "type": "Investment"
+ },
+ {
+  "text": "gold bond issue",
+  "type": "Investment"
+ },
+ {
+  "text": "digital gold purchase",
+  "type": "Investment"
+ },
+ {
+  "text": "demat fees",
+  "type": "Investment"
+ },
+ {
+  "text": "sensex tracker",
+  "type": "Investment"
+ },
+ {
+  "text": "nifty index fund",
+  "type": "Investment"
+ },
+ {
+  "text": "mf switch",
+  "type": "Investment"
+ },
+ {
+  "text": "scrip purchase",
+  "type": "Investment"
+ },
+ {
+  "text": "scrip sale",
+  "type": "Investment"
+ },
+ {
+  "text": "etf subscription",
+  "type": "Investment"
+ },
+ {
+  "text": "fd interest",
+  "type": "Investment"
+ },
+ {
+  "text": "rd interest",
+  "type": "Investment"
+ },
+ {
+  "text": "gold etf buy",
+  "type": "Investment"
+ },
+ {
+  "text": "ppf instalment",
+  "type": "Investment"
+ },
+ {
+  "text": "nps instalment",
+  "type": "Investment"
+ },
+ {
+  "text": "sip renewal",
+  "type": "Investment"
+ },
+ {
+  "text": "etf dividend",
+  "type": "Investment"
+ },
+ {
+  "text": "gold bond issue fee",
+  "type": "Investment"
+ },
+ {
+  "text": "digital gold buy",
+  "type": "Investment"
+ },
+ {
+  "text": "demat account fee",
+  "type": "Investment"
+ },
+ {
+  "text": "stock tracker app",
+  "type": "Investment"
+ },
+ {
+  "text": "mf tracker",
+  "type": "Investment"
+ },
+ {
+  "text": "scrip trade",
+  "type": "Investment"
+ },
+ {
+  "text": "etf buy",
+  "type": "Investment"
+ },
+ {
+  "text": "fd payment",
+  "type": "Investment"
+ },
+ {
+  "text": "rd payment",
+  "type": "Investment"
+ },
+ {
+  "text": "ppf payment",
+  "type": "Investment"
+ },
+ {
+  "text": "nps payment",
+  "type": "Investment"
+ },
+ {
+  "text": "sip payment",
+  "type": "Investment"
+ },
+ {
+  "text": "etf payment",
+  "type": "Investment"
+ },
+ {
+  "text": "gold bond payment",
+  "type": "Investment"
+ },
+ {
+  "text": "digital gold payment",
+  "type": "Investment"
+ },
+ {
+  "text": "demat fee payment",
+  "type": "Investment"
+ }
+]

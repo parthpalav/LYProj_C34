@@ -1,0 +1,318 @@
+[
+ {
+  "text": "Burger King",
+  "type": "Want"
+ },
+ {
+  "text": "Cafe Coffee Day",
+  "type": "Want"
+ },
+ {
+  "text": "Cafe Coffee Day Express",
+  "type": "Want"
+ },
+ {
+  "text": "Chaayos",
+  "type": "Want"
+ },
+ {
+  "text": "Chaayos Express",
+  "type": "Want"
+ },
+ {
+  "text": "Chacha's Chaat Corner",
+  "type": "Want"
+ },
+ {
+  "text": "Chacha's Chaat Express",
+  "type": "Want"
+ },
+ {
+  "text": "Chacha's Tea Stall",
+  "type": "Want"
+ },
+ {
+  "text": "Chai Point",
+  "type": "Want"
+ },
+ {
+  "text": "Chandu Street Food",
+  "type": "Want"
+ },
+ {
+  "text": "Deepa Bakery",
+  "type": "Want"
+ },
+ {
+  "text": "Deepak's Ice Cream",
+  "type": "Want"
+ },
+ {
+  "text": "Deepak's Ice Cream Express",
+  "type": "Want"
+ },
+ {
+  "text": "Dhaba Express",
+  "type": "Want"
+ },
+ {
+  "text": "Dineout",
+  "type": "Want"
+ },
+ {
+  "text": "Dineout Express",
+  "type": "Want"
+ },
+ {
+  "text": "Dominos",
+  "type": "Want"
+ },
+ {
+  "text": "Dum Pukht",
+  "type": "Want"
+ },
+ {
+  "text": "Dum Pukht Express",
+  "type": "Want"
+ },
+ {
+  "text": "Dunkin Donuts",
+  "type": "Want"
+ },
+ {
+  "text": "Falaknuma Biryani",
+  "type": "Want"
+ },
+ {
+  "text": "Falaknuma Biryani Express",
+  "type": "Want"
+ },
+ {
+  "text": "Falaknuma Sweets",
+  "type": "Want"
+ },
+ {
+  "text": "Foodpanda",
+  "type": "Want"
+ },
+ {
+  "text": "Foodpanda Express",
+  "type": "Want"
+ },
+ {
+  "text": "Ganesh Juice Centre",
+  "type": "Want"
+ },
+ {
+  "text": "Ganesh Thali",
+  "type": "Want"
+ },
+ {
+  "text": "Ganesh Thali Express",
+  "type": "Want"
+ },
+ {
+  "text": "Gulab House",
+  "type": "Want"
+ },
+ {
+  "text": "Gulab House Express",
+  "type": "Want"
+ },
+ {
+  "text": "Gulati's Sweets",
+  "type": "Want"
+ },
+ {
+  "text": "Haldiram's",
+  "type": "Want"
+ },
+ {
+  "text": "Haldiram's Express",
+  "type": "Want"
+ },
+ {
+  "text": "Hari's Tiffin",
+  "type": "Want"
+ },
+ {
+  "text": "Hemal's Tiffin House",
+  "type": "Want"
+ },
+ {
+  "text": "Hemal's Tiffin House Express",
+  "type": "Want"
+ },
+ {
+  "text": "Hemal's Tiffin Service",
+  "type": "Want"
+ },
+ {
+  "text": "Iyer's Madras Cafe",
+  "type": "Want"
+ },
+ {
+  "text": "Jassi's Dosa House",
+  "type": "Want"
+ },
+ {
+  "text": "Jitendra Tiffin",
+  "type": "Want"
+ },
+ {
+  "text": "Jitendra's Sweets",
+  "type": "Want"
+ },
+ {
+  "text": "Jitendra's Sweets Express",
+  "type": "Want"
+ },
+ {
+  "text": "Kannan Juice Center",
+  "type": "Want"
+ },
+ {
+  "text": "KFC",
+  "type": "Want"
+ },
+ {
+  "text": "Mcdonalds",
+  "type": "Want"
+ },
+ {
+  "text": "Punjabi By Nature",
+  "type": "Want"
+ },
+ {
+  "text": "Punjabi By Nature Express",
+  "type": "Want"
+ },
+ {
+  "text": "Sagar Ratna",
+  "type": "Want"
+ },
+ {
+  "text": "Sagar Ratna Express",
+  "type": "Want"
+ },
+ {
+  "text": "Sukhija Sweets",
+  "type": "Want"
+ },
+ {
+  "text": "The Cambridge Bakery",
+  "type": "Want"
+ },
+ {
+  "text": "The Cambridge Bakery Express",
+  "type": "Want"
+ },
+ {
+  "text": "The Good Earth",
+  "type": "Want"
+ },
+ {
+  "text": "The Good Earth Express",
+  "type": "Want"
+ },
+ {
+  "text": "Theos",
+  "type": "Want"
+ },
+ {
+  "text": "Theos Express",
+  "type": "Want"
+ },
+ {
+  "text": "Tiffin Room",
+  "type": "Want"
+ },
+ {
+  "text": "Tiffin Room Express",
+  "type": "Want"
+ },
+ {
+  "text": "Vapin Vihari",
+  "type": "Want"
+ },
+ {
+  "text": "Vapin Vihari Express",
+  "type": "Want"
+ },
+ {
+  "text": "Veggie Delight",
+  "type": "Want"
+ },
+ {
+  "text": "Veggie Delight Express",
+  "type": "Want"
+ },
+ {
+  "text": "Vikrams",
+  "type": "Want"
+ },
+ {
+  "text": "Vikrams Express",
+  "type": "Want"
+ },
+ {
+  "text": "Wow Momo",
+  "type": "Want"
+ },
+ {
+  "text": "Wow Momo Express",
+  "type": "Want"
+ },
+ {
+  "text": "Zomato",
+  "type": "Want"
+ },
+ {
+  "text": "Swiggy",
+  "type": "Want"
+ },
+ {
+  "text": "Foodie",
+  "type": "Want"
+ },
+ {
+  "text": "CloudChef",
+  "type": "Want"
+ },
+ {
+  "text": "DineIn",
+  "type": "Want"
+ },
+ {
+  "text": "Deliveroo",
+  "type": "Want"
+ },
+ {
+  "text": "Uber Eats",
+  "type": "Want"
+ },
+ {
+  "text": "Meesho",
+  "type": "Want"
+ },
+ {
+  "text": "InstaCart",
+  "type": "Want"
+ },
+ {
+  "text": "FreshToHome",
+  "type": "Want"
+ },
+ {
+  "text": "Tiffinwala",
+  "type": "Need"
+ },
+ {
+  "text": "MessWala",
+  "type": "Need"
+ },
+ {
+  "text": "OfficeCanteen",
+  "type": "Need"
+ }
+]

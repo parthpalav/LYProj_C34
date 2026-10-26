@@ -16,6 +16,21 @@ import {
 import { getChatHistory, sendMessageToAgent } from '../services/api';
 import { useStore } from '../store/useStore';
 import { ChatMessage } from '../types';
+import Animated, {
+  FadeInLeft, FadeInRight, useAnimatedStyle, useReducedMotion, useSharedValue, withDelay, withRepeat, withSequence, withTiming,
+} from 'react-native-reanimated';
+
+/** One bouncing dot of the "assistant is typing" indicator. */
+function TypingDot({ index, style }: { index: number; style: object }) {
+  const reduced = useReducedMotion();
+  const y = useSharedValue(0);
+  useEffect(() => {
+    if (reduced) return;
+    y.value = withDelay(index * 140, withRepeat(withSequence(withTiming(-5, { duration: 260 }), withTiming(0, { duration: 260 })), -1));
+  }, [index, reduced, y]);
+  const animatedStyle = useAnimatedStyle(() => ({ transform: [{ translateY: y.value }] }));
+  return <Animated.View style={[style, animatedStyle]} />;
+}
 
 // ── Palette ────────────────────────────────────────────────
 const BLUE       = '#3B3BDE';
@@ -130,7 +145,10 @@ export function ChatScreen(): React.ReactElement {
     const timeStr = formatTime(item.timestamp);
 
     return (
-      <View style={[s.bubbleRow, isUser ? s.bubbleRowUser : s.bubbleRowBot]}>
+      <Animated.View
+        entering={(isUser ? FadeInRight : FadeInLeft).springify().damping(18)}
+        style={[s.bubbleRow, isUser ? s.bubbleRowUser : s.bubbleRowBot]}
+      >
         {!isUser && (
           <View style={s.avatar}>
             <Text style={s.avatarTxt}>Bot</Text>
@@ -146,7 +164,7 @@ export function ChatScreen(): React.ReactElement {
             </Text>
           ) : null}
         </View>
-      </View>
+      </Animated.View>
     );
   };
 
@@ -190,7 +208,7 @@ export function ChatScreen(): React.ReactElement {
                 <View style={s.avatar}><Text style={s.avatarTxt}>Bot</Text></View>
                 <View style={[s.bubble, s.bubbleBot]}>
                   <View style={s.typingDots}>
-                    {[0, 1, 2].map((i) => <View key={i} style={s.dot} />)}
+                    {[0, 1, 2].map((i) => <TypingDot key={i} index={i} style={s.dot} />)}
                   </View>
                 </View>
               </View>

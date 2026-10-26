@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -21,6 +21,10 @@ import { addIncome, getIncomeFlow, updateIncome, deleteIncome } from '../service
 import { IncomeFlowData } from '../types';
 import { formatCurrency } from '../utils/format';
 import { celebrate } from '../store/useCelebrationStore';
+import Animated, { Easing, FadeInDown, useAnimatedStyle, useReducedMotion, useSharedValue, withTiming } from 'react-native-reanimated';
+import { AnimatedNumber } from '../components/motion/AnimatedNumber';
+import { PressableScale } from '../components/motion/PressableScale';
+import { FloatingEmoji } from '../components/motion/FloatingEmoji';
 
 const BLUE = '#2563EB';
 const GREEN = '#10B981';
@@ -64,16 +68,28 @@ function AllocationRing({ allocation }: { allocation: IncomeFlowData['allocation
   ];
   const SIZE = 140;
   let acc = 0;
+  // Ring spins and grows into place on mount (re-runs when the totals change after adding income).
+  const reduced = useReducedMotion();
+  const t = useSharedValue(reduced ? 1 : 0);
+  useEffect(() => {
+    if (reduced) return;
+    t.value = 0;
+    t.value = withTiming(1, { duration: 900, easing: Easing.out(Easing.back(1.2)) });
+  }, [allocation.essentials, allocation.goals, allocation.emergency, reduced, t]);
+  const ringStyle = useAnimatedStyle(() => ({
+    opacity: Math.min(1, t.value * 2),
+    transform: [{ rotate: `${(1 - t.value) * -160}deg` }, { scale: 0.6 + 0.4 * t.value }],
+  }));
   return (
     <View style={{ alignItems: 'center' }}>
-      <View
-        style={{
+      <Animated.View
+        style={[ringStyle, {
           width: SIZE,
           height: SIZE,
           borderRadius: SIZE / 2,
           overflow: 'hidden',
           backgroundColor: '#F1F5F9',
-        }}
+        }]}
       >
         {segments.map((seg, i) => {
           const start = acc * 3.6;
@@ -111,13 +127,13 @@ function AllocationRing({ allocation }: { allocation: IncomeFlowData['allocation
         >
           <Text style={{ fontSize: 10, color: GRAY, fontWeight: '700' }}>50/30/20</Text>
         </View>
-      </View>
+      </Animated.View>
       <View style={rStyles.legend}>
         {segments.map((s) => (
           <View key={s.label} style={rStyles.legItem}>
             <View style={[rStyles.legDot, { backgroundColor: s.color }]} />
             <Text style={rStyles.legLbl}>{s.label}</Text>
-            <Text style={[rStyles.legVal, { color: s.color }]}>{formatCurrency(s.value)}</Text>
+            <AnimatedNumber value={s.value} style={[rStyles.legVal, { color: s.color }]} />
           </View>
         ))}
       </View>
@@ -482,8 +498,8 @@ export function IncomeFlowScreen(): React.ReactElement {
               .slice()
               .reverse()
               .map((item, i) => (
+                <Animated.View key={item.id || i} entering={FadeInDown.delay(Math.min(i, 10) * 40).springify().damping(16)}>
                 <TouchableOpacity
-                  key={item.id || i}
                   style={s.timelineRow}
                   onPress={() => handleLongPress(item)}
                   activeOpacity={0.7}
@@ -507,6 +523,7 @@ export function IncomeFlowScreen(): React.ReactElement {
                     +{formatCurrency(item.amount)}
                   </Text>
                 </TouchableOpacity>
+                </Animated.View>
               ))}
           </Card>
         )}
@@ -514,7 +531,7 @@ export function IncomeFlowScreen(): React.ReactElement {
         {/* ── Empty State ──────────────────────────────────────── */}
         {(!flow || flow.timeline.length === 0) && (
           <View style={s.emptyState}>
-            <Ionicons name="cash-outline" size={48} color={GRAY} style={{ marginBottom: 12 }} />
+            <FloatingEmoji emoji="💸" style={{ fontSize: 48, marginBottom: 12 }} />
             <Text style={s.emptyTitle}>No Income Recorded Yet</Text>
             <Text style={s.emptyText}>
               Tap the button below to record your first income payment or freelance earnings.
@@ -527,14 +544,14 @@ export function IncomeFlowScreen(): React.ReactElement {
       </ScrollView>
 
       {/* Floating Action Button */}
-      <TouchableOpacity
+      <PressableScale
         style={s.fab}
+        scaleTo={0.88}
         onPress={() => setShowAdd(true)}
-        activeOpacity={0.85}
         accessibilityLabel="Add New Income Record"
       >
         <Ionicons name="add" size={28} color="#FFFFFF" />
-      </TouchableOpacity>
+      </PressableScale>
 
       <AddIncomeModal visible={showAdd} onClose={() => setShowAdd(false)} onAdd={() => fetchFlow(true)} />
 

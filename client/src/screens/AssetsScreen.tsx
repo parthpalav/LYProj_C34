@@ -19,6 +19,8 @@ import { useNavigation } from '@react-navigation/native';
 import { getAssets, createAsset, updateAsset, deleteAsset } from '../services/api';
 import { Asset, AssetClass, AssetLiquidity } from '../types';
 import { celebrate } from '../store/useCelebrationStore';
+import Animated, { FadeInDown, FadeOutLeft, LinearTransition } from 'react-native-reanimated';
+import { FloatingEmoji } from '../components/motion/FloatingEmoji';
 import { formatCurrency } from '../utils/format';
 
 const ASSET_TYPE_PRESETS = [
@@ -369,7 +371,7 @@ export default function AssetsScreen() {
           <ActivityIndicator size="large" color="#38BDF8" style={{ marginTop: 40 }} />
         ) : assets.length === 0 ? (
           <View style={styles.emptyCard}>
-            <MaterialCommunityIcons name="bank-plus" size={48} color="#64748B" />
+            <FloatingEmoji emoji="🏦" style={{ fontSize: 48 }} />
             <Text style={styles.emptyTitle}>No assets added yet</Text>
             <Text style={styles.emptyText}>
               Add your Fixed Deposits, mutual funds, EPF/PPF, bank accounts, or gold to power accurate FIRE
@@ -380,12 +382,18 @@ export default function AssetsScreen() {
             </TouchableOpacity>
           </View>
         ) : (
-          assets.map((ast) => {
+          assets.map((ast, idx) => {
             const classConfig = ASSET_CLASS_MAP[ast.assetClass] || ASSET_CLASS_MAP.FIRE_INVESTABLE;
             const liqConfig = LIQUIDITY_MAP[ast.liquidity || 'liquid'] || LIQUIDITY_MAP.liquid;
 
             return (
-              <View key={ast.id} style={styles.assetCard}>
+              <Animated.View
+                key={ast.id}
+                entering={FadeInDown.delay(Math.min(idx, 10) * 50).springify().damping(16)}
+                exiting={FadeOutLeft}
+                layout={LinearTransition.springify().damping(16)}
+                style={styles.assetCard}
+              >
                 <View style={styles.assetCardTop}>
                   <View style={styles.assetTitleBlock}>
                     <Text style={styles.assetName}>{ast.name}</Text>
@@ -451,7 +459,7 @@ export default function AssetsScreen() {
                     <Text style={[styles.actionBtnText, { color: '#EF4444' }]}>Delete</Text>
                   </TouchableOpacity>
                 </View>
-              </View>
+              </Animated.View>
             );
           })
         )}

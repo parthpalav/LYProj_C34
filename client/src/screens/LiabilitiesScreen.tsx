@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator
 import { Ionicons } from '@expo/vector-icons';
 import { getLiabilities, createLiability, updateLiability, deleteLiability, getLiabilitiesPaymentsSummary, getLiabilityTransactions } from '../services/api';
 import { celebrate } from '../store/useCelebrationStore';
+import Animated, { FadeInDown, FadeOutLeft, LinearTransition } from 'react-native-reanimated';
+import { FloatingEmoji } from '../components/motion/FloatingEmoji';
 import { Liability, LiabilityPaymentSummary, LiabilityPaymentHistoryResponse, Transaction } from '../types';
 
 const VALID_CATEGORIES = [
@@ -263,7 +265,7 @@ export function LiabilitiesScreen() {
 
         {activeLiabilities.length === 0 ? (
           <View style={styles.emptyState}>
-            <Ionicons name="calendar-outline" size={48} color="#9CA3AF" />
+            <FloatingEmoji emoji="📅" style={{ fontSize: 48 }} />
             <Text style={styles.emptyTitle}>No liabilities yet</Text>
             <Text style={styles.emptyDesc}>
               Add recurring obligations such as rent, EMIs, loans or insurance to track your monthly commitments.
@@ -347,12 +349,18 @@ export function LiabilitiesScreen() {
 
             {/* Liability List */}
             <Text style={styles.sectionTitle}>Your Liabilities</Text>
-            {activeLiabilities.map((item) => {
+            {activeLiabilities.map((item, idx) => {
               const summary = paymentSummaries[item.id];
               const hasPayments = summary && summary.paymentCount > 0;
 
               return (
-                <View key={item.id} style={[styles.card, item.autoDeduct && styles.cardAutoDeduct]}>
+                <Animated.View
+                  key={item.id}
+                  entering={FadeInDown.delay(Math.min(idx, 10) * 50).springify().damping(16)}
+                  exiting={FadeOutLeft}
+                  layout={LinearTransition.springify().damping(16)}
+                  style={[styles.card, item.autoDeduct && styles.cardAutoDeduct]}
+                >
                   <View style={styles.cardHeader}>
                     <Text style={styles.cardName}>{item.name}</Text>
                     <Text style={styles.cardAmount}>₹{item.amount.toLocaleString()}</Text>
@@ -428,7 +436,7 @@ export function LiabilitiesScreen() {
                       </TouchableOpacity>
                     </View>
                   </View>
-                </View>
+                </Animated.View>
               );
             })}
           </>

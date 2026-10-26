@@ -20,6 +20,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { addIncome, getIncomeFlow, updateIncome, deleteIncome } from '../services/api';
 import { IncomeFlowData } from '../types';
 import { formatCurrency } from '../utils/format';
+import { celebrate } from '../store/useCelebrationStore';
 
 const BLUE = '#2563EB';
 const GREEN = '#10B981';
@@ -177,6 +178,7 @@ function AddIncomeModal({
       setSource('salary');
       onAdd();
       onClose();
+      celebrate({ kind: 'coins', title: `${formatCurrency(amt)} income added`, subtitle: `Logged as ${SOURCE_LABELS[source] || source}.` });
     } catch {
       Alert.alert('Error', 'Could not log income. Please check your network connection.');
     } finally {

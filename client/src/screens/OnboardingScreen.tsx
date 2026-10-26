@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuthStore } from '../store/useAuthStore';
+import { celebrate } from '../store/useCelebrationStore';
 
 const INCOME_TYPES = [
   { id: 'salaried', label: 'Salaried' },
@@ -39,7 +40,7 @@ export function OnboardingScreen(): React.ReactElement {
     if (submitting) return;
     setSubmitting(true);
     try {
-      await completeOnboarding({
+      const ok = await completeOnboarding({
         age: Number(age) || 25,
         income: Number(income) || 0,
         monthlyIncome: Number(income) || 0,
@@ -48,6 +49,7 @@ export function OnboardingScreen(): React.ReactElement {
         retirementCorpusGoal: Number(retirementCorpusGoal) || 0,
         currentBalance: Number(currentBalance) || 0
       });
+      if (ok) celebrate({ kind: 'confetti', title: "You're all set!", subtitle: 'Your financial pulse is ready. Explore your dashboard.' });
     } catch (error) {
       console.error('Error submitting onboarding:', error);
     } finally {

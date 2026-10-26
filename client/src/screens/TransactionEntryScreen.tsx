@@ -16,7 +16,10 @@ import {
   Keyboard,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { addTransaction, classifyExpense, ClassifyResult, getLiabilities } from '../services/api';
+import { addTransaction, classifyExpense, ClassifyResult, getLiabilities, getPacing } from '../services/api';
+import { celebrate } from '../store/useCelebrationStore';
+import { formatCurrency } from '../utils/format';
+import { PressableScale } from '../components/motion/PressableScale';
 import { useStore } from '../store/useStore';
 import { Liability } from '../types';
 
@@ -226,11 +229,33 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
       });
       addToStore(newTx);
       setLogged(true);
-      Alert.alert('Saved', `Transaction logged as ${newTx.type || selectedType} in ${newTx.category || categoryKey}.`);
+      const loggedType = newTx.type || selectedType;
+      const summary = `${formatCurrency(parsedAmount)} · ${loggedType} in ${newTx.category || categoryKey}`;
       setTimeout(() => {
         setLogged(false);
         onClose?.();
-      }, 1200);
+        if (loggedType === 'Investment') {
+          celebrate({ kind: 'fireworks', title: `${formatCurrency(parsedAmount)} invested`, subtitle: 'Your future self says thanks. Investments this month just went up.' });
+          return;
+        }
+        celebrate({ kind: 'toast', title: 'Transaction logged', subtitle: summary });
+        // Budget nudge: warn (after the success toast) when this pushes Needs/Wants past the monthly limit.
+        const bucket = loggedType === 'Need' ? 'Needs' : loggedType === 'Want' ? 'Wants' : null;
+        if (bucket) {
+          getPacing()
+            .then((p) => {
+              const b = p?.[bucket];
+              if (b && b.limit > 0 && b.actual > b.limit) {
+                setTimeout(() => celebrate({
+                  kind: 'toast', tone: 'warning',
+                  title: `${bucket} over budget`,
+                  subtitle: `${formatCurrency(b.actual)} spent of ${formatCurrency(b.limit)} this month.`,
+                }), 1600);
+              }
+            })
+            .catch(() => {});
+        }
+      }, 900);
     } catch {
       Alert.alert('Error', 'Failed to save transaction. Please check the server.');
     } finally {
@@ -483,10 +508,9 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
             )}
 
             {/* Log Button */}
-            <TouchableOpacity
+            <PressableScale
               style={[styles.logButton, logged && styles.logButtonSuccess]}
               onPress={handleLog}
-              activeOpacity={0.85}
               disabled={saving}
             >
               {saving ? (
@@ -496,7 +520,7 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
                   {logged ? '✓ Logged!' : 'Log Transaction'}
                 </Text>
               )}
-            </TouchableOpacity>
+            </PressableScale>
 
             {/* Summary Footer */}
             <View style={styles.summaryRow}>

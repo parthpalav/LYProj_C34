@@ -13,6 +13,8 @@ import {
 } from 'react-native';
 import { updateCurrentBalance } from '../services/api';
 import { useStore } from '../store/useStore';
+import { celebrate } from '../store/useCelebrationStore';
+import { formatCurrency } from '../utils/format';
 
 const BLUE = '#3B3BDE';
 const GREEN = '#22C880';
@@ -56,10 +58,12 @@ export function UpdateBalanceScreen({ onClose }: Props): React.ReactElement {
         currentBalance: response.currentBalance,
       });
 
-      Alert.alert('Success', 'Bank balance updated successfully!');
-      setTimeout(() => {
-        onClose?.();
-      }, 500);
+      onClose?.();
+      celebrate({
+        kind: 'toast',
+        title: 'Balance updated',
+        subtitle: `${operation === 'credit' ? 'Added' : 'Deducted'} ${formatCurrency(parsedAmount)}. New balance ${formatCurrency(response.currentBalance)}.`,
+      });
     } catch (error) {
       Alert.alert('Error', 'Failed to update balance. Please try again.');
       console.error(error);

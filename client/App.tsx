@@ -9,6 +9,7 @@ import { useStore } from './src/store/useStore';
 import { useAuthStore } from './src/store/useAuthStore';
 import { LoginScreen } from './src/screens/LoginScreen';
 import { OnboardingScreen } from './src/screens/OnboardingScreen';
+import { CelebrationHost } from './src/components/motion/CelebrationHost';
 
 export default function App(): React.ReactElement {
   const token = useAuthStore((state) => state.token);
@@ -80,6 +81,7 @@ export default function App(): React.ReactElement {
       <SafeAreaProvider>
         <StatusBar style="dark" />
         <WelcomeScreen onContinue={dismissWelcome} />
+        <CelebrationHost />
       </SafeAreaProvider>
     );
   }
@@ -91,6 +93,7 @@ export default function App(): React.ReactElement {
         <StatusBar style="dark" />
         <AppNavigator />
       </NavigationContainer>
+      <CelebrationHost />
     </SafeAreaProvider>
   );
 }

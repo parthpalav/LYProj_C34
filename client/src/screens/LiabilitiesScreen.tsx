@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Alert, TextInput, Switch, KeyboardAvoidingView, Platform, Modal, FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { getLiabilities, createLiability, updateLiability, deleteLiability, getLiabilitiesPaymentsSummary, getLiabilityTransactions } from '../services/api';
+import { celebrate } from '../store/useCelebrationStore';
 import { Liability, LiabilityPaymentSummary, LiabilityPaymentHistoryResponse, Transaction } from '../types';
 
 const VALID_CATEGORIES = [
@@ -122,6 +123,7 @@ export function LiabilitiesScreen() {
       }
       setModalVisible(false);
       fetchData();
+      celebrate({ kind: 'toast', title: editingId ? 'Liability updated' : 'Liability added', subtitle: `${name} · ₹${Number(amount).toLocaleString('en-IN')} ${frequency}` });
     } catch (error) {
       console.error(error);
       Alert.alert('Error', 'Failed to save liability');

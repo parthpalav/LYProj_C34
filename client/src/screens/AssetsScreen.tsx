@@ -18,6 +18,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { getAssets, createAsset, updateAsset, deleteAsset } from '../services/api';
 import { Asset, AssetClass, AssetLiquidity } from '../types';
+import { celebrate } from '../store/useCelebrationStore';
+import { formatCurrency } from '../utils/format';
 
 const ASSET_TYPE_PRESETS = [
   'Fixed Deposit',
@@ -241,6 +243,11 @@ export default function AssetsScreen() {
       }
       setModalVisible(false);
       fetchAssets();
+      if (!editingAsset && assetClass === 'FIRE_INVESTABLE') {
+        celebrate({ kind: 'fireworks', title: `${formatCurrency(val)} invested`, subtitle: `${name.trim()} (${finalType}) now counts towards your FIRE corpus.` });
+      } else {
+        celebrate({ kind: 'toast', title: editingAsset ? 'Asset updated' : 'Asset added', subtitle: `${name.trim()} · ${formatCurrency(val)}` });
+      }
     } catch (err: any) {
       console.error('Failed to save asset:', err);
       const msg = err.response?.data?.error || 'Failed to save asset. Please verify inputs.';

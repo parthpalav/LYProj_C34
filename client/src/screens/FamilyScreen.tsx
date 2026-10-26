@@ -17,6 +17,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { celebrate } from '../store/useCelebrationStore';
 import {
   getCurrentFamily,
   getReceivedFamilyInvitations,
@@ -208,7 +209,7 @@ export default function FamilyScreen(): React.ReactElement {
       await sendFamilyInvitation(trimmed);
       setInviteModalVisible(false);
       setInviteEmail('');
-      Alert.alert('Invitation Sent', `A Family invitation was sent to ${trimmed}.`);
+      celebrate({ kind: 'toast', title: 'Invitation sent', subtitle: `A Family invitation was sent to ${trimmed}.` });
       fetchFamilyData();
     } catch (err: any) {
       const msg = getHumanReadableError(err, 'Failed to send invitation.');
@@ -222,7 +223,7 @@ export default function FamilyScreen(): React.ReactElement {
     setActionLoadingId(`accept-${invitationId}`);
     try {
       await acceptFamilyInvitation(invitationId);
-      Alert.alert('Welcome to the Family!', 'You have successfully joined the Family.');
+      celebrate({ kind: 'confetti', title: 'Welcome to the Family!', subtitle: 'You have joined the household. Your shared overview is ready.' });
       await fetchFamilyData();
     } catch (err: any) {
       const msg = getHumanReadableError(err, 'Failed to accept invitation.');

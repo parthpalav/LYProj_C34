@@ -2,14 +2,23 @@ import React, { useCallback, useEffect, useState } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet, Modal,
   TextInput, KeyboardAvoidingView, Platform, Alert, ActivityIndicator,
-  RefreshControl, Vibration, Animated, Easing, Keyboard, TouchableWithoutFeedback
+  RefreshControl, Keyboard, TouchableWithoutFeedback
 } from 'react-native';
-import { getGoals, createGoal, deleteGoal } from '../services/api';
+import Animated, { FadeIn, FadeInDown, LinearTransition } from 'react-native-reanimated';
+import * as Haptics from 'expo-haptics';
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { getGoals, createGoal, deleteGoal, updateGoal } from '../services/api';
 import { useStore } from '../store/useStore';
+import { celebrate } from '../store/useCelebrationStore';
 import { Goal } from '../types';
-
-const TABS = ['Active', 'Goals', 'Relative'] as const;
-type Tab = (typeof TABS)[number];
+import { formatCurrency } from '../utils/format';
+import { goalProgress } from '../utils/goalProgress';
+import { PressableScale } from '../components/motion/PressableScale';
+import { PiggyBank } from '../components/motion/PiggyBank';
+import { AnimatedBar } from '../components/motion/AnimatedBar';
+import { useShake } from '../components/motion/useShake';
 
 const BLUE  = '#3B3BDE';
 const GREEN = '#22C880';
@@ -42,9 +51,9 @@ function AddGoalModal({
         monthlyContribution: Number(contribution) || 0,
       });
       setName(''); setTarget(''); setDate(''); setContribution('');
-      Vibration.vibrate(50); // Haptic feedback on success
       onAdd();
       onClose();
+      celebrate({ kind: 'toast', title: `${emoji} ${name.trim()} goal created`, subtitle: `Target ${formatCurrency(Number(target))}. Tap "Add money" to start filling it.` });
     } catch {
       Alert.alert('Error', 'Failed to save goal.');
     } finally {
@@ -95,6 +104,84 @@ function AddGoalModal({
   );
 }
 
+function AddMoneyModal({
+  goal, onClose, onSaved,
+}: {
+  goal: Goal | null; onClose: () => void; onSaved: () => void;
+}) {
+  const [amount, setAmount] = useState('');
+  const [saving, setSaving] = useState(false);
+  const { style: shakeStyle, shake } = useShake();
+
+  const handleSave = async () => {
+    if (!goal) return;
+    const add = Number(amount);
+    if (!Number.isFinite(add) || add <= 0) {
+      shake();
+      return;
+    }
+    setSaving(true);
+    try {
+      const p = goalProgress(goal.savedAmount, add, goal.targetAmount);
+      // shortcut: read-modify-write, can lose a concurrent contribution; switch to a $inc endpoint if multi-device use matters
+      await updateGoal(goal.id, { savedAmount: p.newSaved });
+      setAmount('');
+      onClose();
+      onSaved();
+      if (p.completed) {
+        celebrate({ kind: 'trophy', title: `${goal.name} goal reached!`, subtitle: `You saved ${formatCurrency(p.newSaved)} of ${formatCurrency(goal.targetAmount)}.` });
+      } else {
+        celebrate({
+          kind: 'piggy', from: p.from, to: p.to,
+          title: `${formatCurrency(add)} saved`,
+          subtitle: `${formatCurrency(Math.max(0, goal.targetAmount - p.newSaved))} to go for ${goal.name}.`,
+        });
+      }
+    } catch {
+      shake();
+      Alert.alert('Error', 'Failed to add money to this goal.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <Modal visible={!!goal} transparent animationType="slide" onRequestClose={onClose}>
+      <KeyboardAvoidingView style={m.overlay} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <TouchableOpacity style={m.backdrop} activeOpacity={1} onPress={onClose} />
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <View style={m.sheet}>
+          <View style={m.dragHandle} />
+          <Text style={m.sheetTitle}>Add money to {goal?.emoji} {goal?.name}</Text>
+
+          <Text style={m.label}>Amount</Text>
+          <Animated.View style={shakeStyle}>
+            <TextInput
+              style={m.input} value={amount} onChangeText={setAmount} placeholder="e.g. 1000"
+              placeholderTextColor="#9CA3AF" keyboardType="numeric" autoFocus
+            />
+          </Animated.View>
+          <View style={m.emojiRow}>
+            {[500, 1000, 5000].map((v) => (
+              <PressableScale key={v} style={m.quickChip} onPress={() => setAmount(String(v))}>
+                <Text style={m.quickChipTxt}>+{formatCurrency(v)}</Text>
+              </PressableScale>
+            ))}
+          </View>
+
+          <PressableScale style={[m.addBtn, { backgroundColor: GREEN, shadowColor: GREEN }]} onPress={handleSave} disabled={saving}>
+            {saving ? <ActivityIndicator color="#fff" /> : <Text style={m.addBtnTxt}>Put into savings</Text>}
+          </PressableScale>
+          <TouchableOpacity style={m.cancelBtn} onPress={onClose}>
+            <Text style={m.cancelTxt}>Cancel</Text>
+          </TouchableOpacity>
+        </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+    </Modal>
+  );
+}
+
 const m = StyleSheet.create({
   overlay: { flex: 1, justifyContent: 'flex-end' },
   backdrop: { ...StyleSheet.absoluteFill, backgroundColor: 'rgba(0,0,0,0.4)' },
@@ -111,27 +198,20 @@ const m = StyleSheet.create({
   addBtnTxt: { fontSize: 16, fontWeight: '700', color: '#fff' },
   cancelBtn: { height: 44, alignItems: 'center', justifyContent: 'center', marginTop: 8 },
   cancelTxt: { fontSize: 14, color: '#9CA3AF', fontWeight: '500' },
+  quickChip: { paddingHorizontal: 14, paddingVertical: 9, borderRadius: 99, backgroundColor: '#ECFDF5', borderWidth: 1, borderColor: '#A7F3D0' },
+  quickChipTxt: { fontSize: 13, fontWeight: '700', color: '#065F46' },
 });
 
 export function GoalPlannerScreen(): React.ReactElement {
+  const navigation = useNavigation<any>();
   const { goals, setGoals } = useStore();
-  const [activeTab,    setActiveTab]    = useState<Tab>('Active');
   const [selectedId,   setSelectedId]   = useState<string | null>(null);
   const [showAdd,      setShowAdd]      = useState(false);
+  const [fundingGoal,  setFundingGoal]  = useState<Goal | null>(null);
   const [loading,      setLoading]      = useState(true);
   const [refreshing,   setRefreshing]   = useState(false);
-  
-  // Animation value for card selection
-  const scaleAnim = useState(new Animated.Value(1))[0];
-  
-  const handleSelectGoal = (id: string) => {
-    setSelectedId(id);
-    Vibration.vibrate(20); // Light haptic
-    Animated.sequence([
-      Animated.timing(scaleAnim, { toValue: 0.96, duration: 50, useNativeDriver: true, easing: Easing.inOut(Easing.ease) }),
-      Animated.timing(scaleAnim, { toValue: 1, duration: 100, useNativeDriver: true, easing: Easing.bounce })
-    ]).start();
-  };
+
+  const handleSelectGoal = (id: string) => setSelectedId(id);
 
   const fetchGoals = useCallback(async (isRefresh = false) => {
     try {
@@ -157,7 +237,7 @@ export function GoalPlannerScreen(): React.ReactElement {
         onPress: async () => {
           try {
             await deleteGoal(id);
-            Vibration.vibrate([0, 50, 50, 50]); // Heavy haptic feedback for deletion
+            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning).catch(() => {});
             fetchGoals(true);
           } catch (e) { Alert.alert('Error', 'Failed to delete goal.'); }
         },
@@ -193,14 +273,15 @@ export function GoalPlannerScreen(): React.ReactElement {
   }
 
   return (
-    <View style={s.screen}>
-      <View style={s.tabBar}>
-        {TABS.map((t) => (
-          <TouchableOpacity key={t} style={s.tabItem} onPress={() => setActiveTab(t)} activeOpacity={0.8}>
-            <Text style={[s.tabText, activeTab === t && s.tabTextActive]}>{t}</Text>
-            {activeTab === t && <View style={s.tabUnderline} />}
-          </TouchableOpacity>
-        ))}
+    <SafeAreaView style={s.screen} edges={['top']}>
+      <View style={s.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={s.backBtn} accessibilityLabel="Go back">
+          <Ionicons name="chevron-back" size={24} color="#111827" />
+        </TouchableOpacity>
+        <View style={{ flex: 1 }}>
+          <Text style={s.headerTitle}>Savings Goals</Text>
+          <Text style={s.headerSub}>Tap a goal, then "Add money". Long-press to delete.</Text>
+        </View>
       </View>
 
       <ScrollView
@@ -209,32 +290,41 @@ export function GoalPlannerScreen(): React.ReactElement {
       >
         <View style={s.columns}>
           <View style={s.leftCol}>
-            {goals.map((g) => (
-              <TouchableOpacity
-                key={g.id}
-                style={[s.goalChip, selectedId === g.id && s.goalChipActive]}
-                onPress={() => handleSelectGoal(g.id)}
-                onLongPress={() => handleDelete(g.id)}
-                activeOpacity={0.8}
-              >
-                <Text style={s.goalEmoji}>{g.emoji}</Text>
-                <Text style={[s.goalName, selectedId === g.id && s.goalNameActive]}>{g.name}</Text>
-              </TouchableOpacity>
+            {goals.map((g, i) => (
+              <Animated.View key={g.id} entering={FadeInDown.delay(i * 60).springify().damping(14)} layout={LinearTransition.springify()}>
+                <PressableScale
+                  style={[s.goalChip, selected?.id === g.id && s.goalChipActive]}
+                  onPress={() => handleSelectGoal(g.id)}
+                  onLongPress={() => handleDelete(g.id)}
+                >
+                  <Text style={s.goalEmoji}>{g.emoji}</Text>
+                  <Text style={[s.goalName, selected?.id === g.id && s.goalNameActive]}>{g.name}</Text>
+                </PressableScale>
+              </Animated.View>
             ))}
 
-            <TouchableOpacity style={s.addGoalBtn} onPress={() => setShowAdd(true)} activeOpacity={0.8}>
-              <Text style={s.addGoalIcon}>＋</Text>
-              <Text style={s.addGoalTxt}>Add Goal</Text>
-            </TouchableOpacity>
+            <Animated.View layout={LinearTransition.springify()}>
+              <PressableScale style={s.addGoalBtn} onPress={() => setShowAdd(true)}>
+                <Text style={s.addGoalIcon}>＋</Text>
+                <Text style={s.addGoalTxt}>Add Goal</Text>
+              </PressableScale>
+            </Animated.View>
           </View>
 
-          <Animated.View style={[s.rightCol, { transform: [{ scale: scaleAnim }] }]}>
+          <View style={s.rightCol}>
             {selected ? (() => {
               const l = calculateGoalLogic(selected);
+              const pct = selected.targetAmount > 0 ? Math.min(1, selected.savedAmount / selected.targetAmount) : 0;
               return (
-                <>
+                <Animated.View key={selected.id} entering={FadeIn.duration(250)}>
                   <View style={s.detailCard}>
                   <Text style={s.detailTitle}>{selected.name} Fund</Text>
+
+                  <View style={s.piggyWrap}>
+                    <PiggyBank progress={pct} from={0} size={110} />
+                    <Text style={s.piggyPct}>{Math.round(pct * 100)}% saved</Text>
+                  </View>
+                  <AnimatedBar progress={pct} color={GREEN} trackColor="#E8ECF2" height={8} style={{ marginBottom: 12 }} />
 
                   <View style={s.detailRow}><Text style={s.detailLabel}>Target:</Text><Text style={s.detailValue}>₹{selected.targetAmount.toLocaleString()}</Text></View>
                   <View style={s.detailRow}><Text style={s.detailLabel}>Date:</Text><Text style={s.detailValue}>{selected.targetDate || 'Not set'}</Text></View>
@@ -244,6 +334,11 @@ export function GoalPlannerScreen(): React.ReactElement {
                     <Text style={s.achievableQ}>Is this achievable?</Text>
                     <View style={[s.achievableBadge, !l.achievable && s.achievableBadgeNo]}><Text style={s.achievableTxt}>{l.achievable ? 'YES' : 'NO'}</Text></View>
                   </View>
+
+                  <PressableScale style={s.addMoneyBtn} onPress={() => setFundingGoal(selected)} accessibilityLabel={`Add money to ${selected.name}`}>
+                    <Ionicons name="add-circle" size={18} color="#fff" />
+                    <Text style={s.addMoneyTxt}>Add money</Text>
+                  </PressableScale>
                 </View>
 
                 <Text style={s.arrow}>↓</Text>
@@ -255,27 +350,34 @@ export function GoalPlannerScreen(): React.ReactElement {
                   <View style={s.statDivider} />
                   <View style={[s.statItem, s.statItemGreen, !l.achievable && s.statItemRed]}><Text style={s.statLabel}>recommended changes</Text><Text style={[s.statValue, { color: l.achievable ? '#065F46' : '#991B1B', fontSize: 13 }]}>{l.recommendation}</Text></View>
                 </View>
-              </>
+                </Animated.View>
               );
             })() : (
-              <View style={s.emptyRight}><Text style={s.emptyTxt}>Select a goal to view details</Text></View>
+              <View style={s.emptyRight}>
+                <PiggyBank progress={0} size={90} />
+                <Text style={[s.emptyTxt, { marginTop: 10, textAlign: 'center' }]}>Create your first goal and watch the piggy bank fill up.</Text>
+              </View>
             )}
-          </Animated.View>
+          </View>
         </View>
       </ScrollView>
 
       <AddGoalModal visible={showAdd} onClose={() => setShowAdd(false)} onAdd={() => fetchGoals(true)} />
-    </View>
+      <AddMoneyModal goal={fundingGoal} onClose={() => setFundingGoal(null)} onSaved={() => fetchGoals(true)} />
+    </SafeAreaView>
   );
 }
 
 const s = StyleSheet.create({
   screen: { flex: 1, backgroundColor: '#F4F6FA' },
-  tabBar: { flexDirection: 'row', backgroundColor: '#fff', paddingHorizontal: 16, borderBottomWidth: 1, borderBottomColor: '#E8ECF2' },
-  tabItem: { marginRight: 28, paddingVertical: 14, position: 'relative' },
-  tabText: { fontSize: 15, fontWeight: '600', color: '#9CA3AF' },
-  tabTextActive: { color: '#111827' },
-  tabUnderline: { position: 'absolute', bottom: 0, left: 0, right: 0, height: 2.5, backgroundColor: BLUE, borderRadius: 99 },
+  header: { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: '#fff', paddingHorizontal: 12, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: '#E8ECF2' },
+  backBtn: { padding: 4 },
+  headerTitle: { fontSize: 18, fontWeight: '800', color: '#111827' },
+  headerSub: { fontSize: 12, color: '#6B7280', marginTop: 1 },
+  piggyWrap: { alignItems: 'center', marginBottom: 8 },
+  piggyPct: { fontSize: 13, fontWeight: '800', color: GREEN, marginTop: 4 },
+  addMoneyBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, height: 44, borderRadius: 22, backgroundColor: GREEN, marginTop: 14 },
+  addMoneyTxt: { fontSize: 14, fontWeight: '800', color: '#fff' },
   body: { padding: 16, paddingBottom: 40 },
   columns: { flexDirection: 'row', gap: 14, alignItems: 'flex-start' },
   leftCol: { width: 130, gap: 10 },

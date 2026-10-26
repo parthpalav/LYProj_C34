@@ -1,8 +1,9 @@
 import { BottomTabBarButtonProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import Animated, { ZoomIn, ZoomOut, useAnimatedStyle, useSharedValue, withSequence, withSpring } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ChatScreen } from '../screens/ChatScreen';
 import { DashboardScreen } from '../screens/DashboardScreen';
@@ -14,6 +15,8 @@ import { FmiScreen } from '../screens/FmiScreen';
 import { IncomeFlowScreen } from '../screens/IncomeFlowScreen';
 import AssetsScreen from '../screens/AssetsScreen';
 import FamilyScreen from '../screens/FamilyScreen';
+import { GoalPlannerScreen } from '../screens/GoalPlannerScreen';
+import { PressableScale } from '../components/motion/PressableScale';
 
 export type RootTabParamList = {
   Transactions: undefined;
@@ -30,6 +33,7 @@ export type RootStackParamList = {
   IncomeFlow: undefined;
   Assets: undefined;
   Family: undefined;
+  Goals: undefined;
 };
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
@@ -43,13 +47,33 @@ function tabIconName(routeName: keyof RootTabParamList, focused: boolean): React
   return focused ? 'person-circle' : 'person-circle-outline';
 }
 
+/** Tab icon that pops when it becomes active; the indicator dot zooms in under it. */
+function TabIcon({ name, focused, color, size, showDot }: {
+  name: React.ComponentProps<typeof Ionicons>['name']; focused: boolean; color: string; size: number; showDot: boolean;
+}): React.ReactElement {
+  const scale = useSharedValue(1);
+  useEffect(() => {
+    if (focused) scale.value = withSequence(withSpring(1.22, { damping: 8, stiffness: 400 }), withSpring(1, { damping: 12 }));
+  }, [focused, scale]);
+  const style = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
+  return (
+    <View style={styles.tabIconWrap}>
+      <Animated.View style={style}>
+        <Ionicons name={name} size={size} color={color} />
+      </Animated.View>
+      {focused && showDot && <Animated.View entering={ZoomIn.springify()} exiting={ZoomOut} style={styles.activeIndicator} />}
+    </View>
+  );
+}
+
 function HomeTabButton({ onPress, accessibilityState }: BottomTabBarButtonProps): React.ReactElement {
   const isFocused = Boolean(accessibilityState?.selected);
   const tintColor = isFocused ? '#1e293b' : '#94a3b8';
 
   return (
-    <Pressable
+    <PressableScale
       onPress={onPress}
+      scaleTo={0.9}
       style={styles.homeButtonWrap}
       accessibilityRole="tab"
       accessibilityState={{ selected: isFocused }}
@@ -63,7 +87,7 @@ function HomeTabButton({ onPress, accessibilityState }: BottomTabBarButtonProps)
         />
         <Text style={[styles.homeLabel, { color: tintColor }]}>Home</Text>
       </View>
-    </Pressable>
+    </PressableScale>
   );
 }
 
@@ -84,14 +108,13 @@ function MainTabNavigator(): React.ReactElement {
         tabBarStyle: [styles.tabBar, { height: 60 + insets.bottom, paddingBottom: Math.max(6, insets.bottom) }],
         tabBarHideOnKeyboard: true,
         tabBarIcon: ({ focused, color, size }) => (
-          <View style={styles.tabIconWrap}>
-            <Ionicons
-              name={tabIconName(route.name as keyof RootTabParamList, focused)}
-              size={route.name === 'Dashboard' ? size + 2 : 22}
-              color={color}
-            />
-            {focused && route.name !== 'Dashboard' && <View style={styles.activeIndicator} />}
-          </View>
+          <TabIcon
+            name={tabIconName(route.name as keyof RootTabParamList, focused)}
+            size={route.name === 'Dashboard' ? size + 2 : 22}
+            color={color}
+            focused={focused}
+            showDot={route.name !== 'Dashboard'}
+          />
         ),
       })}
     >
@@ -151,6 +174,14 @@ export function AppNavigator(): React.ReactElement {
       <Stack.Screen
         name="Family"
         component={FamilyScreen}
+        options={{
+          headerShown: false,
+          animation: 'slide_from_right',
+        }}
+      />
+      <Stack.Screen
+        name="Goals"
+        component={GoalPlannerScreen}
         options={{
           headerShown: false,
           animation: 'slide_from_right',

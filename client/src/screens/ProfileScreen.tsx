@@ -22,6 +22,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useStore } from '../store/useStore';
 import { useAuthStore } from '../store/useAuthStore';
+import { celebrate } from '../store/useCelebrationStore';
 import { updateUserProfileApi } from '../services/api';
 import { User } from '../types';
 
@@ -419,7 +420,7 @@ export function ProfileScreen(): React.ReactElement {
       }
 
       setEditVisible(false);
-      Alert.alert('Assumptions Saved ✓', 'Your personal and financial planning assumptions have been updated.');
+      celebrate({ kind: 'toast', title: 'Assumptions saved', subtitle: 'Your planning assumptions have been updated.' });
     } catch (err: any) {
       Alert.alert('Save Error', err?.response?.data?.error || err?.message || 'Could not save profile updates.');
     } finally {
@@ -615,6 +616,24 @@ export function ProfileScreen(): React.ReactElement {
             <View style={infoStyles.textCol}>
               <Text style={infoStyles.label}>Income Streams & History</Text>
               <Text style={infoStyles.value}>View, Log & Manage Receipts ↗</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={16} color={TEXT_MUTED} />
+          </TouchableOpacity>
+
+          <View style={{ height: 1, backgroundColor: '#F1F5F9', marginLeft: 50 }} />
+
+          <TouchableOpacity
+            style={infoStyles.row}
+            onPress={() => (navigation as any).navigate('Goals')}
+            activeOpacity={0.7}
+            accessibilityLabel="Manage Savings Goals"
+          >
+            <View style={[infoStyles.iconWrap, { backgroundColor: '#F3E8FF' }]}>
+              <Ionicons name="flag" size={18} color="#7C3AED" />
+            </View>
+            <View style={infoStyles.textCol}>
+              <Text style={infoStyles.label}>Savings Goals</Text>
+              <Text style={infoStyles.value}>Fill your piggy bank towards each goal ↗</Text>
             </View>
             <Ionicons name="chevron-forward" size={16} color={TEXT_MUTED} />
           </TouchableOpacity>

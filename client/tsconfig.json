@@ -24,5 +24,8 @@
     "App.tsx",
     "src"
   ],
+  "exclude": [
+    "src/**/*.check.ts"
+  ],
   "extends": "expo/tsconfig.base.json"
 }

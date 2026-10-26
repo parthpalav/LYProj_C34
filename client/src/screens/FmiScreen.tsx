@@ -1,4 +1,6 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import Animated, { Easing, useAnimatedStyle, useReducedMotion, useSharedValue, withTiming } from 'react-native-reanimated';
+import { AnimatedNumber } from '../components/motion/AnimatedNumber';
 import {
   View,
   Text,
@@ -43,21 +45,20 @@ function formatINR(n: number | null | undefined) {
 function Gauge({ score, label }: { score: number; label?: string }) {
   const color = fmiColor(score);
   const rotation = -90 + (Math.min(100, Math.max(0, score)) / 100) * 180;
+  // Sweep the arc from empty to the score on mount and whenever the score changes.
+  const reduced = useReducedMotion();
+  const rot = useSharedValue(reduced ? rotation : -90);
+  useEffect(() => {
+    rot.value = reduced ? rotation : withTiming(rotation, { duration: 1100, easing: Easing.out(Easing.cubic) });
+  }, [rotation, reduced, rot]);
+  const arcStyle = useAnimatedStyle(() => ({ transform: [{ rotate: `${rot.value}deg` }] }));
   const ratingText = label || (score >= 80 ? 'Excellent' : score >= 65 ? 'Good' : score >= 45 ? 'Fair' : 'Needs Attention');
 
   return (
     <View style={g.container}>
       <View style={g.arcWrap}>
         <View style={g.arcBg} />
-        <View
-          style={[
-            g.arcFg,
-            {
-              borderColor: color,
-              transform: [{ rotate: `${rotation}deg` }],
-            },
-          ]}
-        />
+        <Animated.View style={[g.arcFg, { borderColor: color }, arcStyle]} />
         <View style={g.scoreWrap}>
           <Text
             style={[g.scoreText, { color }]}
@@ -65,7 +66,7 @@ function Gauge({ score, label }: { score: number; label?: string }) {
             adjustsFontSizeToFit
             minimumFontScale={0.7}
           >
-            {Math.round(score)}
+            <AnimatedNumber value={Math.round(score)} format={(n) => String(n)} duration={1100} />
           </Text>
           <Text style={g.scoreLabel}>/ 100</Text>
         </View>

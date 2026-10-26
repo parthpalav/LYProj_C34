@@ -23,7 +23,16 @@ import {
   getIncome,
   getCurrentFamily,
   getFamilyDashboard,
+  getGoals,
 } from '../services/api';
+import Animated, {
+  FadeInDown, interpolate, Extrapolation, useAnimatedScrollHandler, useAnimatedStyle, useReducedMotion, useSharedValue,
+} from 'react-native-reanimated';
+import { AnimatedNumber } from '../components/motion/AnimatedNumber';
+import { AnimatedBar, AnimatedSegment } from '../components/motion/AnimatedBar';
+import { PiggyBank } from '../components/motion/PiggyBank';
+import { PressableScale } from '../components/motion/PressableScale';
+import { Skeleton, SkeletonCard } from '../components/motion/Skeleton';
 import { useStore } from '../store/useStore';
 import {
   DashboardData,
@@ -90,7 +99,24 @@ function fmiStatusColor(score: number): { text: string; bg: string; border: stri
 // ═══════════════════════════════════════════════════════════
 export function DashboardScreen(): React.ReactElement {
   const navigation = useNavigation();
-  const { user, setUser, dashboard, setDashboard } = useStore();
+  const { user, setUser, dashboard, setDashboard, goals, setGoals } = useStore();
+
+  // ── Motion: parallax header + staggered card entrance ─────
+  const reducedMotion = useReducedMotion();
+  const scrollY = useSharedValue(0);
+  const onScroll = useAnimatedScrollHandler((e) => { scrollY.value = e.contentOffset.y; });
+  const headerParallax = useAnimatedStyle(() => {
+    if (reducedMotion) return {};
+    const y = Math.max(0, scrollY.value);
+    return {
+      opacity: interpolate(y, [0, 90], [1, 0], Extrapolation.CLAMP),
+      transform: [
+        { translateY: y * 0.45 },
+        { scale: interpolate(y, [0, 90], [1, 0.94], Extrapolation.CLAMP) },
+      ],
+    };
+  });
+  const enter = (i: number) => FadeInDown.delay(i * 70).springify().damping(16);
 
   // Screen state
   const [loading, setLoading] = useState(!dashboard);
@@ -179,6 +205,7 @@ export function DashboardScreen(): React.ReactElement {
         getUserProfile(),
         getAssets(),
         getIncome(),
+        getGoals(),
       ]);
 
       // 1. Dashboard
@@ -216,6 +243,11 @@ export function DashboardScreen(): React.ReactElement {
         setIncome(results[6].value);
       }
 
+      // 8. Savings goals (shared store, so GoalPlanner updates show here too)
+      if (results[7].status === 'fulfilled' && Array.isArray(results[7].value)) {
+        setGoals(results[7].value);
+      }
+
       setDataLoaded(true);
     } catch {
       // Non-blocking fallback
@@ -223,7 +255,7 @@ export function DashboardScreen(): React.ReactElement {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [dataLoaded, fetchFamilyContext, setDashboard, setUser]);
+  }, [dataLoaded, fetchFamilyContext, setDashboard, setUser, setGoals]);
 
   useEffect(() => {
     fetchAllData();
@@ -237,6 +269,12 @@ export function DashboardScreen(): React.ReactElement {
   const incomeThisMonth = dashboard?.totalIncome ?? user?.monthlyIncome ?? predictability?.income?.meanMonthlyIncome ?? 0;
   const spendingThisMonth = dashboard?.wantsNeedsBreakdown?.total ?? fmiData?.totalSpent ?? 0;
   const investmentsThisMonth = dashboard?.wantsNeedsBreakdown?.investments?.amount ?? fmiData?.totalSaved ?? 0;
+
+  const goalsSummary = (() => {
+    const saved = goals.reduce((sum, g) => sum + (g.savedAmount || 0), 0);
+    const target = goals.reduce((sum, g) => sum + (g.targetAmount || 0), 0);
+    return { saved, target, pct: target > 0 ? Math.min(1, saved / target) : 0 };
+  })();
 
   const wantsNeeds = dashboard?.wantsNeedsBreakdown;
   const hasSpendingData = wantsNeeds && wantsNeeds.total > 0;
@@ -484,20 +522,24 @@ export function DashboardScreen(): React.ReactElement {
   // ── Loading Skeleton / Spinner ───────────────────────────
   if (loading && !dataLoaded) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={BLUE} />
-        <Text style={styles.loadingTitle}>Loading your financial pulse…</Text>
-        <Text style={styles.loadingSubtitle}>Gathering real-time health, cash flow & forecast data</Text>
+      <View style={[styles.container, styles.content]} accessibilityLabel="Loading your financial pulse">
+        <Skeleton width="55%" height={22} style={{ marginTop: 8 }} />
+        <Skeleton width="35%" height={12} />
+        <SkeletonCard lines={4} />
+        <SkeletonCard lines={3} style={{ backgroundColor: '#1E293B', borderColor: '#1E293B' }} />
+        <SkeletonCard lines={3} />
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
-      <ScrollView
+      <Animated.ScrollView
         style={styles.screen}
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
+        onScroll={onScroll}
+        scrollEventThrottle={16}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -508,7 +550,7 @@ export function DashboardScreen(): React.ReactElement {
         }
       >
         {/* ── A. HEADER ────────────────────────────────────── */}
-        <View style={styles.headerRow}>
+        <Animated.View style={[styles.headerRow, headerParallax]} entering={enter(0)}>
           <View style={styles.headerLeft}>
             <Text style={styles.headerGreeting} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8}>
               {greeting}
@@ -533,9 +575,10 @@ export function DashboardScreen(): React.ReactElement {
               <Ionicons name="person-circle-outline" size={36} color={BLUE} />
             )}
           </TouchableOpacity>
-        </View>
+        </Animated.View>
 
         {/* ── B. CURRENT FINANCIAL HEALTH (FMI) ─────────────── */}
+        <Animated.View entering={enter(1)}>
         <TouchableOpacity
           style={styles.fmiCard}
           activeOpacity={0.88}
@@ -566,7 +609,7 @@ export function DashboardScreen(): React.ReactElement {
                 adjustsFontSizeToFit
                 minimumFontScale={0.8}
               >
-                {Math.round(fmiScore)}
+                <AnimatedNumber value={Math.round(fmiScore)} format={(n) => String(n)} />
               </Text>
               <Text style={styles.fmiScoreDenominator}>/100</Text>
             </View>
@@ -582,45 +625,15 @@ export function DashboardScreen(): React.ReactElement {
             <View style={styles.pillarRow}>
               <View style={styles.pillarItem}>
                 <Text style={styles.pillarLabel} numberOfLines={1}>Saving</Text>
-                <View style={styles.pillarTrack}>
-                  <View
-                    style={[
-                      styles.pillarFill,
-                      {
-                        width: `${Math.min(100, Math.max(5, fmiData.pillars.D1_savingDiscipline.score))}%`,
-                        backgroundColor: GREEN,
-                      },
-                    ]}
-                  />
-                </View>
+                <AnimatedBar progress={Math.min(100, Math.max(5, fmiData.pillars.D1_savingDiscipline.score)) / 100} color={GREEN} trackColor="#F1F5F9" height={6} delay={200} />
               </View>
               <View style={styles.pillarItem}>
                 <Text style={styles.pillarLabel} numberOfLines={1}>Discipline</Text>
-                <View style={styles.pillarTrack}>
-                  <View
-                    style={[
-                      styles.pillarFill,
-                      {
-                        width: `${Math.min(100, Math.max(5, fmiData.pillars.D2_spendingControl.score))}%`,
-                        backgroundColor: BLUE,
-                      },
-                    ]}
-                  />
-                </View>
+                <AnimatedBar progress={Math.min(100, Math.max(5, fmiData.pillars.D2_spendingControl.score)) / 100} color={BLUE} trackColor="#F1F5F9" height={6} delay={200} />
               </View>
               <View style={styles.pillarItem}>
                 <Text style={styles.pillarLabel} numberOfLines={1}>Stability</Text>
-                <View style={styles.pillarTrack}>
-                  <View
-                    style={[
-                      styles.pillarFill,
-                      {
-                        width: `${Math.min(100, Math.max(5, fmiData.pillars.D3_behavioralRisk.score))}%`,
-                        backgroundColor: PURPLE,
-                      },
-                    ]}
-                  />
-                </View>
+                <AnimatedBar progress={Math.min(100, Math.max(5, fmiData.pillars.D3_behavioralRisk.score)) / 100} color={PURPLE} trackColor="#F1F5F9" height={6} delay={200} />
               </View>
             </View>
           )}
@@ -630,8 +643,10 @@ export function DashboardScreen(): React.ReactElement {
             <Ionicons name="chevron-forward" size={14} color={BLUE} />
           </View>
         </TouchableOpacity>
+        </Animated.View>
 
         {/* ── C. CASH POSITION / MONTH SNAPSHOT ────────────── */}
+        <Animated.View entering={enter(2)}>
         <View style={styles.cashSection}>
           {/* Main Current Balance Card */}
           <View style={styles.balanceHeroCard}>
@@ -653,7 +668,7 @@ export function DashboardScreen(): React.ReactElement {
               adjustsFontSizeToFit
               minimumFontScale={0.7}
             >
-              {formatCurrency(balance)}
+              <AnimatedNumber value={balance ?? 0} format={formatCurrency} />
             </Text>
 
             {/* 3-Column Monthly Cash Flow Grid */}
@@ -671,7 +686,7 @@ export function DashboardScreen(): React.ReactElement {
                   adjustsFontSizeToFit
                   minimumFontScale={0.75}
                 >
-                  {formatCurrency(incomeThisMonth)}
+                  <AnimatedNumber value={incomeThisMonth ?? 0} format={formatCurrency} />
                 </Text>
               </TouchableOpacity>
               <View style={styles.cashColDivider} />
@@ -683,7 +698,7 @@ export function DashboardScreen(): React.ReactElement {
                   adjustsFontSizeToFit
                   minimumFontScale={0.75}
                 >
-                  {formatCurrency(spendingThisMonth)}
+                  <AnimatedNumber value={spendingThisMonth ?? 0} format={formatCurrency} />
                 </Text>
               </View>
               <View style={styles.cashColDivider} />
@@ -695,22 +710,52 @@ export function DashboardScreen(): React.ReactElement {
                   adjustsFontSizeToFit
                   minimumFontScale={0.75}
                 >
-                  {formatCurrency(investmentsThisMonth)}
+                  <AnimatedNumber value={investmentsThisMonth ?? 0} format={formatCurrency} />
                 </Text>
               </View>
             </View>
           </View>
         </View>
+        </Animated.View>
 
         {/* ── CONTEXTUAL HOUSEHOLD OVERVIEW ───────────────── */}
         {hasActiveHousehold && familyDashboard ? (
-          <FamilyOverviewCard
-            dashboard={familyDashboard}
-            onPressViewDetails={() => (navigation as any).navigate('Family')}
-          />
+          <Animated.View entering={enter(3)}>
+            <FamilyOverviewCard
+              dashboard={familyDashboard}
+              onPressViewDetails={() => (navigation as any).navigate('Family')}
+            />
+          </Animated.View>
         ) : null}
 
+        {/* ── SAVINGS GOALS (PIGGY BANK) ──────────────────── */}
+        <Animated.View entering={enter(3)}>
+          <PressableScale
+            style={styles.goalsCard}
+            onPress={() => (navigation as any).navigate('Goals')}
+            accessibilityLabel="Open Savings Goals"
+          >
+            <PiggyBank progress={goalsSummary.pct} from={0} size={72} />
+            <View style={{ flex: 1, gap: 4 }}>
+              <Text style={styles.cardTitle} numberOfLines={1}>Savings Goals</Text>
+              {goals.length > 0 ? (
+                <>
+                  <AnimatedNumber value={goalsSummary.saved} format={formatCurrency} style={styles.goalsSaved} numberOfLines={1} adjustsFontSizeToFit />
+                  <AnimatedBar progress={goalsSummary.pct} color={GREEN} trackColor="#F1F5F9" height={6} delay={300} />
+                  <Text style={styles.goalsMeta} numberOfLines={1}>
+                    {Math.round(goalsSummary.pct * 100)}% of {formatCurrency(goalsSummary.target)} · {goals.length} goal{goals.length === 1 ? '' : 's'}
+                  </Text>
+                </>
+              ) : (
+                <Text style={styles.goalsMeta} numberOfLines={2}>Start a goal and fill your piggy bank one deposit at a time.</Text>
+              )}
+            </View>
+            <Ionicons name="chevron-forward" size={16} color={GRAY_400} />
+          </PressableScale>
+        </Animated.View>
+
         {/* ── F. PREDICTABILITY SNAPSHOT (FUTURE OUTLOOK) ───── */}
+        <Animated.View entering={enter(4)}>
         <TouchableOpacity
           style={styles.outlookCard}
           activeOpacity={0.88}
@@ -801,8 +846,10 @@ export function DashboardScreen(): React.ReactElement {
             <Ionicons name="chevron-forward" size={14} color={BLUE} />
           </View>
         </TouchableOpacity>
+        </Animated.View>
 
         {/* ── D. SPENDING SNAPSHOT (NEEDS vs WANTS) ─────────── */}
+        <Animated.View entering={enter(5)}>
         <TouchableOpacity
           style={styles.spendingCard}
           activeOpacity={0.88}
@@ -824,13 +871,13 @@ export function DashboardScreen(): React.ReactElement {
               {/* Segmented Proportion Bar */}
               <View style={styles.segmentedTrack}>
                 {wantsNeeds.needs.pct > 0 && (
-                  <View style={[styles.segment, { width: `${wantsNeeds.needs.pct}%`, backgroundColor: GREEN }]} />
+                  <AnimatedSegment pct={wantsNeeds.needs.pct} color={GREEN} delay={0} style={styles.segment} />
                 )}
                 {wantsNeeds.wants.pct > 0 && (
-                  <View style={[styles.segment, { width: `${wantsNeeds.wants.pct}%`, backgroundColor: AMBER }]} />
+                  <AnimatedSegment pct={wantsNeeds.wants.pct} color={AMBER} delay={150} style={styles.segment} />
                 )}
                 {wantsNeeds.investments.pct > 0 && (
-                  <View style={[styles.segment, { width: `${wantsNeeds.investments.pct}%`, backgroundColor: PURPLE }]} />
+                  <AnimatedSegment pct={wantsNeeds.investments.pct} color={PURPLE} delay={300} style={styles.segment} />
                 )}
               </View>
 
@@ -888,8 +935,10 @@ export function DashboardScreen(): React.ReactElement {
             <Ionicons name="chevron-forward" size={14} color={BLUE} />
           </View>
         </TouchableOpacity>
+        </Animated.View>
 
         {/* ── E. MANAGE · ASSETS / INCOME / LIABILITIES ─────── */}
+        <Animated.View entering={enter(6)}>
         <View style={styles.manageCard}>
         {/* Assets */}
         <TouchableOpacity
@@ -1076,8 +1125,10 @@ export function DashboardScreen(): React.ReactElement {
           </View>
         </TouchableOpacity>
         </View>
+        </Animated.View>
 
         {/* ── G. SMART NEXT ACTION ─────────────────────────── */}
+        <Animated.View entering={enter(7)}>
         <TouchableOpacity
           style={styles.smartActionCard}
           activeOpacity={0.88}
@@ -1101,7 +1152,8 @@ export function DashboardScreen(): React.ReactElement {
             <Ionicons name="arrow-forward" size={14} color={BLUE} />
           </View>
         </TouchableOpacity>
-      </ScrollView>
+        </Animated.View>
+      </Animated.ScrollView>
 
       {/* Update Balance Modal */}
       <Modal
@@ -1141,6 +1193,25 @@ const styles = StyleSheet.create({
     padding: 16,
     gap: 16,
     paddingBottom: 48,
+  },
+  goalsCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: BORDER,
+  },
+  goalsSaved: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: DARK,
+  },
+  goalsMeta: {
+    fontSize: 12,
+    color: GRAY_600,
   },
 
   // Loading State

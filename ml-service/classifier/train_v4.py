@@ -38,7 +38,7 @@ from transformers import (
     TrainingArguments,
 )
 
-from classifier.category_map import JOINT_LABELS
+from classifier.category_map import ALLOWED_TYPES, JOINT_LABELS
 from classifier.normalize import clean_text
 
 logging.basicConfig(level=logging.INFO)
@@ -60,6 +60,8 @@ LABEL_CAT_IDX = np.array([CATS.index(l.split("|")[0]) for l in JOINT_LABELS])
 
 def load_split(name: str, tag: str = "v5") -> pd.DataFrame:
     df = pd.read_csv(os.path.join(DATA_DIR, f"{tag}_{name}.csv")).dropna(subset=["text", "category", "type"])
+    # Corpora written before a rubric change (e.g. Education|Investment) keep their rows under the category's default type
+    df["type"] = [t if t in ALLOWED_TYPES.get(c, [t]) else ALLOWED_TYPES[c][0] for c, t in zip(df["category"], df["type"])]
     df["label"] = (df["category"] + "|" + df["type"]).map(label2id)
     bad = df["label"].isna().sum()
     if bad:
@@ -120,6 +122,7 @@ def ensemble(members: list[str], tag: str):
     val_df = load_split("val", tag)
     clf = HybridClassifier(BASE_DIR)
     assert clf.load_v4(members), f"could not load {members}"
+    assert clf.v4_meta["labels"] == JOINT_LABELS, "members use older labels: run python3 -m evaluation.tune_review --activate instead"
     probs = np.stack([clf._classify_v4_probs(t) for t in val_df["clean"]])
     labels = val_df["label"].values
     threshold = pick_threshold(probs, labels)

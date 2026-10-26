@@ -19,6 +19,9 @@ import { useStore } from '../store/useStore';
 import { Transaction } from '../types';
 import { formatCurrency } from '../utils/format';
 import { TransactionEntryScreen } from './TransactionEntryScreen';
+import Animated, { FadeInDown, FadeOutLeft, LinearTransition } from 'react-native-reanimated';
+import { PressableScale } from '../components/motion/PressableScale';
+import { FloatingEmoji } from '../components/motion/FloatingEmoji';
 
 // ── Category definitions ───────────────────────────────────────────────────
 export const LEGACY_CATEGORY_MAP: Record<string, string> = {
@@ -305,7 +308,7 @@ export function TransactionsScreen(): React.ReactElement {
   );
 
   // ── Transaction card renderer ──────────────────────────────────────────
-  const renderItem = ({ item }: { item: Transaction }) => {
+  const renderItem = ({ item, index }: { item: Transaction; index: number }) => {
     const displayAmount = `-${formatCurrency(Math.abs(item.amount))}`;
 
     // Category emoji — lowercase lookup handles canonical ("Food") & legacy ("food")
@@ -319,6 +322,11 @@ export function TransactionsScreen(): React.ReactElement {
     const dateStr = d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
 
     return (
+      <Animated.View
+        entering={FadeInDown.delay(Math.min(index, 10) * 35).springify().damping(16)}
+        exiting={FadeOutLeft}
+        layout={LinearTransition.springify().damping(16)}
+      >
       <TouchableOpacity
         style={styles.card}
         activeOpacity={0.75}
@@ -383,13 +391,14 @@ export function TransactionsScreen(): React.ReactElement {
           </TouchableOpacity>
         </View>
       </TouchableOpacity>
+      </Animated.View>
     );
   };
 
   // ── Empty state ────────────────────────────────────────────────────────
   const renderEmptyState = () => (
     <View style={styles.emptyContainer}>
-      <Text style={styles.emptyEmoji}>🧾</Text>
+      <FloatingEmoji emoji="🧾" style={styles.emptyEmoji} />
       <Text style={styles.emptyTitle}>
         {transactions.length === 0 ? 'No transactions yet' : 'No results'}
       </Text>
@@ -491,14 +500,14 @@ export function TransactionsScreen(): React.ReactElement {
       />
 
       {/* Floating Add Button */}
-      <TouchableOpacity
+      <PressableScale
         style={styles.fab}
+        scaleTo={0.88}
         onPress={() => setShowEntry(true)}
-        activeOpacity={0.85}
         accessibilityLabel="Add new transaction"
       >
         <Ionicons name="add" size={28} color="#ffffff" />
-      </TouchableOpacity>
+      </PressableScale>
 
       {/* Transaction Entry Modal */}
       <Modal

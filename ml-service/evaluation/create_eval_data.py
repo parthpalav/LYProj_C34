@@ -13,7 +13,7 @@ eval_data = [
     # --- Short natural language ---
     {"text": "ordered dinner after college", "expected_category": "Food", "expected_type": "Want", "style": "short_nl"},
     {"text": "paid electricity bill", "expected_category": "Bills", "expected_type": "Need", "style": "short_nl"},
-    {"text": "bought textbooks for semester", "expected_category": "Education", "expected_type": "Investment", "style": "short_nl"},
+    {"text": "bought textbooks for semester", "expected_category": "Education", "expected_type": "Need", "style": "short_nl"},
     {"text": "movie with friends", "expected_category": "Entertainment", "expected_type": "Want", "style": "short_nl"},
     {"text": "monthly SIP investment", "expected_category": "Misc", "expected_type": "Investment", "style": "short_nl"},
     {"text": "got fuel for bike", "expected_category": "Travel", "expected_type": "Need", "style": "short_nl"},

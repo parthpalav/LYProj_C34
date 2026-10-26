@@ -58,6 +58,24 @@ class TestRuleFalsePositives(unittest.TestCase):
             self.assertIsNotNone(res, text)
             self.assertEqual(res["category"], cat, text)
 
+    def test_rubric_boundaries(self):
+        # (text) -> (category, type) per data/CATEGORY_RUBRIC.md; None = left to the model
+        cases = {
+            "board game cafe entry": ("Entertainment", "Want"),
+            "star sports cafe": ("Entertainment", "Want"),
+            "cafe mocha and sandwich": ("Food & Dining", "Want"),
+            "school fees": ("Education", "Need"),
+            "school van fees": ("Education", "Need"),
+            "college fees": ("Education", "Need"),
+            "irctc train ticket booking": ("Transport & Travel", "Want"),
+            "local bus pass": ("Transport & Travel", "Need"),
+            "tata play dth": ("Utilities & Bills", "Need"),
+            "bus ticket to pune": None,
+        }
+        for text, want in cases.items():
+            res = match_merchant_rule(text)
+            self.assertEqual(res and (res["category"], res["type"]), want, text)
+
 
 class TestPipelinePairs(unittest.TestCase):
     def test_category_type_pairs_valid_when_v4_loaded(self):

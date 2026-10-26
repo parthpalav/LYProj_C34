@@ -808,19 +808,19 @@ router.post('/transactions', async (req, res, next) => {
           body: JSON.stringify({ text: req.body.description || '' }),
           signal: AbortSignal.timeout(3000),
         });
-        if (resp.ok) {
-          const d = await resp.json();
-          mlData.category = d.category || null;
-          mlData.confidence = typeof d.confidence === 'number' ? d.confidence : (d.confidenceScore || 0);
-          mlData.type = d.type || 'Need';
-          mlData.confidenceScore = typeof d.confidenceScore === 'number' ? d.confidenceScore : (d.confidence || 0);
-          classificationSource = d.classificationSource || 'ml';
-          mlData.categorySource = d.categorySource || d.classificationSource || 'ml';
-          mlData.typeSource = d.typeSource || d.classificationSource || 'ml';
-          mlData.categoryConfidence = typeof d.categoryConfidence === 'number' ? d.categoryConfidence : mlData.confidence;
-          mlData.typeConfidence = typeof d.typeConfidence === 'number' ? d.typeConfidence : mlData.confidence;
-          mlData.needsReview = typeof d.needsReview === 'boolean' ? d.needsReview : false;
-        }
+        // A 5xx must take the keyword fallback below, not leave the category empty (→ Misc).
+        if (!resp.ok) throw new Error(`ML service responded ${resp.status}`);
+        const d = await resp.json();
+        mlData.category = d.category || null;
+        mlData.confidence = typeof d.confidence === 'number' ? d.confidence : (d.confidenceScore || 0);
+        mlData.type = d.type || 'Need';
+        mlData.confidenceScore = typeof d.confidenceScore === 'number' ? d.confidenceScore : (d.confidence || 0);
+        classificationSource = d.classificationSource || 'ml';
+        mlData.categorySource = d.categorySource || d.classificationSource || 'ml';
+        mlData.typeSource = d.typeSource || d.classificationSource || 'ml';
+        mlData.categoryConfidence = typeof d.categoryConfidence === 'number' ? d.categoryConfidence : mlData.confidence;
+        mlData.typeConfidence = typeof d.typeConfidence === 'number' ? d.typeConfidence : mlData.confidence;
+        mlData.needsReview = typeof d.needsReview === 'boolean' ? d.needsReview : false;
       } catch (e) {
         console.warn('[transactions] ML classify failed, using keyword fallback:', e.message || e);
         const fallback = classifyLocally(req.body.description || '');
@@ -866,10 +866,12 @@ router.post('/transactions', async (req, res, next) => {
     }
 
     // Map source and confidence metadata
-    let categorySource = req.body.categorySource || (req.body.category ? 'manual' : mlData.categorySource || 'unknown');
-    let typeSource = req.body.typeSource || (req.body.type ? 'manual' : mlData.typeSource || 'unknown');
-    let categoryConfidence = req.body.categoryConfidence !== undefined ? Number(req.body.categoryConfidence) : (req.body.category ? 1.0 : mlData.categoryConfidence || 0);
-    let typeConfidence = req.body.typeConfidence !== undefined ? Number(req.body.typeConfidence) : (req.body.type ? 1.0 : mlData.typeConfidence || 0);
+    // A category without a stated source is NOT a user correction (it may be an untouched form
+    // default), so it is tagged 'client' and never written to merchant memory.
+    let categorySource = req.body.categorySource || (req.body.category ? 'client' : mlData.categorySource || 'unknown');
+    let typeSource = req.body.typeSource || (req.body.type ? 'client' : mlData.typeSource || 'unknown');
+    let categoryConfidence = req.body.categoryConfidence !== undefined ? Number(req.body.categoryConfidence) : (req.body.category ? 0 : mlData.categoryConfidence || 0);
+    let typeConfidence = req.body.typeConfidence !== undefined ? Number(req.body.typeConfidence) : (req.body.type ? 0 : mlData.typeConfidence || 0);
     let needsReview = req.body.needsReview !== undefined ? (req.body.needsReview === true) : (req.body.category && req.body.type ? false : mlData.needsReview || false);
 
     // Validate optional liabilityId if supplied by user
@@ -1932,7 +1934,7 @@ const CATEGORY_TYPE_MAP = {
   Shopping: 'Want',
   Entertainment: 'Want',
   Health: 'Need',
-  Education: 'Investment',
+  Education: 'Need',
   'Personal Care': 'Want',
   Insurance: 'Need',
   Investments: 'Investment',

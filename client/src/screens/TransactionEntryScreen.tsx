@@ -156,6 +156,7 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
   }, [description, amount]);
 
   const parsedAmount = parseFloat(amount.replace(/[^0-9.]/g, '')) || 0;
+  const aiUnsure = !!aiResult?.needsReview && !userOverrodeCategoryRef.current;
 
   // Real-time stats
   const today = new Date().toDateString();
@@ -218,8 +219,9 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
         description: description.trim() || selectedCategory.label,
         type: selectedType,
         confidenceScore: aiResult?.confidenceScore ?? aiResult?.confidence ?? 0,
-        categorySource: userOverrodeCategoryRef.current ? 'manual' : aiResult?.categorySource,
-        typeSource: userOverrodeTypeRef.current ? 'manual' : aiResult?.typeSource,
+        // 'default' = untouched form value with no AI result; the server never learns from it
+        categorySource: userOverrodeCategoryRef.current ? 'manual' : aiResult?.categorySource ?? 'default',
+        typeSource: userOverrodeTypeRef.current ? 'manual' : aiResult?.typeSource ?? 'default',
         categoryConfidence: userOverrodeCategoryRef.current ? 1.0 : aiResult?.categoryConfidence,
         typeConfidence: userOverrodeTypeRef.current ? 1.0 : aiResult?.typeConfidence,
         needsReview: aiResult?.needsReview,
@@ -351,7 +353,9 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
                 <View style={styles.aiBadgeHeader}>
                   <Text style={styles.aiBadgeIcon}>🤖</Text>
                   <Text style={styles.aiBadgeLabel}>AI Suggestion</Text>
-                  <Text style={styles.aiAppliedText}>Auto-applied ✓</Text>
+                  <Text style={[styles.aiAppliedText, aiUnsure && { color: AMBER }]}>
+                    {userOverrodeCategoryRef.current ? 'Your pick ✓' : aiUnsure ? 'Not sure, tap the right one' : 'Auto-applied ✓'}
+                  </Text>
                 </View>
 
                 {/* Main row: Category + Sentiment */}
@@ -359,7 +363,8 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
                   <Text style={styles.aiMainCategory}>
                     {CATEGORIES.find(c => c.ml === aiResult.category)?.emoji ?? '📦'}  {aiResult.category}
                   </Text>
-                  <Text style={styles.aiConfidence}>{Math.round(aiResult.confidence * 100)}%</Text>
+                  {/* The raw % is the category share, not the score that triggers review, so show the verdict instead */}
+                  <Text style={[styles.aiConfidence, aiUnsure && { color: AMBER }]}>{aiUnsure ? 'Please check' : 'Confident'}</Text>
                 </View>
 
                 {/* Sentiment Info */}
@@ -374,11 +379,21 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
 
                 {/* Top 3 mini bars */}
                 <View style={{ marginTop: 8 }}>
-                  {Object.entries(aiResult.all_probs)
+                  {Object.entries(aiResult.all_probs ?? {})
                     .sort((a, b) => b[1] - a[1])
                     .slice(0, 3)
                     .map(([cat, prob]) => (
-                      <View key={cat} style={styles.aiBarRow}>
+                      <TouchableOpacity
+                        key={cat}
+                        style={[styles.aiBarRow, selectedCategory.ml === cat && styles.aiBarRowActive]}
+                        onPress={() => {
+                          const pick = CATEGORIES.find(c => c.ml === cat);
+                          if (pick) handleSelectCategoryManually(pick);
+                        }}
+                        accessibilityRole="button"
+                        accessibilityLabel={`Use ${cat}`}
+                        activeOpacity={0.7}
+                      >
                         <Text style={styles.aiBarLabel}>
                           {CATEGORIES.find(c => c.ml === cat)?.emoji ?? '📦'} {cat}
                         </Text>
@@ -386,7 +401,7 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
                           <View style={[styles.aiBarFill, { width: `${Math.round(prob * 100)}%` }]} />
                         </View>
                         <Text style={styles.aiBarPct}>{Math.round(prob * 100)}%</Text>
-                      </View>
+                      </TouchableOpacity>
                     ))
                   }
                 </View>
@@ -684,6 +699,7 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
 
 const BRAND_BLUE = '#3B3BDE';
 const GREEN = '#3DBE7B';
+const AMBER = '#F59E0B';
 const AI_BG = '#F0F0FF';
 const AI_BORDER = '#C7C7FF';
 
@@ -979,6 +995,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
     marginBottom: 5,
+    paddingVertical: 3,
+    paddingHorizontal: 4,
+    borderRadius: 8,
+  },
+  aiBarRowActive: {
+    backgroundColor: '#E0E7FF',
   },
   aiBarLabel: {
     fontSize: 11,

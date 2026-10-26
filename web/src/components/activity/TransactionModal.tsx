@@ -149,6 +149,24 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
         timestamp: date ? new Date(date).toISOString() : new Date().toISOString(),
         classificationSource: isEditing ? 'manual' : (userTouchedCategory ? 'manual' : (suggestion?.classificationSource || 'manual')),
       };
+      // Tell the server where the label came from: only a real user pick is learned as a merchant correction.
+      if (!isEditing) {
+        const usedSuggestion = !userTouchedCategory && suggestion?.category === category;
+        if (userTouchedCategory) {
+          Object.assign(payload, { categorySource: 'manual', typeSource: 'manual', categoryConfidence: 1, typeConfidence: 1, needsReview: false });
+        } else if (usedSuggestion && suggestion) {
+          const src = suggestion.classificationSource || 'ml';
+          Object.assign(payload, {
+            categorySource: suggestion.categorySource || src,
+            typeSource: suggestion.typeSource || src,
+            categoryConfidence: suggestion.categoryConfidence ?? suggestion.confidence ?? 0,
+            typeConfidence: suggestion.typeConfidence ?? suggestion.confidence ?? 0,
+            needsReview: Boolean(suggestion.needsReview),
+          });
+        } else {
+          Object.assign(payload, { categorySource: 'default', typeSource: 'default', categoryConfidence: 0, typeConfidence: 0 });
+        }
+      }
 
       await onSubmit(payload);
       onClose();

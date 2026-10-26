@@ -33,6 +33,7 @@ from typing import Dict, Any, Optional
 
 from classifier.rules import match_merchant_rule
 from classifier.normalize import clean_text
+from classifier.category_map import ALLOWED_TYPES
 
 log = logging.getLogger(__name__)
 
@@ -71,7 +72,7 @@ CATEGORY_TYPE_MAP: Dict[str, str] = {
     "Shopping":              "Want",
     "Entertainment":         "Want",
     "Health":                "Need",
-    "Education":             "Investment",
+    "Education":             "Need",
     "Personal Care":         "Want",
     "Insurance":             "Need",
     "Investments":           "Investment",
@@ -148,13 +149,15 @@ class HybridClassifier:
     def _classify_v4(self, cleaned: str):
         probs = self._classify_v4_probs(cleaned)
         labels = self.v4_meta["labels"]
-        best = int(probs.argmax())
-        category, spend_type = labels[best].split("|")
         cat_probs: Dict[str, float] = {}
+        joint: Dict[tuple, float] = {}
         for label, p in zip(labels, probs):
-            cat = label.split("|")[0]
+            cat, t = label.split("|")
+            if t not in ALLOWED_TYPES[cat]:  # pair dropped from the rubric since the model was trained (e.g. Education|Investment)
+                t = ALLOWED_TYPES[cat][0]
             cat_probs[cat] = cat_probs.get(cat, 0.0) + float(p)
-        joint_conf = float(probs[best])
+            joint[(cat, t)] = joint.get((cat, t), 0.0) + float(p)
+        (category, spend_type), joint_conf = max(joint.items(), key=lambda kv: kv[1])
         needs_review = joint_conf < self.v4_threshold
         all_probs = {c: round(p, 4) for c, p in cat_probs.items()}
         return category, spend_type, cat_probs[category], joint_conf, all_probs, needs_review

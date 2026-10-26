@@ -1,0 +1,302 @@
+[
+ {
+  "text": "BigBasket",
+  "type": "Need"
+ },
+ {
+  "text": "Grofers",
+  "type": "Need"
+ },
+ {
+  "text": "Swiggy Instamart",
+  "type": "Need"
+ },
+ {
+  "text": "Dmart",
+  "type": "Need"
+ },
+ {
+  "text": "Reliance Fresh",
+  "type": "Need"
+ },
+ {
+  "text": "Nearbuy",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Cliq SmartBuy",
+  "type": "Need"
+ },
+ {
+  "text": "Myntra Groceries",
+  "type": "Need"
+ },
+ {
+  "text": "Amazon Groceries",
+  "type": "Need"
+ },
+ {
+  "text": "Flipkart Groceries",
+  "type": "Need"
+ },
+ {
+  "text": "JioMart",
+  "type": "Need"
+ },
+ {
+  "text": "Postmates",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Hypermarket",
+  "type": "Need"
+ },
+ {
+  "text": "Spencers Hypermarket",
+  "type": "Need"
+ },
+ {
+  "text": "CityMall",
+  "type": "Need"
+ },
+ {
+  "text": "Mother Dairy",
+  "type": "Need"
+ },
+ {
+  "text": "Lotus Store",
+  "type": "Need"
+ },
+ {
+  "text": "Nature Fresh",
+  "type": "Need"
+ },
+ {
+  "text": "Mumbai Bazaar",
+  "type": "Need"
+ },
+ {
+  "text": "Karnataka Emporium",
+  "type": "Need"
+ },
+ {
+  "text": "Dabur",
+  "type": "Need"
+ },
+ {
+  "text": "Patanjali",
+  "type": "Need"
+ },
+ {
+  "text": "Amul",
+  "type": "Need"
+ },
+ {
+  "text": "Nestle",
+  "type": "Need"
+ },
+ {
+  "text": "Kissan",
+  "type": "Need"
+ },
+ {
+  "text": "Britannia",
+  "type": "Need"
+ },
+ {
+  "text": "Kellogg's",
+  "type": "Need"
+ },
+ {
+  "text": "Maggi",
+  "type": "Need"
+ },
+ {
+  "text": "Nescafe",
+  "type": "Need"
+ },
+ {
+  "text": "Cadbury",
+  "type": "Need"
+ },
+ {
+  "text": "Peri Peri",
+  "type": "Need"
+ },
+ {
+  "text": "Bikaner",
+  "type": "Need"
+ },
+ {
+  "text": "Sundar Chutney",
+  "type": "Need"
+ },
+ {
+  "text": "MTR",
+  "type": "Need"
+ },
+ {
+  "text": "Britannia Biscuits",
+  "type": "Need"
+ },
+ {
+  "text": "Dairy Milk",
+  "type": "Need"
+ },
+ {
+  "text": "Parle",
+  "type": "Need"
+ },
+ {
+  "text": "Bingo",
+  "type": "Want"
+ },
+ {
+  "text": "Good Day",
+  "type": "Want"
+ },
+ {
+  "text": "Lays",
+  "type": "Want"
+ },
+ {
+  "text": "Doritos",
+  "type": "Want"
+ },
+ {
+  "text": "Kettle",
+  "type": "Want"
+ },
+ {
+  "text": "Walkers",
+  "type": "Want"
+ },
+ {
+  "text": "KitKat",
+  "type": "Want"
+ },
+ {
+  "text": "Munch",
+  "type": "Want"
+ },
+ {
+  "text": "Oreo",
+  "type": "Want"
+ },
+ {
+  "text": "Perk",
+  "type": "Want"
+ },
+ {
+  "text": "Milka",
+  "type": "Want"
+ },
+ {
+  "text": "Wonder",
+  "type": "Want"
+ },
+ {
+  "text": "Bournvita",
+  "type": "Want"
+ },
+ {
+  "text": "Kissan Jam",
+  "type": "Want"
+ },
+ {
+  "text": "Peri Peri Sauce",
+  "type": "Want"
+ },
+ {
+  "text": "Tata Sampann",
+  "type": "Need"
+ },
+ {
+  "text": "Himalaya",
+  "type": "Need"
+ },
+ {
+  "text": "Patanjali Ayurved",
+  "type": "Need"
+ },
+ {
+  "text": "Godrej",
+  "type": "Need"
+ },
+ {
+  "text": "Hindustan Unilever",
+  "type": "Need"
+ },
+ {
+  "text": "Colgate",
+  "type": "Need"
+ },
+ {
+  "text": "Ponds",
+  "type": "Need"
+ },
+ {
+  "text": "Fair & Lovely",
+  "type": "Need"
+ },
+ {
+  "text": "Dove",
+  "type": "Need"
+ },
+ {
+  "text": "Lakme",
+  "type": "Need"
+ },
+ {
+  "text": "Lux",
+  "type": "Need"
+ },
+ {
+  "text": "Lux Soap",
+  "type": "Need"
+ },
+ {
+  "text": "Vim",
+  "type": "Need"
+ },
+ {
+  "text": "Tide",
+  "type": "Need"
+ },
+ {
+  "text": "Surf Excel",
+  "type": "Need"
+ },
+ {
+  "text": "Wheel",
+  "type": "Need"
+ },
+ {
+  "text": "Ariel",
+  "type": "Need"
+ },
+ {
+  "text": "Whisper",
+  "type": "Need"
+ },
+ {
+  "text": "Lotus",
+  "type": "Need"
+ },
+ {
+  "text": "Lipton",
+  "type": "Need"
+ },
+ {
+  "text": "Red Label",
+  "type": "Need"
+ },
+ {
+  "text": "Brooke Bond",
+  "type": "Need"
+ },
+ {
+  "text": "PG Tips",
+  "type": "Need"
+ }
+]

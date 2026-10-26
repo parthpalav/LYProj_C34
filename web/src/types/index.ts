@@ -446,6 +446,8 @@ export interface ClassifierSuggestion {
   typeConfidence?: number;
   needsReview?: boolean;
   classificationSource?: string;
+  categorySource?: string;
+  typeSource?: string;
   sentiment?: string;
   sentiment_label?: string;
 }

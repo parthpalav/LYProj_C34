@@ -12,6 +12,7 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   Keyboard,
+  ScrollView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { getTransactions, updateTransaction, deleteTransaction } from '../services/api';
@@ -155,6 +156,8 @@ export function TransactionsScreen(): React.ReactElement {
   const [editTx, setEditTx] = useState<Transaction | null>(null);
   const [editAmount, setEditAmount] = useState('');
   const [editDesc, setEditDesc] = useState('');
+  const [editCategory, setEditCategory] = useState('');
+  const [editType, setEditType] = useState<'Need' | 'Want' | 'Investment'>('Need');
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [overflowTx, setOverflowTx] = useState<Transaction | null>(null);
 
@@ -226,6 +229,8 @@ export function TransactionsScreen(): React.ReactElement {
     setEditTx(tx);
     setEditAmount(String(Math.abs(tx.amount)));
     setEditDesc(tx.description || '');
+    setEditCategory(CATEGORIES.find(c => c.label.toLowerCase() === (tx.category || '').toLowerCase())?.label ?? tx.category);
+    setEditType(tx.type ?? 'Need');
   };
 
   const submitEdit = async () => {
@@ -236,9 +241,13 @@ export function TransactionsScreen(): React.ReactElement {
       return;
     }
     try {
+      // Only send a changed label: the server treats it as a user correction and remembers the merchant
+      const categoryChanged = editCategory.toLowerCase() !== (editTx.category || '').toLowerCase();
+      const typeChanged = editType !== editTx.type;
       await updateTransaction(editTx.id, {
         amount: parsedAmt,
         description: editDesc,
+        ...(categoryChanged || typeChanged ? { category: editCategory, type: editType } : {}),
       });
       setEditTx(null);
       fetchTransactions();
@@ -663,6 +672,36 @@ export function TransactionsScreen(): React.ReactElement {
                 onChangeText={setEditDesc}
               />
 
+              <Text style={styles.label}>Category</Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.editChips} keyboardShouldPersistTaps="handled">
+                {CATEGORIES.map(c => (
+                  <TouchableOpacity
+                    key={c.key}
+                    onPress={() => setEditCategory(c.label)}
+                    style={[styles.editChip, editCategory === c.label && styles.editChipActive]}
+                    accessibilityRole="button"
+                    accessibilityState={{ selected: editCategory === c.label }}
+                  >
+                    <Text style={[styles.editChipText, editCategory === c.label && styles.editChipTextActive]}>{c.emoji} {c.label}</Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+
+              <Text style={styles.label}>Type</Text>
+              <View style={[styles.editChips, { flexDirection: 'row' }]}>
+                {(['Need', 'Want', 'Investment'] as const).map(t => (
+                  <TouchableOpacity
+                    key={t}
+                    onPress={() => setEditType(t)}
+                    style={[styles.editChip, editType === t && styles.editChipActive]}
+                    accessibilityRole="button"
+                    accessibilityState={{ selected: editType === t }}
+                  >
+                    <Text style={[styles.editChipText, editType === t && styles.editChipTextActive]}>{t}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
               <View style={styles.editActions}>
                 <TouchableOpacity
                   onPress={() => setEditTx(null)}
@@ -1068,5 +1107,10 @@ const styles = StyleSheet.create({
   label: { fontSize: 12, fontWeight: '600', color: '#64748B', marginBottom: 4 },
   input: { borderWidth: 1, borderColor: '#E2E8F0', borderRadius: 8, padding: 12, marginBottom: 16, fontSize: 16 },
   editActions: { flexDirection: 'row', gap: 12, marginTop: 8 },
+  editChips: { marginBottom: 16, flexGrow: 0 },
+  editChip: { paddingVertical: 8, paddingHorizontal: 12, borderRadius: 999, borderWidth: 1, borderColor: '#E2E8F0', marginRight: 8 },
+  editChipActive: { backgroundColor: '#2563EB', borderColor: '#2563EB' },
+  editChipText: { fontSize: 13, color: '#475569', fontWeight: '600' },
+  editChipTextActive: { color: '#fff' },
   editBtn: { flex: 1, padding: 14, borderRadius: 8, alignItems: 'center' },
 });

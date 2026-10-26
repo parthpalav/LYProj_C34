@@ -31,12 +31,12 @@ _RULE_DEFINITIONS: List[Tuple[str, str, str, float]] = [
 
     # ── 2. Transport & Travel ────────────────────────────────────────────────
     # Public transit / essential commute (Need)
-    (r"\b(mumbai\s*metro|delhi\s*metro|bangalore\s*metro|namma\s*metro|metro\s*(card|recharge|pass|station|travel)|local\s*train|irctc|train\s*(ticket|ticket\s*booking|pass|commute)|bus\s*(pass|ticket|fare|travel)|railway\s*(pass|ticket)|public\s*transport|auto\s*fare|petrol(\s*pump|\s*refill|\s*bunk)?|diesel(\s*fuel)?|cng\s*fuel|fastag(\s*toll|\s*debit|\s*payment)?|highway\s*toll)\b", "Transport & Travel", "Need", 0.96),
+    (r"\b(mumbai\s*metro|delhi\s*metro|bangalore\s*metro|namma\s*metro|metro\s*(card|recharge|pass|station|travel)|local\s*train|train\s*(pass|commute)|bus\s*(pass|fare)|railway\s*pass|public\s*transport|auto\s*fare|petrol(\s*pump|\s*refill|\s*bunk)?|diesel(\s*fuel)?|cng\s*fuel|fastag(\s*toll|\s*debit|\s*payment)?|highway\s*toll)\b", "Transport & Travel", "Need", 0.96),
     # Cabs / rideshare / flights / vacations (Want)
-    (r"\b(uber|ola(\s*cabs?|\s*ride)?|rapido|blusmart|taxi(\s*fare|\s*ride|\s*home)?|cab(\s*booking|\s*ride)?|indigo\s*airlines?|air\s*india|spicejet|vistara|flight(\s*ticket|\s*booking)?|makemytrip|cleartrip|goibibo|hotel\s*booking|airbnb|oyo\s*rooms?|booking\.com|redbus|zoomcar)\b", "Transport & Travel", "Want", 0.95),
+    (r"\b(uber|ola(\s*cabs?|\s*ride)?|rapido|blusmart|taxi(\s*fare|\s*ride|\s*home)?|cab(\s*booking|\s*ride)?|indigo\s*airlines?|air\s*india|spicejet|vistara|flight(\s*ticket|\s*booking)?|makemytrip|cleartrip|goibibo|hotel\s*booking|airbnb|oyo\s*rooms?|booking\.com|redbus|zoomcar|irctc|intercity|outstation)\b", "Transport & Travel", "Want", 0.95),
 
     # ── 3. Food & Dining Out (Want) ───────────────────────────────────────────
-    (r"\b(zomato|swiggy|mcdonalds?|dominos?|pizza\s*hut|starbucks|kfc|burger\s*king|subway|haldirams?|behrouz\s*biryani|faasos|ovenstory|barbeque\s*nation|chaayos|chai\s*point|pizza|burgers?|restaurant|cafe|dining\s*out|eating\s*out|lunch\s*(order|with\s*team)|dinner\s*(order|with\s*friends)|swiggy\s*dinner|zomato\s*lunch|food\s*delivery|buffet|dhaba|baskin\s*robbins|theobroma)\b", "Food & Dining", "Want", 0.95),
+    (r"\b(zomato|swiggy|mcdonalds?|dominos?|pizza\s*hut|starbucks|kfc|burger\s*king|subway|haldirams?|behrouz\s*biryani|faasos|ovenstory|barbeque\s*nation|chaayos|chai\s*point|pizza|burgers?|restaurant|(?<!game )(?<!gaming )(?<!sports )cafe|dining\s*out|eating\s*out|lunch\s*(order|with\s*team)|dinner\s*(order|with\s*friends)|swiggy\s*dinner|zomato\s*lunch|food\s*delivery|buffet|dhaba|baskin\s*robbins|theobroma)\b", "Food & Dining", "Want", 0.95),
 
     # ── 4. Housing & Living Costs (Need) ──────────────────────────────────────
     (r"\b(house\s*rent|apartment\s*rent|flat\s*rent|rent\s*payment|room\s*rent|society\s*maintenance|building\s*maintenance|residential\s*maintenance|housing\s*society|property\s*tax|house\s*tax|plumber(\s*charges|\s*service|\s*repair)?|electrician(\s*charges|\s*work)?|carpenter(\s*charges|\s*work)?|pest\s*control|house\s*painting|water\s*tank\s*cleaning|maid\s*salary|cook\s*salary|(home|house)\s*equity|equity\s*in\s*(my\s*)?(home|house|flat))\b", "Housing", "Need", 0.96),
@@ -56,8 +56,8 @@ _RULE_DEFINITIONS: List[Tuple[str, str, str, float]] = [
     # ── 9. Healthcare & Medical (Need) ────────────────────────────────────────
     (r"\b(apollo\s*pharmacy|pharmacy|medplus|tata\s*1mg|1mg|netmeds|pharmeasy|hospital(\s*charges|\s*bill)?|clinic|doctor\s*(fee|consultation|visit)|dentist|dental\s*clinic|diagnostic\s*lab|pathology|dr\s*lal\s*pathlabs|metropolis\s*healthcare|thyrocare|medicines?|(paracetamol|crocin|dolo|medicine)\s*tablets?|tablets?\s*strip|blood\s*test|mri\s*scan|ct\s*scan|x\s*ray|ultrasound|physiotherapy|psychiatrist|counselling|health\s*checkup)\b", "Health", "Need", 0.96),
 
-    # ── 10. Education & Skill Building (Investment) ───────────────────────────
-    (r"\b(coursera|udemy|edx|skillshare|unacademy|byjus?|physics\s*wallah|upgrad|tuition\s*fees?|(college|university)\s*tuition|coaching\s*fees?|college\s*fees?|school\s*fees?|university\s*fees?|semester\s*fees?|exam\s*fees?|gate\s*exam|cat\s*exam|ielts|toefl|gre\s*exam|gmat|ca\s*foundation|cfa\s*exam|aws\s*certification|textbooks?|educational\s*books?)\b", "Education", "Investment", 0.95),
+    # ── 10. Education (Need: Investment is only for financial assets) ─────────
+    (r"\b(coursera|udemy|edx|skillshare|unacademy|byjus?|physics\s*wallah|upgrad|tuition\s*fees?|(college|university)\s*tuition|coaching\s*fees?|college\s*fees?|school\s*(fees?|books?|van|bus\s*fees?)|kids?\s*(tuition|stationery)|home\s*tuition|university\s*fees?|semester\s*fees?|exam\s*fees?|gate\s*exam|cat\s*exam|ielts|toefl|gre\s*exam|gmat|ca\s*foundation|cfa\s*exam|aws\s*certification|textbooks?|educational\s*books?)\b", "Education", "Need", 0.95),
 
     # ── 11. Investments & Wealth Building (Investment) ────────────────────────
     # A. Dedicated Brokers & Investment Platforms
@@ -73,7 +73,7 @@ _RULE_DEFINITIONS: List[Tuple[str, str, str, float]] = [
     (r"\b(ppf(\s*deposit|\s*contribution|\s*transfer|\s*account)?|nps(\s*contribution|\s*tier\s*[12]|\s*deposit)?|epf(\s*contribution|\s*transfer)?|provident\s*fund|sovereign\s*gold\s*bond(s)?|sgb|treasury\s*bills?|t\s*bills?|((government|govt|corporate|rbi|treasury|tax\s*saving)\s*bonds?|bonds?\s*(investment|purchase|yield|portfolio))|securities\s*(investment|purchase|holding|trading))\b", "Investments", "Investment", 0.98),
 
     # ── 12. Entertainment & Leisure (Want) ────────────────────────────────────
-    (r"\b(netflix|spotify|hotstar|disney\+?(\s*hotstar)?|prime\s*video|amazon\s*prime|apple\s*music|youtube\s*premium|sony\s*liv|zee5|pvr(\s*cinemas)?|inox|cinepolis|bookmyshow|playstation|steam\s*games?|xbox|movie\s*tickets?|gaming\s*(subscription|pass|credits?|zone|cafe)|concert|standup\s*comedy|theatre\s*drama|nightclub|pub|brewery|cocktail\s*bar|party\s*(venue|drinks?|celebration)|bachelor\s*party|birthday\s*party|anniversary\s*party|clubbing)\b", "Entertainment", "Want", 0.96),
+    (r"\b(netflix|spotify|hotstar|disney\+?(\s*hotstar)?|prime\s*video|amazon\s*prime|apple\s*music|youtube\s*premium|sony\s*liv|zee5|pvr(\s*cinemas)?|inox|cinepolis|bookmyshow|playstation|steam\s*games?|xbox|movie\s*tickets?|gaming\s*(subscription|pass|credits?|zone|cafe)|board\s*game\s*cafe|sports\s*(cafe|bar)|concert|standup\s*comedy|theatre\s*drama|nightclub|pub|brewery|cocktail\s*bar|party\s*(venue|drinks?|celebration)|bachelor\s*party|birthday\s*party|anniversary\s*party|clubbing)\b", "Entertainment", "Want", 0.96),
 
     # ── 13. Shopping & Discretionary Goods (Want) ─────────────────────────────
     (r"\b(myntra|ajio|zara|h&m|uniqlo|flipkart|meesho|tata\s*cliq|decathlon|croma|reliance\s*digital|vijay\s*sales|ikea|pepperfry|urban\s*ladder|luxury\s*watch|jewellery|tanishq|kalyan\s*jewellers|caratlane|apple\s*store|amazon\s*(impulse|purchase|order|shopping)?|shopping|clothes|shoes|sneakers|handbag|luggage|furniture)\b", "Shopping", "Want", 0.92),

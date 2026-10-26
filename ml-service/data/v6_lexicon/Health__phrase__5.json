@@ -1,0 +1,214 @@
+[
+ {
+  "text": "doctor visit",
+  "type": "Need"
+ },
+ {
+  "text": "hospital bill",
+  "type": "Need"
+ },
+ {
+  "text": "meds online",
+  "type": "Need"
+ },
+ {
+  "text": "diagnostic test",
+  "type": "Need"
+ },
+ {
+  "text": "tooth extraction",
+  "type": "Need"
+ },
+ {
+  "text": "medicines",
+  "type": "Need"
+ },
+ {
+  "text": "dentist fees",
+  "type": "Need"
+ },
+ {
+  "text": "x-ray charges",
+  "type": "Need"
+ },
+ {
+  "text": "blood test",
+  "type": "Need"
+ },
+ {
+  "text": "eye check up",
+  "type": "Need"
+ },
+ {
+  "text": "vitamins",
+  "type": "Want"
+ },
+ {
+  "text": "gym membership",
+  "type": "Want"
+ },
+ {
+  "text": "yoga class",
+  "type": "Want"
+ },
+ {
+  "text": "fitness class",
+  "type": "Want"
+ },
+ {
+  "text": "protein powder",
+  "type": "Want"
+ },
+ {
+  "text": "health supplement",
+  "type": "Want"
+ },
+ {
+  "text": "sports massage",
+  "type": "Want"
+ },
+ {
+  "text": "acupuncture",
+  "type": "Need"
+ },
+ {
+  "text": "herbal tea",
+  "type": "Need"
+ },
+ {
+  "text": "doodh",
+  "type": "Need"
+ },
+ {
+  "text": "sabzi wala for veggies",
+  "type": "Need"
+ },
+ {
+  "text": "surgical mask",
+  "type": "Need"
+ },
+ {
+  "text": "chai sutta",
+  "type": "Need"
+ },
+ {
+  "text": "prescription medicine",
+  "type": "Need"
+ },
+ {
+  "text": "medicare card payment",
+  "type": "Need"
+ },
+ {
+  "text": "homeopathy treatment",
+  "type": "Need"
+ },
+ {
+  "text": "orthodontist visit",
+  "type": "Need"
+ },
+ {
+  "text": "health card renewal",
+  "type": "Need"
+ },
+ {
+  "text": "medicines online",
+  "type": "Need"
+ },
+ {
+  "text": "healthcare plan",
+  "type": "Need"
+ },
+ {
+  "text": "dental implant",
+  "type": "Need"
+ },
+ {
+  "text": "health tonic",
+  "type": "Want"
+ },
+ {
+  "text": "fitness tracker",
+  "type": "Want"
+ },
+ {
+  "text": "workout gear",
+  "type": "Want"
+ },
+ {
+  "text": "personal trainer",
+  "type": "Want"
+ },
+ {
+  "text": "fitness challenge",
+  "type": "Want"
+ },
+ {
+  "text": "health consultation",
+  "type": "Need"
+ },
+ {
+  "text": "vaccination",
+  "type": "Need"
+ },
+ {
+  "text": "lab fees",
+  "type": "Need"
+ },
+ {
+  "text": "physical therapy",
+  "type": "Need"
+ },
+ {
+  "text": "health food",
+  "type": "Want"
+ },
+ {
+  "text": "medicine delivery",
+  "type": "Need"
+ },
+ {
+  "text": "medical aid",
+  "type": "Need"
+ },
+ {
+  "text": "medicine refill",
+  "type": "Need"
+ },
+ {
+  "text": "diabetes check",
+  "type": "Need"
+ },
+ {
+  "text": "health insurance",
+  "type": "Need"
+ },
+ {
+  "text": "health card",
+  "type": "Need"
+ },
+ {
+  "text": "blood donation",
+  "type": "Need"
+ },
+ {
+  "text": "health camp",
+  "type": "Need"
+ },
+ {
+  "text": "fitness band",
+  "type": "Want"
+ },
+ {
+  "text": "fitness challenge",
+  "type": "Want"
+ },
+ {
+  "text": "health checkup",
+  "type": "Need"
+ },
+ {
+  "text": "gym wear",
+  "type": "Want"
+ }
+]

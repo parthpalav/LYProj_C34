@@ -18,11 +18,13 @@ Run:
     cd ml-service && python3 -m evaluation.evaluate_v4
 Outputs:
     ../research/results/classifier_v5_eval.{json,md}
+    (--candidate DIR: ../research/results/classifier_<its data tag>_eval.{json,md})
 """
 
 import os
 import json
 import time
+import argparse
 import logging
 
 import numpy as np
@@ -105,12 +107,22 @@ def evaluate(clf: HybridClassifier, df: pd.DataFrame) -> dict:
 
 
 def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--candidate", metavar="MODEL_DIR", help="also score this trained model dir (e.g. finaura-v6-bge-base-en-v1.5) "
+                    "as column 'candidate'; the report is then written as classifier_<tag>_eval")
+    args = ap.parse_args()
     pipelines = {"legacy": legacy_pipeline(), "v4": HybridClassifier(BASE_DIR)}
     if not pipelines["v4"].load_v4(["finaura-v4"]):
         raise SystemExit("models/finaura-v4 missing: run python3 -m classifier.train_v4 first")
     if os.path.exists(os.path.join(BASE_DIR, "models", "active_model.json")):
         pipelines["v5"] = HybridClassifier(BASE_DIR)
         pipelines["v5"].load_v4()
+    out_name = "classifier_v5_eval"
+    if args.candidate:
+        pipelines["candidate"] = HybridClassifier(BASE_DIR)
+        if not pipelines["candidate"].load_v4([args.candidate]):
+            raise SystemExit(f"models/{args.candidate} failed to load")
+        out_name = f"classifier_{json.load(open(os.path.join(BASE_DIR, 'models', args.candidate, 'v4_meta.json')))['data_tag']}_eval"
     names = list(pipelines)
 
     results = {}
@@ -119,7 +131,7 @@ def main():
         results[set_name] = {name: evaluate(clf, df) for name, clf in runs.items()}
 
     os.makedirs(RESULTS_DIR, exist_ok=True)
-    with open(os.path.join(RESULTS_DIR, "classifier_v5_eval.json"), "w") as f:
+    with open(os.path.join(RESULTS_DIR, f"{out_name}.json"), "w") as f:
         json.dump(results, f, indent=2)
 
     metrics = ["category_accuracy", "category_macro_f1", "type_accuracy", "joint_accuracy",
@@ -127,7 +139,8 @@ def main():
     members = json.load(open(os.path.join(BASE_DIR, "models", "active_model.json")))["members"] if "v5" in names else []
     lines = ["# Classifier v5 evaluation", "",
              "Legacy = rules + TF-IDF category + MiniLM type head. v4 = rules + finaura-v4."
-             + (f" v5 = rules + ensemble {members}." if members else ""),
+             + (f" v5 = rules + ensemble {members}." if members else "")
+             + (f" candidate = rules + {args.candidate}." if args.candidate else ""),
              "All share the current rules.py. On sets b/b0 the legacy TF-IDF is refit on the same 80% human split.", ""]
     best = names[-1]
     for set_name, res in results.items():
@@ -143,7 +156,7 @@ def main():
         lines += [f"- `{e['text']}` expected {e['expected']}, got {e['got']} ({e['source']})" for e in res[best]["errors"]]
         lines.append("")
     report = "\n".join(lines)
-    with open(os.path.join(RESULTS_DIR, "classifier_v5_eval.md"), "w") as f:
+    with open(os.path.join(RESULTS_DIR, f"{out_name}.md"), "w") as f:
         f.write(report)
     print(report)
 

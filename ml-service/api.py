@@ -264,7 +264,7 @@ _CATEGORY_TYPE: dict[str, str] = {
     "Groceries": "Need",
     "Health": "Need",
     "Party": "Want",
-    "Education": "Investment",
+    "Education": "Need",
     "Misc": "Need",
 }
 

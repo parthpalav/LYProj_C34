@@ -61,7 +61,7 @@ CATEGORY_GUIDE = {
     "Shopping": "clothes, footwear, electronics, gadgets, furniture, home decor, gifts, e-commerce orders, jewellery. Want mostly; Need for essentials like school uniform or a work laptop repair.",
     "Entertainment": "OTT subscriptions, movies, concerts, gaming, pubs, bars, alcohol, cigarettes, events, amusement parks. Always Want.",
     "Health": "pharmacies, hospitals, doctors, diagnostics, dentists, medicines. Need; Want for gym, fitness classes, supplements, protein powder.",
-    "Education": "school/college fees, coaching, online courses, books, exam fees, certifications. Investment for skill-building/courses/degrees; Need for school fees, school van, stationery for kids.",
+    "Education": "school/college fees, coaching, online courses, books, exam fees, certifications. Always Need.",
     "Personal Care": "salons, barbers, spa, cosmetics, skincare, grooming products. Want; Need for basic toiletries like toothpaste, soap, sanitary pads.",
     "Insurance": "health, life, term, motor, travel insurance premiums and insurers. Always Need.",
     "Investments": "brokers, mutual funds, SIPs, stocks, ETFs, PPF, NPS, FDs, RDs, gold bonds, digital gold. Always Investment.",
@@ -114,6 +114,19 @@ FOCI = {
                "spends that are easy to confuse with another category, placed correctly by the labelling rules"],
 }
 
+# Extra phrase batches for one category only, aimed at the pairs v5 confused most
+# (research/results/classifier_v5_eval.md). They get new cache indexes, so older batches are reused.
+BOUNDARY_FOCI = {
+    "Food & Dining": ["ready-to-eat buys from bakeries, sweet shops, juice and chai stalls, plus office canteen, hostel mess and tiffin"],
+    "Groceries": ["raw ingredients, packaged staples and snacks bought for home, not meals eaten out"],
+    "Entertainment": ["bars, pubs, sports bars, gaming and board-game cafes and events, where the spend is the outing, not the food"],
+    "Housing": ["home repairs and services: plumber, electrician, carpenter, pest control, society maintenance, domestic help"],
+    "Utilities & Bills": ["software, SaaS and AI-tool subscriptions (Notion, Canva, ChatGPT), cloud storage, piped gas and DTH"],
+    "Debt & Loan Payments": ["BNPL and pay-later dues (Slice, Simpl, LazyPay, ZestMoney), card bills and EMIs, even for a product"],
+    "Misc": ["transfers to friends and family, splitting a bill, cash withdrawal, fines, tips and donations"],
+    "Transport & Travel": ["intercity bus and train tickets versus daily commute, and vehicle parts, tyres, helmets, car wash"],
+}
+
 VERIFY_SCHEMA = {
     "type": "object",
     "properties": {
@@ -160,6 +173,8 @@ def build_lexicon(model: str, n: int) -> pd.DataFrame:
     for category in FINAURA_CATEGORIES:
         for kind, foci in FOCI.items():
             seen: set[str] = set()
+            if kind == "phrase":
+                foci = foci + BOUNDARY_FOCI.get(category, [])
             for b, focus in enumerate(foci):
                 path = os.path.join(LEXICON_DIR, f"{category.replace(' ', '_').replace('&', 'and')}__{kind}__{b}.json")
                 if os.path.exists(path):
@@ -186,7 +201,7 @@ def build_lexicon(model: str, n: int) -> pd.DataFrame:
                         spend_type = ALLOWED_TYPES[category][0]  # LLM picked a type invalid for this category
                     seen.add(text.lower())
                     rows.append({"text": text, "category": category, "type": spend_type, "kind": kind})
-    if failed:  # verification caches are keyed by lexicon position, so never verify a partial lexicon
+    if failed:  # never build the corpus from a partial lexicon
         raise SystemExit(f"{failed} generation batches failed; re-run the same command to retry only those")
     lex = pd.DataFrame(rows)
     # Same string generated under two categories is ambiguous: drop it rather than teach noise.
@@ -201,39 +216,44 @@ def verify_lexicon(lex: pd.DataFrame, verifiers: list[str]) -> pd.DataFrame:
     failed = 0
     for model in verifiers:  # one model at a time: Ollama keeps only one large model in 16 GB
         slug = re.sub(r"[^a-z0-9]+", "-", model.lower())
-        for start in range(0, len(lex), VERIFY_BATCH):
-            path = os.path.join(LEXICON_DIR, f"verify__{slug}__{start:05d}.json")
-            chunk = lex.iloc[start:start + VERIFY_BATCH]
-            if os.path.exists(path):
-                labels = json.load(open(path))
-            else:
-                def ask(part: pd.DataFrame) -> list:
-                    items = "\n".join(f"{i}. {t}" for i, t in zip(part.index, part["text"]))
-                    prompt = (
-                        "You label expenses for an Indian personal finance app. Categories:\n"
-                        f"{guide}\n\nLabelling rules (these win over the list above):\n{RUBRIC}\n\n"
-                        "For each numbered item below (a merchant name or a short expense note), give its "
-                        "category and type (Need, Want or Investment) following the rules exactly. Reply as JSON with one "
-                        f"label for every item, using the item number as i.\n\n{items}"
-                    )
-                    return _ollama(prompt, model, VERIFY_SCHEMA, "labels", temperature=0.0)
+        # Keyed by item text, not position, so adding lexicon items only verifies the new ones.
+        cache_path = os.path.join(LEXICON_DIR, f"verify__{slug}.json")
+        cache = json.load(open(cache_path)) if os.path.exists(cache_path) else {}
+        todo = [i for i, t in zip(lex.index, lex["text"]) if t not in cache]
 
-                print(f"[VERIFY {model}] items {start}-{start + len(chunk) - 1} of {len(lex)} ...", flush=True)
+        def ask(part: pd.DataFrame) -> list:
+            items = "\n".join(f"{i}. {t}" for i, t in zip(part.index, part["text"]))
+            prompt = (
+                "You label expenses for an Indian personal finance app. Categories:\n"
+                f"{guide}\n\nLabelling rules (these win over the list above):\n{RUBRIC}\n\n"
+                "For each numbered item below (a merchant name or a short expense note), give its "
+                "category and type (Need, Want or Investment) following the rules exactly. Reply as JSON with one "
+                f"label for every item, using the item number as i.\n\n{items}"
+            )
+            return _ollama(prompt, model, VERIFY_SCHEMA, "labels", temperature=0.0)
+
+        for start in range(0, len(todo), VERIFY_BATCH):
+            chunk = lex.loc[todo[start:start + VERIFY_BATCH]]
+            print(f"[VERIFY {model}] new items {start}-{start + len(chunk) - 1} of {len(todo)} ...", flush=True)
+            try:
+                labels = ask(chunk)
+            except Exception as e:
+                # temperature 0 repeats the same broken reply, so retry in smaller pieces instead
+                print(f"   ! {e} — retrying in pieces of 10", flush=True)
                 try:
-                    labels = ask(chunk)
-                except Exception as e:
-                    # temperature 0 repeats the same broken reply, so retry in smaller pieces instead
-                    print(f"   ! {e} — retrying in pieces of 10", flush=True)
-                    try:
-                        labels = [lab for k in range(0, len(chunk), 10) for lab in ask(chunk.iloc[k:k + 10])]
-                    except Exception as e:  # rerun retries only the missing batches
-                        print(f"   ! failed: {e}")
-                        failed += 1
-                        continue
-                json.dump(labels, open(path, "w"), indent=1)
+                    labels = [lab for k in range(0, len(chunk), 10) for lab in ask(chunk.iloc[k:k + 10])]
+                except Exception as e:  # rerun retries only the missing items
+                    print(f"   ! failed: {e}")
+                    failed += 1
+                    continue
             for lab in labels:
-                if int(lab.get("i", -1)) in votes and start <= int(lab["i"]) < start + VERIFY_BATCH:
-                    votes[int(lab["i"])].append(lab)
+                i = int(lab.get("i", -1))
+                if i in chunk.index:
+                    cache[chunk.at[i, "text"]] = {"category": lab.get("category"), "type": lab.get("type")}
+            json.dump(cache, open(cache_path, "w"), indent=1, ensure_ascii=False)
+        for i, t in zip(lex.index, lex["text"]):
+            if t in cache:
+                votes[i].append(cache[t])
     if failed:  # a missing vote would silently drop its items
         raise SystemExit(f"{failed} verification batches failed; re-run the same command to retry only those")
     keep = []

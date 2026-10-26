@@ -1,0 +1,434 @@
+[
+ {
+  "text": "Bajaj Electricals",
+  "type": "Need"
+ },
+ {
+  "text": "CNG Corp",
+  "type": "Need"
+ },
+ {
+  "text": "Delhi Jal Board",
+  "type": "Need"
+ },
+ {
+  "text": "Discom",
+  "type": "Need"
+ },
+ {
+  "text": "Docomo",
+  "type": "Need"
+ },
+ {
+  "text": "GAIL",
+  "type": "Need"
+ },
+ {
+  "text": "Gas India",
+  "type": "Need"
+ },
+ {
+  "text": "Gujarat Gas",
+  "type": "Need"
+ },
+ {
+  "text": "Gujarat Gas Company",
+  "type": "Need"
+ },
+ {
+  "text": "Gujarat Gas Company Limited",
+  "type": "Need"
+ },
+ {
+  "text": "Gujarat Gas Distribution",
+  "type": "Need"
+ },
+ {
+  "text": "Gujarat Pipelines",
+  "type": "Need"
+ },
+ {
+  "text": "Gujarat State Petroleum Corp",
+  "type": "Need"
+ },
+ {
+  "text": "Havells",
+  "type": "Need"
+ },
+ {
+  "text": "HDFC Bank",
+  "type": "Need"
+ },
+ {
+  "text": "Hero Gas",
+  "type": "Need"
+ },
+ {
+  "text": "HPL",
+  "type": "Need"
+ },
+ {
+  "text": "Indian Oil",
+  "type": "Need"
+ },
+ {
+  "text": "Indus Towers",
+  "type": "Need"
+ },
+ {
+  "text": "Itron",
+  "type": "Need"
+ },
+ {
+  "text": "JBM Auto",
+  "type": "Need"
+ },
+ {
+  "text": "JSW Gas",
+  "type": "Need"
+ },
+ {
+  "text": "Kamani Tubes",
+  "type": "Need"
+ },
+ {
+  "text": "Kapil Tubes",
+  "type": "Need"
+ },
+ {
+  "text": "Kedia Tubes",
+  "type": "Need"
+ },
+ {
+  "text": "Kurita",
+  "type": "Need"
+ },
+ {
+  "text": "L&T",
+  "type": "Need"
+ },
+ {
+  "text": "Mahindra Lifespace",
+  "type": "Need"
+ },
+ {
+  "text": "Mukand",
+  "type": "Need"
+ },
+ {
+  "text": "Mundra Port",
+  "type": "Need"
+ },
+ {
+  "text": "NTPC",
+  "type": "Need"
+ },
+ {
+  "text": "ONGC",
+  "type": "Need"
+ },
+ {
+  "text": "Power Grid Corp",
+  "type": "Need"
+ },
+ {
+  "text": "RBL Bank",
+  "type": "Need"
+ },
+ {
+  "text": "Reliance Infra",
+  "type": "Need"
+ },
+ {
+  "text": "Shriram EPC",
+  "type": "Need"
+ },
+ {
+  "text": "Steel Authority of India",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Power",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Steel",
+  "type": "Need"
+ },
+ {
+  "text": "TCS",
+  "type": "Need"
+ },
+ {
+  "text": "Tech Mahindra",
+  "type": "Need"
+ },
+ {
+  "text": "Titan",
+  "type": "Need"
+ },
+ {
+  "text": "Turbocor",
+  "type": "Need"
+ },
+ {
+  "text": "UltraTech Cement",
+  "type": "Need"
+ },
+ {
+  "text": "Vedanta",
+  "type": "Need"
+ },
+ {
+  "text": "Vijay Pipes",
+  "type": "Need"
+ },
+ {
+  "text": "Vishakha Pipes",
+  "type": "Need"
+ },
+ {
+  "text": "Welspun India",
+  "type": "Need"
+ },
+ {
+  "text": "ABB",
+  "type": "Need"
+ },
+ {
+  "text": "Adani Gas",
+  "type": "Need"
+ },
+ {
+  "text": "Aggreko",
+  "type": "Need"
+ },
+ {
+  "text": "Aker",
+  "type": "Need"
+ },
+ {
+  "text": "Aliaxis",
+  "type": "Need"
+ },
+ {
+  "text": "Ampco Pumps",
+  "type": "Need"
+ },
+ {
+  "text": "Anmol Pipes",
+  "type": "Need"
+ },
+ {
+  "text": "Andritz",
+  "type": "Need"
+ },
+ {
+  "text": "Ankush Pipes",
+  "type": "Need"
+ },
+ {
+  "text": "Apna Gas",
+  "type": "Need"
+ },
+ {
+  "text": "Bajaj Auto",
+  "type": "Need"
+ },
+ {
+  "text": "Bosch",
+  "type": "Need"
+ },
+ {
+  "text": "Crompton Greaves",
+  "type": "Need"
+ },
+ {
+  "text": "Dabur",
+  "type": "Need"
+ },
+ {
+  "text": "Ecozen",
+  "type": "Need"
+ },
+ {
+  "text": "EPCOS",
+  "type": "Need"
+ },
+ {
+  "text": "Ferrero",
+  "type": "Need"
+ },
+ {
+  "text": "Gujarat Gas Solutions",
+  "type": "Need"
+ },
+ {
+  "text": "Hindustan Aeronautics",
+  "type": "Need"
+ },
+ {
+  "text": "Hindustan Petroleum",
+  "type": "Need"
+ },
+ {
+  "text": "Indraprastha Gas",
+  "type": "Need"
+ },
+ {
+  "text": "IPGCL",
+  "type": "Need"
+ },
+ {
+  "text": "JBF Steel",
+  "type": "Need"
+ },
+ {
+  "text": "Jindal Steel & Power",
+  "type": "Need"
+ },
+ {
+  "text": "Kotak Mahindra Bank",
+  "type": "Need"
+ },
+ {
+  "text": "Larsen & Toubro",
+  "type": "Need"
+ },
+ {
+  "text": "M&M",
+  "type": "Need"
+ },
+ {
+  "text": "Marico",
+  "type": "Need"
+ },
+ {
+  "text": "Mitsubishi",
+  "type": "Need"
+ },
+ {
+  "text": "Nagarjuna Fertilisers",
+  "type": "Need"
+ },
+ {
+  "text": "NCL",
+  "type": "Need"
+ },
+ {
+  "text": "NMDC",
+  "type": "Need"
+ },
+ {
+  "text": "NTPC Vidyut Vyapar Nigam",
+  "type": "Need"
+ },
+ {
+  "text": "Oberoi Realty",
+  "type": "Need"
+ },
+ {
+  "text": "Padmini",
+  "type": "Need"
+ },
+ {
+  "text": "Pankaj Polythene",
+  "type": "Need"
+ },
+ {
+  "text": "Piramal Enterprises",
+  "type": "Need"
+ },
+ {
+  "text": "Prabhat Pipes",
+  "type": "Need"
+ },
+ {
+  "text": "Punjab Tractors",
+  "type": "Need"
+ },
+ {
+  "text": "Punjab National Bank",
+  "type": "Need"
+ },
+ {
+  "text": "Rane",
+  "type": "Need"
+ },
+ {
+  "text": "Reckitt Benckiser",
+  "type": "Need"
+ },
+ {
+  "text": "Reliance Power",
+  "type": "Need"
+ },
+ {
+  "text": "Sail",
+  "type": "Need"
+ },
+ {
+  "text": "Satcon Technologies",
+  "type": "Need"
+ },
+ {
+  "text": "Sawara Gas",
+  "type": "Need"
+ },
+ {
+  "text": "SBI Life",
+  "type": "Need"
+ },
+ {
+  "text": "Shriram City Union Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Siemens",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Chemicals",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Consultancy Services",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Elxsi",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Motors",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Steel",
+  "type": "Need"
+ },
+ {
+  "text": "TCS",
+  "type": "Need"
+ },
+ {
+  "text": "Titan Company",
+  "type": "Need"
+ },
+ {
+  "text": "Uflex",
+  "type": "Need"
+ },
+ {
+  "text": "UltraTech Cement",
+  "type": "Need"
+ },
+ {
+  "text": "Vedanta Limited",
+  "type": "Need"
+ },
+ {
+  "text": "Welspun India",
+  "type": "Need"
+ }
+]

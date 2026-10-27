@@ -60,7 +60,7 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
   const [selectedLiability, setSelectedLiability] = useState<Liability | null>(null);
   const [showLiabilityModal, setShowLiabilityModal] = useState(false);
   const [markAsPaid, setMarkAsPaid] = useState(true);
-  const amountInputRef = useRef<TextInput>(null);
+  const amountInputRef = useRef<React.ComponentRef<typeof TextInput>>(null);
   const { transactions, addTransaction: addToStore } = useStore();
 
   useEffect(() => {

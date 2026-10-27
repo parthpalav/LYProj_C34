@@ -200,7 +200,7 @@ export function ChatScreen(): React.ReactElement {
                   Grounded in your verified operating balance, spending habits, FMI pillars, and FIRE milestones.
                 </Text>
               </View>
-            ) : null
+            ) : undefined
           }
           ListFooterComponent={
             loading ? (
@@ -212,7 +212,7 @@ export function ChatScreen(): React.ReactElement {
                   </View>
                 </View>
               </View>
-            ) : null
+            ) : undefined
           }
         />
 

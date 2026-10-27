@@ -324,7 +324,7 @@ export default function FamilyScreen(): React.ReactElement {
   if (loading) {
     return (
       <SafeAreaView style={styles.container}>
-        <StatusBar barStyle="dark-content" backgroundColor={BG} />
+        <StatusBar barStyle="dark-content" />
         <View style={styles.header}>
           <TouchableOpacity
             style={styles.backBtn}
@@ -351,7 +351,7 @@ export default function FamilyScreen(): React.ReactElement {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor={BG} />
+      <StatusBar barStyle="dark-content" />
 
       {/* ── App Header ────────────────────────────────────────── */}
       <View style={styles.header}>

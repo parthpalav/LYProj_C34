@@ -5,14 +5,16 @@ import {
 import { getWeeklyReport } from '../services/api';
 import { WeeklyReport } from '../types';
 
-const BLUE   = '#3B3BDE';
+import { createStyles, useTheme, Palette } from '../theme';
+const tokens = (c: Palette) => ({ BLUE: c.primary, AMBER: c.warning, RED: c.danger, PURPLE: c.purple });
 const GREEN  = '#22C880';
-const AMBER  = '#F59E0B';
-const RED    = '#EF4444';
-const PURPLE = '#7C3AED';
-const PALETTE = [BLUE, GREEN, AMBER, RED, PURPLE];
+// Chart series colors are saturated enough to read on both light and dark surfaces.
+const PALETTE = ['#3B3BDE', GREEN, '#F59E0B', '#EF4444', '#7C3AED'];
 
-function StatCard({ label, value, sub, color = BLUE }: { label: string; value: string; sub?: string; color?: string }) {
+function StatCard({ label, value, sub, color: colorProp }: { label: string; value: string; sub?: string; color?: string }) {
+  const { c } = useTheme();
+  const color = colorProp ?? c.primary;
+  const st = useStStyles();
   return (
     <View style={[st.card, { borderTopColor: color }]}>
       <Text style={st.label}>{label}</Text>
@@ -21,14 +23,15 @@ function StatCard({ label, value, sub, color = BLUE }: { label: string; value: s
     </View>
   );
 }
-const st = StyleSheet.create({
-  card:  { flex: 1, backgroundColor: '#fff', borderRadius: 16, padding: 14, borderTopWidth: 3, borderColor: '#E8ECF2', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 3 },
-  label: { fontSize: 11, color: '#6B7280', fontWeight: '600', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 6 },
+const useStStyles = createStyles((c) => ({
+  card:  { flex: 1, backgroundColor: c.surface, borderRadius: 16, padding: 14, borderTopWidth: 3, borderColor: c.border, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 8, elevation: 3 },
+  label: { fontSize: 11, color: c.textMuted, fontWeight: '600', textTransform: 'uppercase', letterSpacing: 0.5, marginBottom: 6 },
   value: { fontSize: 22, fontWeight: '800', letterSpacing: -0.5 },
-  sub:   { fontSize: 11, color: '#9CA3AF', marginTop: 4 },
-});
+  sub:   { fontSize: 11, color: c.textSubtle, marginTop: 4 },
+}));
 
 function SectionCard({ title, children }: { title: string; children: React.ReactNode }) {
+  const sc = useScStyles();
   return (
     <View style={sc.card}>
       <Text style={sc.title}>{title}</Text>
@@ -36,12 +39,13 @@ function SectionCard({ title, children }: { title: string; children: React.React
     </View>
   );
 }
-const sc = StyleSheet.create({
-  card:  { backgroundColor: '#fff', borderRadius: 20, padding: 16, borderWidth: 1, borderColor: '#E8ECF2', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 10, elevation: 3 },
-  title: { fontSize: 15, fontWeight: '700', color: '#111827', marginBottom: 16 },
-});
+const useScStyles = createStyles((c) => ({
+  card:  { backgroundColor: c.surface, borderRadius: 20, padding: 16, borderWidth: 1, borderColor: c.border, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 10, elevation: 3 },
+  title: { fontSize: 15, fontWeight: '700', color: c.text, marginBottom: 16 },
+}));
 
 function CategoryBar({ category, amount, pct, color }: { category: string; amount: number; pct: number; color: string }) {
+  const cb = useCbStyles();
   return (
     <View style={cb.row}>
       <Text style={cb.label}>{category.charAt(0).toUpperCase() + category.slice(1)}</Text>
@@ -53,16 +57,19 @@ function CategoryBar({ category, amount, pct, color }: { category: string; amoun
     </View>
   );
 }
-const cb = StyleSheet.create({
+const useCbStyles = createStyles((c) => ({
   row:     { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 12 },
-  label:   { width: 80, fontSize: 12, fontWeight: '600', color: '#374151' },
-  barWrap: { flex: 1, height: 8, backgroundColor: '#F0F1F5', borderRadius: 99, overflow: 'hidden' },
+  label:   { width: 80, fontSize: 12, fontWeight: '600', color: c.textMuted },
+  barWrap: { flex: 1, height: 8, backgroundColor: c.bg, borderRadius: 99, overflow: 'hidden' },
   bar:     { height: '100%', borderRadius: 99 },
-  pct:     { width: 32, fontSize: 12, fontWeight: '600', color: '#6B7280', textAlign: 'right' },
-  amt:     { width: 64, fontSize: 12, fontWeight: '700', color: '#111827', textAlign: 'right' },
-});
+  pct:     { width: 32, fontSize: 12, fontWeight: '600', color: c.textMuted, textAlign: 'right' },
+  amt:     { width: 64, fontSize: 12, fontWeight: '700', color: c.text, textAlign: 'right' },
+}));
 
 export function ReportsScreen(): React.ReactElement {
+  const { c } = useTheme();
+  const { BLUE, AMBER, RED } = tokens(c);
+  const s = useSStyles();
   const [report,     setReport]     = useState<WeeklyReport | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const [loading,    setLoading]    = useState(true);
@@ -80,7 +87,7 @@ export function ReportsScreen(): React.ReactElement {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, backgroundColor: '#F4F6FA', alignItems: 'center', justifyContent: 'center' }}>
+      <View style={{ flex: 1, backgroundColor: c.bg, alignItems: 'center', justifyContent: 'center' }}>
         <ActivityIndicator size="large" color={BLUE} />
       </View>
     );
@@ -161,26 +168,28 @@ export function ReportsScreen(): React.ReactElement {
       {!report && (
         <View style={s.empty}>
           <Text style={{ fontSize: 40, marginBottom: 12 }}>📊</Text>
-          <Text style={{ fontSize: 16, fontWeight: '700', color: '#111827' }}>No report data yet</Text>
-          <Text style={{ fontSize: 13, color: '#6B7280', marginTop: 6, textAlign: 'center' }}>Add transactions and income to see your weekly report.</Text>
+          <Text style={{ fontSize: 16, fontWeight: '700', color: c.text }}>No report data yet</Text>
+          <Text style={{ fontSize: 13, color: c.textMuted, marginTop: 6, textAlign: 'center' }}>Add transactions and income to see your weekly report.</Text>
         </View>
       )}
     </ScrollView>
   );
 }
 
-const s = StyleSheet.create({
-  screen:    { flex: 1, backgroundColor: '#F4F6FA' },
+const useSStyles = createStyles((c) => {
+  const { RED } = tokens(c);
+  return {
+  screen:    { flex: 1, backgroundColor: c.bg },
   content:   { padding: 16, paddingBottom: 32, gap: 16 },
-  heading:   { fontSize: 24, fontWeight: '800', color: '#111827', letterSpacing: -0.5 },
-  subHeading:{ fontSize: 13, color: '#6B7280', marginTop: -8 },
+  heading:   { fontSize: 24, fontWeight: '800', color: c.text, letterSpacing: -0.5 },
+  subHeading:{ fontSize: 13, color: c.textMuted, marginTop: -8 },
   statRow:   { flexDirection: 'row', gap: 12 },
 
   netBanner:  { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 16, borderRadius: 16, borderWidth: 1.5 },
   netIcon:    { fontSize: 24 },
   netLabel:   { fontSize: 12, fontWeight: '600', textTransform: 'uppercase', letterSpacing: 0.5 },
   netValue:   { fontSize: 26, fontWeight: '800', letterSpacing: -1, marginTop: 2 },
-  anomalyBadge: { backgroundColor: '#FEF2F2', borderRadius: 8, paddingHorizontal: 10, paddingVertical: 6 },
+  anomalyBadge: { backgroundColor: c.dangerSoft, borderRadius: 8, paddingHorizontal: 10, paddingVertical: 6 },
   anomalyText:  { fontSize: 12, fontWeight: '700', color: RED },
 
   patternRow:  { flexDirection: 'row', alignItems: 'flex-start', gap: 10, padding: 12, borderRadius: 12, borderWidth: 1, marginBottom: 8 },
@@ -188,4 +197,5 @@ const s = StyleSheet.create({
   patternMsg:  { flex: 1, fontSize: 13, fontWeight: '600', lineHeight: 18 },
 
   empty: { alignItems: 'center', paddingVertical: 48 },
+};
 });

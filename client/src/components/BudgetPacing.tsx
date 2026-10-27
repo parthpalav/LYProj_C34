@@ -2,7 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { getPacing } from '../services/api';
 
+import { createStyles, useTheme } from '../theme';
 export function BudgetPacing({ refreshKey }: { refreshKey?: number }): React.ReactElement {
+  const { c } = useTheme();
+  const styles = useStyles();
   const [data, setData] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -24,9 +27,9 @@ export function BudgetPacing({ refreshKey }: { refreshKey?: number }): React.Rea
   if (loading) return <ActivityIndicator style={{ margin: 12 }} />;
 
   const rows = [
-    { key: 'Needs', label: 'Needs', color: '#3B82F6' },
-    { key: 'Wants', label: 'Wants', color: '#F59E0B' },
-    { key: 'Investments', label: 'Invest', color: '#10B981' },
+    { key: 'Needs', label: 'Needs', color: c.primary },
+    { key: 'Wants', label: 'Wants', color: c.warning },
+    { key: 'Investments', label: 'Invest', color: c.success },
   ];
 
   return (
@@ -52,12 +55,12 @@ export function BudgetPacing({ refreshKey }: { refreshKey?: number }): React.Rea
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = createStyles((c) => ({
   container: { padding: 12 },
   row: { marginBottom: 14 },
   rowHeader: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 },
-  label: { fontWeight: '700', color: '#111827' },
-  value: { color: '#6B7280', fontWeight: '700' },
-  track: { height: 12, backgroundColor: '#F3F4F6', borderRadius: 8, overflow: 'hidden' },
+  label: { fontWeight: '700', color: c.text },
+  value: { color: c.textMuted, fontWeight: '700' },
+  track: { height: 12, backgroundColor: c.surfaceAlt, borderRadius: 8, overflow: 'hidden' },
   fill: { height: '100%' },
-});
+}));

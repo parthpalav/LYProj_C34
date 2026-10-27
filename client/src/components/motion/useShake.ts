@@ -8,11 +8,11 @@ export function useShake() {
   const shake = () => {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error).catch(() => {});
     x.value = withSequence(
-      withTiming(-10, { duration: 50 }),
-      withTiming(10, { duration: 50 }),
-      withTiming(-7, { duration: 50 }),
-      withTiming(7, { duration: 50 }),
-      withTiming(0, { duration: 50 }),
+      withTiming(-6, { duration: 40 }),
+      withTiming(6, { duration: 40 }),
+      withTiming(-4, { duration: 40 }),
+      withTiming(4, { duration: 40 }),
+      withTiming(0, { duration: 40 }),
     );
   };
   return { style, shake };

@@ -12,6 +12,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import {
   getDashboard,
@@ -26,14 +27,16 @@ import {
   getGoals,
 } from '../services/api';
 import Animated, {
-  FadeInDown, interpolate, Extrapolation, useAnimatedScrollHandler, useAnimatedStyle, useReducedMotion, useSharedValue,
+  interpolate, Extrapolation, useAnimatedScrollHandler, useAnimatedStyle, useReducedMotion, useSharedValue,
 } from 'react-native-reanimated';
+import { enterUp } from '../motion';
 import { AnimatedNumber } from '../components/motion/AnimatedNumber';
 import { AnimatedBar, AnimatedSegment } from '../components/motion/AnimatedBar';
 import { PiggyBank } from '../components/motion/PiggyBank';
 import { PressableScale } from '../components/motion/PressableScale';
 import { Skeleton, SkeletonCard } from '../components/motion/Skeleton';
 import { useStore } from '../store/useStore';
+import { ThemeToggle } from '../components/ThemeToggle';
 import {
   DashboardData,
   PredictabilitySnapshot,
@@ -48,24 +51,11 @@ import {
 import { FamilyOverviewCard } from '../components/family/FamilyOverviewCard';
 import { UpdateBalanceScreen } from './UpdateBalanceScreen';
 
+import { createStyles, useTheme, Palette } from '../theme';
 const { width: SCREEN_W } = Dimensions.get('window');
 
 // ── Design Tokens ──────────────────────────────────────────
-const BLUE = '#2563EB';
-const BLUE_LIGHT = '#EFF6FF';
-const GREEN = '#10B981';
-const GREEN_LIGHT = '#ECFDF5';
-const AMBER = '#F59E0B';
-const AMBER_LIGHT = '#FFFBEB';
-const RED = '#EF4444';
-const RED_LIGHT = '#FEF2F2';
-const PURPLE = '#7C3AED';
-const PURPLE_LIGHT = '#F3E8FF';
-const DARK = '#0F172A';
-const GRAY_600 = '#475569';
-const GRAY_400 = '#94A3B8';
-const BORDER = '#E2E8F0';
-const BG = '#F8FAFC';
+const tokens = (c: Palette) => ({ BLUE: c.primary, BLUE_LIGHT: c.primarySoft, GREEN: c.success, GREEN_LIGHT: c.successSoft, AMBER: c.warning, AMBER_LIGHT: c.warningSoft, RED: c.danger, RED_LIGHT: c.dangerSoft, PURPLE: c.purple, PURPLE_LIGHT: c.purpleSoft, DARK: c.text, GRAY_600: c.textMuted, GRAY_400: c.textSubtle, BORDER: c.border, BG: c.bg });
 
 // ── Formatting Helpers ─────────────────────────────────────
 function formatCurrency(n: number | null | undefined): string {
@@ -84,21 +74,25 @@ function formatShortDate(dateStr: string | null | undefined): string {
   return d.toLocaleDateString('en-IN', { month: 'short', day: 'numeric' });
 }
 
-function fmiStatusColor(score: number): { text: string; bg: string; border: string; label: string } {
+function fmiStatusColor(score: number, c: Palette): { text: string; bg: string; border: string; label: string } {
   if (score >= 70) {
-    return { text: '#059669', bg: GREEN_LIGHT, border: '#A7F3D0', label: 'Strong' };
+    return { text: c.successStrong, bg: c.successSoft, border: c.successSoft, label: 'Strong' };
   }
   if (score >= 45) {
-    return { text: '#D97706', bg: AMBER_LIGHT, border: '#FDE68A', label: 'Fair' };
+    return { text: c.warningStrong, bg: c.warningSoft, border: c.warningSoft, label: 'Fair' };
   }
-  return { text: '#DC2626', bg: RED_LIGHT, border: '#FECACA', label: 'Needs Attention' };
+  return { text: c.dangerStrong, bg: c.dangerSoft, border: c.dangerSoft, label: 'Needs Attention' };
 }
 
 // ═══════════════════════════════════════════════════════════
 // MAIN DASHBOARD COMPONENT
 // ═══════════════════════════════════════════════════════════
 export function DashboardScreen(): React.ReactElement {
+  const { c } = useTheme();
+  const { BLUE, BLUE_LIGHT, GREEN, GREEN_LIGHT, AMBER, AMBER_LIGHT, RED, RED_LIGHT, PURPLE, PURPLE_LIGHT, GRAY_600, GRAY_400 } = tokens(c);
+  const styles = useStyles();
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
   const { user, setUser, dashboard, setDashboard, goals, setGoals } = useStore();
 
   // ── Motion: parallax header + staggered card entrance ─────
@@ -112,11 +106,11 @@ export function DashboardScreen(): React.ReactElement {
       opacity: interpolate(y, [0, 90], [1, 0], Extrapolation.CLAMP),
       transform: [
         { translateY: y * 0.45 },
-        { scale: interpolate(y, [0, 90], [1, 0.94], Extrapolation.CLAMP) },
+        { scale: interpolate(y, [0, 90], [1, 0.97], Extrapolation.CLAMP) },
       ],
     };
   });
-  const enter = (i: number) => FadeInDown.delay(i * 70).springify().damping(16);
+  const enter = (i: number) => enterUp(i, 50);
 
   // Screen state
   const [loading, setLoading] = useState(!dashboard);
@@ -263,7 +257,7 @@ export function DashboardScreen(): React.ReactElement {
 
   // ── Computed Values ───────────────────────────────────────
   const fmiScore = fmiData?.score ?? dashboard?.fmiScore ?? 50;
-  const fmiConfig = fmiStatusColor(fmiScore);
+  const fmiConfig = fmiStatusColor(fmiScore, c);
 
   const balance = user?.currentBalance ?? dashboard?.balance ?? 0;
   const incomeThisMonth = dashboard?.totalIncome ?? user?.monthlyIncome ?? predictability?.income?.meanMonthlyIncome ?? 0;
@@ -536,7 +530,7 @@ export function DashboardScreen(): React.ReactElement {
     <View style={styles.container}>
       <Animated.ScrollView
         style={styles.screen}
-        contentContainerStyle={styles.content}
+        contentContainerStyle={[styles.content, { paddingTop: insets.top + 8 }]}
         showsVerticalScrollIndicator={false}
         onScroll={onScroll}
         scrollEventThrottle={16}
@@ -550,7 +544,8 @@ export function DashboardScreen(): React.ReactElement {
         }
       >
         {/* ── A. HEADER ────────────────────────────────────── */}
-        <Animated.View style={[styles.headerRow, headerParallax]} entering={enter(0)}>
+        <Animated.View entering={enter(0)}>
+        <Animated.View style={[styles.headerRow, headerParallax]}>
           <View style={styles.headerLeft}>
             <Text style={styles.headerGreeting} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8}>
               {greeting}
@@ -559,6 +554,8 @@ export function DashboardScreen(): React.ReactElement {
               {todayFormatted} · Live Financial Pulse
             </Text>
           </View>
+          <View style={styles.headerActions}>
+          <ThemeToggle />
           <TouchableOpacity
             style={styles.profileAvatarBtn}
             onPress={() => (navigation as any).navigate('Profile')}
@@ -575,6 +572,8 @@ export function DashboardScreen(): React.ReactElement {
               <Ionicons name="person-circle-outline" size={36} color={BLUE} />
             )}
           </TouchableOpacity>
+          </View>
+        </Animated.View>
         </Animated.View>
 
         {/* ── B. CURRENT FINANCIAL HEALTH (FMI) ─────────────── */}
@@ -588,7 +587,7 @@ export function DashboardScreen(): React.ReactElement {
           <View style={styles.fmiCardHeader}>
             <View style={styles.fmiTitleRow}>
               <View style={styles.fmiIconBadge}>
-                <Ionicons name="pulse" size={18} color="#059669" />
+                <Ionicons name="pulse" size={18} color={c.successStrong} />
               </View>
               <Text style={styles.cardTitle} numberOfLines={1}>
                 Financial Health
@@ -625,15 +624,15 @@ export function DashboardScreen(): React.ReactElement {
             <View style={styles.pillarRow}>
               <View style={styles.pillarItem}>
                 <Text style={styles.pillarLabel} numberOfLines={1}>Saving</Text>
-                <AnimatedBar progress={Math.min(100, Math.max(5, fmiData.pillars.D1_savingDiscipline.score)) / 100} color={GREEN} trackColor="#F1F5F9" height={6} delay={200} />
+                <AnimatedBar progress={Math.min(100, Math.max(5, fmiData.pillars.D1_savingDiscipline.score)) / 100} color={GREEN} trackColor={c.surfaceAlt} height={6} delay={200} />
               </View>
               <View style={styles.pillarItem}>
                 <Text style={styles.pillarLabel} numberOfLines={1}>Discipline</Text>
-                <AnimatedBar progress={Math.min(100, Math.max(5, fmiData.pillars.D2_spendingControl.score)) / 100} color={BLUE} trackColor="#F1F5F9" height={6} delay={200} />
+                <AnimatedBar progress={Math.min(100, Math.max(5, fmiData.pillars.D2_spendingControl.score)) / 100} color={BLUE} trackColor={c.surfaceAlt} height={6} delay={200} />
               </View>
               <View style={styles.pillarItem}>
                 <Text style={styles.pillarLabel} numberOfLines={1}>Stability</Text>
-                <AnimatedBar progress={Math.min(100, Math.max(5, fmiData.pillars.D3_behavioralRisk.score)) / 100} color={PURPLE} trackColor="#F1F5F9" height={6} delay={200} />
+                <AnimatedBar progress={Math.min(100, Math.max(5, fmiData.pillars.D3_behavioralRisk.score)) / 100} color={PURPLE} trackColor={c.surfaceAlt} height={6} delay={200} />
               </View>
             </View>
           )}
@@ -741,7 +740,7 @@ export function DashboardScreen(): React.ReactElement {
               {goals.length > 0 ? (
                 <>
                   <AnimatedNumber value={goalsSummary.saved} format={formatCurrency} style={styles.goalsSaved} numberOfLines={1} adjustsFontSizeToFit />
-                  <AnimatedBar progress={goalsSummary.pct} color={GREEN} trackColor="#F1F5F9" height={6} delay={300} />
+                  <AnimatedBar progress={goalsSummary.pct} color={GREEN} trackColor={c.surfaceAlt} height={6} delay={300} />
                   <Text style={styles.goalsMeta} numberOfLines={1}>
                     {Math.round(goalsSummary.pct * 100)}% of {formatCurrency(goalsSummary.target)} · {goals.length} goal{goals.length === 1 ? '' : 's'}
                   </Text>
@@ -1179,7 +1178,9 @@ export function DashboardScreen(): React.ReactElement {
 // ═══════════════════════════════════════════════════════════
 // STYLES
 // ═══════════════════════════════════════════════════════════
-const styles = StyleSheet.create({
+const useStyles = createStyles((c) => {
+  const { BLUE, BLUE_LIGHT, GREEN, GREEN_LIGHT, PURPLE, PURPLE_LIGHT, DARK, GRAY_600, GRAY_400, BORDER, BG } = tokens(c);
+  return {
   container: {
     flex: 1,
     backgroundColor: BG,
@@ -1198,7 +1199,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 14,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: c.surface,
     borderRadius: 20,
     padding: 16,
     borderWidth: 1,
@@ -1260,6 +1261,11 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     marginTop: 2,
   },
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
   profileAvatarBtn: {
     padding: 4,
     flexShrink: 0,
@@ -1273,7 +1279,7 @@ const styles = StyleSheet.create({
 
   // Manage card (Assets / Income / Liabilities previews clubbed in one rectangle)
   manageCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: c.surface,
     borderRadius: 20,
     paddingHorizontal: 16,
     borderWidth: 1,
@@ -1289,7 +1295,7 @@ const styles = StyleSheet.create({
   },
   manageDivider: {
     height: 1,
-    backgroundColor: '#F1F5F9',
+    backgroundColor: c.surfaceAlt,
     marginLeft: 44,
   },
   manageSectionAction: {
@@ -1375,7 +1381,7 @@ const styles = StyleSheet.create({
 
   // FMI Financial Health Card
   fmiCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: c.surface,
     borderRadius: 20,
     padding: 16,
     borderWidth: 1,
@@ -1469,7 +1475,7 @@ const styles = StyleSheet.create({
   },
   pillarTrack: {
     height: 6,
-    backgroundColor: '#F1F5F9',
+    backgroundColor: c.surfaceAlt,
     borderRadius: 3,
     overflow: 'hidden',
   },
@@ -1501,7 +1507,7 @@ const styles = StyleSheet.create({
   },
   balanceLabel: {
     fontSize: 13,
-    color: '#94A3B8',
+    color: c.textSubtle,
     fontWeight: '600',
     flexShrink: 1,
   },
@@ -1542,7 +1548,7 @@ const styles = StyleSheet.create({
   },
   cashColLabel: {
     fontSize: 11,
-    color: '#94A3B8',
+    color: c.textSubtle,
     fontWeight: '600',
     marginBottom: 2,
   },
@@ -1558,11 +1564,11 @@ const styles = StyleSheet.create({
 
   // Future Outlook (Predictability)
   outlookCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: c.surface,
     borderRadius: 20,
     padding: 16,
     borderWidth: 1,
-    borderColor: '#C7D2FE',
+    borderColor: c.primarySoft,
     shadowColor: BLUE,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
@@ -1676,7 +1682,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: c.bg,
     padding: 10,
     borderRadius: 12,
     borderWidth: 1,
@@ -1720,7 +1726,7 @@ const styles = StyleSheet.create({
 
   // Spending Snapshot
   spendingCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: c.surface,
     borderRadius: 20,
     padding: 16,
     borderWidth: 1,
@@ -1744,7 +1750,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     height: 10,
     borderRadius: 5,
-    backgroundColor: '#F1F5F9',
+    backgroundColor: c.surfaceAlt,
     overflow: 'hidden',
   },
   segment: {
@@ -1785,7 +1791,7 @@ const styles = StyleSheet.create({
 
   // Liabilities Card
   liabilityCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: c.surface,
     borderRadius: 20,
     padding: 16,
     borderWidth: 1,
@@ -1797,7 +1803,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   countBadge: {
-    backgroundColor: '#F1F5F9',
+    backgroundColor: c.surfaceAlt,
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 10,
@@ -1818,7 +1824,7 @@ const styles = StyleSheet.create({
     width: 38,
     height: 38,
     borderRadius: 19,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: c.bg,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
@@ -1849,11 +1855,11 @@ const styles = StyleSheet.create({
 
   // Smart Next Action Card
   smartActionCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: c.surface,
     borderRadius: 20,
     padding: 16,
     borderWidth: 1.5,
-    borderColor: '#DBEAFE',
+    borderColor: c.primarySoft,
     shadowColor: BLUE,
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.08,
@@ -1880,7 +1886,7 @@ const styles = StyleSheet.create({
   },
   smartActionBadge: {
     alignSelf: 'flex-start',
-    backgroundColor: '#EFF6FF',
+    backgroundColor: c.primarySoft,
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: 6,
@@ -1917,11 +1923,11 @@ const styles = StyleSheet.create({
 
   // Assets Card
   assetsCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: c.surface,
     borderRadius: 20,
     padding: 16,
     borderWidth: 1,
-    borderColor: '#D1FAE5',
+    borderColor: c.successSoft,
     shadowColor: GREEN,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.06,
@@ -1962,7 +1968,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: c.bg,
     padding: 8,
     borderRadius: 10,
   },
@@ -2004,4 +2010,5 @@ const styles = StyleSheet.create({
     color: GRAY_600,
     fontStyle: 'italic',
   },
+};
 });

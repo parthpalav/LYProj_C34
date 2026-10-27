@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, ScrollView, TouchableOpacity } from 'react-native';
 import { getHeatmap } from '../services/api';
 
+import { createStyles } from '../theme';
 function chunkArray<T>(arr: T[], size: number): T[][] {
   const out: T[][] = [];
   for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
@@ -9,6 +10,7 @@ function chunkArray<T>(arr: T[], size: number): T[][] {
 }
 
 export function Heatmap({ refreshKey }: { refreshKey?: number }): React.ReactElement {
+  const styles = useStyles();
   const [data, setData] = useState<Array<{ date: string; totalAmount: number }>>([]);
   const [loading, setLoading] = useState(true);
 
@@ -52,11 +54,11 @@ export function Heatmap({ refreshKey }: { refreshKey?: number }): React.ReactEle
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = createStyles((c) => ({
   wrap: { marginVertical: 8 },
   container: { padding: 8 },
   row: { flexDirection: 'column', marginRight: 6 },
   cellTouchable: { alignItems: 'center', marginBottom: 6 },
   cell: { width: 28, height: 28, borderRadius: 4 },
-  cellLabel: { fontSize: 9, color: '#6B7280', marginTop: 4 },
-});
+  cellLabel: { fontSize: 9, color: c.textMuted, marginTop: 4 },
+}));

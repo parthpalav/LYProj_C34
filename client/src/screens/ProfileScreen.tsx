@@ -26,18 +26,9 @@ import { celebrate } from '../store/useCelebrationStore';
 import { updateUserProfileApi } from '../services/api';
 import { User } from '../types';
 
+import { createStyles, useTheme, Palette } from '../theme';
 // ── Design Tokens ─────────────────────────────────────────────
-const BLUE = '#2563EB';
-const BLUE_LIGHT = '#EFF6FF';
-const GREEN = '#10B981';
-const AMBER = '#F59E0B';
-const PURPLE = '#7C3AED';
-const BG = '#F8FAFC';
-const CARD_BG = '#FFFFFF';
-const TEXT_PRIMARY = '#0F172A';
-const TEXT_SECONDARY = '#475569';
-const TEXT_MUTED = '#94A3B8';
-const BORDER = '#E2E8F0';
+const tokens = (c: Palette) => ({ BLUE: c.primary, BLUE_LIGHT: c.primarySoft, GREEN: c.success, AMBER: c.warning, PURPLE: c.purple, BG: c.bg, CARD_BG: c.surface, TEXT_PRIMARY: c.text, TEXT_SECONDARY: c.textMuted, TEXT_MUTED: c.textSubtle, BORDER: c.border });
 
 // Defaults matching system financial policy
 const DEFAULT_RETURN_RATE = 0.08;
@@ -86,6 +77,7 @@ function toDate(value: Date | string | null | undefined): Date {
 
 // ── Stat Pill Component ───────────────────────────────────────
 function StatPill({ label, value, icon, color }: { label: string; value: string; icon: string; color: string }) {
+  const statStyles = useStatStyles();
   return (
     <View style={statStyles.pill}>
       <View style={[statStyles.iconCircle, { backgroundColor: `${color}18` }]}>
@@ -101,7 +93,9 @@ function StatPill({ label, value, icon, color }: { label: string; value: string;
   );
 }
 
-const statStyles = StyleSheet.create({
+const useStatStyles = createStyles((c) => {
+  const { CARD_BG, TEXT_PRIMARY, TEXT_MUTED, BORDER } = tokens(c);
+  return {
   pill: {
     flex: 1,
     flexDirection: 'row',
@@ -122,6 +116,7 @@ const statStyles = StyleSheet.create({
   textWrap: { flex: 1 },
   value: { fontSize: 15, fontWeight: '700', color: TEXT_PRIMARY },
   label: { fontSize: 11, color: TEXT_MUTED, fontWeight: '600', marginTop: 2 },
+};
 });
 
 // ── Info Row Component ────────────────────────────────────────
@@ -131,7 +126,7 @@ function InfoRow({
   value,
   helperText,
   isLast,
-  iconColor = BLUE,
+  iconColor: iconColorProp,
 }: {
   icon: string;
   label: string;
@@ -140,6 +135,9 @@ function InfoRow({
   isLast?: boolean;
   iconColor?: string;
 }) {
+  const { c } = useTheme();
+  const iconColor = iconColorProp ?? c.primary;
+  const infoStyles = useInfoStyles();
   const isSet = value !== 'Not set';
   return (
     <View style={[infoStyles.row, !isLast && infoStyles.rowBorder]}>
@@ -155,21 +153,30 @@ function InfoRow({
   );
 }
 
-const infoStyles = StyleSheet.create({
+const useInfoStyles = createStyles((c) => {
+  const { TEXT_PRIMARY, TEXT_SECONDARY, TEXT_MUTED } = tokens(c);
+  return {
   row: { flexDirection: 'row', alignItems: 'flex-start', paddingVertical: 14, gap: 14 },
-  rowBorder: { borderBottomWidth: 1, borderBottomColor: '#F1F5F9' },
+  rowBorder: { borderBottomWidth: 1, borderBottomColor: c.border },
   iconWrap: { width: 36, height: 36, borderRadius: 12, alignItems: 'center', justifyContent: 'center', marginTop: 2 },
   textCol: { flex: 1 },
   label: { fontSize: 12, color: TEXT_MUTED, fontWeight: '600', letterSpacing: 0.3 },
   value: { fontSize: 15, fontWeight: '700', color: TEXT_PRIMARY, marginTop: 2 },
   valueMuted: { color: TEXT_MUTED, fontStyle: 'italic', fontWeight: '500' },
   helperText: { fontSize: 11, color: TEXT_SECONDARY, marginTop: 3, lineHeight: 15 },
+};
 });
 
 // ═══════════════════════════════════════════════════════════════
 // MAIN SCREEN
 // ═══════════════════════════════════════════════════════════════
 export function ProfileScreen(): React.ReactElement {
+  const { c } = useTheme();
+  const { BLUE, BLUE_LIGHT, GREEN, AMBER, PURPLE, TEXT_SECONDARY, TEXT_MUTED } = tokens(c);
+  const infoStyles = useInfoStyles();
+  const s = useSStyles();
+  const ef = useEfStyles();
+  const modal = useModalStyles();
   const navigation = useNavigation();
   const storeUser = useStore((s) => s.user);
   const authUser = useAuthStore((s) => s.user);
@@ -592,8 +599,8 @@ export function ProfileScreen(): React.ReactElement {
             activeOpacity={0.7}
             accessibilityLabel="Manage Financial Assets and Holdings"
           >
-            <View style={[infoStyles.iconWrap, { backgroundColor: '#ECFDF5' }]}>
-              <Ionicons name="pie-chart" size={18} color="#10B981" />
+            <View style={[infoStyles.iconWrap, { backgroundColor: c.successSoft }]}>
+              <Ionicons name="pie-chart" size={18} color={c.success} />
             </View>
             <View style={infoStyles.textCol}>
               <Text style={infoStyles.label}>Financial Assets & Holdings</Text>
@@ -602,7 +609,7 @@ export function ProfileScreen(): React.ReactElement {
             <Ionicons name="chevron-forward" size={16} color={TEXT_MUTED} />
           </TouchableOpacity>
 
-          <View style={{ height: 1, backgroundColor: '#F1F5F9', marginLeft: 50 }} />
+          <View style={{ height: 1, backgroundColor: c.surfaceAlt, marginLeft: 50 }} />
 
           <TouchableOpacity
             style={infoStyles.row}
@@ -620,7 +627,7 @@ export function ProfileScreen(): React.ReactElement {
             <Ionicons name="chevron-forward" size={16} color={TEXT_MUTED} />
           </TouchableOpacity>
 
-          <View style={{ height: 1, backgroundColor: '#F1F5F9', marginLeft: 50 }} />
+          <View style={{ height: 1, backgroundColor: c.surfaceAlt, marginLeft: 50 }} />
 
           <TouchableOpacity
             style={infoStyles.row}
@@ -628,8 +635,8 @@ export function ProfileScreen(): React.ReactElement {
             activeOpacity={0.7}
             accessibilityLabel="Manage Savings Goals"
           >
-            <View style={[infoStyles.iconWrap, { backgroundColor: '#F3E8FF' }]}>
-              <Ionicons name="flag" size={18} color="#7C3AED" />
+            <View style={[infoStyles.iconWrap, { backgroundColor: c.purpleSoft }]}>
+              <Ionicons name="flag" size={18} color={c.purple} />
             </View>
             <View style={infoStyles.textCol}>
               <Text style={infoStyles.label}>Savings Goals</Text>
@@ -638,7 +645,7 @@ export function ProfileScreen(): React.ReactElement {
             <Ionicons name="chevron-forward" size={16} color={TEXT_MUTED} />
           </TouchableOpacity>
 
-          <View style={{ height: 1, backgroundColor: '#F1F5F9', marginLeft: 50 }} />
+          <View style={{ height: 1, backgroundColor: c.surfaceAlt, marginLeft: 50 }} />
 
           <TouchableOpacity
             style={infoStyles.row}
@@ -646,8 +653,8 @@ export function ProfileScreen(): React.ReactElement {
             activeOpacity={0.7}
             accessibilityLabel="View and Manage User Liabilities"
           >
-            <View style={[infoStyles.iconWrap, { backgroundColor: '#FEF2F2' }]}>
-              <Ionicons name="calendar-outline" size={18} color="#EF4444" />
+            <View style={[infoStyles.iconWrap, { backgroundColor: c.dangerSoft }]}>
+              <Ionicons name="calendar-outline" size={18} color={c.danger} />
             </View>
             <View style={infoStyles.textCol}>
               <Text style={infoStyles.label}>Recurring Liabilities</Text>
@@ -656,7 +663,7 @@ export function ProfileScreen(): React.ReactElement {
             <Ionicons name="chevron-forward" size={16} color={TEXT_MUTED} />
           </TouchableOpacity>
 
-          <View style={{ height: 1, backgroundColor: '#F1F5F9', marginLeft: 50 }} />
+          <View style={{ height: 1, backgroundColor: c.surfaceAlt, marginLeft: 50 }} />
 
           <TouchableOpacity
             style={infoStyles.row}
@@ -664,7 +671,7 @@ export function ProfileScreen(): React.ReactElement {
             activeOpacity={0.7}
             accessibilityLabel="Family & Household, Combined finances, shared insights & invitations"
           >
-            <View style={[infoStyles.iconWrap, { backgroundColor: '#F5F3FF' }]}>
+            <View style={[infoStyles.iconWrap, { backgroundColor: c.primarySoft }]}>
               <Ionicons name="people-outline" size={18} color={PURPLE} />
             </View>
             <View style={infoStyles.textCol}>
@@ -684,7 +691,7 @@ export function ProfileScreen(): React.ReactElement {
           onPress={logout}
           accessibilityLabel="Sign Out of FINAURA Account"
         >
-          <Ionicons name="log-out-outline" size={20} color="#DC2626" />
+          <Ionicons name="log-out-outline" size={20} color={c.dangerStrong} />
           <Text style={s.logoutText}>Sign Out</Text>
         </TouchableOpacity>
         <Text style={s.version}>FINAURA v1.0.0 — Enterprise Financial Intelligence</Text>
@@ -955,7 +962,9 @@ export function ProfileScreen(): React.ReactElement {
 }
 
 // ── Main Styles ───────────────────────────────────────────────
-const s = StyleSheet.create({
+const useSStyles = createStyles((c) => {
+  const { BLUE, BLUE_LIGHT, GREEN, BG, CARD_BG, TEXT_PRIMARY, TEXT_SECONDARY, TEXT_MUTED, BORDER } = tokens(c);
+  return {
   screen: { flex: 1, backgroundColor: BG },
   scroll: { paddingHorizontal: 16 },
   hero: { alignItems: 'center', paddingTop: 28, paddingBottom: 20, position: 'relative' },
@@ -1056,24 +1065,27 @@ const s = StyleSheet.create({
     justifyContent: 'center',
     gap: 8,
     height: 50,
-    backgroundColor: '#FEF2F2',
+    backgroundColor: c.dangerSoft,
     borderRadius: 16,
     borderWidth: 1.5,
-    borderColor: '#FECACA',
+    borderColor: c.dangerSoft,
     marginTop: 4,
   },
-  logoutText: { color: '#DC2626', fontSize: 15, fontWeight: '700' },
+  logoutText: { color: c.dangerStrong, fontSize: 15, fontWeight: '700' },
   version: { textAlign: 'center', fontSize: 11, color: TEXT_MUTED, marginTop: 16, fontWeight: '500' },
+};
 });
 
 // ── Edit Field Styles ─────────────────────────────────────────
-const ef = StyleSheet.create({
+const useEfStyles = createStyles((c) => {
+  const { BLUE, TEXT_PRIMARY, TEXT_MUTED, BORDER } = tokens(c);
+  return {
   wrap: { marginBottom: 16 },
   label: { fontSize: 12, fontWeight: '700', color: TEXT_PRIMARY, marginBottom: 6, marginLeft: 2 },
   inputRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F8FAFC',
+    backgroundColor: c.bg,
     borderRadius: 12,
     borderWidth: 1.5,
     borderColor: BORDER,
@@ -1086,7 +1098,7 @@ const ef = StyleSheet.create({
   suffix: { fontSize: 12, color: TEXT_MUTED, fontWeight: '600', marginLeft: 4 },
   prefix: { fontSize: 14, color: TEXT_PRIMARY, fontWeight: '700', marginRight: 4 },
   pickerWrap: {
-    backgroundColor: '#F8FAFC',
+    backgroundColor: c.bg,
     borderRadius: 14,
     borderWidth: 1,
     borderColor: BORDER,
@@ -1095,14 +1107,17 @@ const ef = StyleSheet.create({
   },
   doneBtn: { alignItems: 'center', paddingVertical: 10, borderTopWidth: 1, borderTopColor: BORDER },
   doneBtnText: { fontSize: 14, fontWeight: '700', color: BLUE },
+};
 });
 
 // ── Modal Styles ──────────────────────────────────────────────
-const modal = StyleSheet.create({
+const useModalStyles = createStyles((c) => {
+  const { BLUE, TEXT_PRIMARY, TEXT_SECONDARY } = tokens(c);
+  return {
   overlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.45)', justifyContent: 'flex-end' },
   kwrap: { justifyContent: 'flex-end' },
   sheet: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: c.surface,
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
     paddingHorizontal: 20,
@@ -1113,7 +1128,7 @@ const modal = StyleSheet.create({
     width: 40,
     height: 4,
     borderRadius: 2,
-    backgroundColor: '#CBD5E1',
+    backgroundColor: c.border,
     alignSelf: 'center',
     marginTop: 12,
     marginBottom: 8,
@@ -1124,7 +1139,7 @@ const modal = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#F1F5F9',
+    backgroundColor: c.surfaceAlt,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -1134,7 +1149,7 @@ const modal = StyleSheet.create({
     flex: 1,
     height: 48,
     borderRadius: 14,
-    backgroundColor: '#F1F5F9',
+    backgroundColor: c.surfaceAlt,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -1155,4 +1170,5 @@ const modal = StyleSheet.create({
     elevation: 6,
   },
   saveText: { fontSize: 14, fontWeight: '700', color: '#FFFFFF' },
+};
 });

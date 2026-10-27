@@ -31,19 +31,11 @@ import { useNavigation } from '@react-navigation/native';
 import { getPredictability } from '../services/api';
 import { PredictabilitySnapshot, PredictabilityQueryOptions } from '../types';
 
+import { createStyles, useTheme, Palette } from '../theme';
 const { width: SCREEN_W } = Dimensions.get('window');
 
 // ── Color Tokens ──────────────────────────────────────────────
-const PRIMARY = '#3B3BDE';
-const SUCCESS = '#10B981';
-const WARNING = '#F59E0B';
-const PURPLE = '#7C3AED';
-const SLATE = '#64748B';
-const DARK = '#0F172A';
-const MUTED = '#6B7280';
-const BORDER = '#E2E8F0';
-const CARD_BG = '#FFFFFF';
-const APP_BG = '#F8FAFC';
+const tokens = (c: Palette) => ({ PRIMARY: c.primary, SUCCESS: c.success, WARNING: c.warning, PURPLE: c.purple, SLATE: c.textMuted, DARK: c.text, MUTED: c.textMuted, BORDER: c.border, CARD_BG: c.surface, APP_BG: c.bg });
 
 // ── Indian Currency Formatter ──────────────────────────────────
 function formatCurrency(amount: number | null | undefined, compact = false): string {
@@ -87,7 +79,7 @@ function formatAge(ageYears: number | null | undefined): string {
 
 function formatFundedAge(point: { reached?: boolean; ageYears?: number | null } | null | undefined): { headline: string; note?: string; color?: string } {
   if (!point || !point.reached || point.ageYears === null || point.ageYears === undefined || !Number.isFinite(point.ageYears)) {
-    return { headline: 'Not reached in forecast horizon', color: SLATE };
+    return { headline: 'Not reached in forecast horizon', color: '#64748B' };
   }
   const ageYears = point.ageYears;
   const wholeYears = Math.floor(ageYears);
@@ -97,16 +89,16 @@ function formatFundedAge(point: { reached?: boolean; ageYears?: number | null } 
     : `Age ${wholeYears}y ${months}m`;
 
   if (ageYears <= 70) {
-    return { headline: formattedExact, color: PRIMARY };
+    return { headline: formattedExact, color: '#3B3BDE' };
   } else if (ageYears <= 75) {
-    return { headline: formattedExact, note: 'Later career horizon', color: PRIMARY };
+    return { headline: formattedExact, note: 'Later career horizon', color: '#3B3BDE' };
   } else if (ageYears <= 85) {
-    return { headline: formattedExact, note: 'Beyond typical retirement horizon', color: WARNING };
+    return { headline: formattedExact, note: 'Beyond typical retirement horizon', color: '#F59E0B' };
   } else {
     return {
       headline: 'Not reached within a typical retirement horizon',
       note: `Modeled: ${formattedExact}`,
-      color: MUTED
+      color: '#6B7280'
     };
   }
 }
@@ -120,131 +112,134 @@ function mapFactToMessage(code: string, value?: any): { title: string; desc: str
         title: 'Consistent Income',
         desc: 'Your recorded income has been completely steady across observed months.',
         icon: 'checkmark-circle-outline',
-        color: SUCCESS
+        color: '#10B981'
       };
     case 'INCOME_VARIABILITY_LOW':
       return {
         title: 'Low Income Variability',
         desc: 'Your monthly earnings show stable, predictable patterns.',
         icon: 'shield-checkmark-outline',
-        color: SUCCESS
+        color: '#10B981'
       };
     case 'INCOME_VARIABILITY_MODERATE':
       return {
         title: 'Moderate Income Variability',
         desc: 'Earnings fluctuate moderately across calendar months.',
         icon: 'analytics-outline',
-        color: WARNING
+        color: '#F59E0B'
       };
     case 'INCOME_VARIABILITY_HIGH':
       return {
         title: 'Variable Income Pattern',
         desc: 'Earnings vary substantially between months; planning uses conservative floor estimation.',
         icon: 'pulse-outline',
-        color: PURPLE
+        color: '#7C3AED'
       };
     case 'ESSENTIALS_COVERED_BY_CONSERVATIVE_INCOME':
       return {
         title: 'Essentials Covered',
         desc: 'Your 25th-percentile conservative income estimate safely covers essential outflows.',
         icon: 'checkmark-done-circle-outline',
-        color: SUCCESS
+        color: '#10B981'
       };
     case 'ESSENTIALS_UNCOVERED_BY_CONSERVATIVE_INCOME':
       return {
         title: 'Essentials Coverage Gap',
         desc: 'In lean months, baseline earnings fall below current essential spending needs.',
         icon: 'alert-circle-outline',
-        color: WARNING
+        color: '#F59E0B'
       };
     case 'BUFFER_RUNWAY_ADEQUATE':
       return {
         title: 'Adequate Buffer Runway',
         desc: 'Your recorded liquid reserves provide 3+ months of essential expenditure runway.',
         icon: 'shield-outline',
-        color: SUCCESS
+        color: '#10B981'
       };
     case 'BUFFER_RUNWAY_LOW':
       return {
         title: 'Buffer Runway Under 3 Months',
         desc: 'Current liquid emergency reserves cover less than 3 months of essential outflows.',
         icon: 'warning-outline',
-        color: WARNING
+        color: '#F59E0B'
       };
     case 'RETIREMENT_ON_TRACK':
       return {
         title: 'Retirement On Track',
         desc: 'Projected corpus at retirement meets or exceeds the estimated FIRE target under model assumptions.',
         icon: 'trending-up-outline',
-        color: SUCCESS
+        color: '#10B981'
       };
     case 'RETIREMENT_CONTRIBUTION_GAP':
       return {
         title: 'Modeled Contribution Gap',
         desc: 'Observed monthly investment is below the fixed amount modeled to reach the FIRE target.',
         icon: 'information-circle-outline',
-        color: PRIMARY
+        color: '#3B3BDE'
       };
     case 'EMERGENCY_FUND_FULLY_FUNDED':
       return {
         title: 'Emergency Reserve Fully Funded',
         desc: 'Recorded liquid assets fully satisfy the target emergency fund duration.',
         icon: 'lock-closed-outline',
-        color: SUCCESS
+        color: '#10B981'
       };
     case 'EMERGENCY_FUND_DEFICIT':
       return {
         title: 'Emergency Fund In Progress',
         desc: 'Additional liquid buffer needed to reach your full emergency reserve target.',
         icon: 'hourglass-outline',
-        color: WARNING
+        color: '#F59E0B'
       };
     case 'PORTFOLIO_RISK_ESTIMATED':
       return {
         title: 'Forecast Risk Assumption',
         desc: 'Market variability is estimated from your expected return because portfolio allocation data is not yet recorded.',
         icon: 'git-branch-outline',
-        color: SLATE
+        color: '#64748B'
       };
     case 'MONTE_CARLO_AVAILABLE':
       return {
         title: 'Probabilistic Engine Active',
         desc: '10,000 future market paths simulated under current financial assumptions.',
         icon: 'sparkles-outline',
-        color: PRIMARY
+        color: '#3B3BDE'
       };
     case 'MONTE_CARLO_PROBABILITY_FUNDED':
       return {
         title: 'Modeled Funding Chance',
         desc: 'Estimated probability of reaching retirement target corpus under market dispersion.',
         icon: 'pie-chart-outline',
-        color: PRIMARY
+        color: '#3B3BDE'
       };
     case 'MONTE_CARLO_DATA_QUALITY_LOW':
       return {
         title: 'Preliminary Forecast Baseline',
         desc: 'Projections are based on early history and will calibrate as more months are observed.',
         icon: 'time-outline',
-        color: WARNING
+        color: '#F59E0B'
       };
     case 'MONTE_CARLO_UNAVAILABLE':
       return {
         title: 'Simulation Notice',
         desc: 'Probability-based forecast is temporarily unavailable; baseline projections remain active.',
         icon: 'alert-circle-outline',
-        color: SLATE
+        color: '#64748B'
       };
     default:
       return {
         title: 'Financial Observation',
         desc: `System note: ${code}`,
         icon: 'information-circle-outline',
-        color: SLATE
+        color: '#64748B'
       };
   }
 }
 
 export function FinancialOutlookScreen(): React.ReactElement {
+  const { c } = useTheme();
+  const { PRIMARY, SUCCESS, WARNING, PURPLE, SLATE, DARK, MUTED } = tokens(c);
+  const styles = useStyles();
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
 
@@ -439,7 +434,7 @@ export function FinancialOutlookScreen(): React.ReactElement {
             SECTION B: RETIREMENT & FIRE OUTLOOK (DETERMINISTIC)
         ══════════════════════════════════════════════════════ */}
         {!snapshot.forecastStatus.available ? (
-          <View style={[styles.sectionCard, { backgroundColor: '#F8FAFC' }]}>
+          <View style={[styles.sectionCard, { backgroundColor: c.bg }]}>
             <View style={styles.sectionHeader}>
               <Ionicons name="compass-outline" size={22} color={SLATE} />
               <Text style={styles.sectionTitle}>Retirement & FIRE Projection</Text>
@@ -943,7 +938,7 @@ export function FinancialOutlookScreen(): React.ReactElement {
                           </Text>
                         )}
                         {rec.feasibility && rec.feasibility.status === 'IMPRACTICAL' && (
-                          <Text style={[styles.mcRecFeasContext, { color: '#DC2626' }]}>
+                          <Text style={[styles.mcRecFeasContext, { color: c.dangerStrong }]}>
                             Reaching a 75% modeled probability by your target retirement age would require approximately {formatCurrency(rec.recommendedMonthlyContribution)}/month under flat contribution modeling. This is substantially above your current reliable monthly income, so extending your retirement timeline may be more realistic.
                           </Text>
                         )}
@@ -1287,12 +1282,12 @@ export function FinancialOutlookScreen(): React.ReactElement {
           </View>
 
           <View style={styles.badgeRow}>
-            <View style={[styles.badge, { backgroundColor: '#F1F5F9' }]}>
+            <View style={[styles.badge, { backgroundColor: c.surfaceAlt }]}>
               <Text style={styles.badgeLabel}>Income Pattern: </Text>
               <Text style={[styles.badgeValue, { color: variabilityColor }]}>{variabilityLabel}</Text>
             </View>
 
-            <View style={[styles.badge, { backgroundColor: '#F1F5F9' }]}>
+            <View style={[styles.badge, { backgroundColor: c.surfaceAlt }]}>
               <Text style={styles.badgeLabel}>History: </Text>
               <Text style={styles.badgeValue}>{dataQuality.incomeDataQuality.monthsObserved} mos recorded</Text>
             </View>
@@ -1569,7 +1564,7 @@ export function FinancialOutlookScreen(): React.ReactElement {
             SECTION J: DATA LIMITATIONS & NOTES
         ══════════════════════════════════════════════════════ */}
         {limitations && limitations.length > 0 && (
-          <View style={[styles.sectionCard, { backgroundColor: '#F8FAFC', borderColor: '#E2E8F0' }]}>
+          <View style={[styles.sectionCard, { backgroundColor: c.bg, borderColor: c.border }]}>
             <View style={styles.sectionHeader}>
               <Ionicons name="information-circle-outline" size={22} color={SLATE} />
               <Text style={[styles.sectionTitle, { color: SLATE }]}>Things to Keep in Mind</Text>
@@ -1590,7 +1585,9 @@ export function FinancialOutlookScreen(): React.ReactElement {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = createStyles((c) => {
+  const { PRIMARY, PURPLE, SLATE, DARK, MUTED, BORDER, CARD_BG, APP_BG } = tokens(c);
+  return {
   container: {
     flex: 1,
     backgroundColor: APP_BG,
@@ -1765,7 +1762,7 @@ const styles = StyleSheet.create({
   },
   progressBarTrack: {
     height: 10,
-    backgroundColor: '#EEF2F6',
+    backgroundColor: c.bg,
     borderRadius: 5,
     overflow: 'hidden',
     marginBottom: 6,
@@ -1787,11 +1784,11 @@ const styles = StyleSheet.create({
   },
   comparisonBox: {
     flex: 1,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: c.bg,
     borderRadius: 12,
     padding: 12,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: c.border,
   },
   compBoxLabel: {
     fontSize: 11,
@@ -1823,7 +1820,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#F8FAFC',
+    backgroundColor: c.bg,
     padding: 10,
     borderRadius: 8,
     marginVertical: 4,
@@ -1855,11 +1852,11 @@ const styles = StyleSheet.create({
   },
   metricCol: {
     flex: 1,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: c.bg,
     borderRadius: 12,
     padding: 12,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: c.border,
   },
   metricColLabel: {
     fontSize: 11,
@@ -1899,11 +1896,11 @@ const styles = StyleSheet.create({
   },
   // ── Monte Carlo UX Elements ──────────────────────────────────
   mcHeadlineCard: {
-    backgroundColor: '#F8FAFC',
+    backgroundColor: c.bg,
     borderRadius: 14,
     padding: 14,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: c.border,
     marginBottom: 16,
   },
   mcHeadlineTopRow: {
@@ -1954,7 +1951,7 @@ const styles = StyleSheet.create({
   },
   mcProgressTrack: {
     height: 8,
-    backgroundColor: '#E2E8F0',
+    backgroundColor: c.border,
     borderRadius: 4,
     overflow: 'hidden',
   },
@@ -1978,11 +1975,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   mcRecCard: {
-    backgroundColor: '#EEF2FF',
+    backgroundColor: c.primarySoft,
     borderRadius: 12,
     padding: 14,
     borderWidth: 1,
-    borderColor: '#C7D2FE',
+    borderColor: c.primarySoft,
     marginBottom: 16,
   },
   mcRecHeader: {
@@ -2024,16 +2021,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 8,
     alignItems: 'center',
-    backgroundColor: '#FFFBEB',
+    backgroundColor: c.warningSoft,
     padding: 10,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#FDE68A',
+    borderColor: c.warningSoft,
     marginTop: 6,
   },
   mcWarningText: {
     fontSize: 11,
-    color: '#92400E',
+    color: c.warningStrong,
     flex: 1,
     lineHeight: 15,
   },
@@ -2041,11 +2038,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 8,
     alignItems: 'center',
-    backgroundColor: '#F1F5F9',
+    backgroundColor: c.surfaceAlt,
     padding: 12,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: c.border,
   },
   mcServiceNoticeText: {
     fontSize: 12,
@@ -2059,7 +2056,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 8,
     borderTopWidth: 1,
-    borderTopColor: '#F1F5F9',
+    borderTopColor: c.border,
   },
   advancedToggleText: {
     fontSize: 12,
@@ -2067,7 +2064,7 @@ const styles = StyleSheet.create({
     color: PRIMARY,
   },
   advancedMetricsBox: {
-    backgroundColor: '#F8FAFC',
+    backgroundColor: c.bg,
     borderRadius: 8,
     padding: 10,
     gap: 8,
@@ -2077,7 +2074,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
     paddingTop: 4,
     borderTopWidth: 1,
-    borderTopColor: '#E2E8F0',
+    borderTopColor: c.border,
   },
   firstCrossingNoteText: {
     fontSize: 10,
@@ -2093,7 +2090,7 @@ const styles = StyleSheet.create({
   assumptionNote: {
     marginTop: 8,
     padding: 10,
-    backgroundColor: '#F1F5F9',
+    backgroundColor: c.surfaceAlt,
     borderRadius: 8,
   },
   assumptionNoteText: {
@@ -2161,7 +2158,7 @@ const styles = StyleSheet.create({
   },
   scenarioTabsRow: {
     flexDirection: 'row',
-    backgroundColor: '#F1F5F9',
+    backgroundColor: c.surfaceAlt,
     borderRadius: 10,
     padding: 3,
     marginBottom: 14,
@@ -2186,7 +2183,7 @@ const styles = StyleSheet.create({
   },
   scenarioTabBtnBase: {
     borderWidth: 1,
-    borderColor: '#CBD5E1',
+    borderColor: c.border,
   },
   scenarioTabLabel: {
     fontSize: 12,
@@ -2198,13 +2195,13 @@ const styles = StyleSheet.create({
     fontWeight: '800',
   },
   baseBadge: {
-    backgroundColor: '#E2E8F0',
+    backgroundColor: c.border,
     paddingHorizontal: 5,
     paddingVertical: 1,
     borderRadius: 4,
   },
   baseBadgeActive: {
-    backgroundColor: '#EEF2FF',
+    backgroundColor: c.primarySoft,
   },
   baseBadgeText: {
     fontSize: 9,
@@ -2215,11 +2212,11 @@ const styles = StyleSheet.create({
     color: PRIMARY,
   },
   activeScenarioCard: {
-    backgroundColor: '#F8FAFC',
+    backgroundColor: c.bg,
     borderRadius: 12,
     padding: 14,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: c.border,
     marginBottom: 14,
   },
   activeScHeaderRow: {
@@ -2236,7 +2233,7 @@ const styles = StyleSheet.create({
   realReturnPill: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#EEF2FF',
+    backgroundColor: c.primarySoft,
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 6,
@@ -2251,11 +2248,11 @@ const styles = StyleSheet.create({
     color: PRIMARY,
   },
   scenarioMatrixWrap: {
-    backgroundColor: '#F8FAFC',
+    backgroundColor: c.bg,
     borderRadius: 12,
     padding: 12,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: c.border,
   },
   matrixTitle: {
     fontSize: 12,
@@ -2267,7 +2264,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingBottom: 6,
     borderBottomWidth: 1,
-    borderBottomColor: '#E2E8F0',
+    borderBottomColor: c.border,
     marginBottom: 6,
   },
   matrixColHeader: {
@@ -2321,28 +2318,28 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   feasPillManageable: {
-    backgroundColor: '#ECFDF5',
+    backgroundColor: c.successSoft,
   },
   feasPillAggressive: {
-    backgroundColor: '#F5F3FF',
+    backgroundColor: c.primarySoft,
   },
   feasPillVeryAggressive: {
-    backgroundColor: '#FFFBEB',
+    backgroundColor: c.warningSoft,
   },
   feasPillImpractical: {
-    backgroundColor: '#FEF2F2',
+    backgroundColor: c.dangerSoft,
   },
   feasTextManageable: {
-    color: '#059669',
+    color: c.successStrong,
   },
   feasTextAggressive: {
-    color: '#7C3AED',
+    color: c.purple,
   },
   feasTextVeryAggressive: {
-    color: '#D97706',
+    color: c.warningStrong,
   },
   feasTextImpractical: {
-    color: '#DC2626',
+    color: c.dangerStrong,
   },
   mcRecFeasContext: {
     fontSize: 12,
@@ -2352,11 +2349,11 @@ const styles = StyleSheet.create({
   },
   // Alternatives Card
   mcAlternativesCard: {
-    backgroundColor: '#F8FAFC',
+    backgroundColor: c.bg,
     borderRadius: 12,
     padding: 14,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: c.border,
     marginTop: 12,
   },
   mcAltHeader: {
@@ -2386,14 +2383,14 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: c.border,
   },
   mcAltLeft: {
     width: 75,
     alignItems: 'center',
     justifyContent: 'center',
     borderRightWidth: 1,
-    borderRightColor: '#E2E8F0',
+    borderRightColor: c.border,
     paddingRight: 10,
     marginRight: 12,
   },
@@ -2439,7 +2436,7 @@ const styles = StyleSheet.create({
   nominalFlatNote: {
     marginTop: 4,
     padding: 8,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: c.bg,
     borderRadius: 6,
     borderLeftWidth: 2,
     borderLeftColor: PRIMARY,
@@ -2452,12 +2449,12 @@ const styles = StyleSheet.create({
   },
   // ── Strategy Selector Styles ───────────────────────────────────
   strategyCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: c.surface,
     borderRadius: 14,
     padding: 16,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: c.border,
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
@@ -2491,12 +2488,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 12,
     borderRadius: 10,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: c.bg,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: c.border,
   },
   strategyOptionBtnActive: {
-    backgroundColor: '#EEF2FF',
+    backgroundColor: c.primarySoft,
     borderColor: PRIMARY,
   },
   strategyOptionLabel: {
@@ -2516,7 +2513,7 @@ const styles = StyleSheet.create({
     marginTop: 14,
     paddingTop: 12,
     borderTopWidth: 1,
-    borderTopColor: '#F1F5F9',
+    borderTopColor: c.border,
   },
   stepUpRateLabel: {
     fontSize: 12,
@@ -2533,12 +2530,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 7,
     borderRadius: 8,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: c.bg,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: c.border,
   },
   stepUpChipActive: {
-    backgroundColor: '#F5F3FF',
+    backgroundColor: c.primarySoft,
     borderColor: PURPLE,
   },
   stepUpChipText: {
@@ -2556,9 +2553,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   customRateInput: {
-    backgroundColor: '#F8FAFC',
+    backgroundColor: c.bg,
     borderWidth: 1,
-    borderColor: '#CBD5E1',
+    borderColor: c.border,
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 6,
@@ -2589,4 +2586,5 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     fontStyle: 'italic',
   },
+};
 });

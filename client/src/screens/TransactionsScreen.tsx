@@ -20,10 +20,12 @@ import { useStore } from '../store/useStore';
 import { Transaction } from '../types';
 import { formatCurrency } from '../utils/format';
 import { TransactionEntryScreen } from './TransactionEntryScreen';
-import Animated, { FadeInDown, FadeOutLeft, LinearTransition } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
+import { enterUp, exitFade, listLayout } from '../motion';
 import { PressableScale } from '../components/motion/PressableScale';
 import { FloatingEmoji } from '../components/motion/FloatingEmoji';
 
+import { createStyles, useTheme } from '../theme';
 // ── Category definitions ───────────────────────────────────────────────────
 export const LEGACY_CATEGORY_MAP: Record<string, string> = {
   food: 'Food & Dining',
@@ -147,6 +149,8 @@ function groupByMonth(txs: Transaction[]): MonthSection[] {
 // ── Screen component ───────────────────────────────────────────────────────
 
 export function TransactionsScreen(): React.ReactElement {
+  const { c } = useTheme();
+  const styles = useStyles();
   const { transactions, setTransactions } = useStore();
 
   const [activeType, setActiveType] = useState<string>('all');
@@ -332,9 +336,9 @@ export function TransactionsScreen(): React.ReactElement {
 
     return (
       <Animated.View
-        entering={FadeInDown.delay(Math.min(index, 10) * 35).springify().damping(16)}
-        exiting={FadeOutLeft}
-        layout={LinearTransition.springify().damping(16)}
+        entering={enterUp(index, 30)}
+        exiting={exitFade}
+        layout={listLayout}
       >
       <TouchableOpacity
         style={styles.card}
@@ -396,7 +400,7 @@ export function TransactionsScreen(): React.ReactElement {
             hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
             accessibilityLabel="Transaction options"
           >
-            <Ionicons name="ellipsis-horizontal" size={16} color="#94a3b8" />
+            <Ionicons name="ellipsis-horizontal" size={16} color={c.textSubtle} />
           </TouchableOpacity>
         </View>
       </TouchableOpacity>
@@ -484,7 +488,7 @@ export function TransactionsScreen(): React.ReactElement {
                   .join(', ')}`}
           </Text>
           <TouchableOpacity onPress={clearFilters} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-            <Ionicons name="close-circle" size={16} color="#64748b" />
+            <Ionicons name="close-circle" size={16} color={c.textMuted} />
           </TouchableOpacity>
         </View>
       )}
@@ -502,7 +506,7 @@ export function TransactionsScreen(): React.ReactElement {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={() => fetchTransactions(true)}
-            tintColor="#2563EB"
+            tintColor={c.primary}
             colors={['#2563EB']}
           />
         }
@@ -511,7 +515,7 @@ export function TransactionsScreen(): React.ReactElement {
       {/* Floating Add Button */}
       <PressableScale
         style={styles.fab}
-        scaleTo={0.88}
+        scaleTo={0.94}
         onPress={() => setShowEntry(true)}
         accessibilityLabel="Add new transaction"
       >
@@ -552,7 +556,7 @@ export function TransactionsScreen(): React.ReactElement {
                   onPress={() => overflowTx && handleEdit(overflowTx)}
                   activeOpacity={0.7}
                 >
-                  <Ionicons name="create-outline" size={20} color="#475569" />
+                  <Ionicons name="create-outline" size={20} color={c.textMuted} />
                   <Text style={styles.overflowActionText}>Edit Transaction</Text>
                 </TouchableOpacity>
 
@@ -566,8 +570,8 @@ export function TransactionsScreen(): React.ReactElement {
                   }}
                   activeOpacity={0.7}
                 >
-                  <Ionicons name="trash-outline" size={20} color="#DC2626" />
-                  <Text style={[styles.overflowActionText, { color: '#DC2626' }]}>Delete Transaction</Text>
+                  <Ionicons name="trash-outline" size={20} color={c.dangerStrong} />
+                  <Text style={[styles.overflowActionText, { color: c.dangerStrong }]}>Delete Transaction</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
@@ -705,13 +709,13 @@ export function TransactionsScreen(): React.ReactElement {
               <View style={styles.editActions}>
                 <TouchableOpacity
                   onPress={() => setEditTx(null)}
-                  style={[styles.editBtn, { backgroundColor: '#E2E8F0' }]}
+                  style={[styles.editBtn, { backgroundColor: c.border }]}
                 >
-                  <Text style={{ color: '#475569', fontWeight: '600' }}>Cancel</Text>
+                  <Text style={{ color: c.textMuted, fontWeight: '600' }}>Cancel</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={submitEdit}
-                  style={[styles.editBtn, { backgroundColor: '#2563EB' }]}
+                  style={[styles.editBtn, { backgroundColor: c.primary }]}
                 >
                   <Text style={{ color: '#fff', fontWeight: '600' }}>Save</Text>
                 </TouchableOpacity>
@@ -726,8 +730,8 @@ export function TransactionsScreen(): React.ReactElement {
 
 // ── Styles ────────────────────────────────────────────────────────────────
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f8fafc' },
+const useStyles = createStyles((c) => ({
+  container: { flex: 1, backgroundColor: c.bg },
 
   // ── Monthly summary
   summaryRow: {
@@ -745,21 +749,21 @@ const styles = StyleSheet.create({
   summaryLabel: {
     fontSize: 11,
     fontWeight: '600',
-    color: '#64748b',
+    color: c.textMuted,
     marginBottom: 2,
   },
   summaryValue: {
     fontSize: 16,
     fontWeight: '800',
-    color: '#0f172a',
+    color: c.text,
   },
   summaryInvested: {
-    color: '#059669',
+    color: c.successStrong,
   },
   summaryDivider: {
     width: 1,
     height: 28,
-    backgroundColor: '#e2e8f0',
+    backgroundColor: c.border,
   },
 
   // ── Type filter row
@@ -779,7 +783,7 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 20,
-    backgroundColor: '#f1f5f9',
+    backgroundColor: c.surfaceAlt,
   },
   typeChipActive: {
     backgroundColor: '#1e293b',
@@ -787,7 +791,7 @@ const styles = StyleSheet.create({
   typeChipText: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#475569',
+    color: c.textMuted,
   },
   typeChipTextActive: {
     fontSize: 12,
@@ -803,18 +807,18 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 10,
     borderRadius: 20,
-    backgroundColor: '#f1f5f9',
+    backgroundColor: c.surfaceAlt,
     borderWidth: 1,
-    borderColor: '#e2e8f0',
+    borderColor: c.border,
   },
   filterBtnActive: {
-    backgroundColor: '#2563EB',
-    borderColor: '#2563EB',
+    backgroundColor: c.primary,
+    borderColor: c.primary,
   },
   filterBtnText: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#475569',
+    color: c.textMuted,
   },
   filterBtnTextActive: {
     color: '#ffffff',
@@ -829,13 +833,13 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     marginHorizontal: 16,
     marginBottom: 4,
-    backgroundColor: '#f1f5f9',
+    backgroundColor: c.surfaceAlt,
     borderRadius: 8,
   },
   activeFilterText: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#475569',
+    color: c.textMuted,
   },
 
   // ── Section header
@@ -850,18 +854,18 @@ const styles = StyleSheet.create({
   sectionMonth: {
     fontSize: 15,
     fontWeight: '700',
-    color: '#0f172a',
+    color: c.text,
     letterSpacing: 0.2,
   },
   sectionTotal: {
     fontSize: 15,
     fontWeight: '700',
-    color: '#2563EB',
+    color: c.primary,
   },
 
   // ── Transaction card
   card: {
-    backgroundColor: '#ffffff',
+    backgroundColor: c.surface,
     borderRadius: 16,
     padding: 14,
     marginHorizontal: 16,
@@ -874,38 +878,38 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     elevation: 2,
     borderWidth: 1,
-    borderColor: '#f1f5f9',
+    borderColor: c.border,
   },
   iconBox: {
     width: 42,
     height: 42,
     borderRadius: 21,
-    backgroundColor: '#f8fafc',
+    backgroundColor: c.bg,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
     borderWidth: 1,
-    borderColor: '#e2e8f0',
+    borderColor: c.border,
   },
   iconText: { fontSize: 19 },
 
   details: { flex: 1, justifyContent: 'center', paddingRight: 8 },
-  desc: { fontSize: 14, fontWeight: '600', color: '#1e293b', marginBottom: 3 },
+  desc: { fontSize: 14, fontWeight: '600', color: c.text, marginBottom: 3 },
 
   metaRow: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' },
-  categoryLabel: { fontSize: 11, color: '#64748b', fontWeight: '500' },
+  categoryLabel: { fontSize: 11, color: c.textMuted, fontWeight: '500' },
   typeInline: { fontSize: 11, fontWeight: '600' },
-  metaDot: { fontSize: 11, color: '#94a3b8', marginHorizontal: 4 },
-  dateText: { fontSize: 11, color: '#94a3b8' },
+  metaDot: { fontSize: 11, color: c.textSubtle, marginHorizontal: 4 },
+  dateText: { fontSize: 11, color: c.textSubtle },
 
   tagsRow: { flexDirection: 'row', gap: 4, marginTop: 4, flexWrap: 'wrap' },
-  tagChip: { backgroundColor: '#F3F4F6', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4 },
-  tagText: { fontSize: 9, color: '#4B5563', fontWeight: '700', letterSpacing: 0.4 },
+  tagChip: { backgroundColor: c.surfaceAlt, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4 },
+  tagText: { fontSize: 9, color: c.textMuted, fontWeight: '700', letterSpacing: 0.4 },
 
   // ── Right column
   rightCol: { alignItems: 'flex-end', gap: 4, minWidth: 72 },
-  amount: { fontSize: 15, fontWeight: '700', color: '#1e293b' },
-  income: { color: '#10b981' },
+  amount: { fontSize: 15, fontWeight: '700', color: c.text },
+  income: { color: c.success },
 
   overflowBtn: {
     padding: 4,
@@ -920,7 +924,7 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: '#2563EB',
+    backgroundColor: c.primary,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#2563EB',
@@ -940,8 +944,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
   },
   emptyEmoji: { fontSize: 52, marginBottom: 16 },
-  emptyTitle: { fontSize: 18, fontWeight: '700', color: '#1e293b', marginBottom: 8 },
-  emptySubtitle: { fontSize: 14, color: '#64748b', textAlign: 'center', lineHeight: 20 },
+  emptyTitle: { fontSize: 18, fontWeight: '700', color: c.text, marginBottom: 8 },
+  emptySubtitle: { fontSize: 14, color: c.textMuted, textAlign: 'center', lineHeight: 20 },
 
   // ── Overflow action sheet
   overflowOverlay: {
@@ -950,7 +954,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   overflowSheet: {
-    backgroundColor: '#ffffff',
+    backgroundColor: c.surface,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 20,
@@ -960,21 +964,21 @@ const styles = StyleSheet.create({
     width: 36,
     height: 4,
     borderRadius: 2,
-    backgroundColor: '#e2e8f0',
+    backgroundColor: c.border,
     alignSelf: 'center',
     marginBottom: 16,
   },
   overflowTitle: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#0f172a',
+    color: c.text,
     textAlign: 'center',
     marginBottom: 2,
   },
   overflowSubtitle: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#64748b',
+    color: c.textMuted,
     textAlign: 'center',
     marginBottom: 16,
   },
@@ -984,12 +988,12 @@ const styles = StyleSheet.create({
     gap: 12,
     paddingVertical: 14,
     borderBottomWidth: 1,
-    borderBottomColor: '#f1f5f9',
+    borderBottomColor: c.border,
   },
   overflowActionText: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#1e293b',
+    color: c.text,
   },
   overflowCancel: {
     paddingVertical: 14,
@@ -999,7 +1003,7 @@ const styles = StyleSheet.create({
   overflowCancelText: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#64748b',
+    color: c.textMuted,
   },
 
   // ── Filter modal
@@ -1009,7 +1013,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   filterSheet: {
-    backgroundColor: '#ffffff',
+    backgroundColor: c.surface,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 20,
@@ -1025,17 +1029,17 @@ const styles = StyleSheet.create({
   filterSheetTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#0f172a',
+    color: c.text,
   },
   clearFiltersText: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#2563EB',
+    color: c.primary,
   },
   filterSectionLabel: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#64748b',
+    color: c.textMuted,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
     marginBottom: 10,
@@ -1053,13 +1057,13 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderRadius: 12,
-    backgroundColor: '#f1f5f9',
+    backgroundColor: c.surfaceAlt,
     borderWidth: 1,
-    borderColor: '#e2e8f0',
+    borderColor: c.border,
   },
   filterCategoryChipActive: {
-    backgroundColor: '#eff6ff',
-    borderColor: '#2563EB',
+    backgroundColor: c.primarySoft,
+    borderColor: c.primary,
   },
   filterCategoryEmoji: {
     fontSize: 14,
@@ -1067,10 +1071,10 @@ const styles = StyleSheet.create({
   filterCategoryText: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#475569',
+    color: c.textMuted,
   },
   filterCategoryTextActive: {
-    color: '#2563EB',
+    color: c.primary,
   },
   filterApplyBtn: {
     backgroundColor: '#1e293b',
@@ -1094,7 +1098,7 @@ const styles = StyleSheet.create({
     padding: 24,
   },
   editCard: {
-    backgroundColor: '#fff',
+    backgroundColor: c.surface,
     padding: 24,
     borderRadius: 16,
     elevation: 10,
@@ -1104,13 +1108,13 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
   },
   editTitle: { fontSize: 18, fontWeight: '700', marginBottom: 16, textAlign: 'center' },
-  label: { fontSize: 12, fontWeight: '600', color: '#64748B', marginBottom: 4 },
-  input: { borderWidth: 1, borderColor: '#E2E8F0', borderRadius: 8, padding: 12, marginBottom: 16, fontSize: 16 },
+  label: { fontSize: 12, fontWeight: '600', color: c.textMuted, marginBottom: 4 },
+  input: { borderWidth: 1, borderColor: c.border, borderRadius: 8, padding: 12, marginBottom: 16, fontSize: 16 },
   editActions: { flexDirection: 'row', gap: 12, marginTop: 8 },
   editChips: { marginBottom: 16, flexGrow: 0 },
-  editChip: { paddingVertical: 8, paddingHorizontal: 12, borderRadius: 999, borderWidth: 1, borderColor: '#E2E8F0', marginRight: 8 },
-  editChipActive: { backgroundColor: '#2563EB', borderColor: '#2563EB' },
-  editChipText: { fontSize: 13, color: '#475569', fontWeight: '600' },
+  editChip: { paddingVertical: 8, paddingHorizontal: 12, borderRadius: 999, borderWidth: 1, borderColor: c.border, marginRight: 8 },
+  editChipActive: { backgroundColor: c.primary, borderColor: c.primary },
+  editChipText: { fontSize: 13, color: c.textMuted, fontWeight: '600' },
   editChipTextActive: { color: '#fff' },
   editBtn: { flex: 1, padding: 14, borderRadius: 8, alignItems: 'center' },
-});
+}));

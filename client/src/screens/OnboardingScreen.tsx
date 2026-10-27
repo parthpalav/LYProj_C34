@@ -14,6 +14,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuthStore } from '../store/useAuthStore';
 import { celebrate } from '../store/useCelebrationStore';
 
+import { createStyles, useTheme } from '../theme';
 const INCOME_TYPES = [
   { id: 'salaried', label: 'Salaried' },
   { id: 'freelancer', label: 'Freelance' },
@@ -23,6 +24,8 @@ const INCOME_TYPES = [
 ];
 
 export function OnboardingScreen(): React.ReactElement {
+  const { c } = useTheme();
+  const styles = useStyles();
   const insets = useSafeAreaInsets();
   const { user, completeOnboarding, loading, authError } = useAuthStore();
   const [submitting, setSubmitting] = useState(false);
@@ -93,7 +96,7 @@ export function OnboardingScreen(): React.ReactElement {
                 <TextInput
                   style={[styles.input, focusedField === 'age' && styles.inputFocused]}
                   placeholder="e.g. 26"
-                  placeholderTextColor="#9CA3AF"
+                  placeholderTextColor={c.textSubtle}
                   keyboardType="number-pad"
                   value={age}
                   onChangeText={setAge}
@@ -107,7 +110,7 @@ export function OnboardingScreen(): React.ReactElement {
                 <TextInput
                   style={[styles.input, focusedField === 'retirementAge' && styles.inputFocused]}
                   placeholder="e.g. 60"
-                  placeholderTextColor="#9CA3AF"
+                  placeholderTextColor={c.textSubtle}
                   keyboardType="number-pad"
                   value={retirementAge}
                   onChangeText={setRetirementAge}
@@ -122,7 +125,7 @@ export function OnboardingScreen(): React.ReactElement {
               <TextInput
                 style={[styles.input, focusedField === 'income' && styles.inputFocused]}
                 placeholder="e.g. 85000"
-                placeholderTextColor="#9CA3AF"
+                placeholderTextColor={c.textSubtle}
                 keyboardType="number-pad"
                 value={income}
                 onChangeText={setIncome}
@@ -159,7 +162,7 @@ export function OnboardingScreen(): React.ReactElement {
               <TextInput
                 style={[styles.input, focusedField === 'currentBalance' && styles.inputFocused]}
                 placeholder="e.g. 150000"
-                placeholderTextColor="#9CA3AF"
+                placeholderTextColor={c.textSubtle}
                 keyboardType="number-pad"
                 value={currentBalance}
                 onChangeText={setCurrentBalance}
@@ -173,7 +176,7 @@ export function OnboardingScreen(): React.ReactElement {
               <TextInput
                 style={[styles.input, focusedField === 'corpus' && styles.inputFocused]}
                 placeholder="e.g. 20000000 (2 Crore)"
-                placeholderTextColor="#9CA3AF"
+                placeholderTextColor={c.textSubtle}
                 keyboardType="number-pad"
                 value={retirementCorpusGoal}
                 onChangeText={setRetirementCorpusGoal}
@@ -202,10 +205,10 @@ export function OnboardingScreen(): React.ReactElement {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = createStyles((c) => ({
   rootContainer: {
     flex: 1,
-    backgroundColor: '#F3F4F6',
+    backgroundColor: c.surfaceAlt,
   },
   keyboardView: {
     flex: 1,
@@ -220,7 +223,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   badgeText: {
-    color: '#2563EB',
+    color: c.primary,
     fontWeight: '800',
     fontSize: 12,
     letterSpacing: 1,
@@ -229,28 +232,28 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     fontWeight: '900',
-    color: '#111827',
+    color: c.text,
     marginBottom: 6,
     letterSpacing: -0.5,
   },
   subtitle: {
     fontSize: 14,
-    color: '#6B7280',
+    color: c.textMuted,
     lineHeight: 20,
   },
   errorBanner: {
-    backgroundColor: '#FEE2E2',
+    backgroundColor: c.dangerSoft,
     padding: 12,
     borderRadius: 12,
     marginBottom: 16,
   },
   errorBannerText: {
-    color: '#B91C1C',
+    color: c.dangerStrong,
     fontSize: 13,
     fontWeight: '600',
   },
   card: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: c.surface,
     borderRadius: 20,
     padding: 20,
     marginBottom: 16,
@@ -260,17 +263,17 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 2,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: c.border,
   },
   sectionHeader: {
     fontSize: 16,
     fontWeight: '800',
-    color: '#111827',
+    color: c.text,
     marginBottom: 4,
   },
   sectionSub: {
     fontSize: 12,
-    color: '#6B7280',
+    color: c.textMuted,
     marginBottom: 16,
   },
   row: {
@@ -282,22 +285,22 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#374151',
+    color: c.textMuted,
     marginBottom: 6,
   },
   input: {
     height: 48,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: c.border,
     borderRadius: 12,
     paddingHorizontal: 14,
     fontSize: 14,
-    color: '#111827',
-    backgroundColor: '#F9FAFB',
+    color: c.text,
+    backgroundColor: c.bg,
   },
   inputFocused: {
-    borderColor: '#2563EB',
-    backgroundColor: '#FFFFFF',
+    borderColor: c.primary,
+    backgroundColor: c.surface,
   },
   chipRow: {
     flexDirection: 'row',
@@ -308,24 +311,24 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 20,
-    backgroundColor: '#F3F4F6',
+    backgroundColor: c.surfaceAlt,
     borderWidth: 1,
-    borderColor: '#E5E7EB',
+    borderColor: c.border,
   },
   chipActive: {
-    backgroundColor: '#EFF6FF',
-    borderColor: '#2563EB',
+    backgroundColor: c.primarySoft,
+    borderColor: c.primary,
   },
   chipText: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#4B5563',
+    color: c.textMuted,
   },
   chipTextActive: {
-    color: '#2563EB',
+    color: c.primary,
   },
   submitBtn: {
-    backgroundColor: '#2563EB',
+    backgroundColor: c.primary,
     height: 52,
     borderRadius: 14,
     justifyContent: 'center',
@@ -342,4 +345,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '800',
   },
-});
+}));

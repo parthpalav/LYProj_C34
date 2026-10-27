@@ -1,12 +1,15 @@
 import React, { useEffect, useState, useMemo } from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator, Alert, TextInput, Switch, KeyboardAvoidingView, Platform, Modal, FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { getLiabilities, createLiability, updateLiability, deleteLiability, getLiabilitiesPaymentsSummary, getLiabilityTransactions } from '../services/api';
 import { celebrate } from '../store/useCelebrationStore';
-import Animated, { FadeInDown, FadeOutLeft, LinearTransition } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
+import { enterUp, exitFade, listLayout } from '../motion';
 import { FloatingEmoji } from '../components/motion/FloatingEmoji';
 import { Liability, LiabilityPaymentSummary, LiabilityPaymentHistoryResponse, Transaction } from '../types';
 
+import { createStyles, useTheme } from '../theme';
 const VALID_CATEGORIES = [
   'Food & Dining', 'Groceries', 'Transport & Travel', 'Housing',
   'Utilities & Bills', 'Debt & Loan Payments', 'Shopping', 'Entertainment',
@@ -16,6 +19,9 @@ const VALID_TYPES: ('Need' | 'Want' | 'Investment')[] = ['Need', 'Want', 'Invest
 const FREQUENCIES = ['daily', 'weekly', 'monthly', 'yearly'];
 
 export function LiabilitiesScreen() {
+  const insets = useSafeAreaInsets();
+  const { c } = useTheme();
+  const styles = useStyles();
   const [liabilities, setLiabilities] = useState<Liability[]>([]);
   const [paymentSummaries, setPaymentSummaries] = useState<Record<string, LiabilityPaymentSummary>>({});
   const [loading, setLoading] = useState(true);
@@ -247,14 +253,14 @@ export function LiabilitiesScreen() {
   if (loading && !liabilities.length) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator size="large" color="#3B3BDE" />
+        <ActivityIndicator size="large" color={c.primary} />
       </View>
     );
   }
 
   return (
     <View style={styles.screen}>
-      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView contentContainerStyle={[styles.content, { paddingTop: insets.top + 8 }]} showsVerticalScrollIndicator={false}>
         <View style={styles.headerRow}>
           <Text style={styles.title}>Liabilities</Text>
           <TouchableOpacity style={styles.addBtn} onPress={openAddModal}>
@@ -294,7 +300,7 @@ export function LiabilitiesScreen() {
             {nextAutoDeduct ? (
               <View style={styles.nextDeductCard}>
                 <View style={styles.nextDeductIcon}>
-                  <Ionicons name="calendar" size={24} color="#3B3BDE" />
+                  <Ionicons name="calendar" size={24} color={c.primary} />
                 </View>
                 <View style={{ flex: 1 }}>
                   <Text style={styles.nextDeductName}>{nextAutoDeduct.name}</Text>
@@ -356,9 +362,9 @@ export function LiabilitiesScreen() {
               return (
                 <Animated.View
                   key={item.id}
-                  entering={FadeInDown.delay(Math.min(idx, 10) * 50).springify().damping(16)}
-                  exiting={FadeOutLeft}
-                  layout={LinearTransition.springify().damping(16)}
+                  entering={enterUp(idx)}
+                  exiting={exitFade}
+                  layout={listLayout}
                   style={[styles.card, item.autoDeduct && styles.cardAutoDeduct]}
                 >
                   <View style={styles.cardHeader}>
@@ -369,7 +375,7 @@ export function LiabilitiesScreen() {
 
                   {/* Recurrence Schedule */}
                   <View style={styles.scheduleRow}>
-                    <Ionicons name="repeat" size={16} color="#6B7280" />
+                    <Ionicons name="repeat" size={16} color={c.textMuted} />
                     <Text style={styles.scheduleText}>
                       {item.frequency}
                     </Text>
@@ -379,13 +385,13 @@ export function LiabilitiesScreen() {
                   <View style={styles.scheduleRow}>
                     {item.autoDeduct ? (
                       <>
-                        <Ionicons name="flash" size={16} color="#059669" />
-                        <Text style={[styles.scheduleText, { color: '#059669', fontWeight: '600' }]}>Auto Deduct ON</Text>
+                        <Ionicons name="flash" size={16} color={c.successStrong} />
+                        <Text style={[styles.scheduleText, { color: c.successStrong, fontWeight: '600' }]}>Auto Deduct ON</Text>
                       </>
                     ) : (
                       <>
-                        <Ionicons name="flash-off" size={16} color="#9CA3AF" />
-                        <Text style={[styles.scheduleText, { color: '#6B7280' }]}>Auto Deduct OFF</Text>
+                        <Ionicons name="flash-off" size={16} color={c.textSubtle} />
+                        <Text style={[styles.scheduleText, { color: c.textMuted }]}>Auto Deduct OFF</Text>
                       </>
                     )}
                   </View>
@@ -394,7 +400,7 @@ export function LiabilitiesScreen() {
                   <View style={styles.paymentSummaryBox}>
                     {hasPayments ? (
                       <View style={styles.paymentStatRow}>
-                        <Ionicons name="checkmark-circle-outline" size={16} color="#059669" />
+                        <Ionicons name="checkmark-circle-outline" size={16} color={c.successStrong} />
                         <Text style={styles.lastPaidText}>
                           Last paid: ₹{summary.lastPaymentAmount?.toLocaleString()} · {new Date(summary.lastPaymentDate!).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })}
                         </Text>
@@ -404,15 +410,15 @@ export function LiabilitiesScreen() {
                       </View>
                     ) : (
                       <View style={styles.paymentStatRow}>
-                        <Ionicons name="time-outline" size={16} color="#9CA3AF" />
+                        <Ionicons name="time-outline" size={16} color={c.textSubtle} />
                         <Text style={styles.noPaymentText}>No payments recorded yet</Text>
                       </View>
                     )}
 
                     {item.autoDeduct && item.nextDueDate && (
                       <View style={[styles.paymentStatRow, { marginTop: 4 }]}>
-                        <Ionicons name="calendar-outline" size={16} color="#3B3BDE" />
-                        <Text style={[styles.scheduleText, { color: '#3B3BDE', fontWeight: '600' }]}>
+                        <Ionicons name="calendar-outline" size={16} color={c.primary} />
+                        <Text style={[styles.scheduleText, { color: c.primary, fontWeight: '600' }]}>
                           Next deduction: ₹{item.amount.toLocaleString()} · {new Date(item.nextDueDate).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })}
                         </Text>
                       </View>
@@ -421,18 +427,18 @@ export function LiabilitiesScreen() {
 
                   <View style={styles.cardActions}>
                     <TouchableOpacity style={styles.historyActionBtn} onPress={() => openHistoryModal(item)}>
-                      <Ionicons name="receipt-outline" size={16} color="#3B3BDE" />
+                      <Ionicons name="receipt-outline" size={16} color={c.primary} />
                       <Text style={styles.historyActionText}>View Payment History</Text>
                     </TouchableOpacity>
 
                     <View style={styles.rightActions}>
                       <TouchableOpacity style={styles.actionBtn} onPress={() => openEditModal(item)}>
-                        <Ionicons name="pencil" size={16} color="#4B5563" />
+                        <Ionicons name="pencil" size={16} color={c.textMuted} />
                         <Text style={styles.actionText}>Edit</Text>
                       </TouchableOpacity>
                       <TouchableOpacity style={styles.actionBtn} onPress={() => handleDelete(item.id)}>
-                        <Ionicons name="trash" size={16} color="#EF4444" />
-                        <Text style={[styles.actionText, { color: '#EF4444' }]}>Delete</Text>
+                        <Ionicons name="trash" size={16} color={c.danger} />
+                        <Text style={[styles.actionText, { color: c.danger }]}>Delete</Text>
                       </TouchableOpacity>
                     </View>
                   </View>
@@ -450,7 +456,7 @@ export function LiabilitiesScreen() {
             <View style={styles.modalHeader}>
               <Text style={styles.modalTitle}>{editingId ? 'Edit Liability' : 'Add Liability'}</Text>
               <TouchableOpacity onPress={() => setModalVisible(false)}>
-                <Ionicons name="close" size={28} color="#111827" />
+                <Ionicons name="close" size={28} color={c.text} />
               </TouchableOpacity>
             </View>
 
@@ -551,18 +557,18 @@ export function LiabilitiesScreen() {
               <Text style={styles.historyModalSubtitle}>Payment History</Text>
             </View>
             <TouchableOpacity onPress={() => setHistoryModalVisible(false)} style={styles.closeBtn}>
-              <Ionicons name="close" size={26} color="#111827" />
+              <Ionicons name="close" size={26} color={c.text} />
             </TouchableOpacity>
           </View>
 
           {historyLoading && !historyData ? (
             <View style={styles.historyCenter}>
-              <ActivityIndicator size="large" color="#3B3BDE" />
+              <ActivityIndicator size="large" color={c.primary} />
               <Text style={styles.historyLoadingText}>Loading payments...</Text>
             </View>
           ) : historyError ? (
             <View style={styles.historyCenter}>
-              <Ionicons name="alert-circle-outline" size={48} color="#EF4444" />
+              <Ionicons name="alert-circle-outline" size={48} color={c.danger} />
               <Text style={styles.historyErrorText}>{historyError}</Text>
               <TouchableOpacity
                 style={styles.retryBtn}
@@ -606,7 +612,7 @@ export function LiabilitiesScreen() {
 
               {historyData.transactions.length === 0 ? (
                 <View style={styles.emptyHistoryBox}>
-                  <Ionicons name="receipt-outline" size={40} color="#9CA3AF" />
+                  <Ionicons name="receipt-outline" size={40} color={c.textSubtle} />
                   <Text style={styles.emptyHistoryTitle}>No payments recorded yet</Text>
                   <Text style={styles.emptyHistoryDesc}>
                     When automatic or scheduled deductions execute, linked transactions will appear here.
@@ -623,12 +629,12 @@ export function LiabilitiesScreen() {
                           </Text>
                           {tx.classificationSource === 'liability' ? (
                             <View style={styles.autoDeductBadge}>
-                              <Ionicons name="flash" size={10} color="#059669" />
+                              <Ionicons name="flash" size={10} color={c.successStrong} />
                               <Text style={styles.autoDeductBadgeText}>Auto Deduct</Text>
                             </View>
                           ) : (
                             <View style={styles.manualPaymentBadge}>
-                              <Ionicons name="hand-left-outline" size={10} color="#4338CA" />
+                              <Ionicons name="hand-left-outline" size={10} color={c.primary} />
                               <Text style={styles.manualPaymentBadgeText}>Manual Payment</Text>
                             </View>
                           )}
@@ -648,7 +654,7 @@ export function LiabilitiesScreen() {
                       disabled={loadingMore}
                     >
                       {loadingMore ? (
-                        <ActivityIndicator size="small" color="#3B3BDE" />
+                        <ActivityIndicator size="small" color={c.primary} />
                       ) : (
                         <Text style={styles.loadMoreText}>Load More Payments</Text>
                       )}
@@ -664,126 +670,126 @@ export function LiabilitiesScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = createStyles((c) => ({
   center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  screen: { flex: 1, backgroundColor: '#F4F6FA' },
+  screen: { flex: 1, backgroundColor: c.bg },
   content: { padding: 16, paddingBottom: 40 },
   headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
-  title: { fontSize: 24, fontWeight: '800', color: '#111827' },
-  addBtn: { backgroundColor: '#3B3BDE', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, paddingVertical: 8, borderRadius: 20 },
+  title: { fontSize: 24, fontWeight: '800', color: c.text },
+  addBtn: { backgroundColor: c.primary, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 12, paddingVertical: 8, borderRadius: 20 },
   addBtnText: { color: '#fff', fontWeight: '700', marginLeft: 4 },
   emptyState: { alignItems: 'center', marginTop: 60, padding: 20 },
-  emptyTitle: { fontSize: 18, fontWeight: '700', color: '#374151', marginTop: 16, marginBottom: 8 },
-  emptyDesc: { fontSize: 14, color: '#6B7280', textAlign: 'center', lineHeight: 22, marginBottom: 24 },
-  emptyAddBtn: { backgroundColor: '#3B3BDE', flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, borderRadius: 12 },
-  sectionTitle: { fontSize: 16, fontWeight: '800', color: '#111827', marginTop: 24, marginBottom: 12 },
+  emptyTitle: { fontSize: 18, fontWeight: '700', color: c.textMuted, marginTop: 16, marginBottom: 8 },
+  emptyDesc: { fontSize: 14, color: c.textMuted, textAlign: 'center', lineHeight: 22, marginBottom: 24 },
+  emptyAddBtn: { backgroundColor: c.primary, flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 12, borderRadius: 12 },
+  sectionTitle: { fontSize: 16, fontWeight: '800', color: c.text, marginTop: 24, marginBottom: 12 },
   
   // Overview Summary
   summaryRow: { flexDirection: 'row', gap: 12, marginBottom: 8 },
-  summaryBox: { flex: 1, backgroundColor: '#fff', padding: 16, borderRadius: 16, borderWidth: 1, borderColor: '#F0F1F5', elevation: 1, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 3 },
-  summaryLabel: { fontSize: 13, color: '#6B7280', fontWeight: '600', marginBottom: 4 },
-  summaryValue: { fontSize: 20, fontWeight: '800', color: '#111827' },
+  summaryBox: { flex: 1, backgroundColor: c.surface, padding: 16, borderRadius: 16, borderWidth: 1, borderColor: c.border, elevation: 1, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 3 },
+  summaryLabel: { fontSize: 13, color: c.textMuted, fontWeight: '600', marginBottom: 4 },
+  summaryValue: { fontSize: 20, fontWeight: '800', color: c.text },
 
   // Next Auto Deduct Card
-  nextDeductCard: { flexDirection: 'row', backgroundColor: '#EEF2FF', padding: 16, borderRadius: 16, alignItems: 'center', borderWidth: 1, borderColor: '#E0E7FF' },
-  nextDeductIcon: { width: 44, height: 44, borderRadius: 22, backgroundColor: '#DBEAFE', justifyContent: 'center', alignItems: 'center', marginRight: 12 },
-  nextDeductName: { fontSize: 15, fontWeight: '700', color: '#1E40AF', marginBottom: 2 },
-  nextDeductAmount: { fontSize: 16, fontWeight: '800', color: '#111827' },
-  nextDeductDate: { fontSize: 14, fontWeight: '700', color: '#3B3BDE' },
-  noUpcomingCard: { backgroundColor: '#F9FAFB', padding: 16, borderRadius: 12, borderWidth: 1, borderColor: '#E5E7EB', alignItems: 'center' },
-  noUpcomingText: { color: '#6B7280', fontSize: 14, fontStyle: 'italic' },
+  nextDeductCard: { flexDirection: 'row', backgroundColor: c.primarySoft, padding: 16, borderRadius: 16, alignItems: 'center', borderWidth: 1, borderColor: c.primarySoft },
+  nextDeductIcon: { width: 44, height: 44, borderRadius: 22, backgroundColor: c.primarySoft, justifyContent: 'center', alignItems: 'center', marginRight: 12 },
+  nextDeductName: { fontSize: 15, fontWeight: '700', color: c.primary, marginBottom: 2 },
+  nextDeductAmount: { fontSize: 16, fontWeight: '800', color: c.text },
+  nextDeductDate: { fontSize: 14, fontWeight: '700', color: c.primary },
+  noUpcomingCard: { backgroundColor: c.bg, padding: 16, borderRadius: 12, borderWidth: 1, borderColor: c.border, alignItems: 'center' },
+  noUpcomingText: { color: c.textMuted, fontSize: 14, fontStyle: 'italic' },
 
   // Upcoming List
-  upcomingContainer: { backgroundColor: '#fff', borderRadius: 16, paddingHorizontal: 16, borderWidth: 1, borderColor: '#F0F1F5', shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 3, elevation: 1 },
-  upcomingItem: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#F3F4F6' },
-  upcomingName: { fontSize: 14, fontWeight: '700', color: '#374151', marginBottom: 2 },
-  upcomingMeta: { fontSize: 12, color: '#6B7280', textTransform: 'capitalize' },
-  upcomingAmount: { fontSize: 14, fontWeight: '800', color: '#111827' },
+  upcomingContainer: { backgroundColor: c.surface, borderRadius: 16, paddingHorizontal: 16, borderWidth: 1, borderColor: c.border, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 3, elevation: 1 },
+  upcomingItem: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: c.border },
+  upcomingName: { fontSize: 14, fontWeight: '700', color: c.textMuted, marginBottom: 2 },
+  upcomingMeta: { fontSize: 12, color: c.textMuted, textTransform: 'capitalize' },
+  upcomingAmount: { fontSize: 14, fontWeight: '800', color: c.text },
 
   // Breakdown
-  breakdownContainer: { backgroundColor: '#fff', borderRadius: 16, paddingHorizontal: 16, borderWidth: 1, borderColor: '#F0F1F5', shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 3, elevation: 1 },
-  breakdownItem: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: '#F3F4F6' },
-  breakdownCat: { fontSize: 14, color: '#4B5563', fontWeight: '600' },
-  breakdownAmt: { fontSize: 14, color: '#111827', fontWeight: '800' },
+  breakdownContainer: { backgroundColor: c.surface, borderRadius: 16, paddingHorizontal: 16, borderWidth: 1, borderColor: c.border, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 3, elevation: 1 },
+  breakdownItem: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: c.border },
+  breakdownCat: { fontSize: 14, color: c.textMuted, fontWeight: '600' },
+  breakdownAmt: { fontSize: 14, color: c.text, fontWeight: '800' },
 
   // Standard Liability Card
-  card: { backgroundColor: '#fff', borderRadius: 16, padding: 16, marginBottom: 14, borderWidth: 1, borderColor: '#F0F1F5', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.04, shadowRadius: 6, elevation: 2 },
-  cardAutoDeduct: { borderColor: '#E0E7FF', backgroundColor: '#FDFDFF' },
+  card: { backgroundColor: c.surface, borderRadius: 16, padding: 16, marginBottom: 14, borderWidth: 1, borderColor: c.border, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.04, shadowRadius: 6, elevation: 2 },
+  cardAutoDeduct: { borderColor: c.primarySoft, backgroundColor: c.surface },
   cardHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 4 },
-  cardName: { fontSize: 16, fontWeight: '700', color: '#111827', flex: 1 },
-  cardAmount: { fontSize: 18, fontWeight: '800', color: '#111827' },
-  cardMeta: { fontSize: 13, color: '#6B7280', marginBottom: 10 },
+  cardName: { fontSize: 16, fontWeight: '700', color: c.text, flex: 1 },
+  cardAmount: { fontSize: 18, fontWeight: '800', color: c.text },
+  cardMeta: { fontSize: 13, color: c.textMuted, marginBottom: 10 },
   scheduleRow: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: 6 },
-  scheduleText: { fontSize: 13, color: '#4B5563', textTransform: 'capitalize' },
+  scheduleText: { fontSize: 13, color: c.textMuted, textTransform: 'capitalize' },
 
   // Payment Summary Box in Card
-  paymentSummaryBox: { backgroundColor: '#F9FAFB', borderRadius: 10, padding: 10, marginTop: 8, marginBottom: 8, borderWidth: 1, borderColor: '#F3F4F6' },
+  paymentSummaryBox: { backgroundColor: c.bg, borderRadius: 10, padding: 10, marginTop: 8, marginBottom: 8, borderWidth: 1, borderColor: c.border },
   paymentStatRow: { flexDirection: 'row', alignItems: 'center', gap: 6, flexWrap: 'wrap' },
-  lastPaidText: { fontSize: 13, color: '#111827', fontWeight: '600' },
-  paymentCountBadge: { fontSize: 11, color: '#059669', backgroundColor: '#ECFDF5', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6, fontWeight: '700', marginLeft: 'auto' },
-  noPaymentText: { fontSize: 12, color: '#9CA3AF', fontStyle: 'italic' },
+  lastPaidText: { fontSize: 13, color: c.text, fontWeight: '600' },
+  paymentCountBadge: { fontSize: 11, color: c.successStrong, backgroundColor: c.successSoft, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6, fontWeight: '700', marginLeft: 'auto' },
+  noPaymentText: { fontSize: 12, color: c.textSubtle, fontStyle: 'italic' },
 
-  cardActions: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 10, paddingTop: 10, borderTopWidth: 1, borderTopColor: '#F3F4F6' },
+  cardActions: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 10, paddingTop: 10, borderTopWidth: 1, borderTopColor: c.border },
   historyActionBtn: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingVertical: 4, paddingHorizontal: 6 },
-  historyActionText: { fontSize: 13, fontWeight: '700', color: '#3B3BDE' },
+  historyActionText: { fontSize: 13, fontWeight: '700', color: c.primary },
   rightActions: { flexDirection: 'row', alignItems: 'center', gap: 14 },
   actionBtn: { flexDirection: 'row', alignItems: 'center', gap: 4 },
-  actionText: { fontSize: 13, fontWeight: '600', color: '#4B5563' },
+  actionText: { fontSize: 13, fontWeight: '600', color: c.textMuted },
 
   // Add/Edit Modal
   modalContent: { padding: 20, paddingBottom: 60 },
   modalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24 },
-  modalTitle: { fontSize: 22, fontWeight: '800', color: '#111827' },
+  modalTitle: { fontSize: 22, fontWeight: '800', color: c.text },
   row: { flexDirection: 'row' },
   inputGroup: { marginBottom: 16 },
-  label: { fontSize: 13, fontWeight: '600', color: '#374151', marginBottom: 8 },
-  helperText: { fontSize: 12, color: '#6B7280', marginBottom: 4 },
-  input: { height: 48, borderWidth: 1, borderColor: '#D1D5DB', borderRadius: 12, paddingHorizontal: 14, fontSize: 16, backgroundColor: '#F9FAFB' },
-  chip: { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, backgroundColor: '#F3F4F6', borderWidth: 1, borderColor: '#E5E7EB', marginRight: 8 },
-  chipActive: { backgroundColor: '#EFF6FF', borderColor: '#3B3BDE' },
-  chipText: { fontSize: 13, fontWeight: '600', color: '#4B5563' },
-  chipTextActive: { color: '#3B3BDE' },
-  switchGroup: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, padding: 12, backgroundColor: '#F9FAFB', borderRadius: 12, borderWidth: 1, borderColor: '#F3F4F6' },
-  saveBtn: { backgroundColor: '#3B3BDE', height: 52, borderRadius: 14, justifyContent: 'center', alignItems: 'center', marginTop: 24 },
+  label: { fontSize: 13, fontWeight: '600', color: c.textMuted, marginBottom: 8 },
+  helperText: { fontSize: 12, color: c.textMuted, marginBottom: 4 },
+  input: { height: 48, borderWidth: 1, borderColor: c.border, borderRadius: 12, paddingHorizontal: 14, fontSize: 16, backgroundColor: c.bg },
+  chip: { paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, backgroundColor: c.surfaceAlt, borderWidth: 1, borderColor: c.border, marginRight: 8 },
+  chipActive: { backgroundColor: c.primarySoft, borderColor: c.primary },
+  chipText: { fontSize: 13, fontWeight: '600', color: c.textMuted },
+  chipTextActive: { color: c.primary },
+  switchGroup: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, padding: 12, backgroundColor: c.bg, borderRadius: 12, borderWidth: 1, borderColor: c.border },
+  saveBtn: { backgroundColor: c.primary, height: 52, borderRadius: 14, justifyContent: 'center', alignItems: 'center', marginTop: 24 },
   saveBtnText: { color: '#fff', fontSize: 16, fontWeight: '700' },
 
   // History Modal Styles
-  historyModalContainer: { flex: 1, backgroundColor: '#F9FAFB' },
-  historyModalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 20, borderBottomWidth: 1, borderBottomColor: '#E5E7EB', backgroundColor: '#fff' },
-  historyModalTitle: { fontSize: 20, fontWeight: '800', color: '#111827' },
-  historyModalSubtitle: { fontSize: 13, color: '#6B7280', fontWeight: '500', marginTop: 2 },
+  historyModalContainer: { flex: 1, backgroundColor: c.bg },
+  historyModalHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 20, borderBottomWidth: 1, borderBottomColor: c.border, backgroundColor: c.surface },
+  historyModalTitle: { fontSize: 20, fontWeight: '800', color: c.text },
+  historyModalSubtitle: { fontSize: 13, color: c.textMuted, fontWeight: '500', marginTop: 2 },
   closeBtn: { padding: 4 },
   historyCenter: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 },
-  historyLoadingText: { marginTop: 12, fontSize: 14, color: '#6B7280', fontWeight: '500' },
-  historyErrorText: { marginTop: 12, fontSize: 14, color: '#EF4444', textAlign: 'center', marginBottom: 16 },
-  retryBtn: { backgroundColor: '#3B3BDE', paddingHorizontal: 18, paddingVertical: 8, borderRadius: 10 },
+  historyLoadingText: { marginTop: 12, fontSize: 14, color: c.textMuted, fontWeight: '500' },
+  historyErrorText: { marginTop: 12, fontSize: 14, color: c.danger, textAlign: 'center', marginBottom: 16 },
+  retryBtn: { backgroundColor: c.primary, paddingHorizontal: 18, paddingVertical: 8, borderRadius: 10 },
   retryBtnText: { color: '#fff', fontWeight: '700', fontSize: 14 },
   historyContent: { padding: 16, paddingBottom: 40 },
 
   // Historical Summary Card
-  historySummaryCard: { flexDirection: 'row', backgroundColor: '#fff', borderRadius: 16, padding: 16, marginBottom: 20, borderWidth: 1, borderColor: '#E5E7EB', shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.04, shadowRadius: 4, elevation: 1 },
+  historySummaryCard: { flexDirection: 'row', backgroundColor: c.surface, borderRadius: 16, padding: 16, marginBottom: 20, borderWidth: 1, borderColor: c.border, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.04, shadowRadius: 4, elevation: 1 },
   historySummaryCol: { flex: 1, alignItems: 'center' },
-  historySummaryLabel: { fontSize: 11, fontWeight: '600', color: '#6B7280', textTransform: 'uppercase', marginBottom: 4, letterSpacing: 0.5 },
-  historySummaryValue: { fontSize: 16, fontWeight: '800', color: '#111827' },
-  historySummaryDivider: { width: 1, backgroundColor: '#E5E7EB', marginVertical: 4 },
+  historySummaryLabel: { fontSize: 11, fontWeight: '600', color: c.textMuted, textTransform: 'uppercase', marginBottom: 4, letterSpacing: 0.5 },
+  historySummaryValue: { fontSize: 16, fontWeight: '800', color: c.text },
+  historySummaryDivider: { width: 1, backgroundColor: c.border, marginVertical: 4 },
 
-  historyListTitle: { fontSize: 16, fontWeight: '800', color: '#111827', marginBottom: 12 },
+  historyListTitle: { fontSize: 16, fontWeight: '800', color: c.text, marginBottom: 12 },
 
-  emptyHistoryBox: { backgroundColor: '#fff', padding: 28, borderRadius: 16, alignItems: 'center', borderWidth: 1, borderColor: '#E5E7EB', marginTop: 8 },
-  emptyHistoryTitle: { fontSize: 16, fontWeight: '700', color: '#374151', marginTop: 12, marginBottom: 6 },
-  emptyHistoryDesc: { fontSize: 13, color: '#6B7280', textAlign: 'center', lineHeight: 18 },
+  emptyHistoryBox: { backgroundColor: c.surface, padding: 28, borderRadius: 16, alignItems: 'center', borderWidth: 1, borderColor: c.border, marginTop: 8 },
+  emptyHistoryTitle: { fontSize: 16, fontWeight: '700', color: c.textMuted, marginTop: 12, marginBottom: 6 },
+  emptyHistoryDesc: { fontSize: 13, color: c.textMuted, textAlign: 'center', lineHeight: 18 },
 
-  historyTxRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#fff', padding: 14, borderRadius: 14, marginBottom: 8, borderWidth: 1, borderColor: '#F0F1F5' },
+  historyTxRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', backgroundColor: c.surface, padding: 14, borderRadius: 14, marginBottom: 8, borderWidth: 1, borderColor: c.border },
   historyTxLeft: { flex: 1 },
   historyTxTopLine: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 2 },
-  historyTxDate: { fontSize: 14, fontWeight: '700', color: '#111827' },
-  autoDeductBadge: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#ECFDF5', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6, gap: 2 },
-  autoDeductBadgeText: { fontSize: 10, color: '#059669', fontWeight: '700' },
-  manualPaymentBadge: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#EEF2FF', paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6, gap: 2 },
-  manualPaymentBadgeText: { fontSize: 10, color: '#4338CA', fontWeight: '700' },
-  historyTxMeta: { fontSize: 12, color: '#6B7280' },
-  historyTxAmount: { fontSize: 15, fontWeight: '800', color: '#111827' },
+  historyTxDate: { fontSize: 14, fontWeight: '700', color: c.text },
+  autoDeductBadge: { flexDirection: 'row', alignItems: 'center', backgroundColor: c.successSoft, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6, gap: 2 },
+  autoDeductBadgeText: { fontSize: 10, color: c.successStrong, fontWeight: '700' },
+  manualPaymentBadge: { flexDirection: 'row', alignItems: 'center', backgroundColor: c.primarySoft, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6, gap: 2 },
+  manualPaymentBadgeText: { fontSize: 10, color: c.primary, fontWeight: '700' },
+  historyTxMeta: { fontSize: 12, color: c.textMuted },
+  historyTxAmount: { fontSize: 15, fontWeight: '800', color: c.text },
 
-  loadMoreBtn: { backgroundColor: '#EFF6FF', paddingVertical: 12, borderRadius: 12, alignItems: 'center', marginTop: 12, borderWidth: 1, borderColor: '#DBEAFE' },
-  loadMoreText: { fontSize: 13, fontWeight: '700', color: '#2563EB' }
-});
+  loadMoreBtn: { backgroundColor: c.primarySoft, paddingVertical: 12, borderRadius: 12, alignItems: 'center', marginTop: 12, borderWidth: 1, borderColor: c.primarySoft },
+  loadMoreText: { fontSize: 13, fontWeight: '700', color: c.primary }
+}));

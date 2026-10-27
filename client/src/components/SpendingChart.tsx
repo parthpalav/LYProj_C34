@@ -1,11 +1,13 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+import { createStyles } from '../theme';
 interface Props {
   values: number[];
 }
 
 export function SpendingChart({ values }: Props): React.ReactElement {
+  const styles = useStyles();
   const maxValue = Math.max(...values, 1);
 
   return (
@@ -22,9 +24,9 @@ export function SpendingChart({ values }: Props): React.ReactElement {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = createStyles((c) => ({
   container: {
-    backgroundColor: '#ffffff',
+    backgroundColor: c.surface,
     borderRadius: 14,
     padding: 16,
     marginBottom: 12
@@ -40,13 +42,13 @@ const styles = StyleSheet.create({
     width: 20,
     height: '100%',
     justifyContent: 'flex-end',
-    backgroundColor: '#f1f5f9',
+    backgroundColor: c.surfaceAlt,
     borderRadius: 8,
     overflow: 'hidden'
   },
   bar: {
     width: '100%',
-    backgroundColor: '#0f766e',
+    backgroundColor: c.successStrong,
     borderRadius: 8
   }
-});
+}));

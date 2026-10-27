@@ -1,18 +1,12 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  ActivityIndicator,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView
-} from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { useAuthStore } from '../store/useAuthStore';
 import { evaluatePasswordStrength } from '../utils/authValidation';
 import { Ionicons } from '@expo/vector-icons';
+import { AuthButton } from '../components/auth/AuthShell';
+import { AuthInput } from '../components/auth/AuthInput';
+import { AnimatedBar } from '../components/motion/AnimatedBar';
+import { createStyles, useTheme } from '../theme';
 
 export function ResetPasswordScreen({ onBack, onComplete }: { onBack: () => void; onComplete: () => void }): React.ReactElement {
   const [token, setToken] = useState('');
@@ -21,8 +15,10 @@ export function ResetPasswordScreen({ onBack, onComplete }: { onBack: () => void
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-
   const { resetPassword, loading, authError, fieldErrors, clearErrors } = useAuthStore();
+  const { c } = useTheme();
+  const styles = useStyles();
+
   const strength = evaluatePasswordStrength(password);
 
   const handleReset = async () => {
@@ -38,178 +34,146 @@ export function ResetPasswordScreen({ onBack, onComplete }: { onBack: () => void
   };
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
-      <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
-        <View style={styles.card}>
-          <Text style={styles.title}>Set New Password</Text>
-          <Text style={styles.subtitle}>Enter the token sent to your email and your new password</Text>
+    <View>
+      <Text style={styles.heading}>Set a new password</Text>
+      <Text style={styles.subheading}>Paste the token from your email, then choose a new password.</Text>
 
-          {successMessage ? (
-            <View style={styles.successBanner}>
-              <Text style={styles.successBannerText}>{successMessage}</Text>
-            </View>
-          ) : null}
-
-          {authError ? (
-            <View style={styles.errorBanner}>
-              <Text style={styles.errorBannerText}>{authError}</Text>
-            </View>
-          ) : null}
-
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Reset Token</Text>
-            <TextInput
-              style={[styles.input, fieldErrors.token && styles.inputError]}
-              placeholder="Paste 64-character token"
-              placeholderTextColor="#9CA3AF"
-              value={token}
-              onChangeText={setToken}
-              autoCapitalize="none"
-            />
-            {fieldErrors.token ? <Text style={styles.fieldError}>{fieldErrors.token}</Text> : null}
-          </View>
-
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>New Password</Text>
-            <View style={styles.passwordFieldWrap}>
-              <TextInput
-                style={[styles.input, styles.passwordInput, fieldErrors.password && styles.inputError]}
-                placeholder="Min. 8 chars, mixed case, number & symbol"
-                placeholderTextColor="#9CA3AF"
-                value={password}
-                onChangeText={setPassword}
-                secureTextEntry={!showPassword}
-              />
-              <TouchableOpacity
-                style={styles.visibilityToggle}
-                onPress={() => setShowPassword((prev) => !prev)}
-                accessibilityRole="button"
-                accessibilityLabel={showPassword ? 'Hide password' : 'Show password'}
-                hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-                activeOpacity={0.7}
-              >
-                <Ionicons
-                  name={showPassword ? 'eye-off-outline' : 'eye-outline'}
-                  size={20}
-                  color="#6B7280"
-                />
-              </TouchableOpacity>
-            </View>
-            {password ? (
-              <View style={styles.strengthContainer}>
-                <View style={[styles.strengthBar, { backgroundColor: strength.color, width: `${(strength.score / 4) * 100}%` }]} />
-                <Text style={[styles.strengthLabel, { color: strength.color }]}>{strength.label}</Text>
-              </View>
-            ) : null}
-            {fieldErrors.password ? <Text style={styles.fieldError}>{fieldErrors.password}</Text> : null}
-          </View>
-
-          <View style={styles.inputGroup}>
-            <Text style={styles.label}>Confirm New Password</Text>
-            <View style={styles.passwordFieldWrap}>
-              <TextInput
-                style={[styles.input, styles.passwordInput, fieldErrors.confirmPassword && styles.inputError]}
-                placeholder="Re-enter password"
-                placeholderTextColor="#9CA3AF"
-                value={confirmPassword}
-                onChangeText={setConfirmPassword}
-                secureTextEntry={!showConfirmPassword}
-              />
-              <TouchableOpacity
-                style={styles.visibilityToggle}
-                onPress={() => setShowConfirmPassword((prev) => !prev)}
-                accessibilityRole="button"
-                accessibilityLabel={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}
-                hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
-                activeOpacity={0.7}
-              >
-                <Ionicons
-                  name={showConfirmPassword ? 'eye-off-outline' : 'eye-outline'}
-                  size={20}
-                  color="#6B7280"
-                />
-              </TouchableOpacity>
-            </View>
-            {fieldErrors.confirmPassword ? <Text style={styles.fieldError}>{fieldErrors.confirmPassword}</Text> : null}
-          </View>
-
-          <TouchableOpacity style={styles.submitBtn} onPress={handleReset} disabled={loading} activeOpacity={0.8}>
-            {loading ? (
-              <ActivityIndicator color="#FFFFFF" />
-            ) : (
-              <Text style={styles.submitBtnText}>Update Password</Text>
-            )}
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.backBtn} onPress={onBack} activeOpacity={0.8}>
-            <Text style={styles.backBtnText}>← Back</Text>
-          </TouchableOpacity>
+      {successMessage ? (
+        <View style={[styles.banner, styles.successBanner]}>
+          <Ionicons name="checkmark-circle" size={18} color={c.successStrong} />
+          <Text style={[styles.bannerText, { color: c.successStrong }]}>{successMessage}</Text>
         </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+      ) : null}
+
+      {authError ? (
+        <View style={[styles.banner, styles.errorBanner]}>
+          <Ionicons name="alert-circle" size={18} color={c.danger} />
+          <Text style={[styles.bannerText, { color: c.dangerStrong }]}>{authError}</Text>
+        </View>
+      ) : null}
+
+      <AuthInput
+        label="Reset token"
+        icon="key-outline"
+        placeholder="Paste 64-character token"
+        value={token}
+        onChangeText={setToken}
+        autoCapitalize="none"
+        autoCorrect={false}
+        error={fieldErrors.token}
+      />
+
+      <AuthInput
+        label="New password"
+        icon="lock-closed-outline"
+        style={styles.passwordInput}
+        placeholder="At least 8 characters"
+        textContentType="newPassword"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry={!showPassword}
+        error={fieldErrors.password}
+        trailing={
+          <TouchableOpacity
+            style={styles.visibilityToggle}
+            onPress={() => setShowPassword((prev) => !prev)}
+            accessibilityRole="button"
+            accessibilityLabel={showPassword ? 'Hide password' : 'Show password'}
+            hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+            activeOpacity={0.7}
+          >
+            <Ionicons
+              name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+              size={20}
+              color={c.textSubtle}
+            />
+          </TouchableOpacity>
+        }
+      />
+
+      {password ? (
+        <View style={styles.strengthContainer}>
+          <View style={styles.strengthTrack}>
+            <AnimatedBar progress={strength.score / 4} color={strength.color} height={4} />
+          </View>
+          <Text style={[styles.strengthLabel, { color: strength.color }]}>{strength.label}</Text>
+        </View>
+      ) : null}
+
+      <AuthInput
+        label="Confirm new password"
+        icon="shield-checkmark-outline"
+        style={styles.passwordInput}
+        placeholder="Re-enter password"
+        textContentType="newPassword"
+        value={confirmPassword}
+        onChangeText={setConfirmPassword}
+        secureTextEntry={!showConfirmPassword}
+        onSubmitEditing={handleReset}
+        error={fieldErrors.confirmPassword}
+        trailing={
+          <TouchableOpacity
+            style={styles.visibilityToggle}
+            onPress={() => setShowConfirmPassword((prev) => !prev)}
+            accessibilityRole="button"
+            accessibilityLabel={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}
+            hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+            activeOpacity={0.7}
+          >
+            <Ionicons
+              name={showConfirmPassword ? 'eye-off-outline' : 'eye-outline'}
+              size={20}
+              color={c.textSubtle}
+            />
+          </TouchableOpacity>
+        }
+      />
+
+      <AuthButton label="Update password" onPress={handleReset} loading={loading} />
+
+      <TouchableOpacity style={styles.backBtn} onPress={onBack} activeOpacity={0.7} accessibilityRole="button">
+        <Ionicons name="arrow-back" size={16} color={c.textMuted} />
+        <Text style={styles.backText}>Back</Text>
+      </TouchableOpacity>
+    </View>
   );
 }
 
-const styles = StyleSheet.create({
-  scrollContainer: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    padding: 24,
-    backgroundColor: '#F3F4F6'
+const useStyles = createStyles((c) => ({
+  heading: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: c.text,
+    marginBottom: 4,
   },
-  card: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    padding: 24,
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.06,
-    shadowRadius: 16,
-    elevation: 3
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: '800',
-    color: '#111827',
-    marginBottom: 6
-  },
-  subtitle: {
-    fontSize: 14,
-    color: '#6B7280',
-    marginBottom: 20
-  },
-  inputGroup: {
-    marginBottom: 16
-  },
-  label: {
+  subheading: {
     fontSize: 13,
-    fontWeight: '600',
-    color: '#374151',
-    marginBottom: 6
+    lineHeight: 19,
+    color: c.textMuted,
+    marginBottom: 18,
   },
-  input: {
-    height: 48,
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
+  banner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
     borderRadius: 12,
-    paddingHorizontal: 14,
-    fontSize: 14,
-    color: '#111827',
-    backgroundColor: '#F9FAFB'
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    marginBottom: 14,
   },
-  inputError: {
-    borderColor: '#EF4444'
+  successBanner: {
+    backgroundColor: c.successSoft,
   },
-  passwordFieldWrap: {
-    position: 'relative',
-    justifyContent: 'center',
-    width: '100%'
+  errorBanner: {
+    backgroundColor: c.dangerSoft,
+  },
+  bannerText: {
+    flex: 1,
+    fontSize: 13,
+    fontWeight: '500',
   },
   passwordInput: {
-    paddingRight: 46
+    paddingRight: 46,
   },
   visibilityToggle: {
     position: 'absolute',
@@ -217,70 +181,34 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 4
-  },
-  fieldError: {
-    color: '#EF4444',
-    fontSize: 12,
-    marginTop: 4
+    paddingHorizontal: 4,
   },
   strengthContainer: {
-    marginTop: 6,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8
+    gap: 10,
+    marginTop: -4,
+    marginBottom: 14,
   },
-  strengthBar: {
-    height: 4,
-    borderRadius: 2,
-    flex: 1
+  strengthTrack: {
+    flex: 1,
   },
   strengthLabel: {
-    fontSize: 11,
-    fontWeight: '600'
-  },
-  submitBtn: {
-    backgroundColor: '#2563EB',
-    height: 48,
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 8
-  },
-  submitBtnText: {
-    color: '#FFFFFF',
-    fontSize: 15,
-    fontWeight: '700'
+    fontSize: 12,
+    fontWeight: '600',
+    minWidth: 72,
+    textAlign: 'right',
   },
   backBtn: {
-    marginTop: 16,
-    alignItems: 'center'
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    paddingVertical: 14,
   },
-  backBtnText: {
-    color: '#6B7280',
+  backText: {
     fontSize: 14,
-    fontWeight: '600'
+    fontWeight: '500',
+    color: c.textMuted,
   },
-  errorBanner: {
-    backgroundColor: '#FEE2E2',
-    padding: 12,
-    borderRadius: 10,
-    marginBottom: 16
-  },
-  errorBannerText: {
-    color: '#B91C1C',
-    fontSize: 13,
-    fontWeight: '500'
-  },
-  successBanner: {
-    backgroundColor: '#DCFCE7',
-    padding: 12,
-    borderRadius: 10,
-    marginBottom: 16
-  },
-  successBannerText: {
-    color: '#15803D',
-    fontSize: 13,
-    fontWeight: '500'
-  }
-});
+}));

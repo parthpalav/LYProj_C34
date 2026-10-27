@@ -3,7 +3,10 @@ import { FlatList, RefreshControl, StyleSheet, Text, View } from 'react-native';
 import { getAlerts } from '../services/api';
 import { useStore } from '../store/useStore';
 
+import { createStyles, useTheme } from '../theme';
 export function AlertsScreen(): React.ReactElement {
+  const { c } = useTheme();
+  const styles = useStyles();
   const { alerts, setAlerts } = useStore();
   const [refreshing, setRefreshing] = useState(false);
 
@@ -32,7 +35,7 @@ export function AlertsScreen(): React.ReactElement {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={() => fetchAlerts(true)}
-            tintColor="#3B3BDE"
+            tintColor={c.primary}
             colors={['#3B3BDE']}
           />
         }
@@ -47,9 +50,9 @@ export function AlertsScreen(): React.ReactElement {
   );
 }
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f8fafc', padding: 16 },
-  card: { backgroundColor: '#ffffff', borderRadius: 12, padding: 12, marginBottom: 10 },
-  type: { fontSize: 12, color: '#0f766e', fontWeight: '700', marginBottom: 4 },
-  msg: { color: '#334155' }
-});
+const useStyles = createStyles((c) => ({
+  container: { flex: 1, backgroundColor: c.bg, padding: 16 },
+  card: { backgroundColor: c.surface, borderRadius: 12, padding: 12, marginBottom: 10 },
+  type: { fontSize: 12, color: c.successStrong, fontWeight: '700', marginBottom: 4 },
+  msg: { color: c.textMuted }
+}));

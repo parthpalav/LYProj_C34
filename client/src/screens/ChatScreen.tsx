@@ -17,27 +17,29 @@ import { getChatHistory, sendMessageToAgent } from '../services/api';
 import { useStore } from '../store/useStore';
 import { ChatMessage } from '../types';
 import Animated, {
-  FadeInLeft, FadeInRight, useAnimatedStyle, useReducedMotion, useSharedValue, withDelay, withRepeat, withSequence, withTiming,
+  Easing, FadeInLeft, FadeInRight, useAnimatedStyle, useReducedMotion, useSharedValue, withDelay, withRepeat, withTiming,
 } from 'react-native-reanimated';
+import { duration, easing } from '../motion';
 
-/** One bouncing dot of the "assistant is typing" indicator. */
+import { createStyles, useTheme, Palette } from '../theme';
+/** One dot of the "assistant is typing" indicator: a soft staggered opacity pulse. */
 function TypingDot({ index, style }: { index: number; style: object }) {
   const reduced = useReducedMotion();
-  const y = useSharedValue(0);
+  const opacity = useSharedValue(0.35);
   useEffect(() => {
     if (reduced) return;
-    y.value = withDelay(index * 140, withRepeat(withSequence(withTiming(-5, { duration: 260 }), withTiming(0, { duration: 260 })), -1));
-  }, [index, reduced, y]);
-  const animatedStyle = useAnimatedStyle(() => ({ transform: [{ translateY: y.value }] }));
+    opacity.value = withDelay(index * 200, withRepeat(withTiming(1, { duration: 600, easing: Easing.inOut(Easing.sin) }), -1, true));
+  }, [index, reduced, opacity]);
+  const animatedStyle = useAnimatedStyle(() => ({ opacity: opacity.value }));
   return <Animated.View style={[style, animatedStyle]} />;
 }
 
+// Bubbles fade in with a 6pt slide from the sender's side.
+const enterUser = FadeInRight.duration(duration.base).easing(easing.standard).withInitialValues({ opacity: 0, transform: [{ translateX: 6 }] });
+const enterBot = FadeInLeft.duration(duration.base).easing(easing.standard).withInitialValues({ opacity: 0, transform: [{ translateX: -6 }] });
+
 // ── Palette ────────────────────────────────────────────────
-const BLUE       = '#3B3BDE';
-const BLUE_LIGHT = '#EEF2FF';
-const TEXT_MAIN  = '#111827';
-const TEXT_MUTED = '#6B7280';
-const BORDER_CLR = '#E8ECF2';
+const tokens = (c: Palette) => ({ BLUE: c.primary, BLUE_LIGHT: c.primarySoft, TEXT_MAIN: c.text, TEXT_MUTED: c.textMuted, BORDER_CLR: c.surfaceAlt });
 
 // ── Grounded Quick Prompts ─────────────────────────────────
 const QUICK_PROMPTS = [
@@ -62,6 +64,9 @@ function formatTime(isoString?: string): string {
 // CHAT SCREEN
 // ═══════════════════════════════════════════════════════════
 export function ChatScreen(): React.ReactElement {
+  const { c } = useTheme();
+  const { BLUE } = tokens(c);
+  const s = useSStyles();
   const { user, chatHistory: storeHistory, addChatMessage, setChatHistory } = useStore();
   const [input,           setInput]           = useState('');
   const [loading,         setLoading]         = useState(false);
@@ -146,7 +151,7 @@ export function ChatScreen(): React.ReactElement {
 
     return (
       <Animated.View
-        entering={(isUser ? FadeInRight : FadeInLeft).springify().damping(18)}
+        entering={isUser ? enterUser : enterBot}
         style={[s.bubbleRow, isUser ? s.bubbleRowUser : s.bubbleRowBot]}
       >
         {!isUser && (
@@ -245,7 +250,7 @@ export function ChatScreen(): React.ReactElement {
             value={input}
             onChangeText={setInput}
             placeholder="Ask about spending, FMI, FIRE, liabilities…"
-            placeholderTextColor="#9CA3AF"
+            placeholderTextColor={c.textSubtle}
             multiline
           />
           <TouchableOpacity
@@ -263,8 +268,10 @@ export function ChatScreen(): React.ReactElement {
 }
 
 // ── Styles ─────────────────────────────────────────────────
-const s = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: '#F4F6FA' },
+const useSStyles = createStyles((c) => {
+  const { BLUE, BLUE_LIGHT, TEXT_MAIN, TEXT_MUTED, BORDER_CLR } = tokens(c);
+  return {
+  screen: { flex: 1, backgroundColor: c.bg },
 
   historyLoading: {
     flexDirection: 'row',
@@ -281,7 +288,7 @@ const s = StyleSheet.create({
   },
 
   emptyStateCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: c.surface,
     borderRadius: 16,
     padding: 16,
     marginBottom: 16,
@@ -326,11 +333,11 @@ const s = StyleSheet.create({
     shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 3, elevation: 1,
   },
   bubbleUser:    { backgroundColor: BLUE, borderBottomRightRadius: 4 },
-  bubbleBot:     { backgroundColor: '#fff', borderBottomLeftRadius: 4, borderWidth: 1, borderColor: BORDER_CLR },
+  bubbleBot:     { backgroundColor: c.surface, borderBottomLeftRadius: 4, borderWidth: 1, borderColor: BORDER_CLR },
   bubbleUserTxt: { fontSize: 15, color: '#fff', lineHeight: 22 },
   bubbleBotTxt:  { fontSize: 15, color: TEXT_MAIN, lineHeight: 22 },
 
-  timestampTxt:  { fontSize: 10, color: '#9CA3AF', marginTop: 4, paddingHorizontal: 4 },
+  timestampTxt:  { fontSize: 10, color: c.textSubtle, marginTop: 4, paddingHorizontal: 4 },
   timestampUser: { textAlign: 'right' },
   timestampBot:  { textAlign: 'left' },
 
@@ -340,7 +347,7 @@ const s = StyleSheet.create({
 
   // Quick prompts
   promptSection: {
-    backgroundColor: '#fff',
+    backgroundColor: c.surface,
     paddingTop: 10,
     paddingBottom: 8,
     borderTopWidth: 1,
@@ -358,20 +365,20 @@ const s = StyleSheet.create({
   promptScroll:  { paddingHorizontal: 16, gap: 8 },
   pill: {
     height: 34, paddingHorizontal: 14, borderRadius: 99,
-    borderWidth: 1, borderColor: '#D1D5DB', backgroundColor: '#F9FAFB',
+    borderWidth: 1, borderColor: c.border, backgroundColor: c.bg,
     justifyContent: 'center',
   },
-  pillTxt: { fontSize: 13, color: '#374151', fontWeight: '500' },
+  pillTxt: { fontSize: 13, color: c.textMuted, fontWeight: '500' },
 
   // Input bar
   inputBar: {
     flexDirection: 'row', alignItems: 'flex-end', gap: 10,
-    backgroundColor: '#fff', paddingHorizontal: 12, paddingVertical: 10,
+    backgroundColor: c.surface, paddingHorizontal: 12, paddingVertical: 10,
     borderTopWidth: 1, borderTopColor: BORDER_CLR,
   },
   input: {
     flex: 1, minHeight: 42, maxHeight: 100,
-    backgroundColor: '#F3F4F6', borderRadius: 21,
+    backgroundColor: c.surfaceAlt, borderRadius: 21,
     paddingHorizontal: 16, paddingTop: 10, paddingBottom: 10,
     fontSize: 15, color: TEXT_MAIN,
   },
@@ -380,6 +387,7 @@ const s = StyleSheet.create({
     backgroundColor: BLUE, alignItems: 'center', justifyContent: 'center',
     shadowColor: BLUE, shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.3, shadowRadius: 6, elevation: 4,
   },
-  sendBtnDisabled: { backgroundColor: '#D1D5DB', shadowOpacity: 0 },
+  sendBtnDisabled: { backgroundColor: c.border, shadowOpacity: 0 },
   sendIcon: { fontSize: 18, color: '#fff', fontWeight: '800' },
+};
 });

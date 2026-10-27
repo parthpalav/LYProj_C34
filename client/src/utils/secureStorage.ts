@@ -3,6 +3,7 @@ import { Platform } from 'react-native';
 
 const ACCESS_TOKEN_KEY = 'finaura_access_token';
 const REFRESH_TOKEN_KEY = 'finaura_refresh_token';
+const THEME_MODE_KEY = 'finaura_theme_mode';
 
 // In-memory web fallback
 const memoryStorage: Record<string, string> = {};
@@ -56,5 +57,7 @@ export const secureStorage = {
   clearTokens: async () => {
     await deleteItem(ACCESS_TOKEN_KEY);
     await deleteItem(REFRESH_TOKEN_KEY);
-  }
+  },
+  getThemeMode: (): Promise<string | null> => getItem(THEME_MODE_KEY),
+  setThemeMode: (mode: string): Promise<void> => setItem(THEME_MODE_KEY, mode),
 };

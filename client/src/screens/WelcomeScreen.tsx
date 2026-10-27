@@ -12,10 +12,11 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuthStore } from '../store/useAuthStore';
 
+import { createStyles, Palette } from '../theme';
 const finauraLogo = require('../assets/finaura_logo.png');
 const { width } = Dimensions.get('window');
 
-const BLUE = '#3B3BDE';
+const tokens = (c: Palette) => ({ BLUE: c.primary });
 
 export function getFirstName(name?: string | null): string | null {
   if (!name) return null;
@@ -31,6 +32,7 @@ interface WelcomeScreenProps {
 }
 
 export function WelcomeScreen({ onContinue }: WelcomeScreenProps): React.ReactElement {
+  const styles = useStyles();
   const insets = useSafeAreaInsets();
   const user = useAuthStore((state) => state.user);
   const dismissWelcome = useAuthStore((state) => state.dismissWelcome);
@@ -41,26 +43,27 @@ export function WelcomeScreen({ onContinue }: WelcomeScreenProps): React.ReactEl
 
   // Entry animations
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(30)).current;
-  const logoScale = useRef(new Animated.Value(0.7)).current;
+  const slideAnim = useRef(new Animated.Value(12)).current;
+  const logoScale = useRef(new Animated.Value(0.94)).current;
 
   useEffect(() => {
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
-        duration: 600,
+        duration: 480,
+        easing: Easing.bezier(0.2, 0, 0, 1),
         useNativeDriver: true,
       }),
       Animated.timing(slideAnim, {
         toValue: 0,
-        duration: 600,
-        easing: Easing.out(Easing.cubic),
+        duration: 480,
+        easing: Easing.bezier(0.2, 0, 0, 1),
         useNativeDriver: true,
       }),
-      Animated.spring(logoScale, {
+      Animated.timing(logoScale, {
         toValue: 1,
-        friction: 6,
-        tension: 45,
+        duration: 480,
+        easing: Easing.bezier(0.2, 0, 0, 1),
         useNativeDriver: true,
       }),
     ]).start();
@@ -116,10 +119,12 @@ export function WelcomeScreen({ onContinue }: WelcomeScreenProps): React.ReactEl
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = createStyles((c) => {
+  const { BLUE } = tokens(c);
+  return {
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: c.surface,
     justifyContent: 'space-between',
     paddingHorizontal: 24,
   },
@@ -133,7 +138,7 @@ const styles = StyleSheet.create({
     width: 96,
     height: 96,
     borderRadius: 28,
-    backgroundColor: '#EEF2FF',
+    backgroundColor: c.primarySoft,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 24,
@@ -144,8 +149,9 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   logoImage: {
-    width: 58,
-    height: 58,
+    width: 64,
+    height: 64,
+    borderRadius: 18,
   },
   badgeText: {
     fontSize: 12,
@@ -158,7 +164,7 @@ const styles = StyleSheet.create({
   greetingTitle: {
     fontSize: 32,
     fontWeight: '800',
-    color: '#0F172A',
+    color: c.text,
     textAlign: 'center',
     letterSpacing: -0.5,
     marginBottom: 10,
@@ -166,7 +172,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 16,
-    color: '#64748B',
+    color: c.textMuted,
     textAlign: 'center',
     fontWeight: '500',
     lineHeight: 24,
@@ -197,4 +203,5 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     letterSpacing: 0.2,
   },
+};
 });

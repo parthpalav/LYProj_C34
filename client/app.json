@@ -23,6 +23,7 @@
       "expo-secure-store",
       "expo-splash-screen",
       "expo-status-bar"
-    ]
+    ],
+    "userInterfaceStyle": "automatic"
   }
 }

@@ -4,7 +4,8 @@ import {
   TextInput, KeyboardAvoidingView, Platform, Alert, ActivityIndicator,
   RefreshControl, Keyboard, TouchableWithoutFeedback
 } from 'react-native';
-import Animated, { FadeIn, FadeInDown, LinearTransition } from 'react-native-reanimated';
+import Animated, { FadeIn } from 'react-native-reanimated';
+import { enterUp, listLayout } from '../motion';
 import * as Haptics from 'expo-haptics';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -20,15 +21,17 @@ import { PiggyBank } from '../components/motion/PiggyBank';
 import { AnimatedBar } from '../components/motion/AnimatedBar';
 import { useShake } from '../components/motion/useShake';
 
-const BLUE  = '#3B3BDE';
+import { createStyles, useTheme, Palette } from '../theme';
+const tokens = (c: Palette) => ({ BLUE: c.primary, RED: c.danger });
 const GREEN = '#22C880';
-const RED   = '#EF4444';
 
 function AddGoalModal({
   visible, onClose, onAdd,
 }: {
   visible: boolean; onClose: () => void; onAdd: () => void;
 }) {
+  const { c } = useTheme();
+  const m = useMStyles();
   const [name,         setName]         = useState('');
   const [emoji,        setEmoji]        = useState('🎯');
   const [target,       setTarget]       = useState('');
@@ -71,7 +74,7 @@ function AddGoalModal({
           <Text style={m.sheetTitle}>Add New Goal</Text>
 
           <Text style={m.label}>Goal Name *</Text>
-          <TextInput style={m.input} value={name} onChangeText={setName} placeholder="e.g. House Down Payment" placeholderTextColor="#9CA3AF" />
+          <TextInput style={m.input} value={name} onChangeText={setName} placeholder="e.g. House Down Payment" placeholderTextColor={c.textSubtle} />
 
           <Text style={m.label}>Emoji Icon</Text>
           <View style={m.emojiRow}>
@@ -83,13 +86,13 @@ function AddGoalModal({
           </View>
 
           <Text style={m.label}>Target Amount *</Text>
-          <TextInput style={m.input} value={target} onChangeText={setTarget} placeholder="e.g. 50000" placeholderTextColor="#9CA3AF" keyboardType="numeric" />
+          <TextInput style={m.input} value={target} onChangeText={setTarget} placeholder="e.g. 50000" placeholderTextColor={c.textSubtle} keyboardType="numeric" />
 
           <Text style={m.label}>Target Date</Text>
-          <TextInput style={m.input} value={date} onChangeText={setDate} placeholder="e.g. December 2030" placeholderTextColor="#9CA3AF" />
+          <TextInput style={m.input} value={date} onChangeText={setDate} placeholder="e.g. December 2030" placeholderTextColor={c.textSubtle} />
 
           <Text style={m.label}>Monthly Contribution</Text>
-          <TextInput style={m.input} value={contribution} onChangeText={setContribution} placeholder="e.g. 500" placeholderTextColor="#9CA3AF" keyboardType="numeric" />
+          <TextInput style={m.input} value={contribution} onChangeText={setContribution} placeholder="e.g. 500" placeholderTextColor={c.textSubtle} keyboardType="numeric" />
 
           <TouchableOpacity style={m.addBtn} onPress={handleAdd} activeOpacity={0.85} disabled={saving}>
             {saving ? <ActivityIndicator color="#fff" /> : <Text style={m.addBtnTxt}>Add Goal</Text>}
@@ -109,6 +112,8 @@ function AddMoneyModal({
 }: {
   goal: Goal | null; onClose: () => void; onSaved: () => void;
 }) {
+  const { c } = useTheme();
+  const m = useMStyles();
   const [amount, setAmount] = useState('');
   const [saving, setSaving] = useState(false);
   const { style: shakeStyle, shake } = useShake();
@@ -158,7 +163,7 @@ function AddMoneyModal({
           <Animated.View style={shakeStyle}>
             <TextInput
               style={m.input} value={amount} onChangeText={setAmount} placeholder="e.g. 1000"
-              placeholderTextColor="#9CA3AF" keyboardType="numeric" autoFocus
+              placeholderTextColor={c.textSubtle} keyboardType="numeric" autoFocus
             />
           </Animated.View>
           <View style={m.emojiRow}>
@@ -182,27 +187,33 @@ function AddMoneyModal({
   );
 }
 
-const m = StyleSheet.create({
+const useMStyles = createStyles((c) => {
+  const { BLUE } = tokens(c);
+  return {
   overlay: { flex: 1, justifyContent: 'flex-end' },
   backdrop: { ...StyleSheet.absoluteFill, backgroundColor: 'rgba(0,0,0,0.4)' },
-  sheet: { backgroundColor: '#fff', borderTopLeftRadius: 28, borderTopRightRadius: 28, padding: 24, paddingBottom: 40 },
-  dragHandle: { width: 40, height: 4, backgroundColor: '#E2E8F0', borderRadius: 99, alignSelf: 'center', marginBottom: 18 },
-  sheetTitle: { fontSize: 20, fontWeight: '800', color: '#111827', marginBottom: 20 },
-  label: { fontSize: 12, fontWeight: '600', color: '#6B7280', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.5 },
-  input: { height: 48, borderWidth: 1.5, borderColor: '#E2E8F0', borderRadius: 12, paddingHorizontal: 14, fontSize: 15, color: '#111827', backgroundColor: '#FAFAFA', marginBottom: 14 },
+  sheet: { backgroundColor: c.surface, borderTopLeftRadius: 28, borderTopRightRadius: 28, padding: 24, paddingBottom: 40 },
+  dragHandle: { width: 40, height: 4, backgroundColor: c.border, borderRadius: 99, alignSelf: 'center', marginBottom: 18 },
+  sheetTitle: { fontSize: 20, fontWeight: '800', color: c.text, marginBottom: 20 },
+  label: { fontSize: 12, fontWeight: '600', color: c.textMuted, marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.5 },
+  input: { height: 48, borderWidth: 1.5, borderColor: c.border, borderRadius: 12, paddingHorizontal: 14, fontSize: 15, color: c.text, backgroundColor: c.surface, marginBottom: 14 },
   emojiRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 14 },
-  emojiBtn: { width: 44, height: 44, borderRadius: 12, borderWidth: 1.5, borderColor: '#E2E8F0', alignItems: 'center', justifyContent: 'center', backgroundColor: '#FAFAFA' },
-  emojiBtnActive: { borderColor: BLUE, backgroundColor: '#EEF2FF' },
+  emojiBtn: { width: 44, height: 44, borderRadius: 12, borderWidth: 1.5, borderColor: c.border, alignItems: 'center', justifyContent: 'center', backgroundColor: c.surface },
+  emojiBtnActive: { borderColor: BLUE, backgroundColor: c.primarySoft },
   emojiTxt: { fontSize: 22 },
   addBtn: { height: 52, borderRadius: 26, backgroundColor: BLUE, alignItems: 'center', justifyContent: 'center', marginTop: 4, shadowColor: BLUE, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8, elevation: 6 },
   addBtnTxt: { fontSize: 16, fontWeight: '700', color: '#fff' },
   cancelBtn: { height: 44, alignItems: 'center', justifyContent: 'center', marginTop: 8 },
-  cancelTxt: { fontSize: 14, color: '#9CA3AF', fontWeight: '500' },
-  quickChip: { paddingHorizontal: 14, paddingVertical: 9, borderRadius: 99, backgroundColor: '#ECFDF5', borderWidth: 1, borderColor: '#A7F3D0' },
-  quickChipTxt: { fontSize: 13, fontWeight: '700', color: '#065F46' },
+  cancelTxt: { fontSize: 14, color: c.textSubtle, fontWeight: '500' },
+  quickChip: { paddingHorizontal: 14, paddingVertical: 9, borderRadius: 99, backgroundColor: c.successSoft, borderWidth: 1, borderColor: c.successSoft },
+  quickChipTxt: { fontSize: 13, fontWeight: '700', color: c.successStrong },
+};
 });
 
 export function GoalPlannerScreen(): React.ReactElement {
+  const { c } = useTheme();
+  const { BLUE, RED } = tokens(c);
+  const s = useSStyles();
   const navigation = useNavigation<any>();
   const { goals, setGoals } = useStore();
   const [selectedId,   setSelectedId]   = useState<string | null>(null);
@@ -266,7 +277,7 @@ export function GoalPlannerScreen(): React.ReactElement {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, backgroundColor: '#F4F6FA', alignItems: 'center', justifyContent: 'center' }}>
+      <View style={{ flex: 1, backgroundColor: c.bg, alignItems: 'center', justifyContent: 'center' }}>
         <ActivityIndicator size="large" color={BLUE} />
       </View>
     );
@@ -276,7 +287,7 @@ export function GoalPlannerScreen(): React.ReactElement {
     <SafeAreaView style={s.screen} edges={['top']}>
       <View style={s.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={s.backBtn} accessibilityLabel="Go back">
-          <Ionicons name="chevron-back" size={24} color="#111827" />
+          <Ionicons name="chevron-back" size={24} color={c.text} />
         </TouchableOpacity>
         <View style={{ flex: 1 }}>
           <Text style={s.headerTitle}>Savings Goals</Text>
@@ -291,7 +302,7 @@ export function GoalPlannerScreen(): React.ReactElement {
         <View style={s.columns}>
           <View style={s.leftCol}>
             {goals.map((g, i) => (
-              <Animated.View key={g.id} entering={FadeInDown.delay(i * 60).springify().damping(14)} layout={LinearTransition.springify()}>
+              <Animated.View key={g.id} entering={enterUp(i)} layout={listLayout}>
                 <PressableScale
                   style={[s.goalChip, selected?.id === g.id && s.goalChipActive]}
                   onPress={() => handleSelectGoal(g.id)}
@@ -303,7 +314,7 @@ export function GoalPlannerScreen(): React.ReactElement {
               </Animated.View>
             ))}
 
-            <Animated.View layout={LinearTransition.springify()}>
+            <Animated.View layout={listLayout}>
               <PressableScale style={s.addGoalBtn} onPress={() => setShowAdd(true)}>
                 <Text style={s.addGoalIcon}>＋</Text>
                 <Text style={s.addGoalTxt}>Add Goal</Text>
@@ -324,7 +335,7 @@ export function GoalPlannerScreen(): React.ReactElement {
                     <PiggyBank progress={pct} from={0} size={110} />
                     <Text style={s.piggyPct}>{Math.round(pct * 100)}% saved</Text>
                   </View>
-                  <AnimatedBar progress={pct} color={GREEN} trackColor="#E8ECF2" height={8} style={{ marginBottom: 12 }} />
+                  <AnimatedBar progress={pct} color={GREEN} trackColor={c.surfaceAlt} height={8} style={{ marginBottom: 12 }} />
 
                   <View style={s.detailRow}><Text style={s.detailLabel}>Target:</Text><Text style={s.detailValue}>₹{selected.targetAmount.toLocaleString()}</Text></View>
                   <View style={s.detailRow}><Text style={s.detailLabel}>Date:</Text><Text style={s.detailValue}>{selected.targetDate || 'Not set'}</Text></View>
@@ -368,12 +379,14 @@ export function GoalPlannerScreen(): React.ReactElement {
   );
 }
 
-const s = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: '#F4F6FA' },
-  header: { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: '#fff', paddingHorizontal: 12, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: '#E8ECF2' },
+const useSStyles = createStyles((c) => {
+  const { BLUE, RED } = tokens(c);
+  return {
+  screen: { flex: 1, backgroundColor: c.bg },
+  header: { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: c.surface, paddingHorizontal: 12, paddingVertical: 12, borderBottomWidth: 1, borderBottomColor: c.border },
   backBtn: { padding: 4 },
-  headerTitle: { fontSize: 18, fontWeight: '800', color: '#111827' },
-  headerSub: { fontSize: 12, color: '#6B7280', marginTop: 1 },
+  headerTitle: { fontSize: 18, fontWeight: '800', color: c.text },
+  headerSub: { fontSize: 12, color: c.textMuted, marginTop: 1 },
   piggyWrap: { alignItems: 'center', marginBottom: 8 },
   piggyPct: { fontSize: 13, fontWeight: '800', color: GREEN, marginTop: 4 },
   addMoneyBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, height: 44, borderRadius: 22, backgroundColor: GREEN, marginTop: 14 },
@@ -381,33 +394,34 @@ const s = StyleSheet.create({
   body: { padding: 16, paddingBottom: 40 },
   columns: { flexDirection: 'row', gap: 14, alignItems: 'flex-start' },
   leftCol: { width: 130, gap: 10 },
-  goalChip: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 12, paddingHorizontal: 12, backgroundColor: '#fff', borderRadius: 16, borderWidth: 1.5, borderColor: '#E8ECF2', shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 4, elevation: 2 },
-  goalChipActive: { borderColor: BLUE, backgroundColor: '#EEF2FF' },
+  goalChip: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 12, paddingHorizontal: 12, backgroundColor: c.surface, borderRadius: 16, borderWidth: 1.5, borderColor: c.border, shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 4, elevation: 2 },
+  goalChipActive: { borderColor: BLUE, backgroundColor: c.primarySoft },
   goalEmoji: { fontSize: 18 },
-  goalName: { fontSize: 13, fontWeight: '600', color: '#374151', flexShrink: 1 },
+  goalName: { fontSize: 13, fontWeight: '600', color: c.textMuted, flexShrink: 1 },
   goalNameActive: { color: BLUE },
-  addGoalBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingVertical: 10, paddingHorizontal: 12, borderRadius: 16, borderWidth: 1.5, borderColor: '#D1D5DB', borderStyle: 'dashed', backgroundColor: '#FAFAFA' },
-  addGoalIcon: { fontSize: 16, color: '#6B7280' },
-  addGoalTxt: { fontSize: 12, fontWeight: '600', color: '#6B7280' },
+  addGoalBtn: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingVertical: 10, paddingHorizontal: 12, borderRadius: 16, borderWidth: 1.5, borderColor: c.border, borderStyle: 'dashed', backgroundColor: c.surface },
+  addGoalIcon: { fontSize: 16, color: c.textMuted },
+  addGoalTxt: { fontSize: 12, fontWeight: '600', color: c.textMuted },
   rightCol: { flex: 1, gap: 0 },
-  detailCard: { backgroundColor: '#fff', borderRadius: 20, padding: 16, borderWidth: 1, borderColor: '#E8ECF2', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 10, elevation: 3 },
-  detailTitle: { fontSize: 18, fontWeight: '800', color: '#111827', marginBottom: 12 },
+  detailCard: { backgroundColor: c.surface, borderRadius: 20, padding: 16, borderWidth: 1, borderColor: c.border, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 10, elevation: 3 },
+  detailTitle: { fontSize: 18, fontWeight: '800', color: c.text, marginBottom: 12 },
   detailRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 6, gap: 4 },
-  detailLabel: { fontSize: 13, color: '#6B7280', fontWeight: '500' },
-  detailValue: { fontSize: 13, fontWeight: '700', color: '#111827' },
+  detailLabel: { fontSize: 13, color: c.textMuted, fontWeight: '500' },
+  detailValue: { fontSize: 13, fontWeight: '700', color: c.text },
   achievableRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 14, flexWrap: 'wrap' },
-  achievableQ: { fontSize: 13, color: '#374151', fontWeight: '500' },
+  achievableQ: { fontSize: 13, color: c.textMuted, fontWeight: '500' },
   achievableBadge: { paddingHorizontal: 14, paddingVertical: 5, borderRadius: 99, backgroundColor: GREEN },
   achievableBadgeNo: { backgroundColor: RED },
   achievableTxt: { fontSize: 13, fontWeight: '800', color: '#fff' },
-  arrow: { textAlign: 'center', fontSize: 20, color: '#9CA3AF', marginVertical: 10 },
-  statsCard: { backgroundColor: '#fff', borderRadius: 20, padding: 14, flexDirection: 'row', borderWidth: 1, borderColor: '#E8ECF2', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 10, elevation: 3 },
+  arrow: { textAlign: 'center', fontSize: 20, color: c.textSubtle, marginVertical: 10 },
+  statsCard: { backgroundColor: c.surface, borderRadius: 20, padding: 14, flexDirection: 'row', borderWidth: 1, borderColor: c.border, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.06, shadowRadius: 10, elevation: 3 },
   statItem: { flex: 1, alignItems: 'flex-start', gap: 4 },
-  statItemGreen: { backgroundColor: '#ECFDF5', borderRadius: 12, padding: 6 },
-  statItemRed: { backgroundColor: '#FEF2F2' },
-  statDivider: { width: 1, backgroundColor: '#E8ECF2', marginHorizontal: 8 },
-  statLabel: { fontSize: 10, color: '#6B7280', fontWeight: '500', lineHeight: 14 },
-  statValue: { fontSize: 16, fontWeight: '800', color: '#111827' },
-  emptyRight: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff', borderRadius: 20, borderWidth: 1.5, borderColor: '#E8ECF2', padding: 24 },
-  emptyTxt:   { color: '#9CA3AF', fontSize: 13, fontWeight: '500' },
+  statItemGreen: { backgroundColor: c.successSoft, borderRadius: 12, padding: 6 },
+  statItemRed: { backgroundColor: c.dangerSoft },
+  statDivider: { width: 1, backgroundColor: c.surfaceAlt, marginHorizontal: 8 },
+  statLabel: { fontSize: 10, color: c.textMuted, fontWeight: '500', lineHeight: 14 },
+  statValue: { fontSize: 16, fontWeight: '800', color: c.text },
+  emptyRight: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: c.surface, borderRadius: 20, borderWidth: 1.5, borderColor: c.border, padding: 24 },
+  emptyTxt:   { color: c.textSubtle, fontSize: 13, fontWeight: '500' },
+};
 });

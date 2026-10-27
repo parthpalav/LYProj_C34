@@ -3,7 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import Animated, { ZoomIn, ZoomOut, useAnimatedStyle, useSharedValue, withSequence, withSpring } from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ChatScreen } from '../screens/ChatScreen';
 import { DashboardScreen } from '../screens/DashboardScreen';
@@ -17,6 +17,8 @@ import AssetsScreen from '../screens/AssetsScreen';
 import FamilyScreen from '../screens/FamilyScreen';
 import { GoalPlannerScreen } from '../screens/GoalPlannerScreen';
 import { PressableScale } from '../components/motion/PressableScale';
+import { createStyles, useTheme } from '../theme';
+import { duration, fadeIn, exitFade, timing } from '../motion';
 
 export type RootTabParamList = {
   Transactions: undefined;
@@ -47,33 +49,36 @@ function tabIconName(routeName: keyof RootTabParamList, focused: boolean): React
   return focused ? 'person-circle' : 'person-circle-outline';
 }
 
-/** Tab icon that pops when it becomes active; the indicator dot zooms in under it. */
+/** Tab icon: the active one settles to full opacity; the indicator dot fades in under it. */
 function TabIcon({ name, focused, color, size, showDot }: {
   name: React.ComponentProps<typeof Ionicons>['name']; focused: boolean; color: string; size: number; showDot: boolean;
 }): React.ReactElement {
-  const scale = useSharedValue(1);
+  const styles = useStyles();
+  const opacity = useSharedValue(focused ? 1 : 0.85);
   useEffect(() => {
-    if (focused) scale.value = withSequence(withSpring(1.22, { damping: 8, stiffness: 400 }), withSpring(1, { damping: 12 }));
-  }, [focused, scale]);
-  const style = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
+    opacity.value = withTiming(focused ? 1 : 0.85, timing(duration.fast));
+  }, [focused, opacity]);
+  const style = useAnimatedStyle(() => ({ opacity: opacity.value }));
   return (
     <View style={styles.tabIconWrap}>
       <Animated.View style={style}>
         <Ionicons name={name} size={size} color={color} />
       </Animated.View>
-      {focused && showDot && <Animated.View entering={ZoomIn.springify()} exiting={ZoomOut} style={styles.activeIndicator} />}
+      {focused && showDot && <Animated.View entering={fadeIn()} exiting={exitFade} style={styles.activeIndicator} />}
     </View>
   );
 }
 
 function HomeTabButton({ onPress, accessibilityState }: BottomTabBarButtonProps): React.ReactElement {
+  const styles = useStyles();
+  const { c } = useTheme();
   const isFocused = Boolean(accessibilityState?.selected);
-  const tintColor = isFocused ? '#1e293b' : '#94a3b8';
+  const tintColor = isFocused ? c.primary : c.textSubtle;
 
   return (
     <PressableScale
       onPress={onPress}
-      scaleTo={0.9}
+      scaleTo={0.96}
       style={styles.homeButtonWrap}
       accessibilityRole="tab"
       accessibilityState={{ selected: isFocused }}
@@ -93,15 +98,18 @@ function HomeTabButton({ onPress, accessibilityState }: BottomTabBarButtonProps)
 
 function MainTabNavigator(): React.ReactElement {
   const insets = useSafeAreaInsets();
+  const styles = useStyles();
+  const { c } = useTheme();
 
   return (
     <Tab.Navigator
       initialRouteName="Dashboard"
       screenOptions={({ route }) => ({
-        headerStyle: { backgroundColor: '#f8f9fb' },
-        headerTitleStyle: { fontWeight: '700' },
-        tabBarActiveTintColor: '#1e293b',
-        tabBarInactiveTintColor: '#94a3b8',
+        headerStyle: { backgroundColor: c.bg },
+        headerTitleStyle: styles.headerTitle,
+        headerShadowVisible: false,
+        tabBarActiveTintColor: c.text,
+        tabBarInactiveTintColor: c.textSubtle,
         tabBarLabelStyle: styles.tabLabel,
         tabBarAllowFontScaling: false,
         tabBarItemStyle: styles.tabItem,
@@ -119,12 +127,13 @@ function MainTabNavigator(): React.ReactElement {
       })}
     >
       <Tab.Screen name="Transactions" component={TransactionsScreen} />
-      <Tab.Screen name="Liabilities" component={LiabilitiesScreen} />
+      <Tab.Screen name="Liabilities" component={LiabilitiesScreen} options={{ headerShown: false }} />
       <Tab.Screen
         name="Dashboard"
         component={DashboardScreen}
         options={{
           title: 'Home',
+          headerShown: false,
           tabBarButton: (props) => <HomeTabButton {...props} />,
           tabBarItemStyle: styles.homeItem,
         }}
@@ -192,13 +201,18 @@ export function AppNavigator(): React.ReactElement {
 }
 
 
-const styles = StyleSheet.create({
+const useStyles = createStyles((c) => ({
+  headerTitle: {
+    fontSize: 17,
+    fontWeight: '700',
+    color: c.text,
+  },
   tabBar: {
     paddingTop: 6,
-    backgroundColor: '#ffffff',
-    borderTopWidth: 1,
-    borderTopColor: '#f1f5f9',
-    shadowColor: '#0f172a',
+    backgroundColor: c.surface,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: c.border,
+    shadowColor: c.shadow,
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.04,
     shadowRadius: 8,
@@ -225,7 +239,7 @@ const styles = StyleSheet.create({
     width: 4,
     height: 4,
     borderRadius: 2,
-    backgroundColor: '#2563EB',
+    backgroundColor: c.primary,
   },
   homeItem: {
     marginTop: -14,
@@ -239,12 +253,12 @@ const styles = StyleSheet.create({
     minWidth: 64,
     height: 54,
     borderRadius: 18,
-    backgroundColor: '#eef2ff',
+    backgroundColor: c.surfaceAlt,
     borderWidth: 2,
-    borderColor: '#ffffff',
+    borderColor: c.surface,
     paddingHorizontal: 10,
     paddingVertical: 5,
-    shadowColor: '#1e293b',
+    shadowColor: c.shadow,
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.08,
     shadowRadius: 6,
@@ -253,8 +267,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   homeButtonActive: {
-    backgroundColor: '#dbeafe',
-    borderColor: '#ffffff',
+    backgroundColor: c.primarySoft,
+    borderColor: c.surface,
     shadowOpacity: 0.16,
     elevation: 6,
   },
@@ -264,4 +278,4 @@ const styles = StyleSheet.create({
     marginTop: 2,
     letterSpacing: 0.1,
   },
-});
+}));

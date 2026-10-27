@@ -16,7 +16,8 @@ import { useStore } from '../store/useStore';
 import { celebrate } from '../store/useCelebrationStore';
 import { formatCurrency } from '../utils/format';
 
-const BLUE = '#3B3BDE';
+import { createStyles, Palette } from '../theme';
+const tokens = (c: Palette) => ({ BLUE: c.primary });
 const GREEN = '#22C880';
 
 interface Props {
@@ -24,6 +25,7 @@ interface Props {
 }
 
 export function UpdateBalanceScreen({ onClose }: Props): React.ReactElement {
+  const styles = useStyles();
   const { user, setUser } = useStore();
   const [operation, setOperation] = useState<'credit' | 'debit'>('credit');
   const [amount, setAmount] = useState('');
@@ -156,10 +158,12 @@ export function UpdateBalanceScreen({ onClose }: Props): React.ReactElement {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = createStyles((c) => {
+  const { BLUE } = tokens(c);
+  return {
   safe: {
     flex: 1,
-    backgroundColor: '#f6f8fc',
+    backgroundColor: c.bg,
   },
   container: {
     flex: 1,
@@ -175,19 +179,19 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     fontWeight: '800',
-    color: '#101827',
+    color: c.text,
   },
   closeBtn: {
     fontSize: 24,
-    color: '#6b7280',
+    color: c.textMuted,
     fontWeight: '700',
   },
   card: {
-    backgroundColor: '#ffffff',
+    backgroundColor: c.surface,
     borderRadius: 20,
     padding: 24,
     borderWidth: 1,
-    borderColor: '#e7ebf2',
+    borderColor: c.border,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
@@ -197,28 +201,28 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#6b7280',
+    color: c.textMuted,
     textTransform: 'uppercase',
     letterSpacing: 0.4,
     marginBottom: 12,
   },
   balanceBox: {
     borderWidth: 1,
-    borderColor: '#dbe3f0',
+    borderColor: c.border,
     borderRadius: 12,
     padding: 14,
     marginBottom: 20,
-    backgroundColor: '#f8fafc',
+    backgroundColor: c.bg,
   },
   balanceValue: {
     fontSize: 24,
     fontWeight: '800',
-    color: '#0f172a',
+    color: c.text,
   },
   segmentWrap: {
     flexDirection: 'row',
     borderWidth: 1,
-    borderColor: '#dbe3f0',
+    borderColor: c.border,
     borderRadius: 12,
     marginBottom: 20,
     overflow: 'hidden',
@@ -227,15 +231,15 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     paddingVertical: 12,
-    backgroundColor: '#f8fafc',
+    backgroundColor: c.bg,
   },
   segmentBtnActive: {
-    backgroundColor: '#e6edff',
+    backgroundColor: c.primarySoft,
   },
   segmentText: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#475569',
+    color: c.textMuted,
     textTransform: 'uppercase',
   },
   segmentTextActive: {
@@ -245,10 +249,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: '#e2e8f0',
+    borderColor: c.border,
     borderRadius: 12,
     paddingHorizontal: 16,
-    backgroundColor: '#fafafa',
+    backgroundColor: c.surface,
     marginBottom: 20,
   },
   currencySymbol: {
@@ -262,19 +266,19 @@ const styles = StyleSheet.create({
     height: 56,
     fontSize: 24,
     fontWeight: '800',
-    color: '#101827',
+    color: c.text,
   },
   infoBox: {
-    backgroundColor: '#eef2ff',
+    backgroundColor: c.primarySoft,
     borderRadius: 12,
     padding: 16,
     marginBottom: 24,
     borderWidth: 1,
-    borderColor: '#d7e3ff',
+    borderColor: c.primarySoft,
   },
   infoLabel: {
     fontSize: 12,
-    color: '#6b7280',
+    color: c.textMuted,
     fontWeight: '600',
     marginBottom: 4,
   },
@@ -305,7 +309,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.3,
   },
   cancelBtn: {
-    color: '#6b7280',
+    color: c.textMuted,
     fontSize: 14,
     fontWeight: '600',
     textAlign: 'center',
@@ -317,9 +321,10 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 12,
-    color: '#6b7280',
+    color: c.textMuted,
     textAlign: 'center',
     lineHeight: 18,
     fontWeight: '500',
   },
+};
 });

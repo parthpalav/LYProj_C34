@@ -13,6 +13,7 @@ import {
   Alert,
   ActivityIndicator,
   Animated,
+  Easing,
   Keyboard,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -23,6 +24,7 @@ import { PressableScale } from '../components/motion/PressableScale';
 import { useStore } from '../store/useStore';
 import { Liability } from '../types';
 
+import { createStyles, useTheme, Palette } from '../theme';
 const CATEGORIES = [
   { label: 'Food & Dining', emoji: '🍽️', ml: 'Food & Dining' },
   { label: 'Groceries', emoji: '🛒', ml: 'Groceries' },
@@ -48,6 +50,9 @@ interface Props {
 }
 
 export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
+  const { c } = useTheme();
+  const { BRAND_BLUE, AMBER } = tokens(c);
+  const styles = useStyles();
   const [amount, setAmount] = useState('');
   const [isAmountFocused, setIsAmountFocused] = useState(false);
   const [description, setDescription] = useState('');
@@ -122,7 +127,7 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
 
         // Animate badge in
         badgeAnim.setValue(0);
-        Animated.spring(badgeAnim, { toValue: 1, useNativeDriver: true, tension: 120, friction: 8 }).start();
+        Animated.timing(badgeAnim, { toValue: 1, duration: 240, easing: Easing.bezier(0.2, 0, 0, 1), useNativeDriver: true }).start();
 
         // ML suggests: only pre-select if user has not manually chosen type
         if (!userOverrodeTypeRef.current) {
@@ -321,7 +326,7 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
                 }}
                 keyboardType="decimal-pad"
                 placeholder="0"
-                placeholderTextColor="#94A3B8"
+                placeholderTextColor={c.textSubtle}
                 onFocus={() => setIsAmountFocused(true)}
                 onBlur={() => setIsAmountFocused(false)}
                 accessibilityLabel="Amount value"
@@ -335,7 +340,7 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
               value={description}
               onChangeText={setDescription}
               placeholder="e.g. Pizza, Uber ride, Book…"
-              placeholderTextColor="#A0AEC0"
+              placeholderTextColor={c.textSubtle}
             />
 
             {/* AI Suggestion Badge */}
@@ -348,7 +353,7 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
             {!aiLoading && aiResult && aiResult.confidence > 0 && (
               <Animated.View style={[
                 styles.aiBadgeContainer,
-                { opacity: badgeAnim, transform: [{ scale: badgeAnim }] }
+                { opacity: badgeAnim, transform: [{ scale: badgeAnim.interpolate({ inputRange: [0, 1], outputRange: [0.96, 1] }) }] }
               ]}>
                 <View style={styles.aiBadgeHeader}>
                   <Text style={styles.aiBadgeIcon}>🤖</Text>
@@ -492,7 +497,7 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
                       onPress={() => setSelectedLiability(null)}
                       hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
                     >
-                      <Ionicons name="close-circle" size={20} color="#94A3B8" />
+                      <Ionicons name="close-circle" size={20} color={c.textSubtle} />
                     </TouchableOpacity>
                   </View>
                 )}
@@ -639,7 +644,7 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
                   activeOpacity={0.7}
                 >
                   <View style={styles.unlinkedIconBox}>
-                    <Ionicons name="remove-circle-outline" size={20} color="#64748B" />
+                    <Ionicons name="remove-circle-outline" size={20} color={c.textMuted} />
                   </View>
                   <View style={{ flex: 1 }}>
                     <Text style={styles.modalItemText}>None (Do not link)</Text>
@@ -674,7 +679,7 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
                         </Text>
                         {item.autoDeduct && (
                           <View style={styles.autoDeductPill}>
-                            <Ionicons name="flash" size={9} color="#059669" />
+                            <Ionicons name="flash" size={9} color={c.successStrong} />
                             <Text style={styles.autoDeductPillText}>Auto</Text>
                           </View>
                         )}
@@ -697,13 +702,12 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
   );
 }
 
-const BRAND_BLUE = '#3B3BDE';
+const tokens = (c: Palette) => ({ BRAND_BLUE: c.primary, AMBER: c.warning, AI_BG: c.primarySoft, AI_BORDER: c.primarySoft });
 const GREEN = '#3DBE7B';
-const AMBER = '#F59E0B';
-const AI_BG = '#F0F0FF';
-const AI_BORDER = '#C7C7FF';
 
-const styles = StyleSheet.create({
+const useStyles = createStyles((c) => {
+  const { BRAND_BLUE, AI_BG, AI_BORDER } = tokens(c);
+  return {
   safe: {
     flex: 1,
     backgroundColor: 'transparent',
@@ -717,7 +721,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   sheet: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: c.surface,
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
     paddingHorizontal: 24,
@@ -732,7 +736,7 @@ const styles = StyleSheet.create({
   dragHandle: {
     width: 40,
     height: 4,
-    backgroundColor: '#E2E8F0',
+    backgroundColor: c.border,
     borderRadius: 99,
     alignSelf: 'center',
     marginBottom: 16,
@@ -749,7 +753,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     fontWeight: '700',
-    color: '#1A202C',
+    color: c.text,
     letterSpacing: 0.2,
   },
   closeBtn: {
@@ -758,13 +762,13 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: '#F1F5F9',
+    backgroundColor: c.surfaceAlt,
     alignItems: 'center',
     justifyContent: 'center',
   },
   closeIcon: {
     fontSize: 14,
-    color: '#64748B',
+    color: c.textMuted,
     fontWeight: '700',
   },
 
@@ -773,8 +777,8 @@ const styles = StyleSheet.create({
     minHeight: 64,
     borderRadius: 16,
     borderWidth: 1.5,
-    borderColor: '#E2E8F0',
-    backgroundColor: '#F8FAFC',
+    borderColor: c.border,
+    backgroundColor: c.bg,
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
@@ -782,7 +786,7 @@ const styles = StyleSheet.create({
   },
   amountContainerFocused: {
     borderColor: BRAND_BLUE,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: c.surface,
     borderWidth: 2,
   },
   currencyPrefixWrap: {
@@ -793,7 +797,7 @@ const styles = StyleSheet.create({
   currencyPrefix: {
     fontSize: 30,
     fontWeight: '700',
-    color: '#64748B',
+    color: c.textMuted,
     lineHeight: 36,
   },
   currencyPrefixFocused: {
@@ -803,7 +807,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 32,
     fontWeight: '800',
-    color: '#1A202C',
+    color: c.text,
     letterSpacing: -0.5,
     paddingVertical: 8,
     minHeight: 48,
@@ -813,7 +817,7 @@ const styles = StyleSheet.create({
   fieldLabel: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#64748B',
+    color: c.textMuted,
     marginBottom: 8,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
@@ -822,26 +826,26 @@ const styles = StyleSheet.create({
     height: 48,
     borderRadius: 12,
     borderWidth: 1.5,
-    borderColor: '#E2E8F0',
+    borderColor: c.border,
     paddingHorizontal: 14,
     fontSize: 15,
-    color: '#1A202C',
-    backgroundColor: '#FAFAFA',
+    color: c.text,
+    backgroundColor: c.surface,
   },
   categoryPicker: {
     height: 48,
     borderRadius: 12,
     borderWidth: 1.5,
-    borderColor: '#E2E8F0',
+    borderColor: c.border,
     paddingHorizontal: 14,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#FAFAFA',
+    backgroundColor: c.surface,
   },
   categoryText: {
     fontSize: 15,
-    color: '#1A202C',
+    color: c.text,
     fontWeight: '500',
   },
   categoryRight: {
@@ -854,7 +858,7 @@ const styles = StyleSheet.create({
   },
   chevron: {
     fontSize: 18,
-    color: '#64748B',
+    color: c.textMuted,
     fontWeight: '700',
   },
 
@@ -886,12 +890,12 @@ const styles = StyleSheet.create({
   // Summary
   summaryRow: {
     flexDirection: 'row',
-    backgroundColor: '#F8FAFC',
+    backgroundColor: c.bg,
     borderRadius: 16,
     paddingVertical: 16,
     paddingHorizontal: 8,
     borderWidth: 1,
-    borderColor: '#EEF2F7',
+    borderColor: c.border,
   },
   summaryItem: {
     flex: 1,
@@ -900,18 +904,18 @@ const styles = StyleSheet.create({
   },
   summaryDivider: {
     width: 1,
-    backgroundColor: '#E2E8F0',
+    backgroundColor: c.border,
   },
   summaryLabel: {
     fontSize: 11,
-    color: '#94A3B8',
+    color: c.textSubtle,
     fontWeight: '500',
     textAlign: 'center',
   },
   summaryValue: {
     fontSize: 16,
     fontWeight: '800',
-    color: '#1A202C',
+    color: c.text,
     letterSpacing: -0.3,
   },
 
@@ -964,7 +968,7 @@ const styles = StyleSheet.create({
   aiMainCategory: {
     fontSize: 16,
     fontWeight: '800',
-    color: '#1A202C',
+    color: c.text,
   },
   aiConfidence: {
     fontSize: 18,
@@ -973,21 +977,21 @@ const styles = StyleSheet.create({
     letterSpacing: -0.5,
   },
   sentimentContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: c.surface,
     borderRadius: 8,
     padding: 8,
     marginTop: 8,
     borderWidth: 1,
-    borderColor: '#e2e8f0',
+    borderColor: c.border,
   },
   sentimentLabel: {
     fontSize: 13,
     fontWeight: '700',
-    color: '#1A202C',
+    color: c.text,
   },
   verdictText: {
     fontSize: 11,
-    color: '#4A5568',
+    color: c.textMuted,
     marginTop: 2,
   },
   aiBarRow: {
@@ -1000,17 +1004,17 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   aiBarRowActive: {
-    backgroundColor: '#E0E7FF',
+    backgroundColor: c.primarySoft,
   },
   aiBarLabel: {
     fontSize: 11,
-    color: '#64748B',
+    color: c.textMuted,
     width: 90,
   },
   aiBarTrack: {
     flex: 1,
     height: 5,
-    backgroundColor: '#DDE0FF',
+    backgroundColor: c.primarySoft,
     borderRadius: 99,
     overflow: 'hidden',
   },
@@ -1021,7 +1025,7 @@ const styles = StyleSheet.create({
   },
   aiBarPct: {
     fontSize: 10,
-    color: '#64748B',
+    color: c.textMuted,
     fontWeight: '600',
     width: 28,
     textAlign: 'right',
@@ -1034,7 +1038,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   modalSheet: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: c.surface,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     paddingTop: 12,
@@ -1044,7 +1048,7 @@ const styles = StyleSheet.create({
   modalTitle: {
     fontSize: 17,
     fontWeight: '700',
-    color: '#1A202C',
+    color: c.text,
     textAlign: 'center',
     marginBottom: 12,
     paddingHorizontal: 24,
@@ -1057,7 +1061,7 @@ const styles = StyleSheet.create({
     gap: 14,
   },
   modalItemActive: {
-    backgroundColor: '#EEF2FF',
+    backgroundColor: c.primarySoft,
   },
   modalItemEmoji: {
     fontSize: 22,
@@ -1066,7 +1070,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 15,
     fontWeight: '500',
-    color: '#374151',
+    color: c.textMuted,
   },
   modalItemTextActive: {
     color: BRAND_BLUE,
@@ -1095,14 +1099,14 @@ const styles = StyleSheet.create({
     height: 20,
     borderRadius: 10,
     borderWidth: 2,
-    borderColor: '#E2E8F0',
+    borderColor: c.border,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#FAFAFA',
+    backgroundColor: c.surface,
   },
   radioOuterActive: {
     borderColor: BRAND_BLUE,
-    backgroundColor: '#EEF2FF',
+    backgroundColor: c.primarySoft,
   },
   radioDot: {
     width: 8,
@@ -1113,12 +1117,12 @@ const styles = StyleSheet.create({
   radioLabel: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#1A202C',
+    color: c.text,
     flex: 1,
   },
   aiConfirmationBanner: {
-    backgroundColor: '#FFFBEB',
-    borderColor: '#FCD34D',
+    backgroundColor: c.warningSoft,
+    borderColor: c.warningSoft,
     borderWidth: 1,
     borderRadius: 8,
     padding: 12,
@@ -1131,11 +1135,11 @@ const styles = StyleSheet.create({
   },
   aiConfirmationText: {
     fontSize: 12,
-    color: '#92400E',
+    color: c.warningStrong,
     flex: 1,
   },
   aiConfirmButton: {
-    backgroundColor: '#F59E0B',
+    backgroundColor: c.warning,
     borderRadius: 6,
     paddingVertical: 6,
     paddingHorizontal: 12,
@@ -1159,9 +1163,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     borderRadius: 12,
     borderWidth: 1.5,
-    borderColor: '#DDE0FF',
+    borderColor: c.primarySoft,
     borderStyle: 'dashed',
-    backgroundColor: '#F8FAFF',
+    backgroundColor: c.surface,
   },
   linkLiabilityBtnText: {
     fontSize: 14,
@@ -1175,8 +1179,8 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 12,
     borderWidth: 1.5,
-    borderColor: '#C7C7FF',
-    backgroundColor: '#F0F0FF',
+    borderColor: c.primarySoft,
+    backgroundColor: c.primarySoft,
   },
   linkedLiabilityInfo: {
     flex: 1,
@@ -1188,18 +1192,18 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: '#DBEAFE',
+    backgroundColor: c.primarySoft,
     alignItems: 'center',
     justifyContent: 'center',
   },
   linkedLiabilityName: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#1A202C',
+    color: c.text,
   },
   linkedLiabilityMeta: {
     fontSize: 12,
-    color: '#4B5563',
+    color: c.textMuted,
     marginTop: 2,
   },
   unlinkBtn: {
@@ -1207,7 +1211,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   autoDeductControlContainer: {
-    backgroundColor: '#EEF2FF',
+    backgroundColor: c.primarySoft,
     borderRadius: 8,
     marginTop: 6,
     overflow: 'hidden',
@@ -1233,16 +1237,16 @@ const styles = StyleSheet.create({
   markAsPaidTitle: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#1A202C',
+    color: c.text,
     marginBottom: 2,
   },
   markAsPaidDesc: {
     fontSize: 11,
-    color: '#4338CA',
+    color: c.primary,
   },
   modalSubtitle: {
     fontSize: 12,
-    color: '#64748B',
+    color: c.textMuted,
     textAlign: 'center',
     marginBottom: 14,
     paddingHorizontal: 24,
@@ -1254,13 +1258,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     gap: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#F1F5F9',
+    borderBottomColor: c.border,
   },
   liabilityIconBox: {
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#EEF2FF',
+    backgroundColor: c.primarySoft,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -1268,19 +1272,19 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#F1F5F9',
+    backgroundColor: c.surfaceAlt,
     alignItems: 'center',
     justifyContent: 'center',
   },
   liabilityItemSub: {
     fontSize: 12,
-    color: '#64748B',
+    color: c.textMuted,
     marginTop: 2,
   },
   autoDeductPill: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#ECFDF5',
+    backgroundColor: c.successSoft,
     paddingHorizontal: 5,
     paddingVertical: 1,
     borderRadius: 4,
@@ -1288,7 +1292,8 @@ const styles = StyleSheet.create({
   },
   autoDeductPillText: {
     fontSize: 9,
-    color: '#059669',
+    color: c.successStrong,
     fontWeight: '700',
   },
+};
 });

@@ -13,7 +13,6 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   SafeAreaView,
-  StatusBar,
 } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
@@ -21,20 +20,14 @@ import { addIncome, getIncomeFlow, updateIncome, deleteIncome } from '../service
 import { IncomeFlowData } from '../types';
 import { formatCurrency } from '../utils/format';
 import { celebrate } from '../store/useCelebrationStore';
-import Animated, { Easing, FadeInDown, useAnimatedStyle, useReducedMotion, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, useReducedMotion, useSharedValue, withTiming } from 'react-native-reanimated';
+import { easing, enterUp } from '../motion';
 import { AnimatedNumber } from '../components/motion/AnimatedNumber';
 import { PressableScale } from '../components/motion/PressableScale';
 import { FloatingEmoji } from '../components/motion/FloatingEmoji';
 
-const BLUE = '#2563EB';
-const GREEN = '#10B981';
-const AMBER = '#F59E0B';
-const RED = '#EF4444';
-const PURPLE = '#7C3AED';
-const DARK = '#0F172A';
-const GRAY = '#64748B';
-const LIGHT = '#F8FAFC';
-const BORDER = '#E2E8F0';
+import { createStyles, useTheme, Palette } from '../theme';
+const tokens = (c: Palette) => ({ BLUE: c.primary, GREEN: c.success, AMBER: c.warning, RED: c.danger, PURPLE: c.purple, DARK: c.text, GRAY: c.textMuted, LIGHT: c.bg, BORDER: c.border });
 
 const SOURCES: Record<string, string> = {
   salary: '#2563EB',
@@ -61,6 +54,10 @@ const SOURCE_LABELS: Record<string, string> = {
 const SOURCE_KEYS = ['salary', 'gig', 'freelance', 'business', 'rental', 'consulting', 'bonus', 'other'] as const;
 
 function AllocationRing({ allocation }: { allocation: IncomeFlowData['allocation'] }) {
+  const { c } = useTheme();
+  const { BLUE, GREEN, AMBER, GRAY } = tokens(c);
+  const rStyles = useRStyles();
+  const s = useSStyles();
   const segments = [
     { label: 'Essentials', value: allocation.essentials, color: BLUE, pct: 50 },
     { label: 'Goals', value: allocation.goals, color: GREEN, pct: 30 },
@@ -74,7 +71,7 @@ function AllocationRing({ allocation }: { allocation: IncomeFlowData['allocation
   useEffect(() => {
     if (reduced) return;
     t.value = 0;
-    t.value = withTiming(1, { duration: 900, easing: Easing.out(Easing.back(1.2)) });
+    t.value = withTiming(1, { duration: 900, easing: easing.standard });
   }, [allocation.essentials, allocation.goals, allocation.emergency, reduced, t]);
   const ringStyle = useAnimatedStyle(() => ({
     opacity: Math.min(1, t.value * 2),
@@ -88,7 +85,7 @@ function AllocationRing({ allocation }: { allocation: IncomeFlowData['allocation
           height: SIZE,
           borderRadius: SIZE / 2,
           overflow: 'hidden',
-          backgroundColor: '#F1F5F9',
+          backgroundColor: c.surfaceAlt,
         }]}
       >
         {segments.map((seg, i) => {
@@ -118,7 +115,7 @@ function AllocationRing({ allocation }: { allocation: IncomeFlowData['allocation
             width: SIZE - 40,
             height: SIZE - 40,
             borderRadius: (SIZE - 40) / 2,
-            backgroundColor: '#FFFFFF',
+            backgroundColor: c.surface,
             left: 20,
             top: 20,
             alignItems: 'center',
@@ -141,15 +138,19 @@ function AllocationRing({ allocation }: { allocation: IncomeFlowData['allocation
   );
 }
 
-const rStyles = StyleSheet.create({
+const useRStyles = createStyles((c) => {
+  const { DARK } = tokens(c);
+  return {
   legend: { marginTop: 14, gap: 8, width: '100%' },
   legItem: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   legDot: { width: 10, height: 10, borderRadius: 5 },
   legLbl: { flex: 1, fontSize: 13, fontWeight: '600', color: DARK },
   legVal: { fontSize: 13, fontWeight: '700' },
+};
 });
 
 function Card({ title, children }: { title: string; children: React.ReactNode }) {
+  const s = useSStyles();
   return (
     <View style={s.card}>
       <Text style={s.cardTitle}>{title}</Text>
@@ -169,6 +170,8 @@ function AddIncomeModal({
   onClose: () => void;
   onAdd: () => void;
 }) {
+  const { c } = useTheme();
+  const m = useMStyles();
   const [amount, setAmount] = useState('');
   const [source, setSource] = useState<string>('salary');
   const [description, setDescription] = useState('');
@@ -217,7 +220,7 @@ function AddIncomeModal({
               onChangeText={setAmount}
               keyboardType="decimal-pad"
               placeholder="e.g. 25000"
-              placeholderTextColor="#94A3B8"
+              placeholderTextColor={c.textSubtle}
             />
 
             <Text style={m.label}>Income Source / Stream</Text>
@@ -245,7 +248,7 @@ function AddIncomeModal({
               value={description}
               onChangeText={setDescription}
               placeholder="e.g. Freelance web design, Monthly Salary"
-              placeholderTextColor="#94A3B8"
+              placeholderTextColor={c.textSubtle}
             />
 
             <Text style={m.label}>Date Received (YYYY-MM-DD)</Text>
@@ -254,7 +257,7 @@ function AddIncomeModal({
               value={dateStr}
               onChangeText={setDateStr}
               placeholder="YYYY-MM-DD"
-              placeholderTextColor="#94A3B8"
+              placeholderTextColor={c.textSubtle}
             />
 
             <TouchableOpacity style={m.addBtn} onPress={handleAdd} disabled={saving} activeOpacity={0.85}>
@@ -270,6 +273,10 @@ function AddIncomeModal({
 // ── Main Screen ────────────────────────────────────────────────
 
 export function IncomeFlowScreen(): React.ReactElement {
+  const { c } = useTheme();
+  const { BLUE, AMBER, RED, DARK } = tokens(c);
+  const m = useMStyles();
+  const s = useSStyles();
   const navigation = useNavigation();
   const [flow, setFlow] = useState<IncomeFlowData | null>(null);
   const [refreshing, setRefreshing] = useState(false);
@@ -391,7 +398,6 @@ export function IncomeFlowScreen(): React.ReactElement {
 
   return (
     <SafeAreaView style={s.safe}>
-      <StatusBar barStyle="dark-content" />
 
       {/* ── Top Bar ──────────────────────────────────────────── */}
       <View style={s.topBar}>
@@ -498,7 +504,7 @@ export function IncomeFlowScreen(): React.ReactElement {
               .slice()
               .reverse()
               .map((item, i) => (
-                <Animated.View key={item.id || i} entering={FadeInDown.delay(Math.min(i, 10) * 40).springify().damping(16)}>
+                <Animated.View key={item.id || i} entering={enterUp(i)}>
                 <TouchableOpacity
                   style={s.timelineRow}
                   onPress={() => handleLongPress(item)}
@@ -546,7 +552,7 @@ export function IncomeFlowScreen(): React.ReactElement {
       {/* Floating Action Button */}
       <PressableScale
         style={s.fab}
-        scaleTo={0.88}
+        scaleTo={0.94}
         onPress={() => setShowAdd(true)}
         accessibilityLabel="Add New Income Record"
       >
@@ -570,7 +576,7 @@ export function IncomeFlowScreen(): React.ReactElement {
                 onChangeText={setEditAmount}
                 keyboardType="decimal-pad"
                 placeholder="e.g. 25000"
-                placeholderTextColor="#94A3B8"
+                placeholderTextColor={c.textSubtle}
               />
 
               <Text style={m.label}>Source</Text>
@@ -598,15 +604,15 @@ export function IncomeFlowScreen(): React.ReactElement {
                 value={editDesc}
                 onChangeText={setEditDesc}
                 placeholder="e.g. Consulting payment"
-                placeholderTextColor="#94A3B8"
+                placeholderTextColor={c.textSubtle}
               />
 
               <View style={{ flexDirection: 'row', gap: 12 }}>
                 <TouchableOpacity
-                  style={[m.addBtn, { flex: 1, backgroundColor: '#E2E8F0' }]}
+                  style={[m.addBtn, { flex: 1, backgroundColor: c.border }]}
                   onPress={() => setEditInc(null)}
                 >
-                  <Text style={[m.addTxt, { color: '#475569' }]}>Cancel</Text>
+                  <Text style={[m.addTxt, { color: c.textMuted }]}>Cancel</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={[m.addBtn, { flex: 1 }]} onPress={submitEdit} disabled={saving}>
                   {saving ? <ActivityIndicator color="#FFFFFF" /> : <Text style={m.addTxt}>Save Changes</Text>}
@@ -622,16 +628,18 @@ export function IncomeFlowScreen(): React.ReactElement {
 
 // ── Styles ─────────────────────────────────────────────────────
 
-const m = StyleSheet.create({
+const useMStyles = createStyles((c) => {
+  const { BLUE, DARK, GRAY, BORDER } = tokens(c);
+  return {
   overlay: { flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.45)' },
   sheet: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: c.surface,
     borderTopLeftRadius: 28,
     borderTopRightRadius: 28,
     padding: 24,
     paddingBottom: 48,
   },
-  handle: { width: 40, height: 4, backgroundColor: '#E2E8F0', borderRadius: 99, alignSelf: 'center', marginBottom: 20 },
+  handle: { width: 40, height: 4, backgroundColor: c.border, borderRadius: 99, alignSelf: 'center', marginBottom: 20 },
   title: { fontSize: 20, fontWeight: '800', color: DARK, marginBottom: 20 },
   label: { fontSize: 12, fontWeight: '600', color: GRAY, marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.5 },
   input: {
@@ -642,7 +650,7 @@ const m = StyleSheet.create({
     paddingHorizontal: 14,
     fontSize: 15,
     color: DARK,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: c.bg,
     marginBottom: 14,
   },
   sourceRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 14 },
@@ -652,7 +660,7 @@ const m = StyleSheet.create({
     borderRadius: 99,
     borderWidth: 1.5,
     borderColor: BORDER,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: c.bg,
   },
   srcTxt: { fontSize: 13, color: GRAY, fontWeight: '500' },
   addBtn: {
@@ -669,9 +677,12 @@ const m = StyleSheet.create({
     elevation: 6,
   },
   addTxt: { fontSize: 16, fontWeight: '700', color: '#FFFFFF' },
+};
 });
 
-const s = StyleSheet.create({
+const useSStyles = createStyles((c) => {
+  const { BLUE, DARK, GRAY, LIGHT, BORDER } = tokens(c);
+  return {
   safe: { flex: 1, backgroundColor: LIGHT },
   screen: { flex: 1, backgroundColor: LIGHT },
   content: { padding: 16, paddingBottom: 96, gap: 16 },
@@ -692,7 +703,7 @@ const s = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingVertical: 10,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: c.surface,
     borderBottomWidth: 1,
     borderBottomColor: BORDER,
   },
@@ -702,7 +713,7 @@ const s = StyleSheet.create({
     borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#F1F5F9',
+    backgroundColor: c.surfaceAlt,
   },
   topBarTitle: {
     fontSize: 16,
@@ -715,7 +726,7 @@ const s = StyleSheet.create({
     borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#EFF6FF',
+    backgroundColor: c.primarySoft,
   },
 
   header: {
@@ -731,10 +742,10 @@ const s = StyleSheet.create({
     shadowRadius: 10,
     elevation: 5,
   },
-  headerLabel: { fontSize: 13, color: '#94A3B8', fontWeight: '500' },
+  headerLabel: { fontSize: 13, color: c.textSubtle, fontWeight: '500' },
   headerAmount: { fontSize: 30, fontWeight: '800', color: '#FFFFFF', letterSpacing: -1, marginTop: 4 },
   dailyPill: { backgroundColor: 'rgba(255,255,255,0.12)', borderRadius: 12, padding: 10, alignItems: 'center' },
-  dailyLabel: { fontSize: 11, color: '#94A3B8', fontWeight: '600' },
+  dailyLabel: { fontSize: 11, color: c.textSubtle, fontWeight: '600' },
   dailyAmount: { fontSize: 16, fontWeight: '800', color: '#6EE7B7', marginTop: 2 },
 
   volatilityBadge: {
@@ -748,7 +759,7 @@ const s = StyleSheet.create({
   volatilityText: { flex: 1, fontSize: 13, fontWeight: '600', lineHeight: 18 },
 
   card: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: c.surface,
     borderRadius: 20,
     padding: 18,
     borderWidth: 1,
@@ -763,7 +774,7 @@ const s = StyleSheet.create({
 
   sourceRow: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 12 },
   sourceName: { width: 100, fontSize: 13, fontWeight: '600', color: DARK },
-  sourceBarWrap: { flex: 1, height: 8, backgroundColor: '#F1F5F9', borderRadius: 99, overflow: 'hidden' },
+  sourceBarWrap: { flex: 1, height: 8, backgroundColor: c.surfaceAlt, borderRadius: 99, overflow: 'hidden' },
   sourceBar: { height: '100%', borderRadius: 99 },
   sourceAmt: { width: 80, textAlign: 'right', fontSize: 13, fontWeight: '700' },
 
@@ -773,19 +784,19 @@ const s = StyleSheet.create({
     gap: 12,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#F1F5F9',
+    borderBottomColor: c.border,
   },
   timelineDot: { width: 10, height: 10, borderRadius: 5 },
   timelineSource: { fontSize: 14, fontWeight: '700', color: DARK },
   timelineDesc: { fontSize: 12, color: GRAY, marginTop: 2 },
-  timelineDate: { fontSize: 11, color: '#94A3B8', marginTop: 2 },
+  timelineDate: { fontSize: 11, color: c.textSubtle, marginTop: 2 },
   timelineAmt: { fontSize: 15, fontWeight: '800' },
 
   emptyState: { alignItems: 'center', paddingVertical: 40 },
   emptyTitle: { fontSize: 17, fontWeight: '700', color: DARK, marginBottom: 6 },
   emptyText: { fontSize: 13, color: GRAY, textAlign: 'center', lineHeight: 18, paddingHorizontal: 24, marginBottom: 16 },
   emptyAddBtn: {
-    backgroundColor: '#EFF6FF',
+    backgroundColor: c.primarySoft,
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 14,
@@ -808,4 +819,5 @@ const s = StyleSheet.create({
     shadowRadius: 10,
     elevation: 8,
   },
+};
 });

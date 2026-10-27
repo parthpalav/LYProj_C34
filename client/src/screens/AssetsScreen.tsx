@@ -15,14 +15,17 @@ import {
   Platform,
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { StatusBar } from 'expo-status-bar';
 import { useNavigation } from '@react-navigation/native';
 import { getAssets, createAsset, updateAsset, deleteAsset } from '../services/api';
 import { Asset, AssetClass, AssetLiquidity } from '../types';
 import { celebrate } from '../store/useCelebrationStore';
-import Animated, { FadeInDown, FadeOutLeft, LinearTransition } from 'react-native-reanimated';
+import Animated from 'react-native-reanimated';
+import { enterUp, exitFade, listLayout } from '../motion';
 import { FloatingEmoji } from '../components/motion/FloatingEmoji';
 import { formatCurrency } from '../utils/format';
 
+import { createStyles, useTheme } from '../theme';
 const ASSET_TYPE_PRESETS = [
   'Fixed Deposit',
   'Mutual Fund',
@@ -80,6 +83,8 @@ export function getRateLabel(type: string): { label: string; placeholder: string
 }
 
 export default function AssetsScreen() {
+  const { c } = useTheme();
+  const styles = useStyles();
   const navigation = useNavigation<any>();
   const [assets, setAssets] = useState<Asset[]>([]);
   const [loading, setLoading] = useState(true);
@@ -303,6 +308,8 @@ export default function AssetsScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* Assets keeps its dark design in both themes */}
+      <StatusBar style="light" />
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity
@@ -340,8 +347,8 @@ export default function AssetsScreen() {
           <View style={styles.dualMetricRow}>
             <View style={[styles.metricCardMini, { borderColor: '#10B98140' }]}>
               <View style={styles.miniHeader}>
-                <MaterialCommunityIcons name="shield-star" size={16} color="#10B981" />
-                <Text style={[styles.metricLabelMini, { color: '#10B981' }]}>FIRE Corpus</Text>
+                <MaterialCommunityIcons name="shield-star" size={16} color={c.success} />
+                <Text style={[styles.metricLabelMini, { color: c.success }]}>FIRE Corpus</Text>
               </View>
               <Text style={styles.metricValueMini}>{formatINR(fireInvestableCorpus)}</Text>
               <Text style={styles.metricSubMini}>Starting retirement capital</Text>
@@ -389,9 +396,9 @@ export default function AssetsScreen() {
             return (
               <Animated.View
                 key={ast.id}
-                entering={FadeInDown.delay(Math.min(idx, 10) * 50).springify().damping(16)}
-                exiting={FadeOutLeft}
-                layout={LinearTransition.springify().damping(16)}
+                entering={enterUp(idx)}
+                exiting={exitFade}
+                layout={listLayout}
                 style={styles.assetCard}
               >
                 <View style={styles.assetCardTop}>
@@ -412,12 +419,12 @@ export default function AssetsScreen() {
 
                   {ast.includedInFireCorpus && ast.assetClass !== 'NON_INVESTABLE' ? (
                     <View style={[styles.statusBadge, { backgroundColor: '#10B98120' }]}>
-                      <MaterialCommunityIcons name="check-circle" size={12} color="#10B981" />
-                      <Text style={[styles.statusBadgeText, { color: '#10B981' }]}>FIRE Corpus</Text>
+                      <MaterialCommunityIcons name="check-circle" size={12} color={c.success} />
+                      <Text style={[styles.statusBadgeText, { color: c.success }]}>FIRE Corpus</Text>
                     </View>
                   ) : (
                     <View style={[styles.statusBadge, { backgroundColor: '#33415560' }]}>
-                      <Text style={[styles.statusBadgeText, { color: '#94A3B8' }]}>Excluded from FIRE</Text>
+                      <Text style={[styles.statusBadgeText, { color: c.textSubtle }]}>Excluded from FIRE</Text>
                     </View>
                   )}
 
@@ -428,8 +435,8 @@ export default function AssetsScreen() {
 
                   {ast.annualReturnRate !== undefined && ast.annualReturnRate !== null ? (
                     <View style={[styles.statusBadge, { backgroundColor: '#10B98120' }]}>
-                      <MaterialCommunityIcons name="trending-up" size={12} color="#10B981" />
-                      <Text style={[styles.statusBadgeText, { color: '#10B981' }]}>
+                      <MaterialCommunityIcons name="trending-up" size={12} color={c.success} />
+                      <Text style={[styles.statusBadgeText, { color: c.success }]}>
                         {ast.assetType.toLowerCase().includes('deposit') || ast.assetType.toLowerCase().includes('fd') || ast.assetType.toLowerCase().includes('rd') ? 'Interest: ' : 'Return: '}
                         {(ast.annualReturnRate > 1 ? ast.annualReturnRate : ast.annualReturnRate * 100).toFixed(2)}% p.a.
                       </Text>
@@ -446,7 +453,7 @@ export default function AssetsScreen() {
                     onPress={() => openEditModal(ast)}
                     accessibilityLabel={`Edit ${ast.name}`}
                   >
-                    <MaterialCommunityIcons name="pencil-outline" size={16} color="#94A3B8" />
+                    <MaterialCommunityIcons name="pencil-outline" size={16} color={c.textSubtle} />
                     <Text style={styles.actionBtnText}>Edit</Text>
                   </TouchableOpacity>
 
@@ -455,8 +462,8 @@ export default function AssetsScreen() {
                     onPress={() => handleDelete(ast)}
                     accessibilityLabel={`Delete ${ast.name}`}
                   >
-                    <MaterialCommunityIcons name="trash-can-outline" size={16} color="#EF4444" />
-                    <Text style={[styles.actionBtnText, { color: '#EF4444' }]}>Delete</Text>
+                    <MaterialCommunityIcons name="trash-can-outline" size={16} color={c.danger} />
+                    <Text style={[styles.actionBtnText, { color: c.danger }]}>Delete</Text>
                   </TouchableOpacity>
                 </View>
               </Animated.View>
@@ -477,7 +484,7 @@ export default function AssetsScreen() {
                 {editingAsset ? 'Edit Financial Asset' : 'Add Financial Asset'}
               </Text>
               <TouchableOpacity onPress={() => setModalVisible(false)}>
-                <MaterialCommunityIcons name="close" size={24} color="#94A3B8" />
+                <MaterialCommunityIcons name="close" size={24} color={c.textSubtle} />
               </TouchableOpacity>
             </View>
 
@@ -487,7 +494,7 @@ export default function AssetsScreen() {
               <TextInput
                 style={styles.input}
                 placeholder="e.g. HDFC Fixed Deposit, Nifty 50 Fund"
-                placeholderTextColor="#64748B"
+                placeholderTextColor={c.textMuted}
                 value={name}
                 onChangeText={setName}
               />
@@ -517,7 +524,7 @@ export default function AssetsScreen() {
                 <TextInput
                   style={[styles.input, { marginTop: 8 }]}
                   placeholder="Enter custom asset type"
-                  placeholderTextColor="#64748B"
+                  placeholderTextColor={c.textMuted}
                   value={customType}
                   onChangeText={setCustomType}
                 />
@@ -528,7 +535,7 @@ export default function AssetsScreen() {
               <TextInput
                 style={styles.input}
                 placeholder="e.g. 1000000"
-                placeholderTextColor="#64748B"
+                placeholderTextColor={c.textMuted}
                 keyboardType="numeric"
                 value={currentValue}
                 onChangeText={setCurrentValue}
@@ -543,7 +550,7 @@ export default function AssetsScreen() {
                     <TextInput
                       style={styles.input}
                       placeholder={rateInfo.placeholder}
-                      placeholderTextColor="#64748B"
+                      placeholderTextColor={c.textMuted}
                       keyboardType="numeric"
                       value={annualReturnRate}
                       onChangeText={setAnnualReturnRate}
@@ -598,7 +605,7 @@ export default function AssetsScreen() {
                 </TouchableOpacity>
               ) : (
                 <View style={styles.infoBanner}>
-                  <MaterialCommunityIcons name="information-outline" size={18} color="#94A3B8" />
+                  <MaterialCommunityIcons name="information-outline" size={18} color={c.textSubtle} />
                   <Text style={styles.infoBannerText}>
                     Non-investable assets (e.g. primary home) represent net worth but cannot be drawn down for retirement spending.
                   </Text>
@@ -636,7 +643,7 @@ export default function AssetsScreen() {
               <TextInput
                 style={[styles.input, { height: 60 }]}
                 placeholder="e.g. Matures in 2028, 7.2% annual interest"
-                placeholderTextColor="#64748B"
+                placeholderTextColor={c.textMuted}
                 multiline
                 value={notes}
                 onChangeText={setNotes}
@@ -657,7 +664,7 @@ export default function AssetsScreen() {
                   disabled={saving}
                 >
                   {saving ? (
-                    <ActivityIndicator size="small" color="#0F172A" />
+                    <ActivityIndicator size="small" color={c.text} />
                   ) : (
                     <Text style={styles.saveBtnText}>Save Asset</Text>
                   )}
@@ -671,7 +678,7 @@ export default function AssetsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = createStyles((c) => ({
   container: {
     flex: 1,
     backgroundColor: '#0B132B',
@@ -700,7 +707,7 @@ const styles = StyleSheet.create({
   },
   headerSubtitle: {
     fontSize: 12,
-    color: '#94A3B8',
+    color: c.textSubtle,
     marginTop: 1,
   },
   addHeaderBtn: {
@@ -725,7 +732,7 @@ const styles = StyleSheet.create({
   },
   metricLabel: {
     fontSize: 13,
-    color: '#94A3B8',
+    color: c.textSubtle,
     fontWeight: '500',
   },
   metricValue: {
@@ -736,7 +743,7 @@ const styles = StyleSheet.create({
   },
   metricSub: {
     fontSize: 12,
-    color: '#64748B',
+    color: c.textMuted,
   },
   dualMetricRow: {
     flexDirection: 'row',
@@ -766,7 +773,7 @@ const styles = StyleSheet.create({
   },
   metricSubMini: {
     fontSize: 11,
-    color: '#64748B',
+    color: c.textMuted,
   },
   sectionHeaderRow: {
     flexDirection: 'row',
@@ -807,7 +814,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 13,
-    color: '#94A3B8',
+    color: c.textSubtle,
     textAlign: 'center',
     marginTop: 6,
     lineHeight: 18,
@@ -823,7 +830,7 @@ const styles = StyleSheet.create({
   emptyCtaText: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#0F172A',
+    color: c.text,
   },
   assetCard: {
     backgroundColor: '#1E293B',
@@ -849,7 +856,7 @@ const styles = StyleSheet.create({
   },
   assetType: {
     fontSize: 12,
-    color: '#94A3B8',
+    color: c.textSubtle,
     marginTop: 2,
   },
   assetValue: {
@@ -886,7 +893,7 @@ const styles = StyleSheet.create({
   },
   assetNotes: {
     fontSize: 12,
-    color: '#64748B',
+    color: c.textMuted,
     marginTop: 8,
     fontStyle: 'italic',
   },
@@ -907,7 +914,7 @@ const styles = StyleSheet.create({
   actionBtnText: {
     fontSize: 12,
     fontWeight: '600',
-    color: '#94A3B8',
+    color: c.textSubtle,
   },
   modalOverlay: {
     flex: 1,
@@ -942,7 +949,7 @@ const styles = StyleSheet.create({
   fieldLabel: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#94A3B8',
+    color: c.textSubtle,
     marginTop: 14,
     marginBottom: 6,
   },
@@ -975,7 +982,7 @@ const styles = StyleSheet.create({
   },
   presetChipText: {
     fontSize: 12,
-    color: '#94A3B8',
+    color: c.textSubtle,
   },
   presetChipTextActive: {
     color: '#38BDF8',
@@ -1002,11 +1009,11 @@ const styles = StyleSheet.create({
   radioTitle: {
     fontSize: 13,
     fontWeight: '600',
-    color: '#94A3B8',
+    color: c.textSubtle,
   },
   radioSub: {
     fontSize: 11,
-    color: '#64748B',
+    color: c.textMuted,
     marginTop: 1,
   },
   toggleRow: {
@@ -1030,7 +1037,7 @@ const styles = StyleSheet.create({
   },
   toggleSub: {
     fontSize: 11,
-    color: '#94A3B8',
+    color: c.textSubtle,
     marginTop: 2,
   },
   infoBanner: {
@@ -1046,7 +1053,7 @@ const styles = StyleSheet.create({
   infoBannerText: {
     flex: 1,
     fontSize: 11,
-    color: '#94A3B8',
+    color: c.textSubtle,
     lineHeight: 16,
   },
   modalBtnRow: {
@@ -1066,7 +1073,7 @@ const styles = StyleSheet.create({
   cancelBtnText: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#94A3B8',
+    color: c.textSubtle,
   },
   saveBtn: {
     flex: 1,
@@ -1078,6 +1085,6 @@ const styles = StyleSheet.create({
   saveBtnText: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#0F172A',
+    color: c.text,
   },
-});
+}));

@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { StyleProp, View, ViewStyle } from 'react-native';
+import { useTheme } from '../../theme';
 import Animated, { useAnimatedStyle, useReducedMotion, useSharedValue, withDelay, withTiming, Easing } from 'react-native-reanimated';
 
 type Props = {
@@ -13,7 +14,8 @@ type Props = {
 };
 
 /** Progress bar that grows from its previous value (0 on mount) to the new one. */
-export function AnimatedBar({ progress, color, trackColor = '#E2E8F0', height = 8, delay = 0, style }: Props) {
+export function AnimatedBar({ progress, color, trackColor, height = 8, delay = 0, style }: Props) {
+  const { c } = useTheme();
   const reduced = useReducedMotion();
   const target = Math.max(0, Math.min(1, Number.isFinite(progress) ? progress : 0));
   const width = useSharedValue(reduced ? target : 0);
@@ -27,7 +29,7 @@ export function AnimatedBar({ progress, color, trackColor = '#E2E8F0', height = 
   const fillStyle = useAnimatedStyle(() => ({ width: `${width.value * 100}%` }));
 
   return (
-    <View style={[{ height, borderRadius: height / 2, backgroundColor: trackColor, overflow: 'hidden' }, style]}>
+    <View style={[{ height, borderRadius: height / 2, backgroundColor: trackColor ?? c.surfaceAlt, overflow: 'hidden' }, style]}>
       <Animated.View style={[{ height: '100%', borderRadius: height / 2, backgroundColor: color }, fillStyle]} />
     </View>
   );

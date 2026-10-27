@@ -10,6 +10,9 @@ import { useAuthStore } from './src/store/useAuthStore';
 import { LoginScreen } from './src/screens/LoginScreen';
 import { OnboardingScreen } from './src/screens/OnboardingScreen';
 import { CelebrationHost } from './src/components/motion/CelebrationHost';
+import { useFonts, Inter_300Light, Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold, Inter_800ExtraBold, Inter_900Black } from '@expo-google-fonts/inter';
+import { navigationTheme, useTheme } from './src/theme';
+import { useThemeStore } from './src/store/useThemeStore';
 
 export default function App(): React.ReactElement {
   const token = useAuthStore((state) => state.token);
@@ -20,11 +23,19 @@ export default function App(): React.ReactElement {
   const initializing = useAuthStore((state) => state.initializing);
   const initAuth = useAuthStore((state) => state.initAuth);
   const setUser = useStore((state) => state.setUser);
+  const themeHydrated = useThemeStore((state) => state.hydrated);
+  const hydrateTheme = useThemeStore((state) => state.hydrate);
+  const { c, isDark } = useTheme();
+  const [fontsLoaded, fontError] = useFonts({
+    Inter_300Light, Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold, Inter_800ExtraBold, Inter_900Black,
+  });
+  const statusBarStyle = isDark ? 'light' : 'dark';
 
   // Initialize auth state from SecureStore on startup
   useEffect(() => {
     initAuth();
-  }, [initAuth]);
+    hydrateTheme();
+  }, [initAuth, hydrateTheme]);
 
   // Sync auth user to the main app store so all screens can access it
   useEffect(() => {
@@ -46,10 +57,11 @@ export default function App(): React.ReactElement {
     }
   }, [authUser, setUser]);
 
-  if (initializing) {
+  // A font load failure falls back to the system font rather than blocking the app.
+  if (initializing || !themeHydrated || (!fontsLoaded && !fontError)) {
     return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#3B3BDE" />
+      <View style={[styles.loadingContainer, { backgroundColor: c.bg }]}>
+        <ActivityIndicator size="large" color={c.primary} />
       </View>
     );
   }
@@ -58,7 +70,7 @@ export default function App(): React.ReactElement {
   if (!token) {
     return (
       <SafeAreaProvider>
-        <StatusBar style="dark" />
+        <StatusBar style="light" />
         <LoginScreen />
       </SafeAreaProvider>
     );
@@ -69,7 +81,7 @@ export default function App(): React.ReactElement {
   if (!isComplete) {
     return (
       <SafeAreaProvider>
-        <StatusBar style="dark" />
+        <StatusBar style={statusBarStyle} />
         <OnboardingScreen />
       </SafeAreaProvider>
     );
@@ -79,7 +91,7 @@ export default function App(): React.ReactElement {
   if (showWelcome) {
     return (
       <SafeAreaProvider>
-        <StatusBar style="dark" />
+        <StatusBar style={statusBarStyle} />
         <WelcomeScreen onContinue={dismissWelcome} />
         <CelebrationHost />
       </SafeAreaProvider>
@@ -89,8 +101,8 @@ export default function App(): React.ReactElement {
   // Authenticated & onboarded — show the full app
   return (
     <SafeAreaProvider>
-      <NavigationContainer>
-        <StatusBar style="dark" />
+      <NavigationContainer theme={navigationTheme(c, isDark)}>
+        <StatusBar style={statusBarStyle} />
         <AppNavigator />
       </NavigationContainer>
       <CelebrationHost />
@@ -101,7 +113,6 @@ export default function App(): React.ReactElement {
 const styles = StyleSheet.create({
   loadingContainer: {
     flex: 1,
-    backgroundColor: '#F4F6FA',
     justifyContent: 'center',
     alignItems: 'center',
   }

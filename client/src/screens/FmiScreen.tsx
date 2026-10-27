@@ -10,22 +10,15 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   SafeAreaView,
-  StatusBar,
 } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { getFMI, getCurrentFamily, getFamilyDashboard } from '../services/api';
 import { FMIRecord, FMIResponse, FamilySummary, FamilyDashboard } from '../types';
 
-const BLUE = '#2563EB';
-const GREEN = '#10B981';
-const AMBER = '#F59E0B';
-const RED = '#EF4444';
+import { createStyles, useTheme, Palette } from '../theme';
+const tokens = (c: Palette) => ({ BLUE: c.primary, GREEN: c.success, AMBER: c.warning, RED: c.danger, DARK: c.text, GRAY: c.textMuted, LIGHT: c.bg, BORDER: c.border });
 const INDIGO = '#4F46E5';
-const DARK = '#0F172A';
-const GRAY = '#64748B';
-const LIGHT = '#F8FAFC';
-const BORDER = '#E2E8F0';
 
 // ── Helpers ──────────────────────────────────────────────────
 
@@ -43,6 +36,7 @@ function formatINR(n: number | null | undefined) {
 // ── Gauge Component ──────────────────────────────────────────
 
 function Gauge({ score, label }: { score: number; label?: string }) {
+  const g = useGStyles();
   const color = fmiColor(score);
   const rotation = -90 + (Math.min(100, Math.max(0, score)) / 100) * 180;
   // Sweep the arc from empty to the score on mount and whenever the score changes.
@@ -80,7 +74,7 @@ function Gauge({ score, label }: { score: number; label?: string }) {
   );
 }
 
-const g = StyleSheet.create({
+const useGStyles = createStyles((c) => ({
   container: { alignItems: 'center', marginVertical: 14 },
   arcWrap: {
     width: 220,
@@ -95,7 +89,7 @@ const g = StyleSheet.create({
     height: 220,
     borderRadius: 110,
     borderWidth: 20,
-    borderColor: '#F1F5F9',
+    borderColor: c.border,
     position: 'absolute',
     top: 0,
   },
@@ -125,7 +119,7 @@ const g = StyleSheet.create({
   scoreLabel: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#94A3B8',
+    color: c.textSubtle,
     marginTop: -2,
     letterSpacing: 0.5,
   },
@@ -140,17 +134,20 @@ const g = StyleSheet.create({
     fontWeight: '700',
     letterSpacing: 0.2,
   },
-});
+}));
 
 // ── Status Badge ─────────────────────────────────────────────
 
 function StatusBadge({ status }: { status: string }) {
+  const { c } = useTheme();
+  const { AMBER, RED, GRAY, BORDER } = tokens(c);
+  const sb = useSbStyles();
   const config =
     {
-      above: { bg: '#FEF2F2', fg: RED, border: '#FECACA', text: 'Budget Pressure' },
-      on_track: { bg: '#FFFBEB', fg: AMBER, border: '#FDE68A', text: 'On Track' },
-      below: { bg: '#ECFDF5', fg: '#059669', border: '#A7F3D0', text: 'Safe Buffer' },
-    }[status] || { bg: '#F1F5F9', fg: GRAY, border: BORDER, text: 'Calibrating' };
+      above: { bg: c.dangerSoft, fg: RED, border: c.dangerSoft, text: 'Budget Pressure' },
+      on_track: { bg: c.warningSoft, fg: AMBER, border: c.warningSoft, text: 'On Track' },
+      below: { bg: c.successSoft, fg: c.successStrong, border: c.successSoft, text: 'Safe Buffer' },
+    }[status] || { bg: c.surfaceAlt, fg: GRAY, border: BORDER, text: 'Calibrating' };
 
   return (
     <View style={[sb.badge, { backgroundColor: config.bg, borderColor: config.border }]}>
@@ -164,7 +161,7 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
-const sb = StyleSheet.create({
+const useSbStyles = createStyles((c) => ({
   badge: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -177,7 +174,7 @@ const sb = StyleSheet.create({
     marginTop: 6,
   },
   text: { fontSize: 13, fontWeight: '700' },
-});
+}));
 
 // ── Pillar Card ──────────────────────────────────────────────
 
@@ -194,6 +191,7 @@ function PillarCard({
   weight: number;
   detail: string;
 }) {
+  const pc = usePcStyles();
   const color = fmiColor(score);
   const pct = Math.min(100, Math.max(0, score));
   const weightPct = Math.round(weight * 100);
@@ -218,9 +216,11 @@ function PillarCard({
   );
 }
 
-const pc = StyleSheet.create({
+const usePcStyles = createStyles((c) => {
+  const { DARK, GRAY, BORDER } = tokens(c);
+  return {
   card: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: c.surface,
     borderRadius: 16,
     padding: 16,
     borderWidth: 1,
@@ -242,14 +242,18 @@ const pc = StyleSheet.create({
   title: { fontSize: 14, fontWeight: '700', color: DARK },
   weight: { fontSize: 11, fontWeight: '600', color: GRAY, marginTop: 2 },
   score: { fontSize: 26, fontWeight: '800', letterSpacing: -1 },
-  barBg: { height: 6, backgroundColor: '#F1F5F9', borderRadius: 3, overflow: 'hidden' },
+  barBg: { height: 6, backgroundColor: c.surfaceAlt, borderRadius: 3, overflow: 'hidden' },
   barFg: { height: '100%', borderRadius: 3 },
   detail: { fontSize: 12, color: GRAY, marginTop: 8, lineHeight: 18 },
+};
 });
 
 // ── Main Screen ──────────────────────────────────────────────
 
 export function FmiScreen(): React.ReactElement {
+  const { c } = useTheme();
+  const { BLUE, GREEN, AMBER, RED, DARK, GRAY, BORDER } = tokens(c);
+  const s = useSStyles();
   const navigation = useNavigation();
   const [history, setHistory] = useState<FMIRecord[]>([]);
   const [current, setCurrent] = useState<FMIResponse | null>(null);
@@ -336,7 +340,6 @@ export function FmiScreen(): React.ReactElement {
 
   return (
     <SafeAreaView style={s.safe}>
-      <StatusBar barStyle="dark-content" />
       {/* ── Top Bar ──────────────────────────────────────────── */}
       <View style={s.topBar}>
         <TouchableOpacity
@@ -383,7 +386,7 @@ export function FmiScreen(): React.ReactElement {
             accessibilityLabel={`Household Financial Maturity Index, ${Math.round(familyDashboard.fmi.score)} out of 100, ${familyDashboard.fmi.fmiLabel}. View household details.`}
           >
             <View style={s.householdIconWrap}>
-              <Ionicons name="people" size={18} color="#7C3AED" />
+              <Ionicons name="people" size={18} color={c.purple} />
             </View>
             <View style={{ flex: 1 }}>
               <Text style={s.householdNavTitle}>Household Financial Maturity</Text>
@@ -393,7 +396,7 @@ export function FmiScreen(): React.ReactElement {
               <Text style={s.householdScoreNum}>{Math.round(familyDashboard.fmi.score)}</Text>
               <Text style={s.householdScoreDenom}>/100</Text>
             </View>
-            <Ionicons name="chevron-forward" size={16} color="#64748B" />
+            <Ionicons name="chevron-forward" size={16} color={c.textMuted} />
           </TouchableOpacity>
         ) : null}
 
@@ -450,7 +453,7 @@ export function FmiScreen(): React.ReactElement {
                 <Text style={s.metricLabel}>Predicted Total</Text>
               </View>
               <View style={s.metricItem}>
-                <Text style={[s.metricValue, { color: '#059669' }]}>{formatINR(current.availableMoney)}</Text>
+                <Text style={[s.metricValue, { color: c.successStrong }]}>{formatINR(current.availableMoney)}</Text>
                 <Text style={s.metricLabel}>Available Budget</Text>
               </View>
               <View style={s.metricItem}>
@@ -573,7 +576,9 @@ export function FmiScreen(): React.ReactElement {
 
 // ── Styles ───────────────────────────────────────────────────
 
-const s = StyleSheet.create({
+const useSStyles = createStyles((c) => {
+  const { BLUE, DARK, GRAY, LIGHT, BORDER } = tokens(c);
+  return {
   safe: { flex: 1, backgroundColor: LIGHT },
   screen: { flex: 1, backgroundColor: LIGHT },
   content: { padding: 16, paddingBottom: 40, gap: 16 },
@@ -594,7 +599,7 @@ const s = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingVertical: 10,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: c.surface,
     borderBottomWidth: 1,
     borderBottomColor: BORDER,
   },
@@ -604,7 +609,7 @@ const s = StyleSheet.create({
     borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#F1F5F9',
+    backgroundColor: c.surfaceAlt,
   },
   topBarTitle: {
     fontSize: 16,
@@ -613,7 +618,7 @@ const s = StyleSheet.create({
   },
 
   card: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: c.surface,
     borderRadius: 20,
     padding: 18,
     shadowColor: '#000',
@@ -637,7 +642,7 @@ const s = StyleSheet.create({
 
   // Metric grid (2×2)
   metricGrid: { flexDirection: 'row', flexWrap: 'wrap', marginTop: 14, gap: 10 },
-  metricItem: { width: '48%', backgroundColor: '#F8FAFC', borderRadius: 14, padding: 12, alignItems: 'center' },
+  metricItem: { width: '48%', backgroundColor: c.bg, borderRadius: 14, padding: 12, alignItems: 'center' },
   metricValue: { fontSize: 17, fontWeight: '800', color: DARK, letterSpacing: -0.5 },
   metricLabel: { fontSize: 11, fontWeight: '600', color: GRAY, marginTop: 4, textAlign: 'center' },
 
@@ -646,7 +651,7 @@ const s = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     gap: 12,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: c.bg,
     padding: 12,
     borderRadius: 12,
     borderWidth: 1,
@@ -673,13 +678,13 @@ const s = StyleSheet.create({
   bar: { width: 16, borderRadius: 8, backgroundColor: BLUE, minHeight: 4 },
 
   // Info
-  infoCard: { backgroundColor: '#EEF2FF', borderRadius: 20, padding: 18, borderWidth: 1, borderColor: '#C7D2FE' },
+  infoCard: { backgroundColor: c.primarySoft, borderRadius: 20, padding: 18, borderWidth: 1, borderColor: c.primarySoft },
   infoTitle: { fontSize: 14, fontWeight: '700', color: INDIGO, marginBottom: 6 },
-  infoText: { fontSize: 12, color: '#4338CA', lineHeight: 18 },
+  infoText: { fontSize: 12, color: c.primary, lineHeight: 18 },
 
   // Contextual Household Nav Card
   householdNavCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: c.surface,
     borderRadius: 16,
     padding: 14,
     flexDirection: 'row',
@@ -697,7 +702,7 @@ const s = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 10,
-    backgroundColor: '#F3E8FF',
+    backgroundColor: c.purpleSoft,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -714,7 +719,7 @@ const s = StyleSheet.create({
   householdScoreBadge: {
     flexDirection: 'row',
     alignItems: 'baseline',
-    backgroundColor: '#F8FAFC',
+    backgroundColor: c.bg,
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 8,
@@ -724,12 +729,13 @@ const s = StyleSheet.create({
   householdScoreNum: {
     fontSize: 16,
     fontWeight: '800',
-    color: '#7C3AED',
+    color: c.purple,
   },
   householdScoreDenom: {
     fontSize: 10,
     fontWeight: '600',
-    color: '#94A3B8',
+    color: c.textSubtle,
     marginLeft: 1,
   },
+};
 });

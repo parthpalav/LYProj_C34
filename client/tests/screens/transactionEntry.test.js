@@ -116,7 +116,7 @@ test('Amount UX Test 3 — Obvious Input Container & Visual Boundaries', () => {
     'amountContainer defines clear visible border'
   );
   assert.ok(
-    screenCode.includes("backgroundColor: '#F8FAFC'"),
+    screenCode.includes('backgroundColor: c.bg'),
     'amountContainer defines contrasting subtle background'
   );
   assert.ok(
@@ -146,7 +146,7 @@ test('Amount UX Test 5 — Placeholder Clarity', () => {
     'TextInput specifies a clean monetary placeholder ("0")'
   );
   assert.ok(
-    screenCode.includes('placeholderTextColor="#94A3B8"'),
+    screenCode.includes('placeholderTextColor={c.textSubtle}'),
     'TextInput specifies high-contrast accessible placeholder color'
   );
 });

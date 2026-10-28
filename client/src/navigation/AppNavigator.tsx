@@ -1,5 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createNativeStackNavigator, NativeStackNavigationOptions } from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { ChatScreen } from '../screens/ChatScreen';
@@ -91,22 +91,11 @@ function WelcomeRoute(): React.ReactElement {
  * Navigation auth-flow pattern), so moving between them cross-fades instead of hard-swapping trees.
  */
 export function AppNavigator(): React.ReactElement {
-  const styles = useStyles();
-  const { c } = useTheme();
   const token = useAuthStore((s) => s.token);
   const user = useAuthStore((s) => s.user);
   const onboardingCompleted = useAuthStore((s) => s.onboardingCompleted);
   const showWelcome = useAuthStore((s) => s.showWelcome);
   const onboarded = Boolean(onboardingCompleted || user?.onboardingComplete || user?.onboardingCompleted);
-
-  const nativeHeader: NativeStackNavigationOptions = {
-    headerShown: true,
-    headerStyle: { backgroundColor: c.bg },
-    headerTitleStyle: styles.headerTitle,
-    headerTintColor: c.text,
-    headerShadowVisible: false,
-    headerBackTitleVisible: false,
-  };
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false, animation: 'default', animationTypeForReplace: 'push' }}>
@@ -124,7 +113,7 @@ export function AppNavigator(): React.ReactElement {
           <Stack.Screen name="Assets" component={AssetsScreen} />
           <Stack.Screen name="Family" component={FamilyScreen} />
           <Stack.Screen name="Goals" component={GoalPlannerScreen} />
-          <Stack.Screen name="Liabilities" component={LiabilitiesScreen} options={{ ...nativeHeader, title: 'Bills' }} />
+          <Stack.Screen name="Liabilities" component={LiabilitiesScreen} />
           <Stack.Screen name="Profile" component={ProfileScreen} />
           <Stack.Screen
             name="QuickAdd"

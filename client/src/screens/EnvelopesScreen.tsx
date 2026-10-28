@@ -1,189 +1,145 @@
-import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import { getEnvelopes, simulateMicroSavings, getRoundupPreview } from '../services/api';
+import React, { useCallback, useState } from 'react';
+import { RefreshControl, Text, TextInput, View } from 'react-native';
+import Animated from 'react-native-reanimated';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { getEnvelopes, getRoundupPreview, simulateMicroSavings } from '../services/api';
+import { celebrate, toast } from '../store/useCelebrationStore';
 import { EnvelopeData } from '../types';
+import { createStyles, radius, tabular, typeScale, useTheme } from '../theme';
+import { enterUp } from '../motion';
+import { formatCurrency } from '../utils/format';
+import { PiggyBank } from '../components/motion/PiggyBank';
+import { Card } from '../components/ui/Card';
+import { Chip, ErrorState, IconTile, MoneyText, SectionHeader } from '../components/ui/Bits';
+import { Button } from '../components/ui/Button';
+import { LargeTitle, ScreenHeader, useHeaderHeight, useScrollHeader } from '../components/ui/ScreenHeader';
 
-import { createStyles, useTheme, Palette } from '../theme';
-const tokens = (c: Palette) => ({ BLUE: c.primary, AMBER: c.warning, PURPLE: c.purple });
-const GREEN = '#22C880';
+/** Round-up vault: tuck away the loose change from purchases, a little at a time. */
+export function EnvelopesScreen(): React.ReactElement {
+  const { c, isDark } = useTheme();
+  const styles = useStyles();
+  const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
+  const headerHeight = useHeaderHeight();
+  const { y, onScroll } = useScrollHeader();
+  const [envelope, setEnvelope] = useState<EnvelopeData | null>(null);
+  const [preview, setPreview] = useState<{ amount: number; previewText: string } | null>(null);
+  const [custom, setCustom] = useState('');
+  const [failed, setFailed] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
-function EnvelopeCard({ title, amount, target, color, icon }: { title: string, amount: number, target?: number, color: string, icon: string }) {
-  const s = useSStyles();
-  const pct = target ? Math.min(100, Math.round((amount / target) * 100)) : 0;
-  
+  const load = useCallback(async () => {
+    const [env, pre] = await Promise.allSettled([getEnvelopes(), getRoundupPreview()]);
+    if (env.status === 'fulfilled') setEnvelope(env.value);
+    if (pre.status === 'fulfilled') setPreview(pre.value);
+    setFailed(env.status === 'rejected');
+  }, []);
+
+  useFocusEffect(useCallback(() => { load(); }, [load]));
+
+  const vault = async (amount: number) => {
+    if (!(amount > 0)) return toast('Enter an amount greater than zero', { tone: 'warning' });
+    try {
+      await simulateMicroSavings(amount);
+      const before = envelope?.savings ?? 0;
+      setCustom('');
+      await load();
+      const target = envelope?.targetSavings ?? 0;
+      celebrate(target > 0
+        ? { kind: 'piggy', from: before / target, to: (before + amount) / target, title: `${formatCurrency(amount)} vaulted`, subtitle: 'Small amounts add up.' }
+        : { kind: 'coins', title: `${formatCurrency(amount)} vaulted`, subtitle: 'Small amounts add up.' });
+    } catch {
+      toast("Couldn't move that into the vault", { tone: 'error' });
+    }
+  };
+
+  const saved = envelope?.savings ?? 0;
+  const target = envelope?.targetSavings ?? 0;
+
   return (
-    <View style={s.envCard}>
-      <View style={[s.envIconWrap, { backgroundColor: color + '1A' }]}>
-        <Text style={s.envIcon}>{icon}</Text>
-      </View>
-      <View style={{ flex: 1 }}>
-        <Text style={s.envTitle}>{title}</Text>
-        <Text style={[s.envAmount, { color }]}>₹{amount.toLocaleString()}</Text>
-        {target && (
-          <View style={s.trackRow}>
-            <View style={s.trackBg}>
-              <View style={[s.trackFg, { width: `${pct}%`, backgroundColor: color }]} />
-            </View>
-            <Text style={s.trackPct}>{pct}%</Text>
-          </View>
-        )}
-      </View>
+    <View style={styles.screen}>
+      <Animated.ScrollView
+        onScroll={onScroll}
+        scrollEventThrottle={16}
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{ paddingTop: headerHeight, paddingBottom: insets.bottom + 40 }}
+        refreshControl={<RefreshControl refreshing={refreshing} progressViewOffset={headerHeight} onRefresh={async () => { setRefreshing(true); await load(); setRefreshing(false); }} />}
+      >
+        <LargeTitle title="Round-ups" subtitle="Save the loose change from everyday spending" />
+        <View style={styles.body}>
+          {failed && !envelope ? (
+            <ErrorState onRetry={load} />
+          ) : (
+            <>
+              <Animated.View entering={enterUp(0)}>
+                <Card variant="hero" style={styles.hero}>
+                  <PiggyBank progress={target > 0 ? Math.min(1, saved / target) : saved > 0 ? 0.35 : 0} size={96} />
+                  <View style={styles.flex}>
+                    <Text style={styles.heroLabel}>In your vault</Text>
+                    <MoneyText value={saved} style={styles.heroValue} />
+                    <Text style={styles.heroSub}>{target > 0 ? `of ${formatCurrency(target)} target` : 'Every round-up lands here'}</Text>
+                  </View>
+                </Card>
+              </Animated.View>
+
+              {preview && preview.amount > 0 && (
+                <>
+                  <SectionHeader title="Suggested round-up" />
+                  <Card style={styles.preview}>
+                    <IconTile icon="sparkles" tint={c.primary} />
+                    <View style={styles.flex}>
+                      <Text style={styles.previewAmount}>{formatCurrency(preview.amount)}</Text>
+                      <Text style={styles.previewText}>{preview.previewText}</Text>
+                    </View>
+                    <Button label="Vault it" size="sm" onPress={() => vault(preview.amount)} />
+                  </Card>
+                </>
+              )}
+
+              <SectionHeader title="Add your own" />
+              <Card>
+                <View style={styles.amountBox}>
+                  <Text style={styles.prefix}>₹</Text>
+                  <TextInput
+                    value={custom}
+                    onChangeText={(v) => setCustom(v.replace(/[^0-9]/g, ''))}
+                    placeholder="0"
+                    placeholderTextColor={c.textSubtle}
+                    keyboardType="number-pad"
+                    keyboardAppearance={isDark ? 'dark' : 'light'}
+                    style={styles.amountInput}
+                    accessibilityLabel="Amount to vault"
+                  />
+                </View>
+                <View style={styles.quick}>
+                  {[20, 50, 100, 500].map((v) => <Chip key={v} label={formatCurrency(v)} onPress={() => setCustom(String(v))} style={styles.flex} />)}
+                </View>
+                <Button label="Move to vault" onPress={() => vault(Number(custom))} style={styles.cta} />
+              </Card>
+            </>
+          )}
+        </View>
+      </Animated.ScrollView>
+      <ScreenHeader title="Round-ups" y={y} onBack={() => navigation.goBack()} />
     </View>
   );
 }
 
-export function EnvelopesScreen(): React.ReactElement {
-  const { c } = useTheme();
-  const { BLUE, AMBER } = tokens(c);
-  const s = useSStyles();
-  const [envelope, setEnvelope] = useState<EnvelopeData | null>(null);
-  const [loading, setLoading]   = useState(true);
-  const [previewAmount, setPreviewAmount] = useState('');
-  const [previewText, setPreviewText]   = useState('');
-  const [simMsg, setSimMsg]         = useState('');
-  const [simLoading, setSimLoading] = useState(false);
-
-  const fetchData = async () => {
-    try {
-      const [env, rPreview] = await Promise.all([
-        getEnvelopes(),
-        getRoundupPreview()
-      ]);
-      setEnvelope(env);
-      setPreviewAmount(String(rPreview.amount));
-      setPreviewText(rPreview.previewText);
-    } catch (e) { console.error(e); }
-    finally { setLoading(false); }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const handleSimulate = async () => {
-    if (!previewAmount || isNaN(Number(previewAmount)) || Number(previewAmount) <= 0) return;
-    
-    setSimLoading(true);
-    setSimMsg('');
-    try {
-      const response = await simulateMicroSavings(Number(previewAmount));
-      setSimMsg(response.message);
-      await fetchData(); // Refresh vault and fetch new preview
-    } catch (e) {
-      console.error(e);
-      setSimMsg('Failed to apply roundup.');
-    } finally {
-      setSimLoading(false);
-      setTimeout(() => setSimMsg(''), 5000);
-    }
-  };
-
-  if (loading || !envelope) {
-    return (
-      <View style={{ flex: 1, backgroundColor: c.bg, alignItems: 'center', justifyContent: 'center' }}>
-        <ActivityIndicator size="large" color={BLUE} />
-      </View>
-    );
-  }
-
-  const savingsTotal = envelope.savings;
-  const savingsPct   = Math.round((savingsTotal / envelope.targetSavings) * 100);
-
-  return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View style={{ flex: 1 }}>
-        <ScrollView style={s.screen} contentContainerStyle={s.content} keyboardShouldPersistTaps="handled">
-
-      <View style={s.header}>
-        <Text style={s.headerTitle}>Total Savings Vault</Text>
-        <Text style={s.headerAmount}>₹{savingsTotal.toLocaleString()}</Text>
-        <View style={s.vaultTrack}>
-          <View style={[s.vaultFill, { width: `${savingsPct}%` }]} />
-        </View>
-        <Text style={s.vaultSub}>Target: ₹{envelope.targetSavings.toLocaleString()} ({savingsPct}%)</Text>
-      </View>
-
-      <Text style={s.sectionTitle}>Active Envelopes</Text>
-      
-      <EnvelopeCard title="Rent & Utilities" amount={envelope.rent} color={BLUE} icon="🏠" />
-      <EnvelopeCard title="Food & Groceries" amount={envelope.food} color={AMBER} icon="🍔" />
-      <EnvelopeCard title="Investments & Savings" amount={envelope.savings} target={envelope.targetSavings} color={GREEN} icon="📈" />
-      
-      <KeyboardAvoidingView behavior="padding">
-        <View style={s.actionCard}>
-          <View style={s.actionHeader}>
-            <Text style={s.actionIcon}>💡</Text>
-            <View style={{ flex: 1 }}>
-              <Text style={s.actionTitle}>Spare Change Roundups</Text>
-              <Text style={s.actionDesc}>{previewText || 'Automatically round up spare change from your recent transactions and vault it.'}</Text>
-            </View>
-          </View>
-          
-          <View style={s.editRow}>
-            <Text style={s.editLabel}>Transfer Amount (₹):</Text>
-            <TextInput 
-              style={s.editInput} 
-              value={previewAmount} 
-              onChangeText={setPreviewAmount} 
-              keyboardType="numeric" 
-            />
-          </View>
-          
-          <TouchableOpacity style={s.btn} onPress={handleSimulate} disabled={simLoading} activeOpacity={0.8}>
-            {simLoading ? <ActivityIndicator color="#fff" /> : <Text style={s.btnText}>Vault ₹{previewAmount} Now</Text>}
-          </TouchableOpacity>
-          
-          {!!simMsg && (
-            <View style={s.msgBox}>
-              <Text style={s.msgText}>✅ {simMsg}</Text>
-            </View>
-          )}
-        </View>
-      </KeyboardAvoidingView>
-        </ScrollView>
-      </View>
-    </TouchableWithoutFeedback>
-  );
-}
-
-const useSStyles = createStyles((c) => {
-  const { BLUE } = tokens(c);
-  return {
-  screen:       { flex: 1, backgroundColor: c.bg },
-  content:      { padding: 16, gap: 16, paddingBottom: 40 },
-  
-  header:       { backgroundColor: BLUE, borderRadius: 20, padding: 24, shadowColor: BLUE, shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.3, shadowRadius: 12, elevation: 8, alignItems: 'center' },
-  headerTitle:  { fontSize: 13, fontWeight: '600', color: 'rgba(255,255,255,0.8)', textTransform: 'uppercase', letterSpacing: 1 },
-  headerAmount: { fontSize: 40, fontWeight: '800', color: '#fff', letterSpacing: -1, marginTop: 4, marginBottom: 16 },
-  vaultTrack:   { width: '100%', height: 6, backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: 3, overflow: 'hidden' },
-  vaultFill:    { height: '100%', backgroundColor: c.surface, borderRadius: 3 },
-  vaultSub:     { fontSize: 13, color: 'rgba(255,255,255,0.9)', marginTop: 8, fontWeight: '500' },
-  
-  sectionTitle: { fontSize: 16, fontWeight: '800', color: c.text, marginTop: 8, marginBottom: -4 },
-  
-  envCard:      { backgroundColor: c.surface, borderRadius: 16, padding: 16, flexDirection: 'row', alignItems: 'center', gap: 14, borderWidth: 1, borderColor: c.border, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.04, shadowRadius: 6, elevation: 2 },
-  envIconWrap:  { width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center' },
-  envIcon:      { fontSize: 22 },
-  envTitle:     { fontSize: 14, fontWeight: '700', color: c.textMuted },
-  envAmount:    { fontSize: 18, fontWeight: '800', marginTop: 2 },
-  
-  trackRow:     { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 8 },
-  trackBg:      { flex: 1, height: 6, backgroundColor: c.bg, borderRadius: 3, overflow: 'hidden' },
-  trackFg:      { height: '100%', borderRadius: 3 },
-  trackPct:     { fontSize: 11, fontWeight: '700', color: c.textSubtle, width: 28, textAlign: 'right' },
-  
-  actionCard:   { backgroundColor: c.surface, borderRadius: 16, padding: 20, borderWidth: 1, borderColor: c.border, marginTop: 8 },
-  actionHeader: { flexDirection: 'row', gap: 12, marginBottom: 16, paddingRight: 24 },
-  actionIcon:   { fontSize: 24 },
-  actionTitle:  { fontSize: 15, fontWeight: '800', color: c.text, marginBottom: 4 },
-  actionDesc:   { fontSize: 13, color: c.textMuted, lineHeight: 18 },
-  editRow:      { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', backgroundColor: c.bg, padding: 12, borderRadius: 12, marginBottom: 16, borderWidth: 1, borderColor: c.border },
-  editLabel:    { fontSize: 13, fontWeight: '600', color: c.textMuted },
-  editInput:    { fontSize: 16, fontWeight: '800', color: BLUE, padding: 0, textAlign: 'right', minWidth: 60 },
-  btn:          { backgroundColor: BLUE, borderRadius: 12, height: 48, alignItems: 'center', justifyContent: 'center' },
-  btnText:      { fontSize: 14, fontWeight: '700', color: '#fff' },
-  
-  msgBox:       { backgroundColor: c.successSoft, padding: 12, borderRadius: 10, marginTop: 12, borderWidth: 1, borderColor: c.successSoft },
-  msgText:      { fontSize: 13, fontWeight: '600', color: c.successStrong },
-};
-});
+const useStyles = createStyles((c) => ({
+  screen: { flex: 1, backgroundColor: c.bg },
+  flex: { flex: 1 },
+  body: { paddingHorizontal: 16 },
+  hero: { flexDirection: 'row', alignItems: 'center', gap: 16 },
+  heroLabel: { ...typeScale.caption, color: c.onAuroraMuted },
+  heroValue: { ...typeScale.title, fontSize: 30, color: c.onAurora, marginTop: 2 },
+  heroSub: { ...typeScale.caption, color: c.onAuroraMuted, marginTop: 2 },
+  preview: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  previewAmount: { ...typeScale.headline, color: c.text, ...tabular },
+  previewText: { ...typeScale.caption, color: c.textMuted, marginTop: 2 },
+  amountBox: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', minHeight: 64, borderRadius: radius.md, backgroundColor: c.bg },
+  prefix: { fontSize: 26, fontWeight: '700', color: c.textSubtle, marginRight: 4 },
+  amountInput: { minWidth: 50, fontSize: 34, fontWeight: '800', color: c.text, ...tabular },
+  quick: { flexDirection: 'row', gap: 8, marginTop: 12 },
+  cta: { marginTop: 14 },
+}));

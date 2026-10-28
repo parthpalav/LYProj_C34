@@ -3,7 +3,7 @@ import { Alert, Pressable, RefreshControl, ScrollView, SectionList, Text, TextIn
 import { Ionicons } from '@expo/vector-icons';
 import Animated from 'react-native-reanimated';
 import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { createLiability, deleteTransaction, getSubscriptionSuggestions, getTransactions, updateTransaction } from '../services/api';
 import { useStore } from '../store/useStore';
 import { toast } from '../store/useCelebrationStore';
@@ -232,6 +232,7 @@ function TxRow({ item, index, onEdit, onDelete, onOptions }: {
 export function TransactionsScreen(): React.ReactElement {
   const { c } = useTheme();
   const styles = useStyles();
+  const navigation = useNavigation<any>();
   const tabBarSpace = useTabBarSpace();
   const headerHeight = useHeaderHeight();
   const { y, onScroll } = useScrollHeader({ hidesTabBar: true });
@@ -524,6 +525,17 @@ export function TransactionsScreen(): React.ReactElement {
               <Ionicons name="close-circle" size={18} color={c.textMuted} />
             </Pressable>
           </View>
+        )}
+
+        {reviewCount > 0 && (
+          <Card onPress={() => navigation.navigate('Review')} style={styles.suggestion} accessibilityLabel={`Check ${reviewCount} AI guesses`}>
+            <IconTile icon="sparkles" tint={c.primary} />
+            <View style={styles.flex}>
+              <Text style={styles.suggestionKicker}>FINAURA wasn't sure</Text>
+              <Text style={styles.suggestionTitle}>Check {reviewCount} AI guess{reviewCount === 1 ? '' : 'es'}</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={18} color={c.textSubtle} />
+          </Card>
         )}
 
         {/* Recurring charge suggestion */}

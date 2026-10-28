@@ -8,7 +8,7 @@ import {
   Transaction, WeeklyReport, User, Liability, LiabilityPaymentSummary,
   LiabilityPaymentHistoryResponse, PredictabilitySnapshot, PredictabilityResponse,
   Asset, PredictabilityQueryOptions, FamilySummary, FamilyInvitation, FamilyDashboard, FamilyDashboardResponse,
-  SubscriptionSuggestion,
+  SubscriptionSuggestion, MonthlyReport,
 } from '../types';
 
 export interface NewTransaction {
@@ -459,6 +459,12 @@ export async function getLiabilityTransactions(
   const { data } = await api.get(`/api/liabilities/${id}/transactions`, {
     params: { page, limit }
   });
+  return data.data;
+}
+
+/** Income, spending mix, top categories and health-score change for one calendar month (default: current). */
+export async function getMonthlyReport(year?: number, month?: number): Promise<MonthlyReport> {
+  const { data } = await api.get('/api/reports/monthly', { params: { year, month } });
   return data.data;
 }
 

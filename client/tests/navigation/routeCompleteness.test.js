@@ -164,16 +164,13 @@ test('Route Integrity 1: AppNavigator registers all primary tabs and stack scree
 
 test('Route Integrity 2: Envelopes is NOT a primary tab destination', () => {
   const content = readClientFile('src/navigation/AppNavigator.tsx');
+  const tabs = content.slice(content.indexOf('<Tab.Navigator'), content.indexOf('</Tab.Navigator>'));
+  const tabParams = content.slice(content.indexOf('RootTabParamList = {'), content.indexOf('};', content.indexOf('RootTabParamList = {')));
 
-  assert.ok(
-    !content.includes('name="Envelopes"'),
-    'Envelopes is NOT registered as a tab screen'
-  );
-
-  assert.ok(
-    !content.includes('Envelopes: undefined'),
-    'Envelopes is NOT in RootTabParamList'
-  );
+  assert.ok(!tabs.includes('name="Envelopes"'), 'Envelopes is NOT registered as a tab screen');
+  assert.ok(!tabParams.includes('Envelopes'), 'Envelopes is NOT in RootTabParamList');
+  // It lives in the stack, reached from the Plan hub's Round-ups tile.
+  assert.ok(content.includes('<Stack.Screen name="Envelopes"'), 'Envelopes is a stack screen');
 });
 
 test('Route Integrity 3: Chat remains available in primary navigation', () => {

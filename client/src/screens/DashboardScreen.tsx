@@ -5,8 +5,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import Animated from 'react-native-reanimated';
 import {
+  getAlerts,
   getAssets,
   getCurrentFamily,
+  getReceivedFamilyInvitations,
   getDashboard,
   getFamilyDashboard,
   getFMI,
@@ -116,6 +118,7 @@ export function DashboardScreen(): React.ReactElement {
   const [fmiData, setFmiData] = useState<FMIResponse | null>(null);
   const [assets, setAssets] = useState<Asset[] | null>(null);
   const [income, setIncome] = useState<IncomeRecord[] | null>(null);
+  const [attention, setAttention] = useState(0);
   const loadedRef = useRef(false);
   const lastHeavyRef = useRef(0);
 
@@ -175,6 +178,13 @@ export function DashboardScreen(): React.ReactElement {
 
     // Trigger supplemental family fetch in parallel without blocking main spinner
     void fetchFamilyContext();
+    // Bell badge: alerts plus pending household invites; never blocks Home.
+    void Promise.allSettled([getAlerts(), getReceivedFamilyInvitations()]).then(([a, inv]) => {
+      setAttention(
+        (a.status === 'fulfilled' ? a.value?.length ?? 0 : 0) +
+        (inv.status === 'fulfilled' ? (inv.value ?? []).filter((i) => i.status === 'pending').length : 0),
+      );
+    });
 
     const results = await Promise.allSettled([
       getDashboard(),
@@ -376,16 +386,19 @@ export function DashboardScreen(): React.ReactElement {
       key: `micro-${m.id}`, icon: 'flash', tint: c.primary, kicker: `Quick win · ${m.impact}`, title: m.title, body: m.description,
       action: m.actionText || 'Open plan', onPress: () => navigation.navigate('Plan'),
     }));
+    const month = new Date().toLocaleDateString('en-IN', { month: 'long' });
+    items.push({
+      key: 'recap', icon: 'albums', tint: c.chart[3], kicker: 'Monthly recap', title: `Your ${month} so far`,
+      body: 'Money in and out, where it went, and how your health score moved, as a quick story.',
+      action: 'Play recap', onPress: () => navigation.navigate('Recap'),
+    });
     return items;
   }, [smartAction, upcomingBills, dashboard?.patterns, dashboard?.microActions, navigation, c]);
 
-  // Greeting
-  const greeting = useMemo(() => {
-    const hour = new Date().getHours();
-    const timeGreeting = hour < 5 ? 'Good evening' : hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
-    const firstName = user?.name ? user.name.trim().split(' ')[0] : 'there';
-    return `${timeGreeting}, ${firstName}`;
-  }, [user?.name]);
+  // Greeting: the time of day sits above the name so long names never truncate next to the buttons.
+  const hour = new Date().getHours();
+  const timeGreeting = hour < 5 ? 'Good evening' : hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+  const firstName = user?.name ? user.name.trim().split(' ')[0] : 'there';
 
   const todayFormatted = useMemo(
     () => new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'short' }),
@@ -674,9 +687,18 @@ export function DashboardScreen(): React.ReactElement {
         {/* Greeting */}
         <View style={styles.header}>
           <View style={styles.flexShrink}>
-            <Text style={styles.greeting} numberOfLines={1}>{greeting}</Text>
-            <Text style={styles.date} numberOfLines={1}>{todayFormatted}</Text>
+            <Text style={styles.date} numberOfLines={1}>{timeGreeting} · {todayFormatted}</Text>
+            <Text style={styles.greeting} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>{firstName}</Text>
           </View>
+          <Pressable
+            onPress={() => navigation.navigate('Alerts')}
+            style={styles.bell}
+            accessibilityRole="button"
+            accessibilityLabel={attention ? `Notifications, ${attention} new` : 'Notifications'}
+          >
+            <Ionicons name="notifications-outline" size={22} color={c.text} />
+            {attention > 0 && <View style={styles.bellBadge}><Text style={styles.bellBadgeText}>{attention > 9 ? '9+' : attention}</Text></View>}
+          </Pressable>
           <Pressable onPress={() => navigation.navigate('Profile')} style={styles.avatar} accessibilityRole="button" accessibilityLabel="View User Profile">
             {avatar ? <Image source={{ uri: avatar }} style={styles.avatarImg} /> : <Ionicons name="person" size={20} color={c.primary} />}
           </Pressable>
@@ -713,8 +735,11 @@ const useStyles = createStyles((c) => ({
   flexShrink: { flex: 1, flexShrink: 1 },
   muted: { ...typeScale.body, color: c.textMuted, marginTop: 8 },
   header: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 20, paddingTop: 8, paddingBottom: 18 },
-  greeting: { ...typeScale.title, fontSize: 26, color: c.text },
-  date: { ...typeScale.caption, color: c.textMuted, marginTop: 2 },
+  greeting: { ...typeScale.display, fontSize: 30, color: c.text, marginTop: 2 },
+  date: { ...typeScale.label, color: c.textMuted },
+  bell: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center', backgroundColor: c.surface, borderWidth: 1, borderColor: c.border },
+  bellBadge: { position: 'absolute', top: 6, right: 6, minWidth: 16, height: 16, borderRadius: 8, paddingHorizontal: 3, alignItems: 'center', justifyContent: 'center', backgroundColor: c.danger },
+  bellBadgeText: { fontSize: 10, fontWeight: '800', color: '#FFFFFF' },
   avatar: { width: 44, height: 44, borderRadius: 22, overflow: 'hidden', alignItems: 'center', justifyContent: 'center', backgroundColor: c.primarySoft },
   avatarImg: { width: '100%', height: '100%' },
 

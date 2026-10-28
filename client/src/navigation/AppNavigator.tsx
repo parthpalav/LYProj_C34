@@ -18,6 +18,10 @@ import { PlanScreen } from '../screens/PlanScreen';
 import { LoginScreen } from '../screens/LoginScreen';
 import { OnboardingScreen } from '../screens/OnboardingScreen';
 import { WelcomeScreen } from '../screens/WelcomeScreen';
+import AlertsScreen from '../screens/AlertsScreen';
+import { ReviewScreen } from '../screens/ReviewScreen';
+import { EnvelopesScreen } from '../screens/EnvelopesScreen';
+import { RecapScreen } from '../screens/RecapScreen';
 import { TabBar } from '../components/navigation/TabBar';
 import { withFocusFade } from '../components/navigation/FocusFade';
 import { useAuthStore } from '../store/useAuthStore';
@@ -44,6 +48,10 @@ export type RootStackParamList = {
   Goals: undefined;
   Liabilities: undefined;
   Profile: undefined;
+  Alerts: undefined;
+  Review: undefined;
+  Envelopes: undefined;
+  Recap: undefined;
 };
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
@@ -115,6 +123,10 @@ export function AppNavigator(): React.ReactElement {
           <Stack.Screen name="Goals" component={GoalPlannerScreen} />
           <Stack.Screen name="Liabilities" component={LiabilitiesScreen} />
           <Stack.Screen name="Profile" component={ProfileScreen} />
+          <Stack.Screen name="Alerts" component={AlertsScreen} />
+          <Stack.Screen name="Review" component={ReviewScreen} />
+          <Stack.Screen name="Envelopes" component={EnvelopesScreen} />
+          <Stack.Screen name="Recap" component={RecapScreen} options={{ presentation: 'fullScreenModal', animation: 'fade' }} />
           <Stack.Screen
             name="QuickAdd"
             component={QuickAddRoute}

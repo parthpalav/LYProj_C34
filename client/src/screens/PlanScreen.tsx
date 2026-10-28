@@ -129,7 +129,20 @@ export function PlanScreen(): React.ReactElement {
             </Card>
           </Animated.View>
 
-          <Animated.View entering={enterUp(7)}>
+          <Animated.View entering={enterUp(7)} style={styles.pair}>
+            <Card onPress={() => navigation.navigate('Recap')} style={styles.half} accessibilityLabel="Play your monthly recap">
+              <IconTile icon="albums" tint={c.chart[3]} size={36} />
+              <Text style={styles.wideTitle}>Monthly recap</Text>
+              <Text style={styles.wideBody}>Your month as a quick story.</Text>
+            </Card>
+            <Card onPress={() => navigation.navigate('Envelopes')} style={styles.half} accessibilityLabel="Open round-up savings">
+              <IconTile icon="sparkles" tint={c.success} size={36} />
+              <Text style={styles.wideTitle}>Round-ups</Text>
+              <Text style={styles.wideBody}>Vault the loose change.</Text>
+            </Card>
+          </Animated.View>
+
+          <Animated.View entering={enterUp(8)}>
             <Card onPress={() => navigation.navigate('Family')} style={styles.wide} accessibilityLabel="Open Family and Household">
               <IconTile icon="people" tint={c.chart[3]} />
               <View style={styles.flex}>
@@ -213,6 +226,14 @@ const useStyles = createStyles((c) => ({
     ...typeScale.caption,
     color: c.textSubtle,
     marginTop: 6,
+  },
+  pair: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  half: {
+    flex: 1,
+    gap: 8,
   },
   wide: {
     flexDirection: 'row',

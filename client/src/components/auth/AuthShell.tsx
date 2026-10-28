@@ -2,14 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Image, KeyboardAvoidingView, LayoutChangeEvent, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { BlurView } from 'expo-blur';
-import Animated, {
-  Easing, interpolate, useAnimatedStyle, useReducedMotion, useSharedValue, withRepeat, withTiming,
-} from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
 import { createStyles, useTheme } from '../../theme';
 import { duration, timing } from '../../motion';
 import { PressableScale } from '../motion/PressableScale';
+import { AuroraBackground } from '../ui/AuroraBackground';
 
 const finauraLogo = require('../../assets/finaura_logo.png');
 
@@ -23,27 +22,6 @@ type Props = {
   onModeChange?: (mode: AuthMode) => void;
   children: React.ReactNode;
 };
-
-/** Two soft color fields that drift slowly behind a blur, giving the background a living mesh-gradient feel. */
-function Aurora() {
-  const reduced = useReducedMotion();
-  const t = useSharedValue(0);
-  useEffect(() => {
-    if (!reduced) t.value = withRepeat(withTiming(1, { duration: 20000, easing: Easing.inOut(Easing.sin) }), -1, true);
-  }, [reduced, t]);
-  const a = useAnimatedStyle(() => ({
-    transform: [{ translateX: interpolate(t.value, [0, 1], [-40, 50]) }, { translateY: interpolate(t.value, [0, 1], [0, 60]) }],
-  }));
-  const b = useAnimatedStyle(() => ({
-    transform: [{ translateX: interpolate(t.value, [0, 1], [30, -50]) }, { translateY: interpolate(t.value, [0, 1], [20, -40]) }],
-  }));
-  return (
-    <>
-      <Animated.View style={[auroraStyles.blob, auroraStyles.blobA, a]} />
-      <Animated.View style={[auroraStyles.blob, auroraStyles.blobB, b]} />
-    </>
-  );
-}
 
 function Segmented({ value, onChange }: { value: AuthMode; onChange: (m: AuthMode) => void }) {
   const styles = useStyles();
@@ -73,10 +51,11 @@ function Segmented({ value, onChange }: { value: AuthMode; onChange: (m: AuthMod
 /** Primary gradient call-to-action with a spinner while busy. */
 export function AuthButton({ label, onPress, loading, disabled }: { label: string; onPress: () => void; loading?: boolean; disabled?: boolean }) {
   const styles = useStyles();
+  const { c } = useTheme();
   const inactive = disabled || loading;
   return (
     <PressableScale onPress={onPress} disabled={inactive} style={[styles.buttonWrap, disabled && !loading && styles.buttonDisabled]} accessibilityRole="button" accessibilityLabel={label}>
-      <LinearGradient colors={['#4F46E5', '#3B3BDE', '#6D28D9']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.button}>
+      <LinearGradient colors={c.accent} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.button}>
         {loading ? <ActivityIndicator color="#FFFFFF" /> : <Text style={styles.buttonText}>{label}</Text>}
       </LinearGradient>
     </PressableScale>
@@ -87,15 +66,10 @@ export function AuthShell({ title, subtitle, mode, onModeChange, children }: Pro
   const { isDark } = useTheme();
   const styles = useStyles();
   const insets = useSafeAreaInsets();
-  const gradient = isDark
-    ? (['#05050C', '#0D0E2E', '#1A1450'] as const)
-    : (['#12105A', '#2A2AB8', '#5B3BDE'] as const);
 
   return (
     <View style={styles.root}>
-      <LinearGradient colors={gradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
-      <Aurora />
-      <BlurView intensity={60} tint="dark" style={StyleSheet.absoluteFill} />
+      <AuroraBackground />
       <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <ScrollView
           contentContainerStyle={[styles.scroll, { paddingTop: insets.top + 28, paddingBottom: insets.bottom + 24 }]}
@@ -124,16 +98,10 @@ export function AuthShell({ title, subtitle, mode, onModeChange, children }: Pro
   );
 }
 
-const auroraStyles = StyleSheet.create({
-  blob: { position: 'absolute', width: 360, height: 360, borderRadius: 180 },
-  blobA: { top: -80, left: -120, backgroundColor: '#7C5CFF', opacity: 0.55 },
-  blobB: { top: 220, right: -140, backgroundColor: '#22D3EE', opacity: 0.28 },
-});
-
 const useStyles = createStyles((c) => ({
   root: {
     flex: 1,
-    backgroundColor: '#12105A',
+    backgroundColor: c.aurora[0],
   },
   flex: {
     flex: 1,

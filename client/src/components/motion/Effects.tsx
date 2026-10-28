@@ -3,7 +3,7 @@ import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import Animated, {
   Easing, SharedValue, useAnimatedStyle, useSharedValue, withDelay, withRepeat, withSequence, withSpring, withTiming,
 } from 'react-native-reanimated';
-import { celebrationPalette, colors } from '../../theme';
+import { art, celebrationPalette } from '../../theme';
 
 const { width: W, height: H } = Dimensions.get('window');
 const rand = (min: number, max: number) => min + Math.random() * (max - min);
@@ -23,7 +23,7 @@ function Burst({ x, y, delay, color }: { x: number; y: number; delay: number; co
   return (
     <View style={{ position: 'absolute', left: x, top: y }}>
       {particles.map((pt, i) => (
-        <Spark key={i} p={p} {...pt} color={i % 3 === 0 ? colors.gold : color} />
+        <Spark key={i} p={p} {...pt} color={i % 3 === 0 ? art.gold : color} />
       ))}
     </View>
   );
@@ -111,7 +111,7 @@ function Coin() {
   }));
   return (
     <Animated.View style={[styles.coin, { width: cfg.size, height: cfg.size, borderRadius: cfg.size / 2 }, style]}>
-      <Text style={{ fontSize: cfg.size * 0.5, fontWeight: '900', color: colors.goldDark }}>₹</Text>
+      <Text style={{ fontSize: cfg.size * 0.5, fontWeight: '900', color: art.goldDark }}>₹</Text>
     </Animated.View>
   );
 }
@@ -149,7 +149,7 @@ export function Trophy() {
 
 const styles = StyleSheet.create({
   coin: {
-    position: 'absolute', backgroundColor: colors.gold, borderWidth: 2, borderColor: colors.amber,
+    position: 'absolute', backgroundColor: art.gold, borderWidth: 2, borderColor: art.amber,
     alignItems: 'center', justifyContent: 'center',
   },
   trophyWrap: { width: 160, height: 160, alignItems: 'center', justifyContent: 'center' },

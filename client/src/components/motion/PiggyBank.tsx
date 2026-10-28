@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import Animated, {
   Easing, useAnimatedStyle, useReducedMotion, useSharedValue, withDelay, withSequence, withSpring, withTiming,
 } from 'react-native-reanimated';
-import { colors } from '../../theme';
+import { art } from '../../theme';
 
 type Props = {
   /** fill fraction 0-1 */
@@ -87,7 +87,7 @@ export function PiggyBank({ progress, from, size = 160, dropCoin = false }: Prop
         {/* falling coin */}
         {dropCoin && (
           <Animated.View style={[styles.coin, { left: bodyW * 0.42 + 4 * s, top: -24 * s, width: 26 * s, height: 26 * s, borderRadius: 13 * s }, coinStyle]}>
-            <Text style={{ fontSize: 13 * s, fontWeight: '900', color: colors.goldDark }}>₹</Text>
+            <Text style={{ fontSize: 13 * s, fontWeight: '900', color: art.goldDark }}>₹</Text>
           </Animated.View>
         )}
       </Animated.View>
@@ -98,23 +98,23 @@ export function PiggyBank({ progress, from, size = 160, dropCoin = false }: Prop
 const styles = StyleSheet.create({
   body: {
     position: 'absolute', left: 0, top: 0,
-    backgroundColor: colors.purpleLight, borderColor: colors.purple, overflow: 'hidden',
+    backgroundColor: art.purpleLight, borderColor: art.purple, overflow: 'hidden',
   },
-  fill: { position: 'absolute', left: 0, right: 0, bottom: 0, backgroundColor: colors.green },
+  fill: { position: 'absolute', left: 0, right: 0, bottom: 0, backgroundColor: art.green },
   fillShine: { backgroundColor: 'rgba(255,255,255,0.35)' },
   gloss: { position: 'absolute', backgroundColor: 'rgba(255,255,255,0.7)', transform: [{ rotate: '-12deg' }] },
-  ear: { position: 'absolute', backgroundColor: colors.purple, transform: [{ rotate: '45deg' }] },
-  tail: { position: 'absolute', borderColor: colors.purple, borderLeftColor: 'transparent', borderBottomColor: 'transparent' },
-  leg: { position: 'absolute', backgroundColor: colors.purple },
-  slot: { position: 'absolute', backgroundColor: colors.dark },
-  eye: { position: 'absolute', backgroundColor: colors.dark },
+  ear: { position: 'absolute', backgroundColor: art.purple, transform: [{ rotate: '45deg' }] },
+  tail: { position: 'absolute', borderColor: art.purple, borderLeftColor: 'transparent', borderBottomColor: 'transparent' },
+  leg: { position: 'absolute', backgroundColor: art.purple },
+  slot: { position: 'absolute', backgroundColor: art.ink },
+  eye: { position: 'absolute', backgroundColor: art.ink },
   snout: {
-    position: 'absolute', backgroundColor: '#E9D5FF', borderColor: colors.purple,
+    position: 'absolute', backgroundColor: art.lilac, borderColor: art.purple,
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-evenly',
   },
-  nostril: { backgroundColor: colors.purple },
+  nostril: { backgroundColor: art.purple },
   coin: {
-    position: 'absolute', backgroundColor: colors.gold, borderWidth: 2, borderColor: colors.amber,
+    position: 'absolute', backgroundColor: art.gold, borderWidth: 2, borderColor: art.amber,
     alignItems: 'center', justifyContent: 'center',
   },
 });

@@ -6,8 +6,10 @@ export interface CelebrationInput {
   kind: CelebrationKind;
   title: string;
   subtitle?: string;
-  /** toast only: 'warning' shows an amber "!" instead of the green check */
-  tone?: 'success' | 'warning';
+  /** toast only: icon and haptic. Defaults to success. */
+  tone?: 'success' | 'warning' | 'error' | 'info';
+  /** toast only: inline action such as Undo; keeps the toast up longer */
+  action?: { label: string; onPress: () => void };
   /** piggy only: fill fraction (0-1) before and after the contribution */
   from?: number;
   to?: number;
@@ -36,3 +38,7 @@ export const useCelebrationStore = create<CelebrationState>((set, get) => ({
 
 /** Call from anywhere (screens, handlers) without subscribing to the store. */
 export const celebrate = (input: CelebrationInput) => useCelebrationStore.getState().celebrate(input);
+
+/** Short status message at the top of the screen. Use instead of Alert.alert for non-blocking feedback. */
+export const toast = (title: string, opts: Omit<CelebrationInput, 'kind' | 'title'> = {}) =>
+  useCelebrationStore.getState().celebrate({ kind: 'toast', title, ...opts });

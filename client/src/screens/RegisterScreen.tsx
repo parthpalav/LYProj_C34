@@ -5,7 +5,7 @@ import { useAuthStore } from '../store/useAuthStore';
 import { evaluatePasswordStrength } from '../utils/authValidation';
 import { Ionicons } from '@expo/vector-icons';
 import { AuthButton } from '../components/auth/AuthShell';
-import { AuthInput } from '../components/auth/AuthInput';
+import { Field } from '../components/ui/Field';
 import { createStyles, useTheme } from '../theme';
 import { timing } from '../motion';
 
@@ -58,7 +58,7 @@ export function RegisterScreen({ errorBanner }: Props): React.ReactElement {
     <View>
       {errorBanner}
 
-      <AuthInput
+      <Field
         label="Full name"
         icon="person-outline"
         placeholder="Your full name"
@@ -70,7 +70,7 @@ export function RegisterScreen({ errorBanner }: Props): React.ReactElement {
         error={fieldErrors.name}
       />
 
-      <AuthInput
+      <Field
         label="Email"
         icon="mail-outline"
         placeholder="you@example.com"
@@ -85,7 +85,7 @@ export function RegisterScreen({ errorBanner }: Props): React.ReactElement {
         error={fieldErrors.email}
       />
 
-      <AuthInput
+      <Field
         label="Password"
         icon="lock-closed-outline"
         style={styles.passwordInput}
@@ -125,7 +125,7 @@ export function RegisterScreen({ errorBanner }: Props): React.ReactElement {
         </View>
       ) : null}
 
-      <AuthInput
+      <Field
         label="Confirm password"
         icon="shield-checkmark-outline"
         style={styles.passwordInput}

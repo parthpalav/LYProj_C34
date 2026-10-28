@@ -6,7 +6,7 @@ import { RegisterScreen } from './RegisterScreen';
 import { ForgotPasswordScreen } from './ForgotPasswordScreen';
 import { Ionicons } from '@expo/vector-icons';
 import { AuthButton, AuthMode, AuthShell } from '../components/auth/AuthShell';
-import { AuthInput } from '../components/auth/AuthInput';
+import { Field } from '../components/ui/Field';
 import { useShake } from '../components/motion/useShake';
 import { createStyles, useTheme } from '../theme';
 import { enterUp } from '../motion';
@@ -70,7 +70,7 @@ export function LoginScreen(): React.ReactElement {
           <View>
             {errorBanner}
 
-            <AuthInput
+            <Field
               label="Email"
               icon="mail-outline"
               placeholder="you@example.com"
@@ -85,7 +85,7 @@ export function LoginScreen(): React.ReactElement {
               error={fieldErrors.email}
             />
 
-            <AuthInput
+            <Field
               label="Password"
               icon="lock-closed-outline"
               labelAction={

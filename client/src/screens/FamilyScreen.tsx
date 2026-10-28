@@ -10,13 +10,13 @@ import {
   ActivityIndicator,
   Alert,
   RefreshControl,
-  SafeAreaView,
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { celebrate } from '../store/useCelebrationStore';
+import { celebrate, toast } from '../store/useCelebrationStore';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   getCurrentFamily,
   getReceivedFamilyInvitations,
@@ -215,7 +215,7 @@ export default function FamilyScreen(): React.ReactElement {
       await fetchFamilyData();
     } catch (err: any) {
       const msg = getHumanReadableError(err, 'Failed to accept invitation.');
-      Alert.alert('Error', msg);
+      toast(msg, { tone: 'error' });
     } finally {
       setActionLoadingId(null);
     }
@@ -226,9 +226,10 @@ export default function FamilyScreen(): React.ReactElement {
     try {
       await declineFamilyInvitation(invitationId);
       setReceivedInvitations((prev) => prev.filter((i) => i.id !== invitationId));
+      toast('Invitation declined', { tone: 'info' });
     } catch (err: any) {
       const msg = getHumanReadableError(err, 'Failed to decline invitation.');
-      Alert.alert('Error', msg);
+      toast(msg, { tone: 'error' });
     } finally {
       setActionLoadingId(null);
     }
@@ -239,9 +240,10 @@ export default function FamilyScreen(): React.ReactElement {
     try {
       await cancelFamilyInvitation(invitationId);
       setSentInvitations((prev) => prev.filter((i) => i.id !== invitationId));
+      toast('Invitation cancelled', { tone: 'info' });
     } catch (err: any) {
       const msg = getHumanReadableError(err, 'Failed to cancel invitation.');
-      Alert.alert('Error', msg);
+      toast(msg, { tone: 'error' });
     } finally {
       setActionLoadingId(null);
     }
@@ -260,11 +262,11 @@ export default function FamilyScreen(): React.ReactElement {
             setActionLoadingId(`remove-${member.userId}`);
             try {
               await removeFamilyMember(member.userId);
-              Alert.alert('Member Removed', `${member.name} was removed from the Family.`);
+              toast('Member removed', { tone: 'info', subtitle: `${member.name} was removed from the Family.` });
               await fetchFamilyData();
             } catch (err: any) {
               const msg = getHumanReadableError(err, 'Failed to remove member.');
-              Alert.alert('Error', msg);
+              toast(msg, { tone: 'error' });
             } finally {
               setActionLoadingId(null);
             }
@@ -291,14 +293,14 @@ export default function FamilyScreen(): React.ReactElement {
           setActionLoadingId('leave-family');
           try {
             await leaveFamily();
-            Alert.alert(
-              isSoleOwner ? 'Family Disbanded' : 'Family Left',
-              isSoleOwner ? 'Your Family has been closed.' : 'You have left the Family.'
-            );
+            toast(isSoleOwner ? 'Family disbanded' : 'You left the Family', {
+              tone: 'info',
+              subtitle: isSoleOwner ? 'Your Family has been closed.' : 'Your personal data is unchanged.',
+            });
             await fetchFamilyData();
           } catch (err: any) {
             const msg = getHumanReadableError(err, 'Failed to leave family.');
-            Alert.alert('Error', msg);
+            toast(msg, { tone: 'error' });
           } finally {
             setActionLoadingId(null);
           }
@@ -319,7 +321,7 @@ export default function FamilyScreen(): React.ReactElement {
             accessibilityRole="button"
             accessibilityLabel="Go back"
           >
-            <Ionicons name="arrow-back" size={24} color={TEXT_PRIMARY} />
+            <Ionicons name="chevron-back" size={24} color={TEXT_PRIMARY} />
           </TouchableOpacity>
           <View style={styles.headerTitleWrap}>
             <Text style={styles.headerTitle}>Family & Household</Text>
@@ -347,7 +349,7 @@ export default function FamilyScreen(): React.ReactElement {
           accessibilityRole="button"
           accessibilityLabel="Go back"
         >
-          <Ionicons name="arrow-back" size={24} color={TEXT_PRIMARY} />
+          <Ionicons name="chevron-back" size={24} color={TEXT_PRIMARY} />
         </TouchableOpacity>
         <View style={styles.headerTitleWrap}>
           <Text style={styles.headerTitle}>Family & Household</Text>

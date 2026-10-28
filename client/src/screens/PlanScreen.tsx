@@ -118,6 +118,17 @@ export function PlanScreen(): React.ReactElement {
             ))}
           </View>
 
+          <Animated.View entering={enterUp(5)}>
+            <Card onPress={() => navigation.navigate('Insights')} style={styles.wide} accessibilityLabel="Open spending insights">
+              <IconTile icon="analytics" tint={c.info} />
+              <View style={styles.flex}>
+                <Text style={styles.wideTitle}>Insights</Text>
+                <Text style={styles.wideBody}>Budget pace, categories, a spending calendar and habits.</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={18} color={c.textSubtle} />
+            </Card>
+          </Animated.View>
+
           <Animated.View entering={enterUp(6)}>
             <Card onPress={() => navigation.navigate('FMI')} style={styles.wide} accessibilityLabel="Open Financial Maturity Index">
               <IconTile icon="pulse" tint={c.primary} />

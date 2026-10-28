@@ -78,7 +78,7 @@ test('Feature Representation 3: IncomeFlowScreen represents Multi-Source, Timeli
 test('Feature Representation 4: LiabilitiesScreen represents Schedules, Auto-Deduct, Mark-Paid, and Payment History', () => {
   const code = readScreen('LiabilitiesScreen.tsx');
   assert.ok(code.includes('autoDeduct') || code.includes('Auto Deduct'), 'Auto-Deduct feature represented');
-  assert.ok(code.includes('nextDueDate') || code.includes('Due Date') || code.includes('Upcoming'), 'Due date schedule represented');
+  assert.ok(code.includes('nextDue(') || code.includes('nextDueDate') || code.includes('Upcoming'), 'Due date schedule represented');
   assert.ok(code.includes('getLiabilityTransactions') || code.includes('Payment History'), 'Payment history represented');
 });
 

@@ -41,6 +41,7 @@ export function Field({ label, icon, hint, error, style, trailing, labelAction, 
       <Animated.View style={[styles.field, ring]}>
         {icon && <Ionicons name={icon} size={18} color={focused ? c.primary : c.textSubtle} style={styles.icon} />}
         <TextInput
+          accessibilityLabel={label}
           {...rest}
           style={[styles.input, !icon && styles.inputBare, style]}
           placeholderTextColor={c.textSubtle}

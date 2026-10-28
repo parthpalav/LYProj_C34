@@ -1,22 +1,14 @@
-import React, { useRef, useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Animated,
-  Dimensions,
-  Image,
-  Easing
-} from 'react-native';
+import React, { useState } from 'react';
+import { Image, StyleSheet, Text, View } from 'react-native';
+import Animated, { FadeIn, FadeInDown, ZoomIn } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuthStore } from '../store/useAuthStore';
+import { createStyles, typeScale } from '../theme';
+import { easing } from '../motion';
+import { AuroraBackground } from '../components/ui/AuroraBackground';
+import { Button } from '../components/ui/Button';
 
-import { createStyles, Palette } from '../theme';
 const finauraLogo = require('../assets/finaura_logo.png');
-const { width } = Dimensions.get('window');
-
-const tokens = (c: Palette) => ({ BLUE: c.primary });
 
 export function getFirstName(name?: string | null): string | null {
   if (!name) return null;
@@ -31,6 +23,7 @@ interface WelcomeScreenProps {
   onContinue?: () => void;
 }
 
+/** Shown after an explicit sign-in. Stays on the login's aurora so the hand-off to Home is one continuous fade. */
 export function WelcomeScreen({ onContinue }: WelcomeScreenProps): React.ReactElement {
   const styles = useStyles();
   const insets = useSafeAreaInsets();
@@ -40,34 +33,6 @@ export function WelcomeScreen({ onContinue }: WelcomeScreenProps): React.ReactEl
 
   const firstName = getFirstName(user?.name);
   const greetingText = firstName ? `Welcome, ${firstName}` : 'Welcome';
-
-  // Entry animations
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(12)).current;
-  const logoScale = useRef(new Animated.Value(0.94)).current;
-
-  useEffect(() => {
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 480,
-        easing: Easing.bezier(0.2, 0, 0, 1),
-        useNativeDriver: true,
-      }),
-      Animated.timing(slideAnim, {
-        toValue: 0,
-        duration: 480,
-        easing: Easing.bezier(0.2, 0, 0, 1),
-        useNativeDriver: true,
-      }),
-      Animated.timing(logoScale, {
-        toValue: 1,
-        duration: 480,
-        easing: Easing.bezier(0.2, 0, 0, 1),
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, [fadeAnim, slideAnim, logoScale]);
 
   const handleContinue = () => {
     if (submitting) return;
@@ -81,50 +46,29 @@ export function WelcomeScreen({ onContinue }: WelcomeScreenProps): React.ReactEl
 
   return (
     <View style={[styles.container, { paddingTop: insets.top + 20, paddingBottom: Math.max(20, insets.bottom + 12) }]}>
-      {/* Upper / Middle Content */}
-      <Animated.View
-        style={[
-          styles.contentWrap,
-          {
-            opacity: fadeAnim,
-            transform: [{ translateY: slideAnim }],
-          },
-        ]}
-      >
-        <Animated.View style={[styles.logoWrap, { transform: [{ scale: logoScale }] }]}>
-          <Image source={finauraLogo} style={styles.logoImage} resizeMode="contain" />
+      <AuroraBackground />
+      <View style={styles.contentWrap}>
+        <Animated.View entering={ZoomIn.duration(520).easing(easing.standard)} style={styles.logoWrap}>
+          <Image source={finauraLogo} style={styles.logoImage} resizeMode="cover" />
         </Animated.View>
-
-        <Text style={styles.badgeText}>FINAURA</Text>
-        <Text style={styles.greetingTitle} numberOfLines={2} adjustsFontSizeToFit>
+        <Animated.Text entering={FadeIn.delay(150).duration(400)} style={styles.badgeText}>FINAURA</Animated.Text>
+        <Animated.Text entering={FadeInDown.delay(220).duration(480).easing(easing.standard)} style={styles.greetingTitle} numberOfLines={2} adjustsFontSizeToFit>
           {greetingText}
-        </Text>
-        <Text style={styles.subtitle}>Good to see you again.</Text>
-      </Animated.View>
-
-      {/* Bottom CTA Button */}
-      <View style={styles.bottomWrap}>
-        <TouchableOpacity
-          style={[styles.continueButton, submitting && styles.continueButtonDisabled]}
-          onPress={handleContinue}
-          activeOpacity={0.85}
-          disabled={submitting}
-          accessibilityRole="button"
-          accessibilityLabel="Continue to Home"
-        >
-          <Text style={styles.continueButtonText}>Continue</Text>
-        </TouchableOpacity>
+        </Animated.Text>
+        <Animated.Text entering={FadeInDown.delay(320).duration(480).easing(easing.standard)} style={styles.subtitle}>Good to see you again.</Animated.Text>
       </View>
+
+      <Animated.View entering={FadeInDown.delay(450).duration(480)} style={styles.bottomWrap}>
+        <Button label="Continue" onPress={handleContinue} loading={submitting} style={styles.continueButton} accessibilityLabel="Continue to Home" />
+      </Animated.View>
     </View>
   );
 }
 
-const useStyles = createStyles((c) => {
-  const { BLUE } = tokens(c);
-  return {
+const useStyles = createStyles((c) => ({
   container: {
     flex: 1,
-    backgroundColor: c.surface,
+    backgroundColor: c.aurora[0],
     justifyContent: 'space-between',
     paddingHorizontal: 24,
   },
@@ -132,76 +76,42 @@ const useStyles = createStyles((c) => {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingBottom: 40,
   },
   logoWrap: {
     width: 96,
     height: 96,
     borderRadius: 28,
-    backgroundColor: c.primarySoft,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 24,
-    shadowColor: BLUE,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.12,
-    shadowRadius: 16,
-    elevation: 4,
+    overflow: 'hidden',
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: 'rgba(255,255,255,0.35)',
+    marginBottom: 20,
   },
   logoImage: {
-    width: 64,
-    height: 64,
-    borderRadius: 18,
+    width: '100%',
+    height: '100%',
   },
   badgeText: {
-    fontSize: 12,
-    fontWeight: '800',
-    letterSpacing: 2.0,
-    color: BLUE,
-    marginBottom: 12,
-    textTransform: 'uppercase',
+    ...typeScale.overline,
+    letterSpacing: 3,
+    color: c.onAuroraMuted,
+    marginBottom: 10,
   },
   greetingTitle: {
-    fontSize: 32,
-    fontWeight: '800',
-    color: c.text,
+    ...typeScale.display,
+    color: c.onAurora,
     textAlign: 'center',
-    letterSpacing: -0.5,
-    marginBottom: 10,
-    paddingHorizontal: 16,
   },
   subtitle: {
-    fontSize: 16,
-    color: c.textMuted,
+    ...typeScale.body,
+    fontSize: 17,
+    color: c.onAuroraMuted,
+    marginTop: 8,
     textAlign: 'center',
-    fontWeight: '500',
-    lineHeight: 24,
   },
   bottomWrap: {
     width: '100%',
-    paddingTop: 12,
   },
   continueButton: {
-    backgroundColor: BLUE,
-    height: 56,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
     width: '100%',
-    shadowColor: BLUE,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.25,
-    shadowRadius: 12,
-    elevation: 4,
   },
-  continueButtonDisabled: {
-    opacity: 0.7,
-  },
-  continueButtonText: {
-    color: '#FFFFFF',
-    fontSize: 17,
-    fontWeight: '700',
-    letterSpacing: 0.2,
-  },
-};
-});
+}));

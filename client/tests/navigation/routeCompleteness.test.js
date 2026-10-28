@@ -126,7 +126,7 @@ test('Feature Representation 9: AssetsScreen and Profile represent financial ass
   assert.ok(assetCode.includes('Mutual Fund'), 'Mutual Fund preset present');
 
   const profCode = readScreen('ProfileScreen.tsx');
-  assert.ok(profCode.includes("navigate('Assets')"), 'Profile links to Assets screen');
+  assert.ok(profCode.includes("route: 'Assets'") && profCode.includes('navigation.navigate(l.route)'), 'Profile links to Assets screen');
 });
 
 test('Feature Representation 10: FinancialOutlookScreen represents interactive Strategy Selector and Presets', () => {
@@ -206,7 +206,7 @@ test('Route Integrity 5: Profile → Assets link is preserved', () => {
   const content = readClientFile('src/screens/ProfileScreen.tsx');
 
   assert.ok(
-    content.includes("navigate('Assets')"),
+    content.includes("route: 'Assets'") && content.includes('navigation.navigate(l.route)'),
     'Profile still links to Assets screen'
   );
 });

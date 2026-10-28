@@ -125,7 +125,7 @@ export function AppNavigator(): React.ReactElement {
           <Stack.Screen name="Family" component={FamilyScreen} />
           <Stack.Screen name="Goals" component={GoalPlannerScreen} />
           <Stack.Screen name="Liabilities" component={LiabilitiesScreen} options={{ ...nativeHeader, title: 'Bills' }} />
-          <Stack.Screen name="Profile" component={ProfileScreen} options={{ ...nativeHeader, title: 'You & Settings' }} />
+          <Stack.Screen name="Profile" component={ProfileScreen} />
           <Stack.Screen
             name="QuickAdd"
             component={QuickAddRoute}

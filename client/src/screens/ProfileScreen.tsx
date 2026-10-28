@@ -1,34 +1,26 @@
 import React, { useState } from 'react';
-import {
-  ActivityIndicator,
-  Alert,
-  Image,
-  Keyboard,
-  KeyboardAvoidingView,
-  Modal,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native';
-import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import { ActivityIndicator, Alert, Image, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import Constants from 'expo-constants';
 import { Ionicons } from '@expo/vector-icons';
+import Animated from 'react-native-reanimated';
 import { useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useStore } from '../store/useStore';
 import { useAuthStore } from '../store/useAuthStore';
-import { celebrate } from '../store/useCelebrationStore';
+import { useThemeStore } from '../store/useThemeStore';
+import { toast } from '../store/useCelebrationStore';
 import { updateUserProfileApi } from '../services/api';
 import { User } from '../types';
-
-import { createStyles, useTheme, Palette } from '../theme';
-// ── Design Tokens ─────────────────────────────────────────────
-const tokens = (c: Palette) => ({ BLUE: c.primary, BLUE_LIGHT: c.primarySoft, GREEN: c.success, AMBER: c.warning, PURPLE: c.purple, BG: c.bg, CARD_BG: c.surface, TEXT_PRIMARY: c.text, TEXT_SECONDARY: c.textMuted, TEXT_MUTED: c.textSubtle, BORDER: c.border });
+import { createStyles, radius, typeScale, useTheme } from '../theme';
+import { enterUp } from '../motion';
+import { formatCurrency } from '../utils/format';
+import { Card } from '../components/ui/Card';
+import { Chip, ListRow, SectionHeader } from '../components/ui/Bits';
+import { Button } from '../components/ui/Button';
+import { Field } from '../components/ui/Field';
+import { DateField, formatDay } from '../components/ui/DateField';
+import { LargeTitle, ScreenHeader, useHeaderHeight, useScrollHeader } from '../components/ui/ScreenHeader';
 
 // Defaults matching system financial policy
 const DEFAULT_RETURN_RATE = 0.08;
@@ -37,36 +29,9 @@ const DEFAULT_WITHDRAWAL_RATE = 0.04;
 const DEFAULT_LIFESTYLE_RATIO = 0.80;
 const DEFAULT_EMERGENCY_MONTHS = 6;
 
-// ── Helpers ───────────────────────────────────────────────────
 function getInitials(name: string | undefined | null): string {
   if (!name) return '?';
-  return name
-    .split(' ')
-    .map((w) => w.charAt(0).toUpperCase())
-    .slice(0, 2)
-    .join('');
-}
-
-function formatDOB(value: Date | string | null | undefined): string {
-  if (!value) return 'Not set';
-  const date = value instanceof Date ? value : new Date(value);
-  if (Number.isNaN(date.getTime())) return 'Not set';
-  return date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
-}
-
-function formatCurrency(value: number | null | undefined): string {
-  if (value === null || value === undefined) return 'Not set';
-  return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(value);
-}
-
-function formatPercent(value: number | null | undefined, fallback: number): string {
-  const rate = value != null && Number.isFinite(value) ? value : fallback;
-  return `${(rate * 100).toFixed(1)}% p.a.`;
-}
-
-function formatRatio(value: number | null | undefined, fallback: number): string {
-  const ratio = value != null && Number.isFinite(value) ? value : fallback;
-  return `${Math.round(ratio * 100)}%`;
+  return name.split(' ').map((w) => w.charAt(0).toUpperCase()).slice(0, 2).join('');
 }
 
 function toDate(value: Date | string | null | undefined): Date {
@@ -75,165 +40,83 @@ function toDate(value: Date | string | null | undefined): Date {
   return Number.isNaN(d.getTime()) ? new Date(2000, 0, 1) : d;
 }
 
-// ── Stat Pill Component ───────────────────────────────────────
-function StatPill({ label, value, icon, color }: { label: string; value: string; icon: string; color: string }) {
-  const statStyles = useStatStyles();
-  return (
-    <View style={statStyles.pill}>
-      <View style={[statStyles.iconCircle, { backgroundColor: `${color}18` }]}>
-        <Ionicons name={icon as any} size={18} color={color} />
-      </View>
-      <View style={statStyles.textWrap}>
-        <Text style={statStyles.value} numberOfLines={1}>
-          {value}
-        </Text>
-        <Text style={statStyles.label}>{label}</Text>
-      </View>
-    </View>
-  );
+const pct = (value: number | null | undefined, fallback: number) => `${Math.round((value ?? fallback) * 100)}%`;
+
+/** Validates the assumptions form; returns the payload or the first problem in plain words. */
+function readAssumptions(f: Record<string, string>): { error: string } | { payload: Partial<User> } {
+  if (!f.name.trim()) return { error: 'Name cannot be blank.' };
+  const retAge = f.retAge.trim() ? parseInt(f.retAge, 10) : null;
+  if (f.retAge.trim() && (isNaN(retAge!) || retAge! < 40 || retAge! > 100)) return { error: 'Retirement age must be a whole number between 40 and 100.' };
+  const income = f.income.trim() ? parseFloat(f.income) : null;
+  if (f.income.trim() && (isNaN(income!) || income! < 0)) return { error: 'Declared monthly income must be zero or more.' };
+  const corpus = f.corpus.trim() ? parseFloat(f.corpus) : null;
+  if (f.corpus.trim() && (isNaN(corpus!) || corpus! < 0)) return { error: 'Retirement corpus goal must be zero or more.' };
+  const ret = f.ret.trim() ? parseFloat(f.ret) : 8;
+  if (isNaN(ret) || ret < 0 || ret > 100) return { error: 'Expected return must be between 0% and 100%.' };
+  const inf = f.inf.trim() ? parseFloat(f.inf) : 6;
+  if (isNaN(inf) || inf < 0 || inf > 100) return { error: 'Inflation must be between 0% and 100%.' };
+  const swr = f.swr.trim() ? parseFloat(f.swr) : 4;
+  if (isNaN(swr) || swr <= 0 || swr > 100) return { error: 'Safe withdrawal rate must be between 1% and 100%.' };
+  const life = f.life.trim() ? parseFloat(f.life) : 80;
+  if (isNaN(life) || life <= 0 || life > 200) return { error: 'Retirement lifestyle must be between 1% and 200% of today.' };
+  const ef = f.ef.trim() ? parseInt(f.ef, 10) : 6;
+  if (isNaN(ef) || ef < 0 || ef > 36) return { error: 'Emergency fund target must be between 0 and 36 months.' };
+  return {
+    payload: {
+      name: f.name.trim(),
+      retirementAge: retAge ?? undefined,
+      monthlyIncome: income ?? undefined,
+      retirementCorpusGoal: corpus ?? 0,
+      expectedReturnRate: ret / 100,
+      expectedInflationRate: inf / 100,
+      expectedWithdrawalRate: swr / 100,
+      lifestyleAdjustmentRatio: life / 100,
+      emergencyFundTargetMonths: ef,
+    },
+  };
 }
 
-const useStatStyles = createStyles((c) => {
-  const { CARD_BG, TEXT_PRIMARY, TEXT_MUTED, BORDER } = tokens(c);
-  return {
-  pill: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: CARD_BG,
-    borderRadius: 16,
-    padding: 14,
-    gap: 12,
-    borderWidth: 1,
-    borderColor: BORDER,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.03,
-    shadowRadius: 8,
-    elevation: 2,
-  },
-  iconCircle: { width: 38, height: 38, borderRadius: 19, alignItems: 'center', justifyContent: 'center' },
-  textWrap: { flex: 1 },
-  value: { fontSize: 15, fontWeight: '700', color: TEXT_PRIMARY },
-  label: { fontSize: 11, color: TEXT_MUTED, fontWeight: '600', marginTop: 2 },
-};
-});
-
-// ── Info Row Component ────────────────────────────────────────
-function InfoRow({
-  icon,
-  label,
-  value,
-  helperText,
-  isLast,
-  iconColor: iconColorProp,
-}: {
-  icon: string;
-  label: string;
-  value: string;
-  helperText?: string;
-  isLast?: boolean;
-  iconColor?: string;
-}) {
-  const { c } = useTheme();
-  const iconColor = iconColorProp ?? c.primary;
-  const infoStyles = useInfoStyles();
-  const isSet = value !== 'Not set';
-  return (
-    <View style={[infoStyles.row, !isLast && infoStyles.rowBorder]}>
-      <View style={[infoStyles.iconWrap, { backgroundColor: `${iconColor}14` }]}>
-        <Ionicons name={icon as any} size={18} color={iconColor} />
-      </View>
-      <View style={infoStyles.textCol}>
-        <Text style={infoStyles.label}>{label}</Text>
-        <Text style={[infoStyles.value, !isSet && infoStyles.valueMuted]}>{value}</Text>
-        {helperText ? <Text style={infoStyles.helperText}>{helperText}</Text> : null}
-      </View>
-    </View>
-  );
-}
-
-const useInfoStyles = createStyles((c) => {
-  const { TEXT_PRIMARY, TEXT_SECONDARY, TEXT_MUTED } = tokens(c);
-  return {
-  row: { flexDirection: 'row', alignItems: 'flex-start', paddingVertical: 14, gap: 14 },
-  rowBorder: { borderBottomWidth: 1, borderBottomColor: c.border },
-  iconWrap: { width: 36, height: 36, borderRadius: 12, alignItems: 'center', justifyContent: 'center', marginTop: 2 },
-  textCol: { flex: 1 },
-  label: { fontSize: 12, color: TEXT_MUTED, fontWeight: '600', letterSpacing: 0.3 },
-  value: { fontSize: 15, fontWeight: '700', color: TEXT_PRIMARY, marginTop: 2 },
-  valueMuted: { color: TEXT_MUTED, fontStyle: 'italic', fontWeight: '500' },
-  helperText: { fontSize: 11, color: TEXT_SECONDARY, marginTop: 3, lineHeight: 15 },
-};
-});
-
-// ═══════════════════════════════════════════════════════════════
-// MAIN SCREEN
-// ═══════════════════════════════════════════════════════════════
 export function ProfileScreen(): React.ReactElement {
   const { c } = useTheme();
-  const { BLUE, BLUE_LIGHT, GREEN, AMBER, PURPLE, TEXT_SECONDARY, TEXT_MUTED } = tokens(c);
-  const infoStyles = useInfoStyles();
   const s = useSStyles();
-  const ef = useEfStyles();
-  const modal = useModalStyles();
-  const navigation = useNavigation();
-  const storeUser = useStore((s) => s.user);
-  const authUser = useAuthStore((s) => s.user);
-  const user = storeUser || authUser;
-  const setStoreUser = useStore((s) => s.setUser);
-  const setAuthUser = useAuthStore((s) => s.setUser);
-  const logout = useAuthStore((s) => s.logout);
+  const navigation = useNavigation<any>();
   const insets = useSafeAreaInsets();
+  const headerHeight = useHeaderHeight();
+  const { y, onScroll } = useScrollHeader();
+  const storeUser = useStore((st) => st.user);
+  const authUser = useAuthStore((st) => st.user);
+  const user = storeUser || authUser;
+  const setStoreUser = useStore((st) => st.setUser);
+  const setAuthUser = useAuthStore((st) => st.setUser);
+  const logout = useAuthStore((st) => st.logout);
+  const themeMode = useThemeStore((st) => st.mode);
+  const setThemeMode = useThemeStore((st) => st.setMode);
 
-  // Edit modal
   const [editVisible, setEditVisible] = useState(false);
-  const [saving, setSaving] = useState(false);
-
-  // Avatar upload
+  const [editError, setEditError] = useState('');
   const [avatarBusy, setAvatarBusy] = useState(false);
   const [avatarRenderKey, setAvatarRenderKey] = useState(0);
-
-  // Typed edit state
-  const [editName, setEditName] = useState('');
+  const [form, setForm] = useState<Record<string, string>>({});
   const [editDOB, setEditDOB] = useState<Date>(new Date(2000, 0, 1));
-  const [editIncome, setEditIncome] = useState('');
-  const [editRetAge, setEditRetAge] = useState('');
-  const [editCorpusGoal, setEditCorpusGoal] = useState('');
-  const [editReturnRate, setEditReturnRate] = useState('');
-  const [editInflationRate, setEditInflationRate] = useState('');
-  const [editWithdrawalRate, setEditWithdrawalRate] = useState('');
-  const [editLifestyleRatio, setEditLifestyleRatio] = useState('');
-  const [editEmergencyMonths, setEditEmergencyMonths] = useState('');
-
-  // Date picker visibility
-  const [showDatePicker, setShowDatePicker] = useState(false);
+  const set = (key: string) => (v: string) => { setForm((f) => ({ ...f, [key]: v })); setEditError(''); };
 
   const shownAvatar = user?.avatarLocalUri || user?.avatar || null;
 
-  const onboardingDone = user?.onboardingComplete ?? false;
-  const statusColor = onboardingDone ? GREEN : AMBER;
-  const statusLabel = onboardingDone ? 'Complete' : 'Pending';
-  const statusIcon = onboardingDone ? 'checkmark-circle' : 'time';
-
   const openEditModal = () => {
-    setEditName(user?.name || '');
+    setForm({
+      name: user?.name || '',
+      income: user?.monthlyIncome != null ? String(user.monthlyIncome) : '',
+      retAge: user?.retirementAge != null ? String(user.retirementAge) : '',
+      corpus: user?.retirementCorpusGoal != null && user.retirementCorpusGoal > 0 ? String(user.retirementCorpusGoal) : '',
+      ret: String(Math.round((user?.expectedReturnRate ?? DEFAULT_RETURN_RATE) * 100)),
+      inf: String(Math.round((user?.expectedInflationRate ?? DEFAULT_INFLATION_RATE) * 100)),
+      swr: String(Math.round((user?.expectedWithdrawalRate ?? DEFAULT_WITHDRAWAL_RATE) * 100)),
+      life: String(Math.round((user?.lifestyleAdjustmentRatio ?? DEFAULT_LIFESTYLE_RATIO) * 100)),
+      ef: String(user?.emergencyFundTargetMonths ?? DEFAULT_EMERGENCY_MONTHS),
+    });
     setEditDOB(toDate(user?.dateOfBirth));
-    setEditIncome(user?.monthlyIncome != null ? String(user.monthlyIncome) : '');
-    setEditRetAge(user?.retirementAge != null ? String(user.retirementAge) : '');
-    setEditCorpusGoal(user?.retirementCorpusGoal != null && user.retirementCorpusGoal > 0 ? String(user.retirementCorpusGoal) : '');
-    setEditReturnRate(String(Math.round((user?.expectedReturnRate ?? DEFAULT_RETURN_RATE) * 100)));
-    setEditInflationRate(String(Math.round((user?.expectedInflationRate ?? DEFAULT_INFLATION_RATE) * 100)));
-    setEditWithdrawalRate(String(Math.round((user?.expectedWithdrawalRate ?? DEFAULT_WITHDRAWAL_RATE) * 100)));
-    setEditLifestyleRatio(String(Math.round((user?.lifestyleAdjustmentRatio ?? DEFAULT_LIFESTYLE_RATIO) * 100)));
-    setEditEmergencyMonths(String(user?.emergencyFundTargetMonths ?? DEFAULT_EMERGENCY_MONTHS));
-    setShowDatePicker(false);
+    setEditError('');
     setEditVisible(true);
-  };
-
-  const onDateChange = (_event: DateTimePickerEvent, selectedDate?: Date) => {
-    if (Platform.OS === 'android') setShowDatePicker(false);
-    if (selectedDate) setEditDOB(selectedDate);
   };
 
   const persistAvatar = async (avatar: string | null, localUri: string | null) => {
@@ -257,16 +140,15 @@ export function ProfileScreen(): React.ReactElement {
       apply((serverUser
         ? { ...serverUser, avatar: serverUser.avatar ?? avatar, avatarLocalUri: localUri }
         : { ...base, avatar, avatarLocalUri: localUri }) as User);
+      toast(avatar ? 'Photo updated' : 'Photo removed');
     } catch (err: any) {
       // Roll back on failure
       apply({ ...base, avatar: previous, avatarLocalUri: previousLocal } as User);
       const status = err?.response?.status;
-      const serverMsg = err?.response?.data?.error || err?.response?.data?.message;
-      const detail =
-        status === 413
-          ? 'Image too large for the server — restart the backend so the new 6 MB limit applies, or pick a smaller photo.'
-          : serverMsg || err?.message || 'Could not update your profile picture.';
-      Alert.alert('Photo Not Saved', status ? `(HTTP ${status}) ${detail}` : detail);
+      toast('Photo not saved', {
+        tone: 'error',
+        subtitle: status === 413 ? 'That photo is too large. Try a smaller one or crop it tighter.' : 'Check your connection and try again.',
+      });
     }
   };
 
@@ -296,7 +178,7 @@ export function ProfileScreen(): React.ReactElement {
 
       const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (!perm.granted) {
-        Alert.alert('Permission Needed', 'Allow photo library access in Settings to set a profile picture.');
+        toast('Photo access is off', { tone: 'warning', subtitle: 'Allow photo library access in Settings to set a profile picture.' });
         return;
       }
 
@@ -311,14 +193,14 @@ export function ProfileScreen(): React.ReactElement {
 
       const asset = result.assets?.[0];
       if (!asset?.base64) {
-        Alert.alert('Photo Error', 'Could not read the selected image. Please try another.');
+        toast("Couldn't read that photo", { tone: 'error', subtitle: 'Please try another one.' });
         return;
       }
 
       const mime = asset.mimeType || 'image/jpeg';
       const dataUri = `data:${mime};base64,${asset.base64}`;
       if (dataUri.length > 3_800_000) {
-        Alert.alert('Image Too Large', 'That photo is too large. Please pick a smaller one or crop it tighter.');
+        toast('That photo is too large', { tone: 'warning', subtitle: 'Pick a smaller one or crop it tighter.' });
         return;
       }
 
@@ -330,845 +212,253 @@ export function ProfileScreen(): React.ReactElement {
 
   const handleSave = async () => {
     if (!user?.id) return;
-
-    // Validate name
-    if (!editName.trim()) {
-      Alert.alert('Invalid Name', 'Name cannot be blank.');
+    const read = readAssumptions(form);
+    if ('error' in read) {
+      setEditError(read.error);
       return;
     }
-
-    // Validate retirement age
-    const retAge = editRetAge.trim() ? parseInt(editRetAge, 10) : null;
-    if (editRetAge.trim() && (isNaN(retAge!) || retAge! < 40 || retAge! > 100)) {
-      Alert.alert('Invalid Retirement Age', 'Retirement age must be an integer between 40 and 100.');
-      return;
-    }
-
-    // Validate monthly income
-    const income = editIncome.trim() ? parseFloat(editIncome) : null;
-    if (editIncome.trim() && (isNaN(income!) || income! < 0)) {
-      Alert.alert('Invalid Income', 'Declared monthly income must be a valid non-negative number.');
-      return;
-    }
-
-    // Validate retirement corpus goal
-    const corpusGoal = editCorpusGoal.trim() ? parseFloat(editCorpusGoal) : null;
-    if (editCorpusGoal.trim() && (isNaN(corpusGoal!) || corpusGoal! < 0)) {
-      Alert.alert('Invalid Corpus Goal', 'Personal retirement corpus goal must be non-negative.');
-      return;
-    }
-
-    // Validate expected return rate (% input -> decimal fraction)
-    const retRatePct = editReturnRate.trim() ? parseFloat(editReturnRate) : 8;
-    if (isNaN(retRatePct) || retRatePct < 0 || retRatePct > 100) {
-      Alert.alert('Invalid Return Rate', 'Expected return rate must be between 0% and 100%.');
-      return;
-    }
-    const expectedReturnRate = retRatePct / 100;
-
-    // Validate inflation rate (% input -> decimal fraction)
-    const infRatePct = editInflationRate.trim() ? parseFloat(editInflationRate) : 6;
-    if (isNaN(infRatePct) || infRatePct < 0 || infRatePct > 100) {
-      Alert.alert('Invalid Inflation Rate', 'Expected inflation rate must be between 0% and 100%.');
-      return;
-    }
-    const expectedInflationRate = infRatePct / 100;
-
-    // Validate withdrawal rate (% input -> decimal fraction)
-    const swrPct = editWithdrawalRate.trim() ? parseFloat(editWithdrawalRate) : 4;
-    if (isNaN(swrPct) || swrPct <= 0 || swrPct > 100) {
-      Alert.alert('Invalid Withdrawal Rate', 'Safe withdrawal rate must be between 1% and 100%.');
-      return;
-    }
-    const expectedWithdrawalRate = swrPct / 100;
-
-    // Validate lifestyle spending ratio (% input -> decimal fraction)
-    const lifestylePct = editLifestyleRatio.trim() ? parseFloat(editLifestyleRatio) : 80;
-    if (isNaN(lifestylePct) || lifestylePct <= 0 || lifestylePct > 200) {
-      Alert.alert('Invalid Lifestyle Spending Ratio', 'Lifestyle spending ratio must be between 1% and 200%.');
-      return;
-    }
-    const lifestyleAdjustmentRatio = lifestylePct / 100;
-
-    // Validate emergency fund target months
-    const efMonths = editEmergencyMonths.trim() ? parseInt(editEmergencyMonths, 10) : 6;
-    if (isNaN(efMonths) || efMonths < 0 || efMonths > 36) {
-      Alert.alert('Invalid Emergency Fund Target', 'Emergency fund target must be between 0 and 36 months.');
-      return;
-    }
-
-    setSaving(true);
+    const payload = { ...read.payload, dateOfBirth: editDOB.toISOString() };
     try {
-      const payload: Partial<User> = {
-        name: editName.trim(),
-        dateOfBirth: editDOB.toISOString(),
-        retirementAge: retAge ?? undefined,
-        monthlyIncome: income ?? undefined,
-        retirementCorpusGoal: corpusGoal ?? 0,
-        expectedReturnRate,
-        expectedInflationRate,
-        expectedWithdrawalRate,
-        lifestyleAdjustmentRatio,
-        emergencyFundTargetMonths: efMonths,
-      };
-
       const response = await updateUserProfileApi(payload);
-
-      if (response && response.user) {
-        setStoreUser(response.user);
-        setAuthUser(response.user);
-      } else {
-        const updated = {
-          ...(user || {}),
-          ...payload,
-        } as User;
-        setStoreUser(updated);
-        setAuthUser(updated);
-      }
-
+      const updated = (response?.user ?? { ...(user || {}), ...payload }) as User;
+      setStoreUser(updated);
+      setAuthUser(updated);
       setEditVisible(false);
-      celebrate({ kind: 'toast', title: 'Assumptions saved', subtitle: 'Your planning assumptions have been updated.' });
+      toast('Assumptions saved', { subtitle: 'Your forecasts will use the new values.' });
     } catch (err: any) {
-      Alert.alert('Save Error', err?.response?.data?.error || err?.message || 'Could not save profile updates.');
-    } finally {
-      setSaving(false);
+      setEditError(err?.response?.data?.error || "Couldn't save. Check your connection and try again.");
     }
   };
 
+  const confirmSignOut = () => {
+    Alert.alert('Sign out of FINAURA?', 'You can sign back in any time with your email and password.', [
+      { text: 'Cancel', style: 'cancel' },
+      { text: 'Sign out', style: 'destructive', onPress: () => logout() },
+    ]);
+  };
+
+  const assumptionsSummary = [
+    user?.retirementAge ? `retire at ${user.retirementAge}` : null,
+    `${pct(user?.expectedReturnRate, DEFAULT_RETURN_RATE)} return`,
+    `${pct(user?.expectedInflationRate, DEFAULT_INFLATION_RATE)} inflation`,
+  ].filter(Boolean).join(' · ');
+
+  const links: { icon: React.ComponentProps<typeof Ionicons>['name']; tint: string; title: string; subtitle: string; route: string }[] = [
+    { icon: 'pie-chart', tint: c.info, title: 'Assets', subtitle: 'Investments, deposits and savings', route: 'Assets' },
+    { icon: 'wallet', tint: c.purple, title: 'Income streams', subtitle: 'Salary and other receipts', route: 'IncomeFlow' },
+    { icon: 'flag', tint: c.success, title: 'Savings goals', subtitle: 'What you are saving towards', route: 'Goals' },
+    { icon: 'calendar', tint: c.warning, title: 'Bills', subtitle: 'Recurring payments and auto-deductions', route: 'Liabilities' },
+    { icon: 'people', tint: c.chart[3], title: 'Family & household', subtitle: 'Shared view, private transactions', route: 'Family' },
+  ];
+
   return (
     <View style={s.screen}>
-      <ScrollView contentContainerStyle={[s.scroll, { paddingBottom: 40 + insets.bottom }]} showsVerticalScrollIndicator={false}>
-        {/* ── Hero ────────────────────────────────────────────── */}
-        <View style={s.hero}>
-          <TouchableOpacity
-            style={s.editBtn}
-            activeOpacity={0.75}
-            onPress={openEditModal}
-            accessibilityLabel="Edit Profile and Financial Planning Assumptions"
-          >
-            <Ionicons name="create-outline" size={18} color={BLUE} />
-            <Text style={s.editBtnText}>Edit Assumptions</Text>
-          </TouchableOpacity>
+      <Animated.ScrollView
+        onScroll={onScroll}
+        scrollEventThrottle={16}
+        contentContainerStyle={{ paddingTop: headerHeight, paddingBottom: insets.bottom + 40 }}
+        showsVerticalScrollIndicator={false}
+      >
+        <LargeTitle title="You" />
 
-          <View style={s.avatarOuter}>
-            <TouchableOpacity
-              style={s.avatar}
-              activeOpacity={0.8}
-              onPress={handlePickAvatar}
-              accessibilityLabel="Change profile picture"
-            >
-              {shownAvatar ? (
-                <Image key={avatarRenderKey} source={{ uri: shownAvatar }} style={s.avatarImg} />
-              ) : (
-                <Text style={s.avatarText}>{getInitials(user?.name)}</Text>
-              )}
-              {avatarBusy && (
-                <View style={s.avatarBusy}>
-                  <ActivityIndicator color="#FFFFFF" size="small" />
+        <View style={s.body}>
+          {/* Profile card */}
+          <Animated.View entering={enterUp(0)}>
+            <Card variant="hero" style={s.profile}>
+              <Pressable onPress={handlePickAvatar} disabled={avatarBusy} accessibilityRole="button" accessibilityLabel="Change profile picture">
+                <View style={s.avatar}>
+                  {shownAvatar ? (
+                    <Image key={avatarRenderKey} source={{ uri: shownAvatar }} style={s.avatarImg} />
+                  ) : (
+                    <Text style={s.avatarInitials}>{getInitials(user?.name)}</Text>
+                  )}
+                  {avatarBusy && <View style={s.avatarBusy}><ActivityIndicator color="#FFFFFF" /></View>}
                 </View>
-              )}
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={s.avatarCameraBadge}
-              activeOpacity={0.8}
-              onPress={handlePickAvatar}
-              accessibilityLabel="Change profile picture"
-            >
-              <Ionicons name="camera" size={13} color="#FFFFFF" />
-            </TouchableOpacity>
-          </View>
-
-          <Text style={s.name}>{user?.name ?? 'Valued Member'}</Text>
-          <Text style={s.email}>{user?.email ?? 'No email'}</Text>
-
-          <View style={[s.statusBadge, { backgroundColor: `${statusColor}18`, borderColor: `${statusColor}40` }]}>
-            <Ionicons name={statusIcon as any} size={14} color={statusColor} />
-            <Text style={[s.statusText, { color: statusColor }]}>Onboarding {statusLabel}</Text>
-          </View>
-        </View>
-
-        {/* ── Quick Stats ─────────────────────────────────────── */}
-        <View style={s.statsRow}>
-          <StatPill label="Declared Income" value={formatCurrency(user?.monthlyIncome)} icon="wallet-outline" color={GREEN} />
-          <StatPill label="Retirement Age" value={user?.retirementAge ? `Age ${user.retirementAge}` : 'Not set'} icon="flag-outline" color={BLUE} />
-        </View>
-
-        {/* ── SECTION A: Personal Details ─────────────────────── */}
-        <View style={s.sectionHeader}>
-          <Text style={s.sectionTitle}>A. Personal Details</Text>
-        </View>
-        <View style={s.card}>
-          <InfoRow icon="person-outline" label="Full Name" value={user?.name ?? 'Not set'} />
-          <InfoRow icon="mail-outline" label="Email Address (Account ID)" value={user?.email ?? 'Not set'} helperText="Account email is permanent for security." />
-          <InfoRow icon="calendar-outline" label="Date of Birth" value={formatDOB(user?.dateOfBirth)} isLast />
-        </View>
-
-        {/* ── SECTION B: Financial Baselines ──────────────────── */}
-        <View style={s.sectionHeader}>
-          <Text style={s.sectionTitle}>B. Financial Baselines</Text>
-        </View>
-        <View style={s.card}>
-          <InfoRow
-            icon="cash-outline"
-            label="Declared Monthly Income"
-            value={formatCurrency(user?.monthlyIncome)}
-            helperText="Used as a planning baseline. Actual receipts are logged separately in Income Streams."
-            iconColor={GREEN}
-          />
-          <InfoRow
-            icon="trending-up-outline"
-            label="Income Employment Type"
-            value={user?.incomeType ? user.incomeType.charAt(0).toUpperCase() + user.incomeType.slice(1) : 'Salaried'}
-            iconColor={BLUE}
-          />
-          <InfoRow
-            icon="card-outline"
-            label="Current Cash Balance"
-            value={formatCurrency(user?.currentBalance)}
-            helperText="Managed automatically via transaction & income logging."
-            iconColor={PURPLE}
-            isLast
-          />
-        </View>
-
-        {/* ── SECTION C: Retirement & Forecast Assumptions ─────── */}
-        <View style={s.sectionHeader}>
-          <Text style={s.sectionTitle}>C. Retirement & Forecast Assumptions</Text>
-        </View>
-        <View style={s.card}>
-          <InfoRow
-            icon="hourglass-outline"
-            label="Target Retirement Age"
-            value={user?.retirementAge ? `${user.retirementAge} years` : 'Not set'}
-            helperText="Defines your investment horizon for Monte Carlo projections."
-            iconColor={BLUE}
-          />
-          <InfoRow
-            icon="trophy-outline"
-            label="Personal Retirement Corpus Goal"
-            value={user?.retirementCorpusGoal && user.retirementCorpusGoal > 0 ? formatCurrency(user.retirementCorpusGoal) : 'Not set (Using FIRE Requirement)'}
-            helperText="Your personal target. FINAURA also calculates estimated FIRE requirement separately."
-            iconColor={AMBER}
-          />
-          <InfoRow
-            icon="stats-chart-outline"
-            label="Expected Investment Return Rate"
-            value={formatPercent(user?.expectedReturnRate, DEFAULT_RETURN_RATE)}
-            helperText="Long-term annual investment return assumption before shocks."
-            iconColor={GREEN}
-          />
-          <InfoRow
-            icon="pie-chart-outline"
-            label="Expected Inflation Rate"
-            value={formatPercent(user?.expectedInflationRate, DEFAULT_INFLATION_RATE)}
-            helperText="Assumed annual inflation for purchasing power projections."
-            iconColor={AMBER}
-          />
-          <InfoRow
-            icon="arrow-down-circle-outline"
-            label="Safe Withdrawal Rate (SWR)"
-            value={formatPercent(user?.expectedWithdrawalRate, DEFAULT_WITHDRAWAL_RATE)}
-            helperText="Annual withdrawal percentage from accumulated corpus during retirement."
-            iconColor={BLUE}
-          />
-          <InfoRow
-            icon="restaurant-outline"
-            label="Lifestyle Spending Ratio"
-            value={formatRatio(user?.lifestyleAdjustmentRatio, DEFAULT_LIFESTYLE_RATIO)}
-            helperText="Estimated post-retirement living spend relative to current lifestyle."
-            iconColor={PURPLE}
-          />
-          <InfoRow
-            icon="shield-checkmark-outline"
-            label="Emergency Fund Target"
-            value={`${user?.emergencyFundTargetMonths ?? DEFAULT_EMERGENCY_MONTHS} months`}
-            helperText="Target buffer for essential living expenses."
-            iconColor={GREEN}
-            isLast
-          />
-        </View>
-
-        {/* ── SECTION D: Financial Data & Accounts ─────────────── */}
-        <View style={s.sectionHeader}>
-          <Text style={s.sectionTitle}>D. Financial Data & Navigation</Text>
-        </View>
-        <View style={s.card}>
-          <TouchableOpacity
-            style={infoStyles.row}
-            onPress={() => (navigation as any).navigate('Assets')}
-            activeOpacity={0.7}
-            accessibilityLabel="Manage Financial Assets and Holdings"
-          >
-            <View style={[infoStyles.iconWrap, { backgroundColor: c.successSoft }]}>
-              <Ionicons name="pie-chart" size={18} color={c.success} />
-            </View>
-            <View style={infoStyles.textCol}>
-              <Text style={infoStyles.label}>Financial Assets & Holdings</Text>
-              <Text style={infoStyles.value}>FD, Mutual Funds, Stocks & PF ↗</Text>
-            </View>
-            <Ionicons name="chevron-forward" size={16} color={TEXT_MUTED} />
-          </TouchableOpacity>
-
-          <View style={{ height: 1, backgroundColor: c.surfaceAlt, marginLeft: 50 }} />
-
-          <TouchableOpacity
-            style={infoStyles.row}
-            onPress={() => (navigation as any).navigate('IncomeFlow')}
-            activeOpacity={0.7}
-            accessibilityLabel="Manage Income Streams and History"
-          >
-            <View style={[infoStyles.iconWrap, { backgroundColor: BLUE_LIGHT }]}>
-              <Ionicons name="wallet" size={18} color={BLUE} />
-            </View>
-            <View style={infoStyles.textCol}>
-              <Text style={infoStyles.label}>Income Streams & History</Text>
-              <Text style={infoStyles.value}>View, Log & Manage Receipts ↗</Text>
-            </View>
-            <Ionicons name="chevron-forward" size={16} color={TEXT_MUTED} />
-          </TouchableOpacity>
-
-          <View style={{ height: 1, backgroundColor: c.surfaceAlt, marginLeft: 50 }} />
-
-          <TouchableOpacity
-            style={infoStyles.row}
-            onPress={() => (navigation as any).navigate('Goals')}
-            activeOpacity={0.7}
-            accessibilityLabel="Manage Savings Goals"
-          >
-            <View style={[infoStyles.iconWrap, { backgroundColor: c.purpleSoft }]}>
-              <Ionicons name="flag" size={18} color={c.purple} />
-            </View>
-            <View style={infoStyles.textCol}>
-              <Text style={infoStyles.label}>Savings Goals</Text>
-              <Text style={infoStyles.value}>Fill your piggy bank towards each goal ↗</Text>
-            </View>
-            <Ionicons name="chevron-forward" size={16} color={TEXT_MUTED} />
-          </TouchableOpacity>
-
-          <View style={{ height: 1, backgroundColor: c.surfaceAlt, marginLeft: 50 }} />
-
-          <TouchableOpacity
-            style={infoStyles.row}
-            onPress={() => (navigation as any).navigate('Liabilities')}
-            activeOpacity={0.7}
-            accessibilityLabel="View and Manage User Liabilities"
-          >
-            <View style={[infoStyles.iconWrap, { backgroundColor: c.dangerSoft }]}>
-              <Ionicons name="calendar-outline" size={18} color={c.danger} />
-            </View>
-            <View style={infoStyles.textCol}>
-              <Text style={infoStyles.label}>Recurring Liabilities</Text>
-              <Text style={infoStyles.value}>View & Manage Commitments ↗</Text>
-            </View>
-            <Ionicons name="chevron-forward" size={16} color={TEXT_MUTED} />
-          </TouchableOpacity>
-
-          <View style={{ height: 1, backgroundColor: c.surfaceAlt, marginLeft: 50 }} />
-
-          <TouchableOpacity
-            style={infoStyles.row}
-            onPress={() => (navigation as any).navigate('Family')}
-            activeOpacity={0.7}
-            accessibilityLabel="Family & Household, Combined finances, shared insights & invitations"
-          >
-            <View style={[infoStyles.iconWrap, { backgroundColor: c.primarySoft }]}>
-              <Ionicons name="people-outline" size={18} color={PURPLE} />
-            </View>
-            <View style={infoStyles.textCol}>
-              <Text style={infoStyles.label}>Family & Household</Text>
-              <Text style={infoStyles.value}>Combined finances, shared insights & invitations ↗</Text>
-            </View>
-            <Ionicons name="chevron-forward" size={16} color={TEXT_MUTED} />
-          </TouchableOpacity>
-
-        </View>
-
-
-        {/* ── Sign Out ────────────────────────────────────────── */}
-        <TouchableOpacity
-          style={s.logoutBtn}
-          activeOpacity={0.85}
-          onPress={logout}
-          accessibilityLabel="Sign Out of FINAURA Account"
-        >
-          <Ionicons name="log-out-outline" size={20} color={c.dangerStrong} />
-          <Text style={s.logoutText}>Sign Out</Text>
-        </TouchableOpacity>
-        <Text style={s.version}>FINAURA v1.0.0 — Enterprise Financial Intelligence</Text>
-      </ScrollView>
-
-      {/* ═══════ Edit Assumptions Modal ═══════ */}
-      <Modal visible={editVisible} transparent animationType="slide" onRequestClose={() => setEditVisible(false)}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={modal.overlay}>
-            <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={modal.kwrap}>
-              <View style={modal.sheet}>
-                <View style={modal.handle} />
-
-                <View style={modal.header}>
-                  <Text style={modal.title}>Edit Planning Assumptions</Text>
-                  <TouchableOpacity
-                    onPress={() => setEditVisible(false)}
-                    style={modal.closeBtn}
-                    accessibilityLabel="Close Edit Modal"
-                  >
-                    <Ionicons name="close" size={22} color={TEXT_SECONDARY} />
-                  </TouchableOpacity>
+                <View style={s.cameraBadge}>
+                  <Ionicons name="camera" size={13} color={c.primary} />
                 </View>
-                <Text style={modal.subtitle}>
-                  Adjust your baseline planning values. Forecasts will update automatically.
-                </Text>
-
-                <ScrollView showsVerticalScrollIndicator={false} style={{ marginTop: 16 }} keyboardShouldPersistTaps="handled">
-                  {/* Name */}
-                  <View style={ef.wrap}>
-                    <Text style={ef.label}>Full Name</Text>
-                    <View style={ef.inputRow}>
-                      <View style={ef.iconWrap}>
-                        <Ionicons name="person-outline" size={16} color={BLUE} />
-                      </View>
-                      <TextInput
-                        style={ef.input}
-                        value={editName}
-                        onChangeText={setEditName}
-                        placeholder="Your full name"
-                        placeholderTextColor={TEXT_MUTED}
-                      />
-                    </View>
-                  </View>
-
-                  {/* DOB — Date picker */}
-                  <View style={ef.wrap}>
-                    <Text style={ef.label}>Date of Birth</Text>
-                    <TouchableOpacity style={ef.inputRow} activeOpacity={0.7} onPress={() => setShowDatePicker(true)}>
-                      <View style={ef.iconWrap}>
-                        <Ionicons name="calendar-outline" size={16} color={BLUE} />
-                      </View>
-                      <Text style={[ef.displayText, !user?.dateOfBirth && { color: TEXT_MUTED }]}>
-                        {formatDOB(editDOB)}
-                      </Text>
-                      <Ionicons name="chevron-down" size={16} color={TEXT_MUTED} />
-                    </TouchableOpacity>
-
-                    {showDatePicker && (
-                      <View style={ef.pickerWrap}>
-                        <DateTimePicker
-                          value={editDOB}
-                          mode="date"
-                          display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-                          maximumDate={new Date()}
-                          minimumDate={new Date(1940, 0, 1)}
-                          onChange={onDateChange}
-                          themeVariant="light"
-                        />
-                        {Platform.OS === 'ios' && (
-                          <TouchableOpacity style={ef.doneBtn} onPress={() => setShowDatePicker(false)}>
-                            <Text style={ef.doneBtnText}>Done</Text>
-                          </TouchableOpacity>
-                        )}
-                      </View>
-                    )}
-                  </View>
-
-                  {/* Declared Monthly Income */}
-                  <View style={ef.wrap}>
-                    <Text style={ef.label}>Declared Monthly Income (₹)</Text>
-                    <View style={ef.inputRow}>
-                      <View style={ef.iconWrap}>
-                        <Ionicons name="wallet-outline" size={16} color={GREEN} />
-                      </View>
-                      <Text style={ef.prefix}>₹</Text>
-                      <TextInput
-                        style={ef.input}
-                        value={editIncome}
-                        onChangeText={(t) => setEditIncome(t.replace(/[^0-9.]/g, ''))}
-                        placeholder="e.g. 80000"
-                        placeholderTextColor={TEXT_MUTED}
-                        keyboardType="decimal-pad"
-                      />
-                    </View>
-                  </View>
-
-                  {/* Retirement Age */}
-                  <View style={ef.wrap}>
-                    <Text style={ef.label}>Target Retirement Age (Years)</Text>
-                    <View style={ef.inputRow}>
-                      <View style={ef.iconWrap}>
-                        <Ionicons name="hourglass-outline" size={16} color={BLUE} />
-                      </View>
-                      <TextInput
-                        style={ef.input}
-                        value={editRetAge}
-                        onChangeText={(t) => setEditRetAge(t.replace(/[^0-9]/g, ''))}
-                        placeholder="e.g. 60"
-                        placeholderTextColor={TEXT_MUTED}
-                        keyboardType="number-pad"
-                        maxLength={3}
-                      />
-                      <Text style={ef.suffix}>years</Text>
-                    </View>
-                  </View>
-
-                  {/* Personal Retirement Corpus Goal */}
-                  <View style={ef.wrap}>
-                    <Text style={ef.label}>Personal Retirement Corpus Goal (₹)</Text>
-                    <View style={ef.inputRow}>
-                      <View style={ef.iconWrap}>
-                        <Ionicons name="trophy-outline" size={16} color={AMBER} />
-                      </View>
-                      <Text style={ef.prefix}>₹</Text>
-                      <TextInput
-                        style={ef.input}
-                        value={editCorpusGoal}
-                        onChangeText={(t) => setEditCorpusGoal(t.replace(/[^0-9.]/g, ''))}
-                        placeholder="e.g. 20000000 (Optional)"
-                        placeholderTextColor={TEXT_MUTED}
-                        keyboardType="decimal-pad"
-                      />
-                    </View>
-                  </View>
-
-                  {/* Expected Return Rate */}
-                  <View style={ef.wrap}>
-                    <Text style={ef.label}>Expected Investment Return Rate (% p.a.)</Text>
-                    <View style={ef.inputRow}>
-                      <View style={ef.iconWrap}>
-                        <Ionicons name="stats-chart-outline" size={16} color={GREEN} />
-                      </View>
-                      <TextInput
-                        style={ef.input}
-                        value={editReturnRate}
-                        onChangeText={(t) => setEditReturnRate(t.replace(/[^0-9.]/g, ''))}
-                        placeholder="e.g. 8"
-                        placeholderTextColor={TEXT_MUTED}
-                        keyboardType="decimal-pad"
-                      />
-                      <Text style={ef.suffix}>%</Text>
-                    </View>
-                  </View>
-
-                  {/* Expected Inflation Rate */}
-                  <View style={ef.wrap}>
-                    <Text style={ef.label}>Expected Inflation Rate (% p.a.)</Text>
-                    <View style={ef.inputRow}>
-                      <View style={ef.iconWrap}>
-                        <Ionicons name="pie-chart-outline" size={16} color={AMBER} />
-                      </View>
-                      <TextInput
-                        style={ef.input}
-                        value={editInflationRate}
-                        onChangeText={(t) => setEditInflationRate(t.replace(/[^0-9.]/g, ''))}
-                        placeholder="e.g. 6"
-                        placeholderTextColor={TEXT_MUTED}
-                        keyboardType="decimal-pad"
-                      />
-                      <Text style={ef.suffix}>%</Text>
-                    </View>
-                  </View>
-
-                  {/* Safe Withdrawal Rate */}
-                  <View style={ef.wrap}>
-                    <Text style={ef.label}>Retirement Withdrawal Assumption (% SWR)</Text>
-                    <View style={ef.inputRow}>
-                      <View style={ef.iconWrap}>
-                        <Ionicons name="arrow-down-circle-outline" size={16} color={BLUE} />
-                      </View>
-                      <TextInput
-                        style={ef.input}
-                        value={editWithdrawalRate}
-                        onChangeText={(t) => setEditWithdrawalRate(t.replace(/[^0-9.]/g, ''))}
-                        placeholder="e.g. 4"
-                        placeholderTextColor={TEXT_MUTED}
-                        keyboardType="decimal-pad"
-                      />
-                      <Text style={ef.suffix}>%</Text>
-                    </View>
-                  </View>
-
-                  {/* Lifestyle Adjustment Ratio */}
-                  <View style={ef.wrap}>
-                    <Text style={ef.label}>Lifestyle Spending Ratio (% of current lifestyle)</Text>
-                    <View style={ef.inputRow}>
-                      <View style={ef.iconWrap}>
-                        <Ionicons name="restaurant-outline" size={16} color={PURPLE} />
-                      </View>
-                      <TextInput
-                        style={ef.input}
-                        value={editLifestyleRatio}
-                        onChangeText={(t) => setEditLifestyleRatio(t.replace(/[^0-9.]/g, ''))}
-                        placeholder="e.g. 80"
-                        placeholderTextColor={TEXT_MUTED}
-                        keyboardType="decimal-pad"
-                      />
-                      <Text style={ef.suffix}>%</Text>
-                    </View>
-                  </View>
-
-                  {/* Emergency Fund Target Months */}
-                  <View style={[ef.wrap, { marginBottom: 28 }]}>
-                    <Text style={ef.label}>Emergency Fund Target (Months)</Text>
-                    <View style={ef.inputRow}>
-                      <View style={ef.iconWrap}>
-                        <Ionicons name="shield-checkmark-outline" size={16} color={GREEN} />
-                      </View>
-                      <TextInput
-                        style={ef.input}
-                        value={editEmergencyMonths}
-                        onChangeText={(t) => setEditEmergencyMonths(t.replace(/[^0-9]/g, ''))}
-                        placeholder="e.g. 6"
-                        placeholderTextColor={TEXT_MUTED}
-                        keyboardType="number-pad"
-                        maxLength={2}
-                      />
-                      <Text style={ef.suffix}>months</Text>
-                    </View>
-                  </View>
-                </ScrollView>
-
-                {/* Actions */}
-                <View style={modal.actions}>
-                  <TouchableOpacity
-                    style={modal.cancelBtn}
-                    onPress={() => setEditVisible(false)}
-                    activeOpacity={0.8}
-                    accessibilityLabel="Cancel Editing"
-                  >
-                    <Text style={modal.cancelText}>Cancel</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[modal.saveBtn, saving && { opacity: 0.6 }]}
-                    onPress={handleSave}
-                    activeOpacity={0.85}
-                    disabled={saving}
-                    accessibilityLabel="Save Planning Assumptions"
-                  >
-                    {saving ? (
-                      <ActivityIndicator color="#FFFFFF" size="small" />
-                    ) : (
-                      <>
-                        <Ionicons name="checkmark-circle-outline" size={18} color="#FFFFFF" />
-                        <Text style={modal.saveText}>Save Assumptions</Text>
-                      </>
-                    )}
-                  </TouchableOpacity>
+              </Pressable>
+              <Text style={s.name} numberOfLines={1}>{user?.name || 'Your name'}</Text>
+              <Text style={s.email} numberOfLines={1}>{user?.email}</Text>
+              <View style={s.facts}>
+                <View style={s.fact}>
+                  <Text style={s.factValue}>{user?.monthlyIncome ? formatCurrency(user.monthlyIncome) : '—'}</Text>
+                  <Text style={s.factLabel}>Declared income / mo</Text>
+                </View>
+                <View style={s.factDivider} />
+                <View style={s.fact}>
+                  <Text style={s.factValue}>{user?.retirementAge ?? '—'}</Text>
+                  <Text style={s.factLabel}>Retirement age</Text>
                 </View>
               </View>
-            </KeyboardAvoidingView>
+            </Card>
+          </Animated.View>
+
+          <SectionHeader title="Planning" />
+          <Card padded={false} style={s.group}>
+            <View style={s.groupInner}>
+              <ListRow icon="options" tint={c.primary} title="Planning assumptions" subtitle={assumptionsSummary} onPress={openEditModal} />
+            </View>
+          </Card>
+
+          <SectionHeader title="Your money" />
+          <Card padded={false} style={s.group}>
+            <View style={s.groupInner}>
+              {links.map((l, i) => (
+                <View key={l.route} style={i > 0 && s.divider}>
+                  <ListRow icon={l.icon} tint={l.tint} title={l.title} subtitle={l.subtitle} onPress={() => navigation.navigate(l.route)} />
+                </View>
+              ))}
+            </View>
+          </Card>
+
+          <SectionHeader title="Appearance" />
+          <View style={s.segment} accessibilityRole="radiogroup">
+            {(['light', 'dark', 'system'] as const).map((m) => (
+              <Chip
+                key={m}
+                label={m === 'system' ? 'Automatic' : m === 'light' ? 'Light' : 'Dark'}
+                icon={m === 'light' ? 'sunny-outline' : m === 'dark' ? 'moon-outline' : 'phone-portrait-outline'}
+                selected={themeMode === m}
+                onPress={() => setThemeMode(m)}
+                style={s.flex}
+              />
+            ))}
           </View>
-        </TouchableWithoutFeedback>
+
+          <SectionHeader title="Account" />
+          <Card padded={false} style={s.group}>
+            <View style={s.groupInner}>
+              <ListRow icon="mail" tint={c.textMuted} title={user?.email || 'Email'} subtitle="Your sign-in email can't be changed" />
+              <View style={s.divider}>
+                <ListRow icon="gift" tint={c.textMuted} title="Date of birth" subtitle={user?.dateOfBirth ? formatDay(toDate(user.dateOfBirth)) : 'Not set'} onPress={openEditModal} />
+              </View>
+            </View>
+          </Card>
+
+          <Button label="Sign out" icon="log-out-outline" variant="destructive" onPress={confirmSignOut} style={s.signOut} accessibilityLabel="Sign Out of FINAURA Account" />
+          <Text style={s.version}>FINAURA {Constants.expoConfig?.version ?? ''}</Text>
+        </View>
+      </Animated.ScrollView>
+
+      <ScreenHeader title="You" y={y} onBack={() => navigation.goBack()} />
+
+      {/* Planning assumptions editor */}
+      <Modal visible={editVisible} animationType="slide" presentationStyle="pageSheet" onRequestClose={() => setEditVisible(false)}>
+        <KeyboardAvoidingView style={s.sheet} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+          <View style={s.sheetHeader}>
+            <Pressable onPress={() => setEditVisible(false)} hitSlop={10} accessibilityRole="button">
+              <Text style={s.sheetCancel}>Cancel</Text>
+            </Pressable>
+            <Text style={s.sheetTitle}>Planning assumptions</Text>
+            <View style={s.sheetSpacer} />
+          </View>
+          <ScrollView contentContainerStyle={s.sheetBody} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+            <Text style={s.sheetIntro}>Forecasts, retirement odds and your health score use these values.</Text>
+
+            <Text style={s.group1}>About you</Text>
+            <Field label="Full name" icon="person-outline" value={form.name} onChangeText={set('name')} />
+            <DateField label="Date of birth" value={editDOB} onChange={setEditDOB} maximumDate={new Date()} />
+            <Field
+              label="Declared monthly income (₹)"
+              icon="cash-outline"
+              value={form.income}
+              onChangeText={set('income')}
+              keyboardType="numeric"
+              hint="A planning baseline. Actual receipts are logged separately in Income Streams."
+            />
+
+            <Text style={s.group1}>Retirement</Text>
+            <Field label="Target retirement age" icon="hourglass-outline" value={form.retAge} onChangeText={set('retAge')} keyboardType="number-pad" />
+            <Field label="Personal corpus goal (₹)" icon="trophy-outline" value={form.corpus} onChangeText={set('corpus')} keyboardType="numeric" hint="Optional. Leave blank to use FINAURA's estimate." />
+            <Field label="Lifestyle in retirement (% of today)" icon="cafe-outline" value={form.life} onChangeText={set('life')} keyboardType="numeric" />
+
+            <Text style={s.group1}>Market assumptions</Text>
+            <View style={s.row2}>
+              <View style={s.flex}><Field label="Return %" value={form.ret} onChangeText={set('ret')} keyboardType="numeric" /></View>
+              <View style={s.flex}><Field label="Inflation %" value={form.inf} onChangeText={set('inf')} keyboardType="numeric" /></View>
+            </View>
+            <View style={s.row2}>
+              <View style={s.flex}><Field label="Safe withdrawal %" value={form.swr} onChangeText={set('swr')} keyboardType="numeric" /></View>
+              <View style={s.flex}><Field label="Emergency fund (months)" value={form.ef} onChangeText={set('ef')} keyboardType="number-pad" /></View>
+            </View>
+
+            {!!editError && <Text style={s.error} accessibilityRole="alert">{editError}</Text>}
+            <Button label="Save assumptions" icon="checkmark-circle-outline" onPress={handleSave} style={s.save} />
+          </ScrollView>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
   );
 }
 
-// ── Main Styles ───────────────────────────────────────────────
-const useSStyles = createStyles((c) => {
-  const { BLUE, BLUE_LIGHT, GREEN, BG, CARD_BG, TEXT_PRIMARY, TEXT_SECONDARY, TEXT_MUTED, BORDER } = tokens(c);
-  return {
-  screen: { flex: 1, backgroundColor: BG },
-  scroll: { paddingHorizontal: 16 },
-  hero: { alignItems: 'center', paddingTop: 28, paddingBottom: 20, position: 'relative' },
-  editBtn: {
-    position: 'absolute',
-    top: 12,
-    right: 0,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 5,
-    backgroundColor: BLUE_LIGHT,
-    paddingHorizontal: 12,
-    paddingVertical: 7,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: `${BLUE}30`,
-    zIndex: 10,
-  },
-  editBtnText: { fontSize: 12, fontWeight: '700', color: BLUE },
-  avatarOuter: { position: 'relative', marginBottom: 12 },
+const useSStyles = createStyles((c) => ({
+  screen: { flex: 1, backgroundColor: c.bg },
+  flex: { flex: 1 },
+  body: { paddingHorizontal: 16 },
+  profile: { alignItems: 'center', paddingVertical: 24 },
   avatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: BLUE,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: BLUE,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 10,
-    elevation: 6,
-  },
-  avatarText: { fontSize: 28, fontWeight: '800', color: '#FFFFFF', letterSpacing: 1 },
-  avatarImg: { width: 80, height: 80, borderRadius: 40 },
-  avatarBusy: {
-    ...StyleSheet.absoluteFill,
-    borderRadius: 40,
-    backgroundColor: 'rgba(15,23,42,0.45)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  avatarCameraBadge: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    width: 26,
-    height: 26,
-    borderRadius: 13,
-    backgroundColor: BLUE,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 2.5,
-    borderColor: BG,
-  },
-  onlineDot: {
-    position: 'absolute',
-    bottom: 2,
-    right: 2,
-    width: 16,
-    height: 16,
-    borderRadius: 8,
-    backgroundColor: GREEN,
-    borderWidth: 2.5,
-    borderColor: BG,
-  },
-  name: { fontSize: 22, fontWeight: '800', color: TEXT_PRIMARY, letterSpacing: -0.3, marginBottom: 2 },
-  email: { fontSize: 13, color: TEXT_SECONDARY, fontWeight: '500', marginBottom: 12 },
-  statusBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 12,
-    paddingVertical: 5,
-    borderRadius: 20,
-    borderWidth: 1,
-  },
-  statusText: { fontSize: 11, fontWeight: '700' },
-  statsRow: { flexDirection: 'row', gap: 12, marginBottom: 20 },
-  sectionHeader: { marginBottom: 8, paddingHorizontal: 4 },
-  sectionTitle: { fontSize: 14, fontWeight: '800', color: TEXT_PRIMARY, letterSpacing: 0.2, textTransform: 'uppercase' },
-  card: {
-    backgroundColor: CARD_BG,
-    borderRadius: 20,
-    paddingHorizontal: 16,
-    borderWidth: 1,
-    borderColor: BORDER,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.04,
-    shadowRadius: 8,
-    elevation: 2,
-    marginBottom: 20,
-  },
-  logoutBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    height: 50,
-    backgroundColor: c.dangerSoft,
-    borderRadius: 16,
-    borderWidth: 1.5,
-    borderColor: c.dangerSoft,
-    marginTop: 4,
-  },
-  logoutText: { color: c.dangerStrong, fontSize: 15, fontWeight: '700' },
-  version: { textAlign: 'center', fontSize: 11, color: TEXT_MUTED, marginTop: 16, fontWeight: '500' },
-};
-});
-
-// ── Edit Field Styles ─────────────────────────────────────────
-const useEfStyles = createStyles((c) => {
-  const { BLUE, TEXT_PRIMARY, TEXT_MUTED, BORDER } = tokens(c);
-  return {
-  wrap: { marginBottom: 16 },
-  label: { fontSize: 12, fontWeight: '700', color: TEXT_PRIMARY, marginBottom: 6, marginLeft: 2 },
-  inputRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: c.bg,
-    borderRadius: 12,
-    borderWidth: 1.5,
-    borderColor: BORDER,
-    paddingHorizontal: 12,
-    height: 48,
-  },
-  iconWrap: { marginRight: 10 },
-  input: { flex: 1, fontSize: 14, color: TEXT_PRIMARY, paddingVertical: 0 },
-  displayText: { flex: 1, fontSize: 14, color: TEXT_PRIMARY, fontWeight: '600' },
-  suffix: { fontSize: 12, color: TEXT_MUTED, fontWeight: '600', marginLeft: 4 },
-  prefix: { fontSize: 14, color: TEXT_PRIMARY, fontWeight: '700', marginRight: 4 },
-  pickerWrap: {
-    backgroundColor: c.bg,
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: BORDER,
-    marginTop: 8,
+    width: 88,
+    height: 88,
+    borderRadius: 44,
     overflow: 'hidden',
-  },
-  doneBtn: { alignItems: 'center', paddingVertical: 10, borderTopWidth: 1, borderTopColor: BORDER },
-  doneBtnText: { fontSize: 14, fontWeight: '700', color: BLUE },
-};
-});
-
-// ── Modal Styles ──────────────────────────────────────────────
-const useModalStyles = createStyles((c) => {
-  const { BLUE, TEXT_PRIMARY, TEXT_SECONDARY } = tokens(c);
-  return {
-  overlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.45)', justifyContent: 'flex-end' },
-  kwrap: { justifyContent: 'flex-end' },
-  sheet: {
-    backgroundColor: c.surface,
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
-    paddingHorizontal: 20,
-    paddingBottom: 32,
-    maxHeight: '90%',
-  },
-  handle: {
-    width: 40,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: c.border,
-    alignSelf: 'center',
-    marginTop: 12,
-    marginBottom: 8,
-  },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 8 },
-  title: { fontSize: 20, fontWeight: '800', color: TEXT_PRIMARY },
-  closeBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: c.surfaceAlt,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'rgba(255,255,255,0.18)',
+    borderWidth: 2,
+    borderColor: 'rgba(255,255,255,0.5)',
   },
-  subtitle: { fontSize: 12, color: TEXT_SECONDARY, marginTop: 4, lineHeight: 16 },
-  actions: { flexDirection: 'row', gap: 12, marginTop: 12 },
-  cancelBtn: {
-    flex: 1,
-    height: 48,
+  avatarImg: { width: '100%', height: '100%' },
+  avatarInitials: { fontSize: 30, fontWeight: '800', color: c.onAurora },
+  avatarBusy: { ...StyleSheet.absoluteFill, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.35)' },
+  cameraBadge: {
+    position: 'absolute',
+    right: -2,
+    bottom: -2,
+    width: 28,
+    height: 28,
     borderRadius: 14,
-    backgroundColor: c.surfaceAlt,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#FFFFFF',
   },
-  cancelText: { fontSize: 14, fontWeight: '700', color: TEXT_SECONDARY },
-  saveBtn: {
-    flex: 2,
-    height: 48,
-    borderRadius: 14,
-    backgroundColor: BLUE,
+  name: { ...typeScale.title, color: c.onAurora, marginTop: 14 },
+  email: { ...typeScale.caption, color: c.onAuroraMuted, marginTop: 2 },
+  facts: {
+    flexDirection: 'row',
+    alignSelf: 'stretch',
+    marginTop: 20,
+    paddingVertical: 12,
+    borderRadius: radius.md,
+    backgroundColor: 'rgba(255,255,255,0.12)',
+  },
+  fact: { flex: 1, alignItems: 'center' },
+  factDivider: { width: 1, backgroundColor: 'rgba(255,255,255,0.2)' },
+  factValue: { ...typeScale.headline, color: c.onAurora, fontVariant: ['tabular-nums'] },
+  factLabel: { fontSize: 11, color: c.onAuroraMuted, marginTop: 2 },
+  group: { paddingHorizontal: 14, paddingVertical: 4 },
+  groupInner: {},
+  divider: { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: c.border },
+  segment: { flexDirection: 'row', gap: 8 },
+  signOut: { marginTop: 28 },
+  version: { ...typeScale.caption, color: c.textSubtle, textAlign: 'center', marginTop: 14 },
+  sheet: { flex: 1, backgroundColor: c.bg },
+  sheetHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    shadowColor: BLUE,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 6,
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: c.border,
   },
-  saveText: { fontSize: 14, fontWeight: '700', color: '#FFFFFF' },
-};
-});
+  sheetCancel: { fontSize: 16, color: c.primary, width: 64 },
+  sheetTitle: { ...typeScale.headline, color: c.text },
+  sheetSpacer: { width: 64 },
+  sheetBody: { padding: 20, paddingBottom: 48 },
+  sheetIntro: { ...typeScale.body, color: c.textMuted, marginBottom: 6 },
+  group1: { ...typeScale.overline, color: c.textSubtle, marginTop: 18, marginBottom: 10 },
+  row2: { flexDirection: 'row', gap: 12 },
+  error: { fontSize: 13, color: c.danger, textAlign: 'center', marginTop: 8 },
+  save: { marginTop: 16 },
+}));

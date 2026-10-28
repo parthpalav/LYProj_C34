@@ -7,6 +7,7 @@
 #   ./sim.sh back                       goBack() on the first navigator that can
 #   ./sim.sh scroll <y>                 scroll every mounted ScrollView/FlatList to y
 #   ./sim.sh press '<regex>'            call onPress of the first pressable whose label/text matches
+#   ./sim.sh type '<label>' '<text>'      set a TextInput's text via onChangeText
 #   ./sim.sh theme light|dark|system      set the app theme mode
 #   ./sim.sh shot <name>                screenshot to ../after/<name>.png (OUT=dir to override)
 set -e
@@ -34,6 +35,9 @@ case $1 in
     # The pattern is JSON-encoded so regex escapes like \s survive the trip into JS.
     RE=$(printf '%s' "$2" | python3 -c 'import json,sys; print(json.dumps(sys.stdin.read()))')
     walk "const p = f.memoizedProps; if (p && typeof p.onPress === 'function' && typeof f.type !== 'string') { let t = ''; const q = [f.child]; let n = 0; while (q.length && n < 60) { const x = q.pop(); n++; if (!x) continue; const c = x.memoizedProps && x.memoizedProps.children; if (typeof c === 'string') t += c + ' '; if (Array.isArray(c)) c.forEach((y) => { if (typeof y === 'string') t += y + ' '; }); if (x.sibling) q.push(x.sibling); if (x.child) q.push(x.child); } const label = (p.accessibilityLabel || '') + ' | ' + t; if (new RegExp($RE).test(label)) { p.onPress({ nativeEvent: {} }); return 'pressed: ' + label.slice(0, 80); } }" "'not found'" ;;
+  type)
+    # Calls onChangeText on the first input whose accessibilityLabel matches exactly.
+    walk "const p = f.memoizedProps; if (p && p.accessibilityLabel === '$2' && typeof p.onChangeText === 'function') { p.onChangeText('$3'); return 'typed'; }" "'input not found'" ;;
   shot)
     mkdir -p $OUT
     xcrun simctl io booted screenshot $OUT/$2.png >/dev/null 2>&1

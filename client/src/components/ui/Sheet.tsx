@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { KeyboardAvoidingView, LayoutChangeEvent, Modal, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated, { Easing, interpolate, useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
 import { GestureDetector, usePanGesture } from 'react-native-gesture-handler';
@@ -26,6 +26,10 @@ export function Sheet({ visible, onClose, title, children }: Props) {
   const [mounted, setMounted] = useState(visible);
   const height = useSharedValue(OFFSCREEN);
   const y = useSharedValue(OFFSCREEN);
+  // Keep showing what was open while it slides away; callers usually clear their state on close,
+  // and swapping the content mid-animation both flashes and can upset the native view hierarchy.
+  const shown = useRef({ title, children });
+  if (visible) shown.current = { title, children };
 
   useEffect(() => {
     if (visible) setMounted(true);
@@ -77,10 +81,10 @@ export function Sheet({ visible, onClose, title, children }: Props) {
           <GestureDetector gesture={pan}>
             <View style={styles.handleArea}>
               <View style={styles.grabber} />
-              {!!title && <Text style={styles.title} accessibilityRole="header">{title}</Text>}
+              {!!shown.current.title && <Text style={styles.title} accessibilityRole="header">{shown.current.title}</Text>}
             </View>
           </GestureDetector>
-          {children}
+          {shown.current.children}
         </Animated.View>
       </KeyboardAvoidingView>
     </Modal>

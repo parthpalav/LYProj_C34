@@ -1,11 +1,15 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { LayoutChangeEvent, StyleProp, View, ViewStyle } from 'react-native';
+import { LayoutChangeEvent, StyleProp, UIManager, View, ViewStyle } from 'react-native';
 import Svg, { Circle, Defs, LinearGradient, Path, Stop } from 'react-native-svg';
 import Animated, { Easing, useAnimatedProps, useReducedMotion, useSharedValue, withDelay, withTiming } from 'react-native-reanimated';
 import { useTheme } from '../../theme';
 import { smoothPath } from '../../utils/chartMath';
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+
+// shortcut: dev builds made before react-native-svg was added lack its native views, so charts
+// degrade to simple shapes instead of crashing; drop this once every build includes the module.
+export const svgReady = !!UIManager.hasViewManagerConfig?.('RNSVGCircle');
 const SWEEP = { duration: 1100, easing: Easing.out(Easing.cubic) };
 
 /** Animates 0 -> target on mount and target -> next on change; jumps when Reduce Motion is on. */
@@ -36,6 +40,13 @@ export function Ring({ progress, size = 120, stroke = 12, color, trackColor, chi
   const circumference = 2 * Math.PI * r;
   const t = useSweep(Math.max(0, Math.min(1, progress)));
   const props = useAnimatedProps(() => ({ strokeDashoffset: circumference * (1 - t.value) }));
+  if (!svgReady) {
+    return (
+      <View style={[{ width: size, height: size, borderRadius: size / 2, borderWidth: stroke, borderColor: color ?? c.primary, alignItems: 'center', justifyContent: 'center' }, style]}>
+        {children}
+      </View>
+    );
+  }
   return (
     <View style={[{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }, style]}>
       <Svg width={size} height={size} style={{ position: 'absolute', transform: [{ rotate: '-90deg' }] }}>
@@ -86,6 +97,13 @@ export function Donut({ segments, size = 160, stroke = 18, children }: { segment
   const r = (size - stroke) / 2;
   const total = segments.reduce((s, x) => s + Math.max(0, x.value), 0);
   let acc = 0;
+  if (!svgReady) {
+    return (
+      <View style={{ width: size, height: size, borderRadius: size / 2, borderWidth: stroke, borderColor: segments[0]?.color ?? c.surfaceAlt, alignItems: 'center', justifyContent: 'center' }}>
+        {children}
+      </View>
+    );
+  }
   return (
     <View style={{ width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
       <Svg width={size} height={size} style={{ position: 'absolute', transform: [{ rotate: '-90deg' }] }}>
@@ -123,7 +141,7 @@ export function Sparkline({ data, height = 56, color, fill = true, style }: { da
 
   return (
     <View style={[{ height }, style]} onLayout={(e: LayoutChangeEvent) => setWidth(e.nativeEvent.layout.width)}>
-      {width > 0 && (
+      {width > 0 && svgReady && (
         <Svg width={width} height={height}>
           <Defs>
             <LinearGradient id="spark" x1="0" y1="0" x2="0" y2="1">

@@ -191,12 +191,11 @@ test('Layout Test 2 — Overflow Guards & Flex Safety', () => {
 test('Layout Test 3 — No Brittle Clipping or Fixed Card Heights', () => {
   const cardStyleNames = [
     'fmiCard',
-    'balanceHeroCard',
-    'outlookCard',
-    'spendingCard',
-    'liabilityCard',
-    'assetsCard',
-    'smartActionCard'
+    'feedCard',
+    'goalCard',
+    'tile',
+    'list',
+    'outlook',
   ];
 
   for (const styleName of cardStyleNames) {
@@ -221,12 +220,10 @@ test('Layout Test 4 — Large Score Support (100/100)', () => {
   const denom = '/100';
   assert.equal(denom.length, 4);
 
-  const circleStyleMatch = dashboardCode.match(/outlookProbCircle:\s*\{([\s\S]*?)\}/);
-  assert.ok(circleStyleMatch, 'outlookProbCircle style must exist');
-  const widthMatch = circleStyleMatch[1].match(/width:\s*(\d+)/);
-  const heightMatch = circleStyleMatch[1].match(/height:\s*(\d+)/);
-  assert.ok(widthMatch && parseInt(widthMatch[1], 10) >= 60, 'Circle width must be >= 60px');
-  assert.ok(heightMatch && parseInt(heightMatch[1], 10) >= 60, 'Circle height must be >= 60px');
+  // The probability sits inside a Ring; its size sets the circle's width and height.
+  const ringMatch = dashboardCode.match(/<Ring progress=\{isMcAvailable[^>]*?size=\{(\d+)\}/);
+  assert.ok(ringMatch, 'Outlook probability Ring must exist');
+  assert.ok(parseInt(ringMatch[1], 10) >= 60, 'Circle must be >= 60px so 100 fits');
 });
 
 test('Layout Test 5 — Long Monetary Values (₹1,25,00,000)', () => {

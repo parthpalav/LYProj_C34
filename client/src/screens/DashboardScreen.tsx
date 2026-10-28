@@ -1,62 +1,51 @@
-import React, { useCallback, useEffect, useState, useMemo } from 'react';
-import {
-  View,
-  Text,
-  Image,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  ActivityIndicator,
-  RefreshControl,
-  Modal,
-  Dimensions,
-} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Dimensions, Image, Modal, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import Animated from 'react-native-reanimated';
 import {
-  getDashboard,
-  getPredictability,
-  getLiabilities,
-  getFMI,
-  getUserProfile,
   getAssets,
-  getIncome,
   getCurrentFamily,
+  getDashboard,
   getFamilyDashboard,
+  getFMI,
   getGoals,
+  getIncome,
+  getLiabilities,
+  getPredictability,
+  getUserProfile,
 } from '../services/api';
-import Animated, {
-  interpolate, Extrapolation, useAnimatedScrollHandler, useAnimatedStyle, useReducedMotion, useSharedValue,
-} from 'react-native-reanimated';
-import { enterUp } from '../motion';
-import { AnimatedNumber } from '../components/motion/AnimatedNumber';
-import { AnimatedBar, AnimatedSegment } from '../components/motion/AnimatedBar';
-import { PiggyBank } from '../components/motion/PiggyBank';
-import { PressableScale } from '../components/motion/PressableScale';
-import { useTabBarSpace } from '../components/navigation/TabBar';
-import { Skeleton, SkeletonCard } from '../components/motion/Skeleton';
 import { useStore } from '../store/useStore';
-import { ThemeToggle } from '../components/ThemeToggle';
 import {
-  DashboardData,
-  PredictabilitySnapshot,
-  Liability,
-  FMIResponse,
-  User,
   Asset,
-  IncomeRecord,
-  FamilySummary,
   FamilyDashboard,
+  FamilySummary,
+  FMIResponse,
+  IncomeRecord,
+  Liability,
+  PredictabilitySnapshot,
 } from '../types';
+import { createStyles, Palette, radius, tabular, typeScale, useTheme } from '../theme';
+import { enterUp } from '../motion';
+import { dueDatesWithin } from '../utils/bills';
+import { monthlyEquivalent } from '../utils/format';
+import { AnimatedBar, AnimatedSegment } from '../components/motion/AnimatedBar';
+import { SkeletonCard } from '../components/motion/Skeleton';
+import { useTabBarSpace } from '../components/navigation/TabBar';
+import { Card } from '../components/ui/Card';
+import { Badge, ErrorState, IconTile, MoneyText, SectionHeader } from '../components/ui/Bits';
+import { Ring, Sparkline, svgReady } from '../components/ui/Charts';
+import { ScreenHeader, useHeaderHeight, useScrollHeader } from '../components/ui/ScreenHeader';
 import { FamilyOverviewCard } from '../components/family/FamilyOverviewCard';
 import { UpdateBalanceScreen } from './UpdateBalanceScreen';
 
-import { createStyles, useTheme, Palette } from '../theme';
-const { width: SCREEN_W } = Dimensions.get('window');
+type IconName = React.ComponentProps<typeof Ionicons>['name'];
 
-// ── Design Tokens ──────────────────────────────────────────
-const tokens = (c: Palette) => ({ BLUE: c.primary, BLUE_LIGHT: c.primarySoft, GREEN: c.success, GREEN_LIGHT: c.successSoft, AMBER: c.warning, AMBER_LIGHT: c.warningSoft, RED: c.danger, RED_LIGHT: c.dangerSoft, PURPLE: c.purple, PURPLE_LIGHT: c.purpleSoft, DARK: c.text, GRAY_600: c.textMuted, GRAY_400: c.textSubtle, BORDER: c.border, BG: c.bg });
+const { width: SCREEN_W } = Dimensions.get('window');
+const FEED_W = SCREEN_W - 48;
+// The Monte Carlo forecast is slow, so returning to Home only re-runs it once a minute.
+const HEAVY_REFRESH_MS = 60_000;
 
 // ── Formatting Helpers ─────────────────────────────────────
 function formatCurrency(n: number | null | undefined): string {
@@ -85,39 +74,41 @@ function fmiStatusColor(score: number, c: Palette): { text: string; bg: string; 
   return { text: c.dangerStrong, bg: c.dangerSoft, border: c.dangerSoft, label: 'Needs Attention' };
 }
 
+type FeedItem = {
+  key: string;
+  icon: IconName;
+  tint: string;
+  kicker: string;
+  title: string;
+  body: string;
+  action: string;
+  onPress: () => void;
+};
+
 // ═══════════════════════════════════════════════════════════
-// MAIN DASHBOARD COMPONENT
+// HOME
 // ═══════════════════════════════════════════════════════════
 export function DashboardScreen(): React.ReactElement {
   const { c } = useTheme();
-  const { BLUE, BLUE_LIGHT, GREEN, GREEN_LIGHT, AMBER, AMBER_LIGHT, RED, RED_LIGHT, PURPLE, PURPLE_LIGHT, GRAY_600, GRAY_400 } = tokens(c);
   const styles = useStyles();
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
   const insets = useSafeAreaInsets();
   const tabBarSpace = useTabBarSpace();
-  const { user, setUser, dashboard, setDashboard, goals, setGoals } = useStore();
-
-  // ── Motion: parallax header + staggered card entrance ─────
-  const reducedMotion = useReducedMotion();
-  const scrollY = useSharedValue(0);
-  const onScroll = useAnimatedScrollHandler((e) => { scrollY.value = e.contentOffset.y; });
-  const headerParallax = useAnimatedStyle(() => {
-    if (reducedMotion) return {};
-    const y = Math.max(0, scrollY.value);
-    return {
-      opacity: interpolate(y, [0, 90], [1, 0], Extrapolation.CLAMP),
-      transform: [
-        { translateY: y * 0.45 },
-        { scale: interpolate(y, [0, 90], [1, 0.97], Extrapolation.CLAMP) },
-      ],
-    };
-  });
-  const enter = (i: number) => enterUp(i, 50);
+  const headerHeight = useHeaderHeight();
+  const { y, onScroll } = useScrollHeader({ hidesTabBar: true });
+  const user = useStore((s) => s.user);
+  const setUser = useStore((s) => s.setUser);
+  const dashboard = useStore((s) => s.dashboard);
+  const setDashboard = useStore((s) => s.setDashboard);
+  const goals = useStore((s) => s.goals);
+  const setGoals = useStore((s) => s.setGoals);
 
   // Screen state
   const [loading, setLoading] = useState(!dashboard);
   const [refreshing, setRefreshing] = useState(false);
+  const [loadFailed, setLoadFailed] = useState(false);
   const [showUpdateBalance, setShowUpdateBalance] = useState(false);
+  const [feedPage, setFeedPage] = useState(0);
 
   // Subsystem data
   const [predictability, setPredictability] = useState<PredictabilitySnapshot | null>(null);
@@ -125,7 +116,8 @@ export function DashboardScreen(): React.ReactElement {
   const [fmiData, setFmiData] = useState<FMIResponse | null>(null);
   const [assets, setAssets] = useState<Asset[] | null>(null);
   const [income, setIncome] = useState<IncomeRecord[] | null>(null);
-  const [dataLoaded, setDataLoaded] = useState(false);
+  const loadedRef = useRef(false);
+  const lastHeavyRef = useRef(0);
 
   // Household subsystem data (Contextual / Multi-member only)
   const [familySummary, setFamilySummary] = useState<FamilySummary | null>(null);
@@ -149,23 +141,18 @@ export function DashboardScreen(): React.ReactElement {
         setFamilyDashboard(null);
         return;
       }
-
       const isMultiMember =
         typeof fam.memberCount === 'number'
           ? fam.memberCount > 1
           : Array.isArray(fam.members) && fam.members.length > 1;
-
       setFamilySummary(fam);
-
       if (!isMultiMember) {
         // Sole member: immediately clear dashboard, do not fetch dashboard
         setFamilyDashboard(null);
         return;
       }
-
       // Only fetch family dashboard when an active multi-member family exists
-      const dash = await getFamilyDashboard();
-      setFamilyDashboard(dash);
+      setFamilyDashboard(await getFamilyDashboard());
     } catch {
       // Failure isolation: never throw or break personal Home
       setFamilySummary(null);
@@ -181,104 +168,74 @@ export function DashboardScreen(): React.ReactElement {
 
   // ── Parallel Data Fetcher with Failure Isolation ─────────
   const fetchAllData = useCallback(async (isRefresh = false) => {
-    if (isRefresh) {
-      setRefreshing(true);
-      // Clear stale family state on refresh before re-evaluation
-      setFamilyDashboard(null);
-    } else if (!dataLoaded) {
-      setLoading(true);
-    }
+    const heavy = isRefresh || Date.now() - lastHeavyRef.current > HEAVY_REFRESH_MS;
+    if (heavy) lastHeavyRef.current = Date.now();
+    if (isRefresh) setRefreshing(true);
+    else if (!loadedRef.current) setLoading(true);
 
     // Trigger supplemental family fetch in parallel without blocking main spinner
     void fetchFamilyContext();
 
-    try {
-      const results = await Promise.allSettled([
-        getDashboard(),
-        getPredictability(),
-        getLiabilities(),
-        getFMI(),
-        getUserProfile(),
-        getAssets(),
-        getIncome(),
-        getGoals(),
-      ]);
+    const results = await Promise.allSettled([
+      getDashboard(),
+      heavy ? getPredictability() : Promise.resolve(null),
+      getLiabilities(),
+      getFMI(),
+      getUserProfile(),
+      getAssets(),
+      getIncome(),
+      getGoals(),
+    ]);
+    const [dash, pred, liab, fmi, profile, assetList, incomeList, goalList] = results;
+    if (dash.status === 'fulfilled' && dash.value) setDashboard(dash.value);
+    if (pred.status === 'fulfilled' && pred.value) setPredictability(pred.value);
+    if (liab.status === 'fulfilled' && Array.isArray(liab.value)) setLiabilities(liab.value);
+    if (fmi.status === 'fulfilled' && fmi.value?.current) setFmiData(fmi.value.current);
+    if (profile.status === 'fulfilled' && profile.value) setUser(profile.value);
+    if (assetList.status === 'fulfilled' && Array.isArray(assetList.value)) setAssets(assetList.value);
+    if (incomeList.status === 'fulfilled' && Array.isArray(incomeList.value)) setIncome(incomeList.value);
+    // Savings goals live in the shared store, so GoalPlanner updates show here too
+    if (goalList.status === 'fulfilled' && Array.isArray(goalList.value)) setGoals(goalList.value);
 
-      // 1. Dashboard
-      if (results[0].status === 'fulfilled' && results[0].value) {
-        setDashboard(results[0].value);
-      }
+    // Only the core dashboard decides failure; other cards degrade on their own.
+    setLoadFailed(dash.status === 'rejected');
+    loadedRef.current = true;
+    setLoading(false);
+    setRefreshing(false);
+  }, [fetchFamilyContext, setDashboard, setUser, setGoals]);
 
-      // 2. Predictability
-      if (results[1].status === 'fulfilled' && results[1].value) {
-        setPredictability(results[1].value);
-      }
-
-      // 3. Liabilities
-      if (results[2].status === 'fulfilled' && Array.isArray(results[2].value)) {
-        setLiabilities(results[2].value);
-      }
-
-      // 4. FMI
-      if (results[3].status === 'fulfilled' && results[3].value?.current) {
-        setFmiData(results[3].value.current);
-      }
-
-      // 5. User Profile
-      if (results[4].status === 'fulfilled' && results[4].value) {
-        setUser(results[4].value);
-      }
-
-      // 6. Assets
-      if (results[5].status === 'fulfilled' && Array.isArray(results[5].value)) {
-        setAssets(results[5].value);
-      }
-
-      // 7. Income receipts
-      if (results[6].status === 'fulfilled' && Array.isArray(results[6].value)) {
-        setIncome(results[6].value);
-      }
-
-      // 8. Savings goals (shared store, so GoalPlanner updates show here too)
-      if (results[7].status === 'fulfilled' && Array.isArray(results[7].value)) {
-        setGoals(results[7].value);
-      }
-
-      setDataLoaded(true);
-    } catch {
-      // Non-blocking fallback
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  }, [dataLoaded, fetchFamilyContext, setDashboard, setUser, setGoals]);
-
-  useEffect(() => {
-    fetchAllData();
-  }, [fetchAllData]);
+  // Refresh whenever Home comes back into view (after QuickAdd, Goals, Bills…).
+  useFocusEffect(useCallback(() => { fetchAllData(); }, [fetchAllData]));
 
   // ── Computed Values ───────────────────────────────────────
-  const fmiScore = fmiData?.score ?? dashboard?.fmiScore ?? 50;
-  const fmiConfig = fmiStatusColor(fmiScore, c);
+  const fmiScore = fmiData?.score ?? dashboard?.fmiScore ?? null;
+  const fmiConfig = fmiStatusColor(fmiScore ?? 0, c);
 
   const balance = user?.currentBalance ?? dashboard?.balance ?? 0;
   const incomeThisMonth = dashboard?.totalIncome ?? user?.monthlyIncome ?? predictability?.income?.meanMonthlyIncome ?? 0;
   const spendingThisMonth = dashboard?.wantsNeedsBreakdown?.total ?? fmiData?.totalSpent ?? 0;
   const investmentsThisMonth = dashboard?.wantsNeedsBreakdown?.investments?.amount ?? fmiData?.totalSaved ?? 0;
+  const spentShare = incomeThisMonth > 0 ? Math.min(1, spendingThisMonth / incomeThisMonth) : 0;
 
-  const goalsSummary = (() => {
+  const goalsSummary = useMemo(() => {
     const saved = goals.reduce((sum, g) => sum + (g.savedAmount || 0), 0);
     const target = goals.reduce((sum, g) => sum + (g.targetAmount || 0), 0);
     return { saved, target, pct: target > 0 ? Math.min(1, saved / target) : 0 };
-  })();
+  }, [goals]);
 
   const wantsNeeds = dashboard?.wantsNeedsBreakdown;
-  const hasSpendingData = wantsNeeds && wantsNeeds.total > 0;
+  const hasSpendingData = !!wantsNeeds && wantsNeeds.total > 0;
 
-  // Upcoming liabilities
-  const activeLiabilities = useMemo(() => {
-    return liabilities.filter((l) => !l.status || l.status === 'active');
-  }, [liabilities]);
+  const activeLiabilities = useMemo(() => liabilities.filter((l) => !l.status || l.status === 'active'), [liabilities]);
+  const monthlyBills = activeLiabilities.reduce((s, l) => s + monthlyEquivalent(l.amount, l.frequency), 0);
+
+  // Bills falling due in the next 30 days, derived from each schedule (not only server nextDueDate).
+  const upcomingBills = useMemo(
+    () => activeLiabilities
+      .flatMap((l) => dueDatesWithin(l, 30).slice(0, 1).map((date) => ({ l, date })))
+      .sort((a, b) => a.date.getTime() - b.date.getTime()),
+    [activeLiabilities],
+  );
 
   // Asset summary (simple presentation aggregate only from direct Assets API)
   const assetSummary = useMemo(() => {
@@ -291,885 +248,454 @@ export function DashboardScreen(): React.ReactElement {
   const previewAssets = useMemo(() => {
     if (!assets || assets.length === 0) return [];
     return [...assets]
-      .sort((a, b) => {
-        const ta = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-        const tb = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-        return ta - tb;
-      })
+      .sort((a, b) => (a.createdAt ? new Date(a.createdAt).getTime() : 0) - (b.createdAt ? new Date(b.createdAt).getTime() : 0))
       .slice(0, 2);
   }, [assets]);
 
-  // Latest income receipts for the Home preview
-  const latestReceipts = useMemo(() => {
-    if (!income || income.length === 0) return [];
-    return [...income]
-      .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-      .slice(0, 2);
+  const incomeReceived = useMemo(() => {
+    if (!income) return null;
+    const now = new Date();
+    return income
+      .filter((r) => { const d = new Date(r.timestamp); return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear(); })
+      .reduce((s, r) => s + r.amount, 0);
   }, [income]);
 
-  const nearestLiability = useMemo(() => {
-    const sorted = [...activeLiabilities]
-      .filter((l) => l.nextDueDate)
-      .sort((a, b) => new Date(a.nextDueDate!).getTime() - new Date(b.nextDueDate!).getTime());
-    return sorted[0] || null;
-  }, [activeLiabilities]);
-
-  // Days until nearest liability
-  const daysUntilLiability = useMemo(() => {
-    if (!nearestLiability?.nextDueDate) return null;
-    const due = new Date(nearestLiability.nextDueDate).getTime();
-    const now = new Date().getTime();
-    const diff = Math.ceil((due - now) / (1000 * 60 * 60 * 24));
-    return diff;
-  }, [nearestLiability]);
+  const nearestBill = upcomingBills[0] ?? null;
+  const daysUntilLiability = nearestBill
+    ? Math.round((new Date(nearestBill.date).setHours(0, 0, 0, 0) - new Date().setHours(0, 0, 0, 0)) / 86400000)
+    : null;
 
   // Predictability metrics
   const mcProb = predictability?.probabilistic?.estimatedFire?.probabilityFundedAtTargetAge;
   const targetAge = predictability?.retirement?.retirementAge ?? user?.retirementAge ?? 60;
   const rec = predictability?.probabilistic?.contributionRecommendation;
   const isMcAvailable = predictability?.probabilistic?.available === true && mcProb !== null && mcProb !== undefined;
-  const isMcDegraded = predictability?.probabilistic?.available === true && (predictability?.probabilistic?.dataQuality === 'LOW' || predictability?.probabilistic?.dataQuality === 'INSUFFICIENT');
   const isHistoryInsufficient = predictability?.forecastStatus?.available === false || predictability?.dataQuality?.incomeDataQuality?.dataQualityLevel === 'INSUFFICIENT';
 
   // ── Smart Next Action Logic (Proactive Guidance Driven) ──
-  const smartAction = useMemo(() => {
+  const smartAction = useMemo((): Omit<FeedItem, 'key' | 'onPress'> & { actionTarget: string } => {
     const guidance = predictability?.proactiveGuidance;
 
     // Priority 1: Insufficient history / LIMITED_DATA
     if (guidance?.status === 'LIMITED_DATA' || isHistoryInsufficient || (dashboard?.spendingSeries && dashboard.spendingSeries.length < 2)) {
       return {
-        icon: 'sparkles',
-        iconColor: PURPLE,
-        iconBg: PURPLE_LIGHT,
-        badge: 'Getting Started',
+        icon: 'sparkles', tint: c.purple, kicker: 'Getting Started',
         title: guidance?.headline || 'More Financial History Needed',
-        message: guidance?.explanation || 'Log a few more transactions to build your behavioral history and unlock saving guidance.',
-        actionText: 'Log Transaction',
-        actionTarget: 'Transactions' as const,
+        body: guidance?.explanation || 'Log a few more transactions to build your behavioral history and unlock saving guidance.',
+        action: 'Log a transaction', actionTarget: 'QuickAdd',
       };
     }
-
     // Priority 2: TEMPORARILY_UNAVAILABLE (service down, deterministic still active)
     if (guidance?.status === 'TEMPORARILY_UNAVAILABLE') {
-      return {
-        icon: 'cloud-offline-outline',
-        iconColor: GRAY_400,
-        iconBg: '#F1F5F9',
-        badge: 'Service Notice',
-        title: guidance.headline,
-        message: guidance.explanation,
-        actionText: 'View Forecast',
-        actionTarget: 'FinancialOutlook' as const,
-      };
+      return { icon: 'cloud-offline-outline', tint: c.textSubtle, kicker: 'Service Notice', title: guidance.headline, body: guidance.explanation, action: 'View forecast', actionTarget: 'FinancialOutlook' };
     }
-
     // Priority 3: ON_TRACK
     if (guidance?.status === 'ON_TRACK') {
-      return {
-        icon: 'checkmark-circle',
-        iconColor: GREEN,
-        iconBg: GREEN_LIGHT,
-        badge: 'Plan On Track',
-        title: guidance.headline,
-        message: guidance.explanation,
-        actionText: 'View Outlook',
-        actionTarget: 'FinancialOutlook' as const,
-      };
+      return { icon: 'checkmark-circle', tint: c.success, kicker: 'Plan On Track', title: guidance.headline, body: guidance.explanation, action: 'View outlook', actionTarget: 'FinancialOutlook' };
     }
-
     // Priority 4: IMPROVEMENT_RECOMMENDED
     if (guidance?.status === 'IMPROVEMENT_RECOMMENDED') {
       const isKnownZero = guidance.investmentBaseline === 'KNOWN_ZERO';
       const isAggressive = guidance.feasibilityStatus === 'AGGRESSIVE';
-      const variableNote = guidance.isVariableIncome
-        ? ' Because your income varies, treat this as an average target.'
-        : '';
-
-      let message = guidance.explanation;
+      const variableNote = guidance.isVariableIncome ? ' Because your income varies, treat this as an average target.' : '';
+      let body = guidance.explanation;
       if (guidance.additionalMonthlyContribution != null && guidance.additionalMonthlyContribution > 0 && !isKnownZero) {
-        message = `Increasing monthly investments by ${formatCurrency(guidance.additionalMonthlyContribution)}/mo could improve your modeled retirement path toward age ${targetAge}.${variableNote}`;
+        body = `Investing ${formatCurrency(guidance.additionalMonthlyContribution)}/mo more could improve your modeled retirement path toward age ${targetAge}.${variableNote}`;
       } else if (isKnownZero && guidance.recommendedMonthlyContribution != null) {
-        message = `Starting at approximately ${formatCurrency(guidance.recommendedMonthlyContribution)}/mo could move you toward the modeled funding target.${variableNote}`;
+        body = `Starting at about ${formatCurrency(guidance.recommendedMonthlyContribution)}/mo could move you toward the modeled funding target.${variableNote}`;
       }
-
       return {
-        icon: isKnownZero ? 'rocket-outline' : 'trending-up',
-        iconColor: isAggressive ? AMBER : BLUE,
-        iconBg: isAggressive ? AMBER_LIGHT : BLUE_LIGHT,
-        badge: isKnownZero ? 'Start Investing' : 'Retirement Outlook',
-        title: guidance.headline,
-        message,
-        actionText: 'View Outlook',
-        actionTarget: 'FinancialOutlook' as const,
+        icon: isKnownZero ? 'rocket-outline' : 'trending-up', tint: isAggressive ? c.warning : c.primary,
+        kicker: isKnownZero ? 'Start Investing' : 'Retirement Outlook', title: guidance.headline, body,
+        action: 'View outlook', actionTarget: 'FinancialOutlook',
       };
     }
-
     // Priority 5: ACTION_NEEDED (timeline alternatives)
     if (guidance?.status === 'ACTION_NEEDED') {
       return {
-        icon: 'time-outline',
-        iconColor: AMBER,
-        iconBg: AMBER_LIGHT,
-        badge: 'Action Needed',
-        title: guidance.headline,
-        message: guidance.retirementAlternativeAvailable
-          ? 'Reaching your target at the current retirement age may require a large increase. Extending the timeline could reduce the required monthly amount.'
+        icon: 'time-outline', tint: c.warning, kicker: 'Action Needed', title: guidance.headline,
+        body: guidance.retirementAlternativeAvailable
+          ? 'Reaching your target at the current retirement age may need a large increase. Extending the timeline could lower the monthly amount.'
           : guidance.explanation,
-        actionText: 'View Alternatives',
-        actionTarget: 'FinancialOutlook' as const,
+        action: 'See alternatives', actionTarget: 'FinancialOutlook',
       };
     }
-
-    // Priority 6: Upcoming liability due soon (within 7 days) — non-guidance priority
-    if (nearestLiability && daysUntilLiability !== null && daysUntilLiability >= 0 && daysUntilLiability <= 7) {
+    // Priority 6: Upcoming bill due soon (within 7 days)
+    if (nearestBill && daysUntilLiability !== null && daysUntilLiability >= 0 && daysUntilLiability <= 7) {
       const dueLabel = daysUntilLiability === 0 ? 'today' : daysUntilLiability === 1 ? 'tomorrow' : `in ${daysUntilLiability} days`;
       return {
-        icon: 'calendar',
-        iconColor: AMBER,
-        iconBg: AMBER_LIGHT,
-        badge: 'Upcoming Due Date',
-        title: `${nearestLiability.name} Due ${dueLabel}`,
-        message: `${formatCurrency(nearestLiability.amount)} payment scheduled for ${formatShortDate(nearestLiability.nextDueDate)}${nearestLiability.autoDeduct ? ' (Auto Deduct enabled)' : ''}.`,
-        actionText: 'View Liabilities',
-        actionTarget: 'Liabilities' as const,
+        icon: 'calendar', tint: c.warning, kicker: 'Upcoming Due Date', title: `${nearestBill.l.name} Due ${dueLabel}`,
+        body: `${formatCurrency(nearestBill.l.amount)} payment scheduled for ${formatShortDate(nearestBill.date.toISOString())}${nearestBill.l.autoDeduct ? ' (Auto Deduct enabled)' : ''}.`,
+        action: 'View bills', actionTarget: 'Liabilities',
       };
     }
-
     // Priority 7: Emergency fund gap
     if (predictability?.emergencyFund && predictability.emergencyFund.fundingGap > 0) {
       return {
-        icon: 'shield-checkmark',
-        iconColor: GREEN,
-        iconBg: GREEN_LIGHT,
-        badge: 'Emergency Reserve',
-        title: 'Build Safety Reserve',
-        message: `Your liquid emergency reserve is ${formatCurrency(predictability.emergencyFund.fundingGap)} below the recommended ${predictability.emergencyFund.targetMonths || 6}-month essential buffer.`,
-        actionText: 'View Buffer',
-        actionTarget: 'FinancialOutlook' as const,
+        icon: 'shield-checkmark', tint: c.success, kicker: 'Emergency Reserve', title: 'Build Safety Reserve',
+        body: `Your liquid emergency reserve is ${formatCurrency(predictability.emergencyFund.fundingGap)} below the recommended ${predictability.emergencyFund.targetMonths || 6}-month essential buffer.`,
+        action: 'View buffer', actionTarget: 'FinancialOutlook',
       };
     }
-
     // Priority 8: Fallback — contribution recommendation from raw solver (legacy path / no proactiveGuidance)
     if (rec?.solved && rec.additionalMonthlyContributionRequired > 0) {
       const stepUpText = rec.annualContributionGrowthRate && rec.annualContributionGrowthRate > 0
         ? ` (+${Math.round(rec.annualContributionGrowthRate * 100)}%/yr annual step-up)`
         : '';
       return {
-        icon: 'trending-up',
-        iconColor: BLUE,
-        iconBg: BLUE_LIGHT,
-        badge: 'Retirement Outlook',
-        title: 'Boost Target Confidence',
-        message: `Increasing initial investments by ${formatCurrency(rec.additionalMonthlyContributionRequired)}/mo${stepUpText} improves your modeled retirement path toward age ${targetAge}.`,
-        actionText: 'View Outlook',
-        actionTarget: 'FinancialOutlook' as const,
+        icon: 'trending-up', tint: c.primary, kicker: 'Retirement Outlook', title: 'Boost Target Confidence',
+        body: `Increasing initial investments by ${formatCurrency(rec.additionalMonthlyContributionRequired)}/mo${stepUpText} improves your modeled retirement path toward age ${targetAge}.`,
+        action: 'View outlook', actionTarget: 'FinancialOutlook',
       };
     }
-
     // Priority 9: Default on-track state
     return {
-      icon: 'checkmark-circle',
-      iconColor: GREEN,
-      iconBg: GREEN_LIGHT,
-      badge: 'Plan On Track',
-      title: 'Current Plan Aligned',
-      message: `Your current savings and investment trajectory meets your modeled retirement target for age ${targetAge}.`,
-      actionText: 'View Outlook',
-      actionTarget: 'FinancialOutlook' as const,
+      icon: 'checkmark-circle', tint: c.success, kicker: 'Plan On Track', title: 'Current Plan Aligned',
+      body: `Your current savings and investment trajectory meets your modeled retirement target for age ${targetAge}.`,
+      action: 'View outlook', actionTarget: 'FinancialOutlook',
     };
-  }, [
-    predictability?.proactiveGuidance,
-    isHistoryInsufficient,
-    dashboard?.spendingSeries,
-    rec,
-    targetAge,
-    nearestLiability,
-    daysUntilLiability,
-    predictability?.emergencyFund,
-  ]);
+  }, [predictability?.proactiveGuidance, predictability?.emergencyFund, isHistoryInsufficient, dashboard?.spendingSeries, rec, targetAge, nearestBill, daysUntilLiability, c]);
 
-  // Supporting FMI insight
-  const fmiInsight = useMemo(() => {
-    if (fmiData?.insights && fmiData.insights.length > 0) {
-      return fmiData.insights[0];
-    }
-    if (dashboard?.insights && dashboard.insights.length > 0) {
-      return dashboard.insights[0];
-    }
-    return 'Your saving discipline and spending control determine your overall financial health.';
-  }, [fmiData, dashboard]);
+  // ── Today feed: the smart action first, then nudges from patterns and micro-actions ──
+  const feed = useMemo<FeedItem[]>(() => {
+    const items: FeedItem[] = [{ key: 'smart', ...smartAction, onPress: () => navigation.navigate(smartAction.actionTarget) }];
+    upcomingBills
+      .filter(({ date }) => date.getTime() - Date.now() < 3 * 86400000 && smartAction.actionTarget !== 'Liabilities')
+      .slice(0, 1)
+      .forEach(({ l, date }) => items.push({
+        key: `bill-${l.id}`, icon: 'calendar', tint: c.warning, kicker: 'Due soon', title: `${l.name} · ${formatCurrency(l.amount)}`,
+        body: `Due ${formatShortDate(date.toISOString())}${l.autoDeduct ? '. FINAURA will log it automatically.' : '. Remember to pay it.'}`,
+        action: 'View bills', onPress: () => navigation.navigate('Liabilities'),
+      }));
+    (dashboard?.patterns ?? []).slice(0, 2).forEach((p, i) => items.push({
+      key: `pattern-${i}`, icon: 'pulse', tint: p.severity === 'high' ? c.danger : c.warning, kicker: `${p.emoji} Spending pattern`,
+      title: p.type.replace(/_/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase()), body: p.message,
+      action: 'See transactions', onPress: () => navigation.navigate('Transactions'),
+    }));
+    (dashboard?.microActions ?? []).slice(0, 2).forEach((m) => items.push({
+      key: `micro-${m.id}`, icon: 'flash', tint: c.primary, kicker: `Quick win · ${m.impact}`, title: m.title, body: m.description,
+      action: m.actionText || 'Open plan', onPress: () => navigation.navigate('Plan'),
+    }));
+    return items;
+  }, [smartAction, upcomingBills, dashboard?.patterns, dashboard?.microActions, navigation, c]);
 
   // Greeting
   const greeting = useMemo(() => {
     const hour = new Date().getHours();
-    const timeGreeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+    const timeGreeting = hour < 5 ? 'Good evening' : hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
     const firstName = user?.name ? user.name.trim().split(' ')[0] : 'there';
     return `${timeGreeting}, ${firstName}`;
   }, [user?.name]);
 
-  const todayFormatted = useMemo(() => {
-    return new Date().toLocaleDateString('en-IN', {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'short',
-    });
-  }, []);
+  const todayFormatted = useMemo(
+    () => new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'short' }),
+    [],
+  );
 
-  // ── Loading Skeleton / Spinner ───────────────────────────
-  if (loading && !dataLoaded) {
+  const avatar = user?.avatarLocalUri || user?.avatar;
+  const pillars = fmiData?.pillars
+    ? [
+      { label: 'Saving', score: fmiData.pillars.D1_savingDiscipline?.score ?? 0, color: c.success },
+      { label: 'Spending', score: fmiData.pillars.D2_spendingControl?.score ?? 0, color: c.primary },
+      { label: 'Behaviour', score: fmiData.pillars.D3_behavioralRisk?.score ?? 0, color: c.purple },
+    ]
+    : [];
+
+  // ── Render ───────────────────────────────────────────────
+  const content = () => {
+    if (loading && !loadedRef.current) {
+      return (
+        <View style={styles.body}>
+          {[0, 1, 2].map((i) => <SkeletonCard key={i} style={styles.gap} />)}
+        </View>
+      );
+    }
+    if (loadFailed && !dashboard) return <ErrorState onRetry={() => fetchAllData(true)} />;
+
     return (
-      <View style={[styles.container, styles.content]} accessibilityLabel="Loading your financial pulse">
-        <Skeleton width="55%" height={22} style={{ marginTop: 8 }} />
-        <Skeleton width="35%" height={12} />
-        <SkeletonCard lines={4} />
-        <SkeletonCard lines={3} style={{ backgroundColor: '#1E293B', borderColor: '#1E293B' }} />
-        <SkeletonCard lines={3} />
+      <View style={styles.body}>
+        {/* ── Balance hero ─────────────────────────────── */}
+        <Animated.View entering={enterUp(0)}>
+          <Card variant="hero">
+            <View style={styles.heroTop}>
+              <View style={styles.heroMain}>
+                <Text style={styles.heroLabel}>Current balance</Text>
+                <Text style={styles.heroValue} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6}>
+                  {formatCurrency(balance)}
+                </Text>
+              </View>
+              <Pressable
+                style={styles.updateBalanceBtn}
+                onPress={() => setShowUpdateBalance(true)}
+                accessibilityRole="button"
+                accessibilityLabel="Update Current Balance"
+              >
+                <Ionicons name="create-outline" size={14} color={c.onAurora} />
+                <Text style={styles.updateBalanceText}>Update</Text>
+              </Pressable>
+            </View>
+
+            <View style={styles.heroBottom}>
+              <Ring progress={spentShare} size={74} stroke={8} color="#FFFFFF" trackColor="rgba(255,255,255,0.18)">
+                <Text style={styles.ringPct}>{Math.round(spentShare * 100)}%</Text>
+              </Ring>
+              <View style={styles.heroStats}>
+                <Text style={styles.heroCaption} numberOfLines={2}>
+                  {incomeThisMonth > 0 ? `of this month's ${formatCurrency(incomeThisMonth)} income spent` : 'Log income to track your pace'}
+                </Text>
+                <View style={styles.heroChips}>
+                  <View style={styles.heroChip}>
+                    <Text style={styles.heroChipLabel}>Spent</Text>
+                    <Text style={styles.heroChipValue} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>{formatCurrency(spendingThisMonth)}</Text>
+                  </View>
+                  <View style={styles.heroChip}>
+                    <Text style={styles.heroChipLabel}>Invested</Text>
+                    <Text style={styles.heroChipValue} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>{formatCurrency(investmentsThisMonth)}</Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </Card>
+        </Animated.View>
+
+        {/* ── Today feed ───────────────────────────────── */}
+        <SectionHeader title="Today" />
+        <ScrollView
+          horizontal
+          pagingEnabled={false}
+          snapToInterval={FEED_W + 12}
+          decelerationRate="fast"
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.feed}
+          onMomentumScrollEnd={(e) => setFeedPage(Math.round(e.nativeEvent.contentOffset.x / (FEED_W + 12)))}
+        >
+          {feed.map((item, i) => (
+            <Animated.View key={item.key} entering={enterUp(i + 1)} style={{ width: FEED_W }}>
+              <Card onPress={item.onPress} style={styles.feedCard} accessibilityLabel={`${item.kicker}: ${item.title}. ${item.action}`}>
+                <View style={styles.feedTop}>
+                  <IconTile icon={item.icon} tint={item.tint} size={36} />
+                  <Text style={[styles.feedKicker, { color: item.tint }]} numberOfLines={1}>{item.kicker}</Text>
+                </View>
+                <Text style={styles.feedTitle} numberOfLines={2}>{item.title}</Text>
+                <Text style={styles.feedBody} numberOfLines={3}>{item.body}</Text>
+                <View style={styles.feedAction}>
+                  <Text style={styles.feedActionText}>{item.action}</Text>
+                  <Ionicons name="arrow-forward" size={14} color={c.primary} />
+                </View>
+              </Card>
+            </Animated.View>
+          ))}
+        </ScrollView>
+        {feed.length > 1 && (
+          <View style={styles.pager}>
+            {feed.map((f, i) => <View key={f.key} style={[styles.pagerDot, i === feedPage && styles.pagerDotOn]} />)}
+          </View>
+        )}
+
+        {/* ── Financial health ─────────────────────────── */}
+        <SectionHeader title="Financial health" action="Details" onAction={() => navigation.navigate('FMI')} />
+        <Card onPress={() => navigation.navigate('FMI')} style={styles.fmiCard} accessibilityLabel="View Financial Health Details">
+          <View style={styles.fmiScoreRow}>
+            <Ring progress={(fmiScore ?? 0) / 100} size={84} stroke={9} color={fmiConfig.text}>
+              <Text style={[styles.fmiScore, { color: fmiConfig.text }]}>{fmiScore ?? '—'}</Text>
+            </Ring>
+            <View style={styles.fmiText}>
+              <Badge label={fmiScore === null ? 'Not enough data' : fmiConfig.label} tone={fmiScore === null ? 'neutral' : fmiScore >= 70 ? 'success' : fmiScore >= 45 ? 'warning' : 'danger'} />
+              <Text style={styles.fmiInsight} numberOfLines={3}>
+                {fmiData?.insights?.[0] ?? dashboard?.insights?.[0] ?? 'Your saving discipline and spending control shape your score.'}
+              </Text>
+            </View>
+          </View>
+          {pillars.length > 0 && (
+            <View style={styles.pillars}>
+              {pillars.map((p, i) => (
+                <View key={p.label} style={styles.pillar}>
+                  <View style={styles.pillarTop}>
+                    <Text style={styles.pillarLabel}>{p.label}</Text>
+                    <Text style={styles.pillarScore}>{Math.round(p.score)}</Text>
+                  </View>
+                  <AnimatedBar progress={p.score / 100} color={p.color} height={5} delay={i * 120} />
+                </View>
+              ))}
+            </View>
+          )}
+        </Card>
+
+        {/* ── Spending ─────────────────────────────────── */}
+        <SectionHeader title="Spending this month" action="Activity" onAction={() => navigation.navigate('Transactions')} />
+        <Card onPress={() => navigation.navigate('Transactions')} accessibilityLabel="View Spending and Transactions">
+          <View style={styles.spendTop}>
+            <MoneyText value={spendingThisMonth} style={styles.spendValue} />
+            {svgReady && (dashboard?.spendingSeries?.length ?? 0) > 1 && <Text style={styles.spendHint}>daily trend</Text>}
+          </View>
+          {svgReady && (dashboard?.spendingSeries?.length ?? 0) > 1 && <Sparkline data={dashboard!.spendingSeries} height={52} style={styles.spark} />}
+          {hasSpendingData ? (
+            <>
+              <View style={styles.track}>
+                {wantsNeeds!.needs.pct > 0 && <AnimatedSegment pct={wantsNeeds!.needs.pct} color={c.info} delay={0} />}
+                {wantsNeeds!.wants.pct > 0 && <AnimatedSegment pct={wantsNeeds!.wants.pct} color={c.warning} delay={150} />}
+                {wantsNeeds!.investments.pct > 0 && <AnimatedSegment pct={wantsNeeds!.investments.pct} color={c.success} delay={300} />}
+              </View>
+              <View style={styles.legend}>
+                {[
+                  { label: 'Needs', color: c.info, v: wantsNeeds!.needs },
+                  { label: 'Wants', color: c.warning, v: wantsNeeds!.wants },
+                  { label: 'Invest', color: c.success, v: wantsNeeds!.investments },
+                ].map((x) => (
+                  <View key={x.label} style={styles.legendItem}>
+                    <View style={[styles.legendDot, { backgroundColor: x.color }]} />
+                    <Text style={styles.legendLabel}>{x.label}</Text>
+                    <Text style={styles.legendValue} numberOfLines={1}>{formatCurrency(x.v.amount)}</Text>
+                  </View>
+                ))}
+              </View>
+            </>
+          ) : (
+            <Text style={styles.muted}>No spending logged this month yet. Tap + to add your first.</Text>
+          )}
+        </Card>
+
+        {/* ── Goals ────────────────────────────────────── */}
+        <SectionHeader title="Goals" action="See all" onAction={() => navigation.navigate('Goals')} />
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.goalRow}>
+          {goals.slice(0, 5).map((g, i) => {
+            const pct = g.targetAmount > 0 ? Math.min(1, g.savedAmount / g.targetAmount) : 0;
+            return (
+              <Card key={g.id} onPress={() => navigation.navigate('Goals')} style={styles.goalCard} accessibilityLabel={`${g.name}, ${Math.round(pct * 100)}% saved`}>
+                <Text style={styles.goalEmoji}>{g.emoji || '🎯'}</Text>
+                <Text style={styles.goalName} numberOfLines={1}>{g.name}</Text>
+                <Text style={styles.goalAmount} numberOfLines={1}>{formatCurrency(g.savedAmount)}</Text>
+                <AnimatedBar progress={pct} color={pct >= 1 ? c.success : c.primary} height={6} delay={i * 100} style={styles.goalBar} />
+                <Text style={styles.goalOf} numberOfLines={1}>of {formatCurrency(g.targetAmount)}</Text>
+              </Card>
+            );
+          })}
+          <Card onPress={() => navigation.navigate('Goals')} style={[styles.goalCard, styles.goalNew]} accessibilityLabel="Open Savings Goals">
+            <Ionicons name="add-circle" size={28} color={c.primary} />
+            <Text style={styles.goalNewText}>{goals.length ? 'New goal' : 'Start a goal'}</Text>
+            {goals.length > 0 && <Text style={styles.goalOf}>{Math.round(goalsSummary.pct * 100)}% of all goals</Text>}
+          </Card>
+        </ScrollView>
+
+        {/* ── Bills ────────────────────────────────────── */}
+        <SectionHeader title="Coming up" action="Bills" onAction={() => navigation.navigate('Liabilities')} />
+        <Card padded={false} style={styles.list}>
+          {upcomingBills.length === 0 ? (
+            <Pressable onPress={() => navigation.navigate('Liabilities')} accessibilityRole="button" accessibilityLabel="View Liabilities and Scheduled Deductions">
+              <Text style={styles.listEmpty}>
+                {activeLiabilities.length ? 'Nothing due in the next 30 days.' : 'Add rent, EMIs or subscriptions to see what’s due.'}
+              </Text>
+            </Pressable>
+          ) : (
+            upcomingBills.slice(0, 3).map(({ l, date }, i) => (
+              <Pressable key={l.id} onPress={() => navigation.navigate('Liabilities')} style={[styles.billRow, i > 0 && styles.divider]} accessibilityRole="button" accessibilityLabel={`${l.name}, ${formatCurrency(l.amount)}, due ${formatShortDate(date.toISOString())}`}>
+                <View style={styles.datePill}>
+                  <Text style={styles.datePillDay}>{date.getDate()}</Text>
+                  <Text style={styles.datePillMonth}>{date.toLocaleDateString('en-IN', { month: 'short' })}</Text>
+                </View>
+                <View style={styles.flexShrink}>
+                  <Text style={styles.rowTitle} numberOfLines={1}>{l.name}</Text>
+                  <Text style={styles.rowSub}>{l.autoDeduct ? 'Auto deduct' : 'Pay manually'} · {l.frequency}</Text>
+                </View>
+                <Text style={styles.rowAmount}>{formatCurrency(l.amount)}</Text>
+              </Pressable>
+            ))
+          )}
+        </Card>
+
+        {/* ── Money tiles ──────────────────────────────── */}
+        <SectionHeader title="Your money" />
+        <View style={styles.manageCard}>
+          <Card onPress={() => navigation.navigate('Assets')} style={styles.tile} accessibilityLabel="View all assets">
+            <IconTile icon="pie-chart" tint={c.info} size={34} />
+            <Text style={styles.tileLabel}>Assets</Text>
+            <Text style={styles.tileValue} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>
+              {assetSummary ? formatCurrency(assetSummary.totalValue) : '—'}
+            </Text>
+            <Text style={styles.tileSub} numberOfLines={2}>
+              {assetSummary === null ? 'Loading…' : assetSummary.count === 0 ? 'No assets logged yet — tap to add your first.' : previewAssets.map((a) => a.name).join(', ')}
+            </Text>
+          </Card>
+          <Card onPress={() => navigation.navigate('IncomeFlow')} style={styles.tile} accessibilityLabel="View, Log and Manage Income Receipts">
+            <IconTile icon="wallet" tint={c.purple} size={34} />
+            <Text style={styles.tileLabel}>Income</Text>
+            <Text style={styles.tileValue} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>
+              {incomeReceived === null ? '—' : formatCurrency(incomeReceived)}
+            </Text>
+            <Text style={styles.tileSub} numberOfLines={2}>received this month</Text>
+          </Card>
+          <Card onPress={() => navigation.navigate('Liabilities')} style={styles.tile} accessibilityLabel="View Liabilities and Scheduled Deductions">
+            <IconTile icon="calendar" tint={c.warning} size={34} />
+            <Text style={styles.tileLabel}>Bills</Text>
+            <Text style={styles.tileValue} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>{formatCurrency(monthlyBills)}</Text>
+            <Text style={styles.tileSub} numberOfLines={2}>{activeLiabilities.length} active · per month</Text>
+          </Card>
+        </View>
+
+        {/* ── Outlook teaser ───────────────────────────── */}
+        <SectionHeader title="Future outlook" action="Open" onAction={() => navigation.navigate('FinancialOutlook')} />
+        <Card onPress={() => navigation.navigate('FinancialOutlook')} style={styles.outlook} accessibilityLabel="View Financial Outlook and Monte Carlo Simulation">
+          <View style={styles.outlookProbCircleContainer}>
+            <Ring progress={isMcAvailable ? (mcProb as number) : 0} size={88} stroke={9} color={isMcAvailable && (mcProb as number) >= 0.75 ? c.success : c.warning}>
+              <View style={styles.outlookProbCircle}>
+                <Text style={styles.outlookProbValue}>{isMcAvailable ? Math.round((mcProb as number) * 100) : '—'}</Text>
+                <Text style={styles.outlookProbDenominator}>/100</Text>
+              </View>
+            </Ring>
+          </View>
+          <View style={styles.flexShrink}>
+            <View style={styles.outlookProbPill}>
+              <Text style={styles.outlookProbPillText}>{isMcAvailable ? ((mcProb as number) >= 0.75 ? 'On track' : 'Needs attention') : 'Calculating'}</Text>
+            </View>
+            <Text style={styles.outlookTitle} numberOfLines={2}>Modeled chance of a fully funded retirement</Text>
+            <Text style={styles.outlookSub} numberOfLines={2}>Target age {targetAge} · 10,000 market paths simulated</Text>
+          </View>
+        </Card>
+
+        {/* ── Household ────────────────────────────────── */}
+        {hasActiveHousehold && familyDashboard ? (
+          <Animated.View entering={enterUp(2)} style={styles.family}>
+            <FamilyOverviewCard dashboard={familyDashboard} onPressViewDetails={() => navigation.navigate('Family')} />
+          </Animated.View>
+        ) : null}
       </View>
     );
-  }
+  };
 
   return (
     <View style={styles.container}>
       <Animated.ScrollView
-        style={styles.screen}
-        contentContainerStyle={[styles.content, { paddingTop: insets.top + 8, paddingBottom: tabBarSpace }]}
-        showsVerticalScrollIndicator={false}
         onScroll={onScroll}
         scrollEventThrottle={16}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={() => fetchAllData(true)}
-            tintColor={BLUE}
-            colors={[BLUE]}
-          />
-        }
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingTop: insets.top + 8, paddingBottom: tabBarSpace }}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => fetchAllData(true)} tintColor={c.primary} />}
       >
-        {/* ── A. HEADER ────────────────────────────────────── */}
-        <Animated.View entering={enter(0)}>
-        <Animated.View style={[styles.headerRow, headerParallax]}>
-          <View style={styles.headerLeft}>
-            <Text style={styles.headerGreeting} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8}>
-              {greeting}
-            </Text>
-            <Text style={styles.headerSubtitle} numberOfLines={1}>
-              {todayFormatted} · Live Financial Pulse
-            </Text>
+        {/* Greeting */}
+        <View style={styles.header}>
+          <View style={styles.flexShrink}>
+            <Text style={styles.greeting} numberOfLines={1}>{greeting}</Text>
+            <Text style={styles.date} numberOfLines={1}>{todayFormatted}</Text>
           </View>
-          <View style={styles.headerActions}>
-          <ThemeToggle />
-          <TouchableOpacity
-            style={styles.profileAvatarBtn}
-            onPress={() => (navigation as any).navigate('Profile')}
-            activeOpacity={0.8}
-            accessibilityLabel="View User Profile"
-          >
-            {user?.avatarLocalUri || user?.avatar ? (
-              <Image
-                key={user.avatarLocalUri || (user.avatar as string).slice(-24)}
-                source={{ uri: (user.avatarLocalUri || user.avatar) as string }}
-                style={styles.profileAvatarImg}
-              />
-            ) : (
-              <Ionicons name="person-circle-outline" size={36} color={BLUE} />
-            )}
-          </TouchableOpacity>
-          </View>
-        </Animated.View>
-        </Animated.View>
-
-        {/* ── B. CURRENT FINANCIAL HEALTH (FMI) ─────────────── */}
-        <Animated.View entering={enter(1)}>
-        <TouchableOpacity
-          style={styles.fmiCard}
-          activeOpacity={0.88}
-          onPress={() => (navigation as any).navigate('FMI')}
-          accessibilityLabel="View Financial Health Details"
-        >
-          <View style={styles.fmiCardHeader}>
-            <View style={styles.fmiTitleRow}>
-              <View style={styles.fmiIconBadge}>
-                <Ionicons name="pulse" size={18} color={c.successStrong} />
-              </View>
-              <Text style={styles.cardTitle} numberOfLines={1}>
-                Financial Health
-              </Text>
-            </View>
-            <View style={[styles.statusPill, { backgroundColor: fmiConfig.bg, borderColor: fmiConfig.border }]}>
-              <Text style={[styles.statusPillText, { color: fmiConfig.text }]} numberOfLines={1}>
-                {fmiConfig.label}
-              </Text>
-            </View>
-          </View>
-
-          <View style={styles.fmiScoreRow}>
-            <View style={styles.fmiScoreWrap}>
-              <Text
-                style={[styles.fmiScoreNumber, { color: fmiConfig.text }]}
-                numberOfLines={1}
-                adjustsFontSizeToFit
-                minimumFontScale={0.8}
-              >
-                <AnimatedNumber value={Math.round(fmiScore)} format={(n) => String(n)} />
-              </Text>
-              <Text style={styles.fmiScoreDenominator}>/100</Text>
-            </View>
-            <View style={styles.fmiInsightWrap}>
-              <Text style={styles.fmiInsightText} numberOfLines={2}>
-                {fmiInsight}
-              </Text>
-            </View>
-          </View>
-
-          {/* FMI Pillar Progress Bars */}
-          {fmiData?.pillars && (
-            <View style={styles.pillarRow}>
-              <View style={styles.pillarItem}>
-                <Text style={styles.pillarLabel} numberOfLines={1}>Saving</Text>
-                <AnimatedBar progress={Math.min(100, Math.max(5, fmiData.pillars.D1_savingDiscipline.score)) / 100} color={GREEN} trackColor={c.surfaceAlt} height={6} delay={200} />
-              </View>
-              <View style={styles.pillarItem}>
-                <Text style={styles.pillarLabel} numberOfLines={1}>Discipline</Text>
-                <AnimatedBar progress={Math.min(100, Math.max(5, fmiData.pillars.D2_spendingControl.score)) / 100} color={BLUE} trackColor={c.surfaceAlt} height={6} delay={200} />
-              </View>
-              <View style={styles.pillarItem}>
-                <Text style={styles.pillarLabel} numberOfLines={1}>Stability</Text>
-                <AnimatedBar progress={Math.min(100, Math.max(5, fmiData.pillars.D3_behavioralRisk.score)) / 100} color={PURPLE} trackColor={c.surfaceAlt} height={6} delay={200} />
-              </View>
-            </View>
-          )}
-
-          <View style={styles.cardActionRow}>
-            <Text style={styles.cardActionLink}>View Financial Health breakdown</Text>
-            <Ionicons name="chevron-forward" size={14} color={BLUE} />
-          </View>
-        </TouchableOpacity>
-        </Animated.View>
-
-        {/* ── C. CASH POSITION / MONTH SNAPSHOT ────────────── */}
-        <Animated.View entering={enter(2)}>
-        <View style={styles.cashSection}>
-          {/* Main Current Balance Card */}
-          <View style={styles.balanceHeroCard}>
-            <View style={styles.balanceHeader}>
-              <Text style={styles.balanceLabel} numberOfLines={1}>Current Balance</Text>
-              <TouchableOpacity
-                style={styles.updateBalanceBtn}
-                onPress={() => setShowUpdateBalance(true)}
-                activeOpacity={0.8}
-                accessibilityLabel="Update Current Balance"
-              >
-                <Ionicons name="create-outline" size={14} color="#FFFFFF" />
-                <Text style={styles.updateBalanceBtnText}>Update</Text>
-              </TouchableOpacity>
-            </View>
-            <Text
-              style={styles.balanceAmount}
-              numberOfLines={1}
-              adjustsFontSizeToFit
-              minimumFontScale={0.7}
-            >
-              <AnimatedNumber value={balance ?? 0} format={formatCurrency} />
-            </Text>
-
-            {/* 3-Column Monthly Cash Flow Grid */}
-            <View style={styles.cashGrid}>
-              <TouchableOpacity
-                style={styles.cashCol}
-                onPress={() => (navigation as any).navigate('IncomeFlow')}
-                activeOpacity={0.75}
-                accessibilityLabel="Manage Income Streams and History"
-              >
-                <Text style={styles.cashColLabel} numberOfLines={1}>Income ↗</Text>
-                <Text
-                  style={[styles.cashColValue, { color: '#6EE7B7' }]}
-                  numberOfLines={1}
-                  adjustsFontSizeToFit
-                  minimumFontScale={0.75}
-                >
-                  <AnimatedNumber value={incomeThisMonth ?? 0} format={formatCurrency} />
-                </Text>
-              </TouchableOpacity>
-              <View style={styles.cashColDivider} />
-              <View style={styles.cashCol}>
-                <Text style={styles.cashColLabel} numberOfLines={1}>Spent</Text>
-                <Text
-                  style={[styles.cashColValue, { color: '#FCD34D' }]}
-                  numberOfLines={1}
-                  adjustsFontSizeToFit
-                  minimumFontScale={0.75}
-                >
-                  <AnimatedNumber value={spendingThisMonth ?? 0} format={formatCurrency} />
-                </Text>
-              </View>
-              <View style={styles.cashColDivider} />
-              <View style={styles.cashCol}>
-                <Text style={styles.cashColLabel} numberOfLines={1}>Invested</Text>
-                <Text
-                  style={[styles.cashColValue, { color: '#C4B5FD' }]}
-                  numberOfLines={1}
-                  adjustsFontSizeToFit
-                  minimumFontScale={0.75}
-                >
-                  <AnimatedNumber value={investmentsThisMonth ?? 0} format={formatCurrency} />
-                </Text>
-              </View>
-            </View>
-          </View>
+          <Pressable onPress={() => navigation.navigate('Profile')} style={styles.avatar} accessibilityRole="button" accessibilityLabel="View User Profile">
+            {avatar ? <Image source={{ uri: avatar }} style={styles.avatarImg} /> : <Ionicons name="person" size={20} color={c.primary} />}
+          </Pressable>
         </View>
-        </Animated.View>
-
-        {/* ── CONTEXTUAL HOUSEHOLD OVERVIEW ───────────────── */}
-        {hasActiveHousehold && familyDashboard ? (
-          <Animated.View entering={enter(3)}>
-            <FamilyOverviewCard
-              dashboard={familyDashboard}
-              onPressViewDetails={() => (navigation as any).navigate('Family')}
-            />
-          </Animated.View>
-        ) : null}
-
-        {/* ── SAVINGS GOALS (PIGGY BANK) ──────────────────── */}
-        <Animated.View entering={enter(3)}>
-          <PressableScale
-            style={styles.goalsCard}
-            onPress={() => (navigation as any).navigate('Goals')}
-            accessibilityLabel="Open Savings Goals"
-          >
-            <PiggyBank progress={goalsSummary.pct} from={0} size={72} />
-            <View style={{ flex: 1, gap: 4 }}>
-              <Text style={styles.cardTitle} numberOfLines={1}>Savings Goals</Text>
-              {goals.length > 0 ? (
-                <>
-                  <AnimatedNumber value={goalsSummary.saved} format={formatCurrency} style={styles.goalsSaved} numberOfLines={1} adjustsFontSizeToFit />
-                  <AnimatedBar progress={goalsSummary.pct} color={GREEN} trackColor={c.surfaceAlt} height={6} delay={300} />
-                  <Text style={styles.goalsMeta} numberOfLines={1}>
-                    {Math.round(goalsSummary.pct * 100)}% of {formatCurrency(goalsSummary.target)} · {goals.length} goal{goals.length === 1 ? '' : 's'}
-                  </Text>
-                </>
-              ) : (
-                <Text style={styles.goalsMeta} numberOfLines={2}>Start a goal and fill your piggy bank one deposit at a time.</Text>
-              )}
-            </View>
-            <Ionicons name="chevron-forward" size={16} color={GRAY_400} />
-          </PressableScale>
-        </Animated.View>
-
-        {/* ── F. PREDICTABILITY SNAPSHOT (FUTURE OUTLOOK) ───── */}
-        <Animated.View entering={enter(4)}>
-        <TouchableOpacity
-          style={styles.outlookCard}
-          activeOpacity={0.88}
-          onPress={() => (navigation as any).navigate('FinancialOutlook')}
-          accessibilityLabel="View Financial Outlook and Monte Carlo Simulation"
-        >
-          <View style={styles.outlookCardHeader}>
-            <View style={styles.outlookTitleRow}>
-              <View style={styles.outlookIconBadge}>
-                <Ionicons name="compass" size={18} color={BLUE} />
-              </View>
-              <Text style={styles.cardTitle}>Future Outlook</Text>
-            </View>
-            <View style={styles.outlookPill}>
-              <Text style={styles.outlookPillText}>FIRE & Monte Carlo</Text>
-            </View>
-          </View>
-
-          {isMcAvailable ? (
-            <View style={styles.outlookBody}>
-              <View style={styles.outlookProbRow}>
-                <View style={styles.outlookProbCircleContainer}>
-                  <View style={styles.outlookProbCircle}>
-                    <Text
-                      style={styles.outlookProbPercent}
-                      numberOfLines={1}
-                      adjustsFontSizeToFit
-                      minimumFontScale={0.7}
-                    >
-                      {Math.round((mcProb || 0) * 100)}
-                    </Text>
-                    <Text style={styles.outlookProbDenominator}>/100</Text>
-                  </View>
-                  <View style={styles.outlookProbPill}>
-                    <Text style={styles.outlookProbPillText} numberOfLines={1}>
-                      {(mcProb || 0) >= 0.75
-                        ? 'Good Predictability'
-                        : (mcProb || 0) >= 0.5
-                          ? 'Fair Predictability'
-                          : 'Action Needed'}
-                    </Text>
-                  </View>
-                </View>
-                <View style={styles.outlookProbInfo}>
-                  <Text style={styles.outlookProbHeadline} numberOfLines={2}>
-                    Modeled chance of fully funded retirement
-                  </Text>
-                  <Text style={styles.outlookProbSubtitle} numberOfLines={2}>
-                    Target Age {targetAge} · 10,000 market paths simulated
-                  </Text>
-                </View>
-              </View>
-
-              {/* Recommendation summary note */}
-              {rec && rec.solved && (
-                <View style={styles.outlookRecBanner}>
-                  <Ionicons
-                    name={rec.additionalMonthlyContributionRequired > 0 ? 'arrow-up-circle' : 'checkmark-circle'}
-                    size={16}
-                    color={rec.additionalMonthlyContributionRequired > 0 ? BLUE : GREEN}
-                  />
-                  <Text style={styles.outlookRecText} numberOfLines={2}>
-                    {rec.additionalMonthlyContributionRequired > 0
-                      ? `Recommended initial monthly investment: ${formatCurrency(rec.recommendedMonthlyContribution)}/mo`
-                      : `Current plan meets the ${Math.round((rec.targetProbability || 0.75) * 100)}% modeled target.`}
-                  </Text>
-                </View>
-              )}
-            </View>
-          ) : isMcDegraded ? (
-            <View style={styles.outlookDegradedBody}>
-              <Text style={styles.outlookDegradedTitle}>Probabilistic Model Calibrating</Text>
-              <Text style={styles.outlookDegradedText} numberOfLines={3}>
-                Market volatility is derived from your expected return. Deterministic projection is active.
-              </Text>
-            </View>
-          ) : (
-            <View style={styles.outlookEmptyBody}>
-              <Text style={styles.outlookEmptyTitle}>More History Needed for Monte Carlo</Text>
-              <Text style={styles.outlookEmptyText} numberOfLines={3}>
-                Log recurring transactions and incomes to activate 10,000-path probabilistic forecasts.
-              </Text>
-            </View>
-          )}
-
-          <View style={styles.cardActionRow}>
-            <Text style={styles.cardActionLink}>View full Financial Outlook & simulations</Text>
-            <Ionicons name="chevron-forward" size={14} color={BLUE} />
-          </View>
-        </TouchableOpacity>
-        </Animated.View>
-
-        {/* ── D. SPENDING SNAPSHOT (NEEDS vs WANTS) ─────────── */}
-        <Animated.View entering={enter(5)}>
-        <TouchableOpacity
-          style={styles.spendingCard}
-          activeOpacity={0.88}
-          onPress={() => (navigation as any).navigate('Transactions')}
-          accessibilityLabel="View Spending and Transactions"
-        >
-          <View style={styles.cardHeader}>
-            <View style={styles.cardTitleRow}>
-              <View style={[styles.iconBadge, { backgroundColor: AMBER_LIGHT }]}>
-                <Ionicons name="pie-chart" size={18} color={AMBER} />
-              </View>
-              <Text style={styles.cardTitle}>Spending Snapshot</Text>
-            </View>
-            <Text style={styles.headerTimeframe}>This Month</Text>
-          </View>
-
-          {hasSpendingData && wantsNeeds ? (
-            <View style={styles.spendingBody}>
-              {/* Segmented Proportion Bar */}
-              <View style={styles.segmentedTrack}>
-                {wantsNeeds.needs.pct > 0 && (
-                  <AnimatedSegment pct={wantsNeeds.needs.pct} color={GREEN} delay={0} style={styles.segment} />
-                )}
-                {wantsNeeds.wants.pct > 0 && (
-                  <AnimatedSegment pct={wantsNeeds.wants.pct} color={AMBER} delay={150} style={styles.segment} />
-                )}
-                {wantsNeeds.investments.pct > 0 && (
-                  <AnimatedSegment pct={wantsNeeds.investments.pct} color={PURPLE} delay={300} style={styles.segment} />
-                )}
-              </View>
-
-              {/* 3 Categories Breakdown */}
-              <View style={styles.spendingLegendRow}>
-                <View style={styles.spendingLegendItem}>
-                  <View style={[styles.legendDot, { backgroundColor: GREEN }]} />
-                  <Text style={styles.legendLabel} numberOfLines={1}>Needs</Text>
-                  <Text
-                    style={styles.legendAmount}
-                    numberOfLines={1}
-                    adjustsFontSizeToFit
-                    minimumFontScale={0.75}
-                  >
-                    {formatCurrency(wantsNeeds.needs.amount)}
-                  </Text>
-                  <Text style={styles.legendPct} numberOfLines={1}>({wantsNeeds.needs.pct}%)</Text>
-                </View>
-                <View style={styles.spendingLegendItem}>
-                  <View style={[styles.legendDot, { backgroundColor: AMBER }]} />
-                  <Text style={styles.legendLabel} numberOfLines={1}>Wants</Text>
-                  <Text
-                    style={styles.legendAmount}
-                    numberOfLines={1}
-                    adjustsFontSizeToFit
-                    minimumFontScale={0.75}
-                  >
-                    {formatCurrency(wantsNeeds.wants.amount)}
-                  </Text>
-                  <Text style={styles.legendPct} numberOfLines={1}>({wantsNeeds.wants.pct}%)</Text>
-                </View>
-                <View style={styles.spendingLegendItem}>
-                  <View style={[styles.legendDot, { backgroundColor: PURPLE }]} />
-                  <Text style={styles.legendLabel} numberOfLines={1}>Invest</Text>
-                  <Text
-                    style={styles.legendAmount}
-                    numberOfLines={1}
-                    adjustsFontSizeToFit
-                    minimumFontScale={0.75}
-                  >
-                    {formatCurrency(wantsNeeds.investments.amount)}
-                  </Text>
-                  <Text style={styles.legendPct} numberOfLines={1}>({wantsNeeds.investments.pct}%)</Text>
-                </View>
-              </View>
-            </View>
-          ) : (
-            <View style={styles.emptyInlineState}>
-              <Text style={styles.emptyInlineText}>No transactions recorded yet this month.</Text>
-            </View>
-          )}
-
-          <View style={styles.cardActionRow}>
-            <Text style={styles.cardActionLink}>View all categorized transactions</Text>
-            <Ionicons name="chevron-forward" size={14} color={BLUE} />
-          </View>
-        </TouchableOpacity>
-        </Animated.View>
-
-        {/* ── E. MANAGE · ASSETS / INCOME / LIABILITIES ─────── */}
-        <Animated.View entering={enter(6)}>
-        <View style={styles.manageCard}>
-        {/* Assets */}
-        <TouchableOpacity
-          style={styles.manageSection}
-          activeOpacity={0.7}
-          onPress={() => (navigation as any).navigate('Assets')}
-          accessibilityLabel="View and Manage Financial Assets"
-        >
-          <View style={styles.cardHeader}>
-            <View style={styles.cardTitleRow}>
-              <View style={[styles.iconBadge, { backgroundColor: GREEN_LIGHT }]}>
-                <Ionicons name="pie-chart" size={18} color={GREEN} />
-              </View>
-              <Text style={styles.cardTitle} numberOfLines={1}>Assets</Text>
-            </View>
-            {assetSummary && assetSummary.count > 0 && (
-              <View style={styles.countBadge}>
-                <Text style={styles.countBadgeText} numberOfLines={1}>{assetSummary.count} logged</Text>
-              </View>
-            )}
-          </View>
-
-          {previewAssets.length > 0 ? (
-            <View style={styles.miniList}>
-              {previewAssets.map((a) => (
-                <View key={a.id} style={styles.miniRow}>
-                  <View style={styles.miniInfo}>
-                    <Text style={styles.miniName} numberOfLines={1}>{a.name}</Text>
-                    <Text style={styles.miniSub} numberOfLines={1}>{a.assetType}</Text>
-                  </View>
-                  <Text
-                    style={styles.miniAmount}
-                    numberOfLines={1}
-                    adjustsFontSizeToFit
-                    minimumFontScale={0.8}
-                  >
-                    {formatCurrency(a.currentValue)}
-                  </Text>
-                </View>
-              ))}
-            </View>
-          ) : (
-            <View style={styles.emptyInlineState}>
-              <Text style={styles.emptyInlineText}>
-                {assets !== null
-                  ? 'No assets logged yet — tap to add your first.'
-                  : 'Track your FDs, mutual funds, stocks & more.'}
-              </Text>
-            </View>
-          )}
-
-          <View style={styles.manageSectionAction}>
-            <Text style={styles.cardActionLink}>View all assets</Text>
-            <Ionicons name="chevron-forward" size={14} color={BLUE} />
-          </View>
-        </TouchableOpacity>
-
-        <View style={styles.manageDivider} />
-
-        {/* Income receipts */}
-        <TouchableOpacity
-          style={styles.manageSection}
-          activeOpacity={0.7}
-          onPress={() => (navigation as any).navigate('IncomeFlow')}
-          accessibilityLabel="View, Log and Manage Income Receipts"
-        >
-          <View style={styles.cardHeader}>
-            <View style={styles.cardTitleRow}>
-              <View style={[styles.iconBadge, { backgroundColor: BLUE_LIGHT }]}>
-                <Ionicons name="wallet" size={18} color={BLUE} />
-              </View>
-              <Text style={styles.cardTitle} numberOfLines={1}>Income Receipts</Text>
-            </View>
-            {income && income.length > 0 && (
-              <View style={styles.countBadge}>
-                <Text style={styles.countBadgeText} numberOfLines={1}>{income.length} logged</Text>
-              </View>
-            )}
-          </View>
-
-          {latestReceipts.length > 0 ? (
-            <View style={styles.miniList}>
-              {latestReceipts.map((r) => (
-                <View key={r.id} style={styles.miniRow}>
-                  <View style={styles.miniInfo}>
-                    <Text style={styles.miniName} numberOfLines={1}>
-                      {r.description || r.source || 'Income'}
-                    </Text>
-                    <Text style={styles.miniSub} numberOfLines={1}>
-                      {r.source
-                        ? `${r.source} · ${formatShortDate(r.timestamp)}`
-                        : formatShortDate(r.timestamp)}
-                    </Text>
-                  </View>
-                  <Text
-                    style={[styles.miniAmount, { color: GREEN }]}
-                    numberOfLines={1}
-                    adjustsFontSizeToFit
-                    minimumFontScale={0.8}
-                  >
-                    +{formatCurrency(r.amount)}
-                  </Text>
-                </View>
-              ))}
-            </View>
-          ) : (
-            <View style={styles.emptyInlineState}>
-              <Text style={styles.emptyInlineText}>
-                {income !== null
-                  ? 'No receipts logged yet — tap to log income.'
-                  : 'Log salary, freelance & other receipts.'}
-              </Text>
-            </View>
-          )}
-
-          <View style={styles.manageSectionAction}>
-            <Text style={styles.cardActionLink}>View all logged receipts</Text>
-            <Ionicons name="chevron-forward" size={14} color={BLUE} />
-          </View>
-        </TouchableOpacity>
-
-        <View style={styles.manageDivider} />
-
-        {/* Upcoming liabilities */}
-        <TouchableOpacity
-          style={styles.manageSection}
-          activeOpacity={0.7}
-          onPress={() => (navigation as any).navigate('Liabilities')}
-          accessibilityLabel="View Liabilities and Scheduled Deductions"
-        >
-          <View style={styles.cardHeader}>
-            <View style={styles.cardTitleRow}>
-              <View style={[styles.iconBadge, { backgroundColor: RED_LIGHT }]}>
-                <Ionicons name="calendar-outline" size={18} color={RED} />
-              </View>
-              <Text style={styles.cardTitle} numberOfLines={1}>Upcoming Liabilities</Text>
-            </View>
-            {activeLiabilities.length > 0 && (
-              <View style={styles.countBadge}>
-                <Text style={styles.countBadgeText} numberOfLines={1}>{activeLiabilities.length} active</Text>
-              </View>
-            )}
-          </View>
-
-          {nearestLiability ? (
-            <View style={styles.miniList}>
-              <View style={styles.miniRow}>
-                <View style={styles.liabilityIconWrap}>
-                  <Ionicons
-                    name={nearestLiability.autoDeduct ? 'flash' : 'time-outline'}
-                    size={18}
-                    color={nearestLiability.autoDeduct ? BLUE : GRAY_600}
-                  />
-                </View>
-                <View style={styles.miniInfo}>
-                  <Text style={styles.miniName} numberOfLines={1}>{nearestLiability.name}</Text>
-                  <Text style={styles.miniSub} numberOfLines={1}>
-                    Due {formatShortDate(nearestLiability.nextDueDate)}
-                    {daysUntilLiability !== null && daysUntilLiability >= 0
-                      ? ` (${daysUntilLiability === 0 ? 'Today' : `in ${daysUntilLiability}d`})`
-                      : ''}
-                    {nearestLiability.autoDeduct ? ' · Auto Deduct' : ''}
-                  </Text>
-                </View>
-                <Text
-                  style={styles.miniAmount}
-                  numberOfLines={1}
-                  adjustsFontSizeToFit
-                  minimumFontScale={0.8}
-                >
-                  {formatCurrency(nearestLiability.amount)}
-                </Text>
-              </View>
-            </View>
-          ) : (
-            <View style={styles.emptyInlineState}>
-              <Text style={styles.emptyInlineText}>No recurring liabilities or auto-deductions scheduled.</Text>
-            </View>
-          )}
-
-          <View style={styles.manageSectionAction}>
-            <Text style={styles.cardActionLink}>View all commitments</Text>
-            <Ionicons name="chevron-forward" size={14} color={BLUE} />
-          </View>
-        </TouchableOpacity>
-        </View>
-        </Animated.View>
-
-        {/* ── G. SMART NEXT ACTION ─────────────────────────── */}
-        <Animated.View entering={enter(7)}>
-        <TouchableOpacity
-          style={styles.smartActionCard}
-          activeOpacity={0.88}
-          onPress={() => (navigation as any).navigate(smartAction.actionTarget)}
-          accessibilityLabel={`Smart Next Action: ${smartAction.title}`}
-        >
-          <View style={styles.smartActionHeader}>
-            <View style={[styles.smartActionIconWrap, { backgroundColor: smartAction.iconBg }]}>
-              <Ionicons name={smartAction.icon as any} size={20} color={smartAction.iconColor} />
-            </View>
-            <View style={styles.smartActionTitleWrap}>
-              <View style={styles.smartActionBadge}>
-                <Text style={styles.smartActionBadgeText} numberOfLines={1}>{smartAction.badge}</Text>
-              </View>
-              <Text style={styles.smartActionTitle} numberOfLines={1}>{smartAction.title}</Text>
-            </View>
-          </View>
-          <Text style={styles.smartActionMessage} numberOfLines={3}>{smartAction.message}</Text>
-          <View style={styles.smartActionButtonRow}>
-            <Text style={styles.smartActionBtnText} numberOfLines={1}>{smartAction.actionText}</Text>
-            <Ionicons name="arrow-forward" size={14} color={BLUE} />
-          </View>
-        </TouchableOpacity>
-        </Animated.View>
+        {content()}
       </Animated.ScrollView>
+      {/* Blurs in once content scrolls under the status bar. */}
+      <ScreenHeader title="Home" y={y} />
 
-      {/* Update Balance Modal */}
       <Modal
         visible={showUpdateBalance}
-        transparent
         animationType="slide"
-        onRequestClose={() => {
-          setShowUpdateBalance(false);
-          fetchAllData(true);
-        }}
+        presentationStyle="pageSheet"
+        onRequestClose={() => setShowUpdateBalance(false)}
       >
         <UpdateBalanceScreen
           onClose={() => {
             setShowUpdateBalance(false);
-            fetchAllData(true);
+            fetchAllData();
           }}
         />
       </Modal>
@@ -1180,837 +706,102 @@ export function DashboardScreen(): React.ReactElement {
 // ═══════════════════════════════════════════════════════════
 // STYLES
 // ═══════════════════════════════════════════════════════════
-const useStyles = createStyles((c) => {
-  const { BLUE, BLUE_LIGHT, GREEN, GREEN_LIGHT, PURPLE, PURPLE_LIGHT, DARK, GRAY_600, GRAY_400, BORDER, BG } = tokens(c);
-  return {
-  container: {
-    flex: 1,
-    backgroundColor: BG,
-    position: 'relative',
-  },
-  screen: {
-    flex: 1,
-    backgroundColor: BG,
-  },
-  content: {
-    padding: 16,
-    gap: 16,
-    paddingBottom: 48,
-  },
-  goalsCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 14,
-    backgroundColor: c.surface,
-    borderRadius: 20,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: BORDER,
-  },
-  goalsSaved: {
-    fontSize: 20,
-    fontWeight: '800',
-    color: DARK,
-  },
-  goalsMeta: {
-    fontSize: 12,
-    color: GRAY_600,
-  },
+const useStyles = createStyles((c) => ({
+  container: { flex: 1, backgroundColor: c.bg },
+  body: { paddingHorizontal: 16 },
+  gap: { marginBottom: 12 },
+  flexShrink: { flex: 1, flexShrink: 1 },
+  muted: { ...typeScale.body, color: c.textMuted, marginTop: 8 },
+  header: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 20, paddingTop: 8, paddingBottom: 18 },
+  greeting: { ...typeScale.title, fontSize: 26, color: c.text },
+  date: { ...typeScale.caption, color: c.textMuted, marginTop: 2 },
+  avatar: { width: 44, height: 44, borderRadius: 22, overflow: 'hidden', alignItems: 'center', justifyContent: 'center', backgroundColor: c.primarySoft },
+  avatarImg: { width: '100%', height: '100%' },
 
-  // Loading State
-  loadingContainer: {
-    flex: 1,
-    backgroundColor: BG,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 24,
-    gap: 12,
-  },
-  loadingTitle: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: DARK,
-    marginTop: 8,
-  },
-  loadingSubtitle: {
-    fontSize: 13,
-    color: GRAY_600,
-    textAlign: 'center',
-    lineHeight: 18,
-  },
+  heroTop: { flexDirection: 'row', alignItems: 'flex-start', gap: 12 },
+  heroMain: { flex: 1, flexShrink: 1 },
+  heroLabel: { ...typeScale.caption, color: c.onAuroraMuted },
+  heroValue: { ...typeScale.display, fontSize: 38, color: c.onAurora, marginTop: 2, ...tabular },
+  updateBalanceBtn: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 12, paddingVertical: 7, borderRadius: radius.pill, backgroundColor: 'rgba(255,255,255,0.16)' },
+  updateBalanceText: { fontSize: 13, fontWeight: '700', color: c.onAurora },
+  heroBottom: { flexDirection: 'row', alignItems: 'center', gap: 16, marginTop: 18 },
+  ringPct: { fontSize: 16, fontWeight: '800', color: c.onAurora, ...tabular },
+  heroStats: { flex: 1, flexShrink: 1 },
+  heroCaption: { ...typeScale.caption, color: c.onAuroraMuted },
+  heroChips: { flexDirection: 'row', gap: 8, marginTop: 10 },
+  heroChip: { flex: 1, paddingHorizontal: 10, paddingVertical: 8, borderRadius: radius.md, backgroundColor: 'rgba(255,255,255,0.12)' },
+  heroChipLabel: { fontSize: 11, color: c.onAuroraMuted },
+  heroChipValue: { ...typeScale.headline, fontSize: 15, color: c.onAurora, marginTop: 1, ...tabular },
 
-  // Header
-  headerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 4,
-    gap: 8,
-  },
-  headerLeft: {
-    flex: 1,
-    flexShrink: 1,
-  },
-  headerGreeting: {
-    fontSize: 22,
-    fontWeight: '800',
-    color: DARK,
-    letterSpacing: -0.5,
-  },
-  headerSubtitle: {
-    fontSize: 13,
-    color: GRAY_600,
-    fontWeight: '500',
-    marginTop: 2,
-  },
-  headerActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  profileAvatarBtn: {
-    padding: 4,
-    flexShrink: 0,
-  },
-  profileAvatarImg: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: BLUE_LIGHT,
-  },
+  feed: { gap: 12, paddingRight: 16 },
+  feedCard: { minHeight: 176 },
+  feedTop: { flexDirection: 'row', alignItems: 'center', gap: 10 },
+  feedKicker: { ...typeScale.overline, flexShrink: 1 },
+  feedTitle: { ...typeScale.headline, color: c.text, marginTop: 12 },
+  feedBody: { ...typeScale.body, fontSize: 14, color: c.textMuted, marginTop: 4 },
+  feedAction: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 'auto', paddingTop: 10 },
+  feedActionText: { ...typeScale.label, color: c.primary },
+  pager: { flexDirection: 'row', justifyContent: 'center', gap: 6, marginTop: 10 },
+  pagerDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: c.borderStrong },
+  pagerDotOn: { width: 16, backgroundColor: c.primary },
 
-  // Manage card (Assets / Income / Liabilities previews clubbed in one rectangle)
-  manageCard: {
-    backgroundColor: c.surface,
-    borderRadius: 20,
-    paddingHorizontal: 16,
-    borderWidth: 1,
-    borderColor: BORDER,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 3,
-  },
-  manageSection: {
-    paddingVertical: 16,
-  },
-  manageDivider: {
-    height: 1,
-    backgroundColor: c.surfaceAlt,
-    marginLeft: 44,
-  },
-  manageSectionAction: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 12,
-  },
-  miniList: {
-    gap: 10,
-  },
-  miniRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  miniInfo: {
-    flex: 1,
-    flexShrink: 1,
-  },
-  miniName: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: DARK,
-  },
-  miniSub: {
-    fontSize: 11,
-    fontWeight: '500',
-    color: GRAY_600,
-    marginTop: 2,
-  },
-  miniAmount: {
-    fontSize: 13,
-    fontWeight: '800',
-    color: DARK,
-    flexShrink: 0,
-    maxWidth: 128,
-  },
+  fmiCard: {},
+  fmiScoreRow: { flexDirection: 'row', alignItems: 'center', gap: 16 },
+  fmiScore: { fontSize: 26, fontWeight: '800', ...tabular },
+  fmiText: { flex: 1, flexShrink: 1, gap: 8 },
+  fmiInsight: { ...typeScale.body, fontSize: 14, color: c.textMuted },
+  pillars: { flexDirection: 'row', gap: 12, marginTop: 16 },
+  pillar: { flex: 1, gap: 6 },
+  pillarTop: { flexDirection: 'row', justifyContent: 'space-between' },
+  pillarLabel: { fontSize: 12, color: c.textMuted },
+  pillarScore: { fontSize: 12, fontWeight: '700', color: c.text, ...tabular },
 
-  // Card Base
-  cardTitle: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: DARK,
-    letterSpacing: -0.2,
-  },
-  cardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
-    gap: 6,
-  },
-  cardTitleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    flex: 1,
-    flexShrink: 1,
-  },
-  iconBadge: {
-    width: 32,
-    height: 32,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexShrink: 0,
-  },
-  cardActionRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingTop: 12,
-    marginTop: 12,
-    borderTopWidth: 1,
-    borderTopColor: BORDER,
-  },
-  cardActionLink: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: BLUE,
-  },
+  spendTop: { flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between' },
+  spendValue: { ...typeScale.title, color: c.text },
+  spendHint: { ...typeScale.caption, color: c.textSubtle },
+  spark: { marginTop: 8, marginHorizontal: -4 },
+  track: { flexDirection: 'row', height: 10, borderRadius: 5, overflow: 'hidden', backgroundColor: c.surfaceAlt, marginTop: 14 },
+  legend: { flexDirection: 'row', marginTop: 12 },
+  legendItem: { flex: 1, gap: 2 },
+  legendDot: { width: 8, height: 8, borderRadius: 4 },
+  legendLabel: { fontSize: 12, color: c.textMuted, marginTop: 4 },
+  legendValue: { fontSize: 14, fontWeight: '700', color: c.text, ...tabular },
 
-  // FMI Financial Health Card
-  fmiCard: {
-    backgroundColor: c.surface,
-    borderRadius: 20,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: BORDER,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 3,
-  },
-  fmiCardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
-    gap: 6,
-  },
-  fmiTitleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    flex: 1,
-    flexShrink: 1,
-  },
-  fmiIconBadge: {
-    width: 32,
-    height: 32,
-    borderRadius: 8,
-    backgroundColor: GREEN_LIGHT,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexShrink: 0,
-  },
-  statusPill: {
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 12,
-    borderWidth: 1,
-    flexShrink: 0,
-  },
-  statusPillText: {
-    fontSize: 11,
-    fontWeight: '700',
-  },
-  fmiScoreRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 14,
-    marginBottom: 12,
-  },
-  fmiScoreWrap: {
-    flexDirection: 'row',
-    alignItems: 'baseline',
-    flexShrink: 0,
-  },
-  fmiScoreNumber: {
-    fontSize: 38,
-    fontWeight: '800',
-    letterSpacing: -1,
-  },
-  fmiScoreDenominator: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: GRAY_400,
-    marginLeft: 2,
-  },
-  fmiInsightWrap: {
-    flex: 1,
-    flexShrink: 1,
-  },
-  fmiInsightText: {
-    fontSize: 13,
-    color: GRAY_600,
-    lineHeight: 18,
-    fontWeight: '500',
-  },
-  pillarRow: {
-    flexDirection: 'row',
-    gap: 8,
-    marginTop: 4,
-  },
-  pillarItem: {
-    flex: 1,
-    minWidth: 50,
-  },
-  pillarLabel: {
-    fontSize: 10,
-    fontWeight: '600',
-    color: GRAY_600,
-    marginBottom: 4,
-  },
-  pillarTrack: {
-    height: 6,
-    backgroundColor: c.surfaceAlt,
-    borderRadius: 3,
-    overflow: 'hidden',
-  },
-  pillarFill: {
-    height: '100%',
-    borderRadius: 3,
-  },
+  goalRow: { gap: 10, paddingRight: 16 },
+  goalCard: { width: 148, padding: 14 },
+  goalEmoji: { fontSize: 24 },
+  goalName: { fontSize: 14, fontWeight: '600', color: c.text, marginTop: 8 },
+  goalAmount: { ...typeScale.headline, color: c.text, marginTop: 2, ...tabular },
+  goalBar: { marginTop: 8 },
+  goalOf: { fontSize: 11, color: c.textSubtle, marginTop: 6 },
+  goalNew: { alignItems: 'center', justifyContent: 'center', borderStyle: 'dashed', borderWidth: 1.5, borderColor: c.borderStrong, backgroundColor: 'transparent', boxShadow: 'none' },
+  goalNewText: { ...typeScale.label, color: c.primary, marginTop: 6 },
 
-  // Cash Section / Hero Balance
-  cashSection: {
-    gap: 12,
-  },
-  balanceHeroCard: {
-    backgroundColor: '#1E293B',
-    borderRadius: 20,
-    padding: 16,
-    shadowColor: '#0F172A',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 10,
-    elevation: 5,
-  },
-  balanceHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 6,
-    gap: 8,
-  },
-  balanceLabel: {
-    fontSize: 13,
-    color: c.textSubtle,
-    fontWeight: '600',
-    flexShrink: 1,
-  },
-  updateBalanceBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 12,
-    flexShrink: 0,
-  },
-  updateBalanceBtnText: {
-    fontSize: 11,
-    color: '#FFFFFF',
-    fontWeight: '600',
-  },
-  balanceAmount: {
-    fontSize: 32,
-    fontWeight: '800',
-    color: '#FFFFFF',
-    letterSpacing: -1,
-    marginBottom: 14,
-  },
-  cashGrid: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.07)',
-    borderRadius: 14,
-    paddingVertical: 10,
-    paddingHorizontal: 6,
-  },
-  cashCol: {
-    flex: 1,
-    alignItems: 'center',
-    paddingHorizontal: 2,
-  },
-  cashColLabel: {
-    fontSize: 11,
-    color: c.textSubtle,
-    fontWeight: '600',
-    marginBottom: 2,
-  },
-  cashColValue: {
-    fontSize: 13,
-    fontWeight: '700',
-  },
-  cashColDivider: {
-    width: 1,
-    height: 24,
-    backgroundColor: 'rgba(255, 255, 255, 0.12)',
-  },
+  list: { paddingHorizontal: 14, paddingVertical: 4 },
+  listEmpty: { ...typeScale.body, color: c.textMuted, paddingVertical: 14, textAlign: 'center' },
+  billRow: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 12 },
+  divider: { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: c.border },
+  datePill: { width: 44, paddingVertical: 6, alignItems: 'center', borderRadius: radius.sm, backgroundColor: c.warningSoft },
+  datePillDay: { ...typeScale.headline, color: c.warningStrong, ...tabular },
+  datePillMonth: { fontSize: 10, fontWeight: '700', color: c.warningStrong },
+  rowTitle: { fontSize: 15, fontWeight: '600', color: c.text },
+  rowSub: { fontSize: 12, color: c.textMuted, marginTop: 2 },
+  rowAmount: { fontSize: 15, fontWeight: '700', color: c.text, ...tabular },
 
-  // Future Outlook (Predictability)
-  outlookCard: {
-    backgroundColor: c.surface,
-    borderRadius: 20,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: c.primarySoft,
-    shadowColor: BLUE,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 8,
-    elevation: 3,
-  },
-  outlookCardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
-    gap: 6,
-  },
-  outlookTitleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    flex: 1,
-    flexShrink: 1,
-  },
-  outlookIconBadge: {
-    width: 32,
-    height: 32,
-    borderRadius: 8,
-    backgroundColor: BLUE_LIGHT,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexShrink: 0,
-  },
-  outlookPill: {
-    backgroundColor: PURPLE_LIGHT,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 10,
-    flexShrink: 0,
-  },
-  outlookPillText: {
-    fontSize: 10,
-    fontWeight: '700',
-    color: PURPLE,
-  },
-  outlookBody: {
-    gap: 10,
-  },
-  outlookProbRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 14,
-  },
-  outlookProbCircleContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexShrink: 0,
-  },
-  outlookProbCircle: {
-    width: 66,
-    height: 66,
-    borderRadius: 33,
-    backgroundColor: BLUE_LIGHT,
-    borderWidth: 2,
-    borderColor: BLUE,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 2,
-  },
-  outlookProbPercent: {
-    fontSize: 20,
-    fontWeight: '800',
-    color: BLUE,
-    lineHeight: 22,
-    letterSpacing: -0.5,
-  },
-  outlookProbDenominator: {
-    fontSize: 10,
-    fontWeight: '700',
-    color: GRAY_400,
-    marginTop: -2,
-  },
-  outlookProbPill: {
-    marginTop: 4,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 6,
-    backgroundColor: BLUE_LIGHT,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  outlookProbPillText: {
-    fontSize: 9,
-    fontWeight: '700',
-    color: BLUE,
-    textAlign: 'center',
-  },
-  outlookProbInfo: {
-    flex: 1,
-    flexShrink: 1,
-  },
-  outlookProbHeadline: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: DARK,
-    lineHeight: 18,
-  },
-  outlookProbSubtitle: {
-    fontSize: 12,
-    color: GRAY_600,
-    marginTop: 2,
-    lineHeight: 16,
-  },
-  outlookRecBanner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    backgroundColor: c.bg,
-    padding: 10,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: BORDER,
-  },
-  outlookRecText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: DARK,
-    flex: 1,
-    lineHeight: 16,
-  },
-  outlookDegradedBody: {
-    paddingVertical: 8,
-  },
-  outlookDegradedTitle: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: DARK,
-  },
-  outlookDegradedText: {
-    fontSize: 12,
-    color: GRAY_600,
-    marginTop: 2,
-    lineHeight: 16,
-  },
-  outlookEmptyBody: {
-    paddingVertical: 8,
-  },
-  outlookEmptyTitle: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: DARK,
-  },
-  outlookEmptyText: {
-    fontSize: 12,
-    color: GRAY_600,
-    marginTop: 2,
-    lineHeight: 16,
-  },
+  manageCard: { flexDirection: 'row', gap: 10 },
+  tile: { flex: 1, padding: 14, minHeight: 150 },
+  tileLabel: { fontSize: 12, color: c.textMuted, marginTop: 10 },
+  tileValue: { ...typeScale.headline, color: c.text, marginTop: 2, ...tabular },
+  tileSub: { fontSize: 11, color: c.textSubtle, marginTop: 4 },
 
-  // Spending Snapshot
-  spendingCard: {
-    backgroundColor: c.surface,
-    borderRadius: 20,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: BORDER,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 3,
-  },
-  headerTimeframe: {
-    fontSize: 11,
-    fontWeight: '600',
-    color: GRAY_600,
-    flexShrink: 0,
-  },
-  spendingBody: {
-    gap: 12,
-  },
-  segmentedTrack: {
-    flexDirection: 'row',
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: c.surfaceAlt,
-    overflow: 'hidden',
-  },
-  segment: {
-    height: '100%',
-  },
-  spendingLegendRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 4,
-  },
-  spendingLegendItem: {
-    alignItems: 'center',
-    flex: 1,
-    minWidth: 50,
-  },
-  legendDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    marginBottom: 4,
-  },
-  legendLabel: {
-    fontSize: 11,
-    fontWeight: '600',
-    color: GRAY_600,
-  },
-  legendAmount: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: DARK,
-    marginTop: 1,
-  },
-  legendPct: {
-    fontSize: 10,
-    color: GRAY_400,
-    marginTop: 1,
-  },
-
-  // Liabilities Card
-  liabilityCard: {
-    backgroundColor: c.surface,
-    borderRadius: 20,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: BORDER,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 3,
-  },
-  countBadge: {
-    backgroundColor: c.surfaceAlt,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 10,
-    flexShrink: 0,
-  },
-  countBadgeText: {
-    fontSize: 11,
-    fontWeight: '600',
-    color: GRAY_600,
-  },
-  liabilityItemRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    paddingVertical: 4,
-  },
-  liabilityIconWrap: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: c.bg,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: BORDER,
-    flexShrink: 0,
-  },
-  liabilityInfo: {
-    flex: 1,
-    flexShrink: 1,
-  },
-  liabilityName: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: DARK,
-  },
-  liabilityDueDate: {
-    fontSize: 12,
-    color: GRAY_600,
-    marginTop: 2,
-  },
-  liabilityAmount: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: DARK,
-    flexShrink: 0,
-    marginLeft: 4,
-  },
-
-  // Smart Next Action Card
-  smartActionCard: {
-    backgroundColor: c.surface,
-    borderRadius: 20,
-    padding: 16,
-    borderWidth: 1.5,
-    borderColor: c.primarySoft,
-    shadowColor: BLUE,
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.08,
-    shadowRadius: 10,
-    elevation: 4,
-  },
-  smartActionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    marginBottom: 8,
-  },
-  smartActionIconWrap: {
-    width: 38,
-    height: 38,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexShrink: 0,
-  },
-  smartActionTitleWrap: {
-    flex: 1,
-    flexShrink: 1,
-  },
-  smartActionBadge: {
-    alignSelf: 'flex-start',
-    backgroundColor: c.primarySoft,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 6,
-    marginBottom: 2,
-  },
-  smartActionBadgeText: {
-    fontSize: 10,
-    fontWeight: '700',
-    color: BLUE,
-    textTransform: 'uppercase',
-  },
-  smartActionTitle: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: DARK,
-  },
-  smartActionMessage: {
-    fontSize: 13,
-    color: GRAY_600,
-    lineHeight: 18,
-    marginBottom: 10,
-  },
-  smartActionButtonRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    alignSelf: 'flex-start',
-  },
-  smartActionBtnText: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: BLUE,
-  },
-
-  // Assets Card
-  assetsCard: {
-    backgroundColor: c.surface,
-    borderRadius: 20,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: c.successSoft,
-    shadowColor: GREEN,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 8,
-    elevation: 3,
-  },
-  assetsBody: {
-    gap: 8,
-  },
-  assetsMetricRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: 8,
-  },
-  assetsMetric: {
-    flex: 1,
-    alignItems: 'center',
-    paddingHorizontal: 2,
-  },
-  assetsMetricLabel: {
-    fontSize: 11,
-    fontWeight: '600',
-    color: GRAY_600,
-    marginBottom: 2,
-  },
-  assetsMetricValue: {
-    fontSize: 15,
-    fontWeight: '800',
-    color: DARK,
-  },
-  assetsMetricDivider: {
-    width: 1,
-    height: 28,
-    backgroundColor: BORDER,
-  },
-  assetsBufferRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    backgroundColor: c.bg,
-    padding: 8,
-    borderRadius: 10,
-  },
-  assetsBufferText: {
-    fontSize: 12,
-    fontWeight: '500',
-    color: GRAY_600,
-    flex: 1,
-    lineHeight: 16,
-  },
-  assetsDirectRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 2,
-  },
-  assetsDirectLabel: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: GRAY_600,
-  },
-  assetsDirectValue: {
-    fontSize: 16,
-    fontWeight: '800',
-    color: DARK,
-  },
-  assetsDirectSubtext: {
-    fontSize: 12,
-    color: GRAY_600,
-    marginTop: 2,
-  },
-
-  // Empty Inline States
-  emptyInlineState: {
-    paddingVertical: 8,
-  },
-  emptyInlineText: {
-    fontSize: 12,
-    color: GRAY_600,
-    fontStyle: 'italic',
-  },
-};
-});
+  outlook: { flexDirection: 'row', alignItems: 'center', gap: 16 },
+  outlookProbCircleContainer: { alignItems: 'center', justifyContent: 'center' },
+  outlookProbCircle: { alignItems: 'center' },
+  outlookProbValue: { fontSize: 24, fontWeight: '800', color: c.text, ...tabular },
+  outlookProbDenominator: { fontSize: 11, color: c.textSubtle, marginTop: -2 },
+  outlookProbPill: { alignSelf: 'flex-start', paddingHorizontal: 8, paddingVertical: 3, borderRadius: radius.pill, backgroundColor: c.primarySoft },
+  outlookProbPillText: { fontSize: 11, fontWeight: '700', color: c.primary },
+  outlookTitle: { ...typeScale.headline, fontSize: 15, color: c.text, marginTop: 8 },
+  outlookSub: { ...typeScale.caption, color: c.textMuted, marginTop: 4 },
+  family: { marginTop: 24 },
+}));

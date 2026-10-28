@@ -197,8 +197,8 @@ test('Route Integrity 4: Assets can be reached directly from Home (Dashboard)', 
     'Dashboard has direct navigation to Assets screen'
   );
   assert.ok(
-    content.includes('Financial Assets'),
-    'Dashboard includes Financial Assets card'
+    content.includes('accessibilityLabel="View all assets"'),
+    'Dashboard includes an Assets tile'
   );
 });
 

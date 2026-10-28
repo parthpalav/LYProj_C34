@@ -177,10 +177,7 @@ test('11. Dashboard Assets card works for new users and error states', () => {
   
   // Card must be visible even without predictability
   assert.ok(code.includes('No assets logged yet — tap to add your first.'), 'Zero-assets empty state');
-  assert.ok(
-    code.includes("Track your FDs") || code.includes("mutual funds"),
-    'Pre-load placeholder message'
-  );
+  assert.ok(code.includes("assetSummary === null ? 'Loading…'"), 'Pre-load placeholder message');
   assert.ok(code.includes('View all assets'), 'View all assets action link always present');
   assert.ok(code.includes("navigate('Assets')"), 'Assets navigation always available');
 });

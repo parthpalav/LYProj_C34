@@ -248,7 +248,7 @@ export function ProfileScreen(): React.ReactElement {
     { icon: 'wallet', tint: c.purple, title: 'Income streams', subtitle: 'Salary and other receipts', route: 'IncomeFlow' },
     { icon: 'flag', tint: c.success, title: 'Savings goals', subtitle: 'What you are saving towards', route: 'Goals' },
     { icon: 'calendar', tint: c.warning, title: 'Bills', subtitle: 'Recurring payments and auto-deductions', route: 'Liabilities' },
-    { icon: 'people', tint: c.chart[3], title: 'Family & household', subtitle: 'Shared view, private transactions', route: 'Family' },
+    { icon: 'people-outline', tint: c.chart[3], title: 'Family & Household', subtitle: 'Combined finances, shared insights & invitations', route: 'Family' },
   ];
 
   return (
@@ -306,7 +306,7 @@ export function ProfileScreen(): React.ReactElement {
             <View style={s.groupInner}>
               {links.map((l, i) => (
                 <View key={l.route} style={i > 0 && s.divider}>
-                  <ListRow icon={l.icon} tint={l.tint} title={l.title} subtitle={l.subtitle} onPress={() => navigation.navigate(l.route)} />
+                  <ListRow icon={l.icon} tint={l.tint} title={l.title} subtitle={l.subtitle} onPress={() => navigation.navigate(l.route)} accessibilityLabel={`${l.title}, ${l.subtitle}`} />
                 </View>
               ))}
             </View>

@@ -415,8 +415,8 @@ test('Visibility Test 25: Accessibility labels and roles present on FamilyOvervi
     'FMIScreen household card must have descriptive accessibilityLabel'
   );
   assert.ok(
-    profileCode.includes('Family & Household') &&
-    profileCode.includes('accessibilityLabel="Family & Household'),
+    profileCode.includes("title: 'Family & Household'") &&
+    profileCode.includes('accessibilityLabel={`${l.title}, ${l.subtitle}`}'),
     'ProfileScreen Family & Household entry must remain unconditional with accessibilityLabel'
   );
 });
@@ -427,15 +427,15 @@ test('Visibility Test 25: Accessibility labels and roles present on FamilyOvervi
 
 test('Family UX 1. Profile includes Family & Household entry in Section D', () => {
   assert.ok(profileCode.includes('Family & Household'), 'Title "Family & Household" is present');
-  assert.ok(profileCode.includes("navigate('Family')"), 'Navigation to "Family" route is wired');
+  assert.ok(profileCode.includes("route: 'Family'") && profileCode.includes('navigation.navigate(l.route)'), 'Navigation to "Family" route is wired');
   assert.ok(profileCode.includes('people-outline'), 'Uses people-outline Ionicons icon');
   assert.ok(
     profileCode.includes('Combined finances, shared insights & invitations'),
     'Descriptive subtitle is present'
   );
   assert.ok(
-    profileCode.includes('accessibilityLabel="Family & Household, Combined finances, shared insights & invitations"'),
-    'Accessibility label is defined'
+    profileCode.includes('accessibilityLabel={`${l.title}, ${l.subtitle}`}'),
+    'Accessibility label is defined (title and subtitle)'
   );
 });
 

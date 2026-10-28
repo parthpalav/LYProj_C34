@@ -12,7 +12,7 @@ function detectBehavioralPatterns(transactions = []) {
 
   // 1. Food spike
   const foodTxs = transactions.filter((t) =>
-    ['food', 'food-drink'].includes((t.category || '').toLowerCase())
+    ['food & dining', 'food', 'food-drink'].includes((t.category || '').toLowerCase())
   );
   if (foodTxs.length) {
     const foodAvg = foodTxs.reduce((s, t) => s + t.amount, 0) / foodTxs.length;

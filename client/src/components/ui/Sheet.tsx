@@ -12,6 +12,8 @@ type Props = {
   onClose: () => void;
   title?: string;
   children: React.ReactNode;
+  /** Runs once the sheet has fully gone, e.g. to present another modal (iOS can't stack them mid-animation). */
+  onClosed?: () => void;
 };
 
 const OFFSCREEN = 2000;
@@ -20,7 +22,7 @@ const OFFSCREEN = 2000;
  * Compact bottom sheet for pickers and action lists. Drag the grabber or title down, tap the
  * backdrop, or use the system back gesture to close. Larger editors should use a pageSheet Modal.
  */
-export function Sheet({ visible, onClose, title, children }: Props) {
+export function Sheet({ visible, onClose, title, children, onClosed }: Props) {
   const styles = useStyles();
   const insets = useSafeAreaInsets();
   const [mounted, setMounted] = useState(visible);
@@ -69,6 +71,12 @@ export function Sheet({ visible, onClose, title, children }: Props) {
   const backdrop = useAnimatedStyle(() => ({
     opacity: height.value === OFFSCREEN ? 0 : interpolate(y.value, [0, height.value], [1, 0]),
   }));
+
+  const wasMounted = useRef(false);
+  useEffect(() => {
+    if (wasMounted.current && !mounted) onClosed?.();
+    wasMounted.current = mounted;
+  }, [mounted, onClosed]);
 
   if (!mounted) return null;
   return (

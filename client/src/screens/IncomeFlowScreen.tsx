@@ -1,44 +1,25 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  RefreshControl,
-  TextInput,
-  Modal,
-  Alert,
-  ActivityIndicator,
-  Keyboard,
-  TouchableWithoutFeedback,
-  SafeAreaView,
-} from 'react-native';
+import React, { useCallback, useRef, useState } from 'react';
+import { Alert, KeyboardAvoidingView, Modal, Platform, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import Animated from 'react-native-reanimated';
 import { addIncome, getIncomeFlow, updateIncome, deleteIncome } from '../services/api';
 import { IncomeFlowData } from '../types';
 import { formatCurrency } from '../utils/format';
-import { celebrate } from '../store/useCelebrationStore';
-import Animated, { useAnimatedStyle, useReducedMotion, useSharedValue, withTiming } from 'react-native-reanimated';
-import { easing, enterUp } from '../motion';
-import { AnimatedNumber } from '../components/motion/AnimatedNumber';
-import { PressableScale } from '../components/motion/PressableScale';
-import { FloatingEmoji } from '../components/motion/FloatingEmoji';
-
-import { createStyles, useTheme, Palette } from '../theme';
-const tokens = (c: Palette) => ({ BLUE: c.primary, GREEN: c.success, AMBER: c.warning, RED: c.danger, PURPLE: c.purple, DARK: c.text, GRAY: c.textMuted, LIGHT: c.bg, BORDER: c.border });
-
-const SOURCES: Record<string, string> = {
-  salary: '#2563EB',
-  gig: '#10B981',
-  freelance: '#F59E0B',
-  business: '#8B5CF6',
-  rental: '#EC4899',
-  consulting: '#06B6D4',
-  bonus: '#F97316',
-  other: '#64748B',
-};
+import { celebrate, toast } from '../store/useCelebrationStore';
+import { enterUp } from '../motion';
+import { createStyles, radius, tabular, typeScale, useTheme } from '../theme';
+import { AnimatedBar } from '../components/motion/AnimatedBar';
+import { SkeletonCard } from '../components/motion/Skeleton';
+import { Card } from '../components/ui/Card';
+import { Badge, Chip, EmptyState, ErrorState, MoneyText, SectionHeader } from '../components/ui/Bits';
+import { Button } from '../components/ui/Button';
+import { Donut } from '../components/ui/Charts';
+import { Field } from '../components/ui/Field';
+import { DateField } from '../components/ui/DateField';
+import { Sheet } from '../components/ui/Sheet';
+import { LargeTitle, ScreenHeader, useHeaderHeight, useScrollHeader } from '../components/ui/ScreenHeader';
 
 const SOURCE_LABELS: Record<string, string> = {
   salary: '💼 Salary',
@@ -53,771 +34,328 @@ const SOURCE_LABELS: Record<string, string> = {
 
 const SOURCE_KEYS = ['salary', 'gig', 'freelance', 'business', 'rental', 'consulting', 'bonus', 'other'] as const;
 
-function AllocationRing({ allocation }: { allocation: IncomeFlowData['allocation'] }) {
-  const { c } = useTheme();
-  const { BLUE, GREEN, AMBER, GRAY } = tokens(c);
-  const rStyles = useRStyles();
+type Entry = IncomeFlowData['timeline'][number];
+
+/** Add or edit one income receipt in a page sheet. */
+function IncomeEditor({ entry, visible, onClose, onSaved }: { entry: Entry | null; visible: boolean; onClose: () => void; onSaved: () => void }) {
   const s = useSStyles();
-  const segments = [
-    { label: 'Essentials', value: allocation.essentials, color: BLUE, pct: 50 },
-    { label: 'Goals', value: allocation.goals, color: GREEN, pct: 30 },
-    { label: 'Emergency', value: allocation.emergency, color: AMBER, pct: 20 },
-  ];
-  const SIZE = 140;
-  let acc = 0;
-  // Ring spins and grows into place on mount (re-runs when the totals change after adding income).
-  const reduced = useReducedMotion();
-  const t = useSharedValue(reduced ? 1 : 0);
-  useEffect(() => {
-    if (reduced) return;
-    t.value = 0;
-    t.value = withTiming(1, { duration: 900, easing: easing.standard });
-  }, [allocation.essentials, allocation.goals, allocation.emergency, reduced, t]);
-  const ringStyle = useAnimatedStyle(() => ({
-    opacity: Math.min(1, t.value * 2),
-    transform: [{ rotate: `${(1 - t.value) * -160}deg` }, { scale: 0.6 + 0.4 * t.value }],
-  }));
-  return (
-    <View style={{ alignItems: 'center' }}>
-      <Animated.View
-        style={[ringStyle, {
-          width: SIZE,
-          height: SIZE,
-          borderRadius: SIZE / 2,
-          overflow: 'hidden',
-          backgroundColor: c.surfaceAlt,
-        }]}
-      >
-        {segments.map((seg, i) => {
-          const start = acc * 3.6;
-          acc += seg.pct;
-          return (
-            <View
-              key={i}
-              pointerEvents="none"
-              style={{
-                position: 'absolute',
-                width: SIZE,
-                height: SIZE,
-                borderRadius: SIZE / 2,
-                borderWidth: SIZE / 2,
-                borderColor: 'transparent',
-                borderTopColor: seg.pct >= 50 ? seg.color : 'transparent',
-                borderRightColor: seg.color,
-                transform: [{ rotate: `${start - 90}deg` }],
-              }}
-            />
-          );
-        })}
-        <View
-          style={{
-            position: 'absolute',
-            width: SIZE - 40,
-            height: SIZE - 40,
-            borderRadius: (SIZE - 40) / 2,
-            backgroundColor: c.surface,
-            left: 20,
-            top: 20,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Text style={{ fontSize: 10, color: GRAY, fontWeight: '700' }}>50/30/20</Text>
-        </View>
-      </Animated.View>
-      <View style={rStyles.legend}>
-        {segments.map((s) => (
-          <View key={s.label} style={rStyles.legItem}>
-            <View style={[rStyles.legDot, { backgroundColor: s.color }]} />
-            <Text style={rStyles.legLbl}>{s.label}</Text>
-            <AnimatedNumber value={s.value} style={[rStyles.legVal, { color: s.color }]} />
-          </View>
-        ))}
-      </View>
-    </View>
-  );
-}
-
-const useRStyles = createStyles((c) => {
-  const { DARK } = tokens(c);
-  return {
-  legend: { marginTop: 14, gap: 8, width: '100%' },
-  legItem: { flexDirection: 'row', alignItems: 'center', gap: 8 },
-  legDot: { width: 10, height: 10, borderRadius: 5 },
-  legLbl: { flex: 1, fontSize: 13, fontWeight: '600', color: DARK },
-  legVal: { fontSize: 13, fontWeight: '700' },
-};
-});
-
-function Card({ title, children }: { title: string; children: React.ReactNode }) {
-  const s = useSStyles();
-  return (
-    <View style={s.card}>
-      <Text style={s.cardTitle}>{title}</Text>
-      {children}
-    </View>
-  );
-}
-
-// ── Add Income Modal ───────────────────────────────────────────
-
-function AddIncomeModal({
-  visible,
-  onClose,
-  onAdd,
-}: {
-  visible: boolean;
-  onClose: () => void;
-  onAdd: () => void;
-}) {
-  const { c } = useTheme();
-  const m = useMStyles();
   const [amount, setAmount] = useState('');
   const [source, setSource] = useState<string>('salary');
   const [description, setDescription] = useState('');
-  const [dateStr, setDateStr] = useState(new Date().toISOString().split('T')[0]);
-  const [saving, setSaving] = useState(false);
+  const [date, setDate] = useState(new Date());
+  const [error, setError] = useState('');
 
-  const handleAdd = async () => {
-    const amt = parseFloat(amount);
-    if (!amt || amt <= 0) {
-      Alert.alert('Invalid Amount', 'Please enter a valid positive income amount.');
-      return;
+  // Reset the form each time the sheet opens.
+  const [openedFor, setOpenedFor] = useState<string | null | undefined>(undefined);
+  const key = visible ? entry?.id ?? null : undefined;
+  if (key !== openedFor) {
+    setOpenedFor(key);
+    if (visible) {
+      setAmount(entry ? String(entry.amount) : '');
+      setSource(entry?.source ?? 'salary');
+      setDescription(entry?.description ?? '');
+      setDate(entry ? new Date(entry.timestamp) : new Date());
+      setError('');
     }
-    setSaving(true);
+  }
+
+  const save = async () => {
+    const amt = parseFloat(amount);
+    if (!amt || amt <= 0) return setError('Enter an amount greater than zero.');
+    const payload = {
+      amount: amt,
+      source,
+      description: description.trim() || SOURCE_LABELS[source] || source,
+      date: date.toISOString().split('T')[0],
+    };
     try {
-      await addIncome({
-        amount: amt,
-        source,
-        description: description.trim() || SOURCE_LABELS[source] || source,
-        date: dateStr,
-      });
-      setAmount('');
-      setDescription('');
-      setSource('salary');
-      onAdd();
+      if (entry) await updateIncome(entry.id, payload);
+      else await addIncome(payload);
       onClose();
-      celebrate({ kind: 'coins', title: `${formatCurrency(amt)} income added`, subtitle: `Logged as ${SOURCE_LABELS[source] || source}.` });
+      onSaved();
+      if (entry) toast('Income updated');
+      else celebrate({ kind: 'coins', title: `${formatCurrency(amt)} income added`, subtitle: `Logged as ${SOURCE_LABELS[source] || source}.` });
     } catch {
-      Alert.alert('Error', 'Could not log income. Please check your network connection.');
-    } finally {
-      setSaving(false);
+      setError("Couldn't save. Check your connection and try again.");
     }
   };
 
   return (
-    <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
-      <TouchableOpacity style={m.overlay} activeOpacity={1} onPress={onClose}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-          <View style={m.sheet} onStartShouldSetResponder={() => true}>
-            <View style={m.handle} />
-            <Text style={m.title}>Record Income</Text>
-
-            <Text style={m.label}>Amount (₹)</Text>
-            <TextInput
-              style={m.input}
-              value={amount}
-              onChangeText={setAmount}
-              keyboardType="decimal-pad"
-              placeholder="e.g. 25000"
-              placeholderTextColor={c.textSubtle}
-            />
-
-            <Text style={m.label}>Income Source / Stream</Text>
-            <View style={m.sourceRow}>
-              {SOURCE_KEYS.map((src) => (
-                <TouchableOpacity
-                  key={src}
-                  style={[
-                    m.srcBtn,
-                    source === src && { borderColor: SOURCES[src], backgroundColor: `${SOURCES[src]}15` },
-                  ]}
-                  onPress={() => setSource(src)}
-                  activeOpacity={0.8}
-                >
-                  <Text style={[m.srcTxt, source === src && { color: SOURCES[src], fontWeight: '700' }]}>
-                    {SOURCE_LABELS[src]}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-
-            <Text style={m.label}>Description / Client</Text>
-            <TextInput
-              style={m.input}
-              value={description}
-              onChangeText={setDescription}
-              placeholder="e.g. Freelance web design, Monthly Salary"
-              placeholderTextColor={c.textSubtle}
-            />
-
-            <Text style={m.label}>Date Received (YYYY-MM-DD)</Text>
-            <TextInput
-              style={m.input}
-              value={dateStr}
-              onChangeText={setDateStr}
-              placeholder="YYYY-MM-DD"
-              placeholderTextColor={c.textSubtle}
-            />
-
-            <TouchableOpacity style={m.addBtn} onPress={handleAdd} disabled={saving} activeOpacity={0.85}>
-              {saving ? <ActivityIndicator color="#FFFFFF" /> : <Text style={m.addTxt}>Log Income</Text>}
-            </TouchableOpacity>
+    <Modal visible={visible} animationType="slide" presentationStyle="pageSheet" onRequestClose={onClose}>
+      <KeyboardAvoidingView style={s.sheet} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <View style={s.sheetHeader}>
+          <Pressable onPress={onClose} hitSlop={10} accessibilityRole="button"><Text style={s.sheetCancel}>Cancel</Text></Pressable>
+          <Text style={s.sheetTitle}>{entry ? 'Edit income' : 'Add Income'}</Text>
+          <View style={s.sheetSpacer} />
+        </View>
+        <ScrollView contentContainerStyle={s.sheetBody} keyboardShouldPersistTaps="handled">
+          <Field label="Amount (₹)" icon="cash-outline" value={amount} onChangeText={(v) => { setAmount(v.replace(/[^0-9.]/g, '')); setError(''); }} keyboardType="numeric" placeholder="e.g. 25000" autoFocus={!entry} />
+          <Text style={s.label}>Source</Text>
+          <View style={s.chips}>
+            {SOURCE_KEYS.map((k) => <Chip key={k} label={SOURCE_LABELS[k]} selected={source === k} onPress={() => setSource(k)} />)}
           </View>
-        </TouchableWithoutFeedback>
-      </TouchableOpacity>
+          <Field label="Description" icon="create-outline" value={description} onChangeText={setDescription} placeholder="e.g. October salary, client invoice" />
+          <DateField label="Received on" value={date} onChange={setDate} maximumDate={new Date()} />
+          {!!error && <Text style={s.error} accessibilityRole="alert">{error}</Text>}
+          <Button label={entry ? 'Save changes' : 'Add income'} onPress={save} style={s.save} />
+        </ScrollView>
+      </KeyboardAvoidingView>
     </Modal>
   );
 }
 
-// ── Main Screen ────────────────────────────────────────────────
-
 export function IncomeFlowScreen(): React.ReactElement {
   const { c } = useTheme();
-  const { BLUE, AMBER, RED, DARK } = tokens(c);
-  const m = useMStyles();
   const s = useSStyles();
   const navigation = useNavigation();
+  const insets = useSafeAreaInsets();
+  const headerHeight = useHeaderHeight();
+  const { y, onScroll } = useScrollHeader();
   const [flow, setFlow] = useState<IncomeFlowData | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [showAdd, setShowAdd] = useState(false);
-  const [editInc, setEditInc] = useState<{
-    id: string;
-    amount: number;
-    source: string;
-    description?: string;
-  } | null>(null);
-  const [editAmount, setEditAmount] = useState('');
-  const [editDesc, setEditDesc] = useState('');
-  const [editSource, setEditSource] = useState<string>('salary');
-  const [saving, setSaving] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const [editorOpen, setEditorOpen] = useState(false);
+  const [editing, setEditing] = useState<Entry | null>(null);
+  const [selected, setSelected] = useState<Entry | null>(null);
+  const editAfterClose = useRef(false);
 
   const fetchFlow = useCallback(async (isRefresh = false) => {
     try {
       if (isRefresh) setRefreshing(true);
-      const data = await getIncomeFlow();
-      setFlow(data);
+      setFlow(await getIncomeFlow());
+      setFailed(false);
     } catch {
-      // Non-blocking
+      setFailed(true);
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
   }, []);
 
-  useFocusEffect(
-    useCallback(() => {
-      fetchFlow();
-    }, [fetchFlow])
-  );
+  useFocusEffect(useCallback(() => { fetchFlow(); }, [fetchFlow]));
 
-  const handleLongPress = (item: IncomeFlowData['timeline'][number]) => {
-    Alert.alert(
-      'Manage Income Record',
-      `What would you like to do with "${item.description || item.source}" (${formatCurrency(item.amount)})?`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Edit',
-          onPress: () => {
-            setEditInc({
-              id: item.id,
-              amount: item.amount,
-              source: item.source,
-              description: item.description,
-            });
-            setEditAmount(String(item.amount));
-            setEditDesc(item.description || '');
-            setEditSource(item.source);
-          },
-        },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: () => {
-            Alert.alert(
-              'Delete Income',
-              `Are you sure you want to delete this ${formatCurrency(item.amount)} entry?`,
-              [
-                { text: 'Cancel', style: 'cancel' },
-                {
-                  text: 'Delete',
-                  style: 'destructive',
-                  onPress: async () => {
-                    try {
-                      await deleteIncome(item.id);
-                      fetchFlow(true);
-                    } catch {
-                      Alert.alert('Error', 'Failed to delete income entry.');
-                    }
-                  },
-                },
-              ]
-            );
-          },
-        },
-      ]
-    );
+  const openEditor = (entry: Entry | null) => {
+    setEditing(entry);
+    if (!selected) return setEditorOpen(true);
+    // The options sheet must finish closing before iOS will present the editor.
+    editAfterClose.current = true;
+    setSelected(null);
   };
 
-  const submitEdit = async () => {
-    if (!editInc) return;
-    const amt = parseFloat(editAmount);
-    if (!amt || amt <= 0) {
-      Alert.alert('Invalid Amount', 'Please enter a valid amount.');
-      return;
-    }
-    setSaving(true);
-    try {
-      await updateIncome(editInc.id, {
-        amount: amt,
-        source: editSource,
-        description: editDesc.trim() || SOURCE_LABELS[editSource] || editSource,
-      });
-      setEditInc(null);
-      fetchFlow(true);
-    } catch {
-      Alert.alert('Error', 'Could not update income.');
-    } finally {
-      setSaving(false);
-    }
+  const confirmDelete = (item: Entry) => {
+    setSelected(null);
+    Alert.alert('Delete this income?', `${item.description || SOURCE_LABELS[item.source] || item.source} · ${formatCurrency(item.amount)}`, [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Delete',
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            await deleteIncome(item.id);
+            fetchFlow(true);
+            toast('Income deleted', { tone: 'info' });
+          } catch {
+            toast("Couldn't delete that entry", { tone: 'error' });
+          }
+        },
+      },
+    ]);
   };
 
-  if (loading && !flow) {
+  const sourceColor = (k: string) => c.chart[Math.max(0, SOURCE_KEYS.indexOf(k as (typeof SOURCE_KEYS)[number])) % c.chart.length];
+  const volatility = flow?.volatility ?? 0;
+  const sources = Object.entries(flow?.sources ?? {}).sort((a, b) => b[1] - a[1]);
+  const split = flow
+    ? [
+      { label: 'Essentials', pct: 50, value: flow.allocation.essentials, color: c.primary },
+      { label: 'Goals', pct: 30, value: flow.allocation.goals, color: c.success },
+      { label: 'Emergency', pct: 20, value: flow.allocation.emergency, color: c.warning },
+    ]
+    : [];
+
+  const body = () => {
+    if (loading && !flow) return <View style={s.body}>{[0, 1].map((i) => <SkeletonCard key={i} style={s.gap} />)}</View>;
+    if (failed && !flow) return <ErrorState onRetry={() => fetchFlow(true)} />;
+    if (!flow || flow.incomeCount === 0) {
+      return <EmptyState emoji="💸" title="No income recorded yet" message="Log your salary or any money that comes in to see your monthly flow." actionLabel="+ Add Income" onAction={() => openEditor(null)} />;
+    }
     return (
-      <View style={s.loadingWrap}>
-        <ActivityIndicator size="large" color={BLUE} />
-        <Text style={s.loadingText}>Loading your income streams…</Text>
-      </View>
-    );
-  }
-
-  const volatilityColor =
-    (flow?.volatility ?? 0) > 50 ? RED : (flow?.volatility ?? 0) > 25 ? AMBER : '#059669';
-
-  return (
-    <SafeAreaView style={s.safe}>
-
-      {/* ── Top Bar ──────────────────────────────────────────── */}
-      <View style={s.topBar}>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={s.backBtn}
-          activeOpacity={0.7}
-          accessibilityLabel="Back to Previous Screen"
-        >
-          <Ionicons name="arrow-back" size={22} color={DARK} />
-        </TouchableOpacity>
-        <Text style={s.topBarTitle}>Income Streams</Text>
-        <TouchableOpacity
-          style={s.addHeaderBtn}
-          onPress={() => setShowAdd(true)}
-          activeOpacity={0.8}
-          accessibilityLabel="Add New Income Record"
-        >
-          <Ionicons name="add" size={22} color={BLUE} />
-        </TouchableOpacity>
-      </View>
-
-      <ScrollView
-        style={s.screen}
-        contentContainerStyle={s.content}
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={() => fetchFlow(true)}
-            tintColor={BLUE}
-            colors={[BLUE]}
-          />
-        }
-      >
-        {/* ── Summary Header ───────────────────────────────────── */}
-        <View style={s.header}>
-          <View>
-            <Text style={s.headerLabel}>Total Monthly Income</Text>
-            <Text style={s.headerAmount}>{formatCurrency(flow?.total ?? 0)}</Text>
-          </View>
-          <View style={s.dailyPill}>
-            <Text style={s.dailyLabel}>Daily Pace</Text>
-            <Text style={s.dailyAmount}>{formatCurrency(flow?.dailySmoothed ?? 0)}</Text>
-          </View>
-        </View>
-
-        {/* ── Volatility Badge ─────────────────────────────────── */}
-        {flow && flow.volatility > 0 && (
-          <View
-            style={[
-              s.volatilityBadge,
-              { backgroundColor: `${volatilityColor}12`, borderColor: volatilityColor },
-            ]}
-          >
-            <Ionicons
-              name={flow.volatility > 50 ? 'trending-down-outline' : 'pulse-outline'}
-              size={20}
-              color={volatilityColor}
-            />
-            <Text style={[s.volatilityText, { color: volatilityColor }]}>
-              Income Volatility: {flow.volatility}% —{' '}
-              {flow.volatility > 50
-                ? 'High variability across income receipts.'
-                : flow.volatility > 25
-                ? 'Moderate income variation.'
-                : 'Stable income stream.'}
-            </Text>
-          </View>
-        )}
-
-        {/* ── 50-30-20 Allocation ──────────────────────────────── */}
-        {flow && flow.total > 0 && (
-          <Card title="Smart Budget Allocation (50/30/20)">
-            <AllocationRing allocation={flow.allocation} />
-          </Card>
-        )}
-
-        {/* ── Source Breakdown ─────────────────────────────────── */}
-        {flow && Object.keys(flow.sources).length > 0 && (
-          <Card title="Income Breakdown by Source">
-            {Object.entries(flow.sources).map(([src, amt]) => {
-              const amount = Number(amt);
-              const pct = flow.total > 0 ? Math.round((amount / flow.total) * 100) : 0;
-              return (
-                <View key={src} style={s.sourceRow}>
-                  <Text style={s.sourceName} numberOfLines={1}>
-                    {SOURCE_LABELS[src] ?? src}
-                  </Text>
-                  <View style={s.sourceBarWrap}>
-                    <View style={[s.sourceBar, { width: `${pct}%`, backgroundColor: SOURCES[src] ?? BLUE }]} />
-                  </View>
-                  <Text style={[s.sourceAmt, { color: SOURCES[src] ?? BLUE }]}>{formatCurrency(amount)}</Text>
-                </View>
-              );
-            })}
-          </Card>
-        )}
-
-        {/* ── Timeline / Recent Records ────────────────────────── */}
-        {flow && flow.timeline.length > 0 && (
-          <Card title="Income Timeline (Tap to Edit / Delete)">
-            {flow.timeline
-              .slice()
-              .reverse()
-              .map((item, i) => (
-                <Animated.View key={item.id || i} entering={enterUp(i)}>
-                <TouchableOpacity
-                  style={s.timelineRow}
-                  onPress={() => handleLongPress(item)}
-                  activeOpacity={0.7}
-                  accessibilityLabel={`Income record: ${item.description || item.source}, ${formatCurrency(item.amount)}`}
-                >
-                  <View style={[s.timelineDot, { backgroundColor: SOURCES[item.source] ?? BLUE }]} />
-                  <View style={{ flex: 1 }}>
-                    <Text style={s.timelineSource}>{SOURCE_LABELS[item.source] ?? item.source}</Text>
-                    <Text style={s.timelineDesc} numberOfLines={1}>
-                      {item.description || 'Income Receipt'}
-                    </Text>
-                    <Text style={s.timelineDate}>
-                      {new Date(item.timestamp).toLocaleDateString('en-IN', {
-                        day: 'numeric',
-                        month: 'short',
-                        year: 'numeric',
-                      })}
-                    </Text>
-                  </View>
-                  <Text style={[s.timelineAmt, { color: SOURCES[item.source] ?? BLUE }]}>
-                    +{formatCurrency(item.amount)}
-                  </Text>
-                </TouchableOpacity>
-                </Animated.View>
-              ))}
-          </Card>
-        )}
-
-        {/* ── Empty State ──────────────────────────────────────── */}
-        {(!flow || flow.timeline.length === 0) && (
-          <View style={s.emptyState}>
-            <FloatingEmoji emoji="💸" style={{ fontSize: 48, marginBottom: 12 }} />
-            <Text style={s.emptyTitle}>No Income Recorded Yet</Text>
-            <Text style={s.emptyText}>
-              Tap the button below to record your first income payment or freelance earnings.
-            </Text>
-            <TouchableOpacity style={s.emptyAddBtn} onPress={() => setShowAdd(true)} activeOpacity={0.8}>
-              <Text style={s.emptyAddBtnText}>+ Log First Income</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-      </ScrollView>
-
-      {/* Floating Action Button */}
-      <PressableScale
-        style={s.fab}
-        scaleTo={0.94}
-        onPress={() => setShowAdd(true)}
-        accessibilityLabel="Add New Income Record"
-      >
-        <Ionicons name="add" size={28} color="#FFFFFF" />
-      </PressableScale>
-
-      <AddIncomeModal visible={showAdd} onClose={() => setShowAdd(false)} onAdd={() => fetchFlow(true)} />
-
-      {/* Edit Income Modal */}
-      <Modal visible={!!editInc} transparent animationType="slide" onRequestClose={() => setEditInc(null)}>
-        <TouchableOpacity style={m.overlay} activeOpacity={1} onPress={() => setEditInc(null)}>
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-            <View style={m.sheet} onStartShouldSetResponder={() => true}>
-              <View style={m.handle} />
-              <Text style={m.title}>Edit Income Record</Text>
-
-              <Text style={m.label}>Amount (₹)</Text>
-              <TextInput
-                style={m.input}
-                value={editAmount}
-                onChangeText={setEditAmount}
-                keyboardType="decimal-pad"
-                placeholder="e.g. 25000"
-                placeholderTextColor={c.textSubtle}
-              />
-
-              <Text style={m.label}>Source</Text>
-              <View style={m.sourceRow}>
-                {SOURCE_KEYS.map((src) => (
-                  <TouchableOpacity
-                    key={src}
-                    style={[
-                      m.srcBtn,
-                      editSource === src && { borderColor: SOURCES[src], backgroundColor: `${SOURCES[src]}15` },
-                    ]}
-                    onPress={() => setEditSource(src)}
-                    activeOpacity={0.8}
-                  >
-                    <Text style={[m.srcTxt, editSource === src && { color: SOURCES[src], fontWeight: '700' }]}>
-                      {SOURCE_LABELS[src]}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
+      <View style={s.body}>
+        <Animated.View entering={enterUp(0)}>
+          <Card variant="hero">
+            <Text style={s.heroLabel}>This month</Text>
+            <MoneyText value={flow.total} style={s.heroValue} />
+            <View style={s.heroRow}>
+              <View style={s.heroStat}>
+                <Text style={s.heroStatLabel}>Daily pace</Text>
+                <Text style={s.heroStatValue}>{formatCurrency(flow.dailySmoothed)}</Text>
               </View>
-
-              <Text style={m.label}>Description</Text>
-              <TextInput
-                style={m.input}
-                value={editDesc}
-                onChangeText={setEditDesc}
-                placeholder="e.g. Consulting payment"
-                placeholderTextColor={c.textSubtle}
-              />
-
-              <View style={{ flexDirection: 'row', gap: 12 }}>
-                <TouchableOpacity
-                  style={[m.addBtn, { flex: 1, backgroundColor: c.border }]}
-                  onPress={() => setEditInc(null)}
-                >
-                  <Text style={[m.addTxt, { color: c.textMuted }]}>Cancel</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[m.addBtn, { flex: 1 }]} onPress={submitEdit} disabled={saving}>
-                  {saving ? <ActivityIndicator color="#FFFFFF" /> : <Text style={m.addTxt}>Save Changes</Text>}
-                </TouchableOpacity>
+              <View style={s.heroStat}>
+                <Text style={s.heroStatLabel}>Income pattern</Text>
+                <Text style={s.heroStatValue}>{volatility > 50 ? 'Volatile' : volatility > 25 ? 'Variable' : 'Steady'}</Text>
               </View>
             </View>
-          </TouchableWithoutFeedback>
-        </TouchableOpacity>
-      </Modal>
-    </SafeAreaView>
+          </Card>
+        </Animated.View>
+
+        <SectionHeader title="Suggested split" />
+        <Card style={s.split}>
+          <Donut segments={split.map((x) => ({ value: x.value, color: x.color }))} size={128} stroke={16}>
+            <Text style={s.donutLabel}>50/30/20</Text>
+          </Donut>
+          <View style={s.flex}>
+            {split.map((x) => (
+              <View key={x.label} style={s.splitRow}>
+                <View style={[s.dot, { backgroundColor: x.color }]} />
+                <Text style={s.splitLabel}>{x.label} <Text style={s.splitPct}>{x.pct}%</Text></Text>
+                <Text style={s.splitValue}>{formatCurrency(x.value)}</Text>
+              </View>
+            ))}
+            <Text style={s.splitNote}>A common guide applied to this month's income, not your actual spending.</Text>
+          </View>
+        </Card>
+
+        <SectionHeader title="By source" />
+        <Card>
+          {sources.map(([k, amt], i) => (
+            <View key={k} style={[s.sourceRow, i > 0 && s.sourceGap]}>
+              <View style={s.sourceTop}>
+                <Text style={s.sourceName}>{SOURCE_LABELS[k] || k}</Text>
+                <Text style={s.sourceAmt}>{formatCurrency(amt)}</Text>
+              </View>
+              <AnimatedBar progress={flow.total > 0 ? amt / flow.total : 0} color={sourceColor(k)} height={6} delay={i * 100} />
+            </View>
+          ))}
+        </Card>
+
+        <SectionHeader title="Receipts" />
+        <Card padded={false} style={s.list}>
+          {flow.timeline.map((item, i) => (
+            <Pressable
+              key={item.id}
+              onPress={() => setSelected(item)}
+              style={({ pressed }) => [s.row, i > 0 && s.divider, pressed && s.pressed]}
+              accessibilityRole="button"
+              accessibilityLabel={`${item.description || item.source}, ${formatCurrency(item.amount)}. Options`}
+            >
+              <View style={[s.sourceDot, { backgroundColor: sourceColor(item.source) }]}>
+                <Text style={s.sourceEmoji}>{(SOURCE_LABELS[item.source] || '💰').split(' ')[0]}</Text>
+              </View>
+              <View style={s.flex}>
+                <Text style={s.rowTitle} numberOfLines={1}>{item.description || SOURCE_LABELS[item.source]}</Text>
+                <Text style={s.rowSub}>{new Date(item.timestamp).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</Text>
+              </View>
+              <Text style={s.rowAmount}>+{formatCurrency(item.amount)}</Text>
+            </Pressable>
+          ))}
+        </Card>
+        {volatility > 25 && <Badge label="Variable income: FINAURA plans with your average month" tone="warning" style={s.note} />}
+      </View>
+    );
+  };
+
+  return (
+    <View style={s.screen}>
+      <Animated.ScrollView
+        onScroll={onScroll}
+        scrollEventThrottle={16}
+        contentContainerStyle={{ paddingTop: headerHeight, paddingBottom: insets.bottom + 40 }}
+        showsVerticalScrollIndicator={false}
+        refreshControl={<RefreshControl refreshing={refreshing} progressViewOffset={headerHeight} onRefresh={() => fetchFlow(true)} />}
+      >
+        <LargeTitle
+          title="Income"
+          subtitle="Salary and everything else that comes in"
+          right={
+            <Pressable style={s.addBtn} onPress={() => openEditor(null)} accessibilityRole="button" accessibilityLabel="Add Income">
+              <Ionicons name="add" size={22} color={c.onPrimary} />
+            </Pressable>
+          }
+        />
+        {body()}
+      </Animated.ScrollView>
+      <ScreenHeader title="Income" y={y} onBack={() => navigation.goBack()} />
+
+      <Sheet
+        visible={!!selected}
+        onClose={() => setSelected(null)}
+        onClosed={() => {
+          if (editAfterClose.current) setEditorOpen(true);
+          editAfterClose.current = false;
+        }}
+        title={selected ? selected.description || SOURCE_LABELS[selected.source] : ''}
+      >
+        <Text style={s.sheetSub}>{selected ? `${formatCurrency(selected.amount)} · ${new Date(selected.timestamp).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}` : ''}</Text>
+        <Pressable style={s.action} onPress={() => selected && openEditor(selected)} accessibilityRole="button">
+          <Ionicons name="create-outline" size={20} color={c.text} />
+          <Text style={s.actionText}>Edit income</Text>
+        </Pressable>
+        <Pressable style={s.action} onPress={() => selected && confirmDelete(selected)} accessibilityRole="button">
+          <Ionicons name="trash-outline" size={20} color={c.dangerStrong} />
+          <Text style={[s.actionText, { color: c.dangerStrong }]}>Delete income</Text>
+        </Pressable>
+      </Sheet>
+
+      <IncomeEditor entry={editing} visible={editorOpen} onClose={() => setEditorOpen(false)} onSaved={() => fetchFlow(true)} />
+    </View>
   );
 }
 
-// ── Styles ─────────────────────────────────────────────────────
-
-const useMStyles = createStyles((c) => {
-  const { BLUE, DARK, GRAY, BORDER } = tokens(c);
-  return {
-  overlay: { flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.45)' },
-  sheet: {
-    backgroundColor: c.surface,
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
-    padding: 24,
-    paddingBottom: 48,
-  },
-  handle: { width: 40, height: 4, backgroundColor: c.border, borderRadius: 99, alignSelf: 'center', marginBottom: 20 },
-  title: { fontSize: 20, fontWeight: '800', color: DARK, marginBottom: 20 },
-  label: { fontSize: 12, fontWeight: '600', color: GRAY, marginBottom: 6, textTransform: 'uppercase', letterSpacing: 0.5 },
-  input: {
-    height: 48,
-    borderWidth: 1.5,
-    borderColor: BORDER,
-    borderRadius: 12,
-    paddingHorizontal: 14,
-    fontSize: 15,
-    color: DARK,
-    backgroundColor: c.bg,
-    marginBottom: 14,
-  },
-  sourceRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 14 },
-  srcBtn: {
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 99,
-    borderWidth: 1.5,
-    borderColor: BORDER,
-    backgroundColor: c.bg,
-  },
-  srcTxt: { fontSize: 13, color: GRAY, fontWeight: '500' },
-  addBtn: {
-    height: 52,
-    borderRadius: 26,
-    backgroundColor: BLUE,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 8,
-    shadowColor: BLUE,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 6,
-  },
-  addTxt: { fontSize: 16, fontWeight: '700', color: '#FFFFFF' },
-};
-});
-
-const useSStyles = createStyles((c) => {
-  const { BLUE, DARK, GRAY, LIGHT, BORDER } = tokens(c);
-  return {
-  safe: { flex: 1, backgroundColor: LIGHT },
-  screen: { flex: 1, backgroundColor: LIGHT },
-  content: { padding: 16, paddingBottom: 96, gap: 16 },
-
-  loadingWrap: {
-    flex: 1,
-    backgroundColor: LIGHT,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 12,
-  },
-  loadingText: { fontSize: 14, fontWeight: '600', color: GRAY },
-
-  // Top Bar
-  topBar: {
+const useSStyles = createStyles((c) => ({
+  screen: { flex: 1, backgroundColor: c.bg },
+  flex: { flex: 1 },
+  body: { paddingHorizontal: 16 },
+  gap: { marginBottom: 12 },
+  addBtn: { width: 42, height: 42, borderRadius: 21, alignItems: 'center', justifyContent: 'center', backgroundColor: c.primary, marginBottom: 4 },
+  heroLabel: { ...typeScale.caption, color: c.onAuroraMuted },
+  heroValue: { ...typeScale.display, color: c.onAurora, marginTop: 2 },
+  heroRow: { flexDirection: 'row', gap: 12, marginTop: 16 },
+  heroStat: { flex: 1, padding: 12, borderRadius: radius.md, backgroundColor: 'rgba(255,255,255,0.12)' },
+  heroStatLabel: { fontSize: 11, color: c.onAuroraMuted },
+  heroStatValue: { ...typeScale.headline, color: c.onAurora, marginTop: 2, ...tabular },
+  split: { flexDirection: 'row', alignItems: 'center', gap: 16 },
+  donutLabel: { fontSize: 12, fontWeight: '800', color: c.textMuted },
+  splitRow: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingVertical: 5 },
+  dot: { width: 10, height: 10, borderRadius: 5 },
+  splitLabel: { flex: 1, fontSize: 14, fontWeight: '600', color: c.text },
+  splitPct: { fontSize: 12, fontWeight: '500', color: c.textSubtle },
+  splitValue: { fontSize: 14, fontWeight: '700', color: c.text, ...tabular },
+  splitNote: { ...typeScale.caption, color: c.textSubtle, marginTop: 8 },
+  sourceRow: { gap: 8 },
+  sourceGap: { marginTop: 14 },
+  sourceTop: { flexDirection: 'row', justifyContent: 'space-between' },
+  sourceName: { fontSize: 14, fontWeight: '600', color: c.text },
+  sourceAmt: { fontSize: 14, fontWeight: '700', color: c.text, ...tabular },
+  list: { paddingHorizontal: 14, paddingVertical: 4 },
+  row: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 12 },
+  pressed: { opacity: 0.6 },
+  divider: { borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: c.border },
+  sourceDot: { width: 40, height: 40, borderRadius: 13, alignItems: 'center', justifyContent: 'center', opacity: 0.9 },
+  sourceEmoji: { fontSize: 18 },
+  rowTitle: { fontSize: 15, fontWeight: '600', color: c.text },
+  rowSub: { fontSize: 12, color: c.textMuted, marginTop: 2 },
+  rowAmount: { fontSize: 15, fontWeight: '700', color: c.successStrong, ...tabular },
+  note: { marginTop: 12 },
+  sheetSub: { ...typeScale.body, color: c.textMuted, marginBottom: 8 },
+  action: { flexDirection: 'row', alignItems: 'center', gap: 14, paddingVertical: 14, borderTopWidth: 1, borderTopColor: c.border },
+  actionText: { fontSize: 16, fontWeight: '600', color: c.text },
+  sheet: { flex: 1, backgroundColor: c.bg },
+  sheetHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    backgroundColor: c.surface,
-    borderBottomWidth: 1,
-    borderBottomColor: BORDER,
-  },
-  backBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: c.surfaceAlt,
-  },
-  topBarTitle: {
-    fontSize: 16,
-    fontWeight: '800',
-    color: DARK,
-  },
-  addHeaderBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: c.primarySoft,
-  },
-
-  header: {
-    backgroundColor: '#1E293B',
-    borderRadius: 20,
-    padding: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    shadowColor: '#0F172A',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 10,
-    elevation: 5,
-  },
-  headerLabel: { fontSize: 13, color: c.textSubtle, fontWeight: '500' },
-  headerAmount: { fontSize: 30, fontWeight: '800', color: '#FFFFFF', letterSpacing: -1, marginTop: 4 },
-  dailyPill: { backgroundColor: 'rgba(255,255,255,0.12)', borderRadius: 12, padding: 10, alignItems: 'center' },
-  dailyLabel: { fontSize: 11, color: c.textSubtle, fontWeight: '600' },
-  dailyAmount: { fontSize: 16, fontWeight: '800', color: '#6EE7B7', marginTop: 2 },
-
-  volatilityBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    padding: 14,
-    borderRadius: 14,
-    borderWidth: 1.5,
-  },
-  volatilityText: { flex: 1, fontSize: 13, fontWeight: '600', lineHeight: 18 },
-
-  card: {
-    backgroundColor: c.surface,
-    borderRadius: 20,
-    padding: 18,
-    borderWidth: 1,
-    borderColor: BORDER,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.04,
-    shadowRadius: 8,
-    elevation: 2,
-  },
-  cardTitle: { fontSize: 15, fontWeight: '700', color: DARK, marginBottom: 16 },
-
-  sourceRow: { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 12 },
-  sourceName: { width: 100, fontSize: 13, fontWeight: '600', color: DARK },
-  sourceBarWrap: { flex: 1, height: 8, backgroundColor: c.surfaceAlt, borderRadius: 99, overflow: 'hidden' },
-  sourceBar: { height: '100%', borderRadius: 99 },
-  sourceAmt: { width: 80, textAlign: 'right', fontSize: 13, fontWeight: '700' },
-
-  timelineRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: c.border,
   },
-  timelineDot: { width: 10, height: 10, borderRadius: 5 },
-  timelineSource: { fontSize: 14, fontWeight: '700', color: DARK },
-  timelineDesc: { fontSize: 12, color: GRAY, marginTop: 2 },
-  timelineDate: { fontSize: 11, color: c.textSubtle, marginTop: 2 },
-  timelineAmt: { fontSize: 15, fontWeight: '800' },
-
-  emptyState: { alignItems: 'center', paddingVertical: 40 },
-  emptyTitle: { fontSize: 17, fontWeight: '700', color: DARK, marginBottom: 6 },
-  emptyText: { fontSize: 13, color: GRAY, textAlign: 'center', lineHeight: 18, paddingHorizontal: 24, marginBottom: 16 },
-  emptyAddBtn: {
-    backgroundColor: c.primarySoft,
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 14,
-  },
-  emptyAddBtnText: { fontSize: 14, fontWeight: '700', color: BLUE },
-
-  fab: {
-    position: 'absolute',
-    bottom: 24,
-    right: 20,
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: BLUE,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: BLUE,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.35,
-    shadowRadius: 10,
-    elevation: 8,
-  },
-};
-});
+  sheetCancel: { fontSize: 16, color: c.primary, width: 64 },
+  sheetTitle: { ...typeScale.headline, color: c.text },
+  sheetSpacer: { width: 64 },
+  sheetBody: { padding: 20, paddingBottom: 48 },
+  label: { fontSize: 13, fontWeight: '600', color: c.textMuted, marginBottom: 8 },
+  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 14 },
+  error: { fontSize: 13, color: c.danger, textAlign: 'center', marginTop: 6 },
+  save: { marginTop: 16 },
+}));

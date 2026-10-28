@@ -232,9 +232,9 @@ test('Route Integrity 7: DashboardScreen navigation CTAs match registered routes
   }
 });
 
-test('Route Integrity 8: TransactionEntry and UpdateBalance modals are mounted in parent screens', () => {
-  const txContent = readClientFile('src/screens/TransactionsScreen.tsx');
-  assert.ok(txContent.includes('<TransactionEntryScreen'), 'TransactionEntryScreen is mounted in TransactionsScreen modal');
+test('Route Integrity 8: TransactionEntry (QuickAdd route) and UpdateBalance modal are mounted', () => {
+  const navContent = readClientFile('src/navigation/AppNavigator.tsx');
+  assert.ok(navContent.includes('<TransactionEntryScreen'), 'TransactionEntryScreen is mounted as the QuickAdd sheet route');
 
   const dashContent = readClientFile('src/screens/DashboardScreen.tsx');
   assert.ok(dashContent.includes('<UpdateBalanceScreen'), 'UpdateBalanceScreen is mounted in DashboardScreen modal');

@@ -276,13 +276,8 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
     <SafeAreaView style={styles.safe}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.sheetWrapper}>
-          {/* Dark background */}
-          <View style={styles.backdrop} />
-
-          {/* Bottom Sheet Card */}
+          {/* Presented as a native form sheet, which supplies the grabber and dimmed backdrop. */}
           <View style={styles.sheet}>
-            {/* Drag handle */}
-            <View style={styles.dragHandle} />
 
             {/* Header */}
             <View style={styles.header}>
@@ -710,28 +705,16 @@ const useStyles = createStyles((c) => {
   return {
   safe: {
     flex: 1,
-    backgroundColor: 'transparent',
-  },
-  backdrop: {
-    ...StyleSheet.absoluteFill,
-    backgroundColor: '#1A1A3E',
+    backgroundColor: c.surface,
   },
   sheetWrapper: {
     flex: 1,
-    justifyContent: 'flex-end',
   },
   sheet: {
     backgroundColor: c.surface,
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
     paddingHorizontal: 24,
     paddingBottom: 32,
-    paddingTop: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: -4 },
-    shadowOpacity: 0.12,
-    shadowRadius: 16,
-    elevation: 12,
+    paddingTop: 20,
   },
   dragHandle: {
     width: 40,

@@ -123,10 +123,15 @@ export const typeScale = {
 /** Digits keep a fixed width so animated amounts don't jitter. */
 export const tabular: TextStyle = { fontVariant: ['tabular-nums'] };
 
-/** Soft, tinted elevation. Level 1 = resting card, 2 = raised, 3 = floating (tab bar, toasts). */
+/**
+ * Soft, tinted elevation. Level 1 = resting card, 2 = raised, 3 = floating (tab bar, toasts).
+ * Uses CSS boxShadow, which follows the view's own shape, so translucent glass surfaces can cast shadows cheaply.
+ */
 export function shadow(c: Palette, level: 1 | 2 | 3 = 1): ViewStyle {
-  const [opacity, radius, y, elevation] = level === 1 ? [0.06, 12, 4, 2] : level === 2 ? [0.1, 18, 8, 5] : [0.18, 28, 14, 10];
-  return { shadowColor: c.shadow, shadowOpacity: opacity, shadowRadius: radius, shadowOffset: { width: 0, height: y }, elevation };
+  const [opacity, blur, y] = level === 1 ? [0.06, 12, 4] : level === 2 ? [0.1, 18, 8] : [0.18, 28, 14];
+  const hex = c.shadow.replace('#', '');
+  const [r, g, b] = [0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16));
+  return { boxShadow: `0px ${y}px ${blur}px rgba(${r}, ${g}, ${b}, ${opacity})` };
 }
 
 export function useTheme() {

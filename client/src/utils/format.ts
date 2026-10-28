@@ -12,3 +12,13 @@ export function humanDate(input: string): string {
     month: 'short'
   });
 }
+
+/** Recurring amount expressed per month. */
+export function monthlyEquivalent(amount: number, frequency: string): number {
+  switch (frequency) {
+    case 'daily': return (amount * 365) / 12;
+    case 'weekly': return (amount * 52) / 12;
+    case 'yearly': return amount / 12;
+    default: return amount;
+  }
+}

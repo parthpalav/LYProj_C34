@@ -2,9 +2,11 @@ import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { Ionicons } from '@expo/vector-icons';
-import Animated, { Extrapolation, interpolate, SharedValue, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
+import Animated, { Extrapolation, interpolate, SharedValue, useAnimatedScrollHandler, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { createStyles, typeScale, useTheme } from '../../theme';
+import { duration, timing } from '../../motion';
+import { tabBarHidden } from '../navigation/TabBar';
 
 const BAR = 52;
 
@@ -13,11 +15,26 @@ export function useHeaderHeight() {
   return useSafeAreaInsets().top + BAR;
 }
 
-/** Scroll offset for ScreenHeader. Pass `onScroll` to an Animated.ScrollView/FlatList with scrollEventThrottle={16}. */
-export function useScrollHeader() {
+/**
+ * Scroll offset for ScreenHeader. Pass `onScroll` to an Animated.ScrollView/FlatList with scrollEventThrottle={16}.
+ * Tab root screens pass hidesTabBar so the floating tab bar tucks away while scrolling down.
+ */
+export function useScrollHeader({ hidesTabBar = false } = {}) {
   const y = useSharedValue(0);
-  const onScroll = useAnimatedScrollHandler((e) => {
-    y.value = e.contentOffset.y;
+  const onScroll = useAnimatedScrollHandler<{ last?: number; hidden?: number }>({
+    onScroll: (e, ctx) => {
+      const next = e.contentOffset.y;
+      if (hidesTabBar) {
+        const dy = next - (ctx.last ?? next);
+        const want = next < 40 || dy < -4 ? 0 : dy > 4 ? 1 : ctx.hidden ?? 0;
+        if (want !== ctx.hidden) {
+          ctx.hidden = want;
+          tabBarHidden.value = withTiming(want, timing(duration.base));
+        }
+      }
+      ctx.last = next;
+      y.value = next;
+    },
   });
   return { y, onScroll };
 }

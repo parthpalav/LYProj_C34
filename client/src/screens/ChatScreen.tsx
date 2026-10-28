@@ -22,6 +22,7 @@ import Animated, {
 import { duration, easing } from '../motion';
 
 import { createStyles, useTheme, Palette } from '../theme';
+import { useTabBarSpace } from '../components/navigation/TabBar';
 /** One dot of the "assistant is typing" indicator: a soft staggered opacity pulse. */
 function TypingDot({ index, style }: { index: number; style: object }) {
   const reduced = useReducedMotion();
@@ -67,6 +68,13 @@ export function ChatScreen(): React.ReactElement {
   const { c } = useTheme();
   const { BLUE } = tokens(c);
   const s = useSStyles();
+  const tabBarSpace = useTabBarSpace();
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
+  useEffect(() => {
+    const show = Keyboard.addListener('keyboardWillShow', () => setKeyboardOpen(true));
+    const hide = Keyboard.addListener('keyboardWillHide', () => setKeyboardOpen(false));
+    return () => { show.remove(); hide.remove(); };
+  }, []);
   const { user, chatHistory: storeHistory, addChatMessage, setChatHistory } = useStore();
   const [input,           setInput]           = useState('');
   const [loading,         setLoading]         = useState(false);
@@ -243,8 +251,8 @@ export function ChatScreen(): React.ReactElement {
           </ScrollView>
         </View>
 
-        {/* Input bar */}
-        <View style={s.inputBar}>
+        {/* Input bar: sits above the floating tab bar, or right on the keyboard while typing */}
+        <View style={[s.inputBar, !keyboardOpen && { marginBottom: tabBarSpace - 16 }]}>
           <TextInput
             style={s.input}
             value={input}

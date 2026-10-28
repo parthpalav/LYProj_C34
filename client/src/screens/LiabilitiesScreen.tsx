@@ -10,6 +10,7 @@ import { FloatingEmoji } from '../components/motion/FloatingEmoji';
 import { Liability, LiabilityPaymentSummary, LiabilityPaymentHistoryResponse, Transaction } from '../types';
 
 import { createStyles, useTheme } from '../theme';
+import { monthlyEquivalent } from '../utils/format';
 const VALID_CATEGORIES = [
   'Food & Dining', 'Groceries', 'Transport & Travel', 'Housing',
   'Utilities & Bills', 'Debt & Loan Payments', 'Shopping', 'Entertainment',
@@ -213,18 +214,8 @@ export function LiabilitiesScreen() {
     return liabilities.filter(l => l.status === 'active' || !l.status);
   }, [liabilities]);
 
-  const getMonthlyEquivalent = (amt: number, freq: string) => {
-    switch (freq) {
-      case 'daily': return (amt * 365) / 12;
-      case 'weekly': return (amt * 52) / 12;
-      case 'yearly': return amt / 12;
-      case 'monthly':
-      default: return amt;
-    }
-  };
-
   const totalMonthlyCommitments = useMemo(() => {
-    return activeLiabilities.reduce((sum, curr) => sum + getMonthlyEquivalent(curr.amount, curr.frequency), 0);
+    return activeLiabilities.reduce((sum, curr) => sum + monthlyEquivalent(curr.amount, curr.frequency), 0);
   }, [activeLiabilities]);
 
   const autoDeductLiabilities = useMemo(() => {
@@ -240,7 +231,7 @@ export function LiabilitiesScreen() {
     const cats: Record<string, number> = {};
     activeLiabilities.forEach(l => {
       const key = l.category || 'Misc';
-      cats[key] = (cats[key] || 0) + getMonthlyEquivalent(l.amount, l.frequency);
+      cats[key] = (cats[key] || 0) + monthlyEquivalent(l.amount, l.frequency);
     });
     // Sort by amount descending
     return Object.entries(cats).sort((a, b) => b[1] - a[1]);

@@ -19,10 +19,10 @@ import { getTransactions, updateTransaction, deleteTransaction } from '../servic
 import { useStore } from '../store/useStore';
 import { Transaction } from '../types';
 import { formatCurrency } from '../utils/format';
-import { TransactionEntryScreen } from './TransactionEntryScreen';
+import { useFocusEffect } from '@react-navigation/native';
+import { useTabBarSpace } from '../components/navigation/TabBar';
 import Animated from 'react-native-reanimated';
 import { enterUp, exitFade, listLayout } from '../motion';
-import { PressableScale } from '../components/motion/PressableScale';
 import { FloatingEmoji } from '../components/motion/FloatingEmoji';
 
 import { createStyles, useTheme } from '../theme';
@@ -151,11 +151,11 @@ function groupByMonth(txs: Transaction[]): MonthSection[] {
 export function TransactionsScreen(): React.ReactElement {
   const { c } = useTheme();
   const styles = useStyles();
+  const tabBarSpace = useTabBarSpace();
   const { transactions, setTransactions } = useStore();
 
   const [activeType, setActiveType] = useState<string>('all');
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [showEntry, setShowEntry] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [editTx, setEditTx] = useState<Transaction | null>(null);
   const [editAmount, setEditAmount] = useState('');
@@ -178,12 +178,8 @@ export function TransactionsScreen(): React.ReactElement {
     }
   }, [setTransactions]);
 
-  useEffect(() => { fetchTransactions(); }, [fetchTransactions]);
-
-  // Re-fetch when entry or edit modal closes (new tx may have been submitted)
-  useEffect(() => {
-    if (!showEntry && !editTx) fetchTransactions();
-  }, [showEntry, editTx]);
+  // Refetch on every focus: QuickAdd is a sheet over this screen, so closing it refocuses here.
+  useFocusEffect(useCallback(() => { fetchTransactions(); }, [fetchTransactions]));
 
   // ── Monthly summary (current month) ────────────────────────────────────
   const monthlySummary = useMemo(() => {
@@ -501,7 +497,7 @@ export function TransactionsScreen(): React.ReactElement {
         renderSectionHeader={renderSectionHeader}
         ListEmptyComponent={renderEmptyState}
         stickySectionHeadersEnabled={false}
-        contentContainerStyle={sections.length === 0 ? styles.emptyList : undefined}
+        contentContainerStyle={[sections.length === 0 && styles.emptyList, { paddingBottom: tabBarSpace }]}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -511,26 +507,6 @@ export function TransactionsScreen(): React.ReactElement {
           />
         }
       />
-
-      {/* Floating Add Button */}
-      <PressableScale
-        style={styles.fab}
-        scaleTo={0.94}
-        onPress={() => setShowEntry(true)}
-        accessibilityLabel="Add new transaction"
-      >
-        <Ionicons name="add" size={28} color="#ffffff" />
-      </PressableScale>
-
-      {/* Transaction Entry Modal */}
-      <Modal
-        visible={showEntry}
-        transparent
-        animationType="slide"
-        onRequestClose={() => setShowEntry(false)}
-      >
-        <TransactionEntryScreen onClose={() => setShowEntry(false)} />
-      </Modal>
 
       {/* Overflow Action Menu Modal */}
       <Modal

@@ -34,6 +34,7 @@ import { AnimatedNumber } from '../components/motion/AnimatedNumber';
 import { AnimatedBar, AnimatedSegment } from '../components/motion/AnimatedBar';
 import { PiggyBank } from '../components/motion/PiggyBank';
 import { PressableScale } from '../components/motion/PressableScale';
+import { useTabBarSpace } from '../components/navigation/TabBar';
 import { Skeleton, SkeletonCard } from '../components/motion/Skeleton';
 import { useStore } from '../store/useStore';
 import { ThemeToggle } from '../components/ThemeToggle';
@@ -93,6 +94,7 @@ export function DashboardScreen(): React.ReactElement {
   const styles = useStyles();
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
+  const tabBarSpace = useTabBarSpace();
   const { user, setUser, dashboard, setDashboard, goals, setGoals } = useStore();
 
   // ── Motion: parallax header + staggered card entrance ─────
@@ -530,7 +532,7 @@ export function DashboardScreen(): React.ReactElement {
     <View style={styles.container}>
       <Animated.ScrollView
         style={styles.screen}
-        contentContainerStyle={[styles.content, { paddingTop: insets.top + 8 }]}
+        contentContainerStyle={[styles.content, { paddingTop: insets.top + 8, paddingBottom: tabBarSpace }]}
         showsVerticalScrollIndicator={false}
         onScroll={onScroll}
         scrollEventThrottle={16}

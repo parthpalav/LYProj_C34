@@ -41,7 +41,7 @@ function test(name, fn) {
 // ── 1. CASE 1: EXPLICIT EXISTING-USER LOGIN FLOW ────────────
 test('Test 1: Case 1 — Explicit successful login for onboarded user triggers showWelcome', () => {
   const authStoreCode = readClientFile('src/store/useAuthStore.ts');
-  const appCode = readClientFile('App.tsx');
+  const navCode = readClientFile('src/navigation/AppNavigator.tsx');
 
   // Verify showWelcome is set in login when onboardingCompleted is true
   assert.ok(
@@ -49,12 +49,12 @@ test('Test 1: Case 1 — Explicit successful login for onboarded user triggers s
     'useAuthStore sets showWelcome to true for onboarded users on login'
   );
 
-  // Verify App.tsx renders WelcomeScreen before MainTabs when showWelcome is true
-  const welcomeIdx = appCode.indexOf('if (showWelcome)');
-  const mainTabsIdx = appCode.indexOf('<AppNavigator />');
-  assert.ok(welcomeIdx > -1, 'App.tsx contains showWelcome check');
-  assert.ok(mainTabsIdx > -1, 'App.tsx contains AppNavigator mount');
-  assert.ok(welcomeIdx < mainTabsIdx, 'showWelcome check takes precedence over AppNavigator');
+  // The Welcome screen is registered ahead of MainTabs, so it is the first route while showWelcome is true
+  const welcomeIdx = navCode.indexOf('{showWelcome && <Stack.Screen name="Welcome"');
+  const mainTabsIdx = navCode.indexOf('name="MainTabs"');
+  assert.ok(welcomeIdx > -1, 'AppNavigator conditionally registers Welcome');
+  assert.ok(mainTabsIdx > -1, 'AppNavigator registers MainTabs');
+  assert.ok(welcomeIdx < mainTabsIdx, 'Welcome comes before MainTabs');
 });
 
 // ── 2. CASE 2: FIRST NAME EXTRACTION ────────────────────────
@@ -129,7 +129,7 @@ test('Test 5: Case 5 — Session restore (cold start via initAuth) does NOT show
 
 // ── 6. CASE 6: ONBOARDING PRIORITY OVER WELCOME ─────────────
 test('Test 6: Case 6 — Incomplete onboarding user routes to Onboarding, NOT Welcome', () => {
-  const appCode = readClientFile('App.tsx');
+  const navCode = readClientFile('src/navigation/AppNavigator.tsx');
   const authStoreCode = readClientFile('src/store/useAuthStore.ts');
 
   // In login, showWelcome is only true if isComplete is true
@@ -138,11 +138,11 @@ test('Test 6: Case 6 — Incomplete onboarding user routes to Onboarding, NOT We
     'showWelcome evaluates to false if user is not onboarded'
   );
 
-  // In App.tsx, onboarding check is evaluated BEFORE showWelcome check
-  const onboardingIdx = appCode.indexOf('if (!isComplete)');
-  const welcomeIdx = appCode.indexOf('if (showWelcome)');
-  assert.ok(onboardingIdx > -1, 'App.tsx contains !isComplete check');
-  assert.ok(welcomeIdx > -1, 'App.tsx contains showWelcome check');
+  // In AppNavigator, the onboarding branch is evaluated BEFORE the showWelcome branch
+  const onboardingIdx = navCode.indexOf('!onboarded ?');
+  const welcomeIdx = navCode.indexOf('{showWelcome &&');
+  assert.ok(onboardingIdx > -1, 'AppNavigator contains !onboarded check');
+  assert.ok(welcomeIdx > -1, 'AppNavigator contains showWelcome check');
   assert.ok(onboardingIdx < welcomeIdx, 'Onboarding check happens before showWelcome check');
 });
 

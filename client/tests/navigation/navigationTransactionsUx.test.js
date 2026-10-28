@@ -47,18 +47,15 @@ function readNav() {
 // ── TEST 1: Tab order is Transactions | Liabilities | Home | AI | Profile ──
 test('1. Tab order matches specification', () => {
   const nav = readNav();
-  
-  // Extract Tab.Screen registrations order from the JSX
-  const tabScreenRegex = /name="(Transactions|Liabilities|Dashboard|Chat|Profile)"/g;
-  const matches = [...nav.matchAll(tabScreenRegex)].map(m => m[1]);
-  
-  // Should be exactly 5 tabs in order
-  assert.equal(matches.length, 5, 'Exactly 5 tab screens registered');
+  const block = nav.slice(nav.indexOf('<Tab.Navigator'), nav.indexOf('</Tab.Navigator>'));
+  const matches = [...block.matchAll(/<Tab\.Screen name="(\w+)"/g)].map(m => m[1]);
   assert.deepEqual(
     matches,
-    ['Transactions', 'Liabilities', 'Dashboard', 'Chat', 'Profile'],
-    'Tab order is correct: Transactions | Liabilities | Home(Dashboard) | AI(Chat) | Profile'
+    ['Dashboard', 'Transactions', 'Plan', 'Chat'],
+    'Tab order is correct: Home | Activity | (+) | Plan | AI'
   );
+  // Bills and Profile moved off the tab bar into the stack.
+  assert.ok(nav.includes('name="Liabilities"') && nav.includes('name="Profile"'), 'Liabilities and Profile remain reachable as stack routes');
 });
 
 // ── TEST 2: Type filters exist (All / Needs / Wants / Investments) ─────────
@@ -190,10 +187,9 @@ test('11. Dashboard Assets card works for new users and error states', () => {
 
 // ── TEST 12: Navbar visual refinements ────────────────────────────────────
 test('12. Navbar includes active indicator and refined styling', () => {
-  const nav = readNav();
-  
-  assert.ok(nav.includes('activeIndicator'), 'Active tab indicator style exists');
-  assert.ok(nav.includes('tabIconWrap'), 'Tab icon wrapper for indicator support');
+  const bar = fs.readFileSync(path.join(clientDir, 'src/components/navigation/TabBar.tsx'), 'utf8');
+  assert.ok(bar.includes('pill: {'), 'Sliding pill indicator style exists');
+  assert.ok(bar.includes('Haptics.selectionAsync'), 'Tab changes give selection haptics');
 });
 
 // ── TEST 13: Type filter and multi-category filter compose predictably ───

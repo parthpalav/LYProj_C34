@@ -78,9 +78,9 @@ const useStyles = createStyles((c) => ({
   md: {
     height: 52,
   },
+  // Horizontal padding lives on the variants: the primary gradient must reach the button's edges.
   sm: {
     height: 40,
-    paddingHorizontal: 14,
   },
   fill: {
     alignSelf: 'stretch',

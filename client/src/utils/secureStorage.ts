@@ -4,6 +4,7 @@ import { Platform } from 'react-native';
 const ACCESS_TOKEN_KEY = 'finaura_access_token';
 const REFRESH_TOKEN_KEY = 'finaura_refresh_token';
 const THEME_MODE_KEY = 'finaura_theme_mode';
+const PROFILE_KEY = 'finaura_profile';
 
 // In-memory web fallback
 const memoryStorage: Record<string, string> = {};
@@ -57,6 +58,19 @@ export const secureStorage = {
   clearTokens: async () => {
     await deleteItem(ACCESS_TOKEN_KEY);
     await deleteItem(REFRESH_TOKEN_KEY);
+    await deleteItem(PROFILE_KEY);
+  },
+  /** Small profile snapshot so an offline launch can open the app instead of signing the user out. */
+  saveProfile: async (profile: object) => {
+    await setItem(PROFILE_KEY, JSON.stringify(profile));
+  },
+  getProfile: async <T,>(): Promise<T | null> => {
+    const raw = await getItem(PROFILE_KEY);
+    try {
+      return raw ? (JSON.parse(raw) as T) : null;
+    } catch {
+      return null;
+    }
   },
   getThemeMode: (): Promise<string | null> => getItem(THEME_MODE_KEY),
   setThemeMode: (mode: string): Promise<void> => setItem(THEME_MODE_KEY, mode),

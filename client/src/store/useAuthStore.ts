@@ -7,6 +7,7 @@ import {
   submitOnboarding,
   updateUserProfileApi,
   getMeUser,
+  setSessionExpiredHandler,
   forgotPasswordUser,
   resetPasswordUser,
   resendVerificationUser
@@ -20,6 +21,13 @@ import {
   resetPasswordClientSchema
 } from '../utils/authValidation';
 import { useStore } from './useStore';
+import { toast } from './useCelebrationStore';
+
+/** The fields an offline launch needs to open the app (avatar data URIs are too big to cache). */
+const slimProfile = (u: User) => ({
+  id: u.id, name: u.name, email: u.email, onboardingComplete: u.onboardingComplete, onboardingCompleted: u.onboardingCompleted,
+  monthlyIncome: u.monthlyIncome, retirementAge: u.retirementAge, currentBalance: u.currentBalance, dateOfBirth: u.dateOfBirth,
+});
 
 interface AuthState {
   user: User | null;
@@ -61,8 +69,8 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 
   initAuth: async () => {
     set({ initializing: true });
+    const accessToken = await secureStorage.getAccessToken();
     try {
-      const accessToken = await secureStorage.getAccessToken();
       if (accessToken) {
         setAuthToken(accessToken);
         const res = await getMeUser();
@@ -73,12 +81,21 @@ export const useAuthStore = create<AuthState>((set, get) => ({
             token: accessToken,
             onboardingCompleted: isComplete
           });
+          secureStorage.saveProfile(slimProfile(res.user)).catch(() => {});
         }
       }
-    } catch {
-      await secureStorage.clearTokens();
-      setAuthToken(undefined);
-      useStore.getState().resetStore();
+    } catch (error: any) {
+      // No response means we're offline or the server is down: open with the cached profile
+      // rather than signing the user out. Only a real auth rejection clears the session.
+      const cached = !error?.response && accessToken ? await secureStorage.getProfile<User>() : null;
+      if (cached) {
+        set({ user: cached, token: accessToken, onboardingCompleted: Boolean(cached.onboardingComplete || cached.onboardingCompleted) });
+        toast("You're offline", { tone: 'warning', subtitle: 'Showing what we can. Pull to refresh when you are back online.' });
+      } else {
+        await secureStorage.clearTokens();
+        setAuthToken(undefined);
+        useStore.getState().resetStore();
+      }
     } finally {
       set({ initializing: false });
     }
@@ -150,6 +167,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       const res = await loginUser(payload);
       const token = res.accessToken || res.token;
       await secureStorage.saveTokens(token, res.refreshToken);
+      if (res.user) secureStorage.saveProfile(slimProfile(res.user)).catch(() => {});
       setAuthToken(token);
       const isComplete = Boolean(res.user?.onboardingComplete || res.user?.onboardingCompleted);
 
@@ -296,3 +314,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   }
 }));
+
+// A refresh token the server rejects means the session is over: return to sign-in and say why.
+setSessionExpiredHandler(() => {
+  useStore.getState().resetStore();
+  useAuthStore.setState({ user: null, token: null, onboardingCompleted: false, showWelcome: false });
+  toast('Session expired', { tone: 'info', subtitle: 'Please sign in again.' });
+});

@@ -79,6 +79,12 @@ export function setAuthToken(token?: string): void {
 }
 
 // ── 401 Refresh Token Queue Interceptor ────────────────────────
+// The auth store registers this; api.ts can't import the store without a cycle.
+let onSessionExpired: (() => void) | null = null;
+export function setSessionExpiredHandler(handler: () => void): void {
+  onSessionExpired = handler;
+}
+
 let isRefreshing = false;
 let failedQueue: Array<{ resolve: (token: string) => void; reject: (err: any) => void }> = [];
 
@@ -135,10 +141,17 @@ api.interceptors.response.use(
         processQueue(null, accessToken);
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
         return api(originalRequest);
-      } catch (refreshErr) {
+      } catch (refreshErr: any) {
         processQueue(refreshErr, null);
-        await secureStorage.clearTokens();
-        setAuthToken(undefined);
+        // Only a rejected refresh ends the session; a network blip keeps the user signed in.
+        const rejected = refreshErr?.response
+          ? [401, 403].includes(refreshErr.response.status)
+          : refreshErr?.message === 'No refresh token available';
+        if (rejected) {
+          await secureStorage.clearTokens();
+          setAuthToken(undefined);
+          onSessionExpired?.();
+        }
         return Promise.reject(refreshErr);
       } finally {
         isRefreshing = false;

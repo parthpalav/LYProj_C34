@@ -75,7 +75,7 @@ export default function AlertsScreen() {
                   <IconTile icon="people" tint={c.chart[3]} />
                   <View style={styles.flex}>
                     <Text style={styles.title}>{inv.inviterName || 'Someone'} invited you to their household</Text>
-                    <Text style={styles.sub}>Shared totals and health score. Your transactions stay private.</Text>
+                    <Text style={styles.sub}>Shared totals and FMI. Your transactions stay private.</Text>
                   </View>
                 </View>
                 <View style={styles.actions}>

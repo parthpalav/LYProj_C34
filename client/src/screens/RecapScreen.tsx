@@ -20,7 +20,7 @@ const PAGES = 6;
 
 const enter = (i: number) => FadeInDown.delay(120 + i * 110).duration(520);
 
-/** "Wrapped"-style story of one month: money in and out, where it went, mix, health score, surprises. */
+/** "Wrapped"-style story of one month: money in and out, where it went, mix, FMI score, surprises. */
 export function RecapScreen() {
   const s = useStyles();
   const navigation = useNavigation();
@@ -135,7 +135,7 @@ export function RecapScreen() {
     </View>,
     // 5 · Health score
     <View key="fmi" style={s.page}>
-      <Animated.Text entering={enter(0)} style={s.kicker}>Financial Health Score</Animated.Text>
+      <Animated.Text entering={enter(0)} style={s.kicker}>Financial Maturity Index</Animated.Text>
       {report.fmi.hasSnapshots && report.fmi.last !== null ? (
         <>
           <Animated.View entering={ZoomIn.delay(150).springify().damping(14)}>

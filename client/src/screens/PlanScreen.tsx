@@ -119,10 +119,10 @@ export function PlanScreen(): React.ReactElement {
           </View>
 
           <Animated.View entering={enterUp(6)}>
-            <Card onPress={() => navigation.navigate('FMI')} style={styles.wide} accessibilityLabel="Open Financial Health Score">
+            <Card onPress={() => navigation.navigate('FMI')} style={styles.wide} accessibilityLabel="Open Financial Maturity Index">
               <IconTile icon="pulse" tint={c.primary} />
               <View style={styles.flex}>
-                <Text style={styles.wideTitle}>Financial Health Score</Text>
+                <Text style={styles.wideTitle}>Financial Maturity Index</Text>
                 <Text style={styles.wideBody}>What's driving your score and how to lift it.</Text>
               </View>
               <Ionicons name="chevron-forward" size={18} color={c.textSubtle} />

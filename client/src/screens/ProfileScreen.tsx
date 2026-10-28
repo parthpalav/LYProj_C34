@@ -354,7 +354,7 @@ export function ProfileScreen(): React.ReactElement {
             <View style={s.sheetSpacer} />
           </View>
           <ScrollView contentContainerStyle={s.sheetBody} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
-            <Text style={s.sheetIntro}>Forecasts, retirement odds and your health score use these values.</Text>
+            <Text style={s.sheetIntro}>Forecasts, retirement odds and your FMI score use these values.</Text>
 
             <Text style={s.group1}>About you</Text>
             <Field label="Full name" icon="person-outline" value={form.name} onChangeText={set('name')} />

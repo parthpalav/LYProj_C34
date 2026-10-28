@@ -208,7 +208,7 @@ export function ChatScreen(): React.ReactElement {
     {
       id: 'bot-0',
       role: 'assistant',
-      content: `Hi ${userName}! I'm FINAURA, your money copilot. Ask me about your balance, spending, **Financial Health Score**, bills, or when you could reach FIRE.`,
+      content: `Hi ${userName}! I'm FINAURA, your money copilot. Ask me about your balance, spending, **FMI score**, bills, or when you could reach FIRE.`,
       timestamp: new Date().toISOString(),
     },
   ];

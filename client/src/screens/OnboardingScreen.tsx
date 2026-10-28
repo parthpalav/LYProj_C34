@@ -24,7 +24,7 @@ const STEPS = [
   { title: 'About you', subtitle: 'So FINAURA can plan around your stage of life.' },
   { title: 'Your income', subtitle: 'A monthly baseline. You can log actual receipts later.' },
   { title: 'Where you are', subtitle: 'The money you can reach today, across bank accounts.' },
-  { title: "Where you're headed", subtitle: 'Your retirement target shapes forecasts and your health score.' },
+  { title: "Where you're headed", subtitle: 'Your retirement target shapes forecasts and your FMI score.' },
 ];
 
 const num = (v: string) => (v.trim() === '' ? NaN : Number(v));

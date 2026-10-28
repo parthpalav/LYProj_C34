@@ -389,7 +389,7 @@ export function DashboardScreen(): React.ReactElement {
     const month = new Date().toLocaleDateString('en-IN', { month: 'long' });
     items.push({
       key: 'recap', icon: 'albums', tint: c.chart[3], kicker: 'Monthly recap', title: `Your ${month} so far`,
-      body: 'Money in and out, where it went, and how your health score moved, as a quick story.',
+      body: 'Money in and out, where it went, and how your FMI score moved, as a quick story.',
       action: 'Play recap', onPress: () => navigation.navigate('Recap'),
     });
     return items;
@@ -505,9 +505,9 @@ export function DashboardScreen(): React.ReactElement {
           </View>
         )}
 
-        {/* ── Financial health ─────────────────────────── */}
-        <SectionHeader title="Financial health" action="Details" onAction={() => navigation.navigate('FMI')} />
-        <Card onPress={() => navigation.navigate('FMI')} style={styles.fmiCard} accessibilityLabel="View Financial Health Details">
+        {/* ── Financial Maturity Index ─────────────────────────── */}
+        <SectionHeader title="Financial Maturity (FMI)" action="Details" onAction={() => navigation.navigate('FMI')} />
+        <Card onPress={() => navigation.navigate('FMI')} style={styles.fmiCard} accessibilityLabel="View Financial Maturity Index details">
           <View style={styles.fmiScoreRow}>
             <Ring progress={(fmiScore ?? 0) / 100} size={84} stroke={9} color={fmiConfig.text}>
               <Text style={[styles.fmiScore, { color: fmiConfig.text }]}>{fmiScore ?? '—'}</Text>

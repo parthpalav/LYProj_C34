@@ -31,7 +31,9 @@ export function Sheet({ visible, onClose, title, children }: Props) {
     if (visible) setMounted(true);
     else if (mounted) {
       y.value = withTiming(height.value, { duration: duration.base, easing: Easing.in(Easing.cubic) }, (done) => {
-        if (done) scheduleOnRN(setMounted, false);
+        if (!done) return;
+        height.value = OFFSCREEN; // so the next open measures and slides in again
+        scheduleOnRN(setMounted, false);
       });
     }
   }, [visible, mounted, y, height]);
@@ -66,7 +68,7 @@ export function Sheet({ visible, onClose, title, children }: Props) {
 
   if (!mounted) return null;
   return (
-    <Modal transparent visible animationType="none" onRequestClose={onClose} statusBarTranslucent onDismiss={() => { height.value = OFFSCREEN; }}>
+    <Modal transparent visible animationType="none" onRequestClose={onClose} statusBarTranslucent>
       <Animated.View style={[StyleSheet.absoluteFill, styles.backdrop, backdrop]}>
         <Pressable style={StyleSheet.absoluteFill} onPress={onClose} accessibilityRole="button" accessibilityLabel="Close" />
       </Animated.View>

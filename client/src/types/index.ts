@@ -695,3 +695,15 @@ export interface FamilyDashboardResponse {
   error?: string;
   message?: string;
 }
+
+export interface SubscriptionSuggestion {
+  key: string;
+  name: string;
+  amount: number;
+  frequency: 'weekly' | 'monthly';
+  occurrences: number;
+  lastDate: string;
+  nextExpected: string;
+  category: string;
+  type: 'Need' | 'Want' | 'Investment';
+}

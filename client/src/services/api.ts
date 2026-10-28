@@ -7,7 +7,8 @@ import {
   FISData, FMIRecord, FMIResponse, Goal, IncomeFlowData, IncomeRecord,
   Transaction, WeeklyReport, User, Liability, LiabilityPaymentSummary,
   LiabilityPaymentHistoryResponse, PredictabilitySnapshot, PredictabilityResponse,
-  Asset, PredictabilityQueryOptions, FamilySummary, FamilyInvitation, FamilyDashboard, FamilyDashboardResponse
+  Asset, PredictabilityQueryOptions, FamilySummary, FamilyInvitation, FamilyDashboard, FamilyDashboardResponse,
+  SubscriptionSuggestion,
 } from '../types';
 
 export interface NewTransaction {
@@ -445,6 +446,12 @@ export async function getLiabilityTransactions(
   const { data } = await api.get(`/api/liabilities/${id}/transactions`, {
     params: { page, limit }
   });
+  return data.data;
+}
+
+/** Charges that repeat weekly or monthly at a steady amount and are not yet tracked as liabilities. */
+export async function getSubscriptionSuggestions(): Promise<SubscriptionSuggestion[]> {
+  const { data } = await api.get('/api/subscriptions/suggestions');
   return data.data;
 }
 

@@ -21,6 +21,8 @@ export function useHeaderHeight() {
  */
 export function useScrollHeader({ hidesTabBar = false } = {}) {
   const y = useSharedValue(0);
+  // Built on the JS thread: motion helpers aren't worklets, so the handler only captures the result.
+  const slide = timing(duration.base);
   const onScroll = useAnimatedScrollHandler<{ last?: number; hidden?: number }>({
     onScroll: (e, ctx) => {
       const next = e.contentOffset.y;
@@ -29,7 +31,7 @@ export function useScrollHeader({ hidesTabBar = false } = {}) {
         const want = next < 40 || dy < -4 ? 0 : dy > 4 ? 1 : ctx.hidden ?? 0;
         if (want !== ctx.hidden) {
           ctx.hidden = want;
-          tabBarHidden.value = withTiming(want, timing(duration.base));
+          tabBarHidden.value = withTiming(want, slide);
         }
       }
       ctx.last = next;

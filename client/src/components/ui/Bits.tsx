@@ -138,6 +138,7 @@ const useStyles = createStyles((c) => ({
   chip: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     gap: 6,
     paddingHorizontal: 14,
     paddingVertical: 8,

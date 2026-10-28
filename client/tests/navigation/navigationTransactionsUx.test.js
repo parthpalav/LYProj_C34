@@ -205,7 +205,7 @@ test('13. Type and category filters compose (AND between type & categories; OR w
   // Category filter: tx.category in selectedCategories
   assert.ok(code.includes("selectedCategories.includes"), 'Multi-category filter uses includes for OR matching');
   // Both should be in the dependencies array
-  assert.ok(code.includes("[activeType, selectedCategories, transactions]"), 'Both filters in useMemo deps');
+  assert.ok(code.includes("[activeType, selectedCategories, transactions"), 'Both filters in useMemo deps');
 });
 
 // ── TEST 14: Filter modal does NOT duplicate type selection ───────────────
@@ -214,7 +214,7 @@ test('14. Filter modal contains only Category, not duplicate Type selection', ()
   
   // Extract the filter modal section
   const modalStart = code.indexOf('Filter Transactions');
-  const modalEnd = code.indexOf('Apply Filters');
+  const modalEnd = code.indexOf('</Sheet>', modalStart);
   const modalSection = code.substring(modalStart, modalEnd);
   
   assert.ok(modalSection.includes('Category'), 'Category section in filter modal');
@@ -241,7 +241,7 @@ test('17. Category Investments (plural) remains strictly distinct from Type Inve
   // CATEGORIES contains 'Investments'
   assert.ok(txScreen.includes("label: 'Investments'"), 'Category label is Investments');
   // TYPE_BADGE contains 'Investment'
-  assert.ok(txScreen.includes("Investment: { bg: '#D1FAE5', text: '#065F46', label: 'Investment' }"), 'Type badge is Investment');
+  assert.ok(txScreen.includes("Investment: { color: c.successStrong, label: 'Investment' }"), 'Type badge is Investment');
   // TYPE_FILTERS contains 'Investment'
   assert.ok(txScreen.includes("{ key: 'Investment', label: 'Investments' }"), 'Type filter key is Investment');
 });

@@ -12,7 +12,8 @@
  *  - Progressive disclosure of probabilistic simulation and risk metrics.
  */
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import Animated from 'react-native-reanimated';
 import {
   View,
   Text,
@@ -29,6 +30,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { getPredictability } from '../services/api';
+import { LargeTitle, ScreenHeader, useHeaderHeight, useScrollHeader } from '../components/ui/ScreenHeader';
+import { Chip, ErrorState } from '../components/ui/Bits';
+import { WhatIfLab } from '../components/outlook/WhatIfLab';
 import { PredictabilitySnapshot, PredictabilityQueryOptions } from '../types';
 
 import { createStyles, useTheme, Palette } from '../theme';
@@ -243,7 +247,14 @@ export function FinancialOutlookScreen(): React.ReactElement {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
 
+  const headerHeight = useHeaderHeight();
+  const { onScroll } = useScrollHeader();
+  const scrollRef = useRef<React.ComponentRef<typeof Animated.ScrollView>>(null);
+  const anchors = useRef<Record<string, number>>({});
+  const [section, setSection] = useState('summary');
   const [snapshot, setSnapshot] = useState<PredictabilitySnapshot | null>(null);
+  const hasSnapshot = useRef(false);
+  const [updating, setUpdating] = useState(false);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -259,7 +270,9 @@ export function FinancialOutlookScreen(): React.ReactElement {
 
   const fetchOutlook = useCallback(async (isRefresh = false, overrideMode?: 'NOMINAL_FLAT' | 'STEP_UP', overrideRate?: number) => {
     try {
+      // Keep the current numbers on screen while a strategy change re-runs the simulation.
       if (isRefresh) setRefreshing(true);
+      else if (hasSnapshot.current) setUpdating(true);
       else setLoading(true);
       setError(null);
 
@@ -273,12 +286,14 @@ export function FinancialOutlookScreen(): React.ReactElement {
 
       const data = await getPredictability(opts);
       setSnapshot(data);
+      hasSnapshot.current = true;
     } catch (err: any) {
       console.error('Failed to fetch predictability snapshot:', err);
       setError(err?.response?.data?.message || err?.message || 'Unable to load your financial outlook.');
     } finally {
       setLoading(false);
       setRefreshing(false);
+      setUpdating(false);
     }
   }, [contributionMode, stepUpGrowthRate]);
 
@@ -291,52 +306,33 @@ export function FinancialOutlookScreen(): React.ReactElement {
     if (newRate !== undefined) {
       setStepUpGrowthRate(newRate);
     }
-    fetchOutlook(false, newMode, newRate);
+    // The effect above refetches when mode or rate change, so no direct fetch here (it used to run twice).
   };
 
-  // ── Loading View ───────────────────────────────────────────
-  if (loading && !snapshot) {
+  const mark = (key: string) => (e: { nativeEvent: { layout: { y: number } } }) => { anchors.current[key] = e.nativeEvent.layout.y; };
+  const jump = (key: string) => {
+    setSection(key);
+    scrollRef.current?.scrollTo({ y: Math.max(0, (anchors.current[key] ?? 0) - 56), animated: true });
+  };
+
+  // ── Loading / Error Views ──────────────────────────────────
+  if (!snapshot) {
     return (
-      <View style={[styles.container, { paddingTop: insets.top }]}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-            <Ionicons name="arrow-back" size={24} color={DARK} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Financial Outlook</Text>
-          <View style={{ width: 40 }} />
-        </View>
-        <View style={styles.centerContainer}>
-          <ActivityIndicator size="large" color={PRIMARY} />
-          <Text style={styles.loadingText}>Generating financial projections...</Text>
-        </View>
+      <View style={[styles.container, { paddingTop: headerHeight }]}>
+        {error ? (
+          <ErrorState message={error} onRetry={() => fetchOutlook()} />
+        ) : (
+          <View style={styles.centerContainer}>
+            <ActivityIndicator size="large" color={PRIMARY} />
+            <Text style={styles.loadingText}>Running 10,000 market simulations…</Text>
+          </View>
+        )}
+        <ScreenHeader title="Future Outlook" onBack={() => navigation.goBack()} />
       </View>
     );
   }
 
-  // ── Error View ─────────────────────────────────────────────
-  if (error && !snapshot) {
-    return (
-      <View style={[styles.container, { paddingTop: insets.top }]}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
-            <Ionicons name="arrow-back" size={24} color={DARK} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Financial Outlook</Text>
-          <View style={{ width: 40 }} />
-        </View>
-        <View style={styles.centerContainer}>
-          <Ionicons name="alert-circle-outline" size={54} color={WARNING} />
-          <Text style={styles.errorTitle}>Unable to Load Outlook</Text>
-          <Text style={styles.errorSubtitle}>{error}</Text>
-          <TouchableOpacity style={styles.retryBtn} onPress={() => fetchOutlook()}>
-            <Text style={styles.retryBtnText}>Retry</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  }
 
-  if (!snapshot) return <View style={styles.container} />;
 
   // ── Destructure Snapshot ───────────────────────────────────
   const {
@@ -373,26 +369,31 @@ export function FinancialOutlookScreen(): React.ReactElement {
   }
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
-      {/* ── Top Header ── */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn} activeOpacity={0.7}>
-          <Ionicons name="arrow-back" size={24} color={DARK} />
-        </TouchableOpacity>
-        <View style={styles.headerCenter}>
-          <Text style={styles.headerTitle}>Financial Outlook</Text>
-          <Text style={styles.headerSubtitle}>Forecast & Predictability</Text>
-        </View>
-        <TouchableOpacity onPress={() => fetchOutlook(true)} style={styles.backBtn} activeOpacity={0.7}>
-          <Ionicons name="refresh" size={20} color={PRIMARY} />
-        </TouchableOpacity>
-      </View>
-
-      <ScrollView
+    <View style={styles.container}>
+      <Animated.ScrollView
+        ref={scrollRef}
+        onScroll={onScroll}
+        scrollEventThrottle={16}
+        // Starts under the solid header so the section bar can stick right below it.
+        style={{ marginTop: headerHeight }}
+        stickyHeaderIndices={[1]}
         contentContainerStyle={[styles.scrollContent, { paddingBottom: insets.bottom + 32 }]}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => fetchOutlook(true)} tintColor={PRIMARY} />}
         showsVerticalScrollIndicator={false}
       >
+        <View style={styles.titleWrap}>
+          <LargeTitle title="Future Outlook" subtitle="Retirement odds, scenarios and your safety net" />
+        </View>
+        {/* Sticky children get their style moved to a wrapper, so the row lives one level down. */}
+        <View style={styles.jumpBar}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.jumpRow}>
+            {([['summary', 'Summary'], ['retirement', 'Retirement'], ['scenarios', 'Scenarios'], ['safety', 'Safety net']] as const).map(([key, label]) => (
+              <Chip key={key} label={label} selected={section === key} onPress={() => jump(key)} />
+            ))}
+          </ScrollView>
+        </View>
+
+        <View onLayout={mark('summary')} />
         {/* ══════════════════════════════════════════════════════
             SECTION A: HEADLINE SNAPSHOT CARDS
         ══════════════════════════════════════════════════════ */}
@@ -430,6 +431,9 @@ export function FinancialOutlookScreen(): React.ReactElement {
           </View>
         </View>
 
+        <WhatIfLab baseline={snapshot} />
+
+        <View onLayout={mark('retirement')} />
         {/* ══════════════════════════════════════════════════════
             SECTION B: RETIREMENT & FIRE OUTLOOK (DETERMINISTIC)
         ══════════════════════════════════════════════════════ */}
@@ -1091,6 +1095,7 @@ export function FinancialOutlookScreen(): React.ReactElement {
           </View>
         )}
 
+        <View onLayout={mark('scenarios')} />
         {/* ══════════════════════════════════════════════════════
             SECTION D: PLANNING SCENARIOS (SENSITIVITY ANALYSIS)
         ══════════════════════════════════════════════════════ */}
@@ -1258,6 +1263,7 @@ export function FinancialOutlookScreen(): React.ReactElement {
           </View>
         )}
 
+        <View onLayout={mark('safety')} />
         {/* ══════════════════════════════════════════════════════
             SECTION E: INCOME & RESILIENCE
         ══════════════════════════════════════════════════════ */}
@@ -1580,7 +1586,22 @@ export function FinancialOutlookScreen(): React.ReactElement {
             </View>
           </View>
         )}
-      </ScrollView>
+      </Animated.ScrollView>
+      <ScreenHeader
+        title="Future Outlook"
+        onBack={() => navigation.goBack()}
+        right={
+          <TouchableOpacity onPress={() => fetchOutlook(true)} hitSlop={10} accessibilityRole="button" accessibilityLabel="Refresh forecast">
+            <Ionicons name="refresh" size={20} color={PRIMARY} />
+          </TouchableOpacity>
+        }
+      />
+      {updating && (
+        <View style={[styles.updating, { top: headerHeight + 8 }]} pointerEvents="none">
+          <ActivityIndicator size="small" color={PRIMARY} />
+          <Text style={styles.updatingText}>Updating forecast…</Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -1623,6 +1644,37 @@ const useStyles = createStyles((c) => {
     fontWeight: '500',
     color: MUTED,
     marginTop: 1,
+  },
+  titleWrap: {
+    marginHorizontal: -16,
+  },
+  jumpBar: {
+    marginHorizontal: -16,
+    backgroundColor: APP_BG,
+  },
+  jumpRow: {
+    flexDirection: 'row',
+    gap: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+  },
+  updating: {
+    position: 'absolute',
+    alignSelf: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 999,
+    backgroundColor: CARD_BG,
+    borderWidth: 1,
+    borderColor: BORDER,
+  },
+  updatingText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: DARK,
   },
   scrollContent: {
     padding: 16,

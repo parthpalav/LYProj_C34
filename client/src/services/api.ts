@@ -8,7 +8,7 @@ import {
   Transaction, WeeklyReport, User, Liability, LiabilityPaymentSummary,
   LiabilityPaymentHistoryResponse, PredictabilitySnapshot, PredictabilityResponse,
   Asset, PredictabilityQueryOptions, FamilySummary, FamilyInvitation, FamilyDashboard, FamilyDashboardResponse,
-  SubscriptionSuggestion, MonthlyReport,
+  SubscriptionSuggestion, MonthlyReport, ScenarioOverrides,
 } from '../types';
 
 export interface NewTransaction {
@@ -460,6 +460,12 @@ export async function getLiabilityTransactions(
     params: { page, limit }
   });
   return data.data;
+}
+
+/** Re-runs the forecast with what-if overrides; read-only and rate limited on the server. */
+export async function runScenario(overrides: ScenarioOverrides): Promise<PredictabilitySnapshot> {
+  const { data } = await api.post('/api/predictability/scenario', overrides);
+  return data?.data || data;
 }
 
 /** Income, spending mix, top categories and health-score change for one calendar month (default: current). */

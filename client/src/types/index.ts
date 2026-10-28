@@ -723,3 +723,13 @@ export interface MonthlyReport {
   fmi: { hasSnapshots: boolean; snapshotCount: number; average: number | null; first: number | null; last: number | null; change: number | null };
   anomalies: { count: number; items: Array<{ id: string; description: string; amount: number; category: string; timestamp: string }> };
 }
+
+/** What-if overrides for POST /api/predictability/scenario; nothing is saved. */
+export interface ScenarioOverrides {
+  monthlyContribution?: number;
+  retirementAge?: number;
+  expectedReturnRate?: number;
+  expectedInflationRate?: number;
+  annualContributionGrowthRate?: number;
+  contributionMode?: 'NOMINAL_FLAT' | 'REAL_CONSTANT' | 'STEP_UP';
+}

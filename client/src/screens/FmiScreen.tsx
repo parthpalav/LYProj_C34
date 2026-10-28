@@ -376,7 +376,9 @@ export function FmiScreen(): React.ReactElement {
           <Text style={s.cardTitle}>Financial Maturity Index</Text>
           <Text style={s.cardSub}>Goal-based deterministic measure of your financial health</Text>
 
-          <Gauge score={score} label={label} />
+          <Animated.View sharedTransitionTag="fmi-score">
+            <Gauge score={score} label={label} />
+          </Animated.View>
           <StatusBadge status={status} />
         </View>
 

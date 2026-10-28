@@ -509,9 +509,12 @@ export function DashboardScreen(): React.ReactElement {
         <SectionHeader title="Financial Maturity (FMI)" action="Details" onAction={() => navigation.navigate('FMI')} />
         <Card onPress={() => navigation.navigate('FMI')} style={styles.fmiCard} accessibilityLabel="View Financial Maturity Index details">
           <View style={styles.fmiScoreRow}>
-            <Ring progress={(fmiScore ?? 0) / 100} size={84} stroke={9} color={fmiConfig.text}>
-              <Text style={[styles.fmiScore, { color: fmiConfig.text }]}>{fmiScore ?? '—'}</Text>
-            </Ring>
+            {/* Morphs into the FMI gauge on push once shared element transitions are built in. */}
+            <Animated.View sharedTransitionTag="fmi-score">
+              <Ring progress={(fmiScore ?? 0) / 100} size={84} stroke={9} color={fmiConfig.text}>
+                <Text style={[styles.fmiScore, { color: fmiConfig.text }]}>{fmiScore ?? '—'}</Text>
+              </Ring>
+            </Animated.View>
             <View style={styles.fmiText}>
               <Badge label={fmiScore === null ? 'Not enough data' : fmiConfig.label} tone={fmiScore === null ? 'neutral' : fmiScore >= 70 ? 'success' : fmiScore >= 45 ? 'warning' : 'danger'} />
               <Text style={styles.fmiInsight} numberOfLines={3}>
@@ -575,7 +578,7 @@ export function DashboardScreen(): React.ReactElement {
             const pct = g.targetAmount > 0 ? Math.min(1, g.savedAmount / g.targetAmount) : 0;
             return (
               <Card key={g.id} onPress={() => navigation.navigate('Goals')} style={styles.goalCard} accessibilityLabel={`${g.name}, ${Math.round(pct * 100)}% saved`}>
-                <Text style={styles.goalEmoji}>{g.emoji || '🎯'}</Text>
+                <Animated.Text sharedTransitionTag={`goal-${g.id}`} style={styles.goalEmoji}>{g.emoji || '🎯'}</Animated.Text>
                 <Text style={styles.goalName} numberOfLines={1}>{g.name}</Text>
                 <Text style={styles.goalAmount} numberOfLines={1}>{formatCurrency(g.savedAmount)}</Text>
                 <AnimatedBar progress={pct} color={pct >= 1 ? c.success : c.primary} height={6} delay={i * 100} style={styles.goalBar} />

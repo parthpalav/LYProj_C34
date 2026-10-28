@@ -267,7 +267,7 @@ export function GoalPlannerScreen(): React.ReactElement {
             <Animated.View key={g.id} entering={enterUp(i + 1)} exiting={exitFade} layout={listLayout}>
               <Card style={s.gap}>
                 <View style={s.goalTop}>
-                  <View style={s.goalEmoji}><Text style={s.goalEmojiTxt}>{g.emoji || '🎯'}</Text></View>
+                  <View style={s.goalEmoji}><Animated.Text sharedTransitionTag={`goal-${g.id}`} style={s.goalEmojiTxt}>{g.emoji || '🎯'}</Animated.Text></View>
                   <View style={s.flex}>
                     <Text style={s.goalName} numberOfLines={1}>{g.name}</Text>
                     <Text style={s.goalSub}>{date ? `By ${date.toLocaleDateString('en-IN', { month: 'short', year: 'numeric' })}` : 'No target date'}</Text>

@@ -37,11 +37,13 @@ function imageCell(dir, file, caption) {
     ],
   });
 }
-const afterCell = (file, caption) => fs.existsSync(path.join(AFTER, file)) ? imageCell(AFTER, file, caption) : new TableCell({
+const placeholderCell = (text) => new TableCell({
   borders, width: { size: COL, type: WidthType.DXA }, margins: { top: 120, bottom: 120, left: 120, right: 120 },
   verticalAlign: VerticalAlign.CENTER, shading: { fill: 'F8F9FB', type: ShadingType.CLEAR },
-  children: [new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text: 'After: to be captured once the overhaul ships', italics: true, size: 18, color: '98A2B3' })] })],
+  children: [new Paragraph({ alignment: AlignmentType.CENTER, children: [new TextRun({ text, italics: true, size: 18, color: '98A2B3' })] })],
 });
+const beforeCell = (file, caption) => fs.existsSync(path.join(BEFORE, file)) ? imageCell(BEFORE, file, caption) : placeholderCell('New screen: did not exist before the overhaul');
+const afterCell = (file, caption) => fs.existsSync(path.join(AFTER, file)) ? imageCell(AFTER, file, caption) : placeholderCell('After: run tools/capture-after.sh');
 const headerCell = (text) => new TableCell({
   borders, width: { size: COL, type: WidthType.DXA }, shading: { fill: 'EEF0FF', type: ShadingType.CLEAR },
   margins: { top: 80, bottom: 80, left: 120, right: 120 },
@@ -52,8 +54,8 @@ function compareTable(shots) {
   return new Table({
     width: { size: CONTENT, type: WidthType.DXA }, columnWidths: [COL, COL],
     rows: [
-      new TableRow({ tableHeader: true, children: [headerCell('Before (29 Oct 2026)'), headerCell('After')] }),
-      ...shots.map(([file, caption]) => new TableRow({ cantSplit: true, children: [imageCell(BEFORE, file, caption), afterCell(file, caption)] })),
+      new TableRow({ tableHeader: true, children: [headerCell('Before (main @ 1ef5142e)'), headerCell('After (feat/ux-overhaul)')] }),
+      ...shots.map(([file, caption]) => new TableRow({ cantSplit: true, children: [beforeCell(file, caption), afterCell(file, caption)] })),
     ],
   });
 }
@@ -150,16 +152,74 @@ const screens = [
     what: 'The same screens in dark mode.',
     issues: ['Mostly consistent; red-on-dark text on Goals is hard to read.', 'Status bar collision on scroll is the same as in light mode.'],
     shots: [['50-dark-dash.png', 'Home, dark'], ['53-dark-dash2.png', 'Home scrolled, dark'], ['51-dark-Transactions.png', 'Transactions, dark'], ['51-dark-Chat.png', 'AI chat, dark'], ['52-dark-FMI.png', 'FMI, dark'], ['52-dark-Goals.png', 'Savings Goals, dark'], ['52-dark-IncomeFlow.png', 'Income Streams, dark']] },
+
+  { group: 'New screens' },
+  { name: 'Plan hub', file: 'client/src/screens/PlanScreen.tsx', reach: 'Plan tab.',
+    what: 'Future Outlook hero, tiles for Goals, Bills, Assets and Income with live totals, Insights, FMI, Monthly recap, Round-ups and Family.',
+    issues: ['Did not exist: these screens were scattered across Home cards and Profile rows.'],
+    shots: [['70-plan.png', 'Plan hub']] },
+  { name: 'Notifications', file: 'client/src/screens/AlertsScreen.tsx', reach: 'Bell on Home (badge shows the count).',
+    what: 'Household invites with accept/decline, AI checks, bills due this week and server alerts.',
+    issues: ['The Alerts screen existed in code but no route reached it; invites were only visible inside Family.'],
+    shots: [['71-notifications.png', 'Notifications (all clear)']] },
+  { name: 'Check AI guesses', file: 'client/src/screens/ReviewScreen.tsx', reach: 'Notifications, or the banner in Activity.',
+    what: 'One card at a time for transactions the classifier was unsure about; confirm or correct, which teaches merchant memory.',
+    issues: ['New. needsReview transactions were never surfaced after logging.'],
+    shots: [['72-review.png', 'Review queue (empty for the test account)']] },
+  { name: 'Round-ups', file: 'client/src/screens/EnvelopesScreen.tsx', reach: 'Plan › Round-ups.',
+    what: 'Vault total, a suggested round-up from the last purchase, and quick amounts.',
+    issues: ['The envelopes screen existed but was unreachable; the server never created a vault for new users (fixed).'],
+    shots: [['73-roundups.png', 'Round-ups vault']] },
+  { name: 'Monthly recap', file: 'client/src/screens/RecapScreen.tsx', reach: 'Plan › Monthly recap, or the last card in Today.',
+    what: 'Full-screen story: money in and out, top categories, needs/wants mix, FMI change and unusual spends, with share.',
+    issues: ['New. /reports/monthly had no mobile screen.'],
+    shots: [['74-recap.png', 'Recap, first page']] },
+  { name: 'Insights', file: 'client/src/screens/InsightsScreen.tsx', reach: 'Plan › Insights.',
+    what: 'This month against 50/30/20, category donut, 12-week spending calendar, behaviour patterns, unusually large spends.',
+    issues: ['New. Pacing, heatmap and behaviour endpoints had no mobile screen.'],
+    shots: [['75-insights.png', 'Insights']] },
+  { name: 'What-if lab', file: 'client/src/components/outlook/WhatIfLab.tsx', reach: 'Future Outlook, below the summary.',
+    what: 'Steppers for monthly investing, retirement age and expected return; shows the modeled odds, change vs plan and projected corpus.',
+    issues: ['New. The scenario endpoint was only used by the web app.'],
+    shots: [['77-whatif.png', 'What-if with ₹15,000/month']] },
+  { name: 'Onboarding', file: 'client/src/screens/OnboardingScreen.tsx', reach: 'After creating an account.',
+    what: 'Four short steps over the aurora with progress dots, Back and validation.',
+    issues: ['Before: one long form that silently filled blanks (age 25, income 0). Not captured before because it needs a new account.'],
+    shots: [['76-onboarding.png', 'Onboarding, step 1']] },
 ];
+
+const CHANGES = {
+  'Login': ['Same aurora look, now the visual language of the whole app.', 'Shares one navigation stack with the app, so sign-in cross-fades into Welcome and Home.'],
+  'Create account (Register)': ['Unchanged layout; fields gained VoiceOver labels.'],
+  'Forgot password': ['The emailed reset link now opens a working reset page served by the API.'],
+  'Welcome': ['Stays on the aurora, so sign-in flows into Home without a white flash.', 'Reanimated entrance (logo zoom, staggered text).'],
+  'Home (Dashboard)': ['Aurora balance hero with this month’s spending pace ring.', 'Swipeable Today feed: smart next action first, then due bills, spending patterns, quick wins and the monthly recap.', 'FMI ring with pillars, spending trend and needs/wants/invest split, goals carousel, upcoming bills, money tiles, outlook teaser.', 'Bell with badge opens Notifications; avatar opens You.', 'Refreshes on focus; error state instead of a fake score of 50; status bar blurs on scroll.'],
+  'Transactions': ['Renamed Activity. Large collapsing title, aurora month summary, search, filter chips and an AI-check filter.', 'Grouped by day with sticky headers and daily totals.', 'Swipe right to edit, left to delete with an Undo toast.', 'Detected subscriptions can be tracked as a bill in one tap.'],
+  'Add transaction (Entry sheet)': ['Now QuickAdd: a native sheet opened from the centre + on the tab bar, from anywhere.', 'Large auto-focused amount, AI category chip with alternatives, Today/Yesterday/calendar date.', 'Inline validation, rupee formatting, no artificial delay after saving.'],
+  'Transaction options sheet': ['Draggable sheet; Edit turns the same sheet into the editor (no second modal).'],
+  'Filter transactions sheet': ['Theme-aware chips; Done replaces the no-op Apply button.'],
+  'Liabilities': ['Renamed Bills and moved under Plan. Monthly total and 30-day outlook, a two-week due-date strip, relative due dates computed from each schedule.', 'Editor uses a calendar and weekday/month pickers instead of typed numbers.'],
+  'AI assistant (Chat)': ['FINAURA mark instead of “Bot”, gradient bubbles, bold and bullet formatting, word-by-word reveal for new answers.', 'Try again on failures, collapsible suggested questions, composer that floats above the tab bar or keyboard.'],
+  'Profile': ['Now You & Settings, opened from the Home avatar.', 'Grouped links, Light / Dark / Automatic appearance, sign-out confirmation, toasts instead of alerts.'],
+  'Edit Planning Assumptions sheet': ['Native page sheet, grouped fields, inline validation, calendar date of birth.'],
+  'Adjust Bank Balance': ['Rupee formatting, toasts, and both user stores update so Home and You agree.'],
+  'Financial Health (FMI)': ['One name everywhere: Financial Maturity Index (FMI).', 'Collapsing header, theme colours for alerts (were light-only), dated history, “What moved your score”.'],
+  'Financial Outlook': ['New What-if lab: step investing, retirement age and return and watch the odds move.', 'Sticky section bar (Summary / Retirement / Scenarios / Safety net); strategy changes update in place and no longer fetch twice.'],
+  'Savings Goals': ['Single column fixes numbers wrapping mid-digit.', 'Real monthly plan from the target date (was a 12-month placeholder), edit and withdraw, milestone celebrations.'],
+  'Income Streams': ['Single add button, calendar dates, editable dates; the 50/30/20 split is labelled as a guide.'],
+  'Financial Assets': ['Light and dark themes (was always dark), composition bar, consistent icons, “1” now means 1%.'],
+  'Family & Household': ['Toasts for results, shared safe area, consistent back chevron.'],
+  'Dark mode samples': ['Every redesigned screen uses theme tokens; status bar blurs instead of colliding with content.'],
+};
 
 const children = [
   new Paragraph({ heading: HeadingLevel.TITLE, children: [new TextRun('FINAURA mobile app: UX before / after')] }),
-  p('Reference screenshots of every reachable screen before the UX overhaul. Each screen has a description, the issues seen, and an empty "After" column to fill in once the overhaul ships.'),
-  meta('Captured', '29 Oct 2026, main @ 1ef5142e'),
+  p('Every reachable screen before and after the UX overhaul. Each screen lists what it shows, the issues seen before, what changed, and both screenshots side by side. Screens added by the overhaul are at the end.'),
+  meta('Before', '29 Oct 2026, main @ 1ef5142e'),
+  meta('After', `${new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}, branch feat/ux-overhaul`),
   meta('Device', 'iPhone 17 Pro simulator, iOS 26.0, Expo dev client'),
   meta('Account', 'claude.uitest@example.com (sample data); light mode unless marked dark'),
-  meta('Not captured', 'Onboarding (needs a new account), Reset Password, and Alerts / Envelopes / Reports (these exist in code but no route reaches them)'),
-  meta('Note', 'The "Open debugger to view warnings" bar in some shots is a development-only overlay, not part of the app.'),
+  meta('Note', 'Development overlays (the debugger warning bar and Metro’s blue “Refreshing” banner) appear in some shots and are not part of the app. Charts show as plain circles until a native build includes react-native-svg; re-run tools/capture-after.sh after rebuilding.'),
   new Paragraph({ spacing: { before: 200 }, children: [] }),
   new Paragraph({ spacing: { after: 80 }, children: [new TextRun({ text: 'Screens in this document', bold: true })] }),
   ...screens.map((s) => s.group ? new Paragraph({ spacing: { before: 120, after: 40 }, children: [new TextRun({ text: s.group, bold: true, color: '3B3BDE' })] }) : bullet(s.name)),
@@ -177,6 +237,10 @@ for (const s of screens) {
   children.push(meta('What it shows', s.what));
   children.push(new Paragraph({ spacing: { before: 80, after: 40 }, keepNext: true, children: [new TextRun({ text: 'Issues seen', bold: true, size: 19 })] }));
   s.issues.forEach((i) => children.push(bullet(i)));
+  if (CHANGES[s.name]) {
+    children.push(new Paragraph({ spacing: { before: 80, after: 40 }, keepNext: true, children: [new TextRun({ text: 'What changed', bold: true, size: 19, color: '059669' })] }));
+    CHANGES[s.name].forEach((i) => children.push(bullet(i)));
+  }
   children.push(new Paragraph({ spacing: { after: 80 }, keepNext: true, children: [] }));
   children.push(compareTable(s.shots));
 }

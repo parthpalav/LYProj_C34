@@ -71,7 +71,7 @@ function MainTabNavigator(): React.ReactElement {
       <Tab.Screen name="Dashboard" component={HomeTab} options={{ title: 'Home', headerShown: false }} />
       <Tab.Screen name="Transactions" component={ActivityTab} options={{ title: 'Activity', headerShown: false }} />
       <Tab.Screen name="Plan" component={PlanTab} options={{ headerShown: false }} />
-      <Tab.Screen name="Chat" component={ChatTab} options={{ title: 'AI' }} />
+      <Tab.Screen name="Chat" component={ChatTab} options={{ title: 'AI', headerShown: false }} />
     </Tab.Navigator>
   );
 }

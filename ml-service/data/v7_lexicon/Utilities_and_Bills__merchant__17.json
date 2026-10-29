@@ -1,0 +1,322 @@
+[
+  {
+    "text": "LPG Booking Online",
+    "type": "Need"
+  },
+  {
+    "text": "Indane Refill Booking",
+    "type": "Need"
+  },
+  {
+    "text": "Bharat Gas Booking",
+    "type": "Need"
+  },
+  {
+    "text": "HP Gas Refill Booking",
+    "type": "Need"
+  },
+  {
+    "text": "Bharatgas Refill Booking",
+    "type": "Need"
+  },
+  {
+    "text": "LPG Missed Call Booking",
+    "type": "Need"
+  },
+  {
+    "text": "IVRS Gas Booking",
+    "type": "Need"
+  },
+  {
+    "text": "SMS Gas Booking",
+    "type": "Need"
+  },
+  {
+    "text": "LPG Refill Form",
+    "type": "Need"
+  },
+  {
+    "text": "Cylinder Booking Form",
+    "type": "Need"
+  },
+  {
+    "text": "Cylinder Booking Online",
+    "type": "Need"
+  },
+  {
+    "text": "Gas Cylinder Booking App",
+    "type": "Need"
+  },
+  {
+    "text": "Cylinder Refill Request",
+    "type": "Need"
+  },
+  {
+    "text": "Gas Refill Request",
+    "type": "Need"
+  },
+  {
+    "text": "Cylinder Home Delivery",
+    "type": "Need"
+  },
+  {
+    "text": "Cylinder Delivery Charge",
+    "type": "Need"
+  },
+  {
+    "text": "LPG Delivery Charges",
+    "type": "Need"
+  },
+  {
+    "text": "LPG New Connection",
+    "type": "Need"
+  },
+  {
+    "text": "Indane New Connection",
+    "type": "Need"
+  },
+  {
+    "text": "Bharat Gas New Connection",
+    "type": "Need"
+  },
+  {
+    "text": "HP Gas New Connection",
+    "type": "Need"
+  },
+  {
+    "text": "LPG Safety Inspection",
+    "type": "Need"
+  },
+  {
+    "text": "Gas Leak Inspection Visit",
+    "type": "Need"
+  },
+  {
+    "text": "Gas Cylinder Advance Booking",
+    "type": "Need"
+  },
+  {
+    "text": "Gas Cylinder Pre Booking",
+    "type": "Need"
+  },
+  {
+    "text": "Gas Cylinder Pay Online",
+    "type": "Need"
+  },
+  {
+    "text": "Gas Cylinder Payment Desk",
+    "type": "Need"
+  },
+  {
+    "text": "Gas Cylinder Counter",
+    "type": "Need"
+  },
+  {
+    "text": "LPG Refill Counter",
+    "type": "Need"
+  },
+  {
+    "text": "LPG Refill Shop",
+    "type": "Need"
+  },
+  {
+    "text": "Cylinder Refill Station",
+    "type": "Need"
+  },
+  {
+    "text": "Cylinder Refill Point",
+    "type": "Need"
+  },
+  {
+    "text": "Gas Refill Point",
+    "type": "Need"
+  },
+  {
+    "text": "Cylinder Refill Desk",
+    "type": "Need"
+  },
+  {
+    "text": "Gas Cylinder Delivery Desk",
+    "type": "Need"
+  },
+  {
+    "text": "LPG Delivery Desk",
+    "type": "Need"
+  },
+  {
+    "text": "LPG Refill Helpline",
+    "type": "Need"
+  },
+  {
+    "text": "LPG Customer Care",
+    "type": "Need"
+  },
+  {
+    "text": "Indane Customer Care",
+    "type": "Need"
+  },
+  {
+    "text": "Bharat Gas Customer Care",
+    "type": "Need"
+  },
+  {
+    "text": "HP Gas Customer Care",
+    "type": "Need"
+  },
+  {
+    "text": "Cylinder Booking Helpline",
+    "type": "Need"
+  },
+  {
+    "text": "LPG Consumer Portal",
+    "type": "Need"
+  },
+  {
+    "text": "MyLPG Booking",
+    "type": "Need"
+  },
+  {
+    "text": "Gas Cylinder Booking Portal",
+    "type": "Need"
+  },
+  {
+    "text": "Refill Booking Portal",
+    "type": "Need"
+  },
+  {
+    "text": "Paytm Gas Booking",
+    "type": "Need"
+  },
+  {
+    "text": "Cylinder Booking Via Paytm",
+    "type": "Need"
+  },
+  {
+    "text": "Indane Booking Portal",
+    "type": "Need"
+  },
+  {
+    "text": "HP Gas Booking Portal",
+    "type": "Need"
+  },
+  {
+    "text": "Bharat Gas Refill Portal",
+    "type": "Need"
+  },
+  {
+    "text": "Cylinder Refill App",
+    "type": "Need"
+  },
+  {
+    "text": "LPG Refill App",
+    "type": "Need"
+  },
+  {
+    "text": "Gas Booking Helpline",
+    "type": "Need"
+  },
+  {
+    "text": "Gas Agency Office",
+    "type": "Need"
+  },
+  {
+    "text": "Gas Agency Desk",
+    "type": "Need"
+  },
+  {
+    "text": "LPG Agency Helpline",
+    "type": "Need"
+  },
+  {
+    "text": "Cylinder Booking Kiosk",
+    "type": "Need"
+  },
+  {
+    "text": "LPG Booking Kiosk",
+    "type": "Need"
+  },
+  {
+    "text": "Gas Refill Kiosk",
+    "type": "Need"
+  },
+  {
+    "text": "Indane Booking Kiosk",
+    "type": "Need"
+  },
+  {
+    "text": "Gas Cylinder Hotline",
+    "type": "Need"
+  },
+  {
+    "text": "Indane Hotline",
+    "type": "Need"
+  },
+  {
+    "text": "HP Gas Hotline",
+    "type": "Need"
+  },
+  {
+    "text": "Bharat Gas Hotline",
+    "type": "Need"
+  },
+  {
+    "text": "LPG Booking WhatsApp",
+    "type": "Need"
+  },
+  {
+    "text": "Cylinder Booking WhatsApp",
+    "type": "Need"
+  },
+  {
+    "text": "Gas Refill WhatsApp",
+    "type": "Need"
+  },
+  {
+    "text": "Indane WhatsApp Booking",
+    "type": "Need"
+  },
+  {
+    "text": "Bharat Gas WhatsApp",
+    "type": "Need"
+  },
+  {
+    "text": "Refill Cylinder Booking",
+    "type": "Need"
+  },
+  {
+    "text": "Cylinder Refill Order Form",
+    "type": "Need"
+  },
+  {
+    "text": "LPG Order Form",
+    "type": "Need"
+  },
+  {
+    "text": "LPG Refill Slip",
+    "type": "Need"
+  },
+  {
+    "text": "Cylinder Refill Slip",
+    "type": "Need"
+  },
+  {
+    "text": "LPG Delivery Slip",
+    "type": "Need"
+  },
+  {
+    "text": "Gas Cylinder Receipt",
+    "type": "Need"
+  },
+  {
+    "text": "Gas Cylinder Invoice",
+    "type": "Need"
+  },
+  {
+    "text": "Cylinder Refill Plan",
+    "type": "Need"
+  },
+  {
+    "text": "LPG Subscription Plan",
+    "type": "Need"
+  }
+]

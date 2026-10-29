@@ -1,0 +1,322 @@
+[
+ {
+  "text": "Sahakari Bhandar",
+  "type": "Need"
+ },
+ {
+  "text": "Sahakari Kendra Store",
+  "type": "Need"
+ },
+ {
+  "text": "Sahakar Bhandar Store",
+  "type": "Need"
+ },
+ {
+  "text": "Grahak Bhandar",
+  "type": "Need"
+ },
+ {
+  "text": "Grahak Sahakari Store",
+  "type": "Need"
+ },
+ {
+  "text": "Kendriya Bhandar",
+  "type": "Need"
+ },
+ {
+  "text": "Kendriya Sahakari Store",
+  "type": "Need"
+ },
+ {
+  "text": "Police Co-op Store",
+  "type": "Need"
+ },
+ {
+  "text": "Mumbai Police Co-op Store",
+  "type": "Need"
+ },
+ {
+  "text": "Bank Staff Co-op Store",
+  "type": "Need"
+ },
+ {
+  "text": "Railway Co-op Store",
+  "type": "Need"
+ },
+ {
+  "text": "Railway Colony Store",
+  "type": "Need"
+ },
+ {
+  "text": "Teachers Co-op Store",
+  "type": "Need"
+ },
+ {
+  "text": "Society Provision Store",
+  "type": "Need"
+ },
+ {
+  "text": "Apartment Co-op Store",
+  "type": "Need"
+ },
+ {
+  "text": "Colony Co-op Store",
+  "type": "Need"
+ },
+ {
+  "text": "Township Co-op Store",
+  "type": "Need"
+ },
+ {
+  "text": "Sahkari Samiti Store",
+  "type": "Need"
+ },
+ {
+  "text": "Samiti Bhandar",
+  "type": "Need"
+ },
+ {
+  "text": "Mahila Sahakari Bhandar",
+  "type": "Need"
+ },
+ {
+  "text": "Doctors Co-op Store",
+  "type": "Need"
+ },
+ {
+  "text": "Employees Co-op Store",
+  "type": "Need"
+ },
+ {
+  "text": "Office Co-op Store",
+  "type": "Need"
+ },
+ {
+  "text": "Staff Provision Store",
+  "type": "Need"
+ },
+ {
+  "text": "University Co-op Store",
+  "type": "Need"
+ },
+ {
+  "text": "College Co-op Store",
+  "type": "Need"
+ },
+ {
+  "text": "Campus Co-op Bhandar",
+  "type": "Need"
+ },
+ {
+  "text": "Cantonment Co-op Store",
+  "type": "Need"
+ },
+ {
+  "text": "Naval Co-op Store",
+  "type": "Need"
+ },
+ {
+  "text": "Air Force Co-op Store",
+  "type": "Need"
+ },
+ {
+  "text": "Defence Co-op Store",
+  "type": "Need"
+ },
+ {
+  "text": "Ordnance Co-op Store",
+  "type": "Need"
+ },
+ {
+  "text": "Secretariat Co-op Store",
+  "type": "Need"
+ },
+ {
+  "text": "Govt Employees Store",
+  "type": "Need"
+ },
+ {
+  "text": "Pensioners Co-op Store",
+  "type": "Need"
+ },
+ {
+  "text": "Sainik Bhandar",
+  "type": "Need"
+ },
+ {
+  "text": "Jawan Bhandar",
+  "type": "Need"
+ },
+ {
+  "text": "CSD Canteen Store",
+  "type": "Need"
+ },
+ {
+  "text": "CSD Canteen Depot",
+  "type": "Need"
+ },
+ {
+  "text": "CSD Bhandar",
+  "type": "Need"
+ },
+ {
+  "text": "Army Canteen Store",
+  "type": "Need"
+ },
+ {
+  "text": "Army Canteen Depot",
+  "type": "Need"
+ },
+ {
+  "text": "Naval Canteen Store",
+  "type": "Need"
+ },
+ {
+  "text": "Air Force Canteen Store",
+  "type": "Need"
+ },
+ {
+  "text": "Military Canteen Store",
+  "type": "Need"
+ },
+ {
+  "text": "Cantt Canteen Store",
+  "type": "Need"
+ },
+ {
+  "text": "Cantonment Canteen Store",
+  "type": "Need"
+ },
+ {
+  "text": "Sainik Canteen Store",
+  "type": "Need"
+ },
+ {
+  "text": "Jawan Canteen Shop",
+  "type": "Need"
+ },
+ {
+  "text": "Ex Servicemen Store",
+  "type": "Need"
+ },
+ {
+  "text": "Ex Servicemen Canteen",
+  "type": "Need"
+ },
+ {
+  "text": "Sena Canteen Bhandar",
+  "type": "Need"
+ },
+ {
+  "text": "Canteen Stores Dept",
+  "type": "Need"
+ },
+ {
+  "text": "CSD Depot Shop",
+  "type": "Need"
+ },
+ {
+  "text": "CSD Store Kendra",
+  "type": "Need"
+ },
+ {
+  "text": "CSD Grocery Depot",
+  "type": "Need"
+ },
+ {
+  "text": "CSD Atta Store",
+  "type": "Need"
+ },
+ {
+  "text": "CSD Rice Store",
+  "type": "Need"
+ },
+ {
+  "text": "CSD Dal Store",
+  "type": "Need"
+ },
+ {
+  "text": "CSD Oil Store",
+  "type": "Need"
+ },
+ {
+  "text": "CSD Masala Store",
+  "type": "Need"
+ },
+ {
+  "text": "CSD Soap and Detergent Store",
+  "type": "Need"
+ },
+ {
+  "text": "Canteen Pulses Store",
+  "type": "Need"
+ },
+ {
+  "text": "Canteen Rice Depot",
+  "type": "Need"
+ },
+ {
+  "text": "Canteen Oil Store",
+  "type": "Need"
+ },
+ {
+  "text": "Canteen Milk Booth",
+  "type": "Need"
+ },
+ {
+  "text": "Canteen Ration Store",
+  "type": "Need"
+ },
+ {
+  "text": "Ration Depot Canteen",
+  "type": "Need"
+ },
+ {
+  "text": "Canteen Provision Shop",
+  "type": "Need"
+ },
+ {
+  "text": "Canteen Staples Store",
+  "type": "Need"
+ },
+ {
+  "text": "Canteen Flour Store",
+  "type": "Need"
+ },
+ {
+  "text": "Canteen Snacks Corner",
+  "type": "Want"
+ },
+ {
+  "text": "Canteen Biscuit Shop",
+  "type": "Want"
+ },
+ {
+  "text": "Canteen Chocolate Corner",
+  "type": "Want"
+ },
+ {
+  "text": "Canteen Namkeen Shop",
+  "type": "Want"
+ },
+ {
+  "text": "Canteen Tea Powder Store",
+  "type": "Need"
+ },
+ {
+  "text": "Canteen Sweets Corner",
+  "type": "Want"
+ },
+ {
+  "text": "Canteen Ghee Store",
+  "type": "Need"
+ },
+ {
+  "text": "Canteen Spices Depot",
+  "type": "Need"
+ },
+ {
+  "text": "Canteen Dry Fruit Store",
+  "type": "Want"
+ }
+]

@@ -1,0 +1,322 @@
+[
+  {
+    "text": "BBPS Bill Pay",
+    "type": "Need"
+  },
+  {
+    "text": "BBPS Payment",
+    "type": "Need"
+  },
+  {
+    "text": "BBPS Utility Pay",
+    "type": "Need"
+  },
+  {
+    "text": "BillDesk BBPS",
+    "type": "Need"
+  },
+  {
+    "text": "BillDesk Payments",
+    "type": "Need"
+  },
+  {
+    "text": "Paytm BBPS",
+    "type": "Need"
+  },
+  {
+    "text": "Paytm Bill Payments",
+    "type": "Need"
+  },
+  {
+    "text": "Paytm Utility Bills",
+    "type": "Need"
+  },
+  {
+    "text": "PhonePe Bill Pay",
+    "type": "Need"
+  },
+  {
+    "text": "PhonePe Bills",
+    "type": "Need"
+  },
+  {
+    "text": "Google Pay Bills",
+    "type": "Need"
+  },
+  {
+    "text": "GPay Bill Payment",
+    "type": "Need"
+  },
+  {
+    "text": "Amazon Pay Bills",
+    "type": "Need"
+  },
+  {
+    "text": "Mobikwik Bill Pay",
+    "type": "Need"
+  },
+  {
+    "text": "Mobikwik Utility",
+    "type": "Need"
+  },
+  {
+    "text": "Freecharge Bill Pay",
+    "type": "Need"
+  },
+  {
+    "text": "Setu BBPS",
+    "type": "Need"
+  },
+  {
+    "text": "Setu Bill Pay",
+    "type": "Need"
+  },
+  {
+    "text": "Pine Labs BBPS",
+    "type": "Need"
+  },
+  {
+    "text": "Pine Labs Pay",
+    "type": "Need"
+  },
+  {
+    "text": "Juspay BBPS",
+    "type": "Need"
+  },
+  {
+    "text": "NPCI BBPS",
+    "type": "Need"
+  },
+  {
+    "text": "Bharat Bill Pay",
+    "type": "Need"
+  },
+  {
+    "text": "BillAvenue Pay",
+    "type": "Need"
+  },
+  {
+    "text": "CSC Bill Pay",
+    "type": "Need"
+  },
+  {
+    "text": "Common Service Centre",
+    "type": "Need"
+  },
+  {
+    "text": "Jan Seva Kendra",
+    "type": "Need"
+  },
+  {
+    "text": "eSeva Centre",
+    "type": "Need"
+  },
+  {
+    "text": "Mee Seva Kendra",
+    "type": "Need"
+  },
+  {
+    "text": "Sahaj Seva Kendra",
+    "type": "Need"
+  },
+  {
+    "text": "Suvidha Kendra",
+    "type": "Need"
+  },
+  {
+    "text": "Nagar Seva Kendra",
+    "type": "Need"
+  },
+  {
+    "text": "E-Mitra Kendra",
+    "type": "Need"
+  },
+  {
+    "text": "Sahayata Kendra",
+    "type": "Need"
+  },
+  {
+    "text": "Digital Seva Kendra",
+    "type": "Need"
+  },
+  {
+    "text": "Easy Bill Pay",
+    "type": "Need"
+  },
+  {
+    "text": "Quick Bill Pay",
+    "type": "Need"
+  },
+  {
+    "text": "Bill Pay Kiosk",
+    "type": "Need"
+  },
+  {
+    "text": "Utility Pay Point",
+    "type": "Need"
+  },
+  {
+    "text": "Bill Hub Payments",
+    "type": "Need"
+  },
+  {
+    "text": "Recharge Hub",
+    "type": "Need"
+  },
+  {
+    "text": "Dial A Recharge",
+    "type": "Need"
+  },
+  {
+    "text": "Recharge Bharat",
+    "type": "Need"
+  },
+  {
+    "text": "Rechargeit Online",
+    "type": "Need"
+  },
+  {
+    "text": "PayU Bill Pay",
+    "type": "Need"
+  },
+  {
+    "text": "CCAvenue Bills",
+    "type": "Need"
+  },
+  {
+    "text": "Ezetap Bill Pay",
+    "type": "Need"
+  },
+  {
+    "text": "Easebuzz Bills",
+    "type": "Need"
+  },
+  {
+    "text": "Cashfree Bill Pay",
+    "type": "Need"
+  },
+  {
+    "text": "Instamojo Bill Pay",
+    "type": "Need"
+  },
+  {
+    "text": "Billpay India",
+    "type": "Need"
+  },
+  {
+    "text": "Bharat Connect Kiosk",
+    "type": "Need"
+  },
+  {
+    "text": "Bill Mitra Pay",
+    "type": "Need"
+  },
+  {
+    "text": "Mobile Seva Kiosk",
+    "type": "Need"
+  },
+  {
+    "text": "PhonePe Utility",
+    "type": "Need"
+  },
+  {
+    "text": "Razorpay BBPS",
+    "type": "Need"
+  },
+  {
+    "text": "Freecharge Utility",
+    "type": "Need"
+  },
+  {
+    "text": "Ola Money Bills",
+    "type": "Need"
+  },
+  {
+    "text": "Fino Payments Bank",
+    "type": "Need"
+  },
+  {
+    "text": "Bank Mitra Kiosk",
+    "type": "Need"
+  },
+  {
+    "text": "Customer Service Point",
+    "type": "Need"
+  },
+  {
+    "text": "Bill Collection Centre",
+    "type": "Need"
+  },
+  {
+    "text": "Utility Collection Counter",
+    "type": "Need"
+  },
+  {
+    "text": "Bill Payment Centre",
+    "type": "Need"
+  },
+  {
+    "text": "Bill Center Kiosk",
+    "type": "Need"
+  },
+  {
+    "text": "Pay Point Kiosk",
+    "type": "Need"
+  },
+  {
+    "text": "Vidyut Seva Kendra",
+    "type": "Need"
+  },
+  {
+    "text": "Nagarik Seva Kendra",
+    "type": "Need"
+  },
+  {
+    "text": "Dhan Seva Kendra",
+    "type": "Need"
+  },
+  {
+    "text": "Jan Sampark Kendra",
+    "type": "Need"
+  },
+  {
+    "text": "Sewa Kendra",
+    "type": "Need"
+  },
+  {
+    "text": "Gram Panchayat Bill Desk",
+    "type": "Need"
+  },
+  {
+    "text": "Bill Point Kiosk",
+    "type": "Need"
+  },
+  {
+    "text": "Easy Pay Kiosk",
+    "type": "Need"
+  },
+  {
+    "text": "Quick Pay Kiosk",
+    "type": "Need"
+  },
+  {
+    "text": "Pay Bills Online",
+    "type": "Need"
+  },
+  {
+    "text": "Bill Pay Online",
+    "type": "Need"
+  },
+  {
+    "text": "Online Bill Desk",
+    "type": "Need"
+  },
+  {
+    "text": "Bill Aggregator Pay",
+    "type": "Need"
+  },
+  {
+    "text": "Utility Bill Desk",
+    "type": "Need"
+  }
+]

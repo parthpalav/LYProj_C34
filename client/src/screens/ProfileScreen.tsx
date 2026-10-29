@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ActivityIndicator, Alert, Image, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Alert, Image, KeyboardAvoidingView, Modal, Platform, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import { Ionicons } from '@expo/vector-icons';
@@ -10,7 +10,7 @@ import { useStore } from '../store/useStore';
 import { useAuthStore } from '../store/useAuthStore';
 import { useThemeStore } from '../store/useThemeStore';
 import { toast } from '../store/useCelebrationStore';
-import { updateUserProfileApi } from '../services/api';
+import { getUserProfile, updateUserProfileApi } from '../services/api';
 import { User } from '../types';
 import { createStyles, radius, typeScale, useTheme } from '../theme';
 import { enterUp } from '../motion';
@@ -95,6 +95,7 @@ export function ProfileScreen(): React.ReactElement {
   const [editVisible, setEditVisible] = useState(false);
   const [editError, setEditError] = useState('');
   const [avatarBusy, setAvatarBusy] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [avatarRenderKey, setAvatarRenderKey] = useState(0);
   const [form, setForm] = useState<Record<string, string>>({});
   const [editDOB, setEditDOB] = useState<Date>(new Date(2000, 0, 1));
@@ -258,6 +259,18 @@ export function ProfileScreen(): React.ReactElement {
         scrollEventThrottle={16}
         contentContainerStyle={{ paddingTop: headerHeight, paddingBottom: insets.bottom + 40 }}
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            tintColor={c.primary}
+            progressViewOffset={headerHeight}
+            onRefresh={async () => {
+              setRefreshing(true);
+              try { setStoreUser(await getUserProfile()); } catch { toast("Couldn't refresh your profile", { tone: 'error' }); }
+              setRefreshing(false);
+            }}
+          />
+        }
       >
         <LargeTitle title="You" />
 

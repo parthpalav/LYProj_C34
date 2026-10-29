@@ -1,0 +1,306 @@
+[
+ {
+  "text": "Dominos",
+  "type": "Want"
+ },
+ {
+  "text": "McDonalds",
+  "type": "Want"
+ },
+ {
+  "text": "KFC",
+  "type": "Want"
+ },
+ {
+  "text": "Pizza Hut",
+  "type": "Want"
+ },
+ {
+  "text": "Burger King",
+  "type": "Want"
+ },
+ {
+  "text": "Subway",
+  "type": "Want"
+ },
+ {
+  "text": "Cafe Coffee Day",
+  "type": "Want"
+ },
+ {
+  "text": "Barista",
+  "type": "Want"
+ },
+ {
+  "text": "Dunkin Donuts",
+  "type": "Want"
+ },
+ {
+  "text": "Chai Point",
+  "type": "Want"
+ },
+ {
+  "text": "Dineout",
+  "type": "Want"
+ },
+ {
+  "text": "Zomato",
+  "type": "Want"
+ },
+ {
+  "text": "Swiggy",
+  "type": "Want"
+ },
+ {
+  "text": "UberEats",
+  "type": "Want"
+ },
+ {
+  "text": "FoodPanda",
+  "type": "Want"
+ },
+ {
+  "text": "Pista House",
+  "type": "Want"
+ },
+ {
+  "text": "The Bombay Canteen",
+  "type": "Want"
+ },
+ {
+  "text": "Keventers",
+  "type": "Want"
+ },
+ {
+  "text": "Cafecino",
+  "type": "Want"
+ },
+ {
+  "text": "Baker's Street",
+  "type": "Want"
+ },
+ {
+  "text": "Thelees",
+  "type": "Want"
+ },
+ {
+  "text": "Pret",
+  "type": "Want"
+ },
+ {
+  "text": "Tandoor",
+  "type": "Want"
+ },
+ {
+  "text": "Punjabi Tadka",
+  "type": "Want"
+ },
+ {
+  "text": "Keventers",
+  "type": "Want"
+ },
+ {
+  "text": "Chaayos",
+  "type": "Want"
+ },
+ {
+  "text": "Pleasant Delhi",
+  "type": "Want"
+ },
+ {
+  "text": "Dum Pukht",
+  "type": "Want"
+ },
+ {
+  "text": "Peshawri",
+  "type": "Want"
+ },
+ {
+  "text": "Bakers Inn",
+  "type": "Want"
+ },
+ {
+  "text": "Gulab House",
+  "type": "Want"
+ },
+ {
+  "text": "Sweet Corner",
+  "type": "Want"
+ },
+ {
+  "text": "Sukh Sagar",
+  "type": "Want"
+ },
+ {
+  "text": "Kesar Pista House",
+  "type": "Want"
+ },
+ {
+  "text": "Shree Thakur Dairy",
+  "type": "Need"
+ },
+ {
+  "text": "Saravana Bhavan",
+  "type": "Want"
+ },
+ {
+  "text": "MTR",
+  "type": "Want"
+ },
+ {
+  "text": "Punjabi Rasoi",
+  "type": "Want"
+ },
+ {
+  "text": "Natraj Sweets",
+  "type": "Want"
+ },
+ {
+  "text": "Lalita Sweets",
+  "type": "Want"
+ },
+ {
+  "text": "Mamta Sweets",
+  "type": "Want"
+ },
+ {
+  "text": "Bikanervala",
+  "type": "Want"
+ },
+ {
+  "text": "Haldiram's",
+  "type": "Want"
+ },
+ {
+  "text": "Mithai Bhandar",
+  "type": "Want"
+ },
+ {
+  "text": "Tandoori Master",
+  "type": "Want"
+ },
+ {
+  "text": "Nanda's Kitchen",
+  "type": "Want"
+ },
+ {
+  "text": "Khari Baoli",
+  "type": "Want"
+ },
+ {
+  "text": "Bikanerwala",
+  "type": "Want"
+ },
+ {
+  "text": "Nimbkaras",
+  "type": "Want"
+ },
+ {
+  "text": "Shri Thakur Dairy",
+  "type": "Need"
+ },
+ {
+  "text": "KFC Express",
+  "type": "Want"
+ },
+ {
+  "text": "MTR Express",
+  "type": "Want"
+ },
+ {
+  "text": "Sukh Sagar Express",
+  "type": "Want"
+ },
+ {
+  "text": "Sweet Corner Express",
+  "type": "Want"
+ },
+ {
+  "text": "Dum Pukht Express",
+  "type": "Want"
+ },
+ {
+  "text": "Peshawri Express",
+  "type": "Want"
+ },
+ {
+  "text": "Tandoor Express",
+  "type": "Want"
+ },
+ {
+  "text": "Punjabi Tadka Express",
+  "type": "Want"
+ },
+ {
+  "text": "Gulab House Express",
+  "type": "Want"
+ },
+ {
+  "text": "Sukhi",
+  "type": "Want"
+ },
+ {
+  "text": "Kevent's",
+  "type": "Want"
+ },
+ {
+  "text": "Pista House Express",
+  "type": "Want"
+ },
+ {
+  "text": "Cafe Coffee Day Express",
+  "type": "Want"
+ },
+ {
+  "text": "Barista Express",
+  "type": "Want"
+ },
+ {
+  "text": "Chaayos Express",
+  "type": "Want"
+ },
+ {
+  "text": "Pleasant Delhi Express",
+  "type": "Want"
+ },
+ {
+  "text": "Haldiram's Express",
+  "type": "Want"
+ },
+ {
+  "text": "Dineout Express",
+  "type": "Want"
+ },
+ {
+  "text": "Zomato Express",
+  "type": "Want"
+ },
+ {
+  "text": "Swiggy Express",
+  "type": "Want"
+ },
+ {
+  "text": "UberEats Express",
+  "type": "Want"
+ },
+ {
+  "text": "FoodPanda Express",
+  "type": "Want"
+ },
+ {
+  "text": "Bikanerwala Express",
+  "type": "Want"
+ },
+ {
+  "text": "Bakers Inn Express",
+  "type": "Want"
+ },
+ {
+  "text": "Nanda's Kitchen Express",
+  "type": "Want"
+ },
+ {
+  "text": "Khari Baoli Express",
+  "type": "Want"
+ }
+]

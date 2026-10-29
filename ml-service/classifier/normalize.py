@@ -30,6 +30,12 @@ _HANDLE_TOKENS = {
 _IFSC = re.compile(r"\b[a-z]{4}0[a-z0-9]{6}\b")
 
 
+def _is_ref(token: str) -> bool:
+    """Reference numbers, card masks and terminal ids; short brand tokens like 1mg, box8, 5paisa survive."""
+    digits = sum(c.isdigit() for c in token)
+    return digits > 0 and (len(token) > 6 or digits > 2 or digits == len(token))
+
+
 def _strip_amounts(text: str) -> str:
     text = re.sub(r"(₹|rs\.?|inr)\s*\d[\d,]*(\.\d+)?|\d[\d,]*(\.\d+)?\s*(₹|rs\.?|inr|/-)", " ", text)
     return re.sub(r"\b\d+(\.\d+)?\b", " ", text)
@@ -46,7 +52,7 @@ def clean_text(raw: str) -> str:
         tokens = re.split(r"[\s/|\-_*:,.#]+", text)
         tokens = [
             t for t in tokens
-            if t and not re.search(r"\d", t) and t not in _RAIL_TOKENS and t not in _HANDLE_TOKENS
+            if t and not _is_ref(t) and t not in _RAIL_TOKENS and t not in _HANDLE_TOKENS
         ]
         text = " ".join(dict.fromkeys(tokens))  # HDFC repeats the payee as name and VPA
     text = _strip_amounts(text)

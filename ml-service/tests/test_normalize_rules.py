@@ -31,6 +31,7 @@ class TestNormalize(unittest.TestCase):
             "UPI/412345678901/Payment from Ph/swiggy8@ybl/YES BANK LIMITED YBS": "payment from ph swiggy yes bank limited",
             "NWD-512345XXXXXX1234-S1ANMU12-MUMBAI": "mumbai",
             "UPI-SWIGGY-SWIGGY8@YBL-YESB0YBLUPI-412345678901-UPI": "swiggy",
+            "POS 416021XXXXXX6172 TATA 1MG JAIPUR": "tata 1mg jaipur",
         }
         for raw, expected in cases.items():
             self.assertEqual(clean_text(raw), expected, raw)

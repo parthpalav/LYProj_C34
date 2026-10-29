@@ -7,6 +7,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { createStyles, typeScale, useTheme } from '../../theme';
 import { duration, timing } from '../../motion';
 import { tabBarHidden } from '../navigation/TabBar';
+import { ThemeToggle } from './ThemeToggle';
 
 const BAR = 52;
 
@@ -47,13 +48,15 @@ type Props = {
   y?: SharedValue<number>;
   onBack?: () => void;
   right?: React.ReactNode;
+  /** off where the screen shows its own toggle (Home keeps it beside the bell) */
+  themeToggle?: boolean;
 };
 
 /**
  * Floating top bar: transparent over the large title, then blurs in with a compact title once the
  * content scrolls under it. Also keeps scrolled content from colliding with the status bar.
  */
-export function ScreenHeader({ title, y, onBack, right }: Props) {
+export function ScreenHeader({ title, y, onBack, right, themeToggle = true }: Props) {
   const styles = useStyles();
   const { c, isDark } = useTheme();
   const insets = useSafeAreaInsets();
@@ -81,7 +84,10 @@ export function ScreenHeader({ title, y, onBack, right }: Props) {
         <Animated.Text style={[styles.title, compact]} numberOfLines={1} accessibilityRole="header">
           {title}
         </Animated.Text>
-        <View style={[styles.side, styles.right]}>{right}</View>
+        <View style={[styles.side, styles.right]}>
+          {right}
+          {themeToggle && <ThemeToggle />}
+        </View>
       </View>
     </View>
   );

@@ -15,6 +15,7 @@ import { duration, easing } from '../motion';
 import { createStyles, radius, shadow, typeScale, useTheme } from '../theme';
 import { useTabBarSpace } from '../components/navigation/TabBar';
 import { Chip } from '../components/ui/Bits';
+import { ThemeToggle } from '../components/ui/ThemeToggle';
 
 const finauraLogo = require('../assets/finaura_logo.png');
 
@@ -355,6 +356,7 @@ export function ChatScreen(): React.ReactElement {
           <Text style={s.headerTitle}>FINAURA AI</Text>
           <Text style={s.headerSub}>{fetchingHistory && storeHistory.length === 0 ? 'Loading your conversation…' : loading ? 'Thinking…' : 'Answers from your own numbers'}</Text>
         </View>
+        <ThemeToggle />
       </View>
     </View>
   );

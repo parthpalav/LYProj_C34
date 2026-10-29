@@ -41,6 +41,7 @@ import { Card } from '../components/ui/Card';
 import { Badge, ErrorState, IconTile, MoneyText, SectionHeader } from '../components/ui/Bits';
 import { Ring, Sparkline, svgReady } from '../components/ui/Charts';
 import { ScreenHeader, useHeaderHeight, useScrollHeader } from '../components/ui/ScreenHeader';
+import { ThemeToggle } from '../components/ui/ThemeToggle';
 import { FamilyOverviewCard } from '../components/family/FamilyOverviewCard';
 import { UpdateBalanceScreen } from './UpdateBalanceScreen';
 
@@ -707,6 +708,7 @@ export function DashboardScreen(): React.ReactElement {
             <Text style={styles.date} numberOfLines={1}>{timeGreeting} · {todayFormatted}</Text>
             <Text style={styles.greeting} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>{firstName}</Text>
           </View>
+          <ThemeToggle style={styles.bell} size={20} />
           <Pressable
             onPress={() => navigation.navigate('Alerts')}
             style={styles.bell}
@@ -723,7 +725,7 @@ export function DashboardScreen(): React.ReactElement {
         {content()}
       </Animated.ScrollView>
       {/* Blurs in once content scrolls under the status bar. */}
-      <ScreenHeader title="Home" y={y} />
+      <ScreenHeader title="Home" y={y} themeToggle={false} />
 
       <Modal
         visible={showUpdateBalance}

@@ -37,6 +37,7 @@ import {
 } from '../types';
 
 import { createStyles, useTheme, Palette } from '../theme';
+import { ThemeToggle } from '../components/ui/ThemeToggle';
 // ── Design Tokens ─────────────────────────────────────────────
 const tokens = (c: Palette) => ({ BLUE: c.primary, BLUE_LIGHT: c.primarySoft, GREEN: c.success, GREEN_LIGHT: c.successSoft, AMBER: c.warning, AMBER_LIGHT: c.warningSoft, RED: c.danger, RED_LIGHT: c.dangerSoft, PURPLE: c.purple, PURPLE_LIGHT: c.primarySoft, BG: c.bg, CARD_BG: c.surface, TEXT_PRIMARY: c.text, TEXT_SECONDARY: c.textMuted, TEXT_MUTED: c.textSubtle, BORDER: c.border });
 
@@ -326,6 +327,7 @@ export default function FamilyScreen(): React.ReactElement {
           <View style={styles.headerTitleWrap}>
             <Text style={styles.headerTitle}>Family & Household</Text>
           </View>
+          <ThemeToggle style={styles.headerToggle} />
         </View>
         <View style={styles.loadingWrap}>
           <ActivityIndicator size="large" color={BLUE} />
@@ -371,6 +373,7 @@ export default function FamilyScreen(): React.ReactElement {
             <Ionicons name="person-add-outline" size={20} color={BLUE} />
           </TouchableOpacity>
         )}
+        <ThemeToggle style={styles.headerToggle} />
       </View>
 
       <ScrollView
@@ -1106,6 +1109,9 @@ const useStyles = createStyles((c) => {
     padding: 8,
     borderRadius: 8,
     backgroundColor: BLUE_LIGHT,
+  },
+  headerToggle: {
+    marginLeft: 8,
   },
   scrollContent: {
     padding: 16,

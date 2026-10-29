@@ -16,6 +16,7 @@ import {
   getIncome,
   getLiabilities,
   getPredictability,
+  getTransactions,
   getUserProfile,
 } from '../services/api';
 import { useStore } from '../store/useStore';
@@ -32,6 +33,7 @@ import { createStyles, Palette, radius, tabular, typeScale, useTheme } from '../
 import { enterUp } from '../motion';
 import { dueDatesWithin } from '../utils/bills';
 import { monthlyEquivalent } from '../utils/format';
+import { buildSeries, rangeFor } from '../utils/spending';
 import { AnimatedBar, AnimatedSegment } from '../components/motion/AnimatedBar';
 import { SkeletonCard } from '../components/motion/Skeleton';
 import { useTabBarSpace } from '../components/navigation/TabBar';
@@ -103,6 +105,8 @@ export function DashboardScreen(): React.ReactElement {
   const dashboard = useStore((s) => s.dashboard);
   const setDashboard = useStore((s) => s.setDashboard);
   const goals = useStore((s) => s.goals);
+  const transactions = useStore((s) => s.transactions);
+  const setTransactions = useStore((s) => s.setTransactions);
   const setGoals = useStore((s) => s.setGoals);
 
   // Screen state
@@ -195,8 +199,9 @@ export function DashboardScreen(): React.ReactElement {
       getAssets(),
       getIncome(),
       getGoals(),
+      getTransactions(),
     ]);
-    const [dash, pred, liab, fmi, profile, assetList, incomeList, goalList] = results;
+    const [dash, pred, liab, fmi, profile, assetList, incomeList, goalList, txList] = results;
     if (dash.status === 'fulfilled' && dash.value) setDashboard(dash.value);
     if (pred.status === 'fulfilled' && pred.value) setPredictability(pred.value);
     if (liab.status === 'fulfilled' && Array.isArray(liab.value)) setLiabilities(liab.value);
@@ -206,6 +211,7 @@ export function DashboardScreen(): React.ReactElement {
     if (incomeList.status === 'fulfilled' && Array.isArray(incomeList.value)) setIncome(incomeList.value);
     // Savings goals live in the shared store, so GoalPlanner updates show here too
     if (goalList.status === 'fulfilled' && Array.isArray(goalList.value)) setGoals(goalList.value);
+    if (txList.status === 'fulfilled' && Array.isArray(txList.value)) setTransactions(txList.value);
 
     // Only the core dashboard decides failure; other cards degrade on their own.
     setLoadFailed(dash.status === 'rejected');
@@ -224,6 +230,11 @@ export function DashboardScreen(): React.ReactElement {
   const balance = user?.currentBalance ?? dashboard?.balance ?? 0;
   const incomeThisMonth = dashboard?.totalIncome ?? user?.monthlyIncome ?? predictability?.income?.meanMonthlyIncome ?? 0;
   const spendingThisMonth = dashboard?.wantsNeedsBreakdown?.total ?? fmiData?.totalSpent ?? 0;
+  // Same daily series the Spending screen opens on, so the card and the full chart agree
+  const dailySpend = useMemo(() => {
+    const r = rangeFor('month', new Date());
+    return buildSeries(transactions, r.start, r.end).buckets.map((b) => b.total);
+  }, [transactions]);
   const investmentsThisMonth = dashboard?.wantsNeedsBreakdown?.investments?.amount ?? fmiData?.totalSaved ?? 0;
   const spentShare = incomeThisMonth > 0 ? Math.min(1, spendingThisMonth / incomeThisMonth) : 0;
 
@@ -539,12 +550,15 @@ export function DashboardScreen(): React.ReactElement {
 
         {/* ── Spending ─────────────────────────────────── */}
         <SectionHeader title="Spending this month" action="Activity" onAction={() => navigation.navigate('Transactions')} />
-        <Card onPress={() => navigation.navigate('Transactions')} accessibilityLabel="View Spending and Transactions">
+        <Card onPress={() => navigation.navigate('Spending')} accessibilityLabel="Open the spending chart">
           <View style={styles.spendTop}>
             <MoneyText value={spendingThisMonth} style={styles.spendValue} />
-            {svgReady && (dashboard?.spendingSeries?.length ?? 0) > 1 && <Text style={styles.spendHint}>daily trend</Text>}
+            <View style={styles.spendHintRow}>
+              <Text style={styles.spendHint}>Explore</Text>
+              <Ionicons name="chevron-forward" size={14} color={c.textSubtle} />
+            </View>
           </View>
-          {svgReady && (dashboard?.spendingSeries?.length ?? 0) > 1 && <Sparkline data={dashboard!.spendingSeries} height={52} style={styles.spark} />}
+          {svgReady && dailySpend.length > 1 && <Sparkline data={dailySpend} height={52} style={styles.spark} />}
           {hasSpendingData ? (
             <>
               <View style={styles.track}>
@@ -685,7 +699,7 @@ export function DashboardScreen(): React.ReactElement {
         scrollEventThrottle={16}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingTop: insets.top + 8, paddingBottom: tabBarSpace }}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => fetchAllData(true)} tintColor={c.primary} />}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => fetchAllData(true)} tintColor={c.primary} progressViewOffset={insets.top} />}
       >
         {/* Greeting */}
         <View style={styles.header}>
@@ -786,6 +800,7 @@ const useStyles = createStyles((c) => ({
 
   spendTop: { flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between' },
   spendValue: { ...typeScale.title, color: c.text },
+  spendHintRow: { flexDirection: 'row', alignItems: 'center', gap: 2 },
   spendHint: { ...typeScale.caption, color: c.textSubtle },
   spark: { marginTop: 8, marginHorizontal: -4 },
   track: { flexDirection: 'row', height: 10, borderRadius: 5, overflow: 'hidden', backgroundColor: c.surfaceAlt, marginTop: 14 },

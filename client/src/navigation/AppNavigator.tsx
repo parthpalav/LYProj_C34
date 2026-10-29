@@ -23,6 +23,7 @@ import { ReviewScreen } from '../screens/ReviewScreen';
 import { EnvelopesScreen } from '../screens/EnvelopesScreen';
 import { RecapScreen } from '../screens/RecapScreen';
 import { InsightsScreen } from '../screens/InsightsScreen';
+import { SpendingScreen } from '../screens/SpendingScreen';
 import { TabBar } from '../components/navigation/TabBar';
 import { withFocusFade } from '../components/navigation/FocusFade';
 import { useAuthStore } from '../store/useAuthStore';
@@ -54,6 +55,7 @@ export type RootStackParamList = {
   Envelopes: undefined;
   Recap: undefined;
   Insights: undefined;
+  Spending: undefined;
 };
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
@@ -129,6 +131,7 @@ export function AppNavigator(): React.ReactElement {
           <Stack.Screen name="Review" component={ReviewScreen} />
           <Stack.Screen name="Envelopes" component={EnvelopesScreen} />
           <Stack.Screen name="Insights" component={InsightsScreen} />
+          <Stack.Screen name="Spending" component={SpendingScreen} />
           <Stack.Screen name="Recap" component={RecapScreen} options={{ presentation: 'fullScreenModal', animation: 'fade' }} />
           <Stack.Screen
             name="QuickAdd"

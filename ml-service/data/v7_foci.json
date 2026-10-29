@@ -1,0 +1,394 @@
+{
+ "Food & Dining": {
+  "merchant": [
+   "restaurants and darshinis in Karnataka and Tamil Nadu (real or typical names)",
+   "dhabas and highway eateries in Punjab, Haryana and Rajasthan",
+   "Kolkata and Odisha sweet shops, cabins and mishti bhandars",
+   "Mumbai and Pune vada pav stalls, Irani cafes and misal houses",
+   "Hyderabad and Lucknow biryani and kebab houses",
+   "Kerala and coastal Karnataka hotels, toddy-free family restaurants and bakeries",
+   "Gujarati thali and farsan shops, Ahmedabad and Surat",
+   "juice centres, lassi shops, chai tapris and coffee stalls in tier-2 cities",
+   "cloud kitchens and delivery-only brands",
+   "ice cream parlours, dessert bars and waffle shops",
+   "office canteens, college canteens, hostel messes and tiffin services",
+   "pizza, burger and fried chicken outlets of regional chains",
+   "Chinese, momo and Tibetan eateries across India",
+   "fine dining and rooftop restaurants in metros"
+  ],
+  "phrase": [
+   "street food bought and eaten on the spot (pani puri, chaat, momos, vada pav)",
+   "office lunch, team dinner, treat for colleagues, eaten at a restaurant",
+   "tiffin, mess bill and canteen coupons (the Need cases)",
+   "online food orders described by dish (paneer butter masala, biryani, dosa)",
+   "chai, coffee, cold drink and snacks bought ready to eat at a stall or cafe",
+   "Hinglish notes: 'nashta', 'khana order kiya', 'chai pe charcha', 'party ka khana'",
+   "sweets and cake bought ready to eat for a celebration at a sweet shop or bakery",
+   "food bought while travelling: railway pantry, airport cafe, highway dhaba"
+  ]
+ },
+ "Groceries": {
+  "merchant": [
+   "kirana and general stores named after owners or gods in North India",
+   "provision stores and departmental stores in South India",
+   "regional supermarket chains in Maharashtra, Gujarat and MP",
+   "regional supermarket chains in Tamil Nadu, Kerala, Telangana and AP",
+   "dairy booths, milk vendors and doodh dairies in every state",
+   "vegetable and fruit vendors and sabzi mandis",
+   "flour mills, atta chakki and rice traders",
+   "meat, chicken and fish shops (raw, for cooking at home)",
+   "organic stores, farm-fresh subscriptions and online grocers",
+   "wholesale cash-and-carry stores (Metro, Walmart Best Price style)",
+   "dry fruit, chocolate and namkeen shops (treats, Want)",
+   "egg, bread and bakery-supply shops selling raw goods for home",
+   "household cleaning supply stores",
+   "co-operative stores and canteen stores (CSD style)"
+  ],
+  "phrase": [
+   "monthly ration: atta, dal, rice, oil, sugar, masala",
+   "daily milk, curd, paneer, eggs and bread for home",
+   "vegetables and fruits bought at a market or from a cart (Hinglish: sabzi, phal, bhaji)",
+   "household supplies: detergent, phenyl, dishwash, garbage bags, floor cleaner",
+   "snacks and treats for home: chips, biscuits, chocolates, namkeen, maggi (Want)",
+   "raw meat, chicken and fish bought to cook at home",
+   "quick-commerce orders described by item (onions, tomatoes, coriander)",
+   "festival grocery: ghee, dry fruits, sugar for sweets made at home"
+  ]
+ },
+ "Transport & Travel": {
+  "merchant": [
+   "petrol pumps and fuel stations named after owners or towns",
+   "city bus, local train and metro card recharges in each metro city",
+   "auto rickshaw stands and local taxi unions",
+   "two-wheeler and car service centres and garages in tier-2 towns",
+   "tyre shops, puncture repair and battery dealers",
+   "parking operators at malls, airports and railway stations",
+   "intercity private bus operators of each state (travels, tours and travels)",
+   "hotels, lodges and homestays in hill stations and pilgrimage towns",
+   "travel agents and tour operators",
+   "car rental and self-drive companies",
+   "EV charging stations and battery-swap networks",
+   "car wash, detailing and accessory shops (Want)",
+   "airline and airport-related services",
+   "toll plazas and highway names as they appear on FASTag debits"
+  ],
+  "phrase": [
+   "daily commute: auto fare, metro, local train pass, bus ticket in the city (Need)",
+   "intercity trips: train ticket to another city, sleeper bus, flight booking (Want)",
+   "fuel: petrol, diesel, CNG fill-up for bike or car (Need)",
+   "vehicle repair and service: oil change, clutch plate, brake pads, puncture (Need)",
+   "app cab rides to office, airport or mall (Want)",
+   "parking and toll notes, including at malls and on holiday trips (Need)",
+   "holiday spends: hotel stay, homestay, sightseeing cab, travel package (Want)",
+   "Hinglish notes: 'petrol dalwaya', 'auto wale bhaiya', 'gaadi service', 'rickshaw bhada'"
+  ]
+ },
+ "Housing": {
+  "merchant": [
+   "housing societies and residents welfare associations (RWA) by name",
+   "municipal corporations and nagar palikas collecting property tax",
+   "real estate brokers and rental agents in metros",
+   "plumbers, electricians and carpenters named in local shop style",
+   "pest control and home cleaning services",
+   "painting, waterproofing and home renovation contractors",
+   "PG and hostel owners collecting rent (named as PG or hostel)",
+   "packers and movers",
+   "home appliance repair services (AC, washing machine, RO repair)",
+   "security agencies and society maintenance companies",
+   "hardware and sanitary shops for home repair materials",
+   "interior and modular kitchen contractors",
+   "water tanker suppliers for housing societies",
+   "domestic help placement agencies"
+  ],
+  "phrase": [
+   "monthly rent, rent advance and security deposit notes",
+   "society maintenance, sinking fund and parking charges in the society",
+   "maid, cook, driver and watchman salary (Hinglish: bai ka pagaar, kaamwali)",
+   "home repairs: leaking tap, switchboard, door lock, tiles, painting",
+   "property tax, house tax and garbage collection fee",
+   "brokerage and agreement charges for a rented flat",
+   "AC service, RO service and appliance repair at home",
+   "shifting house: packers and movers, new flat cleaning"
+  ]
+ },
+ "Utilities & Bills": {
+  "merchant": [
+   "state electricity boards and discoms, every state, short forms",
+   "city gas and PNG companies, plus LPG distributors named as agencies",
+   "municipal water and sewerage boards",
+   "local cable TV operators and regional broadband ISPs",
+   "prepaid and postpaid mobile operators and their plan names",
+   "DTH operators and recharge forms",
+   "newspapers and magazine subscriptions delivered at home",
+   "software, SaaS, cloud storage and AI tools used in India",
+   "bill payment aggregators as they show on statements (BBPS forms)",
+   "fibre broadband brands in tier-2 and tier-3 cities",
+   "prepaid electricity meter recharge forms",
+   "LPG cylinder booking and refill forms",
+   "website hosting, domain and VPN subscriptions",
+   "landline and intercom services"
+  ],
+  "phrase": [
+   "electricity bill, light bill and meter recharge (Hinglish: bijli ka bill)",
+   "gas cylinder refill, PNG bill and gas booking",
+   "mobile recharge, data pack and postpaid bill",
+   "wifi, broadband and fibre bill",
+   "water bill, water tax and sewage charges",
+   "DTH, cable and set-top box recharge",
+   "software and AI subscriptions: ChatGPT, Canva, Google One, iCloud storage",
+   "newspaper bill and magazine subscription"
+  ]
+ },
+ "Debt & Loan Payments": {
+  "merchant": [
+   "consumer durable financers as they appear on NACH debits",
+   "gold loan companies and their branches",
+   "microfinance institutions and small finance banks' loan accounts",
+   "housing finance companies",
+   "vehicle loan financers for two-wheelers and cars",
+   "education loan lenders",
+   "instant personal loan apps",
+   "BNPL and pay-later services",
+   "credit card issuers as bill-payment payees",
+   "co-operative credit societies and patpedhis",
+   "chit fund companies (monthly instalments)",
+   "loan collection agencies",
+   "salary advance and earned-wage apps",
+   "NBFC EMI collection names on ACH/NACH lines"
+  ],
+  "phrase": [
+   "EMI for a phone, TV, fridge or laptop bought on loan",
+   "home loan, car loan and bike loan EMI",
+   "credit card bill, minimum due and card outstanding",
+   "pay-later dues and BNPL repayment",
+   "personal loan and gold loan instalments and interest",
+   "education loan EMI",
+   "repaying money borrowed from a loan app",
+   "Hinglish notes: 'kist bhari', 'loan ki kisht', 'card ka bill'"
+  ]
+ },
+ "Shopping": {
+  "merchant": [
+   "clothing and saree shops named in local style (silks, emporium, collection)",
+   "footwear shops and chappal stores",
+   "mobile phone shops and accessory stores in tier-2 cities",
+   "electronics and home appliance dealers",
+   "jewellers and goldsmiths named after families",
+   "furniture shops and mattress stores",
+   "gift shops, toy stores and novelty stores",
+   "watch and optical shops",
+   "stationery and general book shops (not study books)",
+   "home decor and furnishing stores",
+   "handloom and handicraft emporiums of each state",
+   "sports goods stores",
+   "kitchenware and utensil shops",
+   "D2C fashion and lifestyle brands"
+  ],
+  "phrase": [
+   "clothes: kurta, jeans, saree, shirt for an occasion or work",
+   "gadgets: new phone, earbuds, smartwatch, laptop, power bank",
+   "gifts for family and friends (birthday, wedding, anniversary)",
+   "home items: bedsheet, curtains, utensils, pressure cooker, mixer",
+   "essentials marked Need: school uniform, spectacles, raincoat, umbrella, replacement charger",
+   "footwear, bags and accessories",
+   "festival shopping: Diwali lights, rakhi, decorations",
+   "Hinglish notes: 'naya phone liya', 'kapde kharide', 'gift liya bhai ke liye'"
+  ]
+ },
+ "Entertainment": {
+  "merchant": [
+   "single-screen cinemas and theatres in tier-2 cities",
+   "pubs, bars and breweries in Bengaluru, Pune, Mumbai and Delhi",
+   "wine shops and beer shops named in local style",
+   "paan and cigarette shops (paan bhandar, tobacco shops)",
+   "gaming cafes, bowling alleys and trampoline parks",
+   "event and concert ticketing for Indian artists and festivals",
+   "OTT and music streaming services",
+   "amusement parks, water parks and snow parks",
+   "clubs, lounges and hookah bars",
+   "cricket and football match ticketing, stadiums and leagues",
+   "board-game cafes, escape rooms and karaoke bars",
+   "video game stores and in-game purchase forms",
+   "comedy clubs and theatre groups",
+   "party and event planners"
+  ],
+  "phrase": [
+   "movie tickets, popcorn at the cinema and OTT subscriptions",
+   "drinks at a pub, beer, daru, sutta, cigarettes (Hinglish slang included)",
+   "party contributions, house party supplies, birthday party at a venue",
+   "concerts, stand-up shows, match tickets and events",
+   "gaming: in-game purchases, game passes, gaming cafe hours",
+   "outings where the spend is the fun (bowling, go-karting, escape room)",
+   "chai sutta break, paan and hookah with friends",
+   "Hinglish notes: 'party ka kharcha', 'movie dekhi', 'daru party'"
+  ]
+ },
+ "Health": {
+  "merchant": [
+   "medical stores and chemists named in local style",
+   "multispecialty hospitals and nursing homes in tier-2 cities",
+   "clinics and doctors (Dr name style) as payees",
+   "diagnostic labs and pathology centres",
+   "dental clinics and eye hospitals",
+   "physiotherapy and rehabilitation centres",
+   "ayurveda, homeopathy and unani clinics",
+   "mental health and therapy platforms",
+   "gyms and fitness studios in every city (Want)",
+   "yoga studios and zumba classes (Want)",
+   "supplement and protein stores (Want)",
+   "medical equipment and surgical stores",
+   "blood banks, ambulances and home nursing services",
+   "teleconsult and doctor-on-call apps"
+  ],
+  "phrase": [
+   "medicines, tablets and syrup from a chemist (Hinglish: dawai, dawa)",
+   "doctor consultation, OPD fee and specialist visit",
+   "lab tests: blood test, thyroid, sugar test, x-ray, MRI",
+   "hospital bills, admission deposit and surgery",
+   "dental and eye: filling, root canal, eye test, contact lens solution",
+   "gym membership, protein powder, fitness class (Want)",
+   "therapy and counselling sessions",
+   "medical devices: BP monitor, glucometer, thermometer, nebuliser"
+  ]
+ },
+ "Education": {
+  "merchant": [
+   "local tuition classes and coaching centres named in local style",
+   "schools and convent schools collecting fees",
+   "colleges and universities of each state",
+   "competitive exam coaching for JEE, NEET, UPSC, CA, banking",
+   "language institutes (spoken English, German, Japanese)",
+   "music, dance and art academies",
+   "sports academies (cricket, swimming, football, chess)",
+   "online course platforms and certification bodies",
+   "exam boards and recruitment exam fee portals",
+   "study abroad consultants and IELTS/GRE test centres",
+   "school bookshops and textbook sellers",
+   "driving schools",
+   "computer training institutes",
+   "preschools, playschools and daycare learning centres"
+  ],
+  "phrase": [
+   "school fees, term fees, admission fees",
+   "college fees, semester fees, hostel fees paid to the college",
+   "coaching and tuition fees (Hinglish: tuition ki fees)",
+   "exam and application fees for competitive exams",
+   "course and certification fees, online classes",
+   "textbooks, notebooks and study supplies for class",
+   "music, dance, swimming and sports lessons",
+   "school bus fee, school trip fee and lab fee"
+  ]
+ },
+ "Personal Care": {
+  "merchant": [
+   "barber shops and hair cutting saloons named in local style",
+   "beauty parlours and ladies salons in tier-2 cities",
+   "unisex salon chains and spas",
+   "cosmetic and makeup stores",
+   "skincare and haircare D2C brands",
+   "perfume and deodorant stores",
+   "men's grooming brands",
+   "bridal makeup artists and mehendi artists",
+   "nail studios and tattoo studios",
+   "ayurvedic personal-care brands",
+   "at-home salon services",
+   "toiletries and hygiene brands (Need)",
+   "spa and massage centres",
+   "threading, waxing and eyebrow studios"
+  ],
+  "phrase": [
+   "haircut, shave and beard trim (Hinglish: baal katwaye)",
+   "facial, waxing, threading, manicure and pedicure",
+   "makeup, lipstick, skincare serum and sunscreen",
+   "basic hygiene: soap, toothpaste, shampoo, razor, sanitary pads (Need)",
+   "perfume, deodorant and grooming kit",
+   "spa, massage and bridal makeup",
+   "hair colour, hair spa and keratin treatment",
+   "trimmer, hair dryer and straightener"
+  ]
+ },
+ "Insurance": {
+  "merchant": [
+   "life insurers and their plan names as they appear on premium debits",
+   "health insurers and their plan names",
+   "motor insurers and two-wheeler insurance forms",
+   "insurance aggregators and brokers",
+   "LIC branch and agent payment forms",
+   "travel insurance providers",
+   "group insurance and employer insurance deductions",
+   "crop and government insurance schemes (PMJJBY, PMSBY)",
+   "term insurance plans",
+   "ULIP and endowment plan names",
+   "home and fire insurance providers",
+   "insurance premium payment gateways on statements",
+   "bancassurance names (bank-branded insurance)",
+   "regional and public sector general insurers"
+  ],
+  "phrase": [
+   "life insurance premium, LIC premium, term plan premium",
+   "health insurance premium and top-up",
+   "car insurance and bike insurance renewal",
+   "travel insurance for a trip",
+   "ULIP, endowment and money-back policy premiums",
+   "PMJJBY and PMSBY auto-debits",
+   "home insurance and gadget insurance",
+   "Hinglish notes: 'bima ki kisht', 'policy renew ki'"
+  ]
+ },
+ "Investments": {
+  "merchant": [
+   "mutual fund houses and their scheme names",
+   "stock brokers and trading apps",
+   "depositories and demat charges on statements",
+   "digital gold and silver platforms",
+   "government savings schemes (PPF, NSC, SSY, KVP)",
+   "NPS and pension investment forms",
+   "bond and fixed income platforms",
+   "recurring deposit and fixed deposit forms by bank",
+   "sovereign gold bond and RBI retail direct forms",
+   "SIP mandate names on ACH debits",
+   "robo-advisors and wealth apps",
+   "employee provident fund and VPF forms",
+   "REIT and InvIT investment forms",
+   "P2P lending and alternative investment platforms"
+  ],
+  "phrase": [
+   "monthly SIP and mutual fund lump sum",
+   "buying shares, ETFs and IPO applications",
+   "PPF, NPS, SSY and NSC deposits",
+   "fixed deposit and recurring deposit",
+   "digital gold, sovereign gold bonds",
+   "demat AMC and brokerage charges",
+   "VPF contribution and retirement savings",
+   "Hinglish notes: 'SIP gaya', 'shares liye', 'FD karwayi'"
+  ]
+ },
+ "Misc": {
+  "merchant": [
+   "UPI payees that are individuals (first name and surname)",
+   "temples, gurudwaras, mosques and churches collecting donations",
+   "NGOs and charities",
+   "courier and post offices",
+   "government offices and portals collecting fees",
+   "tailors, cobblers, watch repairers and key makers",
+   "laundry, dry cleaning and ironing (press wala) services",
+   "photocopy, xerox and print shops",
+   "notaries, advocates and legal fee payees",
+   "traffic police and e-challan forms",
+   "bank charges and fee narrations",
+   "ATM and cash withdrawal narrations",
+   "pet shops and veterinary clinics",
+   "unknown small shops with no category clue in the name"
+  ],
+  "phrase": [
+   "money sent to family and friends, splitting a bill (Hinglish: paise bheje)",
+   "cash withdrawal at an ATM",
+   "fines and challans: traffic challan, late fee, penalty",
+   "donations, temple offerings and tips (Want)",
+   "government fees: passport, licence, Aadhaar update, stamp duty",
+   "tailor, cobbler, laundry and ironing charges",
+   "courier, speed post and photocopy charges",
+   "bank charges: SMS charges, ATM fee, minimum balance charges"
+  ]
+ }
+}

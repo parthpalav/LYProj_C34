@@ -1,0 +1,290 @@
+[
+ {
+  "text": "Rajesh Tailor",
+  "type": "Need"
+ },
+ {
+  "text": "Shree Electricals",
+  "type": "Want"
+ },
+ {
+  "text": "Saroj Electronics",
+  "type": "Want"
+ },
+ {
+  "text": "Krishna Footwear",
+  "type": "Want"
+ },
+ {
+  "text": "Ravi Jewellers",
+  "type": "Want"
+ },
+ {
+  "text": "Neha Gifts",
+  "type": "Want"
+ },
+ {
+  "text": "Ganesh Watches",
+  "type": "Want"
+ },
+ {
+  "text": "Nisha Home Decor",
+  "type": "Want"
+ },
+ {
+  "text": "Sai Fashion",
+  "type": "Want"
+ },
+ {
+  "text": "Mohan Furniture",
+  "type": "Want"
+ },
+ {
+  "text": "Lakshmi Stationery",
+  "type": "Want"
+ },
+ {
+  "text": "Prem Mobiles",
+  "type": "Want"
+ },
+ {
+  "text": "Radha Sarees",
+  "type": "Want"
+ },
+ {
+  "text": "Ram Jewellery",
+  "type": "Want"
+ },
+ {
+  "text": "Sudha Decor",
+  "type": "Want"
+ },
+ {
+  "text": "Renu Tailor",
+  "type": "Need"
+ },
+ {
+  "text": "Shyam Opticals",
+  "type": "Need"
+ },
+ {
+  "text": "Kiran Footcare",
+  "type": "Need"
+ },
+ {
+  "text": "Narayan Electricals",
+  "type": "Need"
+ },
+ {
+  "text": "Vinod Tailor",
+  "type": "Need"
+ },
+ {
+  "text": "Sunita Uniforms",
+  "type": "Need"
+ },
+ {
+  "text": "Bhagat Footwear",
+  "type": "Need"
+ },
+ {
+  "text": "Anita Sarees",
+  "type": "Want"
+ },
+ {
+  "text": "Lalitha Home Decor",
+  "type": "Want"
+ },
+ {
+  "text": "Kiran Mobiles",
+  "type": "Want"
+ },
+ {
+  "text": "Girija Fashion",
+  "type": "Want"
+ },
+ {
+  "text": "Manoj Furniture",
+  "type": "Want"
+ },
+ {
+  "text": "Gopi Electronics",
+  "type": "Want"
+ },
+ {
+  "text": "Raju Stationery",
+  "type": "Want"
+ },
+ {
+  "text": "Kishore Watches",
+  "type": "Want"
+ },
+ {
+  "text": "Shoba Gifts",
+  "type": "Want"
+ },
+ {
+  "text": "Madhu Tailor",
+  "type": "Need"
+ },
+ {
+  "text": "Ramesh Opticals",
+  "type": "Need"
+ },
+ {
+  "text": "Preeti Sarees",
+  "type": "Want"
+ },
+ {
+  "text": "Vikas Jewellery",
+  "type": "Want"
+ },
+ {
+  "text": "Sunita Uniforms",
+  "type": "Need"
+ },
+ {
+  "text": "Saroj Fashion",
+  "type": "Want"
+ },
+ {
+  "text": "Balaji Watches",
+  "type": "Want"
+ },
+ {
+  "text": "Ramani Decor",
+  "type": "Want"
+ },
+ {
+  "text": "Madan Furniture",
+  "type": "Want"
+ },
+ {
+  "text": "Rajesh Mobiles",
+  "type": "Want"
+ },
+ {
+  "text": "Sita Sarees",
+  "type": "Want"
+ },
+ {
+  "text": "Nandini Home Decor",
+  "type": "Want"
+ },
+ {
+  "text": "Rajesh Tailor",
+  "type": "Need"
+ },
+ {
+  "text": "Renuka Jewellery",
+  "type": "Want"
+ },
+ {
+  "text": "Krishna Watches",
+  "type": "Want"
+ },
+ {
+  "text": "Madhu Tailor",
+  "type": "Need"
+ },
+ {
+  "text": "Kiran Footcare",
+  "type": "Need"
+ },
+ {
+  "text": "Narayan Electricals",
+  "type": "Need"
+ },
+ {
+  "text": "Vinod Tailor",
+  "type": "Need"
+ },
+ {
+  "text": "Ramesh Opticals",
+  "type": "Need"
+ },
+ {
+  "text": "Madhu Tailor",
+  "type": "Need"
+ },
+ {
+  "text": "Preeti Sarees",
+  "type": "Want"
+ },
+ {
+  "text": "Vikas Jewellery",
+  "type": "Want"
+ },
+ {
+  "text": "Saroj Fashion",
+  "type": "Want"
+ },
+ {
+  "text": "Balaji Watches",
+  "type": "Want"
+ },
+ {
+  "text": "Ramani Decor",
+  "type": "Want"
+ },
+ {
+  "text": "Madan Furniture",
+  "type": "Want"
+ },
+ {
+  "text": "Rajesh Mobiles",
+  "type": "Want"
+ },
+ {
+  "text": "Sita Sarees",
+  "type": "Want"
+ },
+ {
+  "text": "Nandini Home Decor",
+  "type": "Want"
+ },
+ {
+  "text": "Renuka Jewellery",
+  "type": "Want"
+ },
+ {
+  "text": "Krishna Watches",
+  "type": "Want"
+ },
+ {
+  "text": "Anita Sarees",
+  "type": "Want"
+ },
+ {
+  "text": "Lalitha Home Decor",
+  "type": "Want"
+ },
+ {
+  "text": "Kiran Mobiles",
+  "type": "Want"
+ },
+ {
+  "text": "Girija Fashion",
+  "type": "Want"
+ },
+ {
+  "text": "Manoj Furniture",
+  "type": "Want"
+ },
+ {
+  "text": "Gopi Electronics",
+  "type": "Want"
+ },
+ {
+  "text": "Raju Stationery",
+  "type": "Want"
+ },
+ {
+  "text": "Kishore Watches",
+  "type": "Want"
+ },
+ {
+  "text": "Shoba Gifts",
+  "type": "Want"
+ }
+]

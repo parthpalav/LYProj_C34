@@ -1,0 +1,346 @@
+[
+ {
+  "text": "Ananya Dental",
+  "type": "Need"
+ },
+ {
+  "text": "Bansi Medical",
+  "type": "Need"
+ },
+ {
+  "text": "Chitra Physio",
+  "type": "Need"
+ },
+ {
+  "text": "Dental Avenue",
+  "type": "Need"
+ },
+ {
+  "text": "Evergreen Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Ganesh Diagnostics",
+  "type": "Need"
+ },
+ {
+  "text": "Gautam Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Health Hub",
+  "type": "Need"
+ },
+ {
+  "text": "Kiran Ayurveda",
+  "type": "Need"
+ },
+ {
+  "text": "Lakshmi Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "Mohan Dental",
+  "type": "Need"
+ },
+ {
+  "text": "Neha Eye Care",
+  "type": "Need"
+ },
+ {
+  "text": "Nirvana Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Piyush Health",
+  "type": "Need"
+ },
+ {
+  "text": "Ram Dental Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Saroj Diagnostics",
+  "type": "Need"
+ },
+ {
+  "text": "Sarv Health Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Sujal Medical Store",
+  "type": "Need"
+ },
+ {
+  "text": "Sunil Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Triyog Health",
+  "type": "Need"
+ },
+ {
+  "text": "Vidya Healthcare",
+  "type": "Need"
+ },
+ {
+  "text": "Yash Medical",
+  "type": "Need"
+ },
+ {
+  "text": "Zeenath Physio",
+  "type": "Need"
+ },
+ {
+  "text": "Aash Health Club",
+  "type": "Want"
+ },
+ {
+  "text": "Bharat Fitness",
+  "type": "Want"
+ },
+ {
+  "text": "Chetna Yoga Studio",
+  "type": "Want"
+ },
+ {
+  "text": "Disha Gym",
+  "type": "Want"
+ },
+ {
+  "text": "Elevate Fitness",
+  "type": "Want"
+ },
+ {
+  "text": "FitFirst",
+  "type": "Want"
+ },
+ {
+  "text": "GymZone",
+  "type": "Want"
+ },
+ {
+  "text": "Himalaya Gym",
+  "type": "Want"
+ },
+ {
+  "text": "Jagriti Fitness",
+  "type": "Want"
+ },
+ {
+  "text": "Kiran Sports",
+  "type": "Want"
+ },
+ {
+  "text": "Lakshmi Yoga",
+  "type": "Want"
+ },
+ {
+  "text": "Mohan Fitness",
+  "type": "Want"
+ },
+ {
+  "text": "Nandini Gym",
+  "type": "Want"
+ },
+ {
+  "text": "Piyush Health Club",
+  "type": "Want"
+ },
+ {
+  "text": "Rahul Sports",
+  "type": "Want"
+ },
+ {
+  "text": "Saroj Yoga",
+  "type": "Want"
+ },
+ {
+  "text": "Sunil Sports",
+  "type": "Want"
+ },
+ {
+  "text": "Triyog Gym",
+  "type": "Want"
+ },
+ {
+  "text": "Vidya Fitness",
+  "type": "Want"
+ },
+ {
+  "text": "Zeenath Sports",
+  "type": "Want"
+ },
+ {
+  "text": "Aarogya Nutri Care",
+  "type": "Need"
+ },
+ {
+  "text": "Bansi Health Store",
+  "type": "Need"
+ },
+ {
+  "text": "Chitra Health",
+  "type": "Need"
+ },
+ {
+  "text": "Dental Avenue Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Evergreen Medical Store",
+  "type": "Need"
+ },
+ {
+  "text": "Ganesh Diagnostic Center",
+  "type": "Need"
+ },
+ {
+  "text": "Gautam Healthcare",
+  "type": "Need"
+ },
+ {
+  "text": "Health Plus",
+  "type": "Need"
+ },
+ {
+  "text": "Kiran Ayurvedic Store",
+  "type": "Need"
+ },
+ {
+  "text": "Lakshmi Medical",
+  "type": "Need"
+ },
+ {
+  "text": "Mohan Dental Care",
+  "type": "Need"
+ },
+ {
+  "text": "Neha Eye Care Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Nirvana Medical Center",
+  "type": "Need"
+ },
+ {
+  "text": "Piyush Health Care",
+  "type": "Need"
+ },
+ {
+  "text": "Ram Dental Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Saroj Diagnostics Lab",
+  "type": "Need"
+ },
+ {
+  "text": "Sarv Health Center",
+  "type": "Need"
+ },
+ {
+  "text": "Sujal Medical",
+  "type": "Need"
+ },
+ {
+  "text": "Sunil Hospital Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Triyog Health Center",
+  "type": "Need"
+ },
+ {
+  "text": "Vidya Healthcare Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Yash Medical Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Zeenath Physiotherapy",
+  "type": "Need"
+ },
+ {
+  "text": "Aash Health Club",
+  "type": "Want"
+ },
+ {
+  "text": "Bharat Fitness Club",
+  "type": "Want"
+ },
+ {
+  "text": "Chetna Yoga Studio",
+  "type": "Want"
+ },
+ {
+  "text": "Disha Gymnasium",
+  "type": "Want"
+ },
+ {
+  "text": "Elevate Fitness Gym",
+  "type": "Want"
+ },
+ {
+  "text": "FitFirst Gym",
+  "type": "Want"
+ },
+ {
+  "text": "GymZone Fitness",
+  "type": "Want"
+ },
+ {
+  "text": "Himalaya Gymnasium",
+  "type": "Want"
+ },
+ {
+  "text": "Jagriti Fitness Center",
+  "type": "Want"
+ },
+ {
+  "text": "Kiran Sports Club",
+  "type": "Want"
+ },
+ {
+  "text": "Lakshmi Yoga Studio",
+  "type": "Want"
+ },
+ {
+  "text": "Mohan Fitness Gym",
+  "type": "Want"
+ },
+ {
+  "text": "Nandini Gymnasium",
+  "type": "Want"
+ },
+ {
+  "text": "Piyush Health Gym",
+  "type": "Want"
+ },
+ {
+  "text": "Rahul Sports Club",
+  "type": "Want"
+ },
+ {
+  "text": "Saroj Yoga Studio",
+  "type": "Want"
+ },
+ {
+  "text": "Sunil Sports Gym",
+  "type": "Want"
+ },
+ {
+  "text": "Triyog Gymnasium",
+  "type": "Want"
+ },
+ {
+  "text": "Vidya Fitness Center",
+  "type": "Want"
+ },
+ {
+  "text": "Zeenath Sports Club",
+  "type": "Want"
+ }
+]

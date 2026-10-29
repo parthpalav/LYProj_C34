@@ -1,0 +1,390 @@
+[
+ {
+  "text": "A2B",
+  "type": "Want"
+ },
+ {
+  "text": "Adaa",
+  "type": "Want"
+ },
+ {
+  "text": "Alfaaz",
+  "type": "Want"
+ },
+ {
+  "text": "Anand sweets",
+  "type": "Want"
+ },
+ {
+  "text": "Annapurna",
+  "type": "Want"
+ },
+ {
+  "text": "Baba ka tandoor",
+  "type": "Want"
+ },
+ {
+  "text": "Baba ka tandoor express",
+  "type": "Want"
+ },
+ {
+  "text": "Badaam house",
+  "type": "Want"
+ },
+ {
+  "text": "Bhagwan sweets",
+  "type": "Want"
+ },
+ {
+  "text": "Bikaner's",
+  "type": "Want"
+ },
+ {
+  "text": "Bombay buns",
+  "type": "Want"
+ },
+ {
+  "text": "Chaat cart",
+  "type": "Want"
+ },
+ {
+  "text": "Chaat queen",
+  "type": "Want"
+ },
+ {
+  "text": "Channa da saa",
+  "type": "Want"
+ },
+ {
+  "text": "Chaya tea lounge",
+  "type": "Want"
+ },
+ {
+  "text": "Chetna's",
+  "type": "Want"
+ },
+ {
+  "text": "Chetna's express",
+  "type": "Want"
+ },
+ {
+  "text": "Chetna sweets",
+  "type": "Want"
+ },
+ {
+  "text": "Chetna sweets express",
+  "type": "Want"
+ },
+ {
+  "text": "Daawat restaurant",
+  "type": "Want"
+ },
+ {
+  "text": "Dhaba",
+  "type": "Want"
+ },
+ {
+  "text": "Dhaba by the road",
+  "type": "Want"
+ },
+ {
+  "text": "Dosa king",
+  "type": "Want"
+ },
+ {
+  "text": "Dosa paradise",
+  "type": "Want"
+ },
+ {
+  "text": "Dosa point",
+  "type": "Want"
+ },
+ {
+  "text": "Dosa street",
+  "type": "Want"
+ },
+ {
+  "text": "Dosa tandoor",
+  "type": "Want"
+ },
+ {
+  "text": "Dosa wala",
+  "type": "Want"
+ },
+ {
+  "text": "Dosa wala express",
+  "type": "Want"
+ },
+ {
+  "text": "Eklavya",
+  "type": "Want"
+ },
+ {
+  "text": "Eklavya express",
+  "type": "Want"
+ },
+ {
+  "text": "Eklavya sweets",
+  "type": "Want"
+ },
+ {
+  "text": "Eklavya sweets express",
+  "type": "Want"
+ },
+ {
+  "text": "Fog city",
+  "type": "Want"
+ },
+ {
+  "text": "Fresh dough",
+  "type": "Want"
+ },
+ {
+  "text": "Gourmet garden",
+  "type": "Want"
+ },
+ {
+  "text": "Gulab house sweets",
+  "type": "Want"
+ },
+ {
+  "text": "Haji biryani",
+  "type": "Want"
+ },
+ {
+  "text": "Haji biryani express",
+  "type": "Want"
+ },
+ {
+  "text": "Haji's biryani",
+  "type": "Want"
+ },
+ {
+  "text": "Haji's biryani express",
+  "type": "Want"
+ },
+ {
+  "text": "Haldiram's bakery",
+  "type": "Want"
+ },
+ {
+  "text": "Haveli",
+  "type": "Want"
+ },
+ {
+  "text": "Himalayan cha",
+  "type": "Want"
+ },
+ {
+  "text": "Indian tandoor",
+  "type": "Want"
+ },
+ {
+  "text": "Jai bhoj",
+  "type": "Want"
+ },
+ {
+  "text": "Jai bhoj express",
+  "type": "Want"
+ },
+ {
+  "text": "Jalebi wala",
+  "type": "Want"
+ },
+ {
+  "text": "Jalebi wala express",
+  "type": "Want"
+ },
+ {
+  "text": "Jalebi wala sweets",
+  "type": "Want"
+ },
+ {
+  "text": "Jalebi wala sweets express",
+  "type": "Want"
+ },
+ {
+  "text": "Jain kitchen",
+  "type": "Want"
+ },
+ {
+  "text": "Jain kitchen express",
+  "type": "Want"
+ },
+ {
+  "text": "Jain sweets",
+  "type": "Want"
+ },
+ {
+  "text": "Jain sweets express",
+  "type": "Want"
+ },
+ {
+  "text": "Jain sweets corner",
+  "type": "Want"
+ },
+ {
+  "text": "Jain sweets corner express",
+  "type": "Want"
+ },
+ {
+  "text": "Jetha's",
+  "type": "Want"
+ },
+ {
+  "text": "Jetha's express",
+  "type": "Want"
+ },
+ {
+  "text": "Jetha sweets",
+  "type": "Want"
+ },
+ {
+  "text": "Jetha sweets express",
+  "type": "Want"
+ },
+ {
+  "text": "Kabuliwala",
+  "type": "Want"
+ },
+ {
+  "text": "Kabuliwala express",
+  "type": "Want"
+ },
+ {
+  "text": "Kabuliwala sweets",
+  "type": "Want"
+ },
+ {
+  "text": "Kabuliwala sweets express",
+  "type": "Want"
+ },
+ {
+  "text": "Kebab cart",
+  "type": "Want"
+ },
+ {
+  "text": "Kebab point",
+  "type": "Want"
+ },
+ {
+  "text": "Kebab street",
+  "type": "Want"
+ },
+ {
+  "text": "Lakshmi sweets",
+  "type": "Want"
+ },
+ {
+  "text": "Lalit sweets",
+  "type": "Want"
+ },
+ {
+  "text": "Lalit sweets express",
+  "type": "Want"
+ },
+ {
+  "text": "Mamta bhojanalaya",
+  "type": "Want"
+ },
+ {
+  "text": "Mamta sweets express",
+  "type": "Want"
+ },
+ {
+  "text": "Mamta's sweets",
+  "type": "Want"
+ },
+ {
+  "text": "Mamta's sweets express",
+  "type": "Want"
+ },
+ {
+  "text": "Mastani wala",
+  "type": "Want"
+ },
+ {
+  "text": "Mastani wala express",
+  "type": "Want"
+ },
+ {
+  "text": "Mastani wala sweets",
+  "type": "Want"
+ },
+ {
+  "text": "Mastani wala sweets express",
+  "type": "Want"
+ },
+ {
+  "text": "Mithai corner",
+  "type": "Want"
+ },
+ {
+  "text": "Mithai corner express",
+  "type": "Want"
+ },
+ {
+  "text": "Mithai wala",
+  "type": "Want"
+ },
+ {
+  "text": "Mithai wala express",
+  "type": "Want"
+ },
+ {
+  "text": "Mithai wala sweets",
+  "type": "Want"
+ },
+ {
+  "text": "Mithai wala sweets express",
+  "type": "Want"
+ },
+ {
+  "text": "Namkeen cart",
+  "type": "Want"
+ },
+ {
+  "text": "Namkeen cart express",
+  "type": "Want"
+ },
+ {
+  "text": "Namkeen corner",
+  "type": "Want"
+ },
+ {
+  "text": "Namkeen corner express",
+  "type": "Want"
+ },
+ {
+  "text": "Namkeen point",
+  "type": "Want"
+ },
+ {
+  "text": "Namkeen point express",
+  "type": "Want"
+ },
+ {
+  "text": "Namkeen street",
+  "type": "Want"
+ },
+ {
+  "text": "Namkeen street express",
+  "type": "Want"
+ },
+ {
+  "text": "Nanda's kitchen express",
+  "type": "Want"
+ },
+ {
+  "text": "Nanda's kitchen express express",
+  "type": "Want"
+ },
+ {
+  "text": "Nanda's kitchen express express express",
+  "type": "Want"
+ },
+ {
+  "text": "Nanda's kitchen express express express express",
+  "type": "Want"
+ }
+]

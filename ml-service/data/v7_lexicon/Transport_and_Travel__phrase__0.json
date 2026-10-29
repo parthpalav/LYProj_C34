@@ -1,0 +1,266 @@
+[
+ {
+  "text": "petrol station",
+  "type": "Need"
+ },
+ {
+  "text": "diesel bunk",
+  "type": "Need"
+ },
+ {
+  "text": "ev charging",
+  "type": "Need"
+ },
+ {
+  "text": "metro ticket",
+  "type": "Need"
+ },
+ {
+  "text": "bus pass",
+  "type": "Need"
+ },
+ {
+  "text": "local train ticket",
+  "type": "Need"
+ },
+ {
+  "text": "fastag recharge",
+  "type": "Need"
+ },
+ {
+  "text": "toll tax",
+  "type": "Need"
+ },
+ {
+  "text": "parking fee",
+  "type": "Need"
+ },
+ {
+  "text": "taxi ride office",
+  "type": "Need"
+ },
+ {
+  "text": "auto to work",
+  "type": "Need"
+ },
+ {
+  "text": "local cab",
+  "type": "Want"
+ },
+ {
+  "text": "bus fair",
+  "type": "Need"
+ },
+ {
+  "text": "toll plaza",
+  "type": "Need"
+ },
+ {
+  "text": "metro ride",
+  "type": "Need"
+ },
+ {
+  "text": "train travel",
+  "type": "Need"
+ },
+ {
+  "text": "rte challan",
+  "type": "Need"
+ },
+ {
+  "text": "petrol bill",
+  "type": "Need"
+ },
+ {
+  "text": "diesel bill",
+  "type": "Need"
+ },
+ {
+  "text": "ev charge",
+  "type": "Need"
+ },
+ {
+  "text": "fastag",
+  "type": "Need"
+ },
+ {
+  "text": "toll",
+  "type": "Need"
+ },
+ {
+  "text": "parking lot",
+  "type": "Need"
+ },
+ {
+  "text": "parking card",
+  "type": "Need"
+ },
+ {
+  "text": "metro travel",
+  "type": "Need"
+ },
+ {
+  "text": "local train",
+  "type": "Need"
+ },
+ {
+  "text": "local bus",
+  "type": "Need"
+ },
+ {
+  "text": "toll payment",
+  "type": "Need"
+ },
+ {
+  "text": "petrol pump",
+  "type": "Need"
+ },
+ {
+  "text": "ev charging station",
+  "type": "Need"
+ },
+ {
+  "text": "toll road",
+  "type": "Need"
+ },
+ {
+  "text": "metro ride pass",
+  "type": "Need"
+ },
+ {
+  "text": "parking fee at mall",
+  "type": "Need"
+ },
+ {
+  "text": "local cab to work",
+  "type": "Want"
+ },
+ {
+  "text": "metro pass",
+  "type": "Need"
+ },
+ {
+  "text": "local bus ticket",
+  "type": "Need"
+ },
+ {
+  "text": "toll charge",
+  "type": "Need"
+ },
+ {
+  "text": "petrol recharge",
+  "type": "Need"
+ },
+ {
+  "text": "diesel recharge",
+  "type": "Need"
+ },
+ {
+  "text": "ev battery charge",
+  "type": "Need"
+ },
+ {
+  "text": "toll payment machine",
+  "type": "Need"
+ },
+ {
+  "text": "parking lot at hospital",
+  "type": "Need"
+ },
+ {
+  "text": "metro travel to office",
+  "type": "Need"
+ },
+ {
+  "text": "local train to work",
+  "type": "Need"
+ },
+ {
+  "text": "local bus to market",
+  "type": "Need"
+ },
+ {
+  "text": "toll tax at border",
+  "type": "Need"
+ },
+ {
+  "text": "petrol for work",
+  "type": "Need"
+ },
+ {
+  "text": "diesel for work",
+  "type": "Need"
+ },
+ {
+  "text": "ev charge for work",
+  "type": "Need"
+ },
+ {
+  "text": "fastag renewal",
+  "type": "Need"
+ },
+ {
+  "text": "toll payment app",
+  "type": "Need"
+ },
+ {
+  "text": "parking at office",
+  "type": "Need"
+ },
+ {
+  "text": "metro pass for month",
+  "type": "Need"
+ },
+ {
+  "text": "local cab for errands",
+  "type": "Want"
+ },
+ {
+  "text": "metro ticket for day",
+  "type": "Need"
+ },
+ {
+  "text": "local bus to airport",
+  "type": "Need"
+ },
+ {
+  "text": "toll tax for truck",
+  "type": "Need"
+ },
+ {
+  "text": "petrol for holiday",
+  "type": "Want"
+ },
+ {
+  "text": "diesel for trip",
+  "type": "Want"
+ },
+ {
+  "text": "ev charge for holiday",
+  "type": "Want"
+ },
+ {
+  "text": "fastag for trip",
+  "type": "Want"
+ },
+ {
+  "text": "toll payment for trip",
+  "type": "Want"
+ },
+ {
+  "text": "parking at hotel",
+  "type": "Want"
+ },
+ {
+  "text": "metro ticket for holiday",
+  "type": "Want"
+ },
+ {
+  "text": "local bus for outing",
+  "type": "Want"
+ },
+ {
+  "text": "toll tax for holiday",
+  "type": "Want"
+ }
+]

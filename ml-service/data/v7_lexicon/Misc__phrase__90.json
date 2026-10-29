@@ -1,0 +1,458 @@
+[
+ {
+  "text": "SMS charges",
+  "type": "Need"
+ },
+ {
+  "text": "SMS alert charges",
+  "type": "Need"
+ },
+ {
+  "text": "ATM AMC charges",
+  "type": "Need"
+ },
+ {
+  "text": "ATM annual maintenance charges",
+  "type": "Need"
+ },
+ {
+  "text": "min balance charges",
+  "type": "Need"
+ },
+ {
+  "text": "minimum balance charges",
+  "type": "Need"
+ },
+ {
+  "text": "AMB charges",
+  "type": "Need"
+ },
+ {
+  "text": "MAB charges",
+  "type": "Need"
+ },
+ {
+  "text": "non maintenance of minimum balance",
+  "type": "Need"
+ },
+ {
+  "text": "debit card annual fee",
+  "type": "Need"
+ },
+ {
+  "text": "debit card AMC",
+  "type": "Need"
+ },
+ {
+  "text": "debit card annual maintenance",
+  "type": "Need"
+ },
+ {
+  "text": "debit card issuance fee",
+  "type": "Need"
+ },
+ {
+  "text": "debit card replacement fee",
+  "type": "Need"
+ },
+ {
+  "text": "debit card renewal fee",
+  "type": "Need"
+ },
+ {
+  "text": "card replacement charges",
+  "type": "Need"
+ },
+ {
+  "text": "PIN regeneration charges",
+  "type": "Need"
+ },
+ {
+  "text": "cheque book charges",
+  "type": "Need"
+ },
+ {
+  "text": "cheque book issue charges",
+  "type": "Need"
+ },
+ {
+  "text": "chq book charges",
+  "type": "Need"
+ },
+ {
+  "text": "cheque leaves charges",
+  "type": "Need"
+ },
+ {
+  "text": "cheque return charges",
+  "type": "Need"
+ },
+ {
+  "text": "cheque bounce charges",
+  "type": "Need"
+ },
+ {
+  "text": "inward cheque return charges",
+  "type": "Need"
+ },
+ {
+  "text": "outward cheque return charges",
+  "type": "Need"
+ },
+ {
+  "text": "GST on charges",
+  "type": "Need"
+ },
+ {
+  "text": "GST on SMS charges",
+  "type": "Need"
+ },
+ {
+  "text": "GST on ATM charges",
+  "type": "Need"
+ },
+ {
+  "text": "GST on service charges",
+  "type": "Need"
+ },
+ {
+  "text": "IGST on charges",
+  "type": "Need"
+ },
+ {
+  "text": "CGST SGST on charges",
+  "type": "Need"
+ },
+ {
+  "text": "service tax on charges",
+  "type": "Need"
+ },
+ {
+  "text": "ATM cash withdrawal",
+  "type": "Need"
+ },
+ {
+  "text": "ATM withdrawal",
+  "type": "Need"
+ },
+ {
+  "text": "ATM WDL",
+  "type": "Need"
+ },
+ {
+  "text": "ATM cash wdl",
+  "type": "Need"
+ },
+ {
+  "text": "NFS cash withdrawal",
+  "type": "Need"
+ },
+ {
+  "text": "cash withdrawal at ATM",
+  "type": "Need"
+ },
+ {
+  "text": "other bank ATM charges",
+  "type": "Need"
+ },
+ {
+  "text": "other bank ATM fee",
+  "type": "Need"
+ },
+ {
+  "text": "ATM txn charges",
+  "type": "Need"
+ },
+ {
+  "text": "ATM transaction charges",
+  "type": "Need"
+ },
+ {
+  "text": "non home branch ATM charges",
+  "type": "Need"
+ },
+ {
+  "text": "excess ATM transaction charges",
+  "type": "Need"
+ },
+ {
+  "text": "cash deposit charges",
+  "type": "Need"
+ },
+ {
+  "text": "cash handling charges",
+  "type": "Need"
+ },
+ {
+  "text": "cash processing charges",
+  "type": "Need"
+ },
+ {
+  "text": "cash withdrawal charges",
+  "type": "Need"
+ },
+ {
+  "text": "branch cash withdrawal charges",
+  "type": "Need"
+ },
+ {
+  "text": "NEFT charges",
+  "type": "Need"
+ },
+ {
+  "text": "RTGS charges",
+  "type": "Need"
+ },
+ {
+  "text": "IMPS charges",
+  "type": "Need"
+ },
+ {
+  "text": "UPI charges",
+  "type": "Need"
+ },
+ {
+  "text": "IMPS txn charges",
+  "type": "Need"
+ },
+ {
+  "text": "funds transfer charges",
+  "type": "Need"
+ },
+ {
+  "text": "DD issue charges",
+  "type": "Need"
+ },
+ {
+  "text": "demand draft charges",
+  "type": "Need"
+ },
+ {
+  "text": "DD cancellation charges",
+  "type": "Need"
+ },
+ {
+  "text": "pay order charges",
+  "type": "Need"
+ },
+ {
+  "text": "banker cheque charges",
+  "type": "Need"
+ },
+ {
+  "text": "duplicate passbook charges",
+  "type": "Need"
+ },
+ {
+  "text": "passbook issue charges",
+  "type": "Need"
+ },
+ {
+  "text": "passbook printing charges",
+  "type": "Need"
+ },
+ {
+  "text": "duplicate statement charges",
+  "type": "Need"
+ },
+ {
+  "text": "account statement charges",
+  "type": "Need"
+ },
+ {
+  "text": "statement request charges",
+  "type": "Need"
+ },
+ {
+  "text": "balance certificate charges",
+  "type": "Need"
+ },
+ {
+  "text": "interest certificate charges",
+  "type": "Need"
+ },
+ {
+  "text": "stop payment charges",
+  "type": "Need"
+ },
+ {
+  "text": "stop cheque charges",
+  "type": "Need"
+ },
+ {
+  "text": "signature verification charges",
+  "type": "Need"
+ },
+ {
+  "text": "standing instruction charges",
+  "type": "Need"
+ },
+ {
+  "text": "SI failure charges",
+  "type": "Need"
+ },
+ {
+  "text": "mandate rejection charges",
+  "type": "Need"
+ },
+ {
+  "text": "ECS return charges",
+  "type": "Need"
+ },
+ {
+  "text": "NACH return charges",
+  "type": "Need"
+ },
+ {
+  "text": "auto debit return charges",
+  "type": "Need"
+ },
+ {
+  "text": "EMI bounce charges",
+  "type": "Need"
+ },
+ {
+  "text": "locker rent",
+  "type": "Need"
+ },
+ {
+  "text": "locker rental charges",
+  "type": "Need"
+ },
+ {
+  "text": "safe deposit locker charges",
+  "type": "Need"
+ },
+ {
+  "text": "account closure charges",
+  "type": "Need"
+ },
+ {
+  "text": "account maintenance charges",
+  "type": "Need"
+ },
+ {
+  "text": "account maintenance fee",
+  "type": "Need"
+ },
+ {
+  "text": "account keeping charges",
+  "type": "Need"
+ },
+ {
+  "text": "inoperative account charges",
+  "type": "Need"
+ },
+ {
+  "text": "dormant account charges",
+  "type": "Need"
+ },
+ {
+  "text": "low balance charges",
+  "type": "Need"
+ },
+ {
+  "text": "average balance charges",
+  "type": "Need"
+ },
+ {
+  "text": "AQB charges",
+  "type": "Need"
+ },
+ {
+  "text": "quarterly average balance charges",
+  "type": "Need"
+ },
+ {
+  "text": "zero balance penalty",
+  "type": "Need"
+ },
+ {
+  "text": "non maintenance charges",
+  "type": "Need"
+ },
+ {
+  "text": "processing fee",
+  "type": "Need"
+ },
+ {
+  "text": "processing charges",
+  "type": "Need"
+ },
+ {
+  "text": "loan processing fee",
+  "type": "Need"
+ },
+ {
+  "text": "foreclosure charges",
+  "type": "Need"
+ },
+ {
+  "text": "prepayment charges",
+  "type": "Need"
+ },
+ {
+  "text": "late payment fee",
+  "type": "Need"
+ },
+ {
+  "text": "late fee charges",
+  "type": "Need"
+ },
+ {
+  "text": "overlimit fee",
+  "type": "Need"
+ },
+ {
+  "text": "penal charges",
+  "type": "Need"
+ },
+ {
+  "text": "penalty charges",
+  "type": "Need"
+ },
+ {
+  "text": "annual fee",
+  "type": "Need"
+ },
+ {
+  "text": "annual membership fee",
+  "type": "Need"
+ },
+ {
+  "text": "credit card annual fee",
+  "type": "Need"
+ },
+ {
+  "text": "credit card joining fee",
+  "type": "Need"
+ },
+ {
+  "text": "card fee",
+  "type": "Need"
+ },
+ {
+  "text": "forex markup charges",
+  "type": "Need"
+ },
+ {
+  "text": "cross currency markup",
+  "type": "Need"
+ },
+ {
+  "text": "international txn fee",
+  "type": "Need"
+ },
+ {
+  "text": "SMS banking charges",
+  "type": "Need"
+ },
+ {
+  "text": "mobile banking charges",
+  "type": "Need"
+ },
+ {
+  "text": "internet banking charges",
+  "type": "Need"
+ }
+]

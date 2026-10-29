@@ -1,0 +1,1566 @@
+[
+ {
+  "text": "SBI Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "SBI MF",
+  "type": "Investment"
+ },
+ {
+  "text": "HDFC Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "HDFC MF",
+  "type": "Investment"
+ },
+ {
+  "text": "ICICI Prudential Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "ICICI Prudential MF",
+  "type": "Investment"
+ },
+ {
+  "text": "ICICI Pru Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "ICICI Pru MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Nippon India Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Nippon India MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Reliance Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Reliance MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Kotak Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Kotak MF",
+  "type": "Investment"
+ },
+ {
+  "text": "ABSL Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "ABSL MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Birla Sun Life Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "UTI Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "UTI MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Axis Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Axis MF",
+  "type": "Investment"
+ },
+ {
+  "text": "DSP Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "DSP MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Tata Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Tata MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Mirae Asset Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Mirae Asset MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Invesco Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Invesco MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Motilal Oswal Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Motilal Oswal MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Canara Robeco Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Canara Robeco MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Edelweiss Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Edelweiss MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Sundaram Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Sundaram MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Quant Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Quant MF",
+  "type": "Investment"
+ },
+ {
+  "text": "PPFAS Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "PPFAS MF",
+  "type": "Investment"
+ },
+ {
+  "text": "HSBC Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "HSBC MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Baroda BNP Paribas Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Bandhan Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Bandhan MF",
+  "type": "Investment"
+ },
+ {
+  "text": "IDFC Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "IDFC MF",
+  "type": "Investment"
+ },
+ {
+  "text": "LIC Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "LIC MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Mahindra Manulife Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Mahindra Manulife MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Navi Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Navi MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Groww Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Groww MF",
+  "type": "Investment"
+ },
+ {
+  "text": "WhiteOak Capital Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "WhiteOak Capital MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Trust Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Trust MF",
+  "type": "Investment"
+ },
+ {
+  "text": "360 ONE Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "360 ONE MF",
+  "type": "Investment"
+ },
+ {
+  "text": "ITI Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "ITI MF",
+  "type": "Investment"
+ },
+ {
+  "text": "JM Financial Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "JM Financial MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Union Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Union MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Bank of India Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "PGIM India Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "PGIM India MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Taurus Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Taurus MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Samco Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Samco MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Helios Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Helios MF",
+  "type": "Investment"
+ },
+ {
+  "text": "NJ Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "NJ MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Quantum Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Quantum MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Shriram Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Shriram MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Franklin Templeton Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Franklin Templeton MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Franklin India Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Franklin India MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Parag Parikh Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Parag Parikh MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Old Bridge Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Old Bridge MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Zerodha Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Zerodha MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Capitalmind Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Capitalmind MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Unifi Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Unifi MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Angel One Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Angel One MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Principal Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Principal MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Deutsche Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Deutsche MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Escorts Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Escorts MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Indiabulls Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Indiabulls MF",
+  "type": "Investment"
+ },
+ {
+  "text": "L&T Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "L&T MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Sahara Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Sahara MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Baroda Pioneer Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Baroda Pioneer MF",
+  "type": "Investment"
+ },
+ {
+  "text": "DHFL Pramerica Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "DHFL Pramerica MF",
+  "type": "Investment"
+ },
+ {
+  "text": "BNP Paribas Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "BNP Paribas MF",
+  "type": "Investment"
+ },
+ {
+  "text": "JP Morgan Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "JP Morgan MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Morgan Stanley Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Morgan Stanley MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Goldman Sachs Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Goldman Sachs MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Fidelity Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Fidelity MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Peerless Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Peerless MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Benchmark Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Benchmark MF",
+  "type": "Investment"
+ },
+ {
+  "text": "IDBI Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "IDBI MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Essel Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Essel MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Axis Bank Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Axis Bank MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Parag Parikh Flexi Cap",
+  "type": "Investment"
+ },
+ {
+  "text": "Nifty BeES",
+  "type": "Investment"
+ },
+ {
+  "text": "Gold BeES",
+  "type": "Investment"
+ },
+ {
+  "text": "Liquid BeES",
+  "type": "Investment"
+ },
+ {
+  "text": "Bank BeES",
+  "type": "Investment"
+ },
+ {
+  "text": "Junior BeES",
+  "type": "Investment"
+ },
+ {
+  "text": "Nifty 50 ETF",
+  "type": "Investment"
+ },
+ {
+  "text": "Gold ETF",
+  "type": "Investment"
+ },
+ {
+  "text": "Silver ETF",
+  "type": "Investment"
+ },
+ {
+  "text": "Nippon India Gold ETF",
+  "type": "Investment"
+ },
+ {
+  "text": "SBI Gold ETF",
+  "type": "Investment"
+ },
+ {
+  "text": "HDFC Gold ETF",
+  "type": "Investment"
+ },
+ {
+  "text": "Bharat Bond ETF",
+  "type": "Investment"
+ },
+ {
+  "text": "Bharat 22 ETF",
+  "type": "Investment"
+ },
+ {
+  "text": "CPSE ETF",
+  "type": "Investment"
+ },
+ {
+  "text": "Zerodha",
+  "type": "Investment"
+ },
+ {
+  "text": "Zerodha Kite",
+  "type": "Investment"
+ },
+ {
+  "text": "Zerodha Coin",
+  "type": "Investment"
+ },
+ {
+  "text": "Zerodha Console",
+  "type": "Investment"
+ },
+ {
+  "text": "Zerodha Broking",
+  "type": "Investment"
+ },
+ {
+  "text": "Groww",
+  "type": "Investment"
+ },
+ {
+  "text": "Groww Demat",
+  "type": "Investment"
+ },
+ {
+  "text": "Upstox",
+  "type": "Investment"
+ },
+ {
+  "text": "Upstox RKSV",
+  "type": "Investment"
+ },
+ {
+  "text": "Upstox Pro",
+  "type": "Investment"
+ },
+ {
+  "text": "Angel One",
+  "type": "Investment"
+ },
+ {
+  "text": "Angel Broking",
+  "type": "Investment"
+ },
+ {
+  "text": "5paisa",
+  "type": "Investment"
+ },
+ {
+  "text": "5paisa Capital",
+  "type": "Investment"
+ },
+ {
+  "text": "ICICI Direct",
+  "type": "Investment"
+ },
+ {
+  "text": "ICICI Securities",
+  "type": "Investment"
+ },
+ {
+  "text": "HDFC Securities",
+  "type": "Investment"
+ },
+ {
+  "text": "HDFC Sky",
+  "type": "Investment"
+ },
+ {
+  "text": "Kotak Securities",
+  "type": "Investment"
+ },
+ {
+  "text": "Kotak Neo",
+  "type": "Investment"
+ },
+ {
+  "text": "Axis Direct",
+  "type": "Investment"
+ },
+ {
+  "text": "Axis Securities",
+  "type": "Investment"
+ },
+ {
+  "text": "Sharekhan",
+  "type": "Investment"
+ },
+ {
+  "text": "Motilal Oswal Financial",
+  "type": "Investment"
+ },
+ {
+  "text": "Motilal Oswal Securities",
+  "type": "Investment"
+ },
+ {
+  "text": "IIFL Securities",
+  "type": "Investment"
+ },
+ {
+  "text": "India Infoline",
+  "type": "Investment"
+ },
+ {
+  "text": "Edelweiss Broking",
+  "type": "Investment"
+ },
+ {
+  "text": "Nuvama",
+  "type": "Investment"
+ },
+ {
+  "text": "SBICAP Securities",
+  "type": "Investment"
+ },
+ {
+  "text": "SBI Securities",
+  "type": "Investment"
+ },
+ {
+  "text": "Paytm Money",
+  "type": "Investment"
+ },
+ {
+  "text": "Dhan",
+  "type": "Investment"
+ },
+ {
+  "text": "Dhan Broking",
+  "type": "Investment"
+ },
+ {
+  "text": "INDmoney",
+  "type": "Investment"
+ },
+ {
+  "text": "IND Money",
+  "type": "Investment"
+ },
+ {
+  "text": "Kuvera",
+  "type": "Investment"
+ },
+ {
+  "text": "ET Money",
+  "type": "Investment"
+ },
+ {
+  "text": "ETMONEY",
+  "type": "Investment"
+ },
+ {
+  "text": "Scripbox",
+  "type": "Investment"
+ },
+ {
+  "text": "Fisdom",
+  "type": "Investment"
+ },
+ {
+  "text": "Wealthy",
+  "type": "Investment"
+ },
+ {
+  "text": "Smallcase",
+  "type": "Investment"
+ },
+ {
+  "text": "Geojit",
+  "type": "Investment"
+ },
+ {
+  "text": "Religare Broking",
+  "type": "Investment"
+ },
+ {
+  "text": "Religare Securities",
+  "type": "Investment"
+ },
+ {
+  "text": "Anand Rathi",
+  "type": "Investment"
+ },
+ {
+  "text": "Choice Broking",
+  "type": "Investment"
+ },
+ {
+  "text": "Choice Equity",
+  "type": "Investment"
+ },
+ {
+  "text": "Master Trust",
+  "type": "Investment"
+ },
+ {
+  "text": "Prabhudas Lilladher",
+  "type": "Investment"
+ },
+ {
+  "text": "Reliance Securities",
+  "type": "Investment"
+ },
+ {
+  "text": "SMC Global",
+  "type": "Investment"
+ },
+ {
+  "text": "Alice Blue",
+  "type": "Investment"
+ },
+ {
+  "text": "Fyers",
+  "type": "Investment"
+ },
+ {
+  "text": "Finvasia",
+  "type": "Investment"
+ },
+ {
+  "text": "Shoonya",
+  "type": "Investment"
+ },
+ {
+  "text": "Flattrade",
+  "type": "Investment"
+ },
+ {
+  "text": "mStock",
+  "type": "Investment"
+ },
+ {
+  "text": "TradeSmart",
+  "type": "Investment"
+ },
+ {
+  "text": "Samco Securities",
+  "type": "Investment"
+ },
+ {
+  "text": "ProStocks",
+  "type": "Investment"
+ },
+ {
+  "text": "Arihant Capital",
+  "type": "Investment"
+ },
+ {
+  "text": "Bonanza Portfolio",
+  "type": "Investment"
+ },
+ {
+  "text": "Swastika Investmart",
+  "type": "Investment"
+ },
+ {
+  "text": "Ventura Securities",
+  "type": "Investment"
+ },
+ {
+  "text": "Pocketful",
+  "type": "Investment"
+ },
+ {
+  "text": "Stoxkart",
+  "type": "Investment"
+ },
+ {
+  "text": "Tradejini",
+  "type": "Investment"
+ },
+ {
+  "text": "Zebu",
+  "type": "Investment"
+ },
+ {
+  "text": "Wint Wealth",
+  "type": "Investment"
+ },
+ {
+  "text": "Grip Invest",
+  "type": "Investment"
+ },
+ {
+  "text": "Jiraaf",
+  "type": "Investment"
+ },
+ {
+  "text": "Altgrow",
+  "type": "Investment"
+ },
+ {
+  "text": "Strideone",
+  "type": "Investment"
+ },
+ {
+  "text": "BondsIndia",
+  "type": "Investment"
+ },
+ {
+  "text": "Hurdle",
+  "type": "Investment"
+ },
+ {
+  "text": "Jar App",
+  "type": "Investment"
+ },
+ {
+  "text": "Gullak",
+  "type": "Investment"
+ },
+ {
+  "text": "PhonePe Gold",
+  "type": "Investment"
+ },
+ {
+  "text": "Paytm Gold",
+  "type": "Investment"
+ },
+ {
+  "text": "Google Pay Gold",
+  "type": "Investment"
+ },
+ {
+  "text": "MobiKwik Gold",
+  "type": "Investment"
+ },
+ {
+  "text": "Kotak Securities Trading",
+  "type": "Investment"
+ },
+ {
+  "text": "CDSL",
+  "type": "Investment"
+ },
+ {
+  "text": "NSDL",
+  "type": "Investment"
+ },
+ {
+  "text": "CDSL Demat",
+  "type": "Investment"
+ },
+ {
+  "text": "NSDL Demat",
+  "type": "Investment"
+ },
+ {
+  "text": "NSE",
+  "type": "Investment"
+ },
+ {
+  "text": "BSE",
+  "type": "Investment"
+ },
+ {
+  "text": "NSE Clearing",
+  "type": "Investment"
+ },
+ {
+  "text": "Indian Clearing Corporation",
+  "type": "Investment"
+ },
+ {
+  "text": "BSE StAR MF",
+  "type": "Investment"
+ },
+ {
+  "text": "NSE NMF",
+  "type": "Investment"
+ },
+ {
+  "text": "CAMS",
+  "type": "Investment"
+ },
+ {
+  "text": "CAMS Pay",
+  "type": "Investment"
+ },
+ {
+  "text": "Karvy",
+  "type": "Investment"
+ },
+ {
+  "text": "Karvy Fintech",
+  "type": "Investment"
+ },
+ {
+  "text": "KFintech",
+  "type": "Investment"
+ },
+ {
+  "text": "KFin Technologies",
+  "type": "Investment"
+ },
+ {
+  "text": "MFCentral",
+  "type": "Investment"
+ },
+ {
+  "text": "MF Central",
+  "type": "Investment"
+ },
+ {
+  "text": "MF Utility",
+  "type": "Investment"
+ },
+ {
+  "text": "MFU",
+  "type": "Investment"
+ },
+ {
+  "text": "Protean",
+  "type": "Investment"
+ },
+ {
+  "text": "Protean eGov",
+  "type": "Investment"
+ },
+ {
+  "text": "NPS",
+  "type": "Investment"
+ },
+ {
+  "text": "National Pension System",
+  "type": "Investment"
+ },
+ {
+  "text": "NPS Trust",
+  "type": "Investment"
+ },
+ {
+  "text": "NPS Tier 1",
+  "type": "Investment"
+ },
+ {
+  "text": "NPS Tier 2",
+  "type": "Investment"
+ },
+ {
+  "text": "eNPS",
+  "type": "Investment"
+ },
+ {
+  "text": "PFRDA",
+  "type": "Investment"
+ },
+ {
+  "text": "Atal Pension Yojana",
+  "type": "Investment"
+ },
+ {
+  "text": "APY",
+  "type": "Investment"
+ },
+ {
+  "text": "NPS Vatsalya",
+  "type": "Investment"
+ },
+ {
+  "text": "EPFO",
+  "type": "Investment"
+ },
+ {
+  "text": "EPF",
+  "type": "Investment"
+ },
+ {
+  "text": "EPF Contribution",
+  "type": "Investment"
+ },
+ {
+  "text": "VPF",
+  "type": "Investment"
+ },
+ {
+  "text": "PPF",
+  "type": "Investment"
+ },
+ {
+  "text": "Public Provident Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "PPF Deposit",
+  "type": "Investment"
+ },
+ {
+  "text": "PPF Account",
+  "type": "Investment"
+ },
+ {
+  "text": "Sukanya Samriddhi",
+  "type": "Investment"
+ },
+ {
+  "text": "SSY",
+  "type": "Investment"
+ },
+ {
+  "text": "Sukanya Samriddhi Yojana",
+  "type": "Investment"
+ },
+ {
+  "text": "NSC",
+  "type": "Investment"
+ },
+ {
+  "text": "National Savings Certificate",
+  "type": "Investment"
+ },
+ {
+  "text": "Kisan Vikas Patra",
+  "type": "Investment"
+ },
+ {
+  "text": "KVP",
+  "type": "Investment"
+ },
+ {
+  "text": "Post Office RD",
+  "type": "Investment"
+ },
+ {
+  "text": "Post Office FD",
+  "type": "Investment"
+ },
+ {
+  "text": "Post Office Savings Scheme",
+  "type": "Investment"
+ },
+ {
+  "text": "Post Office MIS",
+  "type": "Investment"
+ },
+ {
+  "text": "Post Office Time Deposit",
+  "type": "Investment"
+ },
+ {
+  "text": "SCSS",
+  "type": "Investment"
+ },
+ {
+  "text": "Senior Citizen Savings Scheme",
+  "type": "Investment"
+ },
+ {
+  "text": "Sovereign Gold Bond",
+  "type": "Investment"
+ },
+ {
+  "text": "SGB",
+  "type": "Investment"
+ },
+ {
+  "text": "SGB RBI",
+  "type": "Investment"
+ },
+ {
+  "text": "RBI Bonds",
+  "type": "Investment"
+ },
+ {
+  "text": "RBI Floating Rate Bond",
+  "type": "Investment"
+ },
+ {
+  "text": "RBI Retail Direct",
+  "type": "Investment"
+ },
+ {
+  "text": "Retail Direct",
+  "type": "Investment"
+ },
+ {
+  "text": "Treasury Bill",
+  "type": "Investment"
+ },
+ {
+  "text": "T-Bill",
+  "type": "Investment"
+ },
+ {
+  "text": "G-Sec",
+  "type": "Investment"
+ },
+ {
+  "text": "Recurring Deposit",
+  "type": "Investment"
+ },
+ {
+  "text": "RD",
+  "type": "Investment"
+ },
+ {
+  "text": "RD Installment",
+  "type": "Investment"
+ },
+ {
+  "text": "Fixed Deposit",
+  "type": "Investment"
+ },
+ {
+  "text": "FD",
+  "type": "Investment"
+ },
+ {
+  "text": "FD Booking",
+  "type": "Investment"
+ },
+ {
+  "text": "Term Deposit",
+  "type": "Investment"
+ },
+ {
+  "text": "Bank FD",
+  "type": "Investment"
+ },
+ {
+  "text": "SBI FD",
+  "type": "Investment"
+ },
+ {
+  "text": "SBI RD",
+  "type": "Investment"
+ },
+ {
+  "text": "HDFC Bank FD",
+  "type": "Investment"
+ },
+ {
+  "text": "HDFC Bank RD",
+  "type": "Investment"
+ },
+ {
+  "text": "ICICI Bank FD",
+  "type": "Investment"
+ },
+ {
+  "text": "ICICI Bank RD",
+  "type": "Investment"
+ },
+ {
+  "text": "Axis Bank FD",
+  "type": "Investment"
+ },
+ {
+  "text": "Axis Bank RD",
+  "type": "Investment"
+ },
+ {
+  "text": "Kotak FD",
+  "type": "Investment"
+ },
+ {
+  "text": "Kotak RD",
+  "type": "Investment"
+ },
+ {
+  "text": "PNB FD",
+  "type": "Investment"
+ },
+ {
+  "text": "BoB FD",
+  "type": "Investment"
+ },
+ {
+  "text": "Canara Bank FD",
+  "type": "Investment"
+ },
+ {
+  "text": "Union Bank FD",
+  "type": "Investment"
+ },
+ {
+  "text": "IDFC First FD",
+  "type": "Investment"
+ },
+ {
+  "text": "IndusInd FD",
+  "type": "Investment"
+ },
+ {
+  "text": "Yes Bank FD",
+  "type": "Investment"
+ },
+ {
+  "text": "Federal Bank FD",
+  "type": "Investment"
+ },
+ {
+  "text": "Corporate FD",
+  "type": "Investment"
+ },
+ {
+  "text": "Bajaj Finance FD",
+  "type": "Investment"
+ },
+ {
+  "text": "Shriram Finance FD",
+  "type": "Investment"
+ },
+ {
+  "text": "Mahindra Finance FD",
+  "type": "Investment"
+ },
+ {
+  "text": "SafeGold",
+  "type": "Investment"
+ },
+ {
+  "text": "MMTC-PAMP",
+  "type": "Investment"
+ },
+ {
+  "text": "MMTC PAMP",
+  "type": "Investment"
+ },
+ {
+  "text": "Augmont",
+  "type": "Investment"
+ },
+ {
+  "text": "Digital Gold",
+  "type": "Investment"
+ },
+ {
+  "text": "Digital Gold Purchase",
+  "type": "Investment"
+ },
+ {
+  "text": "Gold SIP",
+  "type": "Investment"
+ },
+ {
+  "text": "Mutual Fund SIP",
+  "type": "Investment"
+ },
+ {
+  "text": "SIP",
+  "type": "Investment"
+ },
+ {
+  "text": "SIP Installment",
+  "type": "Investment"
+ },
+ {
+  "text": "SIP Payment",
+  "type": "Investment"
+ },
+ {
+  "text": "Lumpsum Investment",
+  "type": "Investment"
+ },
+ {
+  "text": "ELSS",
+  "type": "Investment"
+ },
+ {
+  "text": "NFO",
+  "type": "Investment"
+ },
+ {
+  "text": "IPO",
+  "type": "Investment"
+ },
+ {
+  "text": "IPO Application",
+  "type": "Investment"
+ },
+ {
+  "text": "UPI IPO",
+  "type": "Investment"
+ },
+ {
+  "text": "IPO Mandate",
+  "type": "Investment"
+ },
+ {
+  "text": "Demat Charges",
+  "type": "Investment"
+ },
+ {
+  "text": "Demat AMC",
+  "type": "Investment"
+ },
+ {
+  "text": "DP Charges",
+  "type": "Investment"
+ },
+ {
+  "text": "Stock Purchase",
+  "type": "Investment"
+ },
+ {
+  "text": "Equity Purchase",
+  "type": "Investment"
+ },
+ {
+  "text": "Share Purchase",
+  "type": "Investment"
+ },
+ {
+  "text": "Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Mutual Fund Purchase",
+  "type": "Investment"
+ },
+ {
+  "text": "Mutual Fund Investment",
+  "type": "Investment"
+ },
+ {
+  "text": "InvIT",
+  "type": "Investment"
+ },
+ {
+  "text": "REIT",
+  "type": "Investment"
+ },
+ {
+  "text": "Embassy REIT",
+  "type": "Investment"
+ },
+ {
+  "text": "Mindspace REIT",
+  "type": "Investment"
+ },
+ {
+  "text": "Brookfield REIT",
+  "type": "Investment"
+ },
+ {
+  "text": "Nexus Select Trust",
+  "type": "Investment"
+ },
+ {
+  "text": "Knowledge Realty Trust",
+  "type": "Investment"
+ },
+ {
+  "text": "IRB InvIT",
+  "type": "Investment"
+ },
+ {
+  "text": "PowerGrid InvIT",
+  "type": "Investment"
+ },
+ {
+  "text": "India Grid Trust",
+  "type": "Investment"
+ },
+ {
+  "text": "Corporate Bonds",
+  "type": "Investment"
+ },
+ {
+  "text": "NCD",
+  "type": "Investment"
+ },
+ {
+  "text": "NCD Application",
+  "type": "Investment"
+ },
+ {
+  "text": "Tax Free Bonds",
+  "type": "Investment"
+ },
+ {
+  "text": "Zerodha Brokerage",
+  "type": "Investment"
+ },
+ {
+  "text": "Groww Brokerage",
+  "type": "Investment"
+ },
+ {
+  "text": "Upstox Brokerage",
+  "type": "Investment"
+ },
+ {
+  "text": "Angel One Brokerage",
+  "type": "Investment"
+ },
+ {
+  "text": "Groww Wallet",
+  "type": "Investment"
+ },
+ {
+  "text": "Upstox Funds",
+  "type": "Investment"
+ },
+ {
+  "text": "Kite Funds",
+  "type": "Investment"
+ },
+ {
+  "text": "Coin SIP",
+  "type": "Investment"
+ },
+ {
+  "text": "ET Money SIP",
+  "type": "Investment"
+ },
+ {
+  "text": "Kuvera SIP",
+  "type": "Investment"
+ },
+ {
+  "text": "Groww SIP",
+  "type": "Investment"
+ },
+ {
+  "text": "Paytm Money SIP",
+  "type": "Investment"
+ },
+ {
+  "text": "INDmoney SIP",
+  "type": "Investment"
+ },
+ {
+  "text": "Stock SIP",
+  "type": "Investment"
+ },
+ {
+  "text": "Gold Investment",
+  "type": "Investment"
+ },
+ {
+  "text": "Silver Investment",
+  "type": "Investment"
+ },
+ {
+  "text": "Investment Account",
+  "type": "Investment"
+ },
+ {
+  "text": "Demat Account",
+  "type": "Investment"
+ },
+ {
+  "text": "Trading Account",
+  "type": "Investment"
+ },
+ {
+  "text": "Margin Funding",
+  "type": "Investment"
+ },
+ {
+  "text": "Share Market",
+  "type": "Investment"
+ },
+ {
+  "text": "Stock Market",
+  "type": "Investment"
+ }
+]

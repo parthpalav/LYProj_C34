@@ -154,6 +154,12 @@ VERIFY_BATCH = 40
 STATES = ["MUMBAI", "PUNE", "DELHI", "BANGALORE", "CHENNAI", "HYDERABAD", "KOLKATA", "AHMEDABAD", "JAIPUR", "LUCKNOW", "IN"]
 HANDLES = ["okaxis", "oksbi", "okicici", "okhdfcbank", "ybl", "paytm", "ibl", "axl", "upi"]
 BANKS = ["SBI", "HDFC", "ICICI", "AXIS", "KOTAK", "YESB"]
+# Real retail narration pieces (HDFC / SBI / ICICI / Axis / Kotak statements), see research/v7_sources.md
+PSP_BANKS = ["YES BANK LIMITED YBS", "AXIS BANK", "HDFC BANK", "ICICI BANK", "PAYTM PAYMENTS BANK", "KOTAK MAHINDRA BANK",
+             "STATE BANK OF INDIA", "IDFC FIRST BANK"]
+PSP_IFSC = ["YESB0YBLUPI", "HDFC0MERUPI", "UTIB0000553", "ICIC0DC0099", "PYTM0123456", "SBIN0016209"]
+UPI_NOTES = ["UPI", "PAYMENT FROM PHONE", "NA", "Payment", "Paid via PhonePe", "Sent from Paytm", "Pay to merchant"]
+CARD_BINS = ["416021", "512345", "438628", "652150", "607153"]
 SENTENCE_TEMPLATES = ["paid {m}", "{m} payment", "paid to {m}", "{m} bill", "at {m}", "{m} purchase", "spent at {m}", "{m} order"]
 
 
@@ -294,8 +300,15 @@ def _ref(n: int) -> str:
     return "".join(random.choice("0123456789") for _ in range(n))
 
 
+def _vpa(m: str) -> str:
+    local = re.sub(r"[^a-z0-9]", "", m.lower())[:random.choice([10, 14, 20])]
+    if random.random() < 0.3:
+        local = ".".join(m.lower().split()[:2])
+    return f"{local}{random.choice(['', '', str(random.randint(1, 999))])}@{random.choice(HANDLES)}"
+
+
 def expand_merchant(m: str) -> list[tuple[str, str]]:
-    up = m.upper()
+    up, card = m.upper(), f"{random.choice(CARD_BINS)}XXXXXX{_ref(4)}"
     out = [
         (random.choice([m, m.lower()]), "merchant"),
         (random.choice([f"{m} {generate_amount()}", f"{generate_amount()} {m}"]), "merchant_amount"),
@@ -303,6 +316,11 @@ def expand_merchant(m: str) -> list[tuple[str, str]]:
             f"UPI/DR/{_ref(12)}/{up}/{random.choice(HANDLES)}",
             f"UPI-{up.replace(' ', '')}-{_ref(6)}@{random.choice(HANDLES)}",
             f"UPI/{_ref(12)}/{up[:20]}/{m.lower().replace(' ', '')}@{random.choice(HANDLES)}/{random.choice(BANKS)}",
+            f"UPI-{up}-{_vpa(m).upper()}-{random.choice(PSP_IFSC)}-{_ref(12)}-{random.choice(UPI_NOTES).upper()}",
+            f"TO TRANSFER-UPI/DR/{_ref(12)}/{up[:20]}/{random.choice(['YESB', 'UTIB', 'HDFC', 'ICIC', 'SBIN'])}/{_vpa(m)}/{random.choice(UPI_NOTES)}--",
+            f"UPI/{_ref(12)}/{random.choice(UPI_NOTES)}/{_vpa(m)}/{random.choice(PSP_BANKS)}",
+            f"UPI/P2M/{_ref(12)}/{up[:20]}/{random.choice(UPI_NOTES)}/{random.choice(PSP_BANKS)}",
+            f"UPI/{up[:20]}/{_ref(12)}/{random.choice(UPI_NOTES)}",
         ]), "upi"),
         (random.choice([
             f"POS {_ref(4)} {up} {random.choice(STATES)}",
@@ -310,6 +328,11 @@ def expand_merchant(m: str) -> list[tuple[str, str]]:
             f"BIL/ONL/{_ref(12)}/{up}/{random.choice(BANKS)}",
             f"ECOM PUR {up} {random.choice(STATES)}",
             f"NEFT DR-{random.choice(BANKS)}N{_ref(9)}-{up}",
+            f"POS {card} {up[:22]} {random.choice(STATES)}",
+            f"VPS/{up[:20]}/{_ref(12)}/{random.choice(STATES)}",
+            f"PCD/{_ref(4)}/{up[:20]}/{random.choice(STATES)}/{_ref(6)}",
+            f"ACH D- {up[:24]}-{_ref(9)}",
+            f"NACH-DR-{up[:24]}-{_ref(12)}",
         ]), "bank_statement"),
         (random.choice(SENTENCE_TEMPLATES).format(m=random.choice([m, m.lower()])), "natural_language"),
     ]
@@ -327,13 +350,18 @@ def expand_phrase(p: str) -> list[tuple[str, str]]:
 
 FIRST_NAMES = ["Rahul", "Priya", "Amit", "Sneha", "Vikram", "Anjali", "Rohit", "Pooja", "Arjun", "Kavya", "Suresh", "Neha",
                "Manoj", "Divya", "Karan", "Ritu", "Sanjay", "Meera", "Aditya", "Shreya", "Ravi", "Nisha", "Deepak", "Lakshmi",
-               "Imran", "Fatima", "Harpreet", "Gurpreet", "Joseph", "Mary", "Venkat", "Lalitha", "Arun", "Bhavna", "Mohit", "Sunita"]
+               "Imran", "Fatima", "Harpreet", "Gurpreet", "Joseph", "Mary", "Venkat", "Lalitha", "Arun", "Bhavna", "Mohit", "Sunita",
+               "Abhishek", "Swati", "Varun", "Komal", "Prakash", "Rekha", "Tushar", "Sapna", "Ganesh", "Uma", "Ajay", "Shilpa",
+               "Naveen", "Preeti", "Salman", "Ayesha", "Jaspreet", "Simran", "Francis", "Grace", "Srinivas", "Padma", "Hemant",
+               "Kavita", "Dinesh", "Asha", "Vivek", "Monika", "Rajesh", "Geeta", "Anil", "Seema", "Pradeep", "Usha"]
 SURNAMES = ["Sharma", "Verma", "Patel", "Iyer", "Reddy", "Nair", "Gupta", "Singh", "Khan", "Das", "Joshi", "Kulkarni",
-            "Mehta", "Rao", "Banerjee", "Pillai", "Shaikh", "Fernandes", "Chauhan", "Mishra"]
+            "Mehta", "Rao", "Banerjee", "Pillai", "Shaikh", "Fernandes", "Chauhan", "Mishra", "Yadav", "Thakur", "Jain",
+            "Shetty", "Hegde", "Mukherjee", "Ghosh", "Sinha", "Tiwari", "Dubey", "Sawant", "Pawar", "Gill", "Sandhu",
+            "Krishnan", "Subramanian", "Ansari", "Siddiqui", "Lobo", "Dutta"]
 RELATIONS = ["mom", "dad", "bhai", "didi", "wife", "husband", "friend", "roommate", "landlord uncle", "chacha", "mama ji"]
 
 
-def person_transfers(n: int = 600) -> pd.DataFrame:
+def person_transfers(n: int = 3000) -> pd.DataFrame:
     """UPI/IMPS transfers to individuals: the most common Misc case, which the LLM lexicon barely covers."""
     rows = []
     for k in range(n):
@@ -345,6 +373,13 @@ def person_transfers(n: int = 600) -> pd.DataFrame:
             (f"UPI-{first.upper()}{last.upper()}-{_ref(6)}@{random.choice(HANDLES)}", "upi"),
             (f"IMPS/P2A/{_ref(12)}/{name}/{random.choice(BANKS)}0{_ref(6)}", "bank_statement"),
             (f"NEFT/{random.choice(BANKS)}N{_ref(9)}/{name}", "bank_statement"),
+            (f"UPI-{name}-{first.lower()}{random.choice(['', '.' + last.lower(), str(random.randint(1, 99))])}@{random.choice(HANDLES)}-"
+             f"{random.choice(PSP_IFSC)}-{_ref(12)}-{random.choice(UPI_NOTES).upper()}", "upi"),
+            (f"TO TRANSFER-UPI/DR/{_ref(12)}/{name[:20]}/{random.choice(['SBIN', 'HDFC', 'UTIB', 'ICIC'])}/"
+             f"{first.lower()}{_ref(2)}@{random.choice(HANDLES)}/{random.choice(UPI_NOTES)}--", "upi"),
+            (f"UPI/P2A/{_ref(12)}/{name}/{random.choice(UPI_NOTES)}/{random.choice(PSP_BANKS)}", "upi"),
+            (f"IMPS-{_ref(12)}-{name}-{random.choice(BANKS)}-XXXXXXX{_ref(4)}-{random.choice(['NA', 'TRANSFER', 'RENT SHARE', 'LOAN'])}", "bank_statement"),
+            (f"MMT/IMPS/{_ref(12)}/{random.choice(['Sent', 'Transfer', 'IMPS'])}/{name[:12]}/{random.choice(PSP_BANKS)}", "bank_statement"),
             (random.choice([f"paid {first.lower()}", f"sent to {first.lower()}", f"{first.lower()} upi",
                             f"paid {first.lower()} {generate_amount()}", f"transfer to {first} {last}"]), "natural_language"),
             (random.choice([f"sent money to {random.choice(RELATIONS)}", f"{random.choice(RELATIONS)} ko paise bheje",

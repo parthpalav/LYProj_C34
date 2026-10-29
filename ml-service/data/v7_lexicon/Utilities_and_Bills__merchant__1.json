@@ -1,0 +1,322 @@
+[
+ {
+  "text": "BSES",
+  "type": "Need"
+ },
+ {
+  "text": "Hindustan Petroleum",
+  "type": "Need"
+ },
+ {
+  "text": "Hindustan Gas",
+  "type": "Need"
+ },
+ {
+  "text": "Indian Oil",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Power",
+  "type": "Need"
+ },
+ {
+  "text": "Torrent Power",
+  "type": "Need"
+ },
+ {
+  "text": "KPTCL",
+  "type": "Need"
+ },
+ {
+  "text": "MSEDCL",
+  "type": "Need"
+ },
+ {
+  "text": "BSES Rajdhani Power",
+  "type": "Need"
+ },
+ {
+  "text": "BSES Yamuna Power",
+  "type": "Need"
+ },
+ {
+  "text": "CEB",
+  "type": "Need"
+ },
+ {
+  "text": "KPL",
+  "type": "Need"
+ },
+ {
+  "text": "MGCL",
+  "type": "Need"
+ },
+ {
+  "text": "NCL",
+  "type": "Need"
+ },
+ {
+  "text": "SEB",
+  "type": "Need"
+ },
+ {
+  "text": "TNEB",
+  "type": "Need"
+ },
+ {
+  "text": "WBSEDCL",
+  "type": "Need"
+ },
+ {
+  "text": "APGL",
+  "type": "Need"
+ },
+ {
+  "text": "GAIL",
+  "type": "Need"
+ },
+ {
+  "text": "IGPL",
+  "type": "Need"
+ },
+ {
+  "text": "IPGL",
+  "type": "Need"
+ },
+ {
+  "text": "PGPL",
+  "type": "Need"
+ },
+ {
+  "text": "TGL",
+  "type": "Need"
+ },
+ {
+  "text": "APG",
+  "type": "Need"
+ },
+ {
+  "text": "BPCL",
+  "type": "Need"
+ },
+ {
+  "text": "HPL",
+  "type": "Need"
+ },
+ {
+  "text": "IGL",
+  "type": "Need"
+ },
+ {
+  "text": "PGPL",
+  "type": "Need"
+ },
+ {
+  "text": "TCL",
+  "type": "Need"
+ },
+ {
+  "text": "BSES RLTD",
+  "type": "Need"
+ },
+ {
+  "text": "HPLC",
+  "type": "Need"
+ },
+ {
+  "text": "IGPLC",
+  "type": "Need"
+ },
+ {
+  "text": "IPGLC",
+  "type": "Need"
+ },
+ {
+  "text": "PGPGL",
+  "type": "Need"
+ },
+ {
+  "text": "TGLC",
+  "type": "Need"
+ },
+ {
+  "text": "BSES RLTD",
+  "type": "Need"
+ },
+ {
+  "text": "HPLC",
+  "type": "Need"
+ },
+ {
+  "text": "IGPLC",
+  "type": "Need"
+ },
+ {
+  "text": "IPGLC",
+  "type": "Need"
+ },
+ {
+  "text": "PGPGL",
+  "type": "Need"
+ },
+ {
+  "text": "TGLC",
+  "type": "Need"
+ },
+ {
+  "text": "Delhi Jal Board",
+  "type": "Need"
+ },
+ {
+  "text": "MahaNadi Water Management",
+  "type": "Need"
+ },
+ {
+  "text": "BSES",
+  "type": "Need"
+ },
+ {
+  "text": "Hindustan Petroleum",
+  "type": "Need"
+ },
+ {
+  "text": "Hindustan Gas",
+  "type": "Need"
+ },
+ {
+  "text": "Indian Oil",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Power",
+  "type": "Need"
+ },
+ {
+  "text": "Torrent Power",
+  "type": "Need"
+ },
+ {
+  "text": "KPTCL",
+  "type": "Need"
+ },
+ {
+  "text": "MSEDCL",
+  "type": "Need"
+ },
+ {
+  "text": "BSES Rajdhani Power",
+  "type": "Need"
+ },
+ {
+  "text": "BSES Yamuna Power",
+  "type": "Need"
+ },
+ {
+  "text": "CEB",
+  "type": "Need"
+ },
+ {
+  "text": "KPL",
+  "type": "Need"
+ },
+ {
+  "text": "MGCL",
+  "type": "Need"
+ },
+ {
+  "text": "NCL",
+  "type": "Need"
+ },
+ {
+  "text": "SEB",
+  "type": "Need"
+ },
+ {
+  "text": "TNEB",
+  "type": "Need"
+ },
+ {
+  "text": "WBSEDCL",
+  "type": "Need"
+ },
+ {
+  "text": "APGL",
+  "type": "Need"
+ },
+ {
+  "text": "GAIL",
+  "type": "Need"
+ },
+ {
+  "text": "IGPL",
+  "type": "Need"
+ },
+ {
+  "text": "IPGL",
+  "type": "Need"
+ },
+ {
+  "text": "PGPL",
+  "type": "Need"
+ },
+ {
+  "text": "TGL",
+  "type": "Need"
+ },
+ {
+  "text": "APG",
+  "type": "Need"
+ },
+ {
+  "text": "BPCL",
+  "type": "Need"
+ },
+ {
+  "text": "HPL",
+  "type": "Need"
+ },
+ {
+  "text": "IGL",
+  "type": "Need"
+ },
+ {
+  "text": "PGPL",
+  "type": "Need"
+ },
+ {
+  "text": "TCL",
+  "type": "Need"
+ },
+ {
+  "text": "BSES RLTD",
+  "type": "Need"
+ },
+ {
+  "text": "HPLC",
+  "type": "Need"
+ },
+ {
+  "text": "IGPLC",
+  "type": "Need"
+ },
+ {
+  "text": "IPGLC",
+  "type": "Need"
+ },
+ {
+  "text": "PGPGL",
+  "type": "Need"
+ },
+ {
+  "text": "TGLC",
+  "type": "Need"
+ },
+ {
+  "text": "Delhi Jal Board",
+  "type": "Need"
+ },
+ {
+  "text": "MahaNadi Water Management",
+  "type": "Need"
+ }
+]

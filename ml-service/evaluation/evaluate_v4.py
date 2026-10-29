@@ -11,6 +11,7 @@ Legacy pipeline (rules -> TF-IDF category + MiniLM type head) vs v4 (rules -> fi
   b0) the same 140 rows with their original labels (dataset.csv category + LLM type, as v4 was scored)
   c) evaluation/challenge_v4.csv — hand-written adversarial set (UPI/POS strings, Hinglish, ambiguity)
   d) evaluation/real_transactions.csv (text,category,type), if present — real statements, never trained on
+  e) evaluation/gold_v7.csv, if present — ~1,000 Opus-written rows from researched merchants and narration formats
 
 Note: both pipelines share the current (tightened) rules.py, so the gap shown is the model gap.
 
@@ -54,6 +55,9 @@ def load_sets() -> dict:
     real = os.path.join(BASE_DIR, "evaluation", "real_transactions.csv")
     if os.path.exists(real):
         sets["d_real_transactions"] = pd.read_csv(real)
+    gold = os.path.join(BASE_DIR, "evaluation", "gold_v7.csv")
+    if os.path.exists(gold):
+        sets["e_gold_v7"] = pd.read_csv(gold)
     return sets
 
 

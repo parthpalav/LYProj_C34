@@ -467,6 +467,8 @@ def simulate_endpoint():
 
 # ─── Run ──────────────────────────────────────────────────────────────────────
 if __name__ == '__main__':
+    from model_fetch import ensure_models
+    ensure_models(BASE_DIR)
     if not _hybrid_classifier.load_v4():     # pre-load on startup
         _hybrid_classifier.load_category()   # legacy fallback models
         _hybrid_classifier.load_type()

@@ -5,6 +5,7 @@ import * as predictabilityController from '../controllers/predictabilityControll
 import * as assetController from '../controllers/assetController.js';
 import * as reportController from '../controllers/reportController.js';
 import * as familyController from '../controllers/familyController.js';
+import * as subscriptionController from '../controllers/subscriptionController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 import { computeRateLimiter } from '../middleware/rateLimiter.js';
 
@@ -30,6 +31,9 @@ router.post('/predictability/scenario', authMiddleware, computeRateLimiter, pred
 
 // Report routes
 router.get('/reports/monthly', authMiddleware, reportController.getMonthlyReport);
+
+// Recurring-charge suggestions (subscriptions not yet tracked as liabilities)
+router.get('/subscriptions/suggestions', authMiddleware, subscriptionController.getSubscriptionSuggestions);
 
 // Liability routes
 router.get('/liabilities', authMiddleware, liabilityController.getLiabilities);

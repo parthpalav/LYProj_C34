@@ -47,18 +47,15 @@ function readNav() {
 // ── TEST 1: Tab order is Transactions | Liabilities | Home | AI | Profile ──
 test('1. Tab order matches specification', () => {
   const nav = readNav();
-  
-  // Extract Tab.Screen registrations order from the JSX
-  const tabScreenRegex = /name="(Transactions|Liabilities|Dashboard|Chat|Profile)"/g;
-  const matches = [...nav.matchAll(tabScreenRegex)].map(m => m[1]);
-  
-  // Should be exactly 5 tabs in order
-  assert.equal(matches.length, 5, 'Exactly 5 tab screens registered');
+  const block = nav.slice(nav.indexOf('<Tab.Navigator'), nav.indexOf('</Tab.Navigator>'));
+  const matches = [...block.matchAll(/<Tab\.Screen name="(\w+)"/g)].map(m => m[1]);
   assert.deepEqual(
     matches,
-    ['Transactions', 'Liabilities', 'Dashboard', 'Chat', 'Profile'],
-    'Tab order is correct: Transactions | Liabilities | Home(Dashboard) | AI(Chat) | Profile'
+    ['Dashboard', 'Transactions', 'Plan', 'Chat'],
+    'Tab order is correct: Home | Activity | (+) | Plan | AI'
   );
+  // Bills and Profile moved off the tab bar into the stack.
+  assert.ok(nav.includes('name="Liabilities"') && nav.includes('name="Profile"'), 'Liabilities and Profile remain reachable as stack routes');
 });
 
 // ── TEST 2: Type filters exist (All / Needs / Wants / Investments) ─────────
@@ -81,7 +78,7 @@ test('3. Category chips are behind a Filter control, not in primary header', () 
   assert.ok(!code.includes('FILTER_CATEGORIES'), 'Old FILTER_CATEGORIES constant removed');
   assert.ok(code.includes('showFilterModal'), 'Filter modal state exists');
   assert.ok(code.includes('filterSheet') || code.includes('filterOverlay'), 'Filter modal UI exists');
-  assert.ok(code.includes('Filter Transactions'), 'Filter sheet title present');
+  assert.ok(code.includes('title="Filters"'), 'Filter sheet title present');
 });
 
 // ── TEST 4: Filter button exists ──────────────────────────────────────────
@@ -180,20 +177,16 @@ test('11. Dashboard Assets card works for new users and error states', () => {
   
   // Card must be visible even without predictability
   assert.ok(code.includes('No assets logged yet — tap to add your first.'), 'Zero-assets empty state');
-  assert.ok(
-    code.includes("Track your FDs") || code.includes("mutual funds"),
-    'Pre-load placeholder message'
-  );
+  assert.ok(code.includes("assetSummary === null ? 'Loading…'"), 'Pre-load placeholder message');
   assert.ok(code.includes('View all assets'), 'View all assets action link always present');
   assert.ok(code.includes("navigate('Assets')"), 'Assets navigation always available');
 });
 
 // ── TEST 12: Navbar visual refinements ────────────────────────────────────
 test('12. Navbar includes active indicator and refined styling', () => {
-  const nav = readNav();
-  
-  assert.ok(nav.includes('activeIndicator'), 'Active tab indicator style exists');
-  assert.ok(nav.includes('tabIconWrap'), 'Tab icon wrapper for indicator support');
+  const bar = fs.readFileSync(path.join(clientDir, 'src/components/navigation/TabBar.tsx'), 'utf8');
+  assert.ok(bar.includes('pill: {'), 'Sliding pill indicator style exists');
+  assert.ok(bar.includes('Haptics.selectionAsync'), 'Tab changes give selection haptics');
 });
 
 // ── TEST 13: Type filter and multi-category filter compose predictably ───
@@ -208,8 +201,9 @@ test('13. Type and category filters compose (AND between type & categories; OR w
   assert.ok(code.includes("tx.type === activeType"), 'Type filter compares tx.type');
   // Category filter: tx.category in selectedCategories
   assert.ok(code.includes("selectedCategories.includes"), 'Multi-category filter uses includes for OR matching');
-  // Both should be in the dependencies array
-  assert.ok(code.includes("[activeType, selectedCategories, transactions]"), 'Both filters in useMemo deps');
+  // The type filter feeds the category/search memo, so both are dependencies
+  assert.ok(code.includes("[transactions, activeType]"), 'Type filter memo depends on activeType');
+  assert.ok(code.includes("[typed, selectedCategories"), 'Category filter memo builds on the typed list');
 });
 
 // ── TEST 14: Filter modal does NOT duplicate type selection ───────────────
@@ -217,8 +211,8 @@ test('14. Filter modal contains only Category, not duplicate Type selection', ()
   const code = readScreen('TransactionsScreen.tsx');
   
   // Extract the filter modal section
-  const modalStart = code.indexOf('Filter Transactions');
-  const modalEnd = code.indexOf('Apply Filters');
+  const modalStart = code.indexOf('title="Filters"');
+  const modalEnd = code.indexOf('</Sheet>', modalStart);
   const modalSection = code.substring(modalStart, modalEnd);
   
   assert.ok(modalSection.includes('Category'), 'Category section in filter modal');
@@ -245,9 +239,9 @@ test('17. Category Investments (plural) remains strictly distinct from Type Inve
   // CATEGORIES contains 'Investments'
   assert.ok(txScreen.includes("label: 'Investments'"), 'Category label is Investments');
   // TYPE_BADGE contains 'Investment'
-  assert.ok(txScreen.includes("Investment: { bg: '#D1FAE5', text: '#065F46', label: 'Investment' }"), 'Type badge is Investment');
-  // TYPE_FILTERS contains 'Investment'
-  assert.ok(txScreen.includes("{ key: 'Investment', label: 'Investments' }"), 'Type filter key is Investment');
+  assert.ok(txScreen.includes("Investment: { color: c.successStrong, label: 'Investment' }"), 'Type badge is Investment');
+  // TYPE_FILTERS contains 'Investment' (short label so four segments fit)
+  assert.ok(txScreen.includes("{ key: 'Investment' as const, label: 'Invest'"), 'Type filter key is Investment');
 });
 
 // ── TEST 18: Expense display formatting renders with minus sign and no amount < 0 check ───

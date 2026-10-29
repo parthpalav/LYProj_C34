@@ -3,6 +3,8 @@ import { ImageStyle, StyleSheet, TextStyle, useColorScheme, ViewStyle } from 're
 import { DarkTheme, DefaultTheme, Theme as NavTheme } from '@react-navigation/native';
 import { useThemeStore } from './store/useThemeStore';
 
+type Gradient = readonly [string, string, string];
+
 // Semantic color tokens. Screens read these through useTheme()/createStyles so light and dark stay in sync.
 export const lightColors = {
   bg: '#F6F7FB',
@@ -37,6 +39,14 @@ export const lightColors = {
   skeleton: '#E7EAF0',
   glass: 'rgba(255, 255, 255, 0.82)',
   glassBorder: 'rgba(255, 255, 255, 0.9)',
+  /** Deep indigo mesh behind hero surfaces (auth, Home hero, recap). Text on it uses onAurora. */
+  aurora: ['#12105A', '#2A2AB8', '#5B3BDE'] as Gradient,
+  onAurora: '#FFFFFF',
+  onAuroraMuted: 'rgba(255, 255, 255, 0.72)',
+  /** Primary call-to-action gradient. */
+  accent: ['#4F46E5', '#3B3BDE', '#6D28D9'] as Gradient,
+  /** Categorical series colors for charts, in display order. */
+  chart: ['#3B3BDE', '#10B981', '#F59E0B', '#EC4899', '#06B6D4', '#8B5CF6', '#EF4444', '#84CC16'] as readonly string[],
 };
 
 export type Palette = typeof lightColors;
@@ -74,32 +84,55 @@ export const darkColors: Palette = {
   skeleton: '#1F2430',
   glass: 'rgba(20, 23, 31, 0.72)',
   glassBorder: 'rgba(255, 255, 255, 0.10)',
+  aurora: ['#05050C', '#0D0E2E', '#1A1450'],
+  onAurora: '#FFFFFF',
+  onAuroraMuted: 'rgba(255, 255, 255, 0.68)',
+  accent: ['#5B5BF0', '#4F46E5', '#7C3AED'],
+  chart: ['#818CF8', '#34D399', '#FBBF24', '#F472B6', '#22D3EE', '#A78BFA', '#F87171', '#A3E635'],
 };
 
-// Legacy light palette kept for the celebration effects (Effects.tsx), which stay identical in both schemes.
-export const colors = {
-  blue: '#2563EB',
-  blueLight: '#EFF6FF',
-  brand: '#3B3BDE',
-  green: '#10B981',
-  greenLight: '#ECFDF5',
-  amber: '#F59E0B',
-  amberLight: '#FFFBEB',
-  red: '#EF4444',
-  redLight: '#FEF2F2',
+// Fixed illustration colors (piggy bank, coins, confetti): the artwork reads the same in both schemes.
+export const art = {
   purple: '#7C3AED',
   purpleLight: '#F3E8FF',
-  dark: '#0F172A',
-  gray600: '#475569',
-  gray400: '#94A3B8',
-  border: '#E2E8F0',
-  bg: '#F8FAFC',
-  white: '#FFFFFF',
+  lilac: '#E9D5FF',
+  green: '#10B981',
+  amber: '#F59E0B',
   gold: '#FBBF24',
   goldDark: '#B45309',
+  ink: '#0F172A',
 };
 
-export const celebrationPalette = [colors.blue, colors.green, colors.amber, colors.purple, colors.red, colors.brand];
+export const celebrationPalette = ['#2563EB', '#10B981', '#F59E0B', '#7C3AED', '#EF4444', '#3B3BDE'];
+
+export const space = { xs: 4, sm: 8, md: 12, lg: 16, xl: 20, xxl: 24, xxxl: 32 } as const;
+
+export const radius = { sm: 10, md: 14, lg: 20, xl: 28, pill: 999 } as const;
+
+/** Type scale. Spread into createStyles entries; fontWeight is mapped to the Inter family there. */
+export const typeScale = {
+  display: { fontSize: 34, fontWeight: '800', letterSpacing: -1, lineHeight: 40 },
+  title: { fontSize: 24, fontWeight: '800', letterSpacing: -0.5, lineHeight: 30 },
+  headline: { fontSize: 17, fontWeight: '700', letterSpacing: -0.2, lineHeight: 22 },
+  body: { fontSize: 15, fontWeight: '400', lineHeight: 21 },
+  label: { fontSize: 13, fontWeight: '600', lineHeight: 18 },
+  caption: { fontSize: 12, fontWeight: '500', lineHeight: 16 },
+  overline: { fontSize: 11, fontWeight: '700', letterSpacing: 1.2, lineHeight: 14, textTransform: 'uppercase' },
+} as const satisfies Record<string, TextStyle>;
+
+/** Digits keep a fixed width so animated amounts don't jitter. */
+export const tabular: TextStyle = { fontVariant: ['tabular-nums'] };
+
+/**
+ * Soft, tinted elevation. Level 1 = resting card, 2 = raised, 3 = floating (tab bar, toasts).
+ * Uses CSS boxShadow, which follows the view's own shape, so translucent glass surfaces can cast shadows cheaply.
+ */
+export function shadow(c: Palette, level: 1 | 2 | 3 = 1): ViewStyle {
+  const [opacity, blur, y] = level === 1 ? [0.06, 12, 4] : level === 2 ? [0.1, 18, 8] : [0.18, 28, 14];
+  const hex = c.shadow.replace('#', '');
+  const [r, g, b] = [0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16));
+  return { boxShadow: `0px ${y}px ${blur}px rgba(${r}, ${g}, ${b}, ${opacity})` };
+}
 
 export function useTheme() {
   const system = useColorScheme();

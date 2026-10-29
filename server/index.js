@@ -28,13 +28,15 @@ app.use(helmet({
 // Allows non-browser requests with no Origin header (React Native, CLI, server-to-server)
 // Explicitly rejects disallowed browser Origins with no wildcard CORS under credentials
 const allowedOrigins = config.ALLOWED_ORIGINS;
+// The emailed password-reset page is served by this server and posts back to it.
+const selfOrigin = new URL(process.env.APP_BASE_URL || `http://localhost:${config.PORT || 4000}`).origin;
 
 app.use(cors({
   origin: (origin, callback) => {
     if (!origin) {
       return callback(null, true);
     }
-    if (allowedOrigins.includes(origin)) {
+    if (allowedOrigins.includes(origin) || origin === selfOrigin) {
       return callback(null, true);
     }
     return callback(new Error('Not allowed by CORS'));

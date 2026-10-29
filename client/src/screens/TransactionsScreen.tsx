@@ -1,31 +1,27 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import {
-  SectionList,
-  Modal,
-  Pressable,
-  RefreshControl,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  Alert,
-  TextInput,
-  TouchableWithoutFeedback,
-  Keyboard,
-  ScrollView,
-} from 'react-native';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { Alert, Pressable, RefreshControl, ScrollView, SectionList, Switch, Text, TextInput, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { getTransactions, updateTransaction, deleteTransaction } from '../services/api';
-import { useStore } from '../store/useStore';
-import { Transaction } from '../types';
-import { formatCurrency } from '../utils/format';
-import { TransactionEntryScreen } from './TransactionEntryScreen';
 import Animated from 'react-native-reanimated';
+import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { createLiability, deleteTransaction, getSubscriptionSuggestions, getTransactions, updateTransaction } from '../services/api';
+import { useStore } from '../store/useStore';
+import { toast } from '../store/useCelebrationStore';
+import { Palette, createStyles, radius, tabular, typeScale, useTheme } from '../theme';
+import { SubscriptionSuggestion, Transaction } from '../types';
+import { formatCurrency } from '../utils/format';
 import { enterUp, exitFade, listLayout } from '../motion';
-import { PressableScale } from '../components/motion/PressableScale';
-import { FloatingEmoji } from '../components/motion/FloatingEmoji';
+import { useTabBarSpace } from '../components/navigation/TabBar';
+import { LargeTitle, ScreenHeader, useHeaderHeight, useScrollHeader } from '../components/ui/ScreenHeader';
+import { Card } from '../components/ui/Card';
+import { Badge, EmptyState, ErrorState, IconTile, MoneyText } from '../components/ui/Bits';
+import { CategoryGrid } from '../components/ui/CategoryGrid';
+import { SegmentedControl } from '../components/ui/SegmentedControl';
+import { Button } from '../components/ui/Button';
+import { Field } from '../components/ui/Field';
+import { Sheet } from '../components/ui/Sheet';
+import { SkeletonCard } from '../components/motion/Skeleton';
 
-import { createStyles, useTheme } from '../theme';
 // ── Category definitions ───────────────────────────────────────────────────
 export const LEGACY_CATEGORY_MAP: Record<string, string> = {
   food: 'Food & Dining',
@@ -75,75 +71,164 @@ const CATEGORY_EMOJI: Record<string, string> = {
   party: '🎬',
 };
 
-// ── Need / Want / Investment badge colours ─────────────────────────────────
-const TYPE_BADGE: Record<string, { bg: string; text: string; label: string }> = {
-  Need: { bg: '#FEE2E2', text: '#B91C1C', label: 'Need' },
-  Want: { bg: '#FEF3C7', text: '#92400E', label: 'Want' },
-  Investment: { bg: '#D1FAE5', text: '#065F46', label: 'Investment' },
-};
+// ── Need / Want / Investment badge colours (singular type, distinct from the Investments category) ──
+const TYPE_BADGE = (c: Palette): Record<string, { color: string; label: string }> => ({
+  Need: { color: c.info, label: 'Need' },
+  Want: { color: c.warningStrong, label: 'Want' },
+  Investment: { color: c.successStrong, label: 'Investment' },
+});
 
 // ── High-level type filters ───────────────────────────────────────────────
-const TYPE_FILTERS = [
-  { key: 'all', label: 'All' },
-  { key: 'Need', label: 'Needs' },
-  { key: 'Want', label: 'Wants' },
-  { key: 'Investment', label: 'Investments' },
-] as const;
+type TypeFilter = 'all' | 'Need' | 'Want' | 'Investment';
+const TYPE_FILTERS = (c: Palette) => [
+  { key: 'all' as const, label: 'All' },
+  { key: 'Need' as const, label: 'Needs', dot: c.info },
+  { key: 'Want' as const, label: 'Wants', dot: c.warningStrong },
+  { key: 'Investment' as const, label: 'Invest', dot: c.successStrong },
+];
+const TYPES = ['Need', 'Want', 'Investment'] as const;
 
-// ── Monthly grouping helpers ───────────────────────────────────────────────
+// ── Grouping helpers ──────────────────────────────────────────────────────
+
+const pad = (n: number) => String(n).padStart(2, '0');
 
 /** Returns a sort key like "2026-08" (newest = lexicographically largest). */
 function monthKey(ts: string): string {
   const d = new Date(ts);
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
-  return `${y}-${m}`;
-}
-
-const MONTH_NAMES = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December',
-];
-
-function monthLabel(key: string): string {
-  const [y, m] = key.split('-');
-  return `${MONTH_NAMES[parseInt(m, 10) - 1]} ${y}`;
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}`;
 }
 
 function currentMonthKey(): string {
   const now = new Date();
-  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}`;
 }
 
-interface MonthSection {
-  title: string;      // "August 2026"
-  monthKey: string;      // "2026-08" — used as SectionList key
-  totalAmount: number;      // sum of abs(tx.amount) in this month
+/** Local-calendar day key like "2026-10-26". */
+function dayKey(d: Date): string {
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
+function dayLabel(key: string): string {
+  const today = new Date();
+  const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
+  if (key === dayKey(today)) return 'Today';
+  if (key === dayKey(yesterday)) return 'Yesterday';
+  const [y, m, d] = key.split('-').map(Number);
+  const date = new Date(y, m - 1, d);
+  return date.toLocaleDateString('en-IN', {
+    weekday: 'short', day: 'numeric', month: 'short', ...(y !== today.getFullYear() ? { year: 'numeric' } : {}),
+  });
+}
+
+interface DaySection {
+  title: string;
+  key: string;
+  totalAmount: number;
   data: Transaction[];
 }
 
-/** Groups transactions into month sections, sorted newest-first. */
-function groupByMonth(txs: Transaction[]): MonthSection[] {
+/** Groups transactions into day sections, newest first. */
+function groupByDay(txs: Transaction[]): DaySection[] {
   const map = new Map<string, Transaction[]>();
-
-  // Bucket by month key
   for (const tx of txs) {
-    const key = monthKey(tx.timestamp);
+    const key = dayKey(new Date(tx.timestamp));
     if (!map.has(key)) map.set(key, []);
     map.get(key)!.push(tx);
   }
-
-  // Sort buckets newest-first; sort transactions inside each bucket newest-first
   return Array.from(map.entries())
     .sort(([a], [b]) => b.localeCompare(a))
     .map(([key, data]) => ({
-      title: monthLabel(key),
-      monthKey: key,
+      title: dayLabel(key),
+      key,
       totalAmount: data.reduce((sum, tx) => sum + Math.abs(tx.amount), 0),
-      data: [...data].sort(
-        (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
-      ),
+      data: [...data].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()),
     }));
+}
+
+const timeOf = (ts: string) => new Date(ts).toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit' });
+
+const AnimatedSectionList = Animated.createAnimatedComponent(SectionList<Transaction, DaySection>);
+
+// ── Row ────────────────────────────────────────────────────────────────────
+
+function TxRow({ item, index, onEdit, onDelete, onOptions }: {
+  item: Transaction; index: number;
+  onEdit: (tx: Transaction) => void; onDelete: (tx: Transaction) => void; onOptions: (tx: Transaction) => void;
+}) {
+  const styles = useStyles();
+  const { c } = useTheme();
+  const displayAmount = `-${formatCurrency(Math.abs(item.amount))}`;
+  // Category emoji — lowercase lookup handles canonical ("Food") & legacy ("food")
+  const icon = CATEGORY_EMOJI[(item.category || '').toLowerCase()] ?? '📦';
+  // Need / Want / Investment badge — read directly from backend value
+  const typeBadge = item.type ? TYPE_BADGE(c)[item.type] : null;
+  const category = LEGACY_CATEGORY_MAP[(item.category || '').toLowerCase()] || item.category || '—';
+
+  const action = (kind: 'edit' | 'delete') => (_p: unknown, _t: unknown, methods: { close: () => void }) => (
+    <Pressable
+      onPress={() => { methods.close(); (kind === 'edit' ? onEdit : onDelete)(item); }}
+      style={[styles.swipeAction, kind === 'edit' ? styles.swipeEdit : styles.swipeDelete]}
+      accessibilityRole="button"
+      accessibilityLabel={kind === 'edit' ? 'Edit transaction' : 'Delete transaction'}
+    >
+      <Ionicons name={kind === 'edit' ? 'create-outline' : 'trash-outline'} size={20} color="#FFFFFF" />
+      <Text style={styles.swipeText}>{kind === 'edit' ? 'Edit' : 'Delete'}</Text>
+    </Pressable>
+  );
+
+  return (
+    <Animated.View entering={enterUp(index, 30)} exiting={exitFade} layout={listLayout} style={styles.rowWrap}>
+      <ReanimatedSwipeable
+        friction={1.6}
+        leftThreshold={48}
+        rightThreshold={48}
+        overshootLeft={false}
+        overshootRight={false}
+        renderLeftActions={action('edit')}
+        renderRightActions={action('delete')}
+        containerStyle={styles.swipeContainer}
+      >
+        <Pressable
+          style={({ pressed }) => [styles.card, pressed && styles.cardPressed]}
+          onPress={() => onOptions(item)}
+          onLongPress={() => onOptions(item)}
+          accessibilityRole="button"
+          accessibilityLabel={`${item.description || item.category}, ${displayAmount}, ${category}`}
+          accessibilityHint="Swipe left to delete, right to edit, or tap for options"
+        >
+          <IconTile emoji={icon} tint={typeBadge?.color} size={44} />
+
+          <View style={styles.details}>
+            <Text style={styles.desc} numberOfLines={1}>{item.description || item.category}</Text>
+            <View style={styles.metaRow}>
+              <Text style={styles.categoryLabel} numberOfLines={1}>{category}</Text>
+              {typeBadge && (
+                <>
+                  <Text style={styles.metaDot}>·</Text>
+                  <Text style={[styles.typeInline, { color: typeBadge.color }]}>{typeBadge.label}</Text>
+                </>
+              )}
+              <Text style={styles.metaDot}>·</Text>
+              <Text style={styles.dateText}>{timeOf(item.timestamp)}</Text>
+            </View>
+            {(item.needsReview || (item.tags && item.tags.length > 0)) && (
+              <View style={styles.tagsRow}>
+                {item.needsReview && <Badge label="Check category" tone="warning" />}
+                {item.tags?.slice(0, 2).map((t) => <Badge key={t} label={t.toUpperCase()} />)}
+              </View>
+            )}
+          </View>
+
+          <View style={styles.rightCol}>
+            <Text style={styles.amount}>{displayAmount}</Text>
+            <Pressable onPress={() => onOptions(item)} hitSlop={10} accessibilityRole="button" accessibilityLabel="Transaction options">
+              <Ionicons name="ellipsis-horizontal" size={16} color={c.textSubtle} />
+            </Pressable>
+          </View>
+        </Pressable>
+      </ReanimatedSwipeable>
+    </Animated.View>
+  );
 }
 
 // ── Screen component ───────────────────────────────────────────────────────
@@ -151,39 +236,51 @@ function groupByMonth(txs: Transaction[]): MonthSection[] {
 export function TransactionsScreen(): React.ReactElement {
   const { c } = useTheme();
   const styles = useStyles();
-  const { transactions, setTransactions } = useStore();
+  const navigation = useNavigation<any>();
+  const tabBarSpace = useTabBarSpace();
+  const headerHeight = useHeaderHeight();
+  const { y, onScroll } = useScrollHeader({ hidesTabBar: true });
+  const transactions = useStore((s) => s.transactions);
+  const setTransactions = useStore((s) => s.setTransactions);
 
-  const [activeType, setActiveType] = useState<string>('all');
+  const [activeType, setActiveType] = useState<TypeFilter>('all');
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [showEntry, setShowEntry] = useState(false);
+  const [query, setQuery] = useState('');
+  const [reviewOnly, setReviewOnly] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const [loadFailed, setLoadFailed] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [editTx, setEditTx] = useState<Transaction | null>(null);
   const [editAmount, setEditAmount] = useState('');
   const [editDesc, setEditDesc] = useState('');
   const [editCategory, setEditCategory] = useState('');
   const [editType, setEditType] = useState<'Need' | 'Want' | 'Investment'>('Need');
+  const [editError, setEditError] = useState('');
   const [showFilterModal, setShowFilterModal] = useState(false);
+  const [pickingCategory, setPickingCategory] = useState(false);
   const [overflowTx, setOverflowTx] = useState<Transaction | null>(null);
+  const [suggestions, setSuggestions] = useState<SubscriptionSuggestion[]>([]);
+  // Deletes wait out the Undo window before reaching the server.
+  const pendingDeletes = useRef(new Map<string, ReturnType<typeof setTimeout>>());
 
   // ── Data fetching ──────────────────────────────────────────────────────
   const fetchTransactions = useCallback(async (isRefresh = false) => {
     try {
       if (isRefresh) setRefreshing(true);
       const data = await getTransactions();
-      setTransactions(data);
-    } catch (e) {
-      console.error('fetchTransactions error:', e);
+      setTransactions(data.filter((t) => !pendingDeletes.current.has(t.id)));
+      setLoadFailed(false);
+    } catch {
+      setLoadFailed(true);
     } finally {
+      setLoaded(true);
       setRefreshing(false);
     }
+    getSubscriptionSuggestions().then(setSuggestions).catch(() => {});
   }, [setTransactions]);
 
-  useEffect(() => { fetchTransactions(); }, [fetchTransactions]);
-
-  // Re-fetch when entry or edit modal closes (new tx may have been submitted)
-  useEffect(() => {
-    if (!showEntry && !editTx) fetchTransactions();
-  }, [showEntry, editTx]);
+  // Refetch on every focus: QuickAdd is a sheet over this screen, so closing it refocuses here.
+  useFocusEffect(useCallback(() => { fetchTransactions(); }, [fetchTransactions]));
 
   // ── Monthly summary (current month) ────────────────────────────────────
   const monthlySummary = useMemo(() => {
@@ -200,48 +297,64 @@ export function TransactionsScreen(): React.ReactElement {
     return { spent, invested };
   }, [transactions]);
 
-  // ── Edit / Delete handlers ─────────────────────────────────────────────
-  const handleDelete = (tx: Transaction) => {
-    const isScheduledPayment = tx.liabilityId && tx.scheduledFor;
-    const msg = isScheduledPayment
-      ? `Delete "${tx.description || 'this transaction'}"?\n\nAmount: ${formatCurrency(Math.abs(tx.amount))}\n\n⚠️ Note: This payment satisfied a scheduled liability occurrence. Deleting it will not restore/rewind the Auto Deduct date.`
-      : `Delete "${tx.description || 'this transaction'}"?\n\nAmount: ${formatCurrency(Math.abs(tx.amount))}`;
+  const reviewCount = useMemo(() => transactions.filter((t) => t.needsReview).length, [transactions]);
 
-    Alert.alert(
-      'Delete Transaction',
-      msg,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              await deleteTransaction(tx.id);
-              fetchTransactions();
-            } catch {
-              Alert.alert('Error', 'Failed to delete transaction');
-            }
-          },
-        },
-      ]
-    );
+  // ── Edit / Delete handlers ─────────────────────────────────────────────
+  const restore = (tx: Transaction) => setTransactions([...useStore.getState().transactions, tx]);
+
+  const deleteWithUndo = (tx: Transaction) => {
+    setTransactions(useStore.getState().transactions.filter((t) => t.id !== tx.id));
+    const timer = setTimeout(async () => {
+      pendingDeletes.current.delete(tx.id);
+      try {
+        await deleteTransaction(tx.id);
+      } catch {
+        restore(tx);
+        toast("Couldn't delete that transaction", { tone: 'error', subtitle: 'It has been put back.' });
+      }
+    }, 4700);
+    pendingDeletes.current.set(tx.id, timer);
+    toast('Transaction deleted', {
+      tone: 'info',
+      subtitle: `${tx.description || tx.category} · ${formatCurrency(Math.abs(tx.amount))}`,
+      action: { label: 'Undo', onPress: () => { clearTimeout(timer); pendingDeletes.current.delete(tx.id); restore(tx); } },
+    });
+  };
+
+  const handleDelete = (tx: Transaction) => {
+    setOverflowTx(null);
+    // A scheduled liability payment has side effects that undo can't rewind, so confirm it explicitly.
+    if (tx.liabilityId && tx.scheduledFor) {
+      Alert.alert(
+        'Delete scheduled payment?',
+        `${tx.description || 'This payment'} (${formatCurrency(Math.abs(tx.amount))}) satisfied a scheduled bill. Deleting it will not move the bill's next auto-deduct date back.`,
+        [{ text: 'Cancel', style: 'cancel' }, { text: 'Delete', style: 'destructive', onPress: () => deleteWithUndo(tx) }],
+      );
+      return;
+    }
+    deleteWithUndo(tx);
   };
 
   const handleEdit = (tx: Transaction) => {
+    const open = () => {
+      setEditError('');
+      setPickingCategory(false);
+      setEditTx(tx);
+      setEditAmount(String(Math.abs(tx.amount)));
+      setEditDesc(tx.description || '');
+      setEditCategory(CATEGORIES.find(c => c.label.toLowerCase() === (tx.category || '').toLowerCase())?.label ?? tx.category);
+      setEditType(tx.type ?? 'Need');
+    };
+    // The options sheet turns into the editor in place: iOS can't present a second sheet while one is open.
     setOverflowTx(null);
-    setEditTx(tx);
-    setEditAmount(String(Math.abs(tx.amount)));
-    setEditDesc(tx.description || '');
-    setEditCategory(CATEGORIES.find(c => c.label.toLowerCase() === (tx.category || '').toLowerCase())?.label ?? tx.category);
-    setEditType(tx.type ?? 'Need');
+    open();
   };
 
   const submitEdit = async () => {
     if (!editTx) return;
     const parsedAmt = parseFloat(editAmount);
     if (isNaN(parsedAmt) || parsedAmt <= 0) {
-      Alert.alert('Error', 'Valid amount required');
+      setEditError('Enter an amount greater than zero.');
       return;
     }
     try {
@@ -254,22 +367,49 @@ export function TransactionsScreen(): React.ReactElement {
         ...(categoryChanged || typeChanged ? { category: editCategory, type: editType } : {}),
       });
       setEditTx(null);
+      toast(categoryChanged || typeChanged ? 'Updated. FINAURA will remember this merchant.' : 'Transaction updated');
       fetchTransactions();
     } catch {
-      Alert.alert('Error', 'Failed to update transaction');
+      setEditError("Couldn't save. Check your connection and try again.");
+    }
+  };
+
+  const trackSuggestion = async (s: SubscriptionSuggestion) => {
+    const next = new Date(s.nextExpected);
+    try {
+      await createLiability({
+        name: s.name, amount: s.amount, category: s.category, type: s.type, frequency: s.frequency,
+        startDate: next.toISOString(), autoDeduct: false,
+        ...(s.frequency === 'monthly' ? { dayOfMonth: next.getDate() } : { dayOfWeek: next.getDay() }),
+      });
+      setSuggestions((list) => list.filter((x) => x.key !== s.key));
+      toast(`Tracking ${s.name} as a ${s.frequency} bill`, { subtitle: 'Find it under Plan › Bills.' });
+    } catch {
+      toast("Couldn't add that bill", { tone: 'error' });
     }
   };
 
   // ── Filtering: type + multi-category compose (AND between type & categories; OR within categories) ──
-  const hasActiveFilters = selectedCategories.length > 0;
+  const filterCount = selectedCategories.length + (reviewOnly ? 1 : 0);
+  const hasActiveFilters = filterCount > 0;
 
-  const sections = useMemo<MonthSection[]>(() => {
-    let filtered = transactions;
+  const typed = useMemo(
+    () => (activeType === 'all' ? transactions : transactions.filter((tx) => tx.type === activeType)),
+    [transactions, activeType],
+  );
 
-    // Type filter
-    if (activeType !== 'all') {
-      filtered = filtered.filter((tx) => tx.type === activeType);
+  // Per-category counts for the filter grid, within the chosen type
+  const categoryCounts = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const tx of typed) {
+      const key = (LEGACY_CATEGORY_MAP[(tx.category || '').toLowerCase()] || tx.category || '').toLowerCase();
+      counts.set(key, (counts.get(key) ?? 0) + 1);
     }
+    return counts;
+  }, [typed]);
+
+  const sections = useMemo<DaySection[]>(() => {
+    let filtered = typed;
 
     // Category filter: transaction category must match ANY of the selected categories (including legacy aliases)
     if (selectedCategories.length > 0) {
@@ -280,15 +420,23 @@ export function TransactionsScreen(): React.ReactElement {
       });
     }
 
-    return groupByMonth(filtered);
-  }, [activeType, selectedCategories, transactions]);
+    if (reviewOnly) filtered = filtered.filter((tx) => tx.needsReview);
+
+    const q = query.trim().toLowerCase();
+    if (q) filtered = filtered.filter((tx) => `${tx.description} ${tx.category}`.toLowerCase().includes(q));
+
+    return groupByDay(filtered);
+  }, [typed, selectedCategories, reviewOnly, query]);
+
+  const resultCount = sections.reduce((n, sec) => n + sec.data.length, 0);
 
   // ── Helper: descriptive empty message ──────────────────────────────────
   const emptyMessage = useMemo(() => {
     if (transactions.length === 0) {
       return 'Your transactions will appear here.';
     }
-    const typeLabel = TYPE_FILTERS.find((f) => f.key === activeType)?.label ?? '';
+    if (query.trim()) return `Nothing matches "${query.trim()}".`;
+    const typeLabel = TYPE_FILTERS(c).find((f) => f.key === activeType)?.label ?? '';
     const hasType = activeType !== 'all';
     const hasCat = selectedCategories.length > 0;
 
@@ -307,117 +455,10 @@ export function TransactionsScreen(): React.ReactElement {
       return 'No transactions found in selected categories.';
     }
     if (hasType) {
-      return `No ${typeLabel.toLowerCase()} transactions this month.`;
+      return `No ${typeLabel.toLowerCase()} transactions yet.`;
     }
     return 'No transactions match these filters.';
-  }, [transactions.length, activeType, selectedCategories]);
-
-  // ── Section header renderer ────────────────────────────────────────────
-  const renderSectionHeader = ({ section }: { section: MonthSection }) => (
-    <View style={styles.sectionHeader}>
-      <Text style={styles.sectionMonth}>{section.title}</Text>
-      <Text style={styles.sectionTotal}>{formatCurrency(section.totalAmount)}</Text>
-    </View>
-  );
-
-  // ── Transaction card renderer ──────────────────────────────────────────
-  const renderItem = ({ item, index }: { item: Transaction; index: number }) => {
-    const displayAmount = `-${formatCurrency(Math.abs(item.amount))}`;
-
-    // Category emoji — lowercase lookup handles canonical ("Food") & legacy ("food")
-    const icon = CATEGORY_EMOJI[(item.category || '').toLowerCase()] ?? '📦';
-
-    // Need / Want / Investment badge — read directly from backend value
-    const typeBadge = item.type ? TYPE_BADGE[item.type] : null;
-
-    // Date string: "27 Aug"
-    const d = new Date(item.timestamp);
-    const dateStr = d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
-
-    return (
-      <Animated.View
-        entering={enterUp(index, 30)}
-        exiting={exitFade}
-        layout={listLayout}
-      >
-      <TouchableOpacity
-        style={styles.card}
-        activeOpacity={0.75}
-        onLongPress={() => setOverflowTx(item)}
-        accessibilityLabel={`${item.description || item.category}, ${displayAmount}`}
-      >
-        {/* Category icon */}
-        <View style={styles.iconBox}>
-          <Text style={styles.iconText}>{icon}</Text>
-        </View>
-
-        {/* Main content */}
-        <View style={styles.details}>
-          <Text style={styles.desc} numberOfLines={1}>
-            {item.description || item.category}
-          </Text>
-
-          {/* Category · Type · Date row */}
-          <View style={styles.metaRow}>
-            <Text style={styles.categoryLabel}>
-              {LEGACY_CATEGORY_MAP[(item.category || '').toLowerCase()] || item.category || '—'}
-            </Text>
-            {typeBadge && (
-              <>
-                <Text style={styles.metaDot}>·</Text>
-                <Text style={[styles.typeInline, { color: typeBadge.text }]}>
-                  {typeBadge.label}
-                </Text>
-              </>
-            )}
-            <Text style={styles.metaDot}>·</Text>
-            <Text style={styles.dateText}>{dateStr}</Text>
-          </View>
-
-          {/* Tags row (if any) */}
-          {item.tags && item.tags.length > 0 && (
-            <View style={styles.tagsRow}>
-              {item.tags.map((t) => (
-                <View key={t} style={styles.tagChip}>
-                  <Text style={styles.tagText}>{t.toUpperCase()}</Text>
-                </View>
-              ))}
-            </View>
-          )}
-        </View>
-
-        {/* Right column: amount + overflow */}
-        <View style={styles.rightCol}>
-          <Text style={styles.amount}>
-            {displayAmount}
-          </Text>
-
-          {/* Overflow menu trigger */}
-          <TouchableOpacity
-            style={styles.overflowBtn}
-            onPress={() => setOverflowTx(item)}
-            activeOpacity={0.6}
-            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-            accessibilityLabel="Transaction options"
-          >
-            <Ionicons name="ellipsis-horizontal" size={16} color={c.textSubtle} />
-          </TouchableOpacity>
-        </View>
-      </TouchableOpacity>
-      </Animated.View>
-    );
-  };
-
-  // ── Empty state ────────────────────────────────────────────────────────
-  const renderEmptyState = () => (
-    <View style={styles.emptyContainer}>
-      <FloatingEmoji emoji="🧾" style={styles.emptyEmoji} />
-      <Text style={styles.emptyTitle}>
-        {transactions.length === 0 ? 'No transactions yet' : 'No results'}
-      </Text>
-      <Text style={styles.emptySubtitle}>{emptyMessage}</Text>
-    </View>
-  );
+  }, [transactions.length, activeType, selectedCategories, query, c]);
 
   // ── Category toggling and clearing ─────────────────────────────────────
   const toggleCategory = (key: string) => {
@@ -428,693 +469,596 @@ export function TransactionsScreen(): React.ReactElement {
 
   const clearFilters = () => {
     setSelectedCategories([]);
-    setShowFilterModal(false);
+    setReviewOnly(false);
+  };
+
+  const labelOf = (key: string) => CATEGORIES.find((cat) => cat.key === key)?.label ?? key;
+
+  const suggestion = suggestions[0];
+
+  const header = (
+    <View>
+      <LargeTitle
+        title="Activity"
+        right={
+          <Pressable
+            style={[styles.filterBtn, hasActiveFilters && styles.filterBtnActive]}
+            onPress={() => setShowFilterModal(true)}
+            accessibilityRole="button"
+            accessibilityLabel="Open advanced filters"
+          >
+            <Ionicons name="options-outline" size={20} color={hasActiveFilters ? c.onPrimary : c.text} />
+            {hasActiveFilters && <Text style={styles.filterCount}>{filterCount}</Text>}
+          </Pressable>
+        }
+      />
+
+      <View style={styles.body}>
+        {/* Monthly summary */}
+        <Card variant="hero" style={styles.summary}>
+          <View style={styles.summaryItem}>
+            <Text style={styles.summaryLabel}>Spent This Month</Text>
+            <MoneyText value={monthlySummary.spent} style={styles.summaryValue} />
+          </View>
+          <View style={styles.summaryDivider} />
+          <View style={styles.summaryItem}>
+            <Text style={styles.summaryLabel}>Invested This Month</Text>
+            <MoneyText value={monthlySummary.invested} style={styles.summaryValue} />
+          </View>
+        </Card>
+
+        {/* Search */}
+        <View style={styles.search}>
+          <Ionicons name="search" size={18} color={c.textSubtle} />
+          <TextInput
+            value={query}
+            onChangeText={setQuery}
+            placeholder="Search merchants or categories"
+            placeholderTextColor={c.textSubtle}
+            style={styles.searchInput}
+            returnKeyType="search"
+            clearButtonMode="while-editing"
+            accessibilityLabel="Search transactions"
+          />
+        </View>
+
+        {/* Type filter */}
+        <SegmentedControl segments={TYPE_FILTERS(c)} value={activeType} onChange={setActiveType} accessibilityLabel="Filter by type" />
+
+        {/* Active filters: one removable pill each */}
+        {hasActiveFilters && (
+          <Animated.View entering={enterUp(0)} exiting={exitFade}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
+              {reviewOnly && (
+                <Pressable onPress={() => setReviewOnly(false)} style={styles.activePill} accessibilityRole="button" accessibilityLabel="Remove filter: AI guesses to check">
+                  <Ionicons name="sparkles" size={13} color={c.primary} />
+                  <Text style={styles.activePillText}>To check</Text>
+                  <Ionicons name="close" size={14} color={c.primary} />
+                </Pressable>
+              )}
+              {selectedCategories.map((key) => (
+                <Pressable key={key} onPress={() => toggleCategory(key)} style={styles.activePill} accessibilityRole="button" accessibilityLabel={`Remove filter: ${labelOf(key)}`}>
+                  <Text style={styles.activePillEmoji}>{CATEGORY_EMOJI[key] ?? '📦'}</Text>
+                  <Text style={styles.activePillText}>{labelOf(key)}</Text>
+                  <Ionicons name="close" size={14} color={c.primary} />
+                </Pressable>
+              ))}
+              {filterCount > 1 && (
+                <Pressable onPress={clearFilters} style={styles.clearPill} accessibilityRole="button" accessibilityLabel="Clear all filters">
+                  <Text style={styles.clearPillText}>Clear all</Text>
+                </Pressable>
+              )}
+            </ScrollView>
+          </Animated.View>
+        )}
+
+        {reviewCount > 0 && (
+          <Card onPress={() => navigation.navigate('Review')} style={styles.suggestion} accessibilityLabel={`Check ${reviewCount} AI guesses`}>
+            <IconTile icon="sparkles" tint={c.primary} />
+            <View style={styles.flex}>
+              <Text style={styles.suggestionKicker}>FINAURA wasn't sure</Text>
+              <Text style={styles.suggestionTitle}>Check {reviewCount} AI guess{reviewCount === 1 ? '' : 'es'}</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={18} color={c.textSubtle} />
+          </Card>
+        )}
+
+        {/* Recurring charge suggestion */}
+        {suggestion && (
+          <Animated.View entering={enterUp(0)} exiting={exitFade}>
+            <Card style={styles.suggestion}>
+              <IconTile icon="repeat" tint={c.purple} />
+              <View style={styles.flex}>
+                <Text style={styles.suggestionKicker}>Looks like a subscription</Text>
+                <Text style={styles.suggestionTitle} numberOfLines={1}>
+                  {suggestion.name} · {formatCurrency(suggestion.amount)} / {suggestion.frequency === 'monthly' ? 'month' : 'week'}
+                </Text>
+                <View style={styles.suggestionActions}>
+                  <Button label="Track as bill" size="sm" variant="secondary" onPress={() => trackSuggestion(suggestion)} />
+                  <Button label="Not now" size="sm" variant="ghost" onPress={() => setSuggestions((l) => l.slice(1))} />
+                </View>
+              </View>
+            </Card>
+          </Animated.View>
+        )}
+      </View>
+    </View>
+  );
+
+  const renderEmptyState = () => {
+    if (!loaded) {
+      return (
+        <View style={styles.body}>
+          {[0, 1, 2].map((i) => <SkeletonCard key={i} lines={1} style={styles.skeleton} />)}
+        </View>
+      );
+    }
+    if (loadFailed && transactions.length === 0) return <ErrorState onRetry={() => fetchTransactions()} />;
+    return (
+      <EmptyState
+        emoji="🧾"
+        title={transactions.length === 0 ? 'No transactions yet' : 'No results'}
+        message={transactions.length === 0 ? `${emptyMessage} Tap + to log your first one.` : emptyMessage}
+      />
+    );
   };
 
   // ── Render ─────────────────────────────────────────────────────────────
   return (
     <View style={styles.container}>
-
-      {/* Monthly summary row */}
-      <View style={styles.summaryRow}>
-        <View style={styles.summaryItem}>
-          <Text style={styles.summaryLabel}>Spent This Month</Text>
-          <Text style={styles.summaryValue}>{formatCurrency(monthlySummary.spent)}</Text>
-        </View>
-        <View style={styles.summaryDivider} />
-        <View style={styles.summaryItem}>
-          <Text style={styles.summaryLabel}>Invested This Month</Text>
-          <Text style={[styles.summaryValue, styles.summaryInvested]}>{formatCurrency(monthlySummary.invested)}</Text>
-        </View>
-      </View>
-
-      {/* Type filters + Filter button row */}
-      <View style={styles.filterRow}>
-        <View style={styles.typeFilters}>
-          {TYPE_FILTERS.map((f) => (
-            <Pressable
-              key={f.key}
-              onPress={() => setActiveType(f.key)}
-              style={[styles.typeChip, activeType === f.key && styles.typeChipActive]}
-              accessibilityLabel={`Filter by ${f.label}`}
-              accessibilityState={{ selected: activeType === f.key }}
-            >
-              <Text style={activeType === f.key ? styles.typeChipTextActive : styles.typeChipText}>
-                {f.label}
-              </Text>
-            </Pressable>
-          ))}
-        </View>
-
-        <TouchableOpacity
-          style={[styles.filterBtn, hasActiveFilters && styles.filterBtnActive]}
-          onPress={() => setShowFilterModal(true)}
-          activeOpacity={0.7}
-          accessibilityLabel="Open advanced filters"
-        >
-          <Ionicons name="options-outline" size={16} color={hasActiveFilters ? '#ffffff' : '#475569'} />
-          <Text style={[styles.filterBtnText, hasActiveFilters && styles.filterBtnTextActive]}>Filter</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Active filter indicator */}
-      {hasActiveFilters && (
-        <View style={styles.activeFilterBar}>
-          <Text style={styles.activeFilterText} numberOfLines={1}>
-            {selectedCategories.length === 1
-              ? `Category: ${CATEGORIES.find((c) => c.key === selectedCategories[0])?.label ?? selectedCategories[0]}`
-              : `Categories (${selectedCategories.length}): ${selectedCategories
-                  .map((k) => CATEGORIES.find((c) => c.key === k)?.label ?? k)
-                  .join(', ')}`}
-          </Text>
-          <TouchableOpacity onPress={clearFilters} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-            <Ionicons name="close-circle" size={16} color={c.textMuted} />
-          </TouchableOpacity>
-        </View>
-      )}
-
-      {/* Monthly-grouped transaction list */}
-      <SectionList
+      <AnimatedSectionList
         sections={sections}
         keyExtractor={(item: Transaction) => item.id}
-        renderItem={renderItem}
-        renderSectionHeader={renderSectionHeader}
+        renderItem={({ item, index }) => (
+          <TxRow item={item} index={index} onEdit={handleEdit} onDelete={handleDelete} onOptions={setOverflowTx} />
+        )}
+        renderSectionHeader={({ section }) => (
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>{section.title}</Text>
+            <Text style={styles.sectionTotal}>{formatCurrency(section.totalAmount)}</Text>
+          </View>
+        )}
+        ListHeaderComponent={header}
         ListEmptyComponent={renderEmptyState}
-        stickySectionHeadersEnabled={false}
-        contentContainerStyle={sections.length === 0 ? styles.emptyList : undefined}
+        stickySectionHeadersEnabled
+        onScroll={onScroll}
+        scrollEventThrottle={16}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
+        contentContainerStyle={{ paddingTop: headerHeight, paddingBottom: tabBarSpace }}
         refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={() => fetchTransactions(true)}
-            tintColor={c.primary}
-            colors={['#2563EB']}
-          />
+          <RefreshControl refreshing={refreshing} onRefresh={() => fetchTransactions(true)} tintColor={c.primary} progressViewOffset={headerHeight} />
         }
       />
+      <ScreenHeader title="Activity" y={y} />
 
-      {/* Floating Add Button */}
-      <PressableScale
-        style={styles.fab}
-        scaleTo={0.94}
-        onPress={() => setShowEntry(true)}
-        accessibilityLabel="Add new transaction"
+      {/* Row sheet: options first; Edit swaps in the editor without presenting a second modal */}
+      <Sheet
+        visible={!!(overflowTx || editTx)}
+        onClose={() => { setOverflowTx(null); setEditTx(null); setPickingCategory(false); }}
+        title={editTx ? (pickingCategory ? 'Choose a category' : 'Edit Transaction') : overflowTx?.description || overflowTx?.category || 'Transaction'}
       >
-        <Ionicons name="add" size={28} color="#ffffff" />
-      </PressableScale>
+        {editTx && pickingCategory ? (
+          <Animated.View key="pick" entering={enterUp(0)}>
+            <ScrollView style={styles.sheetScroll} showsVerticalScrollIndicator={false}>
+              <CategoryGrid
+                items={CATEGORIES}
+                isSelected={(key) => key === editCategory.toLowerCase()}
+                onPress={(key) => { setEditCategory(labelOf(key)); setPickingCategory(false); }}
+              />
+            </ScrollView>
+            <Button label="Back to edit" variant="secondary" onPress={() => setPickingCategory(false)} style={styles.saveBtn} />
+          </Animated.View>
+        ) : editTx ? (
+          <Animated.View key="edit" entering={enterUp(0)}>
+            <ScrollView keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
+              <Field label="Amount" icon="cash-outline" value={editAmount} onChangeText={(v) => { setEditAmount(v); setEditError(''); }} keyboardType="decimal-pad" error={editError} />
+              <Field label="Description" icon="create-outline" value={editDesc} onChangeText={setEditDesc} />
 
-      {/* Transaction Entry Modal */}
-      <Modal
-        visible={showEntry}
-        transparent
-        animationType="slide"
-        onRequestClose={() => setShowEntry(false)}
-      >
-        <TransactionEntryScreen onClose={() => setShowEntry(false)} />
-      </Modal>
+              <Text style={styles.filterSectionLabel}>Category</Text>
+              <Pressable onPress={() => setPickingCategory(true)} style={styles.pickerRow} accessibilityRole="button" accessibilityLabel={`Category: ${editCategory}. Change`}>
+                <IconTile emoji={CATEGORY_EMOJI[editCategory.toLowerCase()] ?? '📦'} tint={TYPE_BADGE(c)[editType].color} size={36} />
+                <Text style={styles.pickerRowText} numberOfLines={1}>{editCategory}</Text>
+                <Text style={styles.pickerRowAction}>Change</Text>
+                <Ionicons name="chevron-forward" size={16} color={c.textSubtle} />
+              </Pressable>
 
-      {/* Overflow Action Menu Modal */}
-      <Modal
-        visible={!!overflowTx}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setOverflowTx(null)}
-      >
-        <TouchableWithoutFeedback onPress={() => setOverflowTx(null)}>
-          <View style={styles.overflowOverlay}>
-            <TouchableWithoutFeedback>
-              <View style={styles.overflowSheet}>
-                <View style={styles.overflowHandle} />
-                <Text style={styles.overflowTitle} numberOfLines={1}>
-                  {overflowTx?.description || overflowTx?.category || 'Transaction'}
-                </Text>
-                <Text style={styles.overflowSubtitle}>
-                  {overflowTx ? formatCurrency(Math.abs(overflowTx.amount)) : ''}
-                </Text>
-
-                <TouchableOpacity
-                  style={styles.overflowAction}
-                  onPress={() => overflowTx && handleEdit(overflowTx)}
-                  activeOpacity={0.7}
-                >
-                  <Ionicons name="create-outline" size={20} color={c.textMuted} />
-                  <Text style={styles.overflowActionText}>Edit Transaction</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={styles.overflowAction}
-                  onPress={() => {
-                    if (overflowTx) {
-                      setOverflowTx(null);
-                      handleDelete(overflowTx);
-                    }
-                  }}
-                  activeOpacity={0.7}
-                >
-                  <Ionicons name="trash-outline" size={20} color={c.dangerStrong} />
-                  <Text style={[styles.overflowActionText, { color: c.dangerStrong }]}>Delete Transaction</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={styles.overflowCancel}
-                  onPress={() => setOverflowTx(null)}
-                  activeOpacity={0.7}
-                >
-                  <Text style={styles.overflowCancelText}>Cancel</Text>
-                </TouchableOpacity>
-              </View>
-            </TouchableWithoutFeedback>
-          </View>
-        </TouchableWithoutFeedback>
-      </Modal>
-
-      {/* Advanced Filter Modal */}
-      <Modal
-        visible={showFilterModal}
-        transparent
-        animationType="slide"
-        onRequestClose={() => setShowFilterModal(false)}
-      >
-        <TouchableWithoutFeedback onPress={() => setShowFilterModal(false)}>
-          <View style={styles.filterOverlay}>
-            <TouchableWithoutFeedback>
-              <View style={styles.filterSheet}>
-                <View style={styles.overflowHandle} />
-                <View style={styles.filterSheetHeader}>
-                  <Text style={styles.filterSheetTitle}>Filter Transactions</Text>
-                  {hasActiveFilters && (
-                    <TouchableOpacity onPress={clearFilters}>
-                      <Text style={styles.clearFiltersText}>Clear Filters</Text>
-                    </TouchableOpacity>
-                  )}
-                </View>
-
-                {/* Category filter */}
-                <Text style={styles.filterSectionLabel}>Category</Text>
-                <View style={styles.filterCategoryGrid}>
-                  {CATEGORIES.map((cat) => (
-                    <Pressable
-                      key={cat.key}
-                      onPress={() => toggleCategory(cat.key)}
-                      style={[
-                        styles.filterCategoryChip,
-                        selectedCategories.includes(cat.key) && styles.filterCategoryChipActive,
-                      ]}
-                      accessibilityLabel={`Filter by ${cat.label}`}
-                      accessibilityState={{ selected: selectedCategories.includes(cat.key) }}
-                    >
-                      <Text style={styles.filterCategoryEmoji}>{cat.emoji}</Text>
-                      <Text
-                        style={[
-                          styles.filterCategoryText,
-                          selectedCategories.includes(cat.key) && styles.filterCategoryTextActive,
-                        ]}
-                      >
-                        {cat.label}
-                      </Text>
-                    </Pressable>
-                  ))}
-                </View>
-
-                {/* Apply button */}
-                <TouchableOpacity
-                  style={styles.filterApplyBtn}
-                  onPress={() => setShowFilterModal(false)}
-                  activeOpacity={0.85}
-                >
-                  <Text style={styles.filterApplyText}>Apply Filters</Text>
-                </TouchableOpacity>
-              </View>
-            </TouchableWithoutFeedback>
-          </View>
-        </TouchableWithoutFeedback>
-      </Modal>
-
-      {/* Quick Edit Modal */}
-      <Modal
-        visible={!!editTx}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setEditTx(null)}
-      >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-          <View style={styles.editOverlay}>
-            <View style={styles.editCard}>
-              <Text style={styles.editTitle}>Edit Transaction</Text>
-
-              <Text style={styles.label}>Amount</Text>
-              <TextInput
-                style={styles.input}
-                value={editAmount}
-                onChangeText={setEditAmount}
-                keyboardType="numeric"
+              <Text style={styles.filterSectionLabel}>Type</Text>
+              <SegmentedControl
+                segments={TYPES.map((t) => ({ key: t, label: t, dot: TYPE_BADGE(c)[t].color }))}
+                value={editType}
+                onChange={setEditType}
+                accessibilityLabel="Transaction type"
               />
 
-              <Text style={styles.label}>Description</Text>
-              <TextInput
-                style={styles.input}
-                value={editDesc}
-                onChangeText={setEditDesc}
-              />
-
-              <Text style={styles.label}>Category</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.editChips} keyboardShouldPersistTaps="handled">
-                {CATEGORIES.map(c => (
-                  <TouchableOpacity
-                    key={c.key}
-                    onPress={() => setEditCategory(c.label)}
-                    style={[styles.editChip, editCategory === c.label && styles.editChipActive]}
-                    accessibilityRole="button"
-                    accessibilityState={{ selected: editCategory === c.label }}
-                  >
-                    <Text style={[styles.editChipText, editCategory === c.label && styles.editChipTextActive]}>{c.emoji} {c.label}</Text>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-
-              <Text style={styles.label}>Type</Text>
-              <View style={[styles.editChips, { flexDirection: 'row' }]}>
-                {(['Need', 'Want', 'Investment'] as const).map(t => (
-                  <TouchableOpacity
-                    key={t}
-                    onPress={() => setEditType(t)}
-                    style={[styles.editChip, editType === t && styles.editChipActive]}
-                    accessibilityRole="button"
-                    accessibilityState={{ selected: editType === t }}
-                  >
-                    <Text style={[styles.editChipText, editType === t && styles.editChipTextActive]}>{t}</Text>
-                  </TouchableOpacity>
-                ))}
-              </View>
-
-              <View style={styles.editActions}>
-                <TouchableOpacity
-                  onPress={() => setEditTx(null)}
-                  style={[styles.editBtn, { backgroundColor: c.border }]}
-                >
-                  <Text style={{ color: c.textMuted, fontWeight: '600' }}>Cancel</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={submitEdit}
-                  style={[styles.editBtn, { backgroundColor: c.primary }]}
-                >
-                  <Text style={{ color: '#fff', fontWeight: '600' }}>Save</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
+              <Button label="Save changes" onPress={submitEdit} style={styles.saveBtn} />
+            </ScrollView>
+          </Animated.View>
+        ) : (
+          <View style={styles.overflowSheet}>
+            <Text style={styles.overflowSubtitle}>
+              {overflowTx ? `${formatCurrency(Math.abs(overflowTx.amount))} · ${new Date(overflowTx.timestamp).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit' })}` : ''}
+            </Text>
+            <Pressable style={styles.overflowAction} onPress={() => overflowTx && handleEdit(overflowTx)} accessibilityRole="button">
+              <Ionicons name="create-outline" size={20} color={c.text} />
+              <Text style={styles.overflowActionText}>Edit Transaction</Text>
+            </Pressable>
+            <Pressable style={styles.overflowAction} onPress={() => overflowTx && handleDelete(overflowTx)} accessibilityRole="button">
+              <Ionicons name="trash-outline" size={20} color={c.dangerStrong} />
+              <Text style={[styles.overflowActionText, { color: c.dangerStrong }]}>Delete Transaction</Text>
+            </Pressable>
           </View>
-        </TouchableWithoutFeedback>
-      </Modal>
+        )}
+      </Sheet>
+
+      {/* Advanced filter sheet */}
+      <Sheet visible={showFilterModal} onClose={() => setShowFilterModal(false)} title="Filters">
+        <View style={styles.filterSheet}>
+          <View style={styles.filterHeaderRow}>
+            <Text style={styles.filterSectionLabel}>
+              Categories{selectedCategories.length > 0 ? ` · ${selectedCategories.length} selected` : ''}
+            </Text>
+            {hasActiveFilters && (
+              <Pressable onPress={clearFilters} hitSlop={8} accessibilityRole="button" accessibilityLabel="Reset filters">
+                <Text style={styles.clearFiltersText}>Reset</Text>
+              </Pressable>
+            )}
+          </View>
+          <ScrollView style={styles.sheetScroll} showsVerticalScrollIndicator={false}>
+            <CategoryGrid
+              items={CATEGORIES}
+              isSelected={(key) => selectedCategories.includes(key)}
+              onPress={toggleCategory}
+              meta={(key) => {
+                const n = categoryCounts.get(key) ?? 0;
+                return n ? `${n} transaction${n === 1 ? '' : 's'}` : 'None yet';
+              }}
+              isMuted={(key) => !categoryCounts.get(key)}
+            />
+            {reviewCount > 0 && (
+              <View style={styles.switchRow}>
+                <IconTile icon="sparkles" tint={c.primary} size={36} />
+                <View style={styles.flex}>
+                  <Text style={styles.switchTitle}>Only AI guesses to check</Text>
+                  <Text style={styles.switchSub}>{reviewCount} transaction{reviewCount === 1 ? '' : 's'} FINAURA wasn't sure about</Text>
+                </View>
+                <Switch value={reviewOnly} onValueChange={setReviewOnly} trackColor={{ true: c.primary }} accessibilityLabel="Only AI guesses to check" />
+              </View>
+            )}
+          </ScrollView>
+          <Button
+            label={resultCount === 0 ? 'No matches' : `Show ${resultCount} transaction${resultCount === 1 ? '' : 's'}`}
+            onPress={() => setShowFilterModal(false)}
+          />
+        </View>
+      </Sheet>
+
     </View>
   );
 }
 
 // ── Styles ────────────────────────────────────────────────────────────────
-
 const useStyles = createStyles((c) => ({
-  container: { flex: 1, backgroundColor: c.bg },
-
-  // ── Monthly summary
-  summaryRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingTop: 12,
-    paddingBottom: 8,
-    gap: 0,
-  },
-  summaryItem: {
+  container: {
     flex: 1,
-    alignItems: 'center',
+    backgroundColor: c.bg,
   },
-  summaryLabel: {
-    fontSize: 11,
-    fontWeight: '600',
-    color: c.textMuted,
-    marginBottom: 2,
-  },
-  summaryValue: {
-    fontSize: 16,
-    fontWeight: '800',
-    color: c.text,
-  },
-  summaryInvested: {
-    color: c.successStrong,
-  },
-  summaryDivider: {
-    width: 1,
-    height: 28,
-    backgroundColor: c.border,
-  },
-
-  // ── Type filter row
-  filterRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingBottom: 8,
-    gap: 8,
-  },
-  typeFilters: {
+  flex: {
     flex: 1,
-    flexDirection: 'row',
-    gap: 6,
   },
-  typeChip: {
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 20,
-    backgroundColor: c.surfaceAlt,
+  body: {
+    paddingHorizontal: 16,
+    gap: 12,
+    marginBottom: 4,
   },
-  typeChipActive: {
-    backgroundColor: '#1e293b',
-  },
-  typeChipText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: c.textMuted,
-  },
-  typeChipTextActive: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#ffffff',
-  },
-
-  // ── Filter button
   filterBtn: {
-    flexDirection: 'row',
+    width: 42,
+    height: 42,
+    borderRadius: 21,
     alignItems: 'center',
-    gap: 4,
-    paddingVertical: 6,
-    paddingHorizontal: 10,
-    borderRadius: 20,
-    backgroundColor: c.surfaceAlt,
+    justifyContent: 'center',
+    backgroundColor: c.surface,
     borderWidth: 1,
     borderColor: c.border,
+    marginBottom: 4,
   },
   filterBtnActive: {
     backgroundColor: c.primary,
     borderColor: c.primary,
   },
-  filterBtnText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: c.textMuted,
+  filterCount: {
+    position: 'absolute',
+    top: -4,
+    right: -4,
+    minWidth: 18,
+    height: 18,
+    borderRadius: 9,
+    overflow: 'hidden',
+    textAlign: 'center',
+    fontSize: 11,
+    fontWeight: '800',
+    lineHeight: 18,
+    color: c.primary,
+    backgroundColor: c.surface,
   },
-  filterBtnTextActive: {
-    color: '#ffffff',
-  },
-
-  // ── Active filter indicator
-  activeFilterBar: {
+  summary: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 6,
-    marginHorizontal: 16,
-    marginBottom: 4,
-    backgroundColor: c.surfaceAlt,
-    borderRadius: 8,
   },
-  activeFilterText: {
-    fontSize: 12,
-    fontWeight: '600',
+  summaryItem: {
+    flex: 1,
+  },
+  summaryLabel: {
+    ...typeScale.caption,
+    color: c.onAuroraMuted,
+  },
+  summaryValue: {
+    ...typeScale.title,
+    color: c.onAurora,
+    marginTop: 4,
+  },
+  summaryDivider: {
+    width: 1,
+    alignSelf: 'stretch',
+    marginHorizontal: 16,
+    backgroundColor: 'rgba(255,255,255,0.2)',
+  },
+  search: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    height: 44,
+    paddingHorizontal: 14,
+    borderRadius: radius.md,
+    backgroundColor: c.surfaceAlt,
+  },
+  searchInput: {
+    flex: 1,
+    height: '100%',
+    fontSize: 15,
+    color: c.text,
+  },
+  chips: {
+    gap: 8,
+    paddingVertical: 2,
+  },
+  activePill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    height: 32,
+    paddingHorizontal: 12,
+    borderRadius: radius.pill,
+    backgroundColor: c.primarySoft,
+  },
+  activePillEmoji: {
+    fontSize: 13,
+  },
+  activePillText: {
+    ...typeScale.label,
+    color: c.primary,
+  },
+  clearPill: {
+    height: 32,
+    paddingHorizontal: 12,
+    justifyContent: 'center',
+  },
+  clearPillText: {
+    ...typeScale.label,
     color: c.textMuted,
   },
-
-  // ── Section header
+  suggestion: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  suggestionKicker: {
+    ...typeScale.overline,
+    color: c.purple,
+  },
+  suggestionTitle: {
+    ...typeScale.headline,
+    fontSize: 15,
+    color: c.text,
+    marginTop: 4,
+  },
+  suggestionActions: {
+    flexDirection: 'row',
+    gap: 8,
+    marginTop: 10,
+  },
+  skeleton: {
+    marginTop: 4,
+  },
   sectionHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 16,
+    paddingHorizontal: 20,
     paddingTop: 18,
-    paddingBottom: 6,
+    paddingBottom: 8,
+    backgroundColor: c.bg,
   },
-  sectionMonth: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: c.text,
-    letterSpacing: 0.2,
+  sectionTitle: {
+    ...typeScale.label,
+    color: c.textMuted,
   },
   sectionTotal: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: c.primary,
+    ...typeScale.label,
+    ...tabular,
+    color: c.textSubtle,
   },
-
-  // ── Transaction card
+  rowWrap: {
+    paddingHorizontal: 16,
+    marginBottom: 8,
+  },
+  swipeContainer: {
+    borderRadius: radius.lg,
+  },
   card: {
-    backgroundColor: c.surface,
-    borderRadius: 16,
-    padding: 14,
-    marginHorizontal: 16,
-    marginBottom: 10,
     flexDirection: 'row',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 6,
-    elevation: 2,
-    borderWidth: 1,
-    borderColor: c.border,
-  },
-  iconBox: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
-    backgroundColor: c.bg,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 12,
-    borderWidth: 1,
-    borderColor: c.border,
-  },
-  iconText: { fontSize: 19 },
-
-  details: { flex: 1, justifyContent: 'center', paddingRight: 8 },
-  desc: { fontSize: 14, fontWeight: '600', color: c.text, marginBottom: 3 },
-
-  metaRow: { flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap' },
-  categoryLabel: { fontSize: 11, color: c.textMuted, fontWeight: '500' },
-  typeInline: { fontSize: 11, fontWeight: '600' },
-  metaDot: { fontSize: 11, color: c.textSubtle, marginHorizontal: 4 },
-  dateText: { fontSize: 11, color: c.textSubtle },
-
-  tagsRow: { flexDirection: 'row', gap: 4, marginTop: 4, flexWrap: 'wrap' },
-  tagChip: { backgroundColor: c.surfaceAlt, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4 },
-  tagText: { fontSize: 9, color: c.textMuted, fontWeight: '700', letterSpacing: 0.4 },
-
-  // ── Right column
-  rightCol: { alignItems: 'flex-end', gap: 4, minWidth: 72 },
-  amount: { fontSize: 15, fontWeight: '700', color: c.text },
-  income: { color: c.success },
-
-  overflowBtn: {
-    padding: 4,
-    borderRadius: 12,
-  },
-
-  // ── FAB
-  fab: {
-    position: 'absolute',
-    bottom: 24,
-    right: 16,
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: c.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#2563EB',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.35,
-    shadowRadius: 10,
-    elevation: 10,
-  },
-
-  // ── Empty state
-  emptyList: { flex: 1 },
-  emptyContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 80,
-    paddingHorizontal: 32,
-  },
-  emptyEmoji: { fontSize: 52, marginBottom: 16 },
-  emptyTitle: { fontSize: 18, fontWeight: '700', color: c.text, marginBottom: 8 },
-  emptySubtitle: { fontSize: 14, color: c.textMuted, textAlign: 'center', lineHeight: 20 },
-
-  // ── Overflow action sheet
-  overflowOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    justifyContent: 'flex-end',
-  },
-  overflowSheet: {
+    gap: 12,
+    padding: 14,
+    borderRadius: radius.lg,
     backgroundColor: c.surface,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    padding: 20,
-    paddingBottom: 36,
+    borderWidth: 1,
+    borderColor: c.border,
   },
-  overflowHandle: {
-    width: 36,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: c.border,
-    alignSelf: 'center',
-    marginBottom: 16,
+  cardPressed: {
+    backgroundColor: c.surfaceAlt,
   },
-  overflowTitle: {
-    fontSize: 16,
+  details: {
+    flex: 1,
+  },
+  desc: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: c.text,
+  },
+  metaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 3,
+  },
+  categoryLabel: {
+    flexShrink: 1,
+    fontSize: 12,
+    color: c.textMuted,
+  },
+  metaDot: {
+    fontSize: 12,
+    color: c.textSubtle,
+    marginHorizontal: 4,
+  },
+  typeInline: {
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  dateText: {
+    fontSize: 12,
+    color: c.textSubtle,
+  },
+  tagsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+    marginTop: 8,
+  },
+  rightCol: {
+    alignItems: 'flex-end',
+    gap: 8,
+  },
+  amount: {
+    fontSize: 15,
     fontWeight: '700',
     color: c.text,
-    textAlign: 'center',
-    marginBottom: 2,
+    ...tabular,
+  },
+  swipeAction: {
+    width: 84,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 4,
+    borderRadius: radius.lg,
+    marginHorizontal: 6,
+  },
+  swipeEdit: {
+    backgroundColor: c.primary,
+  },
+  swipeDelete: {
+    backgroundColor: c.danger,
+  },
+  swipeText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#FFFFFF',
+  },
+  overflowSheet: {
+    gap: 4,
+    paddingBottom: 4,
   },
   overflowSubtitle: {
-    fontSize: 13,
-    fontWeight: '600',
+    ...typeScale.body,
     color: c.textMuted,
-    textAlign: 'center',
-    marginBottom: 16,
+    marginBottom: 8,
   },
   overflowAction: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: 14,
     paddingVertical: 14,
-    borderBottomWidth: 1,
-    borderBottomColor: c.border,
+    borderTopWidth: 1,
+    borderTopColor: c.border,
   },
   overflowActionText: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: '600',
     color: c.text,
   },
-  overflowCancel: {
-    paddingVertical: 14,
-    alignItems: 'center',
-    marginTop: 4,
-  },
-  overflowCancelText: {
-    fontSize: 15,
-    fontWeight: '600',
-    color: c.textMuted,
-  },
-
-  // ── Filter modal
-  filterOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    justifyContent: 'flex-end',
-  },
   filterSheet: {
-    backgroundColor: c.surface,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    padding: 20,
-    paddingBottom: 36,
-    maxHeight: '70%',
+    gap: 12,
+    flexShrink: 1,
   },
-  filterSheetHeader: {
+  sheetScroll: {
+    flexGrow: 0,
+    flexShrink: 1,
+  },
+  switchRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    marginTop: 16,
+    padding: 12,
+    borderRadius: radius.lg - 4,
+    borderWidth: 1.5,
+    borderColor: c.border,
+    backgroundColor: c.surface,
+  },
+  switchTitle: {
+    ...typeScale.label,
+    color: c.text,
+  },
+  switchSub: {
+    ...typeScale.caption,
+    color: c.textSubtle,
+    marginTop: 2,
+  },
+  pickerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    padding: 10,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    borderColor: c.border,
+    backgroundColor: c.surface,
+  },
+  pickerRowText: {
+    ...typeScale.body,
+    fontWeight: '600',
+    flex: 1,
+    color: c.text,
+  },
+  pickerRowAction: {
+    ...typeScale.label,
+    color: c.primary,
+  },
+  filterHeaderRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
-  },
-  filterSheetTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: c.text,
-  },
-  clearFiltersText: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: c.primary,
   },
   filterSectionLabel: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: c.textMuted,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-    marginBottom: 10,
+    ...typeScale.overline,
+    color: c.textSubtle,
+    marginTop: 6,
+    marginBottom: 8,
   },
-  filterCategoryGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-    marginBottom: 20,
-  },
-  filterCategoryChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 12,
-    backgroundColor: c.surfaceAlt,
-    borderWidth: 1,
-    borderColor: c.border,
-  },
-  filterCategoryChipActive: {
-    backgroundColor: c.primarySoft,
-    borderColor: c.primary,
-  },
-  filterCategoryEmoji: {
-    fontSize: 14,
-  },
-  filterCategoryText: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: c.textMuted,
-  },
-  filterCategoryTextActive: {
+  clearFiltersText: {
+    ...typeScale.label,
     color: c.primary,
   },
-  filterApplyBtn: {
-    backgroundColor: '#1e293b',
-    borderRadius: 12,
-    height: 48,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 4,
+  saveBtn: {
+    marginTop: 20,
   },
-  filterApplyText: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: '#ffffff',
-  },
-
-  // ── Edit modal
-  editOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    justifyContent: 'center',
-    padding: 24,
-  },
-  editCard: {
-    backgroundColor: c.surface,
-    padding: 24,
-    borderRadius: 16,
-    elevation: 10,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 4 },
-  },
-  editTitle: { fontSize: 18, fontWeight: '700', marginBottom: 16, textAlign: 'center' },
-  label: { fontSize: 12, fontWeight: '600', color: c.textMuted, marginBottom: 4 },
-  input: { borderWidth: 1, borderColor: c.border, borderRadius: 8, padding: 12, marginBottom: 16, fontSize: 16 },
-  editActions: { flexDirection: 'row', gap: 12, marginTop: 8 },
-  editChips: { marginBottom: 16, flexGrow: 0 },
-  editChip: { paddingVertical: 8, paddingHorizontal: 12, borderRadius: 999, borderWidth: 1, borderColor: c.border, marginRight: 8 },
-  editChipActive: { backgroundColor: c.primary, borderColor: c.primary },
-  editChipText: { fontSize: 13, color: c.textMuted, fontWeight: '600' },
-  editChipTextActive: { color: '#fff' },
-  editBtn: { flex: 1, padding: 14, borderRadius: 8, alignItems: 'center' },
 }));

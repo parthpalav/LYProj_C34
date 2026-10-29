@@ -7,13 +7,13 @@ import {
   TouchableWithoutFeedback,
   StyleSheet,
   ActivityIndicator,
-  Alert,
-  SafeAreaView,
   Keyboard,
 } from 'react-native';
 import { updateCurrentBalance } from '../services/api';
 import { useStore } from '../store/useStore';
-import { celebrate } from '../store/useCelebrationStore';
+import { useAuthStore } from '../store/useAuthStore';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { celebrate, toast } from '../store/useCelebrationStore';
 import { formatCurrency } from '../utils/format';
 
 import { createStyles, Palette } from '../theme';
@@ -26,7 +26,9 @@ interface Props {
 
 export function UpdateBalanceScreen({ onClose }: Props): React.ReactElement {
   const styles = useStyles();
-  const { user, setUser } = useStore();
+  const user = useStore((s) => s.user);
+  const setUser = useStore((s) => s.setUser);
+  const setAuthUser = useAuthStore((s) => s.setUser);
   const [operation, setOperation] = useState<'credit' | 'debit'>('credit');
   const [amount, setAmount] = useState('');
   const [saving, setSaving] = useState(false);
@@ -41,12 +43,12 @@ export function UpdateBalanceScreen({ onClose }: Props): React.ReactElement {
     if (saving) return;
 
     if (!user?.id) {
-      Alert.alert('Error', 'User information not available');
+      toast('Please sign in again', { tone: 'error' });
       return;
     }
 
     if (isNaN(parsedAmount) || parsedAmount <= 0) {
-      Alert.alert('Invalid Amount', 'Please enter a valid amount greater than 0.');
+      toast('Enter an amount greater than zero', { tone: 'warning' });
       return;
     }
 
@@ -55,10 +57,10 @@ export function UpdateBalanceScreen({ onClose }: Props): React.ReactElement {
       const response = await updateCurrentBalance(user.id, operation, parsedAmount);
       
       // Update local store
-      setUser({
-        ...user,
-        currentBalance: response.currentBalance,
-      });
+      // Both stores hold the user; update both so Home and You agree.
+      setUser({ ...user, currentBalance: response.currentBalance });
+      const authUser = useAuthStore.getState().user;
+      if (authUser) setAuthUser({ ...authUser, currentBalance: response.currentBalance });
 
       onClose?.();
       celebrate({
@@ -67,7 +69,7 @@ export function UpdateBalanceScreen({ onClose }: Props): React.ReactElement {
         subtitle: `${operation === 'credit' ? 'Added' : 'Deducted'} ${formatCurrency(parsedAmount)}. New balance ${formatCurrency(response.currentBalance)}.`,
       });
     } catch (error) {
-      Alert.alert('Error', 'Failed to update balance. Please try again.');
+      toast("Couldn't update your balance", { tone: 'error', subtitle: 'Check your connection and try again.' });
       console.error(error);
     } finally {
       setSaving(false);
@@ -88,7 +90,7 @@ export function UpdateBalanceScreen({ onClose }: Props): React.ReactElement {
         <View style={styles.card}>
           <Text style={styles.label}>Current Balance</Text>
           <View style={styles.balanceBox}>
-            <Text style={styles.balanceValue}>₹{currentBalance.toFixed(2)}</Text>
+            <Text style={styles.balanceValue}>{formatCurrency(currentBalance)}</Text>
           </View>
 
           <Text style={styles.label}>Transaction Type</Text>
@@ -125,7 +127,7 @@ export function UpdateBalanceScreen({ onClose }: Props): React.ReactElement {
           <View style={styles.infoBox}>
             <Text style={styles.infoLabel}>New Balance Preview</Text>
             <Text style={styles.infoValue}>
-              ₹{projectedBalance.toFixed(2)}
+              {formatCurrency(projectedBalance)}
             </Text>
           </View>
 

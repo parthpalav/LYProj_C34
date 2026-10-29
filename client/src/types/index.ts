@@ -695,3 +695,41 @@ export interface FamilyDashboardResponse {
   error?: string;
   message?: string;
 }
+
+export interface SubscriptionSuggestion {
+  key: string;
+  name: string;
+  amount: number;
+  frequency: 'weekly' | 'monthly';
+  occurrences: number;
+  lastDate: string;
+  nextExpected: string;
+  category: string;
+  type: 'Need' | 'Want' | 'Investment';
+}
+
+export interface MonthlyReport {
+  year: number;
+  month: number;
+  periodLabel: string;
+  totalIncome: number;
+  incomeCount: number;
+  totalExpenses: number;
+  transactionCount: number;
+  netCashFlow: number;
+  savingsRate: number;
+  spendingMix: { Needs: number; Wants: number; Investments: number };
+  topCategories: Array<{ category: string; amount: number; pct: number }>;
+  fmi: { hasSnapshots: boolean; snapshotCount: number; average: number | null; first: number | null; last: number | null; change: number | null };
+  anomalies: { count: number; items: Array<{ id: string; description: string; amount: number; category: string; timestamp: string }> };
+}
+
+/** What-if overrides for POST /api/predictability/scenario; nothing is saved. */
+export interface ScenarioOverrides {
+  monthlyContribution?: number;
+  retirementAge?: number;
+  expectedReturnRate?: number;
+  expectedInflationRate?: number;
+  annualContributionGrowthRate?: number;
+  contributionMode?: 'NOMINAL_FLAT' | 'REAL_CONSTANT' | 'STEP_UP';
+}

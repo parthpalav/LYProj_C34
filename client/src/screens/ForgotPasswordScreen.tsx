@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAuthStore } from '../store/useAuthStore';
 import { ResetPasswordScreen } from './ResetPasswordScreen';
 import { AuthButton } from '../components/auth/AuthShell';
-import { AuthInput } from '../components/auth/AuthInput';
+import { Field } from '../components/ui/Field';
 import { createStyles, useTheme } from '../theme';
 import { enterUp } from '../motion';
 
@@ -50,7 +50,7 @@ export function ForgotPasswordScreen({ onBack }: { onBack: () => void }): React.
         </View>
       ) : null}
 
-      <AuthInput
+      <Field
         label="Email address"
         icon="mail-outline"
         placeholder="you@example.com"

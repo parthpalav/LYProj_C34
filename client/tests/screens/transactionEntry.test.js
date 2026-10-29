@@ -127,7 +127,7 @@ test('Amount UX Test 3 — Obvious Input Container & Visual Boundaries', () => {
 
 test('Amount UX Test 4 — Whole Container Focus Mechanism', () => {
   assert.ok(
-    screenCode.includes('amountInputRef = useRef<TextInput>(null)'),
+    screenCode.includes('amountInputRef = useRef<'),
     'amountInputRef is defined using React useRef'
   );
   assert.ok(

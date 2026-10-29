@@ -7,7 +7,9 @@ import { duration, timing } from '../../motion';
 
 type Props = Omit<TextInputProps, 'style'> & {
   label: string;
-  icon: React.ComponentProps<typeof Ionicons>['name'];
+  icon?: React.ComponentProps<typeof Ionicons>['name'];
+  /** Helper text under the field when there is no error. */
+  hint?: string;
   error?: string;
   /** Extra TextInput style, e.g. right padding for a trailing button. */
   style?: StyleProp<TextStyle>;
@@ -17,8 +19,8 @@ type Props = Omit<TextInputProps, 'style'> & {
   labelAction?: React.ReactNode;
 };
 
-/** Labeled auth field: leading icon, focus ring that tints in 180ms, inline error. */
-export function AuthInput({ label, icon, error, style, trailing, labelAction, onFocus, onBlur, ...rest }: Props) {
+/** Labeled field: optional leading icon, focus ring that tints in 180ms, inline error or hint. */
+export function Field({ label, icon, hint, error, style, trailing, labelAction, onFocus, onBlur, ...rest }: Props) {
   const { c, isDark } = useTheme();
   const styles = useStyles();
   const [focused, setFocused] = useState(false);
@@ -37,10 +39,11 @@ export function AuthInput({ label, icon, error, style, trailing, labelAction, on
         {labelAction}
       </View>
       <Animated.View style={[styles.field, ring]}>
-        <Ionicons name={icon} size={18} color={focused ? c.primary : c.textSubtle} style={styles.icon} />
+        {icon && <Ionicons name={icon} size={18} color={focused ? c.primary : c.textSubtle} style={styles.icon} />}
         <TextInput
+          accessibilityLabel={label}
           {...rest}
-          style={[styles.input, style]}
+          style={[styles.input, !icon && styles.inputBare, style]}
           placeholderTextColor={c.textSubtle}
           keyboardAppearance={isDark ? 'dark' : 'light'}
           selectionColor={c.primary}
@@ -49,7 +52,7 @@ export function AuthInput({ label, icon, error, style, trailing, labelAction, on
         />
         {trailing}
       </Animated.View>
-      {error ? <Text style={styles.error}>{error}</Text> : null}
+      {error ? <Text style={styles.error}>{error}</Text> : hint ? <Text style={styles.hint}>{hint}</Text> : null}
     </View>
   );
 }
@@ -87,9 +90,17 @@ const useStyles = createStyles((c) => ({
     fontSize: 15,
     color: c.text,
   },
+  inputBare: {
+    paddingHorizontal: 14,
+  },
   error: {
     fontSize: 12,
     color: c.danger,
+    marginTop: 6,
+  },
+  hint: {
+    fontSize: 12,
+    color: c.textSubtle,
     marginTop: 6,
   },
 }));

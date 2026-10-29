@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import express, { Router } from 'express';
 import jwt from 'jsonwebtoken';
 import { detectAnomaly } from '../services/TransactionService.js';
 import { calculateFMI } from '../services/FMIService.js';
@@ -291,6 +291,57 @@ router.post('/auth/reset-password', passwordResetRateLimiter, validate(resetPass
       error: error.message,
       message: error.message
     });
+  }
+});
+
+// The emailed reset link opens this page, so a user can reset from any browser without the app.
+const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+
+function resetPage({ token = '', message = '', ok = false } = {}) {
+  const form = ok ? '' : `
+    <form method="POST" action="/api/auth/reset-password-page">
+      <input type="hidden" name="token" value="${escapeHtml(token)}">
+      <label>New password<input type="password" name="password" autocomplete="new-password" required minlength="8"></label>
+      <label>Confirm password<input type="password" name="confirm" autocomplete="new-password" required minlength="8"></label>
+      <p class="hint">At least 8 characters, with upper and lower case letters, a number and a symbol.</p>
+      <button type="submit">Reset password</button>
+    </form>`;
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Reset password · FINAURA</title>
+  <style>
+    body{margin:0;min-height:100vh;display:grid;place-items:center;font-family:-apple-system,system-ui,sans-serif;background:linear-gradient(135deg,#12105A,#2A2AB8 55%,#5B3BDE);color:#0F172A;padding:16px}
+    main{width:100%;max-width:380px;background:rgba(255,255,255,.92);border-radius:24px;padding:28px}
+    h1{margin:0 0 6px;font-size:24px} p{color:#475569;line-height:1.45} .hint{font-size:13px;margin:4px 0 16px}
+    label{display:block;font-size:13px;font-weight:600;color:#475569;margin-top:14px}
+    input{display:block;width:100%;box-sizing:border-box;margin-top:6px;height:48px;border:1.5px solid #E5E8EF;border-radius:12px;padding:0 14px;font-size:16px}
+    button{width:100%;height:50px;border:0;border-radius:14px;background:#3B3BDE;color:#fff;font-size:16px;font-weight:700}
+    .msg{padding:12px 14px;border-radius:12px;background:${ok ? '#ECFDF5' : '#FEF2F2'};color:${ok ? '#059669' : '#DC2626'}}
+  </style></head><body><main>
+    <h1>Reset your password</h1>
+    ${message ? `<p class="msg">${escapeHtml(message)}</p>` : '<p>Choose a new password for your FINAURA account.</p>'}
+    ${form}
+  </main></body></html>`;
+}
+
+router.get('/auth/reset-password-page', (req, res) => {
+  const token = typeof req.query.token === 'string' ? req.query.token : '';
+  res.status(token ? 200 : 400).send(resetPage({ token, message: token ? '' : 'This reset link is missing its token. Request a new one from the app.' }));
+});
+
+router.post('/auth/reset-password-page', passwordResetRateLimiter, express.urlencoded({ extended: false, limit: '10kb' }), async (req, res) => {
+  const { token = '', password = '', confirm = '' } = req.body || {};
+  if (password !== confirm) {
+    return res.status(400).send(resetPage({ token, message: 'Those passwords do not match.' }));
+  }
+  const parsed = resetPasswordSchema.safeParse({ token, password });
+  if (!parsed.success) {
+    return res.status(400).send(resetPage({ token, message: parsed.error.issues[0]?.message || 'Invalid password.' }));
+  }
+  try {
+    await authService.verifyAndConsumePasswordResetToken(parsed.data.token, parsed.data.password);
+    return res.send(resetPage({ ok: true, message: 'Password updated. You can now sign in to the FINAURA app.' }));
+  } catch (error) {
+    return res.status(error.status || 400).send(resetPage({ token, message: error.message }));
   }
 });
 
@@ -1307,7 +1358,8 @@ router.get('/envelopes', async (req, res, next) => {
   try {
     const userId = req.user.id;
     const envelopes = await Envelope.findOne({ userId }).lean();
-    res.json(envelopes);
+    // New users have no envelope document until their first deposit.
+    res.json(envelopes ?? { userId, rent: 0, food: 0, savings: 0, targetSavings: 0 });
   } catch (error) { next(error); }
 });
 
@@ -1340,11 +1392,12 @@ router.post('/envelopes/update', async (req, res, next) => {
       return res.status(400).json({ error: 'Transfer amount must be greater than 0.' });
     }
 
-    const envelopes = await Envelope.findOne({ userId }).lean();
-    const newSavings = (envelopes?.savings || 0) + customAmount;
-    
-    await Envelope.updateOne({ userId }, { $set: { savings: newSavings }});
-    res.json({ message: `Successfully vaulted ₹${customAmount.toFixed(2)} into savings.` });
+    const envelope = await Envelope.findOneAndUpdate(
+      { userId },
+      { $inc: { savings: customAmount }, $setOnInsert: { rent: 0, food: 0, targetSavings: 0 } },
+      { upsert: true, new: true, lean: true }
+    );
+    res.json({ message: `Successfully vaulted ₹${customAmount.toFixed(2)} into savings.`, savings: envelope.savings });
   } catch (error) { next(error); }
 });
 

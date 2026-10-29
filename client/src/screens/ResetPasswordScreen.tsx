@@ -4,7 +4,7 @@ import { useAuthStore } from '../store/useAuthStore';
 import { evaluatePasswordStrength } from '../utils/authValidation';
 import { Ionicons } from '@expo/vector-icons';
 import { AuthButton } from '../components/auth/AuthShell';
-import { AuthInput } from '../components/auth/AuthInput';
+import { Field } from '../components/ui/Field';
 import { AnimatedBar } from '../components/motion/AnimatedBar';
 import { createStyles, useTheme } from '../theme';
 
@@ -52,7 +52,7 @@ export function ResetPasswordScreen({ onBack, onComplete }: { onBack: () => void
         </View>
       ) : null}
 
-      <AuthInput
+      <Field
         label="Reset token"
         icon="key-outline"
         placeholder="Paste 64-character token"
@@ -63,7 +63,7 @@ export function ResetPasswordScreen({ onBack, onComplete }: { onBack: () => void
         error={fieldErrors.token}
       />
 
-      <AuthInput
+      <Field
         label="New password"
         icon="lock-closed-outline"
         style={styles.passwordInput}
@@ -100,7 +100,7 @@ export function ResetPasswordScreen({ onBack, onComplete }: { onBack: () => void
         </View>
       ) : null}
 
-      <AuthInput
+      <Field
         label="Confirm new password"
         icon="shield-checkmark-outline"
         style={styles.passwordInput}

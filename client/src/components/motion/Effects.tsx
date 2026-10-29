@@ -1,9 +1,10 @@
 import React, { useEffect, useMemo } from 'react';
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import Animated, {
-  Easing, SharedValue, useAnimatedStyle, useSharedValue, withDelay, withRepeat, withSequence, withSpring, withTiming,
+  Easing, SharedValue, useAnimatedStyle, useSharedValue, withDelay, withRepeat, withTiming,
 } from 'react-native-reanimated';
-import { celebrationPalette, colors } from '../../theme';
+import { art, celebrationPalette } from '../../theme';
+import { duration, timing } from '../../motion';
 
 const { width: W, height: H } = Dimensions.get('window');
 const rand = (min: number, max: number) => min + Math.random() * (max - min);
@@ -13,17 +14,17 @@ const rand = (min: number, max: number) => min + Math.random() * (max - min);
 function Burst({ x, y, delay, color }: { x: number; y: number; delay: number; color: string }) {
   const p = useSharedValue(0);
   const particles = useMemo(
-    () => Array.from({ length: 16 }, (_, i) => ({ angle: (i / 16) * Math.PI * 2, dist: rand(60, 110), size: rand(5, 9) })),
+    () => Array.from({ length: 16 }, (_, i) => ({ angle: (i / 16) * Math.PI * 2, dist: rand(50, 90), size: rand(5, 9) })),
     [],
   );
   useEffect(() => {
-    p.value = withDelay(delay, withTiming(1, { duration: 1100, easing: Easing.out(Easing.quad) }));
+    p.value = withDelay(delay, withTiming(1, { duration: 1300, easing: Easing.out(Easing.cubic) }));
   }, [delay, p]);
 
   return (
     <View style={{ position: 'absolute', left: x, top: y }}>
       {particles.map((pt, i) => (
-        <Spark key={i} p={p} {...pt} color={i % 3 === 0 ? colors.gold : color} />
+        <Spark key={i} p={p} {...pt} color={i % 3 === 0 ? art.gold : color} />
       ))}
     </View>
   );
@@ -36,8 +37,8 @@ function Spark({ p, angle, dist, size, color }: { p: SharedValue<number>; angle:
       opacity: t === 0 ? 0 : 1 - t * t,
       transform: [
         { translateX: Math.cos(angle) * dist * t },
-        { translateY: Math.sin(angle) * dist * t + 40 * t * t }, // gravity
-        { scale: 1.3 - t * 0.8 },
+        { translateY: Math.sin(angle) * dist * t + 24 * t * t }, // gravity
+        { scale: 1 - t * 0.4 },
       ],
     };
   });
@@ -65,10 +66,10 @@ export function Fireworks() {
 // ── Confetti: paper pieces tumbling down from the top ─────────────────────────
 
 function ConfettiPiece({ color }: { color: string }) {
-  const cfg = useMemo(() => ({ x: rand(0, W), drift: rand(-60, 60), delay: rand(0, 500), spin: rand(360, 900), w: rand(6, 10), h: rand(10, 16) }), []);
+  const cfg = useMemo(() => ({ x: rand(0, W), drift: rand(-40, 40), delay: rand(0, 500), spin: rand(120, 360), w: rand(6, 10), h: rand(10, 16) }), []);
   const t = useSharedValue(0);
   useEffect(() => {
-    t.value = withDelay(cfg.delay, withTiming(1, { duration: rand(1600, 2100), easing: Easing.in(Easing.quad) }));
+    t.value = withDelay(cfg.delay, withTiming(1, { duration: rand(2000, 2600), easing: Easing.inOut(Easing.quad) }));
   }, [cfg.delay, t]);
   const style = useAnimatedStyle(() => ({
     opacity: t.value > 0.9 ? (1 - t.value) * 10 : 1,
@@ -76,7 +77,7 @@ function ConfettiPiece({ color }: { color: string }) {
       { translateX: cfg.x + cfg.drift * t.value },
       { translateY: -30 + (H + 60) * t.value },
       { rotate: `${cfg.spin * t.value}deg` },
-      { rotateX: `${cfg.spin * 1.5 * t.value}deg` }, // flips the paper for depth
+      { rotateX: `${cfg.spin * t.value}deg` }, // flips the paper for depth
     ],
   }));
   return <Animated.View style={[{ position: 'absolute', width: cfg.w, height: cfg.h, borderRadius: 2, backgroundColor: color }, style]} />;
@@ -93,12 +94,12 @@ export function Confetti({ count = 40 }: { count?: number }) {
 // ── Coin rain: gold coins that spin on their Y axis as they fall ──────────────
 
 function Coin() {
-  const cfg = useMemo(() => ({ x: rand(10, W - 40), delay: rand(0, 700), size: rand(24, 34), duration: rand(1300, 1800) }), []);
+  const cfg = useMemo(() => ({ x: rand(10, W - 40), delay: rand(0, 700), size: rand(24, 34), duration: rand(1700, 2200) }), []);
   const t = useSharedValue(0);
   const spin = useSharedValue(0);
   useEffect(() => {
-    t.value = withDelay(cfg.delay, withTiming(1, { duration: cfg.duration, easing: Easing.in(Easing.quad) }));
-    spin.value = withRepeat(withTiming(1, { duration: 600, easing: Easing.linear }), -1);
+    t.value = withDelay(cfg.delay, withTiming(1, { duration: cfg.duration, easing: Easing.inOut(Easing.quad) }));
+    spin.value = withRepeat(withTiming(1, { duration: 1400, easing: Easing.linear }), -1);
   }, [cfg, t, spin]);
   const style = useAnimatedStyle(() => ({
     opacity: t.value === 0 ? 0 : 1,
@@ -111,7 +112,7 @@ function Coin() {
   }));
   return (
     <Animated.View style={[styles.coin, { width: cfg.size, height: cfg.size, borderRadius: cfg.size / 2 }, style]}>
-      <Text style={{ fontSize: cfg.size * 0.5, fontWeight: '900', color: colors.goldDark }}>₹</Text>
+      <Text style={{ fontSize: cfg.size * 0.5, fontWeight: '900', color: art.goldDark }}>₹</Text>
     </Animated.View>
   );
 }
@@ -124,17 +125,17 @@ export function CoinRain({ count = 22 }: { count?: number }) {
   );
 }
 
-// ── Trophy: pops in with rotating rays behind it ──────────────────────────────
+// ── Trophy: settles in with slowly rotating rays behind it ──────────────────────────────
 
 export function Trophy() {
-  const scale = useSharedValue(0);
+  const t = useSharedValue(0);
   const rot = useSharedValue(0);
   useEffect(() => {
-    scale.value = withSequence(withSpring(1.15, { damping: 8 }), withSpring(1));
-    rot.value = withRepeat(withTiming(1, { duration: 6000, easing: Easing.linear }), -1);
-  }, [scale, rot]);
-  const trophyStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }));
-  const raysStyle = useAnimatedStyle(() => ({ opacity: scale.value * 0.9, transform: [{ rotate: `${rot.value * 360}deg` }] }));
+    t.value = withTiming(1, timing(duration.slow + 120));
+    rot.value = withRepeat(withTiming(1, { duration: 14000, easing: Easing.linear }), -1);
+  }, [t, rot]);
+  const trophyStyle = useAnimatedStyle(() => ({ opacity: t.value, transform: [{ scale: 0.92 + 0.08 * t.value }] }));
+  const raysStyle = useAnimatedStyle(() => ({ opacity: t.value * 0.9, transform: [{ rotate: `${rot.value * 360}deg` }] }));
   return (
     <View style={styles.trophyWrap}>
       <Animated.View style={[styles.rays, raysStyle]}>
@@ -149,7 +150,7 @@ export function Trophy() {
 
 const styles = StyleSheet.create({
   coin: {
-    position: 'absolute', backgroundColor: colors.gold, borderWidth: 2, borderColor: colors.amber,
+    position: 'absolute', backgroundColor: art.gold, borderWidth: 2, borderColor: art.amber,
     alignItems: 'center', justifyContent: 'center',
   },
   trophyWrap: { width: 160, height: 160, alignItems: 'center', justifyContent: 'center' },

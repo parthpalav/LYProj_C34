@@ -1,20 +1,17 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-  KeyboardAvoidingView,
-  Platform,
-  ActivityIndicator
-} from 'react-native';
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { BlurView } from 'expo-blur';
+import Animated, { FadeInRight, FadeInLeft, FadeOutLeft, FadeOutRight, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuthStore } from '../store/useAuthStore';
 import { celebrate } from '../store/useCelebrationStore';
+import { createStyles, radius, typeScale, useTheme } from '../theme';
+import { duration, timing } from '../motion';
+import { AuroraBackground } from '../components/ui/AuroraBackground';
+import { Button } from '../components/ui/Button';
+import { Chip } from '../components/ui/Bits';
+import { Field } from '../components/ui/Field';
 
-import { createStyles, useTheme } from '../theme';
 const INCOME_TYPES = [
   { id: 'salaried', label: 'Salaried' },
   { id: 'freelancer', label: 'Freelance' },
@@ -23,182 +20,134 @@ const INCOME_TYPES = [
   { id: 'student', label: 'Student' },
 ];
 
+const STEPS = [
+  { title: 'About you', subtitle: 'So FINAURA can plan around your stage of life.' },
+  { title: 'Your income', subtitle: 'A monthly baseline. You can log actual receipts later.' },
+  { title: 'Where you are', subtitle: 'The money you can reach today, across bank accounts.' },
+  { title: "Where you're headed", subtitle: 'Your retirement target shapes forecasts and your FMI score.' },
+];
+
+const num = (v: string) => (v.trim() === '' ? NaN : Number(v));
+
+function Dot({ active, done }: { active: boolean; done: boolean }) {
+  const styles = useStyles();
+  const t = timing(duration.base); // built on the JS thread; motion helpers aren't worklets
+  const style = useAnimatedStyle(() => ({
+    width: withTiming(active ? 22 : 8, t),
+    opacity: withTiming(active || done ? 1 : 0.4, t),
+  }));
+  return <Animated.View style={[styles.dot, style]} />;
+}
+
 export function OnboardingScreen(): React.ReactElement {
-  const { c } = useTheme();
+  const { isDark } = useTheme();
   const styles = useStyles();
   const insets = useSafeAreaInsets();
-  const { user, completeOnboarding, loading, authError } = useAuthStore();
-  const [submitting, setSubmitting] = useState(false);
+  const user = useAuthStore((s) => s.user);
+  const completeOnboarding = useAuthStore((s) => s.completeOnboarding);
+  const authError = useAuthStore((s) => s.authError);
+  const logout = useAuthStore((s) => s.logout);
+
+  const [step, setStep] = useState(0);
+  const [forward, setForward] = useState(true);
+  const [error, setError] = useState('');
 
   const [age, setAge] = useState(user?.age ? String(user.age) : '');
+  const [incomeType, setIncomeType] = useState(user?.incomeType || 'salaried');
   const [income, setIncome] = useState(user?.income || user?.monthlyIncome ? String(user.income || user.monthlyIncome) : '');
+  const [currentBalance, setCurrentBalance] = useState(user?.currentBalance ? String(user.currentBalance) : '');
   const [retirementAge, setRetirementAge] = useState(user?.retirementAge ? String(user.retirementAge) : '60');
   const [retirementCorpusGoal, setRetirementCorpusGoal] = useState(user?.retirementCorpusGoal ? String(user.retirementCorpusGoal) : '');
-  const [currentBalance, setCurrentBalance] = useState(user?.currentBalance ? String(user.currentBalance) : '');
-  const [incomeType, setIncomeType] = useState(user?.incomeType || 'salaried');
 
-  const [focusedField, setFocusedField] = useState<string | null>(null);
-
-  const submit = async () => {
-    if (submitting) return;
-    setSubmitting(true);
-    try {
-      const ok = await completeOnboarding({
-        age: Number(age) || 25,
-        income: Number(income) || 0,
-        monthlyIncome: Number(income) || 0,
-        incomeType,
-        retirementAge: Number(retirementAge) || 60,
-        retirementCorpusGoal: Number(retirementCorpusGoal) || 0,
-        currentBalance: Number(currentBalance) || 0
-      });
-      if (ok) celebrate({ kind: 'confetti', title: "You're all set!", subtitle: 'Your financial pulse is ready. Explore your dashboard.' });
-    } catch (error) {
-      console.error('Error submitting onboarding:', error);
-    } finally {
-      setSubmitting(false);
+  /** The first problem on the current step, in plain words; empty when the step is complete. */
+  const problem = (): string => {
+    if (step === 0) {
+      const a = num(age);
+      if (!Number.isInteger(a) || a < 16 || a > 100) return 'Enter your age in years (16 to 100).';
     }
+    if (step === 1 && (!(num(income) >= 0))) return 'Enter your usual monthly income. Use 0 if you have none right now.';
+    if (step === 2 && (!(num(currentBalance) >= 0))) return 'Enter the money you can reach today. Use 0 if none.';
+    if (step === 3) {
+      const r = num(retirementAge);
+      if (!Number.isInteger(r) || r <= num(age) || r > 100) return `Retirement age must be after your current age (${age}) and at most 100.`;
+      if (retirementCorpusGoal.trim() && !(num(retirementCorpusGoal) >= 0)) return 'Corpus goal must be zero or more, or left blank.';
+    }
+    return '';
   };
 
+  const go = (next: number) => {
+    setError('');
+    setForward(next > step);
+    setStep(next);
+  };
+
+  const submit = async () => {
+    const ok = await completeOnboarding({
+      age: num(age),
+      income: num(income),
+      monthlyIncome: num(income),
+      incomeType,
+      retirementAge: num(retirementAge),
+      retirementCorpusGoal: num(retirementCorpusGoal) || 0,
+      currentBalance: num(currentBalance),
+    });
+    if (ok) celebrate({ kind: 'confetti', title: "You're all set!", subtitle: 'Your financial pulse is ready. Explore your dashboard.' });
+  };
+
+  const next = async () => {
+    const p = problem();
+    if (p) return setError(p);
+    if (step < STEPS.length - 1) return go(step + 1);
+    await submit();
+  };
+
+  const fields = [
+    <>
+      <Field label="Age" icon="person-outline" value={age} onChangeText={(v) => { setAge(v.replace(/[^0-9]/g, '')); setError(''); }} keyboardType="number-pad" placeholder="e.g. 27" autoFocus />
+      <Text style={styles.label}>How do you earn?</Text>
+      <View style={styles.chips}>
+        {INCOME_TYPES.map((t) => <Chip key={t.id} label={t.label} selected={incomeType === t.id} onPress={() => setIncomeType(t.id)} />)}
+      </View>
+    </>,
+    <Field label="Monthly income (₹)" icon="cash-outline" value={income} onChangeText={(v) => { setIncome(v.replace(/[^0-9.]/g, '')); setError(''); }} keyboardType="numeric" placeholder="e.g. 85000" hint="Take-home, after tax." autoFocus />,
+    <Field label="Current liquid balance (₹)" icon="wallet-outline" value={currentBalance} onChangeText={(v) => { setCurrentBalance(v.replace(/[^0-9.]/g, '')); setError(''); }} keyboardType="numeric" placeholder="e.g. 120000" hint="Savings and current accounts. Investments come later, under Assets." autoFocus />,
+    <>
+      <Field label="Target retirement age" icon="hourglass-outline" value={retirementAge} onChangeText={(v) => { setRetirementAge(v.replace(/[^0-9]/g, '')); setError(''); }} keyboardType="number-pad" />
+      <Field label="Retirement corpus goal (₹)" icon="trophy-outline" value={retirementCorpusGoal} onChangeText={(v) => { setRetirementCorpusGoal(v.replace(/[^0-9.]/g, '')); setError(''); }} keyboardType="numeric" placeholder="Optional" hint="Leave blank and FINAURA will estimate one from your spending." />
+    </>,
+  ];
+
   return (
-    <View style={[styles.rootContainer, { paddingTop: insets.top, paddingBottom: insets.bottom }]}>
-      <KeyboardAvoidingView
-        style={styles.keyboardView}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-      >
-        <ScrollView
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled"
-        >
-          {/* Header */}
-          <View style={styles.headerContainer}>
-            <Text style={styles.badgeText}>FINAURA ONBOARDING</Text>
-            <Text style={styles.title}>Set Up Your Financial Profile</Text>
-            <Text style={styles.subtitle}>
-              Personalize your financial wellness index, goal tracking, and retirement forecast.
-            </Text>
+    <View style={styles.root}>
+      <AuroraBackground />
+      <KeyboardAvoidingView style={styles.flex} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+        <ScrollView contentContainerStyle={[styles.scroll, { paddingTop: insets.top + 24, paddingBottom: insets.bottom + 24 }]} keyboardShouldPersistTaps="handled">
+          <View style={styles.topRow}>
+            <Text style={styles.kicker}>Step {step + 1} of {STEPS.length}</Text>
+            <View style={styles.dots}>
+              {STEPS.map((_, i) => <Dot key={i} active={i === step} done={i < step} />)}
+            </View>
           </View>
 
-          {authError ? (
-            <View style={styles.errorBanner}>
-              <Text style={styles.errorBannerText}>{authError}</Text>
-            </View>
-          ) : null}
+          <Animated.View key={step} entering={(forward ? FadeInRight : FadeInLeft).duration(duration.slow)} exiting={(forward ? FadeOutLeft : FadeOutRight).duration(duration.fast)}>
+            <Text style={styles.title}>{STEPS[step].title}</Text>
+            <Text style={styles.subtitle}>{STEPS[step].subtitle}</Text>
 
-          {/* Section 1: Basic Financial Details */}
-          <View style={styles.card}>
-            <Text style={styles.sectionHeader}>Personal & Income Details</Text>
-
-            <View style={styles.row}>
-              <View style={[styles.inputGroup, { flex: 1, marginRight: 8 }]}>
-                <Text style={styles.label}>Current Age</Text>
-                <TextInput
-                  style={[styles.input, focusedField === 'age' && styles.inputFocused]}
-                  placeholder="e.g. 26"
-                  placeholderTextColor={c.textSubtle}
-                  keyboardType="number-pad"
-                  value={age}
-                  onChangeText={setAge}
-                  onFocus={() => setFocusedField('age')}
-                  onBlur={() => setFocusedField(null)}
-                />
+            <BlurView intensity={isDark ? 40 : 70} tint={isDark ? 'dark' : 'light'} style={styles.card}>
+              {fields[step]}
+              {!!(error || authError) && <Text style={styles.error} accessibilityRole="alert">{error || authError}</Text>}
+              <View style={styles.actions}>
+                {step > 0 && <Button label="Back" variant="secondary" onPress={() => go(step - 1)} style={styles.back} />}
+                <Button label={step === STEPS.length - 1 ? 'Finish setup' : 'Continue'} onPress={next} style={styles.flex} />
               </View>
+            </BlurView>
+          </Animated.View>
 
-              <View style={[styles.inputGroup, { flex: 1, marginLeft: 8 }]}>
-                <Text style={styles.label}>Target Retirement Age</Text>
-                <TextInput
-                  style={[styles.input, focusedField === 'retirementAge' && styles.inputFocused]}
-                  placeholder="e.g. 60"
-                  placeholderTextColor={c.textSubtle}
-                  keyboardType="number-pad"
-                  value={retirementAge}
-                  onChangeText={setRetirementAge}
-                  onFocus={() => setFocusedField('retirementAge')}
-                  onBlur={() => setFocusedField(null)}
-                />
-              </View>
-            </View>
-
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Monthly Income (₹)</Text>
-              <TextInput
-                style={[styles.input, focusedField === 'income' && styles.inputFocused]}
-                placeholder="e.g. 85000"
-                placeholderTextColor={c.textSubtle}
-                keyboardType="number-pad"
-                value={income}
-                onChangeText={setIncome}
-                onFocus={() => setFocusedField('income')}
-                onBlur={() => setFocusedField(null)}
-              />
-            </View>
-
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Income Rhythm / Source</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chipRow}>
-                {INCOME_TYPES.map((type) => (
-                  <TouchableOpacity
-                    key={type.id}
-                    style={[styles.chip, incomeType === type.id && styles.chipActive]}
-                    onPress={() => setIncomeType(type.id)}
-                    activeOpacity={0.8}
-                  >
-                    <Text style={[styles.chipText, incomeType === type.id && styles.chipTextActive]}>
-                      {type.label}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-            </View>
-          </View>
-
-          {/* Section 2: Wealth & Corpus Goals */}
-          <View style={styles.card}>
-            <Text style={styles.sectionHeader}>Wealth & Corpus Targets</Text>
-
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Current Net Savings / Liquid Balance (₹)</Text>
-              <TextInput
-                style={[styles.input, focusedField === 'currentBalance' && styles.inputFocused]}
-                placeholder="e.g. 150000"
-                placeholderTextColor={c.textSubtle}
-                keyboardType="number-pad"
-                value={currentBalance}
-                onChangeText={setCurrentBalance}
-                onFocus={() => setFocusedField('currentBalance')}
-                onBlur={() => setFocusedField(null)}
-              />
-            </View>
-
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Retirement Corpus Goal (₹)</Text>
-              <TextInput
-                style={[styles.input, focusedField === 'corpus' && styles.inputFocused]}
-                placeholder="e.g. 20000000 (2 Crore)"
-                placeholderTextColor={c.textSubtle}
-                keyboardType="number-pad"
-                value={retirementCorpusGoal}
-                onChangeText={setRetirementCorpusGoal}
-                onFocus={() => setFocusedField('corpus')}
-                onBlur={() => setFocusedField(null)}
-              />
-            </View>
-          </View>
-
-          {/* Action Button */}
-          <TouchableOpacity
-            style={styles.submitBtn}
-            onPress={submit}
-            disabled={submitting || loading}
-            activeOpacity={0.8}
-          >
-            {submitting || loading ? (
-              <ActivityIndicator color="#FFFFFF" />
-            ) : (
-              <Text style={styles.submitBtnText}>Complete Setup & Enter FINAURA →</Text>
-            )}
-          </TouchableOpacity>
+          {step === 0 && (
+            <Pressable onPress={() => logout()} style={styles.signOut} accessibilityRole="button">
+              <Text style={styles.signOutText}>Not {user?.name?.split(' ')[0] ?? 'you'}? Sign out</Text>
+            </Pressable>
+          )}
         </ScrollView>
       </KeyboardAvoidingView>
     </View>
@@ -206,143 +155,28 @@ export function OnboardingScreen(): React.ReactElement {
 }
 
 const useStyles = createStyles((c) => ({
-  rootContainer: {
-    flex: 1,
-    backgroundColor: c.surfaceAlt,
-  },
-  keyboardView: {
-    flex: 1,
-  },
-  scrollContent: {
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    paddingBottom: 40,
-  },
-  headerContainer: {
-    marginBottom: 20,
-    marginTop: 8,
-  },
-  badgeText: {
-    color: c.primary,
-    fontWeight: '800',
-    fontSize: 12,
-    letterSpacing: 1,
-    marginBottom: 6,
-  },
-  title: {
-    fontSize: 26,
-    fontWeight: '900',
-    color: c.text,
-    marginBottom: 6,
-    letterSpacing: -0.5,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: c.textMuted,
-    lineHeight: 20,
-  },
-  errorBanner: {
-    backgroundColor: c.dangerSoft,
-    padding: 12,
-    borderRadius: 12,
-    marginBottom: 16,
-  },
-  errorBannerText: {
-    color: c.dangerStrong,
-    fontSize: 13,
-    fontWeight: '600',
-  },
+  root: { flex: 1, backgroundColor: c.aurora[0] },
+  flex: { flex: 1 },
+  scroll: { flexGrow: 1, justifyContent: 'center', paddingHorizontal: 20 },
+  topRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 },
+  kicker: { ...typeScale.overline, color: c.onAuroraMuted },
+  dots: { flexDirection: 'row', gap: 6 },
+  dot: { height: 8, borderRadius: 4, backgroundColor: c.onAurora },
+  title: { ...typeScale.display, color: c.onAurora },
+  subtitle: { ...typeScale.body, color: c.onAuroraMuted, marginTop: 8, marginBottom: 24 },
   card: {
-    backgroundColor: c.surface,
-    borderRadius: 20,
+    borderRadius: radius.xl,
+    overflow: 'hidden',
     padding: 20,
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.04,
-    shadowRadius: 8,
-    elevation: 2,
-    borderWidth: 1,
-    borderColor: c.border,
+    backgroundColor: c.glass,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: c.glassBorder,
   },
-  sectionHeader: {
-    fontSize: 16,
-    fontWeight: '800',
-    color: c.text,
-    marginBottom: 4,
-  },
-  sectionSub: {
-    fontSize: 12,
-    color: c.textMuted,
-    marginBottom: 16,
-  },
-  row: {
-    flexDirection: 'row',
-  },
-  inputGroup: {
-    marginBottom: 14,
-  },
-  label: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: c.textMuted,
-    marginBottom: 6,
-  },
-  input: {
-    height: 48,
-    borderWidth: 1,
-    borderColor: c.border,
-    borderRadius: 12,
-    paddingHorizontal: 14,
-    fontSize: 14,
-    color: c.text,
-    backgroundColor: c.bg,
-  },
-  inputFocused: {
-    borderColor: c.primary,
-    backgroundColor: c.surface,
-  },
-  chipRow: {
-    flexDirection: 'row',
-    gap: 8,
-    paddingVertical: 4,
-  },
-  chip: {
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 20,
-    backgroundColor: c.surfaceAlt,
-    borderWidth: 1,
-    borderColor: c.border,
-  },
-  chipActive: {
-    backgroundColor: c.primarySoft,
-    borderColor: c.primary,
-  },
-  chipText: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: c.textMuted,
-  },
-  chipTextActive: {
-    color: c.primary,
-  },
-  submitBtn: {
-    backgroundColor: c.primary,
-    height: 52,
-    borderRadius: 14,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 8,
-    shadowColor: '#2563EB',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 10,
-    elevation: 4,
-  },
-  submitBtnText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '800',
-  },
+  label: { fontSize: 13, fontWeight: '600', color: c.textMuted, marginBottom: 8 },
+  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 8 },
+  error: { fontSize: 13, color: c.danger, marginTop: 4, marginBottom: 4 },
+  actions: { flexDirection: 'row', gap: 10, marginTop: 12 },
+  back: { width: 96 },
+  signOut: { alignSelf: 'center', marginTop: 20, padding: 8 },
+  signOutText: { ...typeScale.label, color: c.onAuroraMuted },
 }));

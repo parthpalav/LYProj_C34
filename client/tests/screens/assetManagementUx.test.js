@@ -177,7 +177,7 @@ test('7. AssetsScreen registered in AppNavigator and reachable from Profile & Ou
   assert.ok(appNavCode.includes('name="Assets"'), 'Assets registered as Stack screen in AppNavigator');
 
   const profileCode = readScreen('ProfileScreen.tsx');
-  assert.ok(profileCode.includes("navigate('Assets')"), 'Profile links to Assets screen');
+  assert.ok(profileCode.includes("route: 'Assets'"), 'Profile links to Assets screen');
 
   const outlookCode = readScreen('FinancialOutlookScreen.tsx');
   assert.ok(outlookCode.includes("navigate('Assets')"), 'Financial Outlook links to Assets screen');
@@ -222,7 +222,7 @@ test('12. Decimal rate entry supported and converted to decimal fraction on save
   const code = readScreen('AssetsScreen.tsx');
   assert.ok(code.includes('annualReturnRate.trim()'), 'Trims rate input');
   assert.ok(code.includes('parseFloat(annualReturnRate.trim())'), 'Parses float decimal rate');
-  assert.ok(code.includes('rateNum > 1 ? rateNum / 100 : rateNum'), 'Converts user % to decimal fraction');
+  assert.ok(code.includes('parsedRate = rateNum / 100;'), 'Converts user % to decimal fraction (1 means 1%)');
   assert.ok(code.includes('annualReturnRate: parsedRate'), 'Passes annualReturnRate in save payload');
 });
 

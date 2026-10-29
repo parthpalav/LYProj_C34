@@ -2,10 +2,11 @@ import React, { useEffect } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
-import Animated, { FadeIn, FadeInUp, FadeOut, FadeOutUp, ZoomIn, useReducedMotion } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeOut, FadeOutUp, useReducedMotion } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Celebration, useCelebrationStore } from '../../store/useCelebrationStore';
 import { createStyles, radius, shadow, useTheme } from '../../theme';
+import { duration, popIn, rise } from '../../motion';
 import { AnimatedNumber } from './AnimatedNumber';
 import { CoinRain, Confetti, Fireworks, Trophy } from './Effects';
 import { PiggyBank } from './PiggyBank';
@@ -54,7 +55,7 @@ function Toast({ c, onDismiss }: { c: Celebration; onDismiss: () => void }) {
   const tint = { success: t.success, warning: t.warning, error: t.danger, info: t.primary }[tone];
   return (
     <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
-      <Animated.View entering={FadeInUp.springify().damping(16)} exiting={FadeOutUp} style={[styles.toastWrap, { top: insets.top + 8 }]}>
+      <Animated.View entering={rise(0, -10)} exiting={FadeOutUp.duration(duration.fast)} style={[styles.toastWrap, { top: insets.top + 8 }]}>
         <Pressable onPress={onDismiss} style={styles.toast} accessibilityRole="alert" accessibilityLabel={`${c.title}. ${c.subtitle ?? ''}`}>
           <View style={[styles.toastIcon, { backgroundColor: tint }]}>
             <Ionicons name={TOAST_ICON[tone]} size={17} color="#FFFFFF" />
@@ -91,7 +92,7 @@ function BigCelebration({ c, onDismiss }: { c: Celebration; onDismiss: () => voi
         {c.kind === 'coins' && <CoinRain />}
 
         <View style={styles.center} pointerEvents="none">
-          <Animated.View entering={ZoomIn.springify().damping(12)} style={styles.card}>
+          <Animated.View entering={popIn(60)} style={styles.card}>
             <Visual c={c} />
             <Text style={styles.title}>{c.title}</Text>
             {!!c.subtitle && <Text style={styles.subtitle}>{c.subtitle}</Text>}

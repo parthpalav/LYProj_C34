@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, Switch, Text, TextInput, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import Animated, { FadeIn, FadeOut, ZoomIn } from 'react-native-reanimated';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import { popIn } from '../motion';
 import { addTransaction, classifyExpense, ClassifyResult, getLiabilities, getPacing } from '../services/api';
 import { celebrate, toast } from '../store/useCelebrationStore';
 import { formatCurrency } from '../utils/format';
@@ -335,7 +336,7 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
 
         {/* AI suggestion: the chosen category plus tappable alternatives */}
         {!aiLoading && aiResult && aiResult.confidence > 0 && (
-          <Animated.View key={aiResult.category} entering={ZoomIn.springify().damping(18)} exiting={FadeOut} style={[styles.aiCard, aiUnsure && styles.aiCardUnsure]}>
+          <Animated.View key={aiResult.category} entering={popIn()} exiting={FadeOut} style={[styles.aiCard, aiUnsure && styles.aiCardUnsure]}>
             <View style={styles.aiHeader}>
               <Ionicons name="sparkles" size={14} color={aiUnsure ? c.warningStrong : c.primary} />
               <Text style={[styles.aiLabel, aiUnsure && { color: c.warningStrong }]}>

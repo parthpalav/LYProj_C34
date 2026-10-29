@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Dimensions, NativeScrollEvent, NativeSyntheticEvent, Pressable, ScrollView, Share, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import Animated, { FadeIn, FadeInDown, ZoomIn } from 'react-native-reanimated';
+import Animated, { FadeIn } from 'react-native-reanimated';
 import * as Haptics from 'expo-haptics';
 import { useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -9,6 +9,7 @@ import { getMonthlyReport } from '../services/api';
 import { MonthlyReport } from '../types';
 import { createStyles, radius, tabular, typeScale } from '../theme';
 import { formatCurrency } from '../utils/format';
+import { popIn, rise } from '../motion';
 import { AnimatedNumber } from '../components/motion/AnimatedNumber';
 import { AnimatedBar } from '../components/motion/AnimatedBar';
 import { AuroraBackground } from '../components/ui/AuroraBackground';
@@ -18,7 +19,7 @@ import { Chip } from '../components/ui/Bits';
 const { width: W } = Dimensions.get('window');
 const PAGES = 6;
 
-const enter = (i: number) => FadeInDown.delay(120 + i * 110).duration(520);
+const enter = (i: number) => rise(120 + i * 110, 10);
 
 /** "Wrapped"-style story of one month: money in and out, where it went, mix, FMI score, surprises. */
 export function RecapScreen() {
@@ -98,7 +99,7 @@ export function RecapScreen() {
         <Text style={s.statLabel}>Went out</Text>
         <AnimatedNumber value={report.totalExpenses} style={s.big} />
       </Animated.View>
-      <Animated.View entering={ZoomIn.delay(520).springify().damping(14)} style={s.badge}>
+      <Animated.View entering={popIn(520)} style={s.badge}>
         <Text style={s.badgeText}>{report.netCashFlow >= 0 ? `You kept ${report.savingsRate}%` : `Overspent by ${formatCurrency(Math.abs(report.netCashFlow))}`}</Text>
       </Animated.View>
     </View>,
@@ -138,7 +139,7 @@ export function RecapScreen() {
       <Animated.Text entering={enter(0)} style={s.kicker}>Financial Maturity Index</Animated.Text>
       {report.fmi.hasSnapshots && report.fmi.last !== null ? (
         <>
-          <Animated.View entering={ZoomIn.delay(150).springify().damping(14)}>
+          <Animated.View entering={popIn(150)}>
             <AnimatedNumber value={Math.round(report.fmi.last)} format={(n) => String(n)} style={s.giant} />
           </Animated.View>
           <Animated.Text entering={enter(2)} style={s.body}>

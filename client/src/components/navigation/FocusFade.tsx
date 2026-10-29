@@ -16,7 +16,7 @@ export function FocusFade({ children }: { children: React.ReactNode }) {
   const style = useAnimatedStyle(() => ({
     flex: 1,
     opacity: 0.35 + 0.65 * t.value,
-    transform: [{ translateY: (1 - t.value) * 10 }],
+    transform: [{ translateY: (1 - t.value) * 6 }],
   }));
   return <Animated.View style={style}>{children}</Animated.View>;
 }

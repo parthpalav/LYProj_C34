@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Animated, {
-  Easing, useAnimatedStyle, useReducedMotion, useSharedValue, withDelay, withSequence, withSpring, withTiming,
+  Easing, useAnimatedStyle, useReducedMotion, useSharedValue, withDelay, withSequence, withTiming,
 } from 'react-native-reanimated';
 import { art } from '../../theme';
 
@@ -36,7 +36,7 @@ export function PiggyBank({ progress, from, size = 160, dropCoin = false }: Prop
       coinY.value = withTiming(0, { duration: 500, easing: Easing.in(Easing.quad) });
       coinOpacity.value = withDelay(480, withTiming(0, { duration: 80 }));
       wobble.value = withDelay(500, withSequence(
-        withTiming(-6, { duration: 70 }), withTiming(5, { duration: 90 }), withSpring(0, { damping: 6 }),
+        withTiming(-2, { duration: 90 }), withTiming(1.5, { duration: 120 }), withTiming(0, { duration: 160, easing: Easing.out(Easing.quad) }),
       ));
     }
     fill.value = withDelay(coinDelay, withTiming(target, { duration: 1000, easing: Easing.out(Easing.cubic) }));

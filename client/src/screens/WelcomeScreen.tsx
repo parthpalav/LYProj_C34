@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Image, StyleSheet, Text, View } from 'react-native';
-import Animated, { FadeIn, FadeInDown, ZoomIn } from 'react-native-reanimated';
+import Animated, { FadeIn } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuthStore } from '../store/useAuthStore';
 import { createStyles, typeScale } from '../theme';
-import { easing } from '../motion';
+import { popIn, rise } from '../motion';
 import { AuroraBackground } from '../components/ui/AuroraBackground';
 import { Button } from '../components/ui/Button';
 
@@ -48,17 +48,17 @@ export function WelcomeScreen({ onContinue }: WelcomeScreenProps): React.ReactEl
     <View style={[styles.container, { paddingTop: insets.top + 20, paddingBottom: Math.max(20, insets.bottom + 12) }]}>
       <AuroraBackground />
       <View style={styles.contentWrap}>
-        <Animated.View entering={ZoomIn.duration(520).easing(easing.standard)} style={styles.logoWrap}>
+        <Animated.View entering={popIn()} style={styles.logoWrap}>
           <Image source={finauraLogo} style={styles.logoImage} resizeMode="cover" />
         </Animated.View>
         <Animated.Text entering={FadeIn.delay(150).duration(400)} style={styles.badgeText}>FINAURA</Animated.Text>
-        <Animated.Text entering={FadeInDown.delay(220).duration(480).easing(easing.standard)} style={styles.greetingTitle} numberOfLines={2} adjustsFontSizeToFit>
+        <Animated.Text entering={rise(220)} style={styles.greetingTitle} numberOfLines={2} adjustsFontSizeToFit>
           {greetingText}
         </Animated.Text>
-        <Animated.Text entering={FadeInDown.delay(320).duration(480).easing(easing.standard)} style={styles.subtitle}>Good to see you again.</Animated.Text>
+        <Animated.Text entering={rise(320)} style={styles.subtitle}>Good to see you again.</Animated.Text>
       </View>
 
-      <Animated.View entering={FadeInDown.delay(450).duration(480)} style={styles.bottomWrap}>
+      <Animated.View entering={rise(450)} style={styles.bottomWrap}>
         <Button label="Continue" onPress={handleContinue} loading={submitting} style={styles.continueButton} accessibilityLabel="Continue to Home" />
       </Animated.View>
     </View>

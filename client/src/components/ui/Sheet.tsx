@@ -5,7 +5,7 @@ import { GestureDetector, usePanGesture } from 'react-native-gesture-handler';
 import { scheduleOnRN } from 'react-native-worklets';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { createStyles, radius, shadow, typeScale } from '../../theme';
-import { duration } from '../../motion';
+import { duration, spring } from '../../motion';
 
 type Props = {
   visible: boolean;
@@ -63,7 +63,7 @@ export function Sheet({ visible, onClose, title, children, onClosed }: Props) {
     onDeactivate: (e) => {
       'worklet';
       if (e.translationY > height.value * 0.3 || e.velocityY > 900) scheduleOnRN(onClose);
-      else y.value = withSpring(0, { damping: 30, stiffness: 300 });
+      else y.value = withSpring(0, spring);
     },
   });
 

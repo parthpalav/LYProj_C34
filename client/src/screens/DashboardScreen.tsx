@@ -704,23 +704,24 @@ export function DashboardScreen(): React.ReactElement {
       >
         {/* Greeting */}
         <View style={styles.header}>
-          <View style={styles.flexShrink}>
-            <Text style={styles.date} numberOfLines={1}>{timeGreeting} · {todayFormatted}</Text>
-            <Text style={styles.greeting} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>{firstName}</Text>
+          {/* Full width, so the date never competes with the buttons for room */}
+          <Text style={styles.date} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.85}>{timeGreeting} · {todayFormatted}</Text>
+          <View style={styles.headerRow}>
+            <Text style={[styles.greeting, styles.flexShrink]} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.7}>{firstName}</Text>
+            <ThemeToggle style={styles.bell} size={20} />
+            <Pressable
+              onPress={() => navigation.navigate('Alerts')}
+              style={styles.bell}
+              accessibilityRole="button"
+              accessibilityLabel={attention ? `Notifications, ${attention} new` : 'Notifications'}
+            >
+              <Ionicons name="notifications-outline" size={22} color={c.text} />
+              {attention > 0 && <View style={styles.bellBadge}><Text style={styles.bellBadgeText}>{attention > 9 ? '9+' : attention}</Text></View>}
+            </Pressable>
+            <Pressable onPress={() => navigation.navigate('Profile')} style={styles.avatar} accessibilityRole="button" accessibilityLabel="View User Profile">
+              {avatar ? <Image source={{ uri: avatar }} style={styles.avatarImg} /> : <Ionicons name="person" size={20} color={c.primary} />}
+            </Pressable>
           </View>
-          <ThemeToggle style={styles.bell} size={20} />
-          <Pressable
-            onPress={() => navigation.navigate('Alerts')}
-            style={styles.bell}
-            accessibilityRole="button"
-            accessibilityLabel={attention ? `Notifications, ${attention} new` : 'Notifications'}
-          >
-            <Ionicons name="notifications-outline" size={22} color={c.text} />
-            {attention > 0 && <View style={styles.bellBadge}><Text style={styles.bellBadgeText}>{attention > 9 ? '9+' : attention}</Text></View>}
-          </Pressable>
-          <Pressable onPress={() => navigation.navigate('Profile')} style={styles.avatar} accessibilityRole="button" accessibilityLabel="View User Profile">
-            {avatar ? <Image source={{ uri: avatar }} style={styles.avatarImg} /> : <Ionicons name="person" size={20} color={c.primary} />}
-          </Pressable>
         </View>
         {content()}
       </Animated.ScrollView>
@@ -753,8 +754,9 @@ const useStyles = createStyles((c) => ({
   gap: { marginBottom: 12 },
   flexShrink: { flex: 1, flexShrink: 1 },
   muted: { ...typeScale.body, color: c.textMuted, marginTop: 8 },
-  header: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 20, paddingTop: 8, paddingBottom: 18 },
-  greeting: { ...typeScale.display, fontSize: 30, color: c.text, marginTop: 2 },
+  header: { paddingHorizontal: 20, paddingTop: 8, paddingBottom: 18 },
+  headerRow: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 2 },
+  greeting: { ...typeScale.display, fontSize: 30, color: c.text },
   date: { ...typeScale.label, color: c.textMuted },
   bell: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center', backgroundColor: c.surface, borderWidth: 1, borderColor: c.border },
   bellBadge: { position: 'absolute', top: 6, right: 6, minWidth: 16, height: 16, borderRadius: 8, paddingHorizontal: 3, alignItems: 'center', justifyContent: 'center', backgroundColor: c.danger },

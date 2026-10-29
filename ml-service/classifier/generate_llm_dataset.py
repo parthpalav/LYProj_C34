@@ -225,7 +225,7 @@ def build_lexicon(model: str, n: int, extra_foci: dict) -> pd.DataFrame:
     return lex.reset_index(drop=True)
 
 
-def verify_lexicon(lex: pd.DataFrame, verifiers: list[str]) -> pd.DataFrame:
+def verify_lexicon(lex: pd.DataFrame, verifiers: list[str], keep_unverified: bool = False) -> pd.DataFrame:
     guide = "\n".join(f"- {c}: {g}" for c, g in CATEGORY_GUIDE.items())
     votes: dict[int, list[dict]] = {i: [{"category": r["category"], "type": r["type"]}] for i, r in lex.iterrows()}
     failed = 0
@@ -273,11 +273,14 @@ def verify_lexicon(lex: pd.DataFrame, verifiers: list[str]) -> pd.DataFrame:
     if failed:  # a missing vote would silently drop its items
         raise SystemExit(f"{failed} verification batches failed; re-run the same command to retry only those")
     unlabeled = sum(len(v) == 1 for v in votes.values())
-    if unlabeled and any(m.startswith("claude") for m in verifiers):
+    if unlabeled and any(m.startswith("claude") for m in verifiers) and not keep_unverified:
         raise SystemExit(f"{unlabeled} items have no verifier label; run python3 -m classifier.claude_labels export, "
                          "label the batches, merge, then re-run the same command")
     keep = []
     for i, r in lex.iterrows():
+        if keep_unverified and len(votes[i]) == 1:
+            keep.append({**r.to_dict(), "verified": False})  # generator label only, no verifier vote
+            continue
         cats = pd.Series([v.get("category") for v in votes[i]]).value_counts()
         category = cats.index[0]
         if cats.iloc[0] * 2 <= len(verifiers) + 1 or category not in ALLOWED_TYPES:
@@ -405,6 +408,7 @@ def main():
     ap.add_argument("--model", default="qwen2.5:14b", help="generator")
     ap.add_argument("--verifiers", default="qwen2.5:14b,llama3.1:8b", help="comma-separated blind re-labellers")
     ap.add_argument("--n", type=int, default=60, help="items per LLM batch")
+    ap.add_argument("--keep-unverified", action="store_true", help="keep items no verifier labelled, under the generator's label")
     args = ap.parse_args()
     random.seed(42)
     np.random.seed(42)
@@ -414,7 +418,7 @@ def main():
     foci_path = os.path.join(DATA_DIR, f"{args.tag}_foci.json")
     lex = build_lexicon(args.model, args.n, json.load(open(foci_path)) if os.path.exists(foci_path) else {})
     lex.to_csv(out("lexicon_raw"), index=False)
-    lex = verify_lexicon(lex, [m for m in args.verifiers.split(",") if m])
+    lex = verify_lexicon(lex, [m for m in args.verifiers.split(",") if m], args.keep_unverified)
     lex.to_csv(out("lexicon"), index=False)
     print(f"[OK] Lexicon: {len(lex)} items\n{lex.groupby(['category', 'type']).size().to_string()}")
 

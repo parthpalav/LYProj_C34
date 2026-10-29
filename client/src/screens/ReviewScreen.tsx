@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { ScrollView, Text, View } from 'react-native';
+import { RefreshControl, ScrollView, Text, View } from 'react-native';
 import Animated, { FadeInRight, FadeOutLeft } from 'react-native-reanimated';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -7,19 +7,18 @@ import { getTransactions, updateTransaction } from '../services/api';
 import { useStore } from '../store/useStore';
 import { toast } from '../store/useCelebrationStore';
 import { Transaction } from '../types';
-import { createStyles, radius, tabular, typeScale } from '../theme';
+import { createStyles, radius, tabular, typeScale, useTheme } from '../theme';
 import { duration } from '../motion';
 import { formatCurrency } from '../utils/format';
 import { Card } from '../components/ui/Card';
-import { Chip, EmptyState } from '../components/ui/Bits';
+import { EmptyState } from '../components/ui/Bits';
+import { CategoryGrid } from '../components/ui/CategoryGrid';
+import { SegmentedControl } from '../components/ui/SegmentedControl';
+import { CATEGORY_ITEMS } from '../utils/categories';
 import { Button } from '../components/ui/Button';
 import { ScreenHeader, useHeaderHeight } from '../components/ui/ScreenHeader';
 import { SkeletonCard } from '../components/motion/Skeleton';
 
-const CATEGORIES = [
-  'Food & Dining', 'Groceries', 'Transport & Travel', 'Housing', 'Utilities & Bills', 'Debt & Loan Payments', 'Shopping',
-  'Entertainment', 'Health', 'Education', 'Personal Care', 'Insurance', 'Investments', 'Misc',
-];
 const TYPES = ['Need', 'Want', 'Investment'] as const;
 
 /**
@@ -28,6 +27,7 @@ const TYPES = ['Need', 'Want', 'Investment'] as const;
  */
 export function ReviewScreen() {
   const s = useStyles();
+  const { c } = useTheme();
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const headerHeight = useHeaderHeight();
@@ -36,6 +36,7 @@ export function ReviewScreen() {
   const [category, setCategory] = useState('');
   const [type, setType] = useState<(typeof TYPES)[number]>('Need');
   const [done, setDone] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
 
   const pick = (tx?: Transaction) => {
     setCategory(tx?.category ?? '');
@@ -84,7 +85,10 @@ export function ReviewScreen() {
 
   return (
     <View style={s.screen}>
-      <ScrollView contentContainerStyle={{ paddingTop: headerHeight + 8, paddingBottom: insets.bottom + 32, paddingHorizontal: 16 }}>
+      <ScrollView
+        contentContainerStyle={{ paddingTop: headerHeight + 8, paddingBottom: insets.bottom + 32, paddingHorizontal: 16 }}
+        refreshControl={<RefreshControl refreshing={refreshing} tintColor={c.primary} progressViewOffset={headerHeight} onRefresh={async () => { setRefreshing(true); await load(); setRefreshing(false); }} />}
+      >
         {queue === null ? (
           <SkeletonCard />
         ) : !current ? (
@@ -104,14 +108,15 @@ export function ReviewScreen() {
               </Card>
 
               <Text style={s.label}>Category</Text>
-              <View style={s.wrap}>
-                {CATEGORIES.map((cat) => <Chip key={cat} label={cat} selected={category === cat} onPress={() => setCategory(cat)} />)}
-              </View>
+              <CategoryGrid items={CATEGORY_ITEMS} isSelected={(key) => key === category} onPress={setCategory} />
 
               <Text style={s.label}>Type</Text>
-              <View style={s.row}>
-                {TYPES.map((t) => <Chip key={t} label={t} selected={type === t} onPress={() => setType(t)} style={s.flex} />)}
-              </View>
+              <SegmentedControl
+                segments={TYPES.map((t) => ({ key: t, label: t, dot: { Need: c.info, Want: c.warningStrong, Investment: c.successStrong }[t] }))}
+                value={type}
+                onChange={setType}
+                accessibilityLabel="Type"
+              />
 
               <Button label={corrected ? 'Save correction' : 'Looks right'} icon={corrected ? 'create-outline' : 'checkmark'} onPress={submit} style={s.cta} />
               {queue.length > 1 && <Button label="Skip for now" variant="ghost" onPress={skip} />}
@@ -136,7 +141,5 @@ const useStyles = createStyles((c) => ({
   guessLabel: { fontSize: 11, color: c.onAuroraMuted },
   guessValue: { ...typeScale.headline, fontSize: 15, color: c.onAurora, marginTop: 2 },
   label: { ...typeScale.overline, color: c.textSubtle, marginTop: 18, marginBottom: 10 },
-  wrap: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
-  row: { flexDirection: 'row', gap: 8 },
   cta: { marginTop: 22 },
 }));

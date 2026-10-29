@@ -78,7 +78,7 @@ test('3. Category chips are behind a Filter control, not in primary header', () 
   assert.ok(!code.includes('FILTER_CATEGORIES'), 'Old FILTER_CATEGORIES constant removed');
   assert.ok(code.includes('showFilterModal'), 'Filter modal state exists');
   assert.ok(code.includes('filterSheet') || code.includes('filterOverlay'), 'Filter modal UI exists');
-  assert.ok(code.includes('Filter Transactions'), 'Filter sheet title present');
+  assert.ok(code.includes('title="Filters"'), 'Filter sheet title present');
 });
 
 // ── TEST 4: Filter button exists ──────────────────────────────────────────
@@ -201,8 +201,9 @@ test('13. Type and category filters compose (AND between type & categories; OR w
   assert.ok(code.includes("tx.type === activeType"), 'Type filter compares tx.type');
   // Category filter: tx.category in selectedCategories
   assert.ok(code.includes("selectedCategories.includes"), 'Multi-category filter uses includes for OR matching');
-  // Both should be in the dependencies array
-  assert.ok(code.includes("[activeType, selectedCategories, transactions"), 'Both filters in useMemo deps');
+  // The type filter feeds the category/search memo, so both are dependencies
+  assert.ok(code.includes("[transactions, activeType]"), 'Type filter memo depends on activeType');
+  assert.ok(code.includes("[typed, selectedCategories"), 'Category filter memo builds on the typed list');
 });
 
 // ── TEST 14: Filter modal does NOT duplicate type selection ───────────────
@@ -210,7 +211,7 @@ test('14. Filter modal contains only Category, not duplicate Type selection', ()
   const code = readScreen('TransactionsScreen.tsx');
   
   // Extract the filter modal section
-  const modalStart = code.indexOf('Filter Transactions');
+  const modalStart = code.indexOf('title="Filters"');
   const modalEnd = code.indexOf('</Sheet>', modalStart);
   const modalSection = code.substring(modalStart, modalEnd);
   
@@ -239,8 +240,8 @@ test('17. Category Investments (plural) remains strictly distinct from Type Inve
   assert.ok(txScreen.includes("label: 'Investments'"), 'Category label is Investments');
   // TYPE_BADGE contains 'Investment'
   assert.ok(txScreen.includes("Investment: { color: c.successStrong, label: 'Investment' }"), 'Type badge is Investment');
-  // TYPE_FILTERS contains 'Investment'
-  assert.ok(txScreen.includes("{ key: 'Investment', label: 'Investments' }"), 'Type filter key is Investment');
+  // TYPE_FILTERS contains 'Investment' (short label so four segments fit)
+  assert.ok(txScreen.includes("{ key: 'Investment' as const, label: 'Invest'"), 'Type filter key is Investment');
 });
 
 // ── TEST 18: Expense display formatting renders with minus sign and no amount < 0 check ───

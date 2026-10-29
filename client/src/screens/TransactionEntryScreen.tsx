@@ -13,6 +13,9 @@ import { createStyles, radius, tabular, typeScale, useTheme } from '../theme';
 import { Button } from '../components/ui/Button';
 import { Chip, IconTile } from '../components/ui/Bits';
 import { Sheet } from '../components/ui/Sheet';
+import { CategoryGrid } from '../components/ui/CategoryGrid';
+import { CATEGORY_ITEMS } from '../utils/categories';
+import { SegmentedControl } from '../components/ui/SegmentedControl';
 
 const CATEGORIES = [
   { label: 'Food & Dining', emoji: '🍽️', ml: 'Food & Dining' },
@@ -375,11 +378,12 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
 
         {/* Spend type */}
         <Text style={styles.fieldLabel}>Type</Text>
-        <View style={styles.typeRow}>
-          {SPEND_TYPES.map((type) => (
-            <Chip key={type} label={type} selected={selectedType === type} onPress={() => handleSelectTypeManually(type)} style={styles.flex} />
-          ))}
-        </View>
+        <SegmentedControl
+          segments={SPEND_TYPES.map((type) => ({ key: type, label: type, dot: { Need: c.info, Want: c.warningStrong, Investment: c.successStrong }[type] }))}
+          value={selectedType}
+          onChange={handleSelectTypeManually}
+          accessibilityLabel="Spend type"
+        />
 
         {/* AI type confirmation (low confidence) */}
         {!typeConfirmed && aiResult && (
@@ -452,11 +456,13 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
 
       {/* Category picker */}
       <Sheet visible={picker === 'category'} onClose={() => setPicker(null)} title="Category">
-        <View style={styles.categoryGrid}>
-          {CATEGORIES.map((item) => (
-            <Chip key={item.label} label={`${item.emoji} ${item.label}`} selected={selectedCategory.label === item.label} onPress={() => handleSelectCategoryManually(item)} />
-          ))}
-        </View>
+        <ScrollView style={styles.sheetScroll} showsVerticalScrollIndicator={false}>
+          <CategoryGrid
+            items={CATEGORY_ITEMS}
+            isSelected={(key) => selectedCategory.label === key}
+            onPress={(key) => { const item = CATEGORIES.find((cat) => cat.label === key); if (item) handleSelectCategoryManually(item); }}
+          />
+        </ScrollView>
       </Sheet>
 
       {/* Date picker */}
@@ -739,10 +745,9 @@ const useStyles = createStyles((c) => ({
     marginTop: 2,
     ...tabular,
   },
-  categoryGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
+  sheetScroll: {
+    flexGrow: 0,
+    flexShrink: 1,
   },
   liabilityList: {
     maxHeight: 420,

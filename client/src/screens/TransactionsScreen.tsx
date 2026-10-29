@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
-import { Alert, Pressable, RefreshControl, ScrollView, SectionList, Text, TextInput, View } from 'react-native';
+import { Alert, Pressable, RefreshControl, ScrollView, SectionList, Switch, Text, TextInput, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Animated from 'react-native-reanimated';
 import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
@@ -14,7 +14,9 @@ import { enterUp, exitFade, listLayout } from '../motion';
 import { useTabBarSpace } from '../components/navigation/TabBar';
 import { LargeTitle, ScreenHeader, useHeaderHeight, useScrollHeader } from '../components/ui/ScreenHeader';
 import { Card } from '../components/ui/Card';
-import { Badge, Chip, EmptyState, ErrorState, IconTile, MoneyText } from '../components/ui/Bits';
+import { Badge, EmptyState, ErrorState, IconTile, MoneyText } from '../components/ui/Bits';
+import { CategoryGrid } from '../components/ui/CategoryGrid';
+import { SegmentedControl } from '../components/ui/SegmentedControl';
 import { Button } from '../components/ui/Button';
 import { Field } from '../components/ui/Field';
 import { Sheet } from '../components/ui/Sheet';
@@ -77,12 +79,14 @@ const TYPE_BADGE = (c: Palette): Record<string, { color: string; label: string }
 });
 
 // ── High-level type filters ───────────────────────────────────────────────
-const TYPE_FILTERS = [
-  { key: 'all', label: 'All' },
-  { key: 'Need', label: 'Needs' },
-  { key: 'Want', label: 'Wants' },
-  { key: 'Investment', label: 'Investments' },
-] as const;
+type TypeFilter = 'all' | 'Need' | 'Want' | 'Investment';
+const TYPE_FILTERS = (c: Palette) => [
+  { key: 'all' as const, label: 'All' },
+  { key: 'Need' as const, label: 'Needs', dot: c.info },
+  { key: 'Want' as const, label: 'Wants', dot: c.warningStrong },
+  { key: 'Investment' as const, label: 'Invest', dot: c.successStrong },
+];
+const TYPES = ['Need', 'Want', 'Investment'] as const;
 
 // ── Grouping helpers ──────────────────────────────────────────────────────
 
@@ -239,7 +243,7 @@ export function TransactionsScreen(): React.ReactElement {
   const transactions = useStore((s) => s.transactions);
   const setTransactions = useStore((s) => s.setTransactions);
 
-  const [activeType, setActiveType] = useState<string>('all');
+  const [activeType, setActiveType] = useState<TypeFilter>('all');
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [query, setQuery] = useState('');
   const [reviewOnly, setReviewOnly] = useState(false);
@@ -253,6 +257,7 @@ export function TransactionsScreen(): React.ReactElement {
   const [editType, setEditType] = useState<'Need' | 'Want' | 'Investment'>('Need');
   const [editError, setEditError] = useState('');
   const [showFilterModal, setShowFilterModal] = useState(false);
+  const [pickingCategory, setPickingCategory] = useState(false);
   const [overflowTx, setOverflowTx] = useState<Transaction | null>(null);
   const [suggestions, setSuggestions] = useState<SubscriptionSuggestion[]>([]);
   // Deletes wait out the Undo window before reaching the server.
@@ -333,6 +338,7 @@ export function TransactionsScreen(): React.ReactElement {
   const handleEdit = (tx: Transaction) => {
     const open = () => {
       setEditError('');
+      setPickingCategory(false);
       setEditTx(tx);
       setEditAmount(String(Math.abs(tx.amount)));
       setEditDesc(tx.description || '');
@@ -384,15 +390,26 @@ export function TransactionsScreen(): React.ReactElement {
   };
 
   // ── Filtering: type + multi-category compose (AND between type & categories; OR within categories) ──
-  const hasActiveFilters = selectedCategories.length > 0;
+  const filterCount = selectedCategories.length + (reviewOnly ? 1 : 0);
+  const hasActiveFilters = filterCount > 0;
+
+  const typed = useMemo(
+    () => (activeType === 'all' ? transactions : transactions.filter((tx) => tx.type === activeType)),
+    [transactions, activeType],
+  );
+
+  // Per-category counts for the filter grid, within the chosen type
+  const categoryCounts = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const tx of typed) {
+      const key = (LEGACY_CATEGORY_MAP[(tx.category || '').toLowerCase()] || tx.category || '').toLowerCase();
+      counts.set(key, (counts.get(key) ?? 0) + 1);
+    }
+    return counts;
+  }, [typed]);
 
   const sections = useMemo<DaySection[]>(() => {
-    let filtered = transactions;
-
-    // Type filter
-    if (activeType !== 'all') {
-      filtered = filtered.filter((tx) => tx.type === activeType);
-    }
+    let filtered = typed;
 
     // Category filter: transaction category must match ANY of the selected categories (including legacy aliases)
     if (selectedCategories.length > 0) {
@@ -409,7 +426,9 @@ export function TransactionsScreen(): React.ReactElement {
     if (q) filtered = filtered.filter((tx) => `${tx.description} ${tx.category}`.toLowerCase().includes(q));
 
     return groupByDay(filtered);
-  }, [activeType, selectedCategories, transactions, reviewOnly, query]);
+  }, [typed, selectedCategories, reviewOnly, query]);
+
+  const resultCount = sections.reduce((n, sec) => n + sec.data.length, 0);
 
   // ── Helper: descriptive empty message ──────────────────────────────────
   const emptyMessage = useMemo(() => {
@@ -417,7 +436,7 @@ export function TransactionsScreen(): React.ReactElement {
       return 'Your transactions will appear here.';
     }
     if (query.trim()) return `Nothing matches "${query.trim()}".`;
-    const typeLabel = TYPE_FILTERS.find((f) => f.key === activeType)?.label ?? '';
+    const typeLabel = TYPE_FILTERS(c).find((f) => f.key === activeType)?.label ?? '';
     const hasType = activeType !== 'all';
     const hasCat = selectedCategories.length > 0;
 
@@ -439,7 +458,7 @@ export function TransactionsScreen(): React.ReactElement {
       return `No ${typeLabel.toLowerCase()} transactions yet.`;
     }
     return 'No transactions match these filters.';
-  }, [transactions.length, activeType, selectedCategories, query]);
+  }, [transactions.length, activeType, selectedCategories, query, c]);
 
   // ── Category toggling and clearing ─────────────────────────────────────
   const toggleCategory = (key: string) => {
@@ -450,8 +469,10 @@ export function TransactionsScreen(): React.ReactElement {
 
   const clearFilters = () => {
     setSelectedCategories([]);
-    setShowFilterModal(false);
+    setReviewOnly(false);
   };
+
+  const labelOf = (key: string) => CATEGORIES.find((cat) => cat.key === key)?.label ?? key;
 
   const suggestion = suggestions[0];
 
@@ -467,7 +488,7 @@ export function TransactionsScreen(): React.ReactElement {
             accessibilityLabel="Open advanced filters"
           >
             <Ionicons name="options-outline" size={20} color={hasActiveFilters ? c.onPrimary : c.text} />
-            {hasActiveFilters && <Text style={styles.filterCount}>{selectedCategories.length}</Text>}
+            {hasActiveFilters && <Text style={styles.filterCount}>{filterCount}</Text>}
           </Pressable>
         }
       />
@@ -501,30 +522,34 @@ export function TransactionsScreen(): React.ReactElement {
           />
         </View>
 
-        {/* Type filters */}
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
-          {TYPE_FILTERS.map((f) => (
-            <Chip key={f.key} label={f.label} selected={activeType === f.key} onPress={() => setActiveType(f.key)} />
-          ))}
-          {reviewCount > 0 && (
-            <Chip label={`Check AI (${reviewCount})`} icon="sparkles" selected={reviewOnly} onPress={() => setReviewOnly((v) => !v)} />
-          )}
-        </ScrollView>
+        {/* Type filter */}
+        <SegmentedControl segments={TYPE_FILTERS(c)} value={activeType} onChange={setActiveType} accessibilityLabel="Filter by type" />
 
-        {/* Active filter indicator */}
+        {/* Active filters: one removable pill each */}
         {hasActiveFilters && (
-          <View style={styles.activeFilterBar}>
-            <Text style={styles.activeFilterText} numberOfLines={1}>
-              {selectedCategories.length === 1
-                ? `Category: ${CATEGORIES.find((c) => c.key === selectedCategories[0])?.label ?? selectedCategories[0]}`
-                : `Categories (${selectedCategories.length}): ${selectedCategories
-                    .map((k) => CATEGORIES.find((c) => c.key === k)?.label ?? k)
-                    .join(', ')}`}
-            </Text>
-            <Pressable onPress={clearFilters} hitSlop={8} accessibilityRole="button" accessibilityLabel="Clear category filters">
-              <Ionicons name="close-circle" size={18} color={c.textMuted} />
-            </Pressable>
-          </View>
+          <Animated.View entering={enterUp(0)} exiting={exitFade}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips}>
+              {reviewOnly && (
+                <Pressable onPress={() => setReviewOnly(false)} style={styles.activePill} accessibilityRole="button" accessibilityLabel="Remove filter: AI guesses to check">
+                  <Ionicons name="sparkles" size={13} color={c.primary} />
+                  <Text style={styles.activePillText}>To check</Text>
+                  <Ionicons name="close" size={14} color={c.primary} />
+                </Pressable>
+              )}
+              {selectedCategories.map((key) => (
+                <Pressable key={key} onPress={() => toggleCategory(key)} style={styles.activePill} accessibilityRole="button" accessibilityLabel={`Remove filter: ${labelOf(key)}`}>
+                  <Text style={styles.activePillEmoji}>{CATEGORY_EMOJI[key] ?? '📦'}</Text>
+                  <Text style={styles.activePillText}>{labelOf(key)}</Text>
+                  <Ionicons name="close" size={14} color={c.primary} />
+                </Pressable>
+              ))}
+              {filterCount > 1 && (
+                <Pressable onPress={clearFilters} style={styles.clearPill} accessibilityRole="button" accessibilityLabel="Clear all filters">
+                  <Text style={styles.clearPillText}>Clear all</Text>
+                </Pressable>
+              )}
+            </ScrollView>
+          </Animated.View>
         )}
 
         {reviewCount > 0 && (
@@ -610,28 +635,41 @@ export function TransactionsScreen(): React.ReactElement {
       {/* Row sheet: options first; Edit swaps in the editor without presenting a second modal */}
       <Sheet
         visible={!!(overflowTx || editTx)}
-        onClose={() => { setOverflowTx(null); setEditTx(null); }}
-        title={editTx ? 'Edit Transaction' : overflowTx?.description || overflowTx?.category || 'Transaction'}
+        onClose={() => { setOverflowTx(null); setEditTx(null); setPickingCategory(false); }}
+        title={editTx ? (pickingCategory ? 'Choose a category' : 'Edit Transaction') : overflowTx?.description || overflowTx?.category || 'Transaction'}
       >
-        {editTx ? (
+        {editTx && pickingCategory ? (
+          <Animated.View key="pick" entering={enterUp(0)}>
+            <ScrollView style={styles.sheetScroll} showsVerticalScrollIndicator={false}>
+              <CategoryGrid
+                items={CATEGORIES}
+                isSelected={(key) => key === editCategory.toLowerCase()}
+                onPress={(key) => { setEditCategory(labelOf(key)); setPickingCategory(false); }}
+              />
+            </ScrollView>
+            <Button label="Back to edit" variant="secondary" onPress={() => setPickingCategory(false)} style={styles.saveBtn} />
+          </Animated.View>
+        ) : editTx ? (
           <Animated.View key="edit" entering={enterUp(0)}>
             <ScrollView keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
               <Field label="Amount" icon="cash-outline" value={editAmount} onChangeText={(v) => { setEditAmount(v); setEditError(''); }} keyboardType="decimal-pad" error={editError} />
               <Field label="Description" icon="create-outline" value={editDesc} onChangeText={setEditDesc} />
 
               <Text style={styles.filterSectionLabel}>Category</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips} keyboardShouldPersistTaps="handled">
-                {CATEGORIES.map((cat) => (
-                  <Chip key={cat.key} label={`${cat.emoji} ${cat.label}`} selected={editCategory === cat.label} onPress={() => setEditCategory(cat.label)} />
-                ))}
-              </ScrollView>
+              <Pressable onPress={() => setPickingCategory(true)} style={styles.pickerRow} accessibilityRole="button" accessibilityLabel={`Category: ${editCategory}. Change`}>
+                <IconTile emoji={CATEGORY_EMOJI[editCategory.toLowerCase()] ?? '📦'} tint={TYPE_BADGE(c)[editType].color} size={36} />
+                <Text style={styles.pickerRowText} numberOfLines={1}>{editCategory}</Text>
+                <Text style={styles.pickerRowAction}>Change</Text>
+                <Ionicons name="chevron-forward" size={16} color={c.textSubtle} />
+              </Pressable>
 
               <Text style={styles.filterSectionLabel}>Type</Text>
-              <View style={styles.typeRow}>
-                {(['Need', 'Want', 'Investment'] as const).map((t) => (
-                  <Chip key={t} label={t} selected={editType === t} onPress={() => setEditType(t)} style={styles.flex} />
-                ))}
-              </View>
+              <SegmentedControl
+                segments={TYPES.map((t) => ({ key: t, label: t, dot: TYPE_BADGE(c)[t].color }))}
+                value={editType}
+                onChange={setEditType}
+                accessibilityLabel="Transaction type"
+              />
 
               <Button label="Save changes" onPress={submitEdit} style={styles.saveBtn} />
             </ScrollView>
@@ -654,27 +692,44 @@ export function TransactionsScreen(): React.ReactElement {
       </Sheet>
 
       {/* Advanced filter sheet */}
-      <Sheet visible={showFilterModal} onClose={() => setShowFilterModal(false)} title="Filter Transactions">
+      <Sheet visible={showFilterModal} onClose={() => setShowFilterModal(false)} title="Filters">
         <View style={styles.filterSheet}>
           <View style={styles.filterHeaderRow}>
-            <Text style={styles.filterSectionLabel}>Category</Text>
+            <Text style={styles.filterSectionLabel}>
+              Categories{selectedCategories.length > 0 ? ` · ${selectedCategories.length} selected` : ''}
+            </Text>
             {hasActiveFilters && (
-              <Pressable onPress={clearFilters} hitSlop={8} accessibilityRole="button">
-                <Text style={styles.clearFiltersText}>Clear Filters</Text>
+              <Pressable onPress={clearFilters} hitSlop={8} accessibilityRole="button" accessibilityLabel="Reset filters">
+                <Text style={styles.clearFiltersText}>Reset</Text>
               </Pressable>
             )}
           </View>
-          <View style={styles.filterCategoryGrid}>
-            {CATEGORIES.map((cat) => (
-              <Chip
-                key={cat.key}
-                label={`${cat.emoji} ${cat.label}`}
-                selected={selectedCategories.includes(cat.key)}
-                onPress={() => toggleCategory(cat.key)}
-              />
-            ))}
-          </View>
-          <Button label="Done" onPress={() => setShowFilterModal(false)} />
+          <ScrollView style={styles.sheetScroll} showsVerticalScrollIndicator={false}>
+            <CategoryGrid
+              items={CATEGORIES}
+              isSelected={(key) => selectedCategories.includes(key)}
+              onPress={toggleCategory}
+              meta={(key) => {
+                const n = categoryCounts.get(key) ?? 0;
+                return n ? `${n} transaction${n === 1 ? '' : 's'}` : 'None yet';
+              }}
+              isMuted={(key) => !categoryCounts.get(key)}
+            />
+            {reviewCount > 0 && (
+              <View style={styles.switchRow}>
+                <IconTile icon="sparkles" tint={c.primary} size={36} />
+                <View style={styles.flex}>
+                  <Text style={styles.switchTitle}>Only AI guesses to check</Text>
+                  <Text style={styles.switchSub}>{reviewCount} transaction{reviewCount === 1 ? '' : 's'} FINAURA wasn't sure about</Text>
+                </View>
+                <Switch value={reviewOnly} onValueChange={setReviewOnly} trackColor={{ true: c.primary }} accessibilityLabel="Only AI guesses to check" />
+              </View>
+            )}
+          </ScrollView>
+          <Button
+            label={resultCount === 0 ? 'No matches' : `Show ${resultCount} transaction${resultCount === 1 ? '' : 's'}`}
+            onPress={() => setShowFilterModal(false)}
+          />
         </View>
       </Sheet>
 
@@ -767,19 +822,30 @@ const useStyles = createStyles((c) => ({
     gap: 8,
     paddingVertical: 2,
   },
-  activeFilterBar: {
+  activePill: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    borderRadius: radius.md,
+    gap: 6,
+    height: 32,
+    paddingHorizontal: 12,
+    borderRadius: radius.pill,
     backgroundColor: c.primarySoft,
   },
-  activeFilterText: {
+  activePillEmoji: {
+    fontSize: 13,
+  },
+  activePillText: {
     ...typeScale.label,
-    flex: 1,
     color: c.primary,
+  },
+  clearPill: {
+    height: 32,
+    paddingHorizontal: 12,
+    justifyContent: 'center',
+  },
+  clearPillText: {
+    ...typeScale.label,
+    color: c.textMuted,
   },
   suggestion: {
     flexDirection: 'row',
@@ -931,6 +997,51 @@ const useStyles = createStyles((c) => ({
   },
   filterSheet: {
     gap: 12,
+    flexShrink: 1,
+  },
+  sheetScroll: {
+    flexGrow: 0,
+    flexShrink: 1,
+  },
+  switchRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    marginTop: 16,
+    padding: 12,
+    borderRadius: radius.lg - 4,
+    borderWidth: 1.5,
+    borderColor: c.border,
+    backgroundColor: c.surface,
+  },
+  switchTitle: {
+    ...typeScale.label,
+    color: c.text,
+  },
+  switchSub: {
+    ...typeScale.caption,
+    color: c.textSubtle,
+    marginTop: 2,
+  },
+  pickerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    padding: 10,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    borderColor: c.border,
+    backgroundColor: c.surface,
+  },
+  pickerRowText: {
+    ...typeScale.body,
+    fontWeight: '600',
+    flex: 1,
+    color: c.text,
+  },
+  pickerRowAction: {
+    ...typeScale.label,
+    color: c.primary,
   },
   filterHeaderRow: {
     flexDirection: 'row',
@@ -945,17 +1056,7 @@ const useStyles = createStyles((c) => ({
   },
   clearFiltersText: {
     ...typeScale.label,
-    color: c.danger,
-  },
-  filterCategoryGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-    marginBottom: 8,
-  },
-  typeRow: {
-    flexDirection: 'row',
-    gap: 8,
+    color: c.primary,
   },
   saveBtn: {
     marginTop: 20,

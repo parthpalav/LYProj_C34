@@ -435,6 +435,34 @@ export interface TransactionPayload {
   categoryConfidence?: number;
   typeConfidence?: number;
   needsReview?: boolean;
+  liabilityId?: string;
+  expectedScheduledFor?: string;
+}
+
+export interface ChatMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: string;
+}
+
+export interface EnvelopeData {
+  rent: number;
+  food: number;
+  savings: number;
+  targetSavings: number;
+}
+
+export interface SubscriptionSuggestion {
+  key: string;
+  name: string;
+  amount: number;
+  frequency: 'weekly' | 'monthly';
+  occurrences: number;
+  lastDate: string;
+  nextExpected: string;
+  category: string;
+  type: 'Need' | 'Want' | 'Investment';
 }
 
 export interface ClassifierSuggestion {

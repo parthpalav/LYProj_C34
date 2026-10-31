@@ -172,5 +172,5 @@
 }
 
 @media (max-width: 380px) {
-  .auth-rules-grid { grid-template-columns: 1fr; }
+  .auth-rules-grid { grid-template-columns: minmax(0, 1fr); }
 }

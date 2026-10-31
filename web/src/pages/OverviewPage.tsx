@@ -24,11 +24,13 @@ import { AlertsPanel } from '../components/dashboard/AlertsPanel';
 import { UpcomingLiabilities } from '../components/dashboard/UpcomingLiabilities';
 import { RecentActivityTable } from '../components/dashboard/RecentActivityTable';
 import { FutureOutlookPanel } from '../components/dashboard/FutureOutlookPanel';
-import { getFamilyDashboard } from '../services/api';
+import { getFamilyDashboard, getReceivedFamilyInvitations } from '../services/api';
 import type { FamilyDashboard } from '../types';
 import { FamilyOverviewCard } from '../components/family/FamilyOverviewCard';
 import { NextStep } from '../components/ui/NextStep';
 import { FMI_NAME } from '../utils/presentation';
+import { AdjustBalanceModal } from '../components/dashboard/AdjustBalanceModal';
+import { Toast } from '../components/ui/Toast';
 
 export const OverviewPage: React.FC = () => {
   const { user } = useAuth();
@@ -102,6 +104,25 @@ export const OverviewPage: React.FC = () => {
     };
   }, [user]);
 
+  // Pending household invitations (mobile Notifications parity)
+  const [pendingInvites, setPendingInvites] = React.useState(0);
+  React.useEffect(() => {
+    let mounted = true;
+    getReceivedFamilyInvitations()
+      .then((list) => mounted && setPendingInvites(list.filter((i) => !i.status || i.status === 'pending').length))
+      .catch(() => {});
+    return () => { mounted = false; };
+  }, []);
+  const reviewCount = transactions.filter((t) => t.needsReview).length;
+
+  const [adjustingBalance, setAdjustingBalance] = React.useState(false);
+  const [toastMessage, setToastMessage] = React.useState<string | null>(null);
+  React.useEffect(() => {
+    if (!toastMessage) return;
+    const t = setTimeout(() => setToastMessage(null), 3500);
+    return () => clearTimeout(t);
+  }, [toastMessage]);
+
   const handleRefresh = () => {
     refetch();
     getFamilyDashboard()
@@ -111,6 +132,13 @@ export const OverviewPage: React.FC = () => {
 
   return (
     <div className="overview-page">
+      <Toast message={toastMessage} type="success" onClose={() => setToastMessage(null)} />
+      <AdjustBalanceModal
+        isOpen={adjustingBalance}
+        onClose={() => setAdjustingBalance(false)}
+        currentBalance={currentBalance}
+        onUpdated={(message) => { setToastMessage(message); refetch(); }}
+      />
       {/* Page Header */}
       <header className="overview-header overview-section-hero">
         <div className="overview-header-left">
@@ -123,6 +151,9 @@ export const OverviewPage: React.FC = () => {
 
         <div className="overview-header-right">
           <Link className="next-step-action" to="/app/activity?entry=new"><Plus size={16} aria-hidden="true" />Record expense</Link>
+          <Button variant="outline" size="sm" onClick={() => setAdjustingBalance(true)} disabled={isLoading} leftIcon={<Wallet size={14} />}>
+            Adjust balance
+          </Button>
           {lastUpdated && (
             <span className="overview-last-updated">
               Updated {lastUpdated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -213,6 +244,29 @@ export const OverviewPage: React.FC = () => {
           </>
         )}
       </section>
+
+      {(pendingInvites > 0 || reviewCount > 0) && (
+        <section className="overview-section-hero" aria-label="Needs your attention">
+          {pendingInvites > 0 && (
+            <div className="parity-nudge">
+              <div>
+                <strong>{pendingInvites} household {pendingInvites === 1 ? 'invitation' : 'invitations'} waiting</strong>
+                <span>Accept to share a combined view while keeping personal accounts private.</span>
+              </div>
+              <Link className="next-step-action" to="/app/family">Respond</Link>
+            </div>
+          )}
+          {reviewCount > 0 && (
+            <div className="parity-nudge parity-nudge-warn">
+              <div>
+                <strong>{reviewCount} AI {reviewCount === 1 ? 'guess' : 'guesses'} to check</strong>
+                <span>Confirm or correct labels FINAURA wasn't sure about.</span>
+              </div>
+              <Link className="next-step-action" to="/app/review">Review now</Link>
+            </div>
+          )}
+        </section>
+      )}
 
       {!isLoading && !sectionErrors.transactions && transactions.length === 0 && (
         <NextStep

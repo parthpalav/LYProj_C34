@@ -5,6 +5,8 @@ import { useIncome } from '../hooks/useIncome';
 import { useLiabilities } from '../hooks/useLiabilities';
 import type { Transaction, IncomeRecord, Liability, TransactionPayload, IncomePayload, LiabilityPayload } from '../types';
 import { formatCurrencyINR } from '../utils/formatters';
+import { getPacingReport } from '../services/api';
+import { ActivityNudges } from '../components/activity/ActivityNudges';
 
 import { ActivityTabs, type ActivityTabKey } from '../components/activity/ActivityTabs';
 import { TransactionSummaryStrip } from '../components/activity/TransactionSummaryStrip';
@@ -27,6 +29,7 @@ import { Button } from '../components/ui/Button';
 import { SkeletonCard } from '../components/ui/SkeletonCard';
 import { SectionError } from '../components/dashboard/SectionError';
 import { Plus } from 'lucide-react';
+import { celebrate } from '../utils/celebrate';
 
 export const ActivityPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -46,12 +49,12 @@ export const ActivityPage: React.FC = () => {
   const liabState = useLiabilities();
 
   // Toast feedback state
-  const [toast, setToast] = useState<{ message: string | null; type: 'success' | 'error' | 'info' }>({
+  const [toast, setToast] = useState<{ message: string | null; type: 'success' | 'error' | 'info' | 'warning' }>({
     message: null,
     type: 'success',
   });
 
-  const showToast = (message: string, type: 'success' | 'error' | 'info' = 'success') => {
+  const showToast = (message: string, type: 'success' | 'error' | 'info' | 'warning' = 'success') => {
     setToast({ message, type });
   };
 
@@ -107,7 +110,23 @@ export const ActivityPage: React.FC = () => {
       showToast('Transaction updated successfully.');
     } else {
       await txState.add(payload);
-      showToast('Transaction added to ledger.');
+      if (payload.type === 'Investment') {
+        celebrate({ kind: 'fireworks', title: `${formatCurrencyINR(payload.amount)} invested`, subtitle: 'Your future self says thanks. Investments this month just went up.' });
+      } else {
+        showToast('Transaction added to ledger.');
+      }
+      // Budget nudge (mobile parity): warn after the success toast when Needs/Wants pass the monthly limit.
+      const bucket = payload.type === 'Need' ? 'Needs' : payload.type === 'Want' ? 'Wants' : null;
+      if (bucket) {
+        getPacingReport()
+          .then((p) => {
+            const b = p?.[bucket];
+            if (b && b.limit > 0 && b.actual > b.limit) {
+              setTimeout(() => showToast(`${bucket} over budget: ${formatCurrencyINR(b.actual)} spent of ${formatCurrencyINR(b.limit)} this month.`, 'warning'), 2200);
+            }
+          })
+          .catch(() => {});
+      }
     }
   };
 
@@ -143,7 +162,8 @@ export const ActivityPage: React.FC = () => {
       showToast('Income entry updated successfully.');
     } else {
       await incState.add(payload);
-      showToast('Income recorded. Balance credited.');
+      const src = payload.source || 'salary';
+      celebrate({ kind: 'coins', title: `${formatCurrencyINR(payload.amount)} income added`, subtitle: `Logged as ${src.charAt(0).toUpperCase()}${src.slice(1)}. Balance credited.` });
     }
   };
 
@@ -282,6 +302,8 @@ export const ActivityPage: React.FC = () => {
             <SkeletonCard height={280} />
           ) : (
             <>
+              <ActivityNudges transactions={txState.transactions} onBillTracked={liabState.refetch} notify={showToast} />
+
               {/* Filter Toolbar */}
               <TransactionFilterToolbar
                 searchQuery={txState.searchQuery}

@@ -33,6 +33,9 @@ import type {
   FamilyInvitation,
   FamilyDashboard,
   FamilyDashboardResponse,
+  ChatMessage,
+  EnvelopeData,
+  SubscriptionSuggestion,
 } from '../types';
 
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
@@ -504,5 +507,62 @@ export async function leaveFamily(): Promise<{ success: boolean; message: string
 export async function removeFamilyMember(userId: string): Promise<{ success: boolean; message: string }> {
   const { data } = await api.post(`/api/family/members/${userId}/remove`);
   return data;
+}
+
+// ── Profile, Onboarding & Balance (mobile parity) ─────────────
+
+export async function submitOnboarding(payload: Partial<User>): Promise<{ success: boolean; user: User }> {
+  const { data } = await api.post('/api/user/onboarding', payload);
+  return data;
+}
+
+export async function updateUserProfile(payload: Partial<User>): Promise<{ success: boolean; message?: string; user: User }> {
+  const { data } = await api.put('/api/user/profile', payload);
+  return data;
+}
+
+export async function updateCurrentBalance(
+  userId: string,
+  operation: 'credit' | 'debit',
+  amount: number
+): Promise<{ success: boolean; currentBalance: number }> {
+  const { data } = await api.put(`/api/user/${userId}/current-balance`, { operation, amount });
+  return data;
+}
+
+// ── AI Assistant ──────────────────────────────────────────────
+
+export async function sendMessageToAgent(message: string): Promise<ChatMessage> {
+  const { data } = await api.post('/api/agent/chat', { message, context: {} }, { timeout: 30000 });
+  return data;
+}
+
+export async function getChatHistory(): Promise<ChatMessage[]> {
+  const { data } = await api.get('/api/agent/history');
+  return Array.isArray(data) ? data : [];
+}
+
+// ── Round-ups (Envelopes) ─────────────────────────────────────
+
+export async function getEnvelopes(): Promise<EnvelopeData> {
+  const { data } = await api.get('/api/envelopes');
+  return data;
+}
+
+export async function getRoundupPreview(): Promise<{ amount: number; previewText: string }> {
+  const { data } = await api.get('/api/envelopes/roundup-preview');
+  return data;
+}
+
+export async function vaultRoundup(amount: number): Promise<{ message: string; savings: number }> {
+  const { data } = await api.post('/api/envelopes/update', { amount });
+  return data;
+}
+
+// ── Subscription suggestions ──────────────────────────────────
+
+export async function getSubscriptionSuggestions(): Promise<SubscriptionSuggestion[]> {
+  const { data } = await api.get('/api/subscriptions/suggestions');
+  return data?.data || [];
 }
 

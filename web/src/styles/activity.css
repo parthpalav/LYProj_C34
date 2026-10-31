@@ -84,9 +84,9 @@
 
 /* Classification source badges: "fallback" is the rule-based path */
 .badge-source-fallback {
-  color: #0e7490;
-  background-color: #ecfeff;
-  border: 1px solid #a5f3fc;
+  color: var(--cyan-700);
+  background-color: var(--cyan-50);
+  border: 1px solid var(--cyan-200);
 }
 
 .source-conf {

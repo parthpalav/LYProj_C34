@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useId } from 'react';
+import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 
 export interface ModalProps {
@@ -64,7 +65,8 @@ export const Modal: React.FC<ModalProps> = ({
 
   if (!isOpen) return null;
 
-  return (
+  // Portal: an animated (transformed) page section would otherwise trap the fixed backdrop inside it.
+  return createPortal(
     <div
       className="modal-backdrop"
       onClick={(e) => {
@@ -101,6 +103,7 @@ export const Modal: React.FC<ModalProps> = ({
         </div>
         <div className="modal-body">{children}</div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 };

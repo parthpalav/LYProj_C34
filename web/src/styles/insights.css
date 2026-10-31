@@ -374,7 +374,7 @@
 @media (max-width: 768px) {
   .two-col-grid,
   .three-col-grid,
-  .insights-type-cards-grid { grid-template-columns: 1fr; }
+  .insights-type-cards-grid { grid-template-columns: minmax(0, 1fr); }
 
   .hero-content-row,
   .hero-score-cluster {

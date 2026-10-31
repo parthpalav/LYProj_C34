@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import type { Transaction, TransactionPayload, TransactionType, ClassifierSuggestion } from '../../types';
+import type { Transaction, TransactionPayload, TransactionType, ClassifierSuggestion, Liability } from '../../types';
 import { CANONICAL_CATEGORIES, VALID_TRANSACTION_TYPES } from '../../types';
-import { classifyExpense } from '../../services/api';
+import { classifyExpense, getLiabilities } from '../../services/api';
+import { formatCurrencyINR } from '../../utils/formatters';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
 import { Sparkles } from 'lucide-react';
@@ -33,6 +34,12 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
   const [isClassifying, setIsClassifying] = useState<boolean>(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Optional link to a recurring bill (mobile QuickAdd parity)
+  const [liabilities, setLiabilities] = useState<Liability[]>([]);
+  const [liabilityId, setLiabilityId] = useState<string>('');
+  const [markAsPaid, setMarkAsPaid] = useState<boolean>(true);
+  const linked = liabilities.find((l) => l.id === liabilityId) ?? null;
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [formError, setFormError] = useState<string | null>(null);
   const amountError = amount !== '' && (!Number.isFinite(Number(amount)) || Number(amount) <= 0)
@@ -62,6 +69,8 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
         setSuggestion(null);
         setFormError(null);
         setIsLoading(false);
+        setLiabilityId('');
+        setMarkAsPaid(true);
       }
     };
     init();
@@ -69,6 +78,16 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
       mounted = false;
     };
   }, [isOpen, initialTransaction]);
+
+  // Active bills for the optional link; only offered when adding.
+  useEffect(() => {
+    if (!isOpen || isEditing) return;
+    let mounted = true;
+    getLiabilities()
+      .then((list) => mounted && setLiabilities(list.filter((l) => l.status === 'active' || !l.status)))
+      .catch(() => mounted && setLiabilities([]));
+    return () => { mounted = false; };
+  }, [isOpen, isEditing]);
 
   // Debounced classifier call on description change (in Add mode)
   useEffect(() => {
@@ -165,6 +184,11 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
           });
         } else {
           Object.assign(payload, { categorySource: 'default', typeSource: 'default', categoryConfidence: 0, typeConfidence: 0 });
+        }
+        if (linked) {
+          payload.liabilityId = linked.id;
+          // Covers the scheduled auto-deduction so the server doesn't charge it twice.
+          if (linked.autoDeduct && markAsPaid && linked.nextDueDate) payload.expectedScheduledFor = String(linked.nextDueDate);
         }
       }
 
@@ -328,6 +352,34 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
             onChange={(e) => setDate(e.target.value)}
           />
         </div>
+
+        {/* Optional bill link */}
+        {!isEditing && liabilities.length > 0 && (
+          <div className="form-group">
+            <label htmlFor="tx-liability" className="form-label">Link to a bill (optional)</label>
+            <select
+              id="tx-liability"
+              className="form-select"
+              value={liabilityId}
+              onChange={(e) => setLiabilityId(e.target.value)}
+            >
+              <option value="">Not a bill payment</option>
+              {liabilities.map((l) => (
+                <option key={l.id} value={l.id}>
+                  {l.name} · {formatCurrencyINR(l.amount)} · {l.frequency}{l.autoDeduct ? ' · Auto deduct' : ''}
+                </option>
+              ))}
+            </select>
+            {linked?.autoDeduct && linked.nextDueDate && (
+              <label className="form-help-text" style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 6 }}>
+                <input type="checkbox" checked={markAsPaid} onChange={(e) => setMarkAsPaid(e.target.checked)} />
+                {markAsPaid
+                  ? `Covers the payment due ${new Date(linked.nextDueDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}, so it won't auto-deduct twice.`
+                  : 'Record as an extra payment. The scheduled deduction still runs.'}
+              </label>
+            )}
+          </div>
+        )}
 
         {/* Form Actions */}
         <div className="modal-footer">

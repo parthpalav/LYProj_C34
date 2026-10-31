@@ -9,6 +9,7 @@ import { SpendingTypeCards } from '../components/insights/SpendingTypeCards';
 import { CategoryRanking } from '../components/insights/CategoryRanking';
 import { MonthOverMonthComparison } from '../components/insights/MonthOverMonthComparison';
 import { CategoryMovement } from '../components/insights/CategoryMovement';
+import { SpendingCalendar } from '../components/insights/SpendingCalendar';
 
 // FMI Components
 import { FmiScoreHero } from '../components/insights/FmiScoreHero';
@@ -197,6 +198,9 @@ export const InsightsPage: React.FC = () => {
 
               {/* Ranked Category Breakdown */}
               <CategoryRanking categories={spending.categoryRankings} />
+
+              {/* Daily spend heatmap (mobile parity) */}
+              <SpendingCalendar />
             </div>
           )}
         </div>

@@ -1,18 +1,19 @@
 import React from 'react';
-import { Pencil, Trash2 } from 'lucide-react';
+import { Pencil, PiggyBank, Trash2 } from 'lucide-react';
 import type { Goal } from '../../types';
 
 interface GoalCardProps {
   goal: Goal;
   onEdit: (goal: Goal) => void;
   onDelete: (goal: Goal) => void;
+  onFund?: (goal: Goal) => void;
 }
 
 function formatINR(val: number): string {
   return `₹${Math.round(val).toLocaleString('en-IN')}`;
 }
 
-export const GoalCard: React.FC<GoalCardProps> = ({ goal, onEdit, onDelete }) => {
+export const GoalCard: React.FC<GoalCardProps> = ({ goal, onEdit, onDelete, onFund }) => {
   const target = Number(goal.targetAmount) || 0;
   const saved = Number(goal.savedAmount) || 0;
 
@@ -40,6 +41,17 @@ export const GoalCard: React.FC<GoalCardProps> = ({ goal, onEdit, onDelete }) =>
           </div>
         </div>
         <div className="plan-goal-actions">
+          {onFund && (
+            <button
+              type="button"
+              className="plan-icon-btn plan-icon-btn--edit"
+              onClick={() => onFund(goal)}
+              aria-label={`Add or take out money for ${goal.name}`}
+              title="Add money"
+            >
+              <PiggyBank size={13} />
+            </button>
+          )}
           <button
             type="button"
             className="plan-icon-btn plan-icon-btn--edit"

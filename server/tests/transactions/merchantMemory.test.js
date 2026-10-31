@@ -44,6 +44,9 @@ async function run() {
   assert.equal(merchantKey('Zomato dinner order ₹450'), 'zomato dinner');
   assert.equal(merchantKey('500 Zomato dinner order'), 'zomato dinner');
   assert.equal(merchantKey('IMPS/P2A/309812345678/MOM/SBIN0001234'), 'mom');
+  assert.equal(merchantKey('UPI/412345678901/Payment from Ph/swiggy8@ybl/YES BANK LIMITED YBS'), 'ph swiggy yes');
+  assert.equal(merchantKey('UPI-SWIGGY-SWIGGY8@YBL-YESB0YBLUPI-412345678901-UPI'), 'swiggy');
+  assert.equal(merchantKey('POS 416021XXXXXX6172 TATA 1MG JAIPUR'), 'tata 1mg jaipur');
   assert.equal(merchantKey('   '), '');
   console.log('  ✅ merchantKey normalisation');
 

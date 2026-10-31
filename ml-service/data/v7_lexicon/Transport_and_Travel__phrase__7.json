@@ -1,0 +1,322 @@
+[
+ {
+  "text": "auto to office",
+  "type": "Need"
+ },
+ {
+  "text": "auto ride to office",
+  "type": "Need"
+ },
+ {
+  "text": "auto for office drop",
+  "type": "Need"
+ },
+ {
+  "text": "office auto ride",
+  "type": "Need"
+ },
+ {
+  "text": "auto wala office drop",
+  "type": "Need"
+ },
+ {
+  "text": "auto to station morning",
+  "type": "Need"
+ },
+ {
+  "text": "auto from metro station",
+  "type": "Need"
+ },
+ {
+  "text": "auto stand to home",
+  "type": "Need"
+ },
+ {
+  "text": "rickshaw to college",
+  "type": "Need"
+ },
+ {
+  "text": "rickshaw ride to station",
+  "type": "Need"
+ },
+ {
+  "text": "metro card top up",
+  "type": "Need"
+ },
+ {
+  "text": "metro smart card topup",
+  "type": "Need"
+ },
+ {
+  "text": "metro token for work",
+  "type": "Need"
+ },
+ {
+  "text": "metro ticket morning",
+  "type": "Need"
+ },
+ {
+  "text": "metro ticket return trip",
+  "type": "Need"
+ },
+ {
+  "text": "metro to college",
+  "type": "Need"
+ },
+ {
+  "text": "metro ride to college",
+  "type": "Need"
+ },
+ {
+  "text": "metro fare to office",
+  "type": "Need"
+ },
+ {
+  "text": "metro monthly pass",
+  "type": "Need"
+ },
+ {
+  "text": "metro pass for college",
+  "type": "Need"
+ },
+ {
+  "text": "metro pass for work",
+  "type": "Need"
+ },
+ {
+  "text": "morning metro ride",
+  "type": "Need"
+ },
+ {
+  "text": "evening auto ride",
+  "type": "Need"
+ },
+ {
+  "text": "auto evening ride home",
+  "type": "Need"
+ },
+ {
+  "text": "office commute auto",
+  "type": "Need"
+ },
+ {
+  "text": "commute auto fare",
+  "type": "Need"
+ },
+ {
+  "text": "office commute metro",
+  "type": "Need"
+ },
+ {
+  "text": "commute by metro card",
+  "type": "Need"
+ },
+ {
+  "text": "commute train ticket",
+  "type": "Need"
+ },
+ {
+  "text": "commute bus card",
+  "type": "Need"
+ },
+ {
+  "text": "shared auto to office",
+  "type": "Need"
+ },
+ {
+  "text": "shared auto ride to work",
+  "type": "Need"
+ },
+ {
+  "text": "auto after office hours",
+  "type": "Need"
+ },
+ {
+  "text": "transport card top up",
+  "type": "Need"
+ },
+ {
+  "text": "city card recharge",
+  "type": "Need"
+ },
+ {
+  "text": "bus card top up",
+  "type": "Need"
+ },
+ {
+  "text": "monthly bus pass",
+  "type": "Need"
+ },
+ {
+  "text": "train ticket for office",
+  "type": "Need"
+ },
+ {
+  "text": "office local train",
+  "type": "Need"
+ },
+ {
+  "text": "local train fare",
+  "type": "Need"
+ },
+ {
+  "text": "rail pass for office",
+  "type": "Need"
+ },
+ {
+  "text": "ticket to college metro",
+  "type": "Need"
+ },
+ {
+  "text": "office metro card",
+  "type": "Need"
+ },
+ {
+  "text": "metro card for office",
+  "type": "Need"
+ },
+ {
+  "text": "auto to railway station early",
+  "type": "Need"
+ },
+ {
+  "text": "city bus ticket for college",
+  "type": "Need"
+ },
+ {
+  "text": "bus ticket to college",
+  "type": "Need"
+ },
+ {
+  "text": "bus ticket to office",
+  "type": "Need"
+ },
+ {
+  "text": "bus pass for college",
+  "type": "Need"
+ },
+ {
+  "text": "bus pass monthly renewal",
+  "type": "Need"
+ },
+ {
+  "text": "city bus pass renewal",
+  "type": "Need"
+ },
+ {
+  "text": "daily bus ticket",
+  "type": "Need"
+ },
+ {
+  "text": "bus fare to college",
+  "type": "Need"
+ },
+ {
+  "text": "bus ride to office",
+  "type": "Need"
+ },
+ {
+  "text": "bus pass recharge card",
+  "type": "Need"
+ },
+ {
+  "text": "office bus pass",
+  "type": "Need"
+ },
+ {
+  "text": "college bus fare",
+  "type": "Need"
+ },
+ {
+  "text": "school bus pass monthly",
+  "type": "Need"
+ },
+ {
+  "text": "suburban train ticket",
+  "type": "Need"
+ },
+ {
+  "text": "suburban pass renewal",
+  "type": "Need"
+ },
+ {
+  "text": "local train monthly pass",
+  "type": "Need"
+ },
+ {
+  "text": "local train season ticket",
+  "type": "Need"
+ },
+ {
+  "text": "local train ticket daily",
+  "type": "Need"
+ },
+ {
+  "text": "local train ticket to office",
+  "type": "Need"
+ },
+ {
+  "text": "local train pass renewal",
+  "type": "Need"
+ },
+ {
+  "text": "commute by local train",
+  "type": "Need"
+ },
+ {
+  "text": "commute by bus daily",
+  "type": "Need"
+ },
+ {
+  "text": "bus to office daily",
+  "type": "Need"
+ },
+ {
+  "text": "bus ride to college daily",
+  "type": "Need"
+ },
+ {
+  "text": "auto ride to college",
+  "type": "Need"
+ },
+ {
+  "text": "auto ride to market morning",
+  "type": "Need"
+ },
+ {
+  "text": "auto to coaching class",
+  "type": "Need"
+ },
+ {
+  "text": "auto to tuition",
+  "type": "Need"
+ },
+ {
+  "text": "auto to office in rain",
+  "type": "Need"
+ },
+ {
+  "text": "metro to office in rain",
+  "type": "Need"
+ },
+ {
+  "text": "auto to school morning",
+  "type": "Need"
+ },
+ {
+  "text": "auto to bus stand",
+  "type": "Need"
+ },
+ {
+  "text": "bus stop auto ride",
+  "type": "Need"
+ },
+ {
+  "text": "auto to dentist visit",
+  "type": "Need"
+ },
+ {
+  "text": "office bus ticket daily",
+  "type": "Need"
+ }
+]

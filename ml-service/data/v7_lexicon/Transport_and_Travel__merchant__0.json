@@ -1,0 +1,282 @@
+[
+ {
+  "text": "IndianOil",
+  "type": "Need"
+ },
+ {
+  "text": "HindustanPetroleum",
+  "type": "Need"
+ },
+ {
+  "text": "BharatPetroleum",
+  "type": "Need"
+ },
+ {
+  "text": "ReliancePetro",
+  "type": "Need"
+ },
+ {
+  "text": "Shell",
+  "type": "Need"
+ },
+ {
+  "text": "CNG",
+  "type": "Need"
+ },
+ {
+  "text": "OlaMoney",
+  "type": "Need"
+ },
+ {
+  "text": "UberMoney",
+  "type": "Need"
+ },
+ {
+  "text": "PGPL",
+  "type": "Need"
+ },
+ {
+  "text": "FASTag",
+  "type": "Need"
+ },
+ {
+  "text": "TollBooth",
+  "type": "Need"
+ },
+ {
+  "text": "DelhiMetro",
+  "type": "Need"
+ },
+ {
+  "text": "MumbaiMetro",
+  "type": "Need"
+ },
+ {
+  "text": "BangaloreMetro",
+  "type": "Need"
+ },
+ {
+  "text": "KolkataMetro",
+  "type": "Need"
+ },
+ {
+  "text": "PuneMetro",
+  "type": "Need"
+ },
+ {
+  "text": "AhmedabadMetro",
+  "type": "Need"
+ },
+ {
+  "text": "DelhiBus",
+  "type": "Need"
+ },
+ {
+  "text": "MumbaiBus",
+  "type": "Need"
+ },
+ {
+  "text": "KolkataBus",
+  "type": "Need"
+ },
+ {
+  "text": "PuneBus",
+  "type": "Need"
+ },
+ {
+  "text": "AhmedabadBus",
+  "type": "Need"
+ },
+ {
+  "text": "DelhiTrain",
+  "type": "Need"
+ },
+ {
+  "text": "MumbaiTrain",
+  "type": "Need"
+ },
+ {
+  "text": "KolkataTrain",
+  "type": "Need"
+ },
+ {
+  "text": "PuneTrain",
+  "type": "Need"
+ },
+ {
+  "text": "AhmedabadTrain",
+  "type": "Need"
+ },
+ {
+  "text": "AutoDriver",
+  "type": "Need"
+ },
+ {
+  "text": "TAXIFARE",
+  "type": "Need"
+ },
+ {
+  "text": "MeteredTaxi",
+  "type": "Need"
+ },
+ {
+  "text": "CityCabs",
+  "type": "Need"
+ },
+ {
+  "text": "NammaMetro",
+  "type": "Need"
+ },
+ {
+  "text": "VOLKSWAGEN",
+  "type": "Need"
+ },
+ {
+  "text": "MARUTI",
+  "type": "Need"
+ },
+ {
+  "text": "TATA",
+  "type": "Need"
+ },
+ {
+  "text": "HINDUSTAN",
+  "type": "Need"
+ },
+ {
+  "text": "BMW",
+  "type": "Need"
+ },
+ {
+  "text": "MERCEDES",
+  "type": "Need"
+ },
+ {
+  "text": "RELIANCE",
+  "type": "Need"
+ },
+ {
+  "text": "BPCL",
+  "type": "Need"
+ },
+ {
+  "text": "ONGC",
+  "type": "Need"
+ },
+ {
+  "text": "ONGCB",
+  "type": "Need"
+ },
+ {
+  "text": "HPL",
+  "type": "Need"
+ },
+ {
+  "text": "NTPC",
+  "type": "Need"
+ },
+ {
+  "text": "IRCTC",
+  "type": "Need"
+ },
+ {
+  "text": "Mahanagar",
+  "type": "Need"
+ },
+ {
+  "text": "DelhiTraffic",
+  "type": "Need"
+ },
+ {
+  "text": "MumbaiTraffic",
+  "type": "Need"
+ },
+ {
+  "text": "BangaloreTraffic",
+  "type": "Need"
+ },
+ {
+  "text": "PuneTraffic",
+  "type": "Need"
+ },
+ {
+  "text": "AhmedabadTraffic",
+  "type": "Need"
+ },
+ {
+  "text": "MetrosRUs",
+  "type": "Need"
+ },
+ {
+  "text": "BusesRUs",
+  "type": "Need"
+ },
+ {
+  "text": "TrainsRUs",
+  "type": "Need"
+ },
+ {
+  "text": "TaxisRUs",
+  "type": "Need"
+ },
+ {
+  "text": "FuelRUs",
+  "type": "Need"
+ },
+ {
+  "text": "ParkRUs",
+  "type": "Need"
+ },
+ {
+  "text": "ChargeRUs",
+  "type": "Need"
+ },
+ {
+  "text": "DriveRUs",
+  "type": "Need"
+ },
+ {
+  "text": "RideRUs",
+  "type": "Need"
+ },
+ {
+  "text": "TollRUs",
+  "type": "Need"
+ },
+ {
+  "text": "MetroRUs",
+  "type": "Need"
+ },
+ {
+  "text": "BikeRUs",
+  "type": "Need"
+ },
+ {
+  "text": "CarRUs",
+  "type": "Need"
+ },
+ {
+  "text": "RideHail",
+  "type": "Need"
+ },
+ {
+  "text": "DriveHail",
+  "type": "Need"
+ },
+ {
+  "text": "TollHail",
+  "type": "Need"
+ },
+ {
+  "text": "MetroHail",
+  "type": "Need"
+ },
+ {
+  "text": "BusHail",
+  "type": "Need"
+ },
+ {
+  "text": "RailHail",
+  "type": "Need"
+ }
+]

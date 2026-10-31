@@ -13,3 +13,5 @@ classifier/__pycache__/
 # ─── HuggingFace cache ────────────────────────────────────────
 .cache/
 
+# personal bank/UPI lines used only for evaluation; never commit
+evaluation/real_transactions.csv

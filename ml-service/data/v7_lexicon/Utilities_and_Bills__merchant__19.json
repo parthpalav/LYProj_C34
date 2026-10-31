@@ -1,0 +1,322 @@
+[
+  {
+    "text": "BSNL Landline Plan",
+    "type": "Need"
+  },
+  {
+    "text": "MTNL Landline",
+    "type": "Need"
+  },
+  {
+    "text": "Airtel Landline",
+    "type": "Need"
+  },
+  {
+    "text": "Tata Tele Landline",
+    "type": "Need"
+  },
+  {
+    "text": "Jio Landline",
+    "type": "Need"
+  },
+  {
+    "text": "Vodafone Landline",
+    "type": "Need"
+  },
+  {
+    "text": "Idea Landline",
+    "type": "Need"
+  },
+  {
+    "text": "Sify Landline",
+    "type": "Need"
+  },
+  {
+    "text": "Hathway Landline",
+    "type": "Need"
+  },
+  {
+    "text": "Landline Phone Bill",
+    "type": "Need"
+  },
+  {
+    "text": "Landline Rental Charges",
+    "type": "Need"
+  },
+  {
+    "text": "Landline Broadband Combo",
+    "type": "Need"
+  },
+  {
+    "text": "Telephone Exchange Dues",
+    "type": "Need"
+  },
+  {
+    "text": "Telephone Rent Bill",
+    "type": "Need"
+  },
+  {
+    "text": "Phone Line Rental",
+    "type": "Need"
+  },
+  {
+    "text": "Telephone Line Rent",
+    "type": "Need"
+  },
+  {
+    "text": "Landline Line Rent",
+    "type": "Need"
+  },
+  {
+    "text": "DoT Telephone Bill",
+    "type": "Need"
+  },
+  {
+    "text": "Local Telephone Bill",
+    "type": "Need"
+  },
+  {
+    "text": "Telecom Line Rental",
+    "type": "Need"
+  },
+  {
+    "text": "PBX Line Rental",
+    "type": "Need"
+  },
+  {
+    "text": "PBX Maintenance Plan",
+    "type": "Need"
+  },
+  {
+    "text": "EPABX AMC Service",
+    "type": "Need"
+  },
+  {
+    "text": "EPABX Service Contract",
+    "type": "Need"
+  },
+  {
+    "text": "Intercom Service Plan",
+    "type": "Need"
+  },
+  {
+    "text": "Intercom Maintenance",
+    "type": "Need"
+  },
+  {
+    "text": "Intercom AMC Service",
+    "type": "Need"
+  },
+  {
+    "text": "Intercom Repair Service",
+    "type": "Need"
+  },
+  {
+    "text": "Intercom Installation",
+    "type": "Need"
+  },
+  {
+    "text": "Intercom Rental",
+    "type": "Need"
+  },
+  {
+    "text": "Video Intercom Plan",
+    "type": "Need"
+  },
+  {
+    "text": "Intercom Line Rental",
+    "type": "Need"
+  },
+  {
+    "text": "Hikvision Intercom",
+    "type": "Need"
+  },
+  {
+    "text": "Aiphone Intercom",
+    "type": "Need"
+  },
+  {
+    "text": "Panasonic Intercom",
+    "type": "Need"
+  },
+  {
+    "text": "Commax Intercom",
+    "type": "Need"
+  },
+  {
+    "text": "Zicom Intercom",
+    "type": "Need"
+  },
+  {
+    "text": "Matrix Comsec Intercom",
+    "type": "Need"
+  },
+  {
+    "text": "Gupta Telephone Exchange",
+    "type": "Need"
+  },
+  {
+    "text": "Sharma Telephone Exchange",
+    "type": "Need"
+  },
+  {
+    "text": "Mahesh Telephone Shop",
+    "type": "Need"
+  },
+  {
+    "text": "Jain Phone Centre",
+    "type": "Need"
+  },
+  {
+    "text": "Nav Durga Telephone",
+    "type": "Need"
+  },
+  {
+    "text": "Shree Telephone Centre",
+    "type": "Need"
+  },
+  {
+    "text": "Bharat Telephone Exchange",
+    "type": "Need"
+  },
+  {
+    "text": "Ram Telephone Exchange",
+    "type": "Need"
+  },
+  {
+    "text": "Maa Telephone Centre",
+    "type": "Need"
+  },
+  {
+    "text": "Laxmi Phone Centre",
+    "type": "Need"
+  },
+  {
+    "text": "Kisan Telephone Shop",
+    "type": "Need"
+  },
+  {
+    "text": "Vikas Telephone Exchange",
+    "type": "Need"
+  },
+  {
+    "text": "Ganesh Telephone Centre",
+    "type": "Need"
+  },
+  {
+    "text": "Om Telephone Exchange",
+    "type": "Need"
+  },
+  {
+    "text": "Balaji Phone Shop",
+    "type": "Need"
+  },
+  {
+    "text": "Sai Telephone Centre",
+    "type": "Need"
+  },
+  {
+    "text": "Surya Telephone Exchange",
+    "type": "Need"
+  },
+  {
+    "text": "Krishna Telephone Shop",
+    "type": "Need"
+  },
+  {
+    "text": "Hanuman Telephone Centre",
+    "type": "Need"
+  },
+  {
+    "text": "Shiv Telephone Exchange",
+    "type": "Need"
+  },
+  {
+    "text": "Ambe Phone Centre",
+    "type": "Need"
+  },
+  {
+    "text": "Bajrang Telephone Shop",
+    "type": "Need"
+  },
+  {
+    "text": "Gopal Telephone Exchange",
+    "type": "Need"
+  },
+  {
+    "text": "Kashi Phone Centre",
+    "type": "Need"
+  },
+  {
+    "text": "Indira Telephone Shop",
+    "type": "Need"
+  },
+  {
+    "text": "Metro Telephone Exchange",
+    "type": "Need"
+  },
+  {
+    "text": "Anand Phone Centre",
+    "type": "Need"
+  },
+  {
+    "text": "Mangal Telephone Shop",
+    "type": "Need"
+  },
+  {
+    "text": "Radha Telephone Centre",
+    "type": "Need"
+  },
+  {
+    "text": "Kailash Phone Exchange",
+    "type": "Need"
+  },
+  {
+    "text": "Ashok Telephone Shop",
+    "type": "Need"
+  },
+  {
+    "text": "Narmada Phone Exchange",
+    "type": "Need"
+  },
+  {
+    "text": "Vaishno Telephone Centre",
+    "type": "Need"
+  },
+  {
+    "text": "Jagat Phone Shop",
+    "type": "Need"
+  },
+  {
+    "text": "Galaxy Telephone Exchange",
+    "type": "Need"
+  },
+  {
+    "text": "Star Telephone Centre",
+    "type": "Need"
+  },
+  {
+    "text": "Intercom Connection Bill",
+    "type": "Need"
+  },
+  {
+    "text": "Intercom Monthly Plan",
+    "type": "Need"
+  },
+  {
+    "text": "Intercom Service Bill",
+    "type": "Need"
+  },
+  {
+    "text": "Telephone Monthly Rental",
+    "type": "Need"
+  },
+  {
+    "text": "Phone Exchange Dues",
+    "type": "Need"
+  },
+  {
+    "text": "Landline Monthly Rental",
+    "type": "Need"
+  }
+]

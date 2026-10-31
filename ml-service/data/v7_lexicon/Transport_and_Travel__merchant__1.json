@@ -1,0 +1,402 @@
+[
+ {
+  "text": "Ola",
+  "type": "Want"
+ },
+ {
+  "text": "Uber",
+  "type": "Want"
+ },
+ {
+  "text": "PaytmTaxi",
+  "type": "Want"
+ },
+ {
+  "text": "Zoomcar",
+  "type": "Want"
+ },
+ {
+  "text": "BluelineCabs",
+  "type": "Want"
+ },
+ {
+  "text": "EasyRoute",
+  "type": "Want"
+ },
+ {
+  "text": "SedexTaxis",
+  "type": "Want"
+ },
+ {
+  "text": "QuickRide",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiForSure",
+  "type": "Want"
+ },
+ {
+  "text": "Ryde",
+  "type": "Want"
+ },
+ {
+  "text": "Lyft",
+  "type": "Want"
+ },
+ {
+  "text": "MeruCabs",
+  "type": "Want"
+ },
+ {
+  "text": "SavaariCars",
+  "type": "Want"
+ },
+ {
+  "text": "MiraTaxi",
+  "type": "Want"
+ },
+ {
+  "text": "InDriver",
+  "type": "Want"
+ },
+ {
+  "text": "SedanHire",
+  "type": "Want"
+ },
+ {
+  "text": "Drivezy",
+  "type": "Want"
+ },
+ {
+  "text": "LycaTaxi",
+  "type": "Want"
+ },
+ {
+  "text": "RentalHippo",
+  "type": "Want"
+ },
+ {
+  "text": "CabHunt",
+  "type": "Want"
+ },
+ {
+  "text": "Caber",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiBooker",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiIndia",
+  "type": "Want"
+ },
+ {
+  "text": "Rivigo",
+  "type": "Want"
+ },
+ {
+  "text": "BookMyDrive",
+  "type": "Want"
+ },
+ {
+  "text": "DriveMyWay",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiOn",
+  "type": "Want"
+ },
+ {
+  "text": "RideEasy",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiSOS",
+  "type": "Want"
+ },
+ {
+  "text": "BookMyTaxi",
+  "type": "Want"
+ },
+ {
+  "text": "SafeRide",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiFast",
+  "type": "Want"
+ },
+ {
+  "text": "DriveTaxi",
+  "type": "Want"
+ },
+ {
+  "text": "RydeNow",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiAssist",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiBuddy",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiHero",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiOn",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiPanda",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiRush",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiSaathi",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiXpress",
+  "type": "Want"
+ },
+ {
+  "text": "Yelo",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiZ",
+  "type": "Want"
+ },
+ {
+  "text": "Zoom",
+  "type": "Want"
+ },
+ {
+  "text": "GrabTaxi",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiForU",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiPro",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiQuick",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiSmart",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiZone",
+  "type": "Want"
+ },
+ {
+  "text": "Taxi24x7",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiWala",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiRover",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiFleet",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiSolutions",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiGuru",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiWay",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiRider",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiEase",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiRide",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiGo",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiBook",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiFly",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiPro",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiSure",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiTiger",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiZone",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiZoom",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiWagon",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiCabs",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiHunt",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiLink",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiNow",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiQuick",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiRush",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiSafe",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiSpeed",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiZone",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiZoom",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiWagon",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiCabs",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiHunt",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiLink",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiNow",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiQuick",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiRush",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiSafe",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiSpeed",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiZone",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiZoom",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiWagon",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiCabs",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiHunt",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiLink",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiNow",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiQuick",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiRush",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiSafe",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiSpeed",
+  "type": "Want"
+ }
+]

@@ -1,0 +1,322 @@
+[
+ {
+  "text": "Monthly SMS Alert Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Cheque Issue Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Cheque Reissue Charges",
+  "type": "Need"
+ },
+ {
+  "text": "Chequebook Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Stop Cheque Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Min Due Charges",
+  "type": "Need"
+ },
+ {
+  "text": "Minimum Due Penalty",
+  "type": "Need"
+ },
+ {
+  "text": "Locker Key Replacement Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Passbook Update Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Account Opening Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Account Reactivation Charges",
+  "type": "Need"
+ },
+ {
+  "text": "Account Dormancy Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Account Closing Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Debit Card Dispatch Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Card Reissue Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Card Annual Charges",
+  "type": "Need"
+ },
+ {
+  "text": "Cash Limit Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Cash Deposit Fee Branch",
+  "type": "Need"
+ },
+ {
+  "text": "Non Preferred Account Charges",
+  "type": "Need"
+ },
+ {
+  "text": "Penalty for Low Balance",
+  "type": "Need"
+ },
+ {
+  "text": "Monthly Balance Penalty",
+  "type": "Need"
+ },
+ {
+  "text": "Minimum Balance Penalty Quarter",
+  "type": "Need"
+ },
+ {
+  "text": "NEFT Failure Charges",
+  "type": "Need"
+ },
+ {
+  "text": "RTGS Fee Bank",
+  "type": "Need"
+ },
+ {
+  "text": "Outward Remittance Charges",
+  "type": "Need"
+ },
+ {
+  "text": "Wire Transfer Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Foreign Transaction Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Forex Conversion Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Currency Exchange Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Demat Account Annual Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Bank Statement Printing Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Account Statement Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Balance Enquiry Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Income Proof Letter Fee",
+  "type": "Need"
+ },
+ {
+  "text": "NOC Bank Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Loan Document Charges",
+  "type": "Need"
+ },
+ {
+  "text": "Loan Stamp Charges",
+  "type": "Need"
+ },
+ {
+  "text": "Standing Order Fee",
+  "type": "Need"
+ },
+ {
+  "text": "ECS Mandate Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Auto Debit Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Auto Sweep Charges",
+  "type": "Need"
+ },
+ {
+  "text": "UPI Failed Txn Fee",
+  "type": "Need"
+ },
+ {
+  "text": "IMPS Failed Txn Fee",
+  "type": "Need"
+ },
+ {
+  "text": "POS Transaction Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Card Swipe Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Merchant Refund Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Payment Gateway Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Bank Convenience Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Convenience Charges Online",
+  "type": "Need"
+ },
+ {
+  "text": "Online Payment Fee Bank",
+  "type": "Need"
+ },
+ {
+  "text": "Service Fee Netbanking",
+  "type": "Need"
+ },
+ {
+  "text": "Netbanking Setup Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Mobile Banking Activation Fee",
+  "type": "Need"
+ },
+ {
+  "text": "DD Stamp Charges",
+  "type": "Need"
+ },
+ {
+  "text": "Pay Order Stamp Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Bank Draft Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Cashier Cheque Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Bank Guarantee Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Letter of Credit Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Pre Closure Fee Bank",
+  "type": "Need"
+ },
+ {
+  "text": "Loan Prepayment Penalty",
+  "type": "Need"
+ },
+ {
+  "text": "Late Payment Penalty Bank",
+  "type": "Need"
+ },
+ {
+  "text": "Overdue Interest Penalty",
+  "type": "Need"
+ },
+ {
+  "text": "Bounce Penalty Bank",
+  "type": "Need"
+ },
+ {
+  "text": "Cheque Dishonour Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Return Charges Bank",
+  "type": "Need"
+ },
+ {
+  "text": "Insufficient Funds Penalty",
+  "type": "Need"
+ },
+ {
+  "text": "Delayed Payment Charge",
+  "type": "Need"
+ },
+ {
+  "text": "Account Freeze Fee",
+  "type": "Need"
+ },
+ {
+  "text": "KYC Update Fee",
+  "type": "Need"
+ },
+ {
+  "text": "KYC Reverification Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Mail Statement Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Email Statement Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Paper Statement Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Safe Custody Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Nomination Update Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Signature Update Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Address Change Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Account Transfer Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Branch Transfer Fee",
+  "type": "Need"
+ }
+]

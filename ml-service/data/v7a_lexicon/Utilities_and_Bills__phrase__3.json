@@ -1,0 +1,234 @@
+[
+ {
+  "text": "electricity bill",
+  "type": "Need"
+ },
+ {
+  "text": "water bill",
+  "type": "Need"
+ },
+ {
+  "text": "gas cylinder",
+  "type": "Need"
+ },
+ {
+  "text": "pipeda gas",
+  "type": "Need"
+ },
+ {
+  "text": "dth recharge",
+  "type": "Need"
+ },
+ {
+  "text": "broadband bill",
+  "type": "Need"
+ },
+ {
+  "text": "mobile bill",
+  "type": "Need"
+ },
+ {
+  "text": "internet bill",
+  "type": "Need"
+ },
+ {
+  "text": "sewage bill",
+  "type": "Need"
+ },
+ {
+  "text": "phone bill",
+  "type": "Need"
+ },
+ {
+  "text": "nrega",
+  "type": "Need"
+ },
+ {
+  "text": "water tax",
+  "type": "Need"
+ },
+ {
+  "text": "electricity tax",
+  "type": "Need"
+ },
+ {
+  "text": "dth bill",
+  "type": "Need"
+ },
+ {
+  "text": "broadband recharge",
+  "type": "Need"
+ },
+ {
+  "text": "mobile recharge",
+  "type": "Need"
+ },
+ {
+  "text": "gas bill",
+  "type": "Need"
+ },
+ {
+  "text": "pipeda bill",
+  "type": "Need"
+ },
+ {
+  "text": "water bill payment",
+  "type": "Need"
+ },
+ {
+  "text": "electricity bill payment",
+  "type": "Need"
+ },
+ {
+  "text": "dth bill payment",
+  "type": "Need"
+ },
+ {
+  "text": "broadband payment",
+  "type": "Need"
+ },
+ {
+  "text": "mobile payment",
+  "type": "Need"
+ },
+ {
+  "text": "gas payment",
+  "type": "Need"
+ },
+ {
+  "text": "pipeda payment",
+  "type": "Need"
+ },
+ {
+  "text": "water payment",
+  "type": "Need"
+ },
+ {
+  "text": "electricity payment",
+  "type": "Need"
+ },
+ {
+  "text": "dth payment",
+  "type": "Need"
+ },
+ {
+  "text": "broadband payment done",
+  "type": "Need"
+ },
+ {
+  "text": "mobile payment done",
+  "type": "Need"
+ },
+ {
+  "text": "gas payment done",
+  "type": "Need"
+ },
+ {
+  "text": "pipeda payment done",
+  "type": "Need"
+ },
+ {
+  "text": "water payment done",
+  "type": "Need"
+ },
+ {
+  "text": "electricity payment done",
+  "type": "Need"
+ },
+ {
+  "text": "dth payment done",
+  "type": "Need"
+ },
+ {
+  "text": "broadband payment success",
+  "type": "Need"
+ },
+ {
+  "text": "mobile payment success",
+  "type": "Need"
+ },
+ {
+  "text": "gas payment success",
+  "type": "Need"
+ },
+ {
+  "text": "pipeda payment success",
+  "type": "Need"
+ },
+ {
+  "text": "water payment success",
+  "type": "Need"
+ },
+ {
+  "text": "electricity payment success",
+  "type": "Need"
+ },
+ {
+  "text": "dth payment success",
+  "type": "Need"
+ },
+ {
+  "text": "broadband bill received",
+  "type": "Need"
+ },
+ {
+  "text": "mobile bill received",
+  "type": "Need"
+ },
+ {
+  "text": "gas bill received",
+  "type": "Need"
+ },
+ {
+  "text": "pipeda bill received",
+  "type": "Need"
+ },
+ {
+  "text": "water bill received",
+  "type": "Need"
+ },
+ {
+  "text": "electricity bill received",
+  "type": "Need"
+ },
+ {
+  "text": "dth bill received",
+  "type": "Need"
+ },
+ {
+  "text": "internet recharge",
+  "type": "Need"
+ },
+ {
+  "text": "monthly bill",
+  "type": "Need"
+ },
+ {
+  "text": "broadband renewal",
+  "type": "Need"
+ },
+ {
+  "text": "mobile renewal",
+  "type": "Need"
+ },
+ {
+  "text": "gas renewal",
+  "type": "Need"
+ },
+ {
+  "text": "pipeda renewal",
+  "type": "Need"
+ },
+ {
+  "text": "water renewal",
+  "type": "Need"
+ },
+ {
+  "text": "electricity renewal",
+  "type": "Need"
+ },
+ {
+  "text": "dth renewal",
+  "type": "Need"
+ }
+]

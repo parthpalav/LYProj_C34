@@ -1,0 +1,322 @@
+[
+ {
+  "text": "oil change for bike",
+  "type": "Need"
+ },
+ {
+  "text": "oil change for car",
+  "type": "Need"
+ },
+ {
+  "text": "engine oil change done",
+  "type": "Need"
+ },
+ {
+  "text": "bike oil change",
+  "type": "Need"
+ },
+ {
+  "text": "clutch plate change",
+  "type": "Need"
+ },
+ {
+  "text": "clutch plate replacement",
+  "type": "Need"
+ },
+ {
+  "text": "clutch cable replacement",
+  "type": "Need"
+ },
+ {
+  "text": "clutch repair for bike",
+  "type": "Need"
+ },
+ {
+  "text": "brake pads replacement",
+  "type": "Need"
+ },
+ {
+  "text": "brake pad change",
+  "type": "Need"
+ },
+ {
+  "text": "brake shoe change",
+  "type": "Need"
+ },
+ {
+  "text": "brake pads for scooter",
+  "type": "Need"
+ },
+ {
+  "text": "front brake pads",
+  "type": "Need"
+ },
+ {
+  "text": "rear brake pads",
+  "type": "Need"
+ },
+ {
+  "text": "puncture fix for bike",
+  "type": "Need"
+ },
+ {
+  "text": "puncture repair today",
+  "type": "Need"
+ },
+ {
+  "text": "tube puncture bike",
+  "type": "Need"
+ },
+ {
+  "text": "tyre puncture bike",
+  "type": "Need"
+ },
+ {
+  "text": "tubeless puncture repair",
+  "type": "Need"
+ },
+ {
+  "text": "puncture wala bhaiya",
+  "type": "Need"
+ },
+ {
+  "text": "bike puncture",
+  "type": "Need"
+ },
+ {
+  "text": "car puncture",
+  "type": "Need"
+ },
+ {
+  "text": "air filter change",
+  "type": "Need"
+ },
+ {
+  "text": "air filter replacement bike",
+  "type": "Need"
+ },
+ {
+  "text": "spark plug change",
+  "type": "Need"
+ },
+ {
+  "text": "bike chain set",
+  "type": "Need"
+ },
+ {
+  "text": "chain sprocket change",
+  "type": "Need"
+ },
+ {
+  "text": "chain lube bike service",
+  "type": "Need"
+ },
+ {
+  "text": "car battery change",
+  "type": "Need"
+ },
+ {
+  "text": "car battery replaced",
+  "type": "Need"
+ },
+ {
+  "text": "bike battery change",
+  "type": "Need"
+ },
+ {
+  "text": "scooter battery replacement",
+  "type": "Need"
+ },
+ {
+  "text": "coolant top up",
+  "type": "Need"
+ },
+ {
+  "text": "radiator service",
+  "type": "Need"
+ },
+ {
+  "text": "wheel alignment done",
+  "type": "Need"
+ },
+ {
+  "text": "wheel balancing charge",
+  "type": "Need"
+ },
+ {
+  "text": "car wheel balancing",
+  "type": "Need"
+ },
+ {
+  "text": "car ac gas refill",
+  "type": "Need"
+ },
+ {
+  "text": "ac gas refilling car",
+  "type": "Need"
+ },
+ {
+  "text": "car ac service",
+  "type": "Need"
+ },
+ {
+  "text": "bike full service",
+  "type": "Need"
+ },
+ {
+  "text": "car full service",
+  "type": "Need"
+ },
+ {
+  "text": "general service for bike",
+  "type": "Need"
+ },
+ {
+  "text": "gaadi service today",
+  "type": "Need"
+ },
+ {
+  "text": "scooter service",
+  "type": "Need"
+ },
+ {
+  "text": "scooter full service",
+  "type": "Need"
+ },
+ {
+  "text": "car periodic service",
+  "type": "Need"
+ },
+ {
+  "text": "free service bike",
+  "type": "Need"
+ },
+ {
+  "text": "service visit bike",
+  "type": "Need"
+ },
+ {
+  "text": "service visit car",
+  "type": "Need"
+ },
+ {
+  "text": "mechanic bill bike",
+  "type": "Need"
+ },
+ {
+  "text": "mechanic charges car",
+  "type": "Need"
+ },
+ {
+  "text": "workshop bill for bike",
+  "type": "Need"
+ },
+ {
+  "text": "workshop charges bike",
+  "type": "Need"
+ },
+ {
+  "text": "engine repair car",
+  "type": "Need"
+ },
+ {
+  "text": "engine work for bike",
+  "type": "Need"
+ },
+ {
+  "text": "gearbox oil change",
+  "type": "Need"
+ },
+ {
+  "text": "transmission oil change",
+  "type": "Need"
+ },
+ {
+  "text": "brake fluid change",
+  "type": "Need"
+ },
+ {
+  "text": "headlight bulb replacement",
+  "type": "Need"
+ },
+ {
+  "text": "indicator bulb change",
+  "type": "Need"
+ },
+ {
+  "text": "wiper blade replacement",
+  "type": "Need"
+ },
+ {
+  "text": "clutch wire change",
+  "type": "Need"
+ },
+ {
+  "text": "throttle cable change",
+  "type": "Need"
+ },
+ {
+  "text": "carburettor cleaning",
+  "type": "Need"
+ },
+ {
+  "text": "carb cleaning bike",
+  "type": "Need"
+ },
+ {
+  "text": "fuel pump repair",
+  "type": "Need"
+ },
+ {
+  "text": "starter motor repair",
+  "type": "Need"
+ },
+ {
+  "text": "self motor repair bike",
+  "type": "Need"
+ },
+ {
+  "text": "alternator repair",
+  "type": "Need"
+ },
+ {
+  "text": "shock absorber replacement",
+  "type": "Need"
+ },
+ {
+  "text": "bike suspension repair",
+  "type": "Need"
+ },
+ {
+  "text": "car suspension repair",
+  "type": "Need"
+ },
+ {
+  "text": "steering repair car",
+  "type": "Need"
+ },
+ {
+  "text": "exhaust pipe repair",
+  "type": "Need"
+ },
+ {
+  "text": "silencer repair bike",
+  "type": "Need"
+ },
+ {
+  "text": "side mirror replacement bike",
+  "type": "Need"
+ },
+ {
+  "text": "brake light repair",
+  "type": "Need"
+ },
+ {
+  "text": "horn repair bike",
+  "type": "Need"
+ },
+ {
+  "text": "bike tyre replacement",
+  "type": "Need"
+ }
+]

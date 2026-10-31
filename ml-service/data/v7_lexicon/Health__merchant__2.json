@@ -1,0 +1,450 @@
+[
+ {
+  "text": "Balaji Medical Store",
+  "type": "Need"
+ },
+ {
+  "text": "Chennai Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "Sai Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Krishna Medical Hall",
+  "type": "Need"
+ },
+ {
+  "text": "Prem Dental",
+  "type": "Need"
+ },
+ {
+  "text": "Anil Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Health Mart",
+  "type": "Need"
+ },
+ {
+  "text": "Raj's Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "Sanjeevani Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Goyal Diagnostic",
+  "type": "Need"
+ },
+ {
+  "text": "Shree Ayurveda",
+  "type": "Need"
+ },
+ {
+  "text": "Narayana Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Wellness Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "Prakash Dental Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Vaidya's Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "MedLife Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "Kamala Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Aarogya Care",
+  "type": "Need"
+ },
+ {
+  "text": "Mohan Medical",
+  "type": "Need"
+ },
+ {
+  "text": "Sahil Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Renuka Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "Dr. Sharma's Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "MedPlus Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "Anil Ayurveda Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Rajesh Dental",
+  "type": "Need"
+ },
+ {
+  "text": "Murali Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Balakrishna Medical",
+  "type": "Need"
+ },
+ {
+  "text": "Ramesh Diagnostic",
+  "type": "Need"
+ },
+ {
+  "text": "Premnath Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Sangeeta Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "Gyan Dental Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Bhagya Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Sharda Medical",
+  "type": "Need"
+ },
+ {
+  "text": "Shri Ram Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Vijaya Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "Vishnu Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Komal Dental",
+  "type": "Need"
+ },
+ {
+  "text": "Kamal Diagnostic",
+  "type": "Need"
+ },
+ {
+  "text": "Sunny Health Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Madhu Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "Sudha Dental Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Nandini Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Rahul Medical",
+  "type": "Need"
+ },
+ {
+  "text": "Sunita Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "Sanjay Diagnostic",
+  "type": "Need"
+ },
+ {
+  "text": "Kiran Dental",
+  "type": "Need"
+ },
+ {
+  "text": "Manju Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Ramesh Medical",
+  "type": "Need"
+ },
+ {
+  "text": "Rajiv Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "Shyam Diagnostic",
+  "type": "Need"
+ },
+ {
+  "text": "Priya Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Surya Medical",
+  "type": "Need"
+ },
+ {
+  "text": "Rakesh Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "Manorama Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Renuka Dental",
+  "type": "Need"
+ },
+ {
+  "text": "Ganesh Diagnostic",
+  "type": "Need"
+ },
+ {
+  "text": "Madhu Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Sanjay Medical",
+  "type": "Need"
+ },
+ {
+  "text": "Rajesh Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Shyam Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Priya Dental",
+  "type": "Need"
+ },
+ {
+  "text": "Vipul Health Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Komal Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Rajesh Medical Hall",
+  "type": "Need"
+ },
+ {
+  "text": "Sunny Medical",
+  "type": "Need"
+ },
+ {
+  "text": "Bhagyashree Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Rajesh Diagnostic",
+  "type": "Need"
+ },
+ {
+  "text": "Madhu Dental",
+  "type": "Need"
+ },
+ {
+  "text": "Kamal Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Vijaya Dental",
+  "type": "Need"
+ },
+ {
+  "text": "Renuka Medical",
+  "type": "Need"
+ },
+ {
+  "text": "Kiran Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Gyan Dental",
+  "type": "Need"
+ },
+ {
+  "text": "Madhu Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "Sanjay Dental",
+  "type": "Need"
+ },
+ {
+  "text": "Ramesh Dental Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Manju Dental",
+  "type": "Need"
+ },
+ {
+  "text": "Vipul Dental Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Bhagyashree Dental",
+  "type": "Need"
+ },
+ {
+  "text": "Komal Dental Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Rajesh Medical Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "Sunny Dental",
+  "type": "Need"
+ },
+ {
+  "text": "Madhu Diagnostic",
+  "type": "Need"
+ },
+ {
+  "text": "Kiran Clinic Dental",
+  "type": "Need"
+ },
+ {
+  "text": "Ganesh Dental Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Vipul Health Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Komal Medical",
+  "type": "Need"
+ },
+ {
+  "text": "Shyam Medical Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Priya Health Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Sunny Dental Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Vijaya Health Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Rajesh Dental Hall",
+  "type": "Need"
+ },
+ {
+  "text": "Madhu Medical Hall",
+  "type": "Need"
+ },
+ {
+  "text": "Kiran Clinic Dental Hall",
+  "type": "Need"
+ },
+ {
+  "text": "Ganesh Dental Hall",
+  "type": "Need"
+ },
+ {
+  "text": "Vipul Health Hall",
+  "type": "Need"
+ },
+ {
+  "text": "Komal Medical Hall",
+  "type": "Need"
+ },
+ {
+  "text": "Shyam Medical Hall",
+  "type": "Need"
+ },
+ {
+  "text": "Priya Health Hall",
+  "type": "Need"
+ },
+ {
+  "text": "Sunny Dental Hall",
+  "type": "Need"
+ },
+ {
+  "text": "Vijaya Health Hall",
+  "type": "Need"
+ },
+ {
+  "text": "Rajesh Dental Hall",
+  "type": "Need"
+ },
+ {
+  "text": "Madhu Medical Hall",
+  "type": "Need"
+ },
+ {
+  "text": "Kiran Clinic Dental Hall",
+  "type": "Need"
+ },
+ {
+  "text": "Ganesh Dental Hall",
+  "type": "Need"
+ },
+ {
+  "text": "Vipul Health Hall",
+  "type": "Need"
+ },
+ {
+  "text": "Komal Medical Hall",
+  "type": "Need"
+ },
+ {
+  "text": "Shyam Medical Hall",
+  "type": "Need"
+ },
+ {
+  "text": "Priya Health Hall",
+  "type": "Need"
+ },
+ {
+  "text": "Sunny Dental Hall",
+  "type": "Need"
+ },
+ {
+  "text": "Vijaya Health Hall",
+  "type": "Need"
+ },
+ {
+  "text": "Rajesh Dental Hall",
+  "type": "Need"
+ }
+]

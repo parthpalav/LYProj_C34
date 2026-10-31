@@ -1,0 +1,1538 @@
+[
+ {
+  "text": "Apollo Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "Apollo Hospitals",
+  "type": "Need"
+ },
+ {
+  "text": "Apollo Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Apollo Diagnostics",
+  "type": "Need"
+ },
+ {
+  "text": "Apollo 24/7",
+  "type": "Need"
+ },
+ {
+  "text": "Apollo Cradle",
+  "type": "Need"
+ },
+ {
+  "text": "Apollo Spectra",
+  "type": "Need"
+ },
+ {
+  "text": "Apollo Dental",
+  "type": "Need"
+ },
+ {
+  "text": "MedPlus",
+  "type": "Need"
+ },
+ {
+  "text": "MedPlus Mart",
+  "type": "Need"
+ },
+ {
+  "text": "MedPlus Diagnostics",
+  "type": "Need"
+ },
+ {
+  "text": "Wellness Forever",
+  "type": "Need"
+ },
+ {
+  "text": "Netmeds",
+  "type": "Need"
+ },
+ {
+  "text": "PharmEasy",
+  "type": "Need"
+ },
+ {
+  "text": "Tata 1mg",
+  "type": "Need"
+ },
+ {
+  "text": "1mg",
+  "type": "Need"
+ },
+ {
+  "text": "Truemeds",
+  "type": "Need"
+ },
+ {
+  "text": "Frank Ross Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "Frank Ross",
+  "type": "Need"
+ },
+ {
+  "text": "Davaindia",
+  "type": "Need"
+ },
+ {
+  "text": "Dava India",
+  "type": "Need"
+ },
+ {
+  "text": "Jan Aushadhi",
+  "type": "Need"
+ },
+ {
+  "text": "Jan Aushadhi Kendra",
+  "type": "Need"
+ },
+ {
+  "text": "PMBJP Kendra",
+  "type": "Need"
+ },
+ {
+  "text": "Generic Aadhaar",
+  "type": "Need"
+ },
+ {
+  "text": "Zeno Health",
+  "type": "Need"
+ },
+ {
+  "text": "Medkart Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "Medkart",
+  "type": "Need"
+ },
+ {
+  "text": "Healthkart Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "Guardian Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "Noble Plus Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "Plus Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "Health and Glow Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "Dawaa Dost",
+  "type": "Need"
+ },
+ {
+  "text": "Dawai Dost",
+  "type": "Need"
+ },
+ {
+  "text": "Mediplus Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "Sanjivani Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "Sri Krishna Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "Sri Balaji Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "Hetero Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "Medlife",
+  "type": "Need"
+ },
+ {
+  "text": "Medlife Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "Pharmacy Plus",
+  "type": "Need"
+ },
+ {
+  "text": "Pillpack India",
+  "type": "Need"
+ },
+ {
+  "text": "Dr Morepen",
+  "type": "Need"
+ },
+ {
+  "text": "Morepen Labs",
+  "type": "Need"
+ },
+ {
+  "text": "MyUpchar",
+  "type": "Need"
+ },
+ {
+  "text": "Pristyn Care",
+  "type": "Need"
+ },
+ {
+  "text": "Practo",
+  "type": "Need"
+ },
+ {
+  "text": "Practo Plus",
+  "type": "Need"
+ },
+ {
+  "text": "MFine",
+  "type": "Need"
+ },
+ {
+  "text": "DocsApp",
+  "type": "Need"
+ },
+ {
+  "text": "Lybrate",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Health",
+  "type": "Need"
+ },
+ {
+  "text": "Tata MD",
+  "type": "Need"
+ },
+ {
+  "text": "Medibuddy",
+  "type": "Need"
+ },
+ {
+  "text": "Mediassist Health",
+  "type": "Need"
+ },
+ {
+  "text": "Amwell India",
+  "type": "Need"
+ },
+ {
+  "text": "Eka Care",
+  "type": "Need"
+ },
+ {
+  "text": "CureFit Care",
+  "type": "Need"
+ },
+ {
+  "text": "Cure.fit Care",
+  "type": "Need"
+ },
+ {
+  "text": "Docon",
+  "type": "Need"
+ },
+ {
+  "text": "Cult Care",
+  "type": "Need"
+ },
+ {
+  "text": "Dr Reddys Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "Wockhardt Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Wockhardt Hospitals",
+  "type": "Need"
+ },
+ {
+  "text": "Fortis Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Fortis Healthcare",
+  "type": "Need"
+ },
+ {
+  "text": "Fortis Escorts",
+  "type": "Need"
+ },
+ {
+  "text": "Fortis Memorial",
+  "type": "Need"
+ },
+ {
+  "text": "Fortis La Femme",
+  "type": "Need"
+ },
+ {
+  "text": "Fortis Malar",
+  "type": "Need"
+ },
+ {
+  "text": "Fortis Flt Lt Rajan Dhall",
+  "type": "Need"
+ },
+ {
+  "text": "Max Healthcare",
+  "type": "Need"
+ },
+ {
+  "text": "Max Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Max Super Speciality",
+  "type": "Need"
+ },
+ {
+  "text": "Max Smart Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Manipal Hospitals",
+  "type": "Need"
+ },
+ {
+  "text": "Manipal Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Manipal Health",
+  "type": "Need"
+ },
+ {
+  "text": "Manipal Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Narayana Health",
+  "type": "Need"
+ },
+ {
+  "text": "Narayana Hrudayalaya",
+  "type": "Need"
+ },
+ {
+  "text": "Narayana Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Narayana Netralaya",
+  "type": "Need"
+ },
+ {
+  "text": "Aster Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Aster CMI",
+  "type": "Need"
+ },
+ {
+  "text": "Aster Medcity",
+  "type": "Need"
+ },
+ {
+  "text": "Aster RV",
+  "type": "Need"
+ },
+ {
+  "text": "Aster Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Aster Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "KIMS Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "KIMS Health",
+  "type": "Need"
+ },
+ {
+  "text": "KIMS Kingsway",
+  "type": "Need"
+ },
+ {
+  "text": "KIMS Sunshine",
+  "type": "Need"
+ },
+ {
+  "text": "KIMS Hospitals",
+  "type": "Need"
+ },
+ {
+  "text": "Medanta",
+  "type": "Need"
+ },
+ {
+  "text": "Medanta Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Medanta The Medicity",
+  "type": "Need"
+ },
+ {
+  "text": "Medanta Mediclinic",
+  "type": "Need"
+ },
+ {
+  "text": "Rainbow Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Rainbow Hospitals",
+  "type": "Need"
+ },
+ {
+  "text": "Rainbow Children Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Birla Fertility",
+  "type": "Need"
+ },
+ {
+  "text": "Cloudnine Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Cloudnine",
+  "type": "Need"
+ },
+ {
+  "text": "Motherhood Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Motherhood Hospitals",
+  "type": "Need"
+ },
+ {
+  "text": "Sankara Nethralaya",
+  "type": "Need"
+ },
+ {
+  "text": "Sankara Eye Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Sankara Eye Care",
+  "type": "Need"
+ },
+ {
+  "text": "Aravind Eye Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Aravind Eye Care",
+  "type": "Need"
+ },
+ {
+  "text": "LV Prasad Eye Institute",
+  "type": "Need"
+ },
+ {
+  "text": "LVPEI",
+  "type": "Need"
+ },
+ {
+  "text": "Dr Agarwals Eye Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Dr Agarwals Health Care",
+  "type": "Need"
+ },
+ {
+  "text": "Maxivision",
+  "type": "Need"
+ },
+ {
+  "text": "Maxivision Eye Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Vasan Eye Care",
+  "type": "Need"
+ },
+ {
+  "text": "Vasan Health Care",
+  "type": "Need"
+ },
+ {
+  "text": "Centre For Sight",
+  "type": "Need"
+ },
+ {
+  "text": "Eye Q Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Eye-Q",
+  "type": "Need"
+ },
+ {
+  "text": "Shroff Eye Centre",
+  "type": "Need"
+ },
+ {
+  "text": "Shroff Eye Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Dr Shroffs Charity Eye",
+  "type": "Need"
+ },
+ {
+  "text": "Lotus Eye Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Chaitanya Eye Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Clear Vision Eye Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Nethradhama",
+  "type": "Need"
+ },
+ {
+  "text": "Nethradhama Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Hiranandani Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Fortis Hiranandani",
+  "type": "Need"
+ },
+ {
+  "text": "Lilavati Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Kokilaben Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Kokilaben Ambani Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Breach Candy Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Jaslok Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Nanavati Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Nanavati Max",
+  "type": "Need"
+ },
+ {
+  "text": "Wockhardt Mumbai",
+  "type": "Need"
+ },
+ {
+  "text": "Bombay Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Memorial Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Memorial Centre",
+  "type": "Need"
+ },
+ {
+  "text": "Sir HN Reliance Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "HN Reliance Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Reliance Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Saifee Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Masina Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Holy Family Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Holy Spirit Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Asian Heart Institute",
+  "type": "Need"
+ },
+ {
+  "text": "Global Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Gleneagles Global",
+  "type": "Need"
+ },
+ {
+  "text": "Gleneagles Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Gleneagles Global Health",
+  "type": "Need"
+ },
+ {
+  "text": "Zynova Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Criticare Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Dr LH Hiranandani",
+  "type": "Need"
+ },
+ {
+  "text": "Ruby Hall Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Jehangir Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Sahyadri Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Sahyadri Hospitals",
+  "type": "Need"
+ },
+ {
+  "text": "Dr Lal PathLabs",
+  "type": "Need"
+ },
+ {
+  "text": "Dr Lal Path Labs",
+  "type": "Need"
+ },
+ {
+  "text": "Metropolis",
+  "type": "Need"
+ },
+ {
+  "text": "Metropolis Healthcare",
+  "type": "Need"
+ },
+ {
+  "text": "Agilus Diagnostics",
+  "type": "Need"
+ },
+ {
+  "text": "SRL Diagnostics",
+  "type": "Need"
+ },
+ {
+  "text": "SRL Labs",
+  "type": "Need"
+ },
+ {
+  "text": "Thyrocare",
+  "type": "Need"
+ },
+ {
+  "text": "Thyrocare Technologies",
+  "type": "Need"
+ },
+ {
+  "text": "Redcliffe Labs",
+  "type": "Need"
+ },
+ {
+  "text": "Redcliffe",
+  "type": "Need"
+ },
+ {
+  "text": "Healthians",
+  "type": "Need"
+ },
+ {
+  "text": "Neuberg Diagnostics",
+  "type": "Need"
+ },
+ {
+  "text": "Neuberg",
+  "type": "Need"
+ },
+ {
+  "text": "Pathkind",
+  "type": "Need"
+ },
+ {
+  "text": "Pathkind Labs",
+  "type": "Need"
+ },
+ {
+  "text": "Vijaya Diagnostic",
+  "type": "Need"
+ },
+ {
+  "text": "Vijaya Diagnostics",
+  "type": "Need"
+ },
+ {
+  "text": "Suburban Diagnostics",
+  "type": "Need"
+ },
+ {
+  "text": "Orange Health",
+  "type": "Need"
+ },
+ {
+  "text": "Orange Health Labs",
+  "type": "Need"
+ },
+ {
+  "text": "Tata 1mg Labs",
+  "type": "Need"
+ },
+ {
+  "text": "Lal Path Labs",
+  "type": "Need"
+ },
+ {
+  "text": "Krsnaa Diagnostics",
+  "type": "Need"
+ },
+ {
+  "text": "Krsnaa",
+  "type": "Need"
+ },
+ {
+  "text": "Medall",
+  "type": "Need"
+ },
+ {
+  "text": "Medall Healthcare",
+  "type": "Need"
+ },
+ {
+  "text": "Aarthi Scans",
+  "type": "Need"
+ },
+ {
+  "text": "Aarthi Scans and Labs",
+  "type": "Need"
+ },
+ {
+  "text": "Hitech Diagnostic",
+  "type": "Need"
+ },
+ {
+  "text": "Scanron",
+  "type": "Need"
+ },
+ {
+  "text": "Lucid Diagnostics",
+  "type": "Need"
+ },
+ {
+  "text": "Core Diagnostics",
+  "type": "Need"
+ },
+ {
+  "text": "Ampath",
+  "type": "Need"
+ },
+ {
+  "text": "Ampath Labs",
+  "type": "Need"
+ },
+ {
+  "text": "Genestrings",
+  "type": "Need"
+ },
+ {
+  "text": "Mylab",
+  "type": "Need"
+ },
+ {
+  "text": "Mylab Discovery",
+  "type": "Need"
+ },
+ {
+  "text": "Care Labs",
+  "type": "Need"
+ },
+ {
+  "text": "Quest Diagnostics India",
+  "type": "Need"
+ },
+ {
+  "text": "Oncquest",
+  "type": "Need"
+ },
+ {
+  "text": "Oncquest Labs",
+  "type": "Need"
+ },
+ {
+  "text": "Pathcare Labs",
+  "type": "Need"
+ },
+ {
+  "text": "Reliable Diagnostics",
+  "type": "Need"
+ },
+ {
+  "text": "Jeevan Diagnostics",
+  "type": "Need"
+ },
+ {
+  "text": "Sterling Accuris",
+  "type": "Need"
+ },
+ {
+  "text": "Accuris Diagnostics",
+  "type": "Need"
+ },
+ {
+  "text": "Anand Diagnostic",
+  "type": "Need"
+ },
+ {
+  "text": "Anand Diagnostic Laboratory",
+  "type": "Need"
+ },
+ {
+  "text": "Nirmal Diagnostics",
+  "type": "Need"
+ },
+ {
+  "text": "Tulip Diagnostics",
+  "type": "Need"
+ },
+ {
+  "text": "Prime Diagnostics",
+  "type": "Need"
+ },
+ {
+  "text": "Unipath",
+  "type": "Need"
+ },
+ {
+  "text": "Unipath Labs",
+  "type": "Need"
+ },
+ {
+  "text": "Cerba Lancet",
+  "type": "Need"
+ },
+ {
+  "text": "Lancet Labs",
+  "type": "Need"
+ },
+ {
+  "text": "Bio Diagnostics",
+  "type": "Need"
+ },
+ {
+  "text": "Diagnostic Centre",
+  "type": "Need"
+ },
+ {
+  "text": "Mediscan",
+  "type": "Need"
+ },
+ {
+  "text": "Maxlab",
+  "type": "Need"
+ },
+ {
+  "text": "Wellcare Diagnostics",
+  "type": "Need"
+ },
+ {
+  "text": "Bajaj Finserv Health",
+  "type": "Need"
+ },
+ {
+  "text": "Bajaj Health",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Diagnostics",
+  "type": "Need"
+ },
+ {
+  "text": "Dentzz",
+  "type": "Need"
+ },
+ {
+  "text": "Clove Dental",
+  "type": "Need"
+ },
+ {
+  "text": "Sabka Dentist",
+  "type": "Need"
+ },
+ {
+  "text": "Smile Dental",
+  "type": "Need"
+ },
+ {
+  "text": "Dental Dost",
+  "type": "Need"
+ },
+ {
+  "text": "Mouth Health",
+  "type": "Need"
+ },
+ {
+  "text": "Pearl Dental",
+  "type": "Need"
+ },
+ {
+  "text": "32 Smiles",
+  "type": "Need"
+ },
+ {
+  "text": "Tooth Fairy Dental",
+  "type": "Need"
+ },
+ {
+  "text": "Dentist Plus",
+  "type": "Need"
+ },
+ {
+  "text": "Rishikesh Dental",
+  "type": "Need"
+ },
+ {
+  "text": "Maxivision Laser",
+  "type": "Need"
+ },
+ {
+  "text": "Lenskart Eye Test",
+  "type": "Need"
+ },
+ {
+  "text": "Titan Eye Plus Test",
+  "type": "Need"
+ },
+ {
+  "text": "Specsmakers Eye Test",
+  "type": "Need"
+ },
+ {
+  "text": "Eye Mantra",
+  "type": "Need"
+ },
+ {
+  "text": "Eye Care Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Vision Express Eye Test",
+  "type": "Need"
+ },
+ {
+  "text": "Laservision",
+  "type": "Need"
+ },
+ {
+  "text": "Laser Vision",
+  "type": "Need"
+ },
+ {
+  "text": "Cult Fit",
+  "type": "Want"
+ },
+ {
+  "text": "Cult.fit",
+  "type": "Want"
+ },
+ {
+  "text": "Cultsport",
+  "type": "Want"
+ },
+ {
+  "text": "Gold's Gym",
+  "type": "Want"
+ },
+ {
+  "text": "Golds Gym",
+  "type": "Want"
+ },
+ {
+  "text": "Anytime Fitness",
+  "type": "Want"
+ },
+ {
+  "text": "Snap Fitness",
+  "type": "Want"
+ },
+ {
+  "text": "Fitness First",
+  "type": "Want"
+ },
+ {
+  "text": "Talwalkars",
+  "type": "Want"
+ },
+ {
+  "text": "Talwalkars Gym",
+  "type": "Want"
+ },
+ {
+  "text": "Fitness One",
+  "type": "Want"
+ },
+ {
+  "text": "Powerhouse Gym",
+  "type": "Want"
+ },
+ {
+  "text": "Gold Gym",
+  "type": "Want"
+ },
+ {
+  "text": "Curves",
+  "type": "Want"
+ },
+ {
+  "text": "Curves India",
+  "type": "Want"
+ },
+ {
+  "text": "F45 Training",
+  "type": "Want"
+ },
+ {
+  "text": "Orange Theory",
+  "type": "Want"
+ },
+ {
+  "text": "Orangetheory Fitness",
+  "type": "Want"
+ },
+ {
+  "text": "Planet Fitness India",
+  "type": "Want"
+ },
+ {
+  "text": "The Gym",
+  "type": "Want"
+ },
+ {
+  "text": "Ultimate Fitness",
+  "type": "Want"
+ },
+ {
+  "text": "Body Fit Gym",
+  "type": "Want"
+ },
+ {
+  "text": "Fitness Zone",
+  "type": "Want"
+ },
+ {
+  "text": "Fitness Hub",
+  "type": "Want"
+ },
+ {
+  "text": "Muscle Factory",
+  "type": "Want"
+ },
+ {
+  "text": "Iron Paradise",
+  "type": "Want"
+ },
+ {
+  "text": "Evolve Fitness",
+  "type": "Want"
+ },
+ {
+  "text": "Chisel Fitness",
+  "type": "Want"
+ },
+ {
+  "text": "Chisel Gym",
+  "type": "Want"
+ },
+ {
+  "text": "Cure Fit Gym",
+  "type": "Want"
+ },
+ {
+  "text": "Anytime Fitness India",
+  "type": "Want"
+ },
+ {
+  "text": "Fit Hub",
+  "type": "Want"
+ },
+ {
+  "text": "Fitpass",
+  "type": "Want"
+ },
+ {
+  "text": "Fitternity",
+  "type": "Want"
+ },
+ {
+  "text": "Gympik",
+  "type": "Want"
+ },
+ {
+  "text": "Healthify Me",
+  "type": "Want"
+ },
+ {
+  "text": "HealthifyMe",
+  "type": "Want"
+ },
+ {
+  "text": "Fittr",
+  "type": "Want"
+ },
+ {
+  "text": "Cult Live",
+  "type": "Want"
+ },
+ {
+  "text": "Isha Yoga",
+  "type": "Want"
+ },
+ {
+  "text": "Isha Foundation",
+  "type": "Want"
+ },
+ {
+  "text": "Art of Living",
+  "type": "Want"
+ },
+ {
+  "text": "Patanjali Yogpeeth",
+  "type": "Want"
+ },
+ {
+  "text": "Yoga Institute",
+  "type": "Want"
+ },
+ {
+  "text": "The Yoga Institute",
+  "type": "Want"
+ },
+ {
+  "text": "Bihar School of Yoga",
+  "type": "Want"
+ },
+ {
+  "text": "Sivananda Yoga",
+  "type": "Want"
+ },
+ {
+  "text": "Kaivalyadhama",
+  "type": "Want"
+ },
+ {
+  "text": "Kaivalyadhama Yoga",
+  "type": "Want"
+ },
+ {
+  "text": "Yoga Studio",
+  "type": "Want"
+ },
+ {
+  "text": "Yoga Centre",
+  "type": "Want"
+ },
+ {
+  "text": "Zumba Studio",
+  "type": "Want"
+ },
+ {
+  "text": "Zumba Fitness",
+  "type": "Want"
+ },
+ {
+  "text": "Yogaville",
+  "type": "Want"
+ },
+ {
+  "text": "Pilates Studio",
+  "type": "Want"
+ },
+ {
+  "text": "Crossfit",
+  "type": "Want"
+ },
+ {
+  "text": "CrossFit Box",
+  "type": "Want"
+ },
+ {
+  "text": "Boxing Gym",
+  "type": "Want"
+ },
+ {
+  "text": "MMA Gym",
+  "type": "Want"
+ },
+ {
+  "text": "Swimming Pool Club",
+  "type": "Want"
+ },
+ {
+  "text": "MuscleBlaze",
+  "type": "Want"
+ },
+ {
+  "text": "HealthKart",
+  "type": "Want"
+ },
+ {
+  "text": "HK Vitals",
+  "type": "Want"
+ },
+ {
+  "text": "Fast and Up",
+  "type": "Want"
+ },
+ {
+  "text": "Fast&Up",
+  "type": "Want"
+ },
+ {
+  "text": "Optimum Nutrition",
+  "type": "Want"
+ },
+ {
+  "text": "ON Gold Standard",
+  "type": "Want"
+ },
+ {
+  "text": "MyProtein",
+  "type": "Want"
+ },
+ {
+  "text": "GNC",
+  "type": "Want"
+ },
+ {
+  "text": "GNC India",
+  "type": "Want"
+ },
+ {
+  "text": "Muscletech",
+  "type": "Want"
+ },
+ {
+  "text": "Dymatize",
+  "type": "Want"
+ },
+ {
+  "text": "Ultimate Nutrition",
+  "type": "Want"
+ },
+ {
+  "text": "BigMuscles",
+  "type": "Want"
+ },
+ {
+  "text": "Big Muscles Nutrition",
+  "type": "Want"
+ },
+ {
+  "text": "AS-IT-IS Nutrition",
+  "type": "Want"
+ },
+ {
+  "text": "AS-IT-IS",
+  "type": "Want"
+ },
+ {
+  "text": "Asitis",
+  "type": "Want"
+ },
+ {
+  "text": "Nutrabay",
+  "type": "Want"
+ },
+ {
+  "text": "Nutrabay Store",
+  "type": "Want"
+ },
+ {
+  "text": "Wellbeing Nutrition",
+  "type": "Want"
+ },
+ {
+  "text": "Wellbeing",
+  "type": "Want"
+ },
+ {
+  "text": "Oziva",
+  "type": "Want"
+ },
+ {
+  "text": "Kapiva",
+  "type": "Want"
+ },
+ {
+  "text": "Kapiva Ayurveda",
+  "type": "Want"
+ },
+ {
+  "text": "Himalaya Wellness",
+  "type": "Want"
+ },
+ {
+  "text": "Ritebite",
+  "type": "Want"
+ },
+ {
+  "text": "RiteBite Max Protein",
+  "type": "Want"
+ },
+ {
+  "text": "Yoga Bar",
+  "type": "Want"
+ },
+ {
+  "text": "Yogabar",
+  "type": "Want"
+ },
+ {
+  "text": "Fitspire",
+  "type": "Want"
+ },
+ {
+  "text": "Fitspire Nutrition",
+  "type": "Want"
+ },
+ {
+  "text": "The Whole Truth",
+  "type": "Want"
+ },
+ {
+  "text": "The Whole Truth Foods",
+  "type": "Want"
+ },
+ {
+  "text": "Boldfit",
+  "type": "Want"
+ },
+ {
+  "text": "Boldfit Fitness",
+  "type": "Want"
+ },
+ {
+  "text": "Decathlon Fitness",
+  "type": "Want"
+ },
+ {
+  "text": "Isagenix",
+  "type": "Want"
+ },
+ {
+  "text": "Herbalife",
+  "type": "Want"
+ },
+ {
+  "text": "Herbalife Nutrition",
+  "type": "Want"
+ },
+ {
+  "text": "Amway Nutrilite",
+  "type": "Want"
+ },
+ {
+  "text": "Nutrilite",
+  "type": "Want"
+ },
+ {
+  "text": "Forever Living",
+  "type": "Want"
+ },
+ {
+  "text": "Vestige",
+  "type": "Want"
+ },
+ {
+  "text": "Vestige Marketing",
+  "type": "Want"
+ },
+ {
+  "text": "Muscle Blaze",
+  "type": "Want"
+ },
+ {
+  "text": "Avvatar",
+  "type": "Want"
+ },
+ {
+  "text": "Avvatar Proteins",
+  "type": "Want"
+ },
+ {
+  "text": "Scitron",
+  "type": "Want"
+ },
+ {
+  "text": "Scitron Nutrition",
+  "type": "Want"
+ },
+ {
+  "text": "GNC Live Well",
+  "type": "Want"
+ },
+ {
+  "text": "Naturaltein",
+  "type": "Want"
+ },
+ {
+  "text": "Naturaltein Protein",
+  "type": "Want"
+ },
+ {
+  "text": "Neuherbs",
+  "type": "Want"
+ },
+ {
+  "text": "Setu Nutrition",
+  "type": "Want"
+ },
+ {
+  "text": "Giffy",
+  "type": "Want"
+ },
+ {
+  "text": "Giffy Nutrition",
+  "type": "Want"
+ },
+ {
+  "text": "Sinew Nutrition",
+  "type": "Want"
+ },
+ {
+  "text": "Sinew",
+  "type": "Want"
+ },
+ {
+  "text": "Labrada",
+  "type": "Want"
+ },
+ {
+  "text": "Labrada Nutrition",
+  "type": "Want"
+ },
+ {
+  "text": "Universal Nutrition",
+  "type": "Want"
+ },
+ {
+  "text": "BSN Nutrition",
+  "type": "Want"
+ },
+ {
+  "text": "Cellucor",
+  "type": "Want"
+ },
+ {
+  "text": "Cellucor India",
+  "type": "Want"
+ },
+ {
+  "text": "Isopure",
+  "type": "Want"
+ },
+ {
+  "text": "Ronnie Coleman Signature",
+  "type": "Want"
+ },
+ {
+  "text": "Rule One",
+  "type": "Want"
+ },
+ {
+  "text": "Rule1 Proteins",
+  "type": "Want"
+ },
+ {
+  "text": "Rule 1 Proteins",
+  "type": "Want"
+ },
+ {
+  "text": "Muscleblaze Biozyme",
+  "type": "Want"
+ },
+ {
+  "text": "Biozyme",
+  "type": "Want"
+ },
+ {
+  "text": "Bigflex",
+  "type": "Want"
+ },
+ {
+  "text": "Bigflex Nutrition",
+  "type": "Want"
+ },
+ {
+  "text": "Revolution Nutrition",
+  "type": "Want"
+ },
+ {
+  "text": "Revolutionary Nutrition",
+  "type": "Want"
+ }
+]

@@ -1,0 +1,4970 @@
+[
+ {
+  "text": "Indian Oil",
+  "type": "Need"
+ },
+ {
+  "text": "IOCL",
+  "type": "Need"
+ },
+ {
+  "text": "IndianOil",
+  "type": "Need"
+ },
+ {
+  "text": "Indian Oil Petrol Pump",
+  "type": "Need"
+ },
+ {
+  "text": "BPCL",
+  "type": "Need"
+ },
+ {
+  "text": "Bharat Petroleum",
+  "type": "Need"
+ },
+ {
+  "text": "Bharat Petroleum Pump",
+  "type": "Need"
+ },
+ {
+  "text": "HPCL",
+  "type": "Need"
+ },
+ {
+  "text": "Hindustan Petroleum",
+  "type": "Need"
+ },
+ {
+  "text": "HP Petrol Pump",
+  "type": "Need"
+ },
+ {
+  "text": "HP Pay",
+  "type": "Need"
+ },
+ {
+  "text": "Shell",
+  "type": "Need"
+ },
+ {
+  "text": "Shell Petrol Pump",
+  "type": "Need"
+ },
+ {
+  "text": "Nayara Energy",
+  "type": "Need"
+ },
+ {
+  "text": "Nayara Petrol Pump",
+  "type": "Need"
+ },
+ {
+  "text": "Jio-bp",
+  "type": "Need"
+ },
+ {
+  "text": "Jio bp Pump",
+  "type": "Need"
+ },
+ {
+  "text": "Reliance Petrol Pump",
+  "type": "Need"
+ },
+ {
+  "text": "Essar Oil",
+  "type": "Need"
+ },
+ {
+  "text": "Essar Petrol Pump",
+  "type": "Need"
+ },
+ {
+  "text": "Petrol Pump",
+  "type": "Need"
+ },
+ {
+  "text": "Fuel Station",
+  "type": "Need"
+ },
+ {
+  "text": "Filling Station",
+  "type": "Need"
+ },
+ {
+  "text": "Service Station Fuel",
+  "type": "Need"
+ },
+ {
+  "text": "Gas Station",
+  "type": "Need"
+ },
+ {
+  "text": "CNG Pump",
+  "type": "Need"
+ },
+ {
+  "text": "Mahanagar Gas CNG",
+  "type": "Need"
+ },
+ {
+  "text": "Indraprastha Gas CNG",
+  "type": "Need"
+ },
+ {
+  "text": "IGL CNG",
+  "type": "Need"
+ },
+ {
+  "text": "Adani Total Gas CNG",
+  "type": "Need"
+ },
+ {
+  "text": "Gujarat Gas CNG",
+  "type": "Need"
+ },
+ {
+  "text": "Sabarmati Gas CNG",
+  "type": "Need"
+ },
+ {
+  "text": "Torrent Gas CNG",
+  "type": "Need"
+ },
+ {
+  "text": "XtraPower",
+  "type": "Need"
+ },
+ {
+  "text": "XP95 Petrol",
+  "type": "Need"
+ },
+ {
+  "text": "Speed Petrol",
+  "type": "Need"
+ },
+ {
+  "text": "Power Petrol",
+  "type": "Need"
+ },
+ {
+  "text": "Turbojet Petrol",
+  "type": "Need"
+ },
+ {
+  "text": "MGL CNG",
+  "type": "Need"
+ },
+ {
+  "text": "Bharat Petroleum Speed",
+  "type": "Need"
+ },
+ {
+  "text": "IOCL Xtrapremium",
+  "type": "Need"
+ },
+ {
+  "text": "Servo Fuel",
+  "type": "Need"
+ },
+ {
+  "text": "IndianOil XTRAREWARDS",
+  "type": "Need"
+ },
+ {
+  "text": "SmartDrive HPCL",
+  "type": "Need"
+ },
+ {
+  "text": "FASTag",
+  "type": "Need"
+ },
+ {
+  "text": "Paytm FASTag",
+  "type": "Need"
+ },
+ {
+  "text": "HDFC Bank FASTag",
+  "type": "Need"
+ },
+ {
+  "text": "ICICI Bank FASTag",
+  "type": "Need"
+ },
+ {
+  "text": "SBI FASTag",
+  "type": "Need"
+ },
+ {
+  "text": "Axis Bank FASTag",
+  "type": "Need"
+ },
+ {
+  "text": "IDFC First FASTag",
+  "type": "Need"
+ },
+ {
+  "text": "Airtel Payments Bank FASTag",
+  "type": "Need"
+ },
+ {
+  "text": "Kotak FASTag",
+  "type": "Need"
+ },
+ {
+  "text": "Bank of Baroda FASTag",
+  "type": "Need"
+ },
+ {
+  "text": "PNB FASTag",
+  "type": "Need"
+ },
+ {
+  "text": "Federal Bank FASTag",
+  "type": "Need"
+ },
+ {
+  "text": "IndusInd FASTag",
+  "type": "Need"
+ },
+ {
+  "text": "Union Bank FASTag",
+  "type": "Need"
+ },
+ {
+  "text": "Canara Bank FASTag",
+  "type": "Need"
+ },
+ {
+  "text": "Equitas FASTag",
+  "type": "Need"
+ },
+ {
+  "text": "Yes Bank FASTag",
+  "type": "Need"
+ },
+ {
+  "text": "IHMCL",
+  "type": "Need"
+ },
+ {
+  "text": "NHAI",
+  "type": "Need"
+ },
+ {
+  "text": "NHAI Toll",
+  "type": "Need"
+ },
+ {
+  "text": "NHAI Toll Plaza",
+  "type": "Need"
+ },
+ {
+  "text": "Toll Plaza",
+  "type": "Need"
+ },
+ {
+  "text": "Toll Tax",
+  "type": "Need"
+ },
+ {
+  "text": "NETC FASTag",
+  "type": "Need"
+ },
+ {
+  "text": "Mumbai Metro",
+  "type": "Need"
+ },
+ {
+  "text": "Mumbai Metro One",
+  "type": "Need"
+ },
+ {
+  "text": "Mumbai Metro Line 3",
+  "type": "Need"
+ },
+ {
+  "text": "MMRC",
+  "type": "Need"
+ },
+ {
+  "text": "MMRDA Metro",
+  "type": "Need"
+ },
+ {
+  "text": "DMRC",
+  "type": "Need"
+ },
+ {
+  "text": "Delhi Metro",
+  "type": "Need"
+ },
+ {
+  "text": "Namma Metro",
+  "type": "Need"
+ },
+ {
+  "text": "BMRCL",
+  "type": "Need"
+ },
+ {
+  "text": "Chennai Metro",
+  "type": "Need"
+ },
+ {
+  "text": "CMRL",
+  "type": "Need"
+ },
+ {
+  "text": "Kochi Metro",
+  "type": "Need"
+ },
+ {
+  "text": "KMRL",
+  "type": "Need"
+ },
+ {
+  "text": "Hyderabad Metro",
+  "type": "Need"
+ },
+ {
+  "text": "L&T Metro",
+  "type": "Need"
+ },
+ {
+  "text": "HMRL",
+  "type": "Need"
+ },
+ {
+  "text": "Kolkata Metro",
+  "type": "Need"
+ },
+ {
+  "text": "Metro Railway Kolkata",
+  "type": "Need"
+ },
+ {
+  "text": "Jaipur Metro",
+  "type": "Need"
+ },
+ {
+  "text": "JMRC",
+  "type": "Need"
+ },
+ {
+  "text": "Lucknow Metro",
+  "type": "Need"
+ },
+ {
+  "text": "LMRC",
+  "type": "Need"
+ },
+ {
+  "text": "Nagpur Metro",
+  "type": "Need"
+ },
+ {
+  "text": "Maha Metro",
+  "type": "Need"
+ },
+ {
+  "text": "Pune Metro",
+  "type": "Need"
+ },
+ {
+  "text": "Ahmedabad Metro",
+  "type": "Need"
+ },
+ {
+  "text": "GMRC",
+  "type": "Need"
+ },
+ {
+  "text": "Gujarat Metro",
+  "type": "Need"
+ },
+ {
+  "text": "Bhopal Metro",
+  "type": "Need"
+ },
+ {
+  "text": "Indore Metro",
+  "type": "Need"
+ },
+ {
+  "text": "MP Metro",
+  "type": "Need"
+ },
+ {
+  "text": "Patna Metro",
+  "type": "Need"
+ },
+ {
+  "text": "PMRC",
+  "type": "Need"
+ },
+ {
+  "text": "Kanpur Metro",
+  "type": "Need"
+ },
+ {
+  "text": "Agra Metro",
+  "type": "Need"
+ },
+ {
+  "text": "UPMRC",
+  "type": "Need"
+ },
+ {
+  "text": "Noida Metro",
+  "type": "Need"
+ },
+ {
+  "text": "NMRC",
+  "type": "Need"
+ },
+ {
+  "text": "Rapid Metro Gurgaon",
+  "type": "Need"
+ },
+ {
+  "text": "Gurugram Metro",
+  "type": "Need"
+ },
+ {
+  "text": "Delhi Airport Metro",
+  "type": "Need"
+ },
+ {
+  "text": "Surat Metro",
+  "type": "Need"
+ },
+ {
+  "text": "Navi Mumbai Metro",
+  "type": "Need"
+ },
+ {
+  "text": "CIDCO Metro",
+  "type": "Need"
+ },
+ {
+  "text": "Thane Metro",
+  "type": "Need"
+ },
+ {
+  "text": "Vadodara Metro",
+  "type": "Need"
+ },
+ {
+  "text": "Mumbai Local",
+  "type": "Need"
+ },
+ {
+  "text": "Mumbai Local Train",
+  "type": "Need"
+ },
+ {
+  "text": "UTS",
+  "type": "Need"
+ },
+ {
+  "text": "UTS Mobile Ticket",
+  "type": "Need"
+ },
+ {
+  "text": "Suburban Railway",
+  "type": "Need"
+ },
+ {
+  "text": "Central Railway Local",
+  "type": "Need"
+ },
+ {
+  "text": "Western Railway Local",
+  "type": "Need"
+ },
+ {
+  "text": "Chennai Suburban",
+  "type": "Need"
+ },
+ {
+  "text": "Kolkata Suburban",
+  "type": "Need"
+ },
+ {
+  "text": "Hyderabad MMTS",
+  "type": "Need"
+ },
+ {
+  "text": "MMTS",
+  "type": "Need"
+ },
+ {
+  "text": "Pune Local",
+  "type": "Need"
+ },
+ {
+  "text": "BEST",
+  "type": "Need"
+ },
+ {
+  "text": "BEST Bus",
+  "type": "Need"
+ },
+ {
+  "text": "BEST Undertaking",
+  "type": "Need"
+ },
+ {
+  "text": "BEST Chalo",
+  "type": "Need"
+ },
+ {
+  "text": "BMTC",
+  "type": "Need"
+ },
+ {
+  "text": "BMTC Bus",
+  "type": "Need"
+ },
+ {
+  "text": "BMTC Bus Pass",
+  "type": "Need"
+ },
+ {
+  "text": "DTC",
+  "type": "Need"
+ },
+ {
+  "text": "DTC Bus",
+  "type": "Need"
+ },
+ {
+  "text": "DTC Bus Pass",
+  "type": "Need"
+ },
+ {
+  "text": "Delhi Bus",
+  "type": "Need"
+ },
+ {
+  "text": "DIMTS",
+  "type": "Need"
+ },
+ {
+  "text": "DEVI Bus",
+  "type": "Need"
+ },
+ {
+  "text": "MTC",
+  "type": "Need"
+ },
+ {
+  "text": "MTC Chennai",
+  "type": "Need"
+ },
+ {
+  "text": "MTC Bus",
+  "type": "Need"
+ },
+ {
+  "text": "CTU Chennai",
+  "type": "Need"
+ },
+ {
+  "text": "NMMT",
+  "type": "Need"
+ },
+ {
+  "text": "Navi Mumbai Municipal Transport",
+  "type": "Need"
+ },
+ {
+  "text": "TMT",
+  "type": "Need"
+ },
+ {
+  "text": "Thane Municipal Transport",
+  "type": "Need"
+ },
+ {
+  "text": "KDMT",
+  "type": "Need"
+ },
+ {
+  "text": "PMPML",
+  "type": "Need"
+ },
+ {
+  "text": "Pune Mahanagar Parivahan",
+  "type": "Need"
+ },
+ {
+  "text": "PMPML Bus",
+  "type": "Need"
+ },
+ {
+  "text": "PCMT",
+  "type": "Need"
+ },
+ {
+  "text": "AMTS",
+  "type": "Need"
+ },
+ {
+  "text": "Ahmedabad Municipal Transport",
+  "type": "Need"
+ },
+ {
+  "text": "AMTS Bus",
+  "type": "Need"
+ },
+ {
+  "text": "BRTS Ahmedabad",
+  "type": "Need"
+ },
+ {
+  "text": "Janmarg",
+  "type": "Need"
+ },
+ {
+  "text": "Surat BRTS",
+  "type": "Need"
+ },
+ {
+  "text": "Sitilink",
+  "type": "Need"
+ },
+ {
+  "text": "Rajkot Rajpath",
+  "type": "Need"
+ },
+ {
+  "text": "Vadodara City Bus",
+  "type": "Need"
+ },
+ {
+  "text": "Kolkata Bus",
+  "type": "Need"
+ },
+ {
+  "text": "CTC Kolkata",
+  "type": "Need"
+ },
+ {
+  "text": "WBTC",
+  "type": "Need"
+ },
+ {
+  "text": "West Bengal Transport Corporation",
+  "type": "Need"
+ },
+ {
+  "text": "Kolkata Tram",
+  "type": "Need"
+ },
+ {
+  "text": "CSTC",
+  "type": "Need"
+ },
+ {
+  "text": "Kolkata Ferry",
+  "type": "Need"
+ },
+ {
+  "text": "TSRTC City Bus",
+  "type": "Need"
+ },
+ {
+  "text": "GHMC Bus",
+  "type": "Need"
+ },
+ {
+  "text": "Hyderabad City Bus",
+  "type": "Need"
+ },
+ {
+  "text": "VMC Bus",
+  "type": "Need"
+ },
+ {
+  "text": "APSRTC City Bus",
+  "type": "Need"
+ },
+ {
+  "text": "Visakhapatnam City Bus",
+  "type": "Need"
+ },
+ {
+  "text": "Kochi Water Metro",
+  "type": "Need"
+ },
+ {
+  "text": "KSRTC Swift City",
+  "type": "Need"
+ },
+ {
+  "text": "KURTC",
+  "type": "Need"
+ },
+ {
+  "text": "Trivandrum City Bus",
+  "type": "Need"
+ },
+ {
+  "text": "JNNURM Bus",
+  "type": "Need"
+ },
+ {
+  "text": "Lucknow City Bus",
+  "type": "Need"
+ },
+ {
+  "text": "LCTSL",
+  "type": "Need"
+ },
+ {
+  "text": "Jaipur City Bus",
+  "type": "Need"
+ },
+ {
+  "text": "JCTSL",
+  "type": "Need"
+ },
+ {
+  "text": "Indore iBus",
+  "type": "Need"
+ },
+ {
+  "text": "AICTSL",
+  "type": "Need"
+ },
+ {
+  "text": "Bhopal BCLL",
+  "type": "Need"
+ },
+ {
+  "text": "BRTS Bhopal",
+  "type": "Need"
+ },
+ {
+  "text": "Nagpur Aapli Bus",
+  "type": "Need"
+ },
+ {
+  "text": "Chandigarh CTU",
+  "type": "Need"
+ },
+ {
+  "text": "CTU Bus",
+  "type": "Need"
+ },
+ {
+  "text": "Bhubaneswar Mo Bus",
+  "type": "Need"
+ },
+ {
+  "text": "Mo Bus",
+  "type": "Need"
+ },
+ {
+  "text": "CRUT",
+  "type": "Need"
+ },
+ {
+  "text": "Guwahati City Bus",
+  "type": "Need"
+ },
+ {
+  "text": "ASTC City Bus",
+  "type": "Need"
+ },
+ {
+  "text": "Patna City Bus",
+  "type": "Need"
+ },
+ {
+  "text": "Ranchi City Bus",
+  "type": "Need"
+ },
+ {
+  "text": "Dehradun City Bus",
+  "type": "Need"
+ },
+ {
+  "text": "Goa Kadamba City",
+  "type": "Need"
+ },
+ {
+  "text": "Kadamba Transport",
+  "type": "Need"
+ },
+ {
+  "text": "KTCL",
+  "type": "Need"
+ },
+ {
+  "text": "Mysore City Bus",
+  "type": "Need"
+ },
+ {
+  "text": "Mangalore City Bus",
+  "type": "Need"
+ },
+ {
+  "text": "Coimbatore City Bus",
+  "type": "Need"
+ },
+ {
+  "text": "Madurai City Bus",
+  "type": "Need"
+ },
+ {
+  "text": "Chalo App",
+  "type": "Need"
+ },
+ {
+  "text": "Chalo Bus",
+  "type": "Need"
+ },
+ {
+  "text": "Tummoc",
+  "type": "Need"
+ },
+ {
+  "text": "Tummoc Bus",
+  "type": "Need"
+ },
+ {
+  "text": "Namma Yatri Auto",
+  "type": "Need"
+ },
+ {
+  "text": "Auto Rickshaw",
+  "type": "Need"
+ },
+ {
+  "text": "Autorickshaw",
+  "type": "Need"
+ },
+ {
+  "text": "Auto Fare",
+  "type": "Need"
+ },
+ {
+  "text": "Meru Cabs",
+  "type": "Need"
+ },
+ {
+  "text": "Kali Peeli Taxi",
+  "type": "Need"
+ },
+ {
+  "text": "Black Yellow Taxi",
+  "type": "Need"
+ },
+ {
+  "text": "Prepaid Taxi",
+  "type": "Need"
+ },
+ {
+  "text": "Prepaid Auto",
+  "type": "Need"
+ },
+ {
+  "text": "Prepaid Taxi Booth",
+  "type": "Need"
+ },
+ {
+  "text": "EV Charging",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Power EZ Charge",
+  "type": "Need"
+ },
+ {
+  "text": "EZ Charge",
+  "type": "Need"
+ },
+ {
+  "text": "Statiq",
+  "type": "Need"
+ },
+ {
+  "text": "ChargeZone",
+  "type": "Need"
+ },
+ {
+  "text": "Jio-bp pulse",
+  "type": "Need"
+ },
+ {
+  "text": "Jio bp Pulse",
+  "type": "Need"
+ },
+ {
+  "text": "Ather Grid",
+  "type": "Need"
+ },
+ {
+  "text": "Glida",
+  "type": "Need"
+ },
+ {
+  "text": "Fortum Charge",
+  "type": "Need"
+ },
+ {
+  "text": "ChargeGrid",
+  "type": "Need"
+ },
+ {
+  "text": "Volttic",
+  "type": "Need"
+ },
+ {
+  "text": "Zeon Charging",
+  "type": "Need"
+ },
+ {
+  "text": "Magenta ChargeGrid",
+  "type": "Need"
+ },
+ {
+  "text": "Kazam",
+  "type": "Need"
+ },
+ {
+  "text": "Kazam EV",
+  "type": "Need"
+ },
+ {
+  "text": "Charge Point India",
+  "type": "Need"
+ },
+ {
+  "text": "Bolt Charging",
+  "type": "Need"
+ },
+ {
+  "text": "Exicom",
+  "type": "Need"
+ },
+ {
+  "text": "Exicom Charging",
+  "type": "Need"
+ },
+ {
+  "text": "BPCL Charge",
+  "type": "Need"
+ },
+ {
+  "text": "BPCL Pulse",
+  "type": "Need"
+ },
+ {
+  "text": "IOCL EV Charging",
+  "type": "Need"
+ },
+ {
+  "text": "Hero Electric Charging",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Power Charging",
+  "type": "Need"
+ },
+ {
+  "text": "Ola Electric Hypercharger",
+  "type": "Need"
+ },
+ {
+  "text": "Ola Hypercharger",
+  "type": "Need"
+ },
+ {
+  "text": "EVRE",
+  "type": "Need"
+ },
+ {
+  "text": "EVRE Charging",
+  "type": "Need"
+ },
+ {
+  "text": "Evera",
+  "type": "Need"
+ },
+ {
+  "text": "Electrify",
+  "type": "Need"
+ },
+ {
+  "text": "PlugNgo",
+  "type": "Need"
+ },
+ {
+  "text": "Plug N Go",
+  "type": "Need"
+ },
+ {
+  "text": "Relux Electric",
+  "type": "Need"
+ },
+ {
+  "text": "Okaya EV Charging",
+  "type": "Need"
+ },
+ {
+  "text": "ReCharge Zone",
+  "type": "Need"
+ },
+ {
+  "text": "Parking",
+  "type": "Need"
+ },
+ {
+  "text": "Parking Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Car Parking",
+  "type": "Need"
+ },
+ {
+  "text": "Bike Parking",
+  "type": "Need"
+ },
+ {
+  "text": "Parking Charges",
+  "type": "Need"
+ },
+ {
+  "text": "Airport Parking",
+  "type": "Need"
+ },
+ {
+  "text": "Station Parking",
+  "type": "Need"
+ },
+ {
+  "text": "Mall Parking",
+  "type": "Need"
+ },
+ {
+  "text": "ParkPlus",
+  "type": "Need"
+ },
+ {
+  "text": "Park+",
+  "type": "Need"
+ },
+ {
+  "text": "ParkMate",
+  "type": "Need"
+ },
+ {
+  "text": "Parkomatic",
+  "type": "Need"
+ },
+ {
+  "text": "Get My Parking",
+  "type": "Need"
+ },
+ {
+  "text": "Quickpark",
+  "type": "Need"
+ },
+ {
+  "text": "ParkNGo",
+  "type": "Need"
+ },
+ {
+  "text": "Parking Pay",
+  "type": "Need"
+ },
+ {
+  "text": "Smart Parking",
+  "type": "Need"
+ },
+ {
+  "text": "Municipal Parking",
+  "type": "Need"
+ },
+ {
+  "text": "BMC Parking",
+  "type": "Need"
+ },
+ {
+  "text": "Pay and Park",
+  "type": "Need"
+ },
+ {
+  "text": "MCD Parking",
+  "type": "Need"
+ },
+ {
+  "text": "NDMC Parking",
+  "type": "Need"
+ },
+ {
+  "text": "BBMP Parking",
+  "type": "Need"
+ },
+ {
+  "text": "GCC Parking",
+  "type": "Need"
+ },
+ {
+  "text": "Multilevel Parking",
+  "type": "Need"
+ },
+ {
+  "text": "Valet Parking",
+  "type": "Need"
+ },
+ {
+  "text": "GoMechanic",
+  "type": "Need"
+ },
+ {
+  "text": "Mahindra First Choice",
+  "type": "Need"
+ },
+ {
+  "text": "Mahindra First Choice Wheels",
+  "type": "Need"
+ },
+ {
+  "text": "Maruti Suzuki Service",
+  "type": "Need"
+ },
+ {
+  "text": "Maruti Suzuki Arena Service",
+  "type": "Need"
+ },
+ {
+  "text": "Nexa Service",
+  "type": "Need"
+ },
+ {
+  "text": "Hyundai Service",
+  "type": "Need"
+ },
+ {
+  "text": "Hyundai Service Centre",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Motors Service",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Motors Service Centre",
+  "type": "Need"
+ },
+ {
+  "text": "Mahindra Service",
+  "type": "Need"
+ },
+ {
+  "text": "Mahindra Authorised Service",
+  "type": "Need"
+ },
+ {
+  "text": "Honda Cars Service",
+  "type": "Need"
+ },
+ {
+  "text": "Toyota Service",
+  "type": "Need"
+ },
+ {
+  "text": "Toyota Service Centre",
+  "type": "Need"
+ },
+ {
+  "text": "Kia Service",
+  "type": "Need"
+ },
+ {
+  "text": "Skoda Service",
+  "type": "Need"
+ },
+ {
+  "text": "Volkswagen Service",
+  "type": "Need"
+ },
+ {
+  "text": "Renault Service",
+  "type": "Need"
+ },
+ {
+  "text": "Nissan Service",
+  "type": "Need"
+ },
+ {
+  "text": "MG Motor Service",
+  "type": "Need"
+ },
+ {
+  "text": "Ford Service",
+  "type": "Need"
+ },
+ {
+  "text": "Jeep Service",
+  "type": "Need"
+ },
+ {
+  "text": "Citroen Service",
+  "type": "Need"
+ },
+ {
+  "text": "Hero MotoCorp Service",
+  "type": "Need"
+ },
+ {
+  "text": "Hero Service Centre",
+  "type": "Need"
+ },
+ {
+  "text": "Honda Two Wheeler Service",
+  "type": "Need"
+ },
+ {
+  "text": "Honda Bike Service",
+  "type": "Need"
+ },
+ {
+  "text": "Bajaj Auto Service",
+  "type": "Need"
+ },
+ {
+  "text": "Bajaj Service Centre",
+  "type": "Need"
+ },
+ {
+  "text": "TVS Motor Service",
+  "type": "Need"
+ },
+ {
+  "text": "TVS Service Centre",
+  "type": "Need"
+ },
+ {
+  "text": "Royal Enfield Service",
+  "type": "Need"
+ },
+ {
+  "text": "Suzuki Motorcycle Service",
+  "type": "Need"
+ },
+ {
+  "text": "Yamaha Service",
+  "type": "Need"
+ },
+ {
+  "text": "KTM Service",
+  "type": "Need"
+ },
+ {
+  "text": "Ather Service",
+  "type": "Need"
+ },
+ {
+  "text": "Ola Electric Service",
+  "type": "Need"
+ },
+ {
+  "text": "Ola Service Centre",
+  "type": "Need"
+ },
+ {
+  "text": "Bajaj Chetak Service",
+  "type": "Need"
+ },
+ {
+  "text": "Hero Vida Service",
+  "type": "Need"
+ },
+ {
+  "text": "Car Service",
+  "type": "Need"
+ },
+ {
+  "text": "Bike Service",
+  "type": "Need"
+ },
+ {
+  "text": "Two Wheeler Service",
+  "type": "Need"
+ },
+ {
+  "text": "Garage",
+  "type": "Need"
+ },
+ {
+  "text": "Auto Garage",
+  "type": "Need"
+ },
+ {
+  "text": "Motor Garage",
+  "type": "Need"
+ },
+ {
+  "text": "Car Repair",
+  "type": "Need"
+ },
+ {
+  "text": "Bike Repair",
+  "type": "Need"
+ },
+ {
+  "text": "Puncture Repair",
+  "type": "Need"
+ },
+ {
+  "text": "Puncture Shop",
+  "type": "Need"
+ },
+ {
+  "text": "Tyre Puncture",
+  "type": "Need"
+ },
+ {
+  "text": "Wheel Alignment",
+  "type": "Need"
+ },
+ {
+  "text": "Wheel Balancing",
+  "type": "Need"
+ },
+ {
+  "text": "Car Mechanic",
+  "type": "Need"
+ },
+ {
+  "text": "Auto Works",
+  "type": "Need"
+ },
+ {
+  "text": "Motors Service",
+  "type": "Need"
+ },
+ {
+  "text": "Auto Service Centre",
+  "type": "Need"
+ },
+ {
+  "text": "Authorised Service Centre",
+  "type": "Need"
+ },
+ {
+  "text": "Bosch Car Service",
+  "type": "Need"
+ },
+ {
+  "text": "Bosch Service",
+  "type": "Need"
+ },
+ {
+  "text": "Carz Mantra",
+  "type": "Need"
+ },
+ {
+  "text": "Popular Vehicles",
+  "type": "Need"
+ },
+ {
+  "text": "Popular Vehicles and Services",
+  "type": "Need"
+ },
+ {
+  "text": "Pitstop",
+  "type": "Need"
+ },
+ {
+  "text": "Pitstop Bike Service",
+  "type": "Need"
+ },
+ {
+  "text": "Bike Doctor",
+  "type": "Need"
+ },
+ {
+  "text": "BikeDoctor",
+  "type": "Need"
+ },
+ {
+  "text": "Bikes Service",
+  "type": "Need"
+ },
+ {
+  "text": "Bykemania",
+  "type": "Need"
+ },
+ {
+  "text": "Bike Bazaar",
+  "type": "Need"
+ },
+ {
+  "text": "MyTVS",
+  "type": "Need"
+ },
+ {
+  "text": "ServiceMyCar",
+  "type": "Need"
+ },
+ {
+  "text": "Car Care Garage",
+  "type": "Need"
+ },
+ {
+  "text": "Carnation",
+  "type": "Need"
+ },
+ {
+  "text": "GoBumpr",
+  "type": "Need"
+ },
+ {
+  "text": "MyCarCare",
+  "type": "Need"
+ },
+ {
+  "text": "Mechanic Bhai",
+  "type": "Need"
+ },
+ {
+  "text": "3M Car Care",
+  "type": "Need"
+ },
+ {
+  "text": "Revv Service",
+  "type": "Need"
+ },
+ {
+  "text": "Zoomcar Service",
+  "type": "Need"
+ },
+ {
+  "text": "Mobil Car Care",
+  "type": "Need"
+ },
+ {
+  "text": "Shell Helix Service",
+  "type": "Need"
+ },
+ {
+  "text": "Castrol Autoservice",
+  "type": "Need"
+ },
+ {
+  "text": "Castrol Service",
+  "type": "Need"
+ },
+ {
+  "text": "Valvoline Service",
+  "type": "Need"
+ },
+ {
+  "text": "Servo Service",
+  "type": "Need"
+ },
+ {
+  "text": "Engine Oil",
+  "type": "Need"
+ },
+ {
+  "text": "Engine Oil Change",
+  "type": "Need"
+ },
+ {
+  "text": "Castrol",
+  "type": "Need"
+ },
+ {
+  "text": "Castrol Engine Oil",
+  "type": "Need"
+ },
+ {
+  "text": "Mobil Oil",
+  "type": "Need"
+ },
+ {
+  "text": "Valvoline",
+  "type": "Need"
+ },
+ {
+  "text": "Gulf Oil",
+  "type": "Need"
+ },
+ {
+  "text": "Servo",
+  "type": "Need"
+ },
+ {
+  "text": "HP Lubricants",
+  "type": "Need"
+ },
+ {
+  "text": "Veedol",
+  "type": "Need"
+ },
+ {
+  "text": "Tide Water Oil",
+  "type": "Need"
+ },
+ {
+  "text": "MRF",
+  "type": "Need"
+ },
+ {
+  "text": "MRF Tyres",
+  "type": "Need"
+ },
+ {
+  "text": "MRF Tyre",
+  "type": "Need"
+ },
+ {
+  "text": "Apollo Tyres",
+  "type": "Need"
+ },
+ {
+  "text": "Apollo Tyre",
+  "type": "Need"
+ },
+ {
+  "text": "Apollo Zone",
+  "type": "Need"
+ },
+ {
+  "text": "CEAT",
+  "type": "Need"
+ },
+ {
+  "text": "CEAT Tyres",
+  "type": "Need"
+ },
+ {
+  "text": "CEAT Shoppe",
+  "type": "Need"
+ },
+ {
+  "text": "JK Tyre",
+  "type": "Need"
+ },
+ {
+  "text": "JK Tyres",
+  "type": "Need"
+ },
+ {
+  "text": "JK Tyre Steel Wheel",
+  "type": "Need"
+ },
+ {
+  "text": "Bridgestone",
+  "type": "Need"
+ },
+ {
+  "text": "Bridgestone Tyres",
+  "type": "Need"
+ },
+ {
+  "text": "Goodyear",
+  "type": "Need"
+ },
+ {
+  "text": "Goodyear Tyres",
+  "type": "Need"
+ },
+ {
+  "text": "Michelin",
+  "type": "Need"
+ },
+ {
+  "text": "Michelin Tyres",
+  "type": "Need"
+ },
+ {
+  "text": "Continental Tyres",
+  "type": "Need"
+ },
+ {
+  "text": "Pirelli",
+  "type": "Need"
+ },
+ {
+  "text": "Yokohama",
+  "type": "Need"
+ },
+ {
+  "text": "Yokohama Tyres",
+  "type": "Need"
+ },
+ {
+  "text": "TVS Eurogrip",
+  "type": "Need"
+ },
+ {
+  "text": "Eurogrip",
+  "type": "Need"
+ },
+ {
+  "text": "Birla Tyres",
+  "type": "Need"
+ },
+ {
+  "text": "Hankook Tyres",
+  "type": "Need"
+ },
+ {
+  "text": "Maxxis",
+  "type": "Need"
+ },
+ {
+  "text": "Maxxis Tyres",
+  "type": "Need"
+ },
+ {
+  "text": "Dunlop",
+  "type": "Need"
+ },
+ {
+  "text": "Dunlop Tyres",
+  "type": "Need"
+ },
+ {
+  "text": "Metro Tyres",
+  "type": "Need"
+ },
+ {
+  "text": "Tyre Shop",
+  "type": "Need"
+ },
+ {
+  "text": "Tyre Dealer",
+  "type": "Need"
+ },
+ {
+  "text": "Tyres and Wheels",
+  "type": "Need"
+ },
+ {
+  "text": "TyreMan",
+  "type": "Need"
+ },
+ {
+  "text": "Tyre Wala",
+  "type": "Need"
+ },
+ {
+  "text": "Tyrewale",
+  "type": "Need"
+ },
+ {
+  "text": "Tyre Express",
+  "type": "Need"
+ },
+ {
+  "text": "Tyrefix",
+  "type": "Need"
+ },
+ {
+  "text": "Tyre Express India",
+  "type": "Need"
+ },
+ {
+  "text": "Exide",
+  "type": "Need"
+ },
+ {
+  "text": "Exide Batteries",
+  "type": "Need"
+ },
+ {
+  "text": "Exide Life",
+  "type": "Need"
+ },
+ {
+  "text": "Exide Care",
+  "type": "Need"
+ },
+ {
+  "text": "Exide Industries",
+  "type": "Need"
+ },
+ {
+  "text": "Amaron",
+  "type": "Need"
+ },
+ {
+  "text": "Amaron Batteries",
+  "type": "Need"
+ },
+ {
+  "text": "Amara Raja",
+  "type": "Need"
+ },
+ {
+  "text": "Amara Raja Batteries",
+  "type": "Need"
+ },
+ {
+  "text": "Luminous Batteries",
+  "type": "Need"
+ },
+ {
+  "text": "SF Sonic",
+  "type": "Need"
+ },
+ {
+  "text": "SF Sonic Battery",
+  "type": "Need"
+ },
+ {
+  "text": "Livguard",
+  "type": "Need"
+ },
+ {
+  "text": "Livguard Batteries",
+  "type": "Need"
+ },
+ {
+  "text": "Okaya Batteries",
+  "type": "Need"
+ },
+ {
+  "text": "Banner Batteries",
+  "type": "Need"
+ },
+ {
+  "text": "Bosch Battery",
+  "type": "Need"
+ },
+ {
+  "text": "Varta",
+  "type": "Need"
+ },
+ {
+  "text": "Varta Battery",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Green Batteries",
+  "type": "Need"
+ },
+ {
+  "text": "Tata AutoComp",
+  "type": "Need"
+ },
+ {
+  "text": "Battery Shop",
+  "type": "Need"
+ },
+ {
+  "text": "Battery Dealer",
+  "type": "Need"
+ },
+ {
+  "text": "Two Wheeler Battery",
+  "type": "Need"
+ },
+ {
+  "text": "Car Battery",
+  "type": "Need"
+ },
+ {
+  "text": "Battery Replacement",
+  "type": "Need"
+ },
+ {
+  "text": "Spare Parts",
+  "type": "Need"
+ },
+ {
+  "text": "Auto Spare Parts",
+  "type": "Need"
+ },
+ {
+  "text": "Auto Parts",
+  "type": "Need"
+ },
+ {
+  "text": "Bike Spare Parts",
+  "type": "Need"
+ },
+ {
+  "text": "Car Spare Parts",
+  "type": "Need"
+ },
+ {
+  "text": "Genuine Spare Parts",
+  "type": "Need"
+ },
+ {
+  "text": "Maruti Genuine Parts",
+  "type": "Need"
+ },
+ {
+  "text": "MGP",
+  "type": "Need"
+ },
+ {
+  "text": "Mahindra Genuine Parts",
+  "type": "Need"
+ },
+ {
+  "text": "Hero Genuine Parts",
+  "type": "Need"
+ },
+ {
+  "text": "Honda Genuine Parts",
+  "type": "Need"
+ },
+ {
+  "text": "Bosch Auto Parts",
+  "type": "Need"
+ },
+ {
+  "text": "Uno Minda",
+  "type": "Need"
+ },
+ {
+  "text": "Sundram Fasteners",
+  "type": "Need"
+ },
+ {
+  "text": "Gabriel Shocks",
+  "type": "Need"
+ },
+ {
+  "text": "Gabriel India",
+  "type": "Need"
+ },
+ {
+  "text": "Brakes India",
+  "type": "Need"
+ },
+ {
+  "text": "TVS Brakes",
+  "type": "Need"
+ },
+ {
+  "text": "NGK Spark Plugs",
+  "type": "Need"
+ },
+ {
+  "text": "Autozone",
+  "type": "Need"
+ },
+ {
+  "text": "Auto Zone",
+  "type": "Need"
+ },
+ {
+  "text": "AutoZone India",
+  "type": "Need"
+ },
+ {
+  "text": "Partsbazaar",
+  "type": "Need"
+ },
+ {
+  "text": "Boodmo",
+  "type": "Need"
+ },
+ {
+  "text": "Bike Parts",
+  "type": "Need"
+ },
+ {
+  "text": "Bikers Zone",
+  "type": "Need"
+ },
+ {
+  "text": "Motul",
+  "type": "Need"
+ },
+ {
+  "text": "Motul Oil",
+  "type": "Need"
+ },
+ {
+  "text": "Pennzoil",
+  "type": "Need"
+ },
+ {
+  "text": "Bosch Wipers",
+  "type": "Need"
+ },
+ {
+  "text": "Philips Auto",
+  "type": "Need"
+ },
+ {
+  "text": "Osram Auto",
+  "type": "Need"
+ },
+ {
+  "text": "Gearbox Repair",
+  "type": "Need"
+ },
+ {
+  "text": "Clutch Repair",
+  "type": "Need"
+ },
+ {
+  "text": "Dent Painting",
+  "type": "Need"
+ },
+ {
+  "text": "Denting Painting",
+  "type": "Need"
+ },
+ {
+  "text": "Body Shop",
+  "type": "Need"
+ },
+ {
+  "text": "Car Body Shop",
+  "type": "Need"
+ },
+ {
+  "text": "Vehicle Repair",
+  "type": "Need"
+ },
+ {
+  "text": "Vehicle Service",
+  "type": "Need"
+ },
+ {
+  "text": "Vehicle Servicing",
+  "type": "Need"
+ },
+ {
+  "text": "Vehicle Workshop",
+  "type": "Need"
+ },
+ {
+  "text": "Bike Workshop",
+  "type": "Need"
+ },
+ {
+  "text": "PUC",
+  "type": "Need"
+ },
+ {
+  "text": "PUC Certificate",
+  "type": "Need"
+ },
+ {
+  "text": "PUC Centre",
+  "type": "Need"
+ },
+ {
+  "text": "Pollution Check",
+  "type": "Need"
+ },
+ {
+  "text": "Pollution Under Control",
+  "type": "Need"
+ },
+ {
+  "text": "Vehicle Inspection",
+  "type": "Need"
+ },
+ {
+  "text": "Fitness Certificate",
+  "type": "Need"
+ },
+ {
+  "text": "Truck Repair",
+  "type": "Need"
+ },
+ {
+  "text": "Truck Service",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Truck Service",
+  "type": "Need"
+ },
+ {
+  "text": "Ashok Leyland Service",
+  "type": "Need"
+ },
+ {
+  "text": "BharatBenz Service",
+  "type": "Need"
+ },
+ {
+  "text": "Eicher Service",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Motors Truck",
+  "type": "Need"
+ },
+ {
+  "text": "MSRTC",
+  "type": "Want"
+ },
+ {
+  "text": "MSRTC Bus",
+  "type": "Want"
+ },
+ {
+  "text": "Maharashtra State Road Transport",
+  "type": "Want"
+ },
+ {
+  "text": "MSRTC ST",
+  "type": "Want"
+ },
+ {
+  "text": "ST Bus",
+  "type": "Want"
+ },
+ {
+  "text": "ST Mahamandal",
+  "type": "Want"
+ },
+ {
+  "text": "Shivneri",
+  "type": "Want"
+ },
+ {
+  "text": "Shivshahi",
+  "type": "Want"
+ },
+ {
+  "text": "MSRTC Online",
+  "type": "Want"
+ },
+ {
+  "text": "KSRTC",
+  "type": "Want"
+ },
+ {
+  "text": "KSRTC Karnataka",
+  "type": "Want"
+ },
+ {
+  "text": "KSRTC Kerala",
+  "type": "Want"
+ },
+ {
+  "text": "KSRTC Bus",
+  "type": "Want"
+ },
+ {
+  "text": "Karnataka State Road Transport",
+  "type": "Want"
+ },
+ {
+  "text": "Kerala State Road Transport",
+  "type": "Want"
+ },
+ {
+  "text": "KSRTC Airavat",
+  "type": "Want"
+ },
+ {
+  "text": "Airavat",
+  "type": "Want"
+ },
+ {
+  "text": "Airavat Club Class",
+  "type": "Want"
+ },
+ {
+  "text": "Ambaari",
+  "type": "Want"
+ },
+ {
+  "text": "Rajahamsa",
+  "type": "Want"
+ },
+ {
+  "text": "Kerala RTC",
+  "type": "Want"
+ },
+ {
+  "text": "KSRTC Swift",
+  "type": "Want"
+ },
+ {
+  "text": "APSRTC",
+  "type": "Want"
+ },
+ {
+  "text": "Andhra Pradesh State Road Transport",
+  "type": "Want"
+ },
+ {
+  "text": "APSRTC Online",
+  "type": "Want"
+ },
+ {
+  "text": "APSRTC Bus",
+  "type": "Want"
+ },
+ {
+  "text": "Ammaravathi",
+  "type": "Want"
+ },
+ {
+  "text": "Garuda Plus",
+  "type": "Want"
+ },
+ {
+  "text": "Indra APSRTC",
+  "type": "Want"
+ },
+ {
+  "text": "TGSRTC",
+  "type": "Want"
+ },
+ {
+  "text": "Telangana State Road Transport",
+  "type": "Want"
+ },
+ {
+  "text": "TSRTC",
+  "type": "Want"
+ },
+ {
+  "text": "TSRTC Bus",
+  "type": "Want"
+ },
+ {
+  "text": "TGSRTC Bus",
+  "type": "Want"
+ },
+ {
+  "text": "Telangana RTC",
+  "type": "Want"
+ },
+ {
+  "text": "GSRTC",
+  "type": "Want"
+ },
+ {
+  "text": "Gujarat State Road Transport",
+  "type": "Want"
+ },
+ {
+  "text": "GSRTC Bus",
+  "type": "Want"
+ },
+ {
+  "text": "GSRTC Online",
+  "type": "Want"
+ },
+ {
+  "text": "UPSRTC",
+  "type": "Want"
+ },
+ {
+  "text": "UP Roadways",
+  "type": "Want"
+ },
+ {
+  "text": "UPSRTC Bus",
+  "type": "Want"
+ },
+ {
+  "text": "Uttar Pradesh State Road Transport",
+  "type": "Want"
+ },
+ {
+  "text": "Janrath",
+  "type": "Want"
+ },
+ {
+  "text": "Shatabdi UPSRTC",
+  "type": "Want"
+ },
+ {
+  "text": "RSRTC",
+  "type": "Want"
+ },
+ {
+  "text": "Rajasthan Roadways",
+  "type": "Want"
+ },
+ {
+  "text": "Rajasthan State Road Transport",
+  "type": "Want"
+ },
+ {
+  "text": "RSRTC Bus",
+  "type": "Want"
+ },
+ {
+  "text": "RSRTC Online",
+  "type": "Want"
+ },
+ {
+  "text": "HRTC",
+  "type": "Want"
+ },
+ {
+  "text": "Himachal Road Transport",
+  "type": "Want"
+ },
+ {
+  "text": "HRTC Bus",
+  "type": "Want"
+ },
+ {
+  "text": "HRTC Himachal",
+  "type": "Want"
+ },
+ {
+  "text": "HRTC Online",
+  "type": "Want"
+ },
+ {
+  "text": "HRTC Volvo",
+  "type": "Want"
+ },
+ {
+  "text": "PRTC",
+  "type": "Want"
+ },
+ {
+  "text": "PRTC Punjab",
+  "type": "Want"
+ },
+ {
+  "text": "PEPSU Road Transport",
+  "type": "Want"
+ },
+ {
+  "text": "PEPSU",
+  "type": "Want"
+ },
+ {
+  "text": "PEPSU RTC",
+  "type": "Want"
+ },
+ {
+  "text": "PRTC Bus",
+  "type": "Want"
+ },
+ {
+  "text": "Punjab Roadways",
+  "type": "Want"
+ },
+ {
+  "text": "PUNBUS",
+  "type": "Want"
+ },
+ {
+  "text": "Haryana Roadways",
+  "type": "Want"
+ },
+ {
+  "text": "HRTC Haryana",
+  "type": "Want"
+ },
+ {
+  "text": "Haryana Transport",
+  "type": "Want"
+ },
+ {
+  "text": "Haryana Roadways Bus",
+  "type": "Want"
+ },
+ {
+  "text": "Chandigarh Transport",
+  "type": "Want"
+ },
+ {
+  "text": "CTU Intercity",
+  "type": "Want"
+ },
+ {
+  "text": "Delhi Intercity Bus",
+  "type": "Want"
+ },
+ {
+  "text": "Delhi Transport Corporation",
+  "type": "Want"
+ },
+ {
+  "text": "DTC Intercity",
+  "type": "Want"
+ },
+ {
+  "text": "JKSRTC",
+  "type": "Want"
+ },
+ {
+  "text": "J&K SRTC",
+  "type": "Want"
+ },
+ {
+  "text": "J&K Road Transport",
+  "type": "Want"
+ },
+ {
+  "text": "JKRTC",
+  "type": "Want"
+ },
+ {
+  "text": "Uttarakhand Roadways",
+  "type": "Want"
+ },
+ {
+  "text": "UTC Roadways",
+  "type": "Want"
+ },
+ {
+  "text": "Uttarakhand Transport",
+  "type": "Want"
+ },
+ {
+  "text": "UKSRTC",
+  "type": "Want"
+ },
+ {
+  "text": "Uttarakhand Parivahan",
+  "type": "Want"
+ },
+ {
+  "text": "MPSRTC",
+  "type": "Want"
+ },
+ {
+  "text": "MP Roadways",
+  "type": "Want"
+ },
+ {
+  "text": "MP State Road Transport",
+  "type": "Want"
+ },
+ {
+  "text": "MP Transport",
+  "type": "Want"
+ },
+ {
+  "text": "Madhya Pradesh Road Transport",
+  "type": "Want"
+ },
+ {
+  "text": "CSRTC",
+  "type": "Want"
+ },
+ {
+  "text": "Chhattisgarh Road Transport",
+  "type": "Want"
+ },
+ {
+  "text": "CG Roadways",
+  "type": "Want"
+ },
+ {
+  "text": "BSRTC",
+  "type": "Want"
+ },
+ {
+  "text": "Bihar State Road Transport",
+  "type": "Want"
+ },
+ {
+  "text": "Bihar Roadways",
+  "type": "Want"
+ },
+ {
+  "text": "BSRTC Bihar",
+  "type": "Want"
+ },
+ {
+  "text": "JSRTC",
+  "type": "Want"
+ },
+ {
+  "text": "Jharkhand State Road Transport",
+  "type": "Want"
+ },
+ {
+  "text": "Jharkhand Roadways",
+  "type": "Want"
+ },
+ {
+  "text": "OSRTC",
+  "type": "Want"
+ },
+ {
+  "text": "Odisha State Road Transport",
+  "type": "Want"
+ },
+ {
+  "text": "Odisha Roadways",
+  "type": "Want"
+ },
+ {
+  "text": "OSRTC Bus",
+  "type": "Want"
+ },
+ {
+  "text": "OSRTC Odisha",
+  "type": "Want"
+ },
+ {
+  "text": "WBSTC",
+  "type": "Want"
+ },
+ {
+  "text": "West Bengal Surface Transport",
+  "type": "Want"
+ },
+ {
+  "text": "WBSTC Bus",
+  "type": "Want"
+ },
+ {
+  "text": "NBSTC",
+  "type": "Want"
+ },
+ {
+  "text": "North Bengal State Transport",
+  "type": "Want"
+ },
+ {
+  "text": "SBSTC",
+  "type": "Want"
+ },
+ {
+  "text": "South Bengal State Transport",
+  "type": "Want"
+ },
+ {
+  "text": "CSTC Bus",
+  "type": "Want"
+ },
+ {
+  "text": "ASTC",
+  "type": "Want"
+ },
+ {
+  "text": "Assam State Transport",
+  "type": "Want"
+ },
+ {
+  "text": "ASTC Bus",
+  "type": "Want"
+ },
+ {
+  "text": "ASTC Assam",
+  "type": "Want"
+ },
+ {
+  "text": "ASTC Guwahati",
+  "type": "Want"
+ },
+ {
+  "text": "North East State Transport",
+  "type": "Want"
+ },
+ {
+  "text": "Meghalaya Transport",
+  "type": "Want"
+ },
+ {
+  "text": "Tripura Road Transport",
+  "type": "Want"
+ },
+ {
+  "text": "TRTC",
+  "type": "Want"
+ },
+ {
+  "text": "TRTC Tripura",
+  "type": "Want"
+ },
+ {
+  "text": "Manipur State Transport",
+  "type": "Want"
+ },
+ {
+  "text": "Nagaland State Transport",
+  "type": "Want"
+ },
+ {
+  "text": "NST Nagaland",
+  "type": "Want"
+ },
+ {
+  "text": "Sikkim Nationalised Transport",
+  "type": "Want"
+ },
+ {
+  "text": "SNT",
+  "type": "Want"
+ },
+ {
+  "text": "SNT Sikkim",
+  "type": "Want"
+ },
+ {
+  "text": "Arunachal Pradesh State Transport",
+  "type": "Want"
+ },
+ {
+  "text": "APST",
+  "type": "Want"
+ },
+ {
+  "text": "APSTS",
+  "type": "Want"
+ },
+ {
+  "text": "Goa Kadamba Transport",
+  "type": "Want"
+ },
+ {
+  "text": "Kadamba Corporation",
+  "type": "Want"
+ },
+ {
+  "text": "Kadamba Bus",
+  "type": "Want"
+ },
+ {
+  "text": "KTC Goa",
+  "type": "Want"
+ },
+ {
+  "text": "KTC Kadamba",
+  "type": "Want"
+ },
+ {
+  "text": "TNSTC",
+  "type": "Want"
+ },
+ {
+  "text": "Tamil Nadu State Transport",
+  "type": "Want"
+ },
+ {
+  "text": "SETC",
+  "type": "Want"
+ },
+ {
+  "text": "SETC Tamil Nadu",
+  "type": "Want"
+ },
+ {
+  "text": "SETC Bus",
+  "type": "Want"
+ },
+ {
+  "text": "TNSTC Bus",
+  "type": "Want"
+ },
+ {
+  "text": "TNSTC Online",
+  "type": "Want"
+ },
+ {
+  "text": "TNSTC Kumbakonam",
+  "type": "Want"
+ },
+ {
+  "text": "TNSTC Salem",
+  "type": "Want"
+ },
+ {
+  "text": "TNSTC Madurai",
+  "type": "Want"
+ },
+ {
+  "text": "TNSTC Villupuram",
+  "type": "Want"
+ },
+ {
+  "text": "TNSTC Coimbatore",
+  "type": "Want"
+ },
+ {
+  "text": "Puducherry Road Transport",
+  "type": "Want"
+ },
+ {
+  "text": "PRTC Puducherry",
+  "type": "Want"
+ },
+ {
+  "text": "PRTC Pondicherry",
+  "type": "Want"
+ },
+ {
+  "text": "PRTC Pondy",
+  "type": "Want"
+ },
+ {
+  "text": "Kerala SRTC",
+  "type": "Want"
+ },
+ {
+  "text": "KSRTC Kerala Online",
+  "type": "Want"
+ },
+ {
+  "text": "NWKRTC",
+  "type": "Want"
+ },
+ {
+  "text": "North Western Karnataka RTC",
+  "type": "Want"
+ },
+ {
+  "text": "KKRTC",
+  "type": "Want"
+ },
+ {
+  "text": "Kalyana Karnataka RTC",
+  "type": "Want"
+ },
+ {
+  "text": "NEKRTC",
+  "type": "Want"
+ },
+ {
+  "text": "North Eastern Karnataka RTC",
+  "type": "Want"
+ },
+ {
+  "text": "BMTC Volvo",
+  "type": "Want"
+ },
+ {
+  "text": "Vayu Vajra",
+  "type": "Want"
+ },
+ {
+  "text": "Vayu Vajra BMTC",
+  "type": "Want"
+ },
+ {
+  "text": "SRTC Bus",
+  "type": "Want"
+ },
+ {
+  "text": "SRTC",
+  "type": "Want"
+ },
+ {
+  "text": "SRTC Booking",
+  "type": "Want"
+ },
+ {
+  "text": "State Transport Bus",
+  "type": "Want"
+ },
+ {
+  "text": "State Transport",
+  "type": "Want"
+ },
+ {
+  "text": "State Transport Bus Ticket",
+  "type": "Want"
+ },
+ {
+  "text": "State Road Transport",
+  "type": "Want"
+ },
+ {
+  "text": "Bus Ticket",
+  "type": "Want"
+ },
+ {
+  "text": "IntrCity SmartBus",
+  "type": "Want"
+ },
+ {
+  "text": "IntrCity",
+  "type": "Want"
+ },
+ {
+  "text": "IntrCity Smart Bus",
+  "type": "Want"
+ },
+ {
+  "text": "Zingbus",
+  "type": "Want"
+ },
+ {
+  "text": "Zing Bus",
+  "type": "Want"
+ },
+ {
+  "text": "NueGo",
+  "type": "Want"
+ },
+ {
+  "text": "Nue Go",
+  "type": "Want"
+ },
+ {
+  "text": "NueGo Bus",
+  "type": "Want"
+ },
+ {
+  "text": "FlixBus",
+  "type": "Want"
+ },
+ {
+  "text": "Flix Bus",
+  "type": "Want"
+ },
+ {
+  "text": "FlixBus India",
+  "type": "Want"
+ },
+ {
+  "text": "Flixbus Indian",
+  "type": "Want"
+ },
+ {
+  "text": "Shuttl",
+  "type": "Want"
+ },
+ {
+  "text": "Shuttl Bus",
+  "type": "Want"
+ },
+ {
+  "text": "Chartr",
+  "type": "Want"
+ },
+ {
+  "text": "Chartr Bus",
+  "type": "Want"
+ },
+ {
+  "text": "Cityflo",
+  "type": "Want"
+ },
+ {
+  "text": "Cityflo Bus",
+  "type": "Want"
+ },
+ {
+  "text": "Bus Booking",
+  "type": "Want"
+ },
+ {
+  "text": "Abhibus",
+  "type": "Want"
+ },
+ {
+  "text": "redBus",
+  "type": "Want"
+ },
+ {
+  "text": "Red Bus",
+  "type": "Want"
+ },
+ {
+  "text": "redBus Ticket",
+  "type": "Want"
+ },
+ {
+  "text": "Paytm Bus",
+  "type": "Want"
+ },
+ {
+  "text": "MakeMyTrip Bus",
+  "type": "Want"
+ },
+ {
+  "text": "ixigo Bus",
+  "type": "Want"
+ },
+ {
+  "text": "Orange Travels",
+  "type": "Want"
+ },
+ {
+  "text": "Orange Tours and Travels",
+  "type": "Want"
+ },
+ {
+  "text": "VRL Travels",
+  "type": "Want"
+ },
+ {
+  "text": "VRL Logistics Bus",
+  "type": "Want"
+ },
+ {
+  "text": "SRS Travels",
+  "type": "Want"
+ },
+ {
+  "text": "KPN Travels",
+  "type": "Want"
+ },
+ {
+  "text": "KPN Bus",
+  "type": "Want"
+ },
+ {
+  "text": "Parveen Travels",
+  "type": "Want"
+ },
+ {
+  "text": "Parveen Bus",
+  "type": "Want"
+ },
+ {
+  "text": "Kallada Travels",
+  "type": "Want"
+ },
+ {
+  "text": "Kallada",
+  "type": "Want"
+ },
+ {
+  "text": "Sharma Travels",
+  "type": "Want"
+ },
+ {
+  "text": "Sharma Transports",
+  "type": "Want"
+ },
+ {
+  "text": "Neeta Travels",
+  "type": "Want"
+ },
+ {
+  "text": "Neeta Tours",
+  "type": "Want"
+ },
+ {
+  "text": "Paulo Travels",
+  "type": "Want"
+ },
+ {
+  "text": "Paulo Tours",
+  "type": "Want"
+ },
+ {
+  "text": "Prasanna Travels",
+  "type": "Want"
+ },
+ {
+  "text": "Prasanna Purple",
+  "type": "Want"
+ },
+ {
+  "text": "VRL",
+  "type": "Want"
+ },
+ {
+  "text": "IRCTC",
+  "type": "Want"
+ },
+ {
+  "text": "IRCTC Ticket",
+  "type": "Want"
+ },
+ {
+  "text": "IRCTC Train Ticket",
+  "type": "Want"
+ },
+ {
+  "text": "IRCTC Tourism",
+  "type": "Want"
+ },
+ {
+  "text": "IRCTC Tatkal",
+  "type": "Want"
+ },
+ {
+  "text": "IRCTC Rail Connect",
+  "type": "Want"
+ },
+ {
+  "text": "IRCTC eCatering",
+  "type": "Want"
+ },
+ {
+  "text": "IRCTC Catering",
+  "type": "Want"
+ },
+ {
+  "text": "Indian Railways",
+  "type": "Want"
+ },
+ {
+  "text": "Indian Railways Ticket",
+  "type": "Want"
+ },
+ {
+  "text": "Indian Railway Ticket",
+  "type": "Want"
+ },
+ {
+  "text": "Railway Ticket",
+  "type": "Want"
+ },
+ {
+  "text": "Railway Reservation",
+  "type": "Want"
+ },
+ {
+  "text": "Train Ticket",
+  "type": "Want"
+ },
+ {
+  "text": "Train Booking",
+  "type": "Want"
+ },
+ {
+  "text": "Rail Connect",
+  "type": "Want"
+ },
+ {
+  "text": "RailYatri",
+  "type": "Want"
+ },
+ {
+  "text": "Rail Yatri",
+  "type": "Want"
+ },
+ {
+  "text": "Railofy",
+  "type": "Want"
+ },
+ {
+  "text": "Confirmtkt",
+  "type": "Want"
+ },
+ {
+  "text": "Trainman",
+  "type": "Want"
+ },
+ {
+  "text": "NTES",
+  "type": "Want"
+ },
+ {
+  "text": "Tatkal Ticket",
+  "type": "Want"
+ },
+ {
+  "text": "Vande Bharat",
+  "type": "Want"
+ },
+ {
+  "text": "Vande Bharat Express",
+  "type": "Want"
+ },
+ {
+  "text": "Rajdhani Express",
+  "type": "Want"
+ },
+ {
+  "text": "Shatabdi Express",
+  "type": "Want"
+ },
+ {
+  "text": "Duronto Express",
+  "type": "Want"
+ },
+ {
+  "text": "Gatimaan Express",
+  "type": "Want"
+ },
+ {
+  "text": "Tejas Express",
+  "type": "Want"
+ },
+ {
+  "text": "Palace on Wheels",
+  "type": "Want"
+ },
+ {
+  "text": "Maharajas Express",
+  "type": "Want"
+ },
+ {
+  "text": "Deccan Odyssey",
+  "type": "Want"
+ },
+ {
+  "text": "Golden Chariot",
+  "type": "Want"
+ },
+ {
+  "text": "Darjeeling Himalayan Railway",
+  "type": "Want"
+ },
+ {
+  "text": "Nilgiri Mountain Railway",
+  "type": "Want"
+ },
+ {
+  "text": "Kalka Shimla Railway",
+  "type": "Want"
+ },
+ {
+  "text": "Matheran Light Railway",
+  "type": "Want"
+ },
+ {
+  "text": "Konkan Railway",
+  "type": "Want"
+ },
+ {
+  "text": "KRCL",
+  "type": "Want"
+ },
+ {
+  "text": "Konkan Railway Ticket",
+  "type": "Want"
+ },
+ {
+  "text": "IndiGo",
+  "type": "Want"
+ },
+ {
+  "text": "IndiGo Airlines",
+  "type": "Want"
+ },
+ {
+  "text": "InterGlobe Aviation",
+  "type": "Want"
+ },
+ {
+  "text": "IndiGo 6E",
+  "type": "Want"
+ },
+ {
+  "text": "6E",
+  "type": "Want"
+ },
+ {
+  "text": "Air India",
+  "type": "Want"
+ },
+ {
+  "text": "Air India Express",
+  "type": "Want"
+ },
+ {
+  "text": "Air India Ticket",
+  "type": "Want"
+ },
+ {
+  "text": "Air India Limited",
+  "type": "Want"
+ },
+ {
+  "text": "AI Express",
+  "type": "Want"
+ },
+ {
+  "text": "Vistara",
+  "type": "Want"
+ },
+ {
+  "text": "Vistara Airlines",
+  "type": "Want"
+ },
+ {
+  "text": "SpiceJet",
+  "type": "Want"
+ },
+ {
+  "text": "Spice Jet",
+  "type": "Want"
+ },
+ {
+  "text": "SpiceJet Airlines",
+  "type": "Want"
+ },
+ {
+  "text": "Akasa Air",
+  "type": "Want"
+ },
+ {
+  "text": "Akasa",
+  "type": "Want"
+ },
+ {
+  "text": "Akasa Airlines",
+  "type": "Want"
+ },
+ {
+  "text": "Alliance Air",
+  "type": "Want"
+ },
+ {
+  "text": "Star Air",
+  "type": "Want"
+ },
+ {
+  "text": "Fly91",
+  "type": "Want"
+ },
+ {
+  "text": "FlyBig",
+  "type": "Want"
+ },
+ {
+  "text": "Fly Big",
+  "type": "Want"
+ },
+ {
+  "text": "IndiaOne Air",
+  "type": "Want"
+ },
+ {
+  "text": "Air Asia India",
+  "type": "Want"
+ },
+ {
+  "text": "AirAsia India",
+  "type": "Want"
+ },
+ {
+  "text": "AirAsia",
+  "type": "Want"
+ },
+ {
+  "text": "Go First",
+  "type": "Want"
+ },
+ {
+  "text": "GoAir",
+  "type": "Want"
+ },
+ {
+  "text": "GoFirst",
+  "type": "Want"
+ },
+ {
+  "text": "Jet Airways",
+  "type": "Want"
+ },
+ {
+  "text": "Air Deccan",
+  "type": "Want"
+ },
+ {
+  "text": "Zoom Air",
+  "type": "Want"
+ },
+ {
+  "text": "TruJet",
+  "type": "Want"
+ },
+ {
+  "text": "Turbo Megha",
+  "type": "Want"
+ },
+ {
+  "text": "Fly Express",
+  "type": "Want"
+ },
+ {
+  "text": "Flybig Airlines",
+  "type": "Want"
+ },
+ {
+  "text": "Blade India",
+  "type": "Want"
+ },
+ {
+  "text": "Pawan Hans",
+  "type": "Want"
+ },
+ {
+  "text": "Heli Taxii",
+  "type": "Want"
+ },
+ {
+  "text": "Thumby Aviation",
+  "type": "Want"
+ },
+ {
+  "text": "Emirates",
+  "type": "Want"
+ },
+ {
+  "text": "Emirates Airlines",
+  "type": "Want"
+ },
+ {
+  "text": "Etihad",
+  "type": "Want"
+ },
+ {
+  "text": "Etihad Airways",
+  "type": "Want"
+ },
+ {
+  "text": "Qatar Airways",
+  "type": "Want"
+ },
+ {
+  "text": "Singapore Airlines",
+  "type": "Want"
+ },
+ {
+  "text": "Lufthansa",
+  "type": "Want"
+ },
+ {
+  "text": "British Airways",
+  "type": "Want"
+ },
+ {
+  "text": "Virgin Atlantic",
+  "type": "Want"
+ },
+ {
+  "text": "KLM",
+  "type": "Want"
+ },
+ {
+  "text": "Air France",
+  "type": "Want"
+ },
+ {
+  "text": "Turkish Airlines",
+  "type": "Want"
+ },
+ {
+  "text": "Cathay Pacific",
+  "type": "Want"
+ },
+ {
+  "text": "Thai Airways",
+  "type": "Want"
+ },
+ {
+  "text": "Malaysia Airlines",
+  "type": "Want"
+ },
+ {
+  "text": "Malindo Air",
+  "type": "Want"
+ },
+ {
+  "text": "Batik Air",
+  "type": "Want"
+ },
+ {
+  "text": "Scoot",
+  "type": "Want"
+ },
+ {
+  "text": "Jetstar",
+  "type": "Want"
+ },
+ {
+  "text": "Qantas",
+  "type": "Want"
+ },
+ {
+  "text": "Air Canada",
+  "type": "Want"
+ },
+ {
+  "text": "American Airlines",
+  "type": "Want"
+ },
+ {
+  "text": "Delta Air Lines",
+  "type": "Want"
+ },
+ {
+  "text": "United Airlines",
+  "type": "Want"
+ },
+ {
+  "text": "Saudia",
+  "type": "Want"
+ },
+ {
+  "text": "Gulf Air",
+  "type": "Want"
+ },
+ {
+  "text": "Oman Air",
+  "type": "Want"
+ },
+ {
+  "text": "Kuwait Airways",
+  "type": "Want"
+ },
+ {
+  "text": "SriLankan Airlines",
+  "type": "Want"
+ },
+ {
+  "text": "Bangladesh Biman",
+  "type": "Want"
+ },
+ {
+  "text": "Biman Bangladesh",
+  "type": "Want"
+ },
+ {
+  "text": "Nepal Airlines",
+  "type": "Want"
+ },
+ {
+  "text": "Druk Air",
+  "type": "Want"
+ },
+ {
+  "text": "Drukair",
+  "type": "Want"
+ },
+ {
+  "text": "flydubai",
+  "type": "Want"
+ },
+ {
+  "text": "Fly Dubai",
+  "type": "Want"
+ },
+ {
+  "text": "Jazeera Airways",
+  "type": "Want"
+ },
+ {
+  "text": "Ethiopian Airlines",
+  "type": "Want"
+ },
+ {
+  "text": "Kenya Airways",
+  "type": "Want"
+ },
+ {
+  "text": "EgyptAir",
+  "type": "Want"
+ },
+ {
+  "text": "Swiss Air",
+  "type": "Want"
+ },
+ {
+  "text": "Swiss International",
+  "type": "Want"
+ },
+ {
+  "text": "Finnair",
+  "type": "Want"
+ },
+ {
+  "text": "Korean Air",
+  "type": "Want"
+ },
+ {
+  "text": "Asiana Airlines",
+  "type": "Want"
+ },
+ {
+  "text": "Japan Airlines",
+  "type": "Want"
+ },
+ {
+  "text": "All Nippon Airways",
+  "type": "Want"
+ },
+ {
+  "text": "China Southern",
+  "type": "Want"
+ },
+ {
+  "text": "China Eastern",
+  "type": "Want"
+ },
+ {
+  "text": "Hainan Airlines",
+  "type": "Want"
+ },
+ {
+  "text": "Philippine Airlines",
+  "type": "Want"
+ },
+ {
+  "text": "Vietnam Airlines",
+  "type": "Want"
+ },
+ {
+  "text": "VietJet",
+  "type": "Want"
+ },
+ {
+  "text": "Vietjet Air",
+  "type": "Want"
+ },
+ {
+  "text": "Garuda Indonesia",
+  "type": "Want"
+ },
+ {
+  "text": "Lion Air",
+  "type": "Want"
+ },
+ {
+  "text": "Cebu Pacific",
+  "type": "Want"
+ },
+ {
+  "text": "Bamboo Airways",
+  "type": "Want"
+ },
+ {
+  "text": "MakeMyTrip",
+  "type": "Want"
+ },
+ {
+  "text": "Make My Trip",
+  "type": "Want"
+ },
+ {
+  "text": "MMT",
+  "type": "Want"
+ },
+ {
+  "text": "MakeMyTrip Flights",
+  "type": "Want"
+ },
+ {
+  "text": "MakeMyTrip Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "MakeMyTrip Holidays",
+  "type": "Want"
+ },
+ {
+  "text": "Goibibo",
+  "type": "Want"
+ },
+ {
+  "text": "Goibibo Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Goibibo Flights",
+  "type": "Want"
+ },
+ {
+  "text": "Cleartrip",
+  "type": "Want"
+ },
+ {
+  "text": "Cleartrip Flights",
+  "type": "Want"
+ },
+ {
+  "text": "Cleartrip Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "EaseMyTrip",
+  "type": "Want"
+ },
+ {
+  "text": "Ease My Trip",
+  "type": "Want"
+ },
+ {
+  "text": "Easy Trip Planners",
+  "type": "Want"
+ },
+ {
+  "text": "ixigo",
+  "type": "Want"
+ },
+ {
+  "text": "ixigo Flights",
+  "type": "Want"
+ },
+ {
+  "text": "ixigo Trains",
+  "type": "Want"
+ },
+ {
+  "text": "Yatra",
+  "type": "Want"
+ },
+ {
+  "text": "Yatra.com",
+  "type": "Want"
+ },
+ {
+  "text": "Yatra Online",
+  "type": "Want"
+ },
+ {
+  "text": "Yatra Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Via.com",
+  "type": "Want"
+ },
+ {
+  "text": "Via Travel",
+  "type": "Want"
+ },
+ {
+  "text": "TravelGuru",
+  "type": "Want"
+ },
+ {
+  "text": "Travel Guru",
+  "type": "Want"
+ },
+ {
+  "text": "Thomas Cook India",
+  "type": "Want"
+ },
+ {
+  "text": "Thomas Cook",
+  "type": "Want"
+ },
+ {
+  "text": "SOTC",
+  "type": "Want"
+ },
+ {
+  "text": "SOTC Travel",
+  "type": "Want"
+ },
+ {
+  "text": "Kesari Tours",
+  "type": "Want"
+ },
+ {
+  "text": "Kesari",
+  "type": "Want"
+ },
+ {
+  "text": "Veena World",
+  "type": "Want"
+ },
+ {
+  "text": "Veena Tours",
+  "type": "Want"
+ },
+ {
+  "text": "Cox and Kings",
+  "type": "Want"
+ },
+ {
+  "text": "Cox & Kings",
+  "type": "Want"
+ },
+ {
+  "text": "Make My Trip Holidays",
+  "type": "Want"
+ },
+ {
+  "text": "Pickyourtrail",
+  "type": "Want"
+ },
+ {
+  "text": "Pick Your Trail",
+  "type": "Want"
+ },
+ {
+  "text": "TBO Holidays",
+  "type": "Want"
+ },
+ {
+  "text": "TBO",
+  "type": "Want"
+ },
+ {
+  "text": "Travel Boutique Online",
+  "type": "Want"
+ },
+ {
+  "text": "Thrillophilia",
+  "type": "Want"
+ },
+ {
+  "text": "Thrillophilia Tours",
+  "type": "Want"
+ },
+ {
+  "text": "Yatra Holidays",
+  "type": "Want"
+ },
+ {
+  "text": "Holidify",
+  "type": "Want"
+ },
+ {
+  "text": "Holidays Packages",
+  "type": "Want"
+ },
+ {
+  "text": "Tours and Travels",
+  "type": "Want"
+ },
+ {
+  "text": "Tours & Travels",
+  "type": "Want"
+ },
+ {
+  "text": "TripJack",
+  "type": "Want"
+ },
+ {
+  "text": "Akbar Travels",
+  "type": "Want"
+ },
+ {
+  "text": "Akbar Online",
+  "type": "Want"
+ },
+ {
+  "text": "Kuoni",
+  "type": "Want"
+ },
+ {
+  "text": "Kuoni India",
+  "type": "Want"
+ },
+ {
+  "text": "Club Mahindra",
+  "type": "Want"
+ },
+ {
+  "text": "Club Mahindra Holidays",
+  "type": "Want"
+ },
+ {
+  "text": "Mahindra Holidays",
+  "type": "Want"
+ },
+ {
+  "text": "Sterling Holidays",
+  "type": "Want"
+ },
+ {
+  "text": "Sterling Resorts",
+  "type": "Want"
+ },
+ {
+  "text": "Sterling Holiday Resorts",
+  "type": "Want"
+ },
+ {
+  "text": "Country Club India",
+  "type": "Want"
+ },
+ {
+  "text": "Country Inns",
+  "type": "Want"
+ },
+ {
+  "text": "Wonderla Holidays",
+  "type": "Want"
+ },
+ {
+  "text": "Fern Residency",
+  "type": "Want"
+ },
+ {
+  "text": "The Fern",
+  "type": "Want"
+ },
+ {
+  "text": "Fern Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Airbnb",
+  "type": "Want"
+ },
+ {
+  "text": "Airbnb India",
+  "type": "Want"
+ },
+ {
+  "text": "Booking.com",
+  "type": "Want"
+ },
+ {
+  "text": "Booking com",
+  "type": "Want"
+ },
+ {
+  "text": "Agoda",
+  "type": "Want"
+ },
+ {
+  "text": "Expedia",
+  "type": "Want"
+ },
+ {
+  "text": "Hotels.com",
+  "type": "Want"
+ },
+ {
+  "text": "TripAdvisor",
+  "type": "Want"
+ },
+ {
+  "text": "Trip.com",
+  "type": "Want"
+ },
+ {
+  "text": "Skyscanner",
+  "type": "Want"
+ },
+ {
+  "text": "Trivago",
+  "type": "Want"
+ },
+ {
+  "text": "Kiwi.com",
+  "type": "Want"
+ },
+ {
+  "text": "Traveloka",
+  "type": "Want"
+ },
+ {
+  "text": "Hostelworld",
+  "type": "Want"
+ },
+ {
+  "text": "Hostelworld India",
+  "type": "Want"
+ },
+ {
+  "text": "Zostel",
+  "type": "Want"
+ },
+ {
+  "text": "Zostel Hostels",
+  "type": "Want"
+ },
+ {
+  "text": "Zostel Plus",
+  "type": "Want"
+ },
+ {
+  "text": "Moustache Hostel",
+  "type": "Want"
+ },
+ {
+  "text": "Moustache Escapes",
+  "type": "Want"
+ },
+ {
+  "text": "Backpacker Panda",
+  "type": "Want"
+ },
+ {
+  "text": "goStops",
+  "type": "Want"
+ },
+ {
+  "text": "The Hosteller",
+  "type": "Want"
+ },
+ {
+  "text": "Hosteller",
+  "type": "Want"
+ },
+ {
+  "text": "Youth Hostel",
+  "type": "Want"
+ },
+ {
+  "text": "Taj Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Taj",
+  "type": "Want"
+ },
+ {
+  "text": "Taj Palace",
+  "type": "Want"
+ },
+ {
+  "text": "Taj Mahal Palace",
+  "type": "Want"
+ },
+ {
+  "text": "Taj Vivanta",
+  "type": "Want"
+ },
+ {
+  "text": "Vivanta",
+  "type": "Want"
+ },
+ {
+  "text": "Vivanta by Taj",
+  "type": "Want"
+ },
+ {
+  "text": "Taj Gateway",
+  "type": "Want"
+ },
+ {
+  "text": "Gateway Hotel",
+  "type": "Want"
+ },
+ {
+  "text": "Taj Ginger",
+  "type": "Want"
+ },
+ {
+  "text": "Ginger Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Ginger",
+  "type": "Want"
+ },
+ {
+  "text": "Ginger by Taj",
+  "type": "Want"
+ },
+ {
+  "text": "IHCL",
+  "type": "Want"
+ },
+ {
+  "text": "Indian Hotels Company",
+  "type": "Want"
+ },
+ {
+  "text": "The Indian Hotels Company",
+  "type": "Want"
+ },
+ {
+  "text": "SeleQtions",
+  "type": "Want"
+ },
+ {
+  "text": "Taj SeleQtions",
+  "type": "Want"
+ },
+ {
+  "text": "Tajness",
+  "type": "Want"
+ },
+ {
+  "text": "OYO",
+  "type": "Want"
+ },
+ {
+  "text": "OYO Rooms",
+  "type": "Want"
+ },
+ {
+  "text": "OYO Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "OYO Hotels and Homes",
+  "type": "Want"
+ },
+ {
+  "text": "Oyo Rooms Booking",
+  "type": "Want"
+ },
+ {
+  "text": "OYO Townhouse",
+  "type": "Want"
+ },
+ {
+  "text": "OYO Capital O",
+  "type": "Want"
+ },
+ {
+  "text": "Capital O",
+  "type": "Want"
+ },
+ {
+  "text": "Collection O",
+  "type": "Want"
+ },
+ {
+  "text": "Silver Key",
+  "type": "Want"
+ },
+ {
+  "text": "Treebo",
+  "type": "Want"
+ },
+ {
+  "text": "Treebo Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Treebo Trend",
+  "type": "Want"
+ },
+ {
+  "text": "Treebo Tryst",
+  "type": "Want"
+ },
+ {
+  "text": "Treebo Trip",
+  "type": "Want"
+ },
+ {
+  "text": "FabHotels",
+  "type": "Want"
+ },
+ {
+  "text": "Fab Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "FabHotel",
+  "type": "Want"
+ },
+ {
+  "text": "FabExpress",
+  "type": "Want"
+ },
+ {
+  "text": "Fab Express",
+  "type": "Want"
+ },
+ {
+  "text": "Lemon Tree",
+  "type": "Want"
+ },
+ {
+  "text": "Lemon Tree Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Lemon Tree Premier",
+  "type": "Want"
+ },
+ {
+  "text": "Red Fox Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Red Fox by Lemon Tree",
+  "type": "Want"
+ },
+ {
+  "text": "Keys Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Keys Select",
+  "type": "Want"
+ },
+ {
+  "text": "Keys Prima",
+  "type": "Want"
+ },
+ {
+  "text": "Lemon Tree Hotel",
+  "type": "Want"
+ },
+ {
+  "text": "Hotel Lemon Tree",
+  "type": "Want"
+ },
+ {
+  "text": "Aurika",
+  "type": "Want"
+ },
+ {
+  "text": "Aurika Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Aurika Udaipur",
+  "type": "Want"
+ },
+ {
+  "text": "ITC Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "ITC Grand",
+  "type": "Want"
+ },
+ {
+  "text": "ITC Maurya",
+  "type": "Want"
+ },
+ {
+  "text": "ITC Maratha",
+  "type": "Want"
+ },
+ {
+  "text": "ITC Gardenia",
+  "type": "Want"
+ },
+ {
+  "text": "ITC Windsor",
+  "type": "Want"
+ },
+ {
+  "text": "ITC Kakatiya",
+  "type": "Want"
+ },
+ {
+  "text": "ITC Sonar",
+  "type": "Want"
+ },
+ {
+  "text": "Welcomhotel",
+  "type": "Want"
+ },
+ {
+  "text": "WelcomHeritage",
+  "type": "Want"
+ },
+ {
+  "text": "WelcomHeritage Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Fortune Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Fortune Park",
+  "type": "Want"
+ },
+ {
+  "text": "Fortune Select",
+  "type": "Want"
+ },
+ {
+  "text": "Fortune Inn",
+  "type": "Want"
+ },
+ {
+  "text": "Fortune Resorts",
+  "type": "Want"
+ },
+ {
+  "text": "Fortune Park Hotel",
+  "type": "Want"
+ },
+ {
+  "text": "Radisson",
+  "type": "Want"
+ },
+ {
+  "text": "Radisson Blu",
+  "type": "Want"
+ },
+ {
+  "text": "Radisson Hotel",
+  "type": "Want"
+ },
+ {
+  "text": "Radisson Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Radisson Red",
+  "type": "Want"
+ },
+ {
+  "text": "Radisson Collection",
+  "type": "Want"
+ },
+ {
+  "text": "Park Inn",
+  "type": "Want"
+ },
+ {
+  "text": "Park Inn by Radisson",
+  "type": "Want"
+ },
+ {
+  "text": "Country Inn",
+  "type": "Want"
+ },
+ {
+  "text": "Country Inn and Suites",
+  "type": "Want"
+ },
+ {
+  "text": "Courtyard by Marriott",
+  "type": "Want"
+ },
+ {
+  "text": "Courtyard Marriott",
+  "type": "Want"
+ },
+ {
+  "text": "Marriott",
+  "type": "Want"
+ },
+ {
+  "text": "Marriott Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Marriott International",
+  "type": "Want"
+ },
+ {
+  "text": "JW Marriott",
+  "type": "Want"
+ },
+ {
+  "text": "Fairfield by Marriott",
+  "type": "Want"
+ },
+ {
+  "text": "Fairfield Marriott",
+  "type": "Want"
+ },
+ {
+  "text": "Four Points by Sheraton",
+  "type": "Want"
+ },
+ {
+  "text": "Four Points",
+  "type": "Want"
+ },
+ {
+  "text": "Sheraton",
+  "type": "Want"
+ },
+ {
+  "text": "Westin",
+  "type": "Want"
+ },
+ {
+  "text": "The Westin",
+  "type": "Want"
+ },
+ {
+  "text": "W Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "W Hotel",
+  "type": "Want"
+ },
+ {
+  "text": "St Regis",
+  "type": "Want"
+ },
+ {
+  "text": "The St Regis",
+  "type": "Want"
+ },
+ {
+  "text": "Le Meridien",
+  "type": "Want"
+ },
+ {
+  "text": "Le Meridien Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Luxury Collection",
+  "type": "Want"
+ },
+ {
+  "text": "The Luxury Collection",
+  "type": "Want"
+ },
+ {
+  "text": "Aloft",
+  "type": "Want"
+ },
+ {
+  "text": "Aloft Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Ritz Carlton",
+  "type": "Want"
+ },
+ {
+  "text": "The Ritz-Carlton",
+  "type": "Want"
+ },
+ {
+  "text": "Renaissance",
+  "type": "Want"
+ },
+ {
+  "text": "Renaissance Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Moxy",
+  "type": "Want"
+ },
+ {
+  "text": "Moxy Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Element by Westin",
+  "type": "Want"
+ },
+ {
+  "text": "Hilton",
+  "type": "Want"
+ },
+ {
+  "text": "Hilton Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Hilton Garden Inn",
+  "type": "Want"
+ },
+ {
+  "text": "Hilton Garden",
+  "type": "Want"
+ },
+ {
+  "text": "DoubleTree",
+  "type": "Want"
+ },
+ {
+  "text": "DoubleTree by Hilton",
+  "type": "Want"
+ },
+ {
+  "text": "Conrad",
+  "type": "Want"
+ },
+ {
+  "text": "Conrad Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Hampton by Hilton",
+  "type": "Want"
+ },
+ {
+  "text": "Hampton Inn",
+  "type": "Want"
+ },
+ {
+  "text": "Holiday Inn",
+  "type": "Want"
+ },
+ {
+  "text": "Holiday Inn Express",
+  "type": "Want"
+ },
+ {
+  "text": "Holiday Inn Resort",
+  "type": "Want"
+ },
+ {
+  "text": "Crowne Plaza",
+  "type": "Want"
+ },
+ {
+  "text": "IHG",
+  "type": "Want"
+ },
+ {
+  "text": "IHG Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "InterContinental",
+  "type": "Want"
+ },
+ {
+  "text": "Intercontinental Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Hotel Indigo",
+  "type": "Want"
+ },
+ {
+  "text": "Kimpton",
+  "type": "Want"
+ },
+ {
+  "text": "Hyatt",
+  "type": "Want"
+ },
+ {
+  "text": "Hyatt Regency",
+  "type": "Want"
+ },
+ {
+  "text": "Grand Hyatt",
+  "type": "Want"
+ },
+ {
+  "text": "Park Hyatt",
+  "type": "Want"
+ },
+ {
+  "text": "Hyatt Place",
+  "type": "Want"
+ },
+ {
+  "text": "Hyatt Centric",
+  "type": "Want"
+ },
+ {
+  "text": "Andaz",
+  "type": "Want"
+ },
+ {
+  "text": "Andaz Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Hyatt House",
+  "type": "Want"
+ },
+ {
+  "text": "Hyatt Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Alila",
+  "type": "Want"
+ },
+ {
+  "text": "Alila Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Alila Diwa",
+  "type": "Want"
+ },
+ {
+  "text": "Alila Jabal",
+  "type": "Want"
+ },
+ {
+  "text": "Accor",
+  "type": "Want"
+ },
+ {
+  "text": "Accor Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Novotel",
+  "type": "Want"
+ },
+ {
+  "text": "Novotel Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Ibis",
+  "type": "Want"
+ },
+ {
+  "text": "Ibis Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Ibis Styles",
+  "type": "Want"
+ },
+ {
+  "text": "ibis budget",
+  "type": "Want"
+ },
+ {
+  "text": "Pullman",
+  "type": "Want"
+ },
+ {
+  "text": "Pullman Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Sofitel",
+  "type": "Want"
+ },
+ {
+  "text": "Sofitel Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Mercure",
+  "type": "Want"
+ },
+ {
+  "text": "Mercure Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Fairmont",
+  "type": "Want"
+ },
+ {
+  "text": "Fairmont Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Raffles",
+  "type": "Want"
+ },
+ {
+  "text": "Raffles Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Swissotel",
+  "type": "Want"
+ },
+ {
+  "text": "Swissotel Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "MGallery",
+  "type": "Want"
+ },
+ {
+  "text": "M Gallery",
+  "type": "Want"
+ },
+ {
+  "text": "Movenpick",
+  "type": "Want"
+ },
+ {
+  "text": "Movenpick Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Grand Mercure",
+  "type": "Want"
+ },
+ {
+  "text": "Mantis",
+  "type": "Want"
+ },
+ {
+  "text": "Mantis Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Sarovar",
+  "type": "Want"
+ },
+ {
+  "text": "Sarovar Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Sarovar Portico",
+  "type": "Want"
+ },
+ {
+  "text": "Sarovar Premiere",
+  "type": "Want"
+ },
+ {
+  "text": "Park Plaza",
+  "type": "Want"
+ },
+ {
+  "text": "Park Plaza Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Premier Inn",
+  "type": "Want"
+ },
+ {
+  "text": "Premier Inn Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Best Western",
+  "type": "Want"
+ },
+ {
+  "text": "Best Western Plus",
+  "type": "Want"
+ },
+ {
+  "text": "Best Western Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Wyndham",
+  "type": "Want"
+ },
+ {
+  "text": "Wyndham Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Ramada",
+  "type": "Want"
+ },
+ {
+  "text": "Ramada Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Ramada Encore",
+  "type": "Want"
+ },
+ {
+  "text": "Ramada Plaza",
+  "type": "Want"
+ },
+ {
+  "text": "Days Inn",
+  "type": "Want"
+ },
+ {
+  "text": "Days Hotel",
+  "type": "Want"
+ },
+ {
+  "text": "Days Inn Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Super 8",
+  "type": "Want"
+ },
+ {
+  "text": "Super 8 Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Howard Johnson",
+  "type": "Want"
+ },
+ {
+  "text": "Howard Johnson Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Wyndham Garden",
+  "type": "Want"
+ },
+ {
+  "text": "Wyndham Garden Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Tryp",
+  "type": "Want"
+ },
+ {
+  "text": "TRYP Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Hotel Leela",
+  "type": "Want"
+ },
+ {
+  "text": "The Leela",
+  "type": "Want"
+ },
+ {
+  "text": "Leela Palace",
+  "type": "Want"
+ },
+ {
+  "text": "Leela Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Oberoi Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Oberoi Hotel",
+  "type": "Want"
+ },
+ {
+  "text": "Oberoi Udaivilas",
+  "type": "Want"
+ },
+ {
+  "text": "Oberoi Rajvilas",
+  "type": "Want"
+ },
+ {
+  "text": "Oberoi Amarvilas",
+  "type": "Want"
+ },
+ {
+  "text": "Trident",
+  "type": "Want"
+ },
+ {
+  "text": "Trident Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Trident Hotel",
+  "type": "Want"
+ },
+ {
+  "text": "EIH",
+  "type": "Want"
+ },
+ {
+  "text": "EIH Hotels",
+  "type": "Want"
+ },
+ {
+  "text": "Oberoi Grand",
+  "type": "Want"
+ },
+ {
+  "text": "Oberoi Gurgaon",
+  "type": "Want"
+ },
+ {
+  "text": "Oberoi Mumbai",
+  "type": "Want"
+ },
+ {
+  "text": "Uber",
+  "type": "Want"
+ },
+ {
+  "text": "Uber India",
+  "type": "Want"
+ },
+ {
+  "text": "Uber Auto",
+  "type": "Want"
+ },
+ {
+  "text": "Uber Moto",
+  "type": "Want"
+ },
+ {
+  "text": "Uber Rentals",
+  "type": "Want"
+ },
+ {
+  "text": "Ola",
+  "type": "Want"
+ },
+ {
+  "text": "Ola Cabs",
+  "type": "Want"
+ },
+ {
+  "text": "Ola Auto",
+  "type": "Want"
+ },
+ {
+  "text": "Ola Bike",
+  "type": "Want"
+ },
+ {
+  "text": "Rapido",
+  "type": "Want"
+ },
+ {
+  "text": "Rapido Bike",
+  "type": "Want"
+ },
+ {
+  "text": "Rapido Auto",
+  "type": "Want"
+ },
+ {
+  "text": "Namma Yatri",
+  "type": "Want"
+ },
+ {
+  "text": "BluSmart",
+  "type": "Want"
+ },
+ {
+  "text": "Mega Cabs",
+  "type": "Want"
+ },
+ {
+  "text": "Easy Cabs",
+  "type": "Want"
+ },
+ {
+  "text": "Carzonrent",
+  "type": "Want"
+ },
+ {
+  "text": "Zoomcar",
+  "type": "Want"
+ },
+ {
+  "text": "Revv",
+  "type": "Want"
+ },
+ {
+  "text": "Drivezy",
+  "type": "Want"
+ },
+ {
+  "text": "Myles",
+  "type": "Want"
+ },
+ {
+  "text": "Bounce",
+  "type": "Want"
+ },
+ {
+  "text": "Vogo",
+  "type": "Want"
+ },
+ {
+  "text": "Yulu",
+  "type": "Want"
+ },
+ {
+  "text": "Zypp",
+  "type": "Want"
+ },
+ {
+  "text": "inDrive",
+  "type": "Want"
+ },
+ {
+  "text": "Gozo Cabs",
+  "type": "Want"
+ },
+ {
+  "text": "Savaari",
+  "type": "Want"
+ },
+ {
+  "text": "Quick Ride",
+  "type": "Want"
+ },
+ {
+  "text": "QuickRide",
+  "type": "Want"
+ },
+ {
+  "text": "BlaBlaCar",
+  "type": "Want"
+ },
+ {
+  "text": "Sarthi Cabs",
+  "type": "Want"
+ },
+ {
+  "text": "Cab Booking",
+  "type": "Want"
+ },
+ {
+  "text": "Taxi Booking",
+  "type": "Want"
+ },
+ {
+  "text": "Outstation Cab",
+  "type": "Want"
+ },
+ {
+  "text": "Airport Taxi",
+  "type": "Want"
+ },
+ {
+  "text": "Radio Taxi",
+  "type": "Want"
+ },
+ {
+  "text": "Self Drive Car",
+  "type": "Want"
+ },
+ {
+  "text": "Royal Brothers",
+  "type": "Want"
+ },
+ {
+  "text": "Wheelstreet",
+  "type": "Want"
+ },
+ {
+  "text": "Doorstep Car Wash",
+  "type": "Want"
+ },
+ {
+  "text": "Washmen Car",
+  "type": "Want"
+ },
+ {
+  "text": "Washtom",
+  "type": "Want"
+ },
+ {
+  "text": "Carzspa",
+  "type": "Want"
+ },
+ {
+  "text": "Pioneer Car Audio",
+  "type": "Want"
+ },
+ {
+  "text": "Sony Car Audio",
+  "type": "Want"
+ },
+ {
+  "text": "JBL Car Audio",
+  "type": "Want"
+ },
+ {
+  "text": "Blaupunkt",
+  "type": "Want"
+ },
+ {
+  "text": "Blaupunkt Car Audio",
+  "type": "Want"
+ },
+ {
+  "text": "Alpine Car Audio",
+  "type": "Want"
+ },
+ {
+  "text": "Kenwood Car Audio",
+  "type": "Want"
+ },
+ {
+  "text": "Dashcam",
+  "type": "Want"
+ },
+ {
+  "text": "Sun Film",
+  "type": "Want"
+ },
+ {
+  "text": "Window Tinting",
+  "type": "Want"
+ },
+ {
+  "text": "Autoform",
+  "type": "Want"
+ },
+ {
+  "text": "Autofurnish",
+  "type": "Want"
+ },
+ {
+  "text": "Elegant Auto Retail",
+  "type": "Want"
+ },
+ {
+  "text": "Carmate",
+  "type": "Want"
+ },
+ {
+  "text": "Carmate Accessories",
+  "type": "Want"
+ },
+ {
+  "text": "Takata Seat Covers",
+  "type": "Want"
+ },
+ {
+  "text": "Hella Accessories",
+  "type": "Want"
+ },
+ {
+  "text": "Vega Helmets",
+  "type": "Want"
+ },
+ {
+  "text": "Studds",
+  "type": "Want"
+ },
+ {
+  "text": "Studds Helmets",
+  "type": "Want"
+ },
+ {
+  "text": "Steelbird",
+  "type": "Want"
+ },
+ {
+  "text": "Steelbird Helmets",
+  "type": "Want"
+ },
+ {
+  "text": "Axor Helmets",
+  "type": "Want"
+ },
+ {
+  "text": "Royal Enfield Accessories",
+  "type": "Want"
+ },
+ {
+  "text": "Helmet",
+  "type": "Want"
+ },
+ {
+  "text": "Helmet Shop",
+  "type": "Want"
+ },
+ {
+  "text": "Riding Gear",
+  "type": "Want"
+ },
+ {
+  "text": "Moto Accessories",
+  "type": "Want"
+ },
+ {
+  "text": "Goodyear Car Care",
+  "type": "Want"
+ },
+ {
+  "text": "3M Car Care India",
+  "type": "Want"
+ },
+ {
+  "text": "Turtle Wax",
+  "type": "Want"
+ },
+ {
+  "text": "Armor All",
+  "type": "Want"
+ },
+ {
+  "text": "Meguiars",
+  "type": "Want"
+ },
+ {
+  "text": "Sonax",
+  "type": "Want"
+ },
+ {
+  "text": "Autoglym",
+  "type": "Want"
+ }
+]

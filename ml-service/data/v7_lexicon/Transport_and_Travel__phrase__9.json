@@ -1,0 +1,322 @@
+[
+ {
+  "text": "petrol for scooty",
+  "type": "Need"
+ },
+ {
+  "text": "petrol fill for activa",
+  "type": "Need"
+ },
+ {
+  "text": "petrol fill for splendor",
+  "type": "Need"
+ },
+ {
+  "text": "full tank petrol",
+  "type": "Need"
+ },
+ {
+  "text": "half tank petrol",
+  "type": "Need"
+ },
+ {
+  "text": "petrol full tank today",
+  "type": "Need"
+ },
+ {
+  "text": "petrol top up",
+  "type": "Need"
+ },
+ {
+  "text": "bike petrol full tank",
+  "type": "Need"
+ },
+ {
+  "text": "car petrol full tank",
+  "type": "Need"
+ },
+ {
+  "text": "diesel fill for car",
+  "type": "Need"
+ },
+ {
+  "text": "diesel car tank full",
+  "type": "Need"
+ },
+ {
+  "text": "cng fill for car",
+  "type": "Need"
+ },
+ {
+  "text": "cng bharne gaye",
+  "type": "Need"
+ },
+ {
+  "text": "cng refill for auto",
+  "type": "Need"
+ },
+ {
+  "text": "cng for car today",
+  "type": "Need"
+ },
+ {
+  "text": "petrol bharwaya bike",
+  "type": "Need"
+ },
+ {
+  "text": "petrol bharwaya scooter",
+  "type": "Need"
+ },
+ {
+  "text": "diesel bharwaya gaadi",
+  "type": "Need"
+ },
+ {
+  "text": "petrol pump se petrol",
+  "type": "Need"
+ },
+ {
+  "text": "petrol at pump near office",
+  "type": "Need"
+ },
+ {
+  "text": "petrol bill for scooter",
+  "type": "Need"
+ },
+ {
+  "text": "petrol bill for bike",
+  "type": "Need"
+ },
+ {
+  "text": "petrol refill scooter",
+  "type": "Need"
+ },
+ {
+  "text": "scooter fuel top up",
+  "type": "Need"
+ },
+ {
+  "text": "bike fuel top up",
+  "type": "Need"
+ },
+ {
+  "text": "car fuel top up",
+  "type": "Need"
+ },
+ {
+  "text": "fuel top up today",
+  "type": "Need"
+ },
+ {
+  "text": "petrol refuel",
+  "type": "Need"
+ },
+ {
+  "text": "refuel bike",
+  "type": "Need"
+ },
+ {
+  "text": "refuel car",
+  "type": "Need"
+ },
+ {
+  "text": "diesel refuel",
+  "type": "Need"
+ },
+ {
+  "text": "cng refuel",
+  "type": "Need"
+ },
+ {
+  "text": "diesel fill up today",
+  "type": "Need"
+ },
+ {
+  "text": "petrol for two wheeler",
+  "type": "Need"
+ },
+ {
+  "text": "petrol for four wheeler",
+  "type": "Need"
+ },
+ {
+  "text": "fuel for activa",
+  "type": "Need"
+ },
+ {
+  "text": "fuel for splendor",
+  "type": "Need"
+ },
+ {
+  "text": "fuel for pulsar",
+  "type": "Need"
+ },
+ {
+  "text": "fuel for swift",
+  "type": "Need"
+ },
+ {
+  "text": "fuel for alto",
+  "type": "Need"
+ },
+ {
+  "text": "fuel for innova",
+  "type": "Need"
+ },
+ {
+  "text": "fuel for creta",
+  "type": "Need"
+ },
+ {
+  "text": "petrol for hero bike",
+  "type": "Need"
+ },
+ {
+  "text": "petrol for honda bike",
+  "type": "Need"
+ },
+ {
+  "text": "petrol for jupiter",
+  "type": "Need"
+ },
+ {
+  "text": "petrol for office car",
+  "type": "Need"
+ },
+ {
+  "text": "petrol for daily office run",
+  "type": "Need"
+ },
+ {
+  "text": "diesel for innova",
+  "type": "Need"
+ },
+ {
+  "text": "diesel for xuv",
+  "type": "Need"
+ },
+ {
+  "text": "diesel for scorpio",
+  "type": "Need"
+ },
+ {
+  "text": "cng for auto",
+  "type": "Need"
+ },
+ {
+  "text": "cng for car monthly",
+  "type": "Need"
+ },
+ {
+  "text": "petrol top up for week",
+  "type": "Need"
+ },
+ {
+  "text": "petrol till full",
+  "type": "Need"
+ },
+ {
+  "text": "petrol pump receipt",
+  "type": "Need"
+ },
+ {
+  "text": "petrol paid at pump",
+  "type": "Need"
+ },
+ {
+  "text": "petrol cash pump",
+  "type": "Need"
+ },
+ {
+  "text": "fuel paid upi pump",
+  "type": "Need"
+ },
+ {
+  "text": "fuel paid card pump",
+  "type": "Need"
+ },
+ {
+  "text": "petrol wale bhaiya",
+  "type": "Need"
+ },
+ {
+  "text": "petrol bunk ka bill",
+  "type": "Need"
+ },
+ {
+  "text": "petrol bunk bill monthly",
+  "type": "Need"
+ },
+ {
+  "text": "petrol expense bike",
+  "type": "Need"
+ },
+ {
+  "text": "petrol expense car",
+  "type": "Need"
+ },
+ {
+  "text": "bike petrol monthly",
+  "type": "Need"
+ },
+ {
+  "text": "car petrol monthly",
+  "type": "Need"
+ },
+ {
+  "text": "scooter petrol weekly",
+  "type": "Need"
+ },
+ {
+  "text": "petrol for bike today",
+  "type": "Need"
+ },
+ {
+  "text": "petrol for car today",
+  "type": "Need"
+ },
+ {
+  "text": "petrol for office bike",
+  "type": "Need"
+ },
+ {
+  "text": "petrol for office scooter",
+  "type": "Need"
+ },
+ {
+  "text": "fuel for office car",
+  "type": "Need"
+ },
+ {
+  "text": "cng bill auto monthly",
+  "type": "Need"
+ },
+ {
+  "text": "cng bill car",
+  "type": "Need"
+ },
+ {
+  "text": "petrol top up scooty",
+  "type": "Need"
+ },
+ {
+  "text": "fuel fill for bike today",
+  "type": "Need"
+ },
+ {
+  "text": "fuel fill for scooter today",
+  "type": "Need"
+ },
+ {
+  "text": "petrol for school run bike",
+  "type": "Need"
+ },
+ {
+  "text": "petrol for weekly grocery run",
+  "type": "Need"
+ },
+ {
+  "text": "diesel for taxi duty car",
+  "type": "Need"
+ }
+]

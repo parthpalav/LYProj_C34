@@ -1,0 +1,302 @@
+[
+ {
+  "text": "Bajaj Finserv",
+  "type": "Need"
+ },
+ {
+  "text": "BharatPe",
+  "type": "Need"
+ },
+ {
+  "text": "Bhim UPI",
+  "type": "Need"
+ },
+ {
+  "text": "Bhim",
+  "type": "Need"
+ },
+ {
+  "text": "GooglePay",
+  "type": "Need"
+ },
+ {
+  "text": "PhonePe",
+  "type": "Need"
+ },
+ {
+  "text": "Paytm",
+  "type": "Need"
+ },
+ {
+  "text": "UPI Charges",
+  "type": "Need"
+ },
+ {
+  "text": "Fine",
+  "type": "Need"
+ },
+ {
+  "text": "Challan",
+  "type": "Need"
+ },
+ {
+  "text": "Toll",
+  "type": "Need"
+ },
+ {
+  "text": "Parking",
+  "type": "Need"
+ },
+ {
+  "text": "FASTag",
+  "type": "Need"
+ },
+ {
+  "text": "Courier Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Postage",
+  "type": "Need"
+ },
+ {
+  "text": "Tailor",
+  "type": "Need"
+ },
+ {
+  "text": "Cobbler",
+  "type": "Need"
+ },
+ {
+  "text": "Keymaker",
+  "type": "Need"
+ },
+ {
+  "text": "Watch Repair",
+  "type": "Need"
+ },
+ {
+  "text": "Jewelry Repair",
+  "type": "Need"
+ },
+ {
+  "text": "Coin Laundry",
+  "type": "Need"
+ },
+ {
+  "text": "Donation",
+  "type": "Need"
+ },
+ {
+  "text": "Gratitude",
+  "type": "Want"
+ },
+ {
+  "text": "Tip",
+  "type": "Want"
+ },
+ {
+  "text": "Gift",
+  "type": "Want"
+ },
+ {
+  "text": "Crowdfunding",
+  "type": "Want"
+ },
+ {
+  "text": "Gofundme",
+  "type": "Want"
+ },
+ {
+  "text": "Anand Charities",
+  "type": "Need"
+ },
+ {
+  "text": "Durga Charities",
+  "type": "Need"
+ },
+ {
+  "text": "Ganesha Charities",
+  "type": "Need"
+ },
+ {
+  "text": "Temple Donations",
+  "type": "Need"
+ },
+ {
+  "text": "Chitra Handicrafts",
+  "type": "Want"
+ },
+ {
+  "text": "Gupta Art Gallery",
+  "type": "Want"
+ },
+ {
+  "text": "Gupta Custom Paintings",
+  "type": "Want"
+ },
+ {
+  "text": "Gupta Old Books",
+  "type": "Want"
+ },
+ {
+  "text": "Gupta Printing",
+  "type": "Want"
+ },
+ {
+  "text": "Gupta Puzzle Club",
+  "type": "Want"
+ },
+ {
+  "text": "Gupta Stamp Collecting",
+  "type": "Want"
+ },
+ {
+  "text": "Gupta Soccer Field",
+  "type": "Want"
+ },
+ {
+  "text": "Gupta Swimming Pool",
+  "type": "Want"
+ },
+ {
+  "text": "Gupta Basketball Court",
+  "type": "Want"
+ },
+ {
+  "text": "Gupta Art Restoration",
+  "type": "Want"
+ },
+ {
+  "text": "Ganesh Temple",
+  "type": "Need"
+ },
+ {
+  "text": "Durga Temple",
+  "type": "Need"
+ },
+ {
+  "text": "Goddess Temple",
+  "type": "Need"
+ },
+ {
+  "text": "Chand Family Tiffin",
+  "type": "Need"
+ },
+ {
+  "text": "Chandra Tailor",
+  "type": "Need"
+ },
+ {
+  "text": "Chakraborty Locksmith",
+  "type": "Need"
+ },
+ {
+  "text": "Ganguly Dryclean",
+  "type": "Need"
+ },
+ {
+  "text": "Balaji Medical Store",
+  "type": "Need"
+ },
+ {
+  "text": "Bajaj Finserv EMI",
+  "type": "Need"
+ },
+ {
+  "text": "Bank of India",
+  "type": "Need"
+ },
+ {
+  "text": "ICICI Bank",
+  "type": "Need"
+ },
+ {
+  "text": "SBI",
+  "type": "Need"
+ },
+ {
+  "text": "Axis Bank",
+  "type": "Need"
+ },
+ {
+  "text": "Kotak Mahindra Bank",
+  "type": "Need"
+ },
+ {
+  "text": "HDFC Bank",
+  "type": "Need"
+ },
+ {
+  "text": "IndusInd Bank",
+  "type": "Need"
+ },
+ {
+  "text": "Yes Bank",
+  "type": "Need"
+ },
+ {
+  "text": "PNB",
+  "type": "Need"
+ },
+ {
+  "text": "IDBI Bank",
+  "type": "Need"
+ },
+ {
+  "text": "UCO Bank",
+  "type": "Need"
+ },
+ {
+  "text": "RBL Bank",
+  "type": "Need"
+ },
+ {
+  "text": "DCB Bank",
+  "type": "Need"
+ },
+ {
+  "text": "FEDAI Bank",
+  "type": "Need"
+ },
+ {
+  "text": "City Gas",
+  "type": "Need"
+ },
+ {
+  "text": "Electricity Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Water Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Gas Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Internet Bill",
+  "type": "Need"
+ },
+ {
+  "text": "DTH",
+  "type": "Need"
+ },
+ {
+  "text": "Cloud Storage",
+  "type": "Need"
+ },
+ {
+  "text": "SaaS",
+  "type": "Need"
+ },
+ {
+  "text": "AI Tool Subscription",
+  "type": "Need"
+ },
+ {
+  "text": "OTT",
+  "type": "Need"
+ }
+]

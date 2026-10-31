@@ -8,6 +8,7 @@ const RAIL_TOKENS = new Set([
   'upi', 'dr', 'cr', 'neft', 'imps', 'rtgs', 'pos', 'ach', 'nach', 'bil', 'onl', 'ecom',
   'txn', 'trf', 'ref', 'mmt', 'int', 'inb', 'mb', 'ib', 'vps', 'vsi', 'pur', 'purchase',
   'debit', 'credit', 'card', 'p2a', 'p2m', 'collect', 'pay', 'sent', 'received', 'upiintent',
+  'nwd', 'atw', 'wdl', 'pcd', 'yesb', 'ybs', 'netbank', 'autopay',
   'okaxis', 'oksbi', 'okicici', 'okhdfcbank', 'ybl', 'ibl', 'axl', 'apl', 'paytm',
   'hdfcbank', 'icici', 'sbi', 'axis', 'kotak', 'yesbank', 'idfcbank', 'barodampay', 'fbl',
   'axisbank', 'icicibank', 'sbin', 'utib', 'hdfc', 'kkbk', 'punb', 'jupiteraxis', 'freecharge'
@@ -18,14 +19,21 @@ const KEY_STOPWORDS = new Set([
   'rs', 'inr', 'transfer', 'sent', 'online', 'monthly', 'weekly', 'today', 'yesterday'
 ]);
 
+// Reference numbers, card masks and terminal ids; short brand tokens like 1mg, box8, 5paisa survive.
+const isRef = (t) => {
+  const digits = (t.match(/\d/g) || []).length;
+  return digits > 0 && (t.length > 6 || digits > 2 || digits === t.length);
+};
+
 export function merchantKey(raw) {
   let text = String(raw || '').toLowerCase().replace(/['’`]/g, '');
   if (BANK_STRING.test(text)) {
     text = text
       .replace(/\b[a-z]{4}0[a-z0-9]{6}\b/g, ' ')
-      .replace(/([a-z0-9._-]+)@[a-z]+/g, '$1')
+      .replace(/([a-z0-9._-]+)@[a-z]+/g, (_, local) => local.replace(/\d+/g, ' '))
       .split(/[\s/|\-_*:,.#]+/)
-      .filter((t) => t && !/\d/.test(t) && !RAIL_TOKENS.has(t))
+      .filter((t) => t && !isRef(t) && !RAIL_TOKENS.has(t))
+      .filter((t, k, all) => all.indexOf(t) === k) // HDFC repeats the payee as name and VPA
       .join(' ');
   }
   text = text

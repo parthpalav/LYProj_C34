@@ -1,0 +1,2918 @@
+[
+ {
+  "text": "MSEDCL",
+  "type": "Need"
+ },
+ {
+  "text": "Mahavitaran",
+  "type": "Need"
+ },
+ {
+  "text": "Maharashtra State Electricity",
+  "type": "Need"
+ },
+ {
+  "text": "MSEB",
+  "type": "Need"
+ },
+ {
+  "text": "BESCOM",
+  "type": "Need"
+ },
+ {
+  "text": "Bangalore Electricity Supply",
+  "type": "Need"
+ },
+ {
+  "text": "MESCOM",
+  "type": "Need"
+ },
+ {
+  "text": "HESCOM",
+  "type": "Need"
+ },
+ {
+  "text": "GESCOM",
+  "type": "Need"
+ },
+ {
+  "text": "CESC Mysore",
+  "type": "Need"
+ },
+ {
+  "text": "CHESCOM",
+  "type": "Need"
+ },
+ {
+  "text": "TANGEDCO",
+  "type": "Need"
+ },
+ {
+  "text": "TNPDCL",
+  "type": "Need"
+ },
+ {
+  "text": "TNEB",
+  "type": "Need"
+ },
+ {
+  "text": "Tamil Nadu Electricity Board",
+  "type": "Need"
+ },
+ {
+  "text": "Adani Electricity",
+  "type": "Need"
+ },
+ {
+  "text": "Adani Electricity Mumbai",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Power DDL",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Power Delhi",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Power Mumbai",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Power",
+  "type": "Need"
+ },
+ {
+  "text": "BSES Rajdhani",
+  "type": "Need"
+ },
+ {
+  "text": "BSES Yamuna",
+  "type": "Need"
+ },
+ {
+  "text": "BSES",
+  "type": "Need"
+ },
+ {
+  "text": "CESC Limited",
+  "type": "Need"
+ },
+ {
+  "text": "CESC Kolkata",
+  "type": "Need"
+ },
+ {
+  "text": "WBSEDCL",
+  "type": "Need"
+ },
+ {
+  "text": "West Bengal State Electricity",
+  "type": "Need"
+ },
+ {
+  "text": "UPPCL",
+  "type": "Need"
+ },
+ {
+  "text": "UPCL",
+  "type": "Need"
+ },
+ {
+  "text": "PVVNL",
+  "type": "Need"
+ },
+ {
+  "text": "MVVNL",
+  "type": "Need"
+ },
+ {
+  "text": "DVVNL",
+  "type": "Need"
+ },
+ {
+  "text": "PuVVNL",
+  "type": "Need"
+ },
+ {
+  "text": "KESCO",
+  "type": "Need"
+ },
+ {
+  "text": "Kanpur Electricity Supply",
+  "type": "Need"
+ },
+ {
+  "text": "NPCL",
+  "type": "Need"
+ },
+ {
+  "text": "Noida Power Company",
+  "type": "Need"
+ },
+ {
+  "text": "UPPCL Lucknow",
+  "type": "Need"
+ },
+ {
+  "text": "UHBVN",
+  "type": "Need"
+ },
+ {
+  "text": "DHBVN",
+  "type": "Need"
+ },
+ {
+  "text": "Haryana Bijli",
+  "type": "Need"
+ },
+ {
+  "text": "PSPCL",
+  "type": "Need"
+ },
+ {
+  "text": "Punjab State Power",
+  "type": "Need"
+ },
+ {
+  "text": "PSEB",
+  "type": "Need"
+ },
+ {
+  "text": "HPSEBL",
+  "type": "Need"
+ },
+ {
+  "text": "HPSEB",
+  "type": "Need"
+ },
+ {
+  "text": "JVVNL",
+  "type": "Need"
+ },
+ {
+  "text": "AVVNL",
+  "type": "Need"
+ },
+ {
+  "text": "JdVVNL",
+  "type": "Need"
+ },
+ {
+  "text": "Jaipur Vidyut Vitran",
+  "type": "Need"
+ },
+ {
+  "text": "Ajmer Vidyut Vitran",
+  "type": "Need"
+ },
+ {
+  "text": "Jodhpur Vidyut Vitran",
+  "type": "Need"
+ },
+ {
+  "text": "BSES Rajasthan",
+  "type": "Need"
+ },
+ {
+  "text": "Torrent Power",
+  "type": "Need"
+ },
+ {
+  "text": "Torrent Power Ahmedabad",
+  "type": "Need"
+ },
+ {
+  "text": "Torrent Power Surat",
+  "type": "Need"
+ },
+ {
+  "text": "Torrent Power Bhiwandi",
+  "type": "Need"
+ },
+ {
+  "text": "DGVCL",
+  "type": "Need"
+ },
+ {
+  "text": "MGVCL",
+  "type": "Need"
+ },
+ {
+  "text": "PGVCL",
+  "type": "Need"
+ },
+ {
+  "text": "UGVCL",
+  "type": "Need"
+ },
+ {
+  "text": "Dakshin Gujarat Vij",
+  "type": "Need"
+ },
+ {
+  "text": "Madhya Gujarat Vij",
+  "type": "Need"
+ },
+ {
+  "text": "Paschim Gujarat Vij",
+  "type": "Need"
+ },
+ {
+  "text": "Uttar Gujarat Vij",
+  "type": "Need"
+ },
+ {
+  "text": "GUVNL",
+  "type": "Need"
+ },
+ {
+  "text": "MPPKVVCL",
+  "type": "Need"
+ },
+ {
+  "text": "MPMKVVCL",
+  "type": "Need"
+ },
+ {
+  "text": "MPPoKVVCL",
+  "type": "Need"
+ },
+ {
+  "text": "MP Poorv Kshetra",
+  "type": "Need"
+ },
+ {
+  "text": "MP Paschim Kshetra",
+  "type": "Need"
+ },
+ {
+  "text": "MP Madhya Kshetra",
+  "type": "Need"
+ },
+ {
+  "text": "CSPDCL",
+  "type": "Need"
+ },
+ {
+  "text": "Chhattisgarh State Power",
+  "type": "Need"
+ },
+ {
+  "text": "TPCODL",
+  "type": "Need"
+ },
+ {
+  "text": "TPNODL",
+  "type": "Need"
+ },
+ {
+  "text": "TPSODL",
+  "type": "Need"
+ },
+ {
+  "text": "TPWODL",
+  "type": "Need"
+ },
+ {
+  "text": "OPTCL",
+  "type": "Need"
+ },
+ {
+  "text": "APEPDCL",
+  "type": "Need"
+ },
+ {
+  "text": "APSPDCL",
+  "type": "Need"
+ },
+ {
+  "text": "APCPDCL",
+  "type": "Need"
+ },
+ {
+  "text": "TSSPDCL",
+  "type": "Need"
+ },
+ {
+  "text": "TSNPDCL",
+  "type": "Need"
+ },
+ {
+  "text": "TGSPDCL",
+  "type": "Need"
+ },
+ {
+  "text": "TGNPDCL",
+  "type": "Need"
+ },
+ {
+  "text": "Telangana Southern Power",
+  "type": "Need"
+ },
+ {
+  "text": "Telangana Northern Power",
+  "type": "Need"
+ },
+ {
+  "text": "KSEB",
+  "type": "Need"
+ },
+ {
+  "text": "KSEBL",
+  "type": "Need"
+ },
+ {
+  "text": "Kerala State Electricity Board",
+  "type": "Need"
+ },
+ {
+  "text": "APEPDCL Visakhapatnam",
+  "type": "Need"
+ },
+ {
+  "text": "JBVNL",
+  "type": "Need"
+ },
+ {
+  "text": "Jharkhand Bijli Vitran",
+  "type": "Need"
+ },
+ {
+  "text": "BSPHCL",
+  "type": "Need"
+ },
+ {
+  "text": "NBPDCL",
+  "type": "Need"
+ },
+ {
+  "text": "SBPDCL",
+  "type": "Need"
+ },
+ {
+  "text": "North Bihar Power",
+  "type": "Need"
+ },
+ {
+  "text": "South Bihar Power",
+  "type": "Need"
+ },
+ {
+  "text": "Bihar Bijli",
+  "type": "Need"
+ },
+ {
+  "text": "DNH Power",
+  "type": "Need"
+ },
+ {
+  "text": "DNHDDPDCL",
+  "type": "Need"
+ },
+ {
+  "text": "Goa Electricity Department",
+  "type": "Need"
+ },
+ {
+  "text": "JKPDD",
+  "type": "Need"
+ },
+ {
+  "text": "KPDCL",
+  "type": "Need"
+ },
+ {
+  "text": "JPDCL",
+  "type": "Need"
+ },
+ {
+  "text": "Kashmir Power Distribution",
+  "type": "Need"
+ },
+ {
+  "text": "Jammu Power Distribution",
+  "type": "Need"
+ },
+ {
+  "text": "PSPCL Punjab",
+  "type": "Need"
+ },
+ {
+  "text": "UTPCL",
+  "type": "Need"
+ },
+ {
+  "text": "Uttarakhand Power Corporation",
+  "type": "Need"
+ },
+ {
+  "text": "MeECL",
+  "type": "Need"
+ },
+ {
+  "text": "Meghalaya Energy Corporation",
+  "type": "Need"
+ },
+ {
+  "text": "APDCL",
+  "type": "Need"
+ },
+ {
+  "text": "Assam Power Distribution",
+  "type": "Need"
+ },
+ {
+  "text": "TSECL",
+  "type": "Need"
+ },
+ {
+  "text": "Tripura State Electricity",
+  "type": "Need"
+ },
+ {
+  "text": "MSPDCL",
+  "type": "Need"
+ },
+ {
+  "text": "Manipur Power",
+  "type": "Need"
+ },
+ {
+  "text": "NESCO Odisha",
+  "type": "Need"
+ },
+ {
+  "text": "WESCO Odisha",
+  "type": "Need"
+ },
+ {
+  "text": "SOUTHCO Odisha",
+  "type": "Need"
+ },
+ {
+  "text": "CESU Odisha",
+  "type": "Need"
+ },
+ {
+  "text": "Chandigarh Electricity",
+  "type": "Need"
+ },
+ {
+  "text": "Puducherry Electricity",
+  "type": "Need"
+ },
+ {
+  "text": "Andaman Electricity",
+  "type": "Need"
+ },
+ {
+  "text": "Lakshadweep Electricity",
+  "type": "Need"
+ },
+ {
+  "text": "Sikkim Power",
+  "type": "Need"
+ },
+ {
+  "text": "DVC",
+  "type": "Need"
+ },
+ {
+  "text": "Damodar Valley Corporation",
+  "type": "Need"
+ },
+ {
+  "text": "NDMC Electricity",
+  "type": "Need"
+ },
+ {
+  "text": "Reliance Energy",
+  "type": "Need"
+ },
+ {
+  "text": "BEST Undertaking",
+  "type": "Need"
+ },
+ {
+  "text": "BEST Electricity",
+  "type": "Need"
+ },
+ {
+  "text": "Reliance Infra",
+  "type": "Need"
+ },
+ {
+  "text": "Noida Power",
+  "type": "Need"
+ },
+ {
+  "text": "Jamshedpur Utilities",
+  "type": "Need"
+ },
+ {
+  "text": "JUSCO",
+  "type": "Need"
+ },
+ {
+  "text": "Calcutta Electric Supply",
+  "type": "Need"
+ },
+ {
+  "text": "Siliguri Electricity",
+  "type": "Need"
+ },
+ {
+  "text": "Bangalore Electricity",
+  "type": "Need"
+ },
+ {
+  "text": "Mangalore Electricity",
+  "type": "Need"
+ },
+ {
+  "text": "Hubli Electricity",
+  "type": "Need"
+ },
+ {
+  "text": "Gulbarga Electricity",
+  "type": "Need"
+ },
+ {
+  "text": "Electricity Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Light Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Bijli Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Bijli Vitran",
+  "type": "Need"
+ },
+ {
+  "text": "Vidyut Vitran",
+  "type": "Need"
+ },
+ {
+  "text": "Power Distribution",
+  "type": "Need"
+ },
+ {
+  "text": "Power Corporation",
+  "type": "Need"
+ },
+ {
+  "text": "MGL",
+  "type": "Need"
+ },
+ {
+  "text": "Mahanagar Gas",
+  "type": "Need"
+ },
+ {
+  "text": "IGL",
+  "type": "Need"
+ },
+ {
+  "text": "Indraprastha Gas",
+  "type": "Need"
+ },
+ {
+  "text": "Gujarat Gas",
+  "type": "Need"
+ },
+ {
+  "text": "Adani Total Gas",
+  "type": "Need"
+ },
+ {
+  "text": "Sabarmati Gas",
+  "type": "Need"
+ },
+ {
+  "text": "Torrent Gas",
+  "type": "Need"
+ },
+ {
+  "text": "Vadodara Gas",
+  "type": "Need"
+ },
+ {
+  "text": "Sanwariya Gas",
+  "type": "Need"
+ },
+ {
+  "text": "Charotar Gas",
+  "type": "Need"
+ },
+ {
+  "text": "Central UP Gas",
+  "type": "Need"
+ },
+ {
+  "text": "Bhagyanagar Gas",
+  "type": "Need"
+ },
+ {
+  "text": "HPCL Bhagyanagar Gas",
+  "type": "Need"
+ },
+ {
+  "text": "Green Gas",
+  "type": "Need"
+ },
+ {
+  "text": "Maharashtra Natural Gas",
+  "type": "Need"
+ },
+ {
+  "text": "MNGL",
+  "type": "Need"
+ },
+ {
+  "text": "Haryana City Gas",
+  "type": "Need"
+ },
+ {
+  "text": "GAIL Gas",
+  "type": "Need"
+ },
+ {
+  "text": "GAIL Gas Limited",
+  "type": "Need"
+ },
+ {
+  "text": "Indian Oil Adani Gas",
+  "type": "Need"
+ },
+ {
+  "text": "IOAGPL",
+  "type": "Need"
+ },
+ {
+  "text": "Think Gas",
+  "type": "Need"
+ },
+ {
+  "text": "Aavantika Gas",
+  "type": "Need"
+ },
+ {
+  "text": "Assam Gas Company",
+  "type": "Need"
+ },
+ {
+  "text": "AGCL",
+  "type": "Need"
+ },
+ {
+  "text": "Tripura Natural Gas",
+  "type": "Need"
+ },
+ {
+  "text": "TNGCL",
+  "type": "Need"
+ },
+ {
+  "text": "Gujarat State Petronet",
+  "type": "Need"
+ },
+ {
+  "text": "GSPL",
+  "type": "Need"
+ },
+ {
+  "text": "Megha Gas",
+  "type": "Need"
+ },
+ {
+  "text": "Unison Enviro",
+  "type": "Need"
+ },
+ {
+  "text": "Siti Energy",
+  "type": "Need"
+ },
+ {
+  "text": "Hindustan Petroleum Gas",
+  "type": "Need"
+ },
+ {
+  "text": "BPCL CGD",
+  "type": "Need"
+ },
+ {
+  "text": "Bharat Petroleum Gas",
+  "type": "Need"
+ },
+ {
+  "text": "Naveriya Gas",
+  "type": "Need"
+ },
+ {
+  "text": "Avantika Gas",
+  "type": "Need"
+ },
+ {
+  "text": "Konkan LNG",
+  "type": "Need"
+ },
+ {
+  "text": "Reliance BP Gas",
+  "type": "Need"
+ },
+ {
+  "text": "RBML Gas",
+  "type": "Need"
+ },
+ {
+  "text": "Purba Bharati Gas",
+  "type": "Need"
+ },
+ {
+  "text": "Goa Natural Gas",
+  "type": "Need"
+ },
+ {
+  "text": "Maharashtra Gas",
+  "type": "Need"
+ },
+ {
+  "text": "Roha Gas",
+  "type": "Need"
+ },
+ {
+  "text": "Pipeline Gas",
+  "type": "Need"
+ },
+ {
+  "text": "PNG Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Piped Gas",
+  "type": "Need"
+ },
+ {
+  "text": "CNG Home Gas",
+  "type": "Need"
+ },
+ {
+  "text": "Indane",
+  "type": "Need"
+ },
+ {
+  "text": "Indane Gas",
+  "type": "Need"
+ },
+ {
+  "text": "Indian Oil Indane",
+  "type": "Need"
+ },
+ {
+  "text": "HP Gas",
+  "type": "Need"
+ },
+ {
+  "text": "HP Anywhere",
+  "type": "Need"
+ },
+ {
+  "text": "Bharatgas",
+  "type": "Need"
+ },
+ {
+  "text": "Bharat Gas",
+  "type": "Need"
+ },
+ {
+  "text": "Bharat Petroleum LPG",
+  "type": "Need"
+ },
+ {
+  "text": "Super Gas",
+  "type": "Need"
+ },
+ {
+  "text": "Totalgaz",
+  "type": "Need"
+ },
+ {
+  "text": "Reliance LPG",
+  "type": "Need"
+ },
+ {
+  "text": "Essar LPG",
+  "type": "Need"
+ },
+ {
+  "text": "Gas Cylinder",
+  "type": "Need"
+ },
+ {
+  "text": "LPG Cylinder",
+  "type": "Need"
+ },
+ {
+  "text": "LPG Booking",
+  "type": "Need"
+ },
+ {
+  "text": "Gas Agency",
+  "type": "Need"
+ },
+ {
+  "text": "Gas Booking",
+  "type": "Need"
+ },
+ {
+  "text": "Delhi Jal Board",
+  "type": "Need"
+ },
+ {
+  "text": "DJB",
+  "type": "Need"
+ },
+ {
+  "text": "BWSSB",
+  "type": "Need"
+ },
+ {
+  "text": "Bangalore Water Supply",
+  "type": "Need"
+ },
+ {
+  "text": "HMWSSB",
+  "type": "Need"
+ },
+ {
+  "text": "Hyderabad Metro Water",
+  "type": "Need"
+ },
+ {
+  "text": "Chennai Metrowater",
+  "type": "Need"
+ },
+ {
+  "text": "CMWSSB",
+  "type": "Need"
+ },
+ {
+  "text": "Mumbai Water Department",
+  "type": "Need"
+ },
+ {
+  "text": "BMC Water",
+  "type": "Need"
+ },
+ {
+  "text": "MCGM Water",
+  "type": "Need"
+ },
+ {
+  "text": "PMC Water",
+  "type": "Need"
+ },
+ {
+  "text": "PCMC Water",
+  "type": "Need"
+ },
+ {
+  "text": "Pune Water Supply",
+  "type": "Need"
+ },
+ {
+  "text": "Nagpur Water",
+  "type": "Need"
+ },
+ {
+  "text": "OCW Nagpur",
+  "type": "Need"
+ },
+ {
+  "text": "NMC Water",
+  "type": "Need"
+ },
+ {
+  "text": "Thane Water",
+  "type": "Need"
+ },
+ {
+  "text": "TMC Water",
+  "type": "Need"
+ },
+ {
+  "text": "KMC Water",
+  "type": "Need"
+ },
+ {
+  "text": "Kolkata Water",
+  "type": "Need"
+ },
+ {
+  "text": "KMW Water",
+  "type": "Need"
+ },
+ {
+  "text": "AMC Water",
+  "type": "Need"
+ },
+ {
+  "text": "Ahmedabad Water",
+  "type": "Need"
+ },
+ {
+  "text": "SMC Water",
+  "type": "Need"
+ },
+ {
+  "text": "Surat Water",
+  "type": "Need"
+ },
+ {
+  "text": "VMC Water",
+  "type": "Need"
+ },
+ {
+  "text": "Vadodara Water",
+  "type": "Need"
+ },
+ {
+  "text": "Rajkot Water",
+  "type": "Need"
+ },
+ {
+  "text": "Indore Water",
+  "type": "Need"
+ },
+ {
+  "text": "Bhopal Water",
+  "type": "Need"
+ },
+ {
+  "text": "Jaipur Water",
+  "type": "Need"
+ },
+ {
+  "text": "PHED",
+  "type": "Need"
+ },
+ {
+  "text": "Public Health Engineering",
+  "type": "Need"
+ },
+ {
+  "text": "Jal Nigam",
+  "type": "Need"
+ },
+ {
+  "text": "UP Jal Nigam",
+  "type": "Need"
+ },
+ {
+  "text": "Jal Sansthan",
+  "type": "Need"
+ },
+ {
+  "text": "Lucknow Jal Sansthan",
+  "type": "Need"
+ },
+ {
+  "text": "Jal Kal Vibhag",
+  "type": "Need"
+ },
+ {
+  "text": "Jal Board",
+  "type": "Need"
+ },
+ {
+  "text": "Water Board",
+  "type": "Need"
+ },
+ {
+  "text": "Water Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Water Supply Board",
+  "type": "Need"
+ },
+ {
+  "text": "Kerala Water Authority",
+  "type": "Need"
+ },
+ {
+  "text": "KWA",
+  "type": "Need"
+ },
+ {
+  "text": "Goa PWD Water",
+  "type": "Need"
+ },
+ {
+  "text": "Chandigarh Water",
+  "type": "Need"
+ },
+ {
+  "text": "Ludhiana Water",
+  "type": "Need"
+ },
+ {
+  "text": "Bhubaneswar Water",
+  "type": "Need"
+ },
+ {
+  "text": "PHED Odisha",
+  "type": "Need"
+ },
+ {
+  "text": "Guwahati Water",
+  "type": "Need"
+ },
+ {
+  "text": "GMDA Water",
+  "type": "Need"
+ },
+ {
+  "text": "Jharkhand Water",
+  "type": "Need"
+ },
+ {
+  "text": "Ranchi Water",
+  "type": "Need"
+ },
+ {
+  "text": "Patna Water",
+  "type": "Need"
+ },
+ {
+  "text": "Bihar Water",
+  "type": "Need"
+ },
+ {
+  "text": "Noida Water",
+  "type": "Need"
+ },
+ {
+  "text": "Greater Noida Water",
+  "type": "Need"
+ },
+ {
+  "text": "Gurgaon Water",
+  "type": "Need"
+ },
+ {
+  "text": "GMC Water",
+  "type": "Need"
+ },
+ {
+  "text": "Faridabad Water",
+  "type": "Need"
+ },
+ {
+  "text": "Visakhapatnam Water",
+  "type": "Need"
+ },
+ {
+  "text": "GVMC Water",
+  "type": "Need"
+ },
+ {
+  "text": "Vijayawada Water",
+  "type": "Need"
+ },
+ {
+  "text": "Mysore Water",
+  "type": "Need"
+ },
+ {
+  "text": "Coimbatore Water",
+  "type": "Need"
+ },
+ {
+  "text": "Madurai Water",
+  "type": "Need"
+ },
+ {
+  "text": "Trichy Water",
+  "type": "Need"
+ },
+ {
+  "text": "TWAD Board",
+  "type": "Need"
+ },
+ {
+  "text": "Sewerage Board",
+  "type": "Need"
+ },
+ {
+  "text": "Sewage Charges",
+  "type": "Need"
+ },
+ {
+  "text": "Sewer Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Jio",
+  "type": "Need"
+ },
+ {
+  "text": "Reliance Jio",
+  "type": "Need"
+ },
+ {
+  "text": "Jio Prepaid",
+  "type": "Need"
+ },
+ {
+  "text": "Jio Postpaid",
+  "type": "Need"
+ },
+ {
+  "text": "JioFiber",
+  "type": "Need"
+ },
+ {
+  "text": "Jio Fiber",
+  "type": "Need"
+ },
+ {
+  "text": "JioAirFiber",
+  "type": "Need"
+ },
+ {
+  "text": "Jio AirFiber",
+  "type": "Need"
+ },
+ {
+  "text": "Airtel",
+  "type": "Need"
+ },
+ {
+  "text": "Bharti Airtel",
+  "type": "Need"
+ },
+ {
+  "text": "Airtel Prepaid",
+  "type": "Need"
+ },
+ {
+  "text": "Airtel Postpaid",
+  "type": "Need"
+ },
+ {
+  "text": "Airtel Xstream",
+  "type": "Need"
+ },
+ {
+  "text": "Airtel Xstream Fiber",
+  "type": "Need"
+ },
+ {
+  "text": "Airtel Black",
+  "type": "Need"
+ },
+ {
+  "text": "Airtel Digital TV",
+  "type": "Need"
+ },
+ {
+  "text": "Vi",
+  "type": "Need"
+ },
+ {
+  "text": "Vodafone Idea",
+  "type": "Need"
+ },
+ {
+  "text": "Vodafone",
+  "type": "Need"
+ },
+ {
+  "text": "Idea Cellular",
+  "type": "Need"
+ },
+ {
+  "text": "Vi Prepaid",
+  "type": "Need"
+ },
+ {
+  "text": "Vi Postpaid",
+  "type": "Need"
+ },
+ {
+  "text": "BSNL",
+  "type": "Need"
+ },
+ {
+  "text": "BSNL Landline",
+  "type": "Need"
+ },
+ {
+  "text": "BSNL Broadband",
+  "type": "Need"
+ },
+ {
+  "text": "BSNL Bharat Fiber",
+  "type": "Need"
+ },
+ {
+  "text": "BSNL Prepaid",
+  "type": "Need"
+ },
+ {
+  "text": "MTNL",
+  "type": "Need"
+ },
+ {
+  "text": "MTNL Delhi",
+  "type": "Need"
+ },
+ {
+  "text": "MTNL Mumbai",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Docomo",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Teleservices",
+  "type": "Need"
+ },
+ {
+  "text": "Aircel",
+  "type": "Need"
+ },
+ {
+  "text": "Telenor",
+  "type": "Need"
+ },
+ {
+  "text": "Reliance Communications",
+  "type": "Need"
+ },
+ {
+  "text": "RCom",
+  "type": "Need"
+ },
+ {
+  "text": "Videocon Telecom",
+  "type": "Need"
+ },
+ {
+  "text": "Uninor",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Indicom",
+  "type": "Need"
+ },
+ {
+  "text": "Reliance Netconnect",
+  "type": "Need"
+ },
+ {
+  "text": "Airtel Payments",
+  "type": "Need"
+ },
+ {
+  "text": "Jio Recharge",
+  "type": "Need"
+ },
+ {
+  "text": "Vi Recharge",
+  "type": "Need"
+ },
+ {
+  "text": "BSNL Recharge",
+  "type": "Need"
+ },
+ {
+  "text": "ACT Fibernet",
+  "type": "Need"
+ },
+ {
+  "text": "ACT Broadband",
+  "type": "Need"
+ },
+ {
+  "text": "Hathway",
+  "type": "Need"
+ },
+ {
+  "text": "Hathway Broadband",
+  "type": "Need"
+ },
+ {
+  "text": "Excitel",
+  "type": "Need"
+ },
+ {
+  "text": "Excitel Broadband",
+  "type": "Need"
+ },
+ {
+  "text": "Tikona",
+  "type": "Need"
+ },
+ {
+  "text": "Tikona Digital",
+  "type": "Need"
+ },
+ {
+  "text": "You Broadband",
+  "type": "Need"
+ },
+ {
+  "text": "Spectra",
+  "type": "Need"
+ },
+ {
+  "text": "Spectranet",
+  "type": "Need"
+ },
+ {
+  "text": "Alliance Broadband",
+  "type": "Need"
+ },
+ {
+  "text": "Alliance Broadband Services",
+  "type": "Need"
+ },
+ {
+  "text": "Den Broadband",
+  "type": "Need"
+ },
+ {
+  "text": "DEN Networks",
+  "type": "Need"
+ },
+ {
+  "text": "Fastway",
+  "type": "Need"
+ },
+ {
+  "text": "Fastway Transmissions",
+  "type": "Need"
+ },
+ {
+  "text": "GTPL",
+  "type": "Need"
+ },
+ {
+  "text": "GTPL Hathway",
+  "type": "Need"
+ },
+ {
+  "text": "GTPL Broadband",
+  "type": "Need"
+ },
+ {
+  "text": "Siti Broadband",
+  "type": "Need"
+ },
+ {
+  "text": "Siti Networks",
+  "type": "Need"
+ },
+ {
+  "text": "Siti Cable",
+  "type": "Need"
+ },
+ {
+  "text": "Nextra",
+  "type": "Need"
+ },
+ {
+  "text": "Nextra Broadband",
+  "type": "Need"
+ },
+ {
+  "text": "Atria Convergence",
+  "type": "Need"
+ },
+ {
+  "text": "Syscon Infoway",
+  "type": "Need"
+ },
+ {
+  "text": "Syscon Broadband",
+  "type": "Need"
+ },
+ {
+  "text": "Beam Telecom",
+  "type": "Need"
+ },
+ {
+  "text": "Beam Fiber",
+  "type": "Need"
+ },
+ {
+  "text": "Connect Broadband",
+  "type": "Need"
+ },
+ {
+  "text": "Connect Holdings",
+  "type": "Need"
+ },
+ {
+  "text": "Netplus",
+  "type": "Need"
+ },
+ {
+  "text": "Netplus Broadband",
+  "type": "Need"
+ },
+ {
+  "text": "Net4India",
+  "type": "Need"
+ },
+ {
+  "text": "Sify",
+  "type": "Need"
+ },
+ {
+  "text": "Sify Broadband",
+  "type": "Need"
+ },
+ {
+  "text": "Sify Technologies",
+  "type": "Need"
+ },
+ {
+  "text": "Railtel",
+  "type": "Need"
+ },
+ {
+  "text": "RailWire",
+  "type": "Need"
+ },
+ {
+  "text": "Railwire Broadband",
+  "type": "Need"
+ },
+ {
+  "text": "Kerala Vision",
+  "type": "Need"
+ },
+ {
+  "text": "Kerala Vision Broadband",
+  "type": "Need"
+ },
+ {
+  "text": "KCCL",
+  "type": "Need"
+ },
+ {
+  "text": "Asianet Broadband",
+  "type": "Need"
+ },
+ {
+  "text": "Asianet Digital",
+  "type": "Need"
+ },
+ {
+  "text": "Asianet Satellite",
+  "type": "Need"
+ },
+ {
+  "text": "Digi Cable",
+  "type": "Need"
+ },
+ {
+  "text": "Digicable",
+  "type": "Need"
+ },
+ {
+  "text": "Hinduja Cable",
+  "type": "Need"
+ },
+ {
+  "text": "IndusInd Media",
+  "type": "Need"
+ },
+ {
+  "text": "IN Cable",
+  "type": "Need"
+ },
+ {
+  "text": "Ortel",
+  "type": "Need"
+ },
+ {
+  "text": "Ortel Communications",
+  "type": "Need"
+ },
+ {
+  "text": "Wishnet",
+  "type": "Need"
+ },
+ {
+  "text": "Wishnet Broadband",
+  "type": "Need"
+ },
+ {
+  "text": "Skynet Broadband",
+  "type": "Need"
+ },
+ {
+  "text": "SkyOnline",
+  "type": "Need"
+ },
+ {
+  "text": "Diginet",
+  "type": "Need"
+ },
+ {
+  "text": "Digital Vision Broadband",
+  "type": "Need"
+ },
+ {
+  "text": "Zee Digital",
+  "type": "Need"
+ },
+ {
+  "text": "Dishnet Wireless",
+  "type": "Need"
+ },
+ {
+  "text": "DishTV Broadband",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Play Fiber",
+  "type": "Need"
+ },
+ {
+  "text": "Vodafone Broadband",
+  "type": "Need"
+ },
+ {
+  "text": "Idea Broadband",
+  "type": "Need"
+ },
+ {
+  "text": "WiFi Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Broadband Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Internet Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Fiber Internet",
+  "type": "Need"
+ },
+ {
+  "text": "Dataone",
+  "type": "Need"
+ },
+ {
+  "text": "Mahanagar Telephone",
+  "type": "Need"
+ },
+ {
+  "text": "Dialog Broadband",
+  "type": "Need"
+ },
+ {
+  "text": "Bharat Net",
+  "type": "Need"
+ },
+ {
+  "text": "Quadrant Cable",
+  "type": "Need"
+ },
+ {
+  "text": "Quadrant Televentures",
+  "type": "Need"
+ },
+ {
+  "text": "Pioneer Broadband",
+  "type": "Need"
+ },
+ {
+  "text": "JPR Broadband",
+  "type": "Need"
+ },
+ {
+  "text": "Primus Broadband",
+  "type": "Need"
+ },
+ {
+  "text": "Cable TV",
+  "type": "Need"
+ },
+ {
+  "text": "Cable Operator",
+  "type": "Need"
+ },
+ {
+  "text": "Cable Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Telephone Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Landline Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Mobile Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Mobile Recharge",
+  "type": "Need"
+ },
+ {
+  "text": "Prepaid Recharge",
+  "type": "Need"
+ },
+ {
+  "text": "Postpaid Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Data Pack",
+  "type": "Need"
+ },
+ {
+  "text": "Dish TV",
+  "type": "Need"
+ },
+ {
+  "text": "Videocon d2h",
+  "type": "Need"
+ },
+ {
+  "text": "d2h",
+  "type": "Need"
+ },
+ {
+  "text": "Sun Direct",
+  "type": "Need"
+ },
+ {
+  "text": "Sun Direct DTH",
+  "type": "Need"
+ },
+ {
+  "text": "DD Free Dish",
+  "type": "Need"
+ },
+ {
+  "text": "Dish TV Recharge",
+  "type": "Need"
+ },
+ {
+  "text": "Sun Direct Recharge",
+  "type": "Need"
+ },
+ {
+  "text": "d2h Recharge",
+  "type": "Need"
+ },
+ {
+  "text": "Videocon DTH",
+  "type": "Need"
+ },
+ {
+  "text": "Reliance Big TV",
+  "type": "Need"
+ },
+ {
+  "text": "Big TV",
+  "type": "Need"
+ },
+ {
+  "text": "DTH Recharge",
+  "type": "Need"
+ },
+ {
+  "text": "DTH Bill",
+  "type": "Need"
+ },
+ {
+  "text": "The Times of India",
+  "type": "Need"
+ },
+ {
+  "text": "Times of India",
+  "type": "Need"
+ },
+ {
+  "text": "TOI",
+  "type": "Need"
+ },
+ {
+  "text": "Hindustan Times",
+  "type": "Need"
+ },
+ {
+  "text": "HT Media",
+  "type": "Need"
+ },
+ {
+  "text": "The Hindu",
+  "type": "Need"
+ },
+ {
+  "text": "The Hindu Subscription",
+  "type": "Need"
+ },
+ {
+  "text": "Indian Express",
+  "type": "Need"
+ },
+ {
+  "text": "Express Newspapers",
+  "type": "Need"
+ },
+ {
+  "text": "Economic Times",
+  "type": "Need"
+ },
+ {
+  "text": "ET Prime",
+  "type": "Need"
+ },
+ {
+  "text": "Business Standard",
+  "type": "Need"
+ },
+ {
+  "text": "Mint",
+  "type": "Need"
+ },
+ {
+  "text": "Livemint",
+  "type": "Need"
+ },
+ {
+  "text": "Financial Express",
+  "type": "Need"
+ },
+ {
+  "text": "The Telegraph",
+  "type": "Need"
+ },
+ {
+  "text": "Telegraph India",
+  "type": "Need"
+ },
+ {
+  "text": "Deccan Herald",
+  "type": "Need"
+ },
+ {
+  "text": "Deccan Chronicle",
+  "type": "Need"
+ },
+ {
+  "text": "The Statesman",
+  "type": "Need"
+ },
+ {
+  "text": "Navbharat Times",
+  "type": "Need"
+ },
+ {
+  "text": "Maharashtra Times",
+  "type": "Need"
+ },
+ {
+  "text": "Dainik Bhaskar",
+  "type": "Need"
+ },
+ {
+  "text": "Dainik Jagran",
+  "type": "Need"
+ },
+ {
+  "text": "Amar Ujala",
+  "type": "Need"
+ },
+ {
+  "text": "Hindustan Dainik",
+  "type": "Need"
+ },
+ {
+  "text": "Rajasthan Patrika",
+  "type": "Need"
+ },
+ {
+  "text": "Punjab Kesari",
+  "type": "Need"
+ },
+ {
+  "text": "Jansatta",
+  "type": "Need"
+ },
+ {
+  "text": "Lokmat",
+  "type": "Need"
+ },
+ {
+  "text": "Loksatta",
+  "type": "Need"
+ },
+ {
+  "text": "Sakal",
+  "type": "Need"
+ },
+ {
+  "text": "Pudhari",
+  "type": "Need"
+ },
+ {
+  "text": "Mumbai Mirror",
+  "type": "Need"
+ },
+ {
+  "text": "Mid-Day",
+  "type": "Need"
+ },
+ {
+  "text": "Mid Day",
+  "type": "Need"
+ },
+ {
+  "text": "DNA India",
+  "type": "Need"
+ },
+ {
+  "text": "Free Press Journal",
+  "type": "Need"
+ },
+ {
+  "text": "Eenadu",
+  "type": "Need"
+ },
+ {
+  "text": "Sakshi",
+  "type": "Need"
+ },
+ {
+  "text": "Andhra Jyothy",
+  "type": "Need"
+ },
+ {
+  "text": "Namaste Telangana",
+  "type": "Need"
+ },
+ {
+  "text": "Malayala Manorama",
+  "type": "Need"
+ },
+ {
+  "text": "Mathrubhumi",
+  "type": "Need"
+ },
+ {
+  "text": "Deshabhimani",
+  "type": "Need"
+ },
+ {
+  "text": "Madhyamam",
+  "type": "Need"
+ },
+ {
+  "text": "Kerala Kaumudi",
+  "type": "Need"
+ },
+ {
+  "text": "Dinamalar",
+  "type": "Need"
+ },
+ {
+  "text": "Dina Thanthi",
+  "type": "Need"
+ },
+ {
+  "text": "Daily Thanthi",
+  "type": "Need"
+ },
+ {
+  "text": "Dinakaran",
+  "type": "Need"
+ },
+ {
+  "text": "Dinamani",
+  "type": "Need"
+ },
+ {
+  "text": "Vijay Karnataka",
+  "type": "Need"
+ },
+ {
+  "text": "Vijaya Karnataka",
+  "type": "Need"
+ },
+ {
+  "text": "Prajavani",
+  "type": "Need"
+ },
+ {
+  "text": "Kannada Prabha",
+  "type": "Need"
+ },
+ {
+  "text": "Udayavani",
+  "type": "Need"
+ },
+ {
+  "text": "Vijayavani",
+  "type": "Need"
+ },
+ {
+  "text": "Samyukta Karnataka",
+  "type": "Need"
+ },
+ {
+  "text": "Ananda Bazar Patrika",
+  "type": "Need"
+ },
+ {
+  "text": "Anandabazar",
+  "type": "Need"
+ },
+ {
+  "text": "Bartaman",
+  "type": "Need"
+ },
+ {
+  "text": "Sangbad Pratidin",
+  "type": "Need"
+ },
+ {
+  "text": "Ganashakti",
+  "type": "Need"
+ },
+ {
+  "text": "Asomiya Pratidin",
+  "type": "Need"
+ },
+ {
+  "text": "Sentinel Assam",
+  "type": "Need"
+ },
+ {
+  "text": "Assam Tribune",
+  "type": "Need"
+ },
+ {
+  "text": "Dainik Sambad",
+  "type": "Need"
+ },
+ {
+  "text": "Sambad",
+  "type": "Need"
+ },
+ {
+  "text": "Dharitri",
+  "type": "Need"
+ },
+ {
+  "text": "Prajatantra",
+  "type": "Need"
+ },
+ {
+  "text": "Gujarat Samachar",
+  "type": "Need"
+ },
+ {
+  "text": "Sandesh",
+  "type": "Need"
+ },
+ {
+  "text": "Divya Bhaskar",
+  "type": "Need"
+ },
+ {
+  "text": "Mumbai Samachar",
+  "type": "Need"
+ },
+ {
+  "text": "Jai Hind",
+  "type": "Need"
+ },
+ {
+  "text": "Dainik Navjyoti",
+  "type": "Need"
+ },
+ {
+  "text": "Dainik Tribune",
+  "type": "Need"
+ },
+ {
+  "text": "The Tribune",
+  "type": "Need"
+ },
+ {
+  "text": "Tribune India",
+  "type": "Need"
+ },
+ {
+  "text": "Hari Bhoomi",
+  "type": "Need"
+ },
+ {
+  "text": "Nai Dunia",
+  "type": "Need"
+ },
+ {
+  "text": "Naidunia",
+  "type": "Need"
+ },
+ {
+  "text": "Prabhat Khabar",
+  "type": "Need"
+ },
+ {
+  "text": "Hindu Business Line",
+  "type": "Need"
+ },
+ {
+  "text": "BusinessLine",
+  "type": "Need"
+ },
+ {
+  "text": "Newspaper Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Newspaper Vendor",
+  "type": "Need"
+ },
+ {
+  "text": "Paper Vendor",
+  "type": "Need"
+ },
+ {
+  "text": "Akhbar",
+  "type": "Need"
+ },
+ {
+  "text": "Magazine Subscription",
+  "type": "Need"
+ },
+ {
+  "text": "India Today",
+  "type": "Need"
+ },
+ {
+  "text": "Outlook",
+  "type": "Need"
+ },
+ {
+  "text": "Frontline",
+  "type": "Need"
+ },
+ {
+  "text": "Dainik Savera",
+  "type": "Need"
+ },
+ {
+  "text": "Navhind Times",
+  "type": "Need"
+ },
+ {
+  "text": "Gomantak Times",
+  "type": "Need"
+ },
+ {
+  "text": "Herald Goa",
+  "type": "Need"
+ },
+ {
+  "text": "Google One",
+  "type": "Need"
+ },
+ {
+  "text": "Google Drive",
+  "type": "Need"
+ },
+ {
+  "text": "Google Workspace",
+  "type": "Need"
+ },
+ {
+  "text": "Google Storage",
+  "type": "Need"
+ },
+ {
+  "text": "YouTube Premium",
+  "type": "Need"
+ },
+ {
+  "text": "iCloud",
+  "type": "Need"
+ },
+ {
+  "text": "iCloud Plus",
+  "type": "Need"
+ },
+ {
+  "text": "iCloud Storage",
+  "type": "Need"
+ },
+ {
+  "text": "Apple iCloud",
+  "type": "Need"
+ },
+ {
+  "text": "Apple One",
+  "type": "Need"
+ },
+ {
+  "text": "Dropbox",
+  "type": "Need"
+ },
+ {
+  "text": "OneDrive",
+  "type": "Need"
+ },
+ {
+  "text": "Microsoft OneDrive",
+  "type": "Need"
+ },
+ {
+  "text": "Microsoft 365",
+  "type": "Need"
+ },
+ {
+  "text": "Office 365",
+  "type": "Need"
+ },
+ {
+  "text": "Microsoft Office",
+  "type": "Need"
+ },
+ {
+  "text": "Microsoft 365 Family",
+  "type": "Need"
+ },
+ {
+  "text": "Microsoft Copilot",
+  "type": "Need"
+ },
+ {
+  "text": "Copilot Pro",
+  "type": "Need"
+ },
+ {
+  "text": "ChatGPT",
+  "type": "Need"
+ },
+ {
+  "text": "ChatGPT Plus",
+  "type": "Need"
+ },
+ {
+  "text": "ChatGPT Pro",
+  "type": "Need"
+ },
+ {
+  "text": "OpenAI",
+  "type": "Need"
+ },
+ {
+  "text": "OpenAI API",
+  "type": "Need"
+ },
+ {
+  "text": "Claude Pro",
+  "type": "Need"
+ },
+ {
+  "text": "Claude Max",
+  "type": "Need"
+ },
+ {
+  "text": "Anthropic",
+  "type": "Need"
+ },
+ {
+  "text": "Anthropic API",
+  "type": "Need"
+ },
+ {
+  "text": "Perplexity",
+  "type": "Need"
+ },
+ {
+  "text": "Perplexity Pro",
+  "type": "Need"
+ },
+ {
+  "text": "Gemini Advanced",
+  "type": "Need"
+ },
+ {
+  "text": "Google AI Pro",
+  "type": "Need"
+ },
+ {
+  "text": "Midjourney",
+  "type": "Need"
+ },
+ {
+  "text": "GitHub Copilot",
+  "type": "Need"
+ },
+ {
+  "text": "GitHub",
+  "type": "Need"
+ },
+ {
+  "text": "GitLab",
+  "type": "Need"
+ },
+ {
+  "text": "Cursor",
+  "type": "Need"
+ },
+ {
+  "text": "Cursor Pro",
+  "type": "Need"
+ },
+ {
+  "text": "Replit",
+  "type": "Need"
+ },
+ {
+  "text": "Notion",
+  "type": "Need"
+ },
+ {
+  "text": "Notion AI",
+  "type": "Need"
+ },
+ {
+  "text": "Canva",
+  "type": "Need"
+ },
+ {
+  "text": "Canva Pro",
+  "type": "Need"
+ },
+ {
+  "text": "Figma",
+  "type": "Need"
+ },
+ {
+  "text": "Adobe",
+  "type": "Need"
+ },
+ {
+  "text": "Adobe Creative Cloud",
+  "type": "Need"
+ },
+ {
+  "text": "Adobe Photoshop",
+  "type": "Need"
+ },
+ {
+  "text": "Adobe Acrobat",
+  "type": "Need"
+ },
+ {
+  "text": "Adobe Express",
+  "type": "Need"
+ },
+ {
+  "text": "Grammarly",
+  "type": "Need"
+ },
+ {
+  "text": "Grammarly Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Evernote",
+  "type": "Need"
+ },
+ {
+  "text": "Todoist",
+  "type": "Need"
+ },
+ {
+  "text": "Trello",
+  "type": "Need"
+ },
+ {
+  "text": "Atlassian",
+  "type": "Need"
+ },
+ {
+  "text": "Jira",
+  "type": "Need"
+ },
+ {
+  "text": "Confluence",
+  "type": "Need"
+ },
+ {
+  "text": "Slack",
+  "type": "Need"
+ },
+ {
+  "text": "Zoom",
+  "type": "Need"
+ },
+ {
+  "text": "Zoom Pro",
+  "type": "Need"
+ },
+ {
+  "text": "Google Meet",
+  "type": "Need"
+ },
+ {
+  "text": "Microsoft Teams",
+  "type": "Need"
+ },
+ {
+  "text": "Asana",
+  "type": "Need"
+ },
+ {
+  "text": "Monday.com",
+  "type": "Need"
+ },
+ {
+  "text": "ClickUp",
+  "type": "Need"
+ },
+ {
+  "text": "Airtable",
+  "type": "Need"
+ },
+ {
+  "text": "Miro",
+  "type": "Need"
+ },
+ {
+  "text": "Loom",
+  "type": "Need"
+ },
+ {
+  "text": "Calendly",
+  "type": "Need"
+ },
+ {
+  "text": "Zapier",
+  "type": "Need"
+ },
+ {
+  "text": "Mailchimp",
+  "type": "Need"
+ },
+ {
+  "text": "Zoho",
+  "type": "Need"
+ },
+ {
+  "text": "Zoho Mail",
+  "type": "Need"
+ },
+ {
+  "text": "Zoho One",
+  "type": "Need"
+ },
+ {
+  "text": "Zoho CRM",
+  "type": "Need"
+ },
+ {
+  "text": "Zoho Books",
+  "type": "Need"
+ },
+ {
+  "text": "Freshworks",
+  "type": "Need"
+ },
+ {
+  "text": "Freshdesk",
+  "type": "Need"
+ },
+ {
+  "text": "Freshsales",
+  "type": "Need"
+ },
+ {
+  "text": "HubSpot",
+  "type": "Need"
+ },
+ {
+  "text": "Salesforce",
+  "type": "Need"
+ },
+ {
+  "text": "Tally Prime",
+  "type": "Need"
+ },
+ {
+  "text": "Tally Solutions",
+  "type": "Need"
+ },
+ {
+  "text": "Busy Accounting",
+  "type": "Need"
+ },
+ {
+  "text": "ClearTax",
+  "type": "Need"
+ },
+ {
+  "text": "Cleartax Plus",
+  "type": "Need"
+ },
+ {
+  "text": "Razorpay Software",
+  "type": "Need"
+ },
+ {
+  "text": "Wix",
+  "type": "Need"
+ },
+ {
+  "text": "Squarespace",
+  "type": "Need"
+ },
+ {
+  "text": "Shopify",
+  "type": "Need"
+ },
+ {
+  "text": "WordPress",
+  "type": "Need"
+ },
+ {
+  "text": "WordPress.com",
+  "type": "Need"
+ },
+ {
+  "text": "Hostinger",
+  "type": "Need"
+ },
+ {
+  "text": "GoDaddy",
+  "type": "Need"
+ },
+ {
+  "text": "BigRock",
+  "type": "Need"
+ },
+ {
+  "text": "Bluehost",
+  "type": "Need"
+ },
+ {
+  "text": "HostGator",
+  "type": "Need"
+ },
+ {
+  "text": "Namecheap",
+  "type": "Need"
+ },
+ {
+  "text": "ResellerClub",
+  "type": "Need"
+ },
+ {
+  "text": "Cloudflare",
+  "type": "Need"
+ },
+ {
+  "text": "DigitalOcean",
+  "type": "Need"
+ },
+ {
+  "text": "AWS",
+  "type": "Need"
+ },
+ {
+  "text": "Amazon Web Services",
+  "type": "Need"
+ },
+ {
+  "text": "Google Cloud",
+  "type": "Need"
+ },
+ {
+  "text": "Microsoft Azure",
+  "type": "Need"
+ },
+ {
+  "text": "Linode",
+  "type": "Need"
+ },
+ {
+  "text": "Vercel",
+  "type": "Need"
+ },
+ {
+  "text": "Netlify",
+  "type": "Need"
+ },
+ {
+  "text": "Heroku",
+  "type": "Need"
+ },
+ {
+  "text": "NordVPN",
+  "type": "Need"
+ },
+ {
+  "text": "ExpressVPN",
+  "type": "Need"
+ },
+ {
+  "text": "Surfshark",
+  "type": "Need"
+ },
+ {
+  "text": "ProtonVPN",
+  "type": "Need"
+ },
+ {
+  "text": "Proton Mail",
+  "type": "Need"
+ },
+ {
+  "text": "Proton Drive",
+  "type": "Need"
+ },
+ {
+  "text": "Norton",
+  "type": "Need"
+ },
+ {
+  "text": "Norton 360",
+  "type": "Need"
+ },
+ {
+  "text": "McAfee",
+  "type": "Need"
+ },
+ {
+  "text": "Quick Heal",
+  "type": "Need"
+ },
+ {
+  "text": "Kaspersky",
+  "type": "Need"
+ },
+ {
+  "text": "Bitdefender",
+  "type": "Need"
+ },
+ {
+  "text": "Avast",
+  "type": "Need"
+ },
+ {
+  "text": "ESET",
+  "type": "Need"
+ },
+ {
+  "text": "Malwarebytes",
+  "type": "Need"
+ },
+ {
+  "text": "1Password",
+  "type": "Need"
+ },
+ {
+  "text": "LastPass",
+  "type": "Need"
+ },
+ {
+  "text": "Bitwarden",
+  "type": "Need"
+ },
+ {
+  "text": "Dashlane",
+  "type": "Need"
+ },
+ {
+  "text": "Duolingo Plus",
+  "type": "Need"
+ },
+ {
+  "text": "Microsoft Store Subscription",
+  "type": "Need"
+ },
+ {
+  "text": "Google Play Subscription",
+  "type": "Need"
+ },
+ {
+  "text": "Apple Subscription",
+  "type": "Need"
+ },
+ {
+  "text": "App Store Subscription",
+  "type": "Need"
+ },
+ {
+  "text": "Truecaller",
+  "type": "Need"
+ },
+ {
+  "text": "Truecaller Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Truecaller Gold",
+  "type": "Need"
+ },
+ {
+  "text": "LinkedIn Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Naukri Subscription",
+  "type": "Need"
+ },
+ {
+  "text": "Medium Membership",
+  "type": "Need"
+ },
+ {
+  "text": "Substack",
+  "type": "Need"
+ },
+ {
+  "text": "Patreon",
+  "type": "Need"
+ },
+ {
+  "text": "Kindle Unlimited",
+  "type": "Need"
+ },
+ {
+  "text": "Audible",
+  "type": "Need"
+ },
+ {
+  "text": "Zomato Gold Subscription",
+  "type": "Need"
+ },
+ {
+  "text": "Setapp",
+  "type": "Need"
+ },
+ {
+  "text": "ZipRecruiter",
+  "type": "Need"
+ },
+ {
+  "text": "Quora Plus",
+  "type": "Need"
+ },
+ {
+  "text": "WhatsApp Business",
+  "type": "Need"
+ },
+ {
+  "text": "Gmail Storage",
+  "type": "Need"
+ },
+ {
+  "text": "Mega Cloud",
+  "type": "Need"
+ },
+ {
+  "text": "pCloud",
+  "type": "Need"
+ },
+ {
+  "text": "Box Cloud",
+  "type": "Need"
+ },
+ {
+  "text": "Backblaze",
+  "type": "Need"
+ },
+ {
+  "text": "Dropbox Plus",
+  "type": "Need"
+ },
+ {
+  "text": "Cloud Subscription",
+  "type": "Need"
+ },
+ {
+  "text": "SaaS Subscription",
+  "type": "Need"
+ },
+ {
+  "text": "Software Subscription",
+  "type": "Need"
+ },
+ {
+  "text": "AI Subscription",
+  "type": "Need"
+ },
+ {
+  "text": "CRED Mint Utilities",
+  "type": "Need"
+ },
+ {
+  "text": "Bill Payment",
+  "type": "Need"
+ },
+ {
+  "text": "Utility Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Postpaid Mobile",
+  "type": "Need"
+ },
+ {
+  "text": "Municipal Water",
+  "type": "Need"
+ },
+ {
+  "text": "Gas Pipeline",
+  "type": "Need"
+ },
+ {
+  "text": "Electric Board",
+  "type": "Need"
+ },
+ {
+  "text": "Electricity Board",
+  "type": "Need"
+ },
+ {
+  "text": "Electricity Department",
+  "type": "Need"
+ },
+ {
+  "text": "Power Supply",
+  "type": "Need"
+ },
+ {
+  "text": "Water Tax Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Water Charges",
+  "type": "Need"
+ },
+ {
+  "text": "Gas Connection",
+  "type": "Need"
+ },
+ {
+  "text": "Electricity Connection",
+  "type": "Need"
+ },
+ {
+  "text": "Meter Reading",
+  "type": "Need"
+ },
+ {
+  "text": "Prepaid Meter",
+  "type": "Need"
+ },
+ {
+  "text": "Smart Meter",
+  "type": "Need"
+ },
+ {
+  "text": "Sub Division Electricity",
+  "type": "Need"
+ },
+ {
+  "text": "Torrent Power Agra",
+  "type": "Need"
+ },
+ {
+  "text": "Torrent Power Dahej",
+  "type": "Need"
+ },
+ {
+  "text": "Adani Electricity Navi Mumbai",
+  "type": "Need"
+ },
+ {
+  "text": "Adani Mundra",
+  "type": "Need"
+ },
+ {
+  "text": "Kolkata CESC",
+  "type": "Need"
+ },
+ {
+  "text": "India Power Corporation",
+  "type": "Need"
+ },
+ {
+  "text": "DPSC",
+  "type": "Need"
+ },
+ {
+  "text": "Durgapur Projects",
+  "type": "Need"
+ },
+ {
+  "text": "Dishergarh Power",
+  "type": "Need"
+ },
+ {
+  "text": "Pondicherry Electricity",
+  "type": "Need"
+ },
+ {
+  "text": "Daman Diu Electricity",
+  "type": "Need"
+ },
+ {
+  "text": "Dadra Nagar Haveli Electricity",
+  "type": "Need"
+ },
+ {
+  "text": "Ladakh Power",
+  "type": "Need"
+ },
+ {
+  "text": "Arunachal Power",
+  "type": "Need"
+ },
+ {
+  "text": "Mizoram Power",
+  "type": "Need"
+ },
+ {
+  "text": "Nagaland Power",
+  "type": "Need"
+ },
+ {
+  "text": "Nagaland Electricity",
+  "type": "Need"
+ },
+ {
+  "text": "Sikkim Energy",
+  "type": "Need"
+ }
+]

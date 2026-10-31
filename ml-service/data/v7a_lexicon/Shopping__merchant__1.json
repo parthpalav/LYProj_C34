@@ -1,0 +1,330 @@
+[
+ {
+  "text": "Bewakoof",
+  "type": "Want"
+ },
+ {
+  "text": "Urbanest",
+  "type": "Want"
+ },
+ {
+  "text": "Zivame",
+  "type": "Want"
+ },
+ {
+  "text": "Hutker",
+  "type": "Want"
+ },
+ {
+  "text": "PurThread",
+  "type": "Need"
+ },
+ {
+  "text": "Bata Footcare",
+  "type": "Want"
+ },
+ {
+  "text": "Puma India",
+  "type": "Want"
+ },
+ {
+  "text": "Nike Sportswear",
+  "type": "Want"
+ },
+ {
+  "text": "Adidas Originals",
+  "type": "Want"
+ },
+ {
+  "text": "Lee Cooper",
+  "type": "Want"
+ },
+ {
+  "text": "Levi's Store",
+  "type": "Want"
+ },
+ {
+  "text": "Raymond Outlet",
+  "type": "Want"
+ },
+ {
+  "text": "Pepe Jeans",
+  "type": "Want"
+ },
+ {
+  "text": "Wrangler Store",
+  "type": "Want"
+ },
+ {
+  "text": "Woodland Footwear",
+  "type": "Want"
+ },
+ {
+  "text": "Roadster Fashion",
+  "type": "Want"
+ },
+ {
+  "text": "Wynk Store",
+  "type": "Want"
+ },
+ {
+  "text": "Fabindia Online",
+  "type": "Want"
+ },
+ {
+  "text": "Forever New",
+  "type": "Want"
+ },
+ {
+  "text": "Shoppers Stop",
+  "type": "Want"
+ },
+ {
+  "text": "Myntra Shop",
+  "type": "Want"
+ },
+ {
+  "text": "Flipkart Fashion",
+  "type": "Want"
+ },
+ {
+  "text": "Amazon Fashion",
+  "type": "Want"
+ },
+ {
+  "text": "Kraftly Outfitters",
+  "type": "Want"
+ },
+ {
+  "text": "Jaypee Lifestyle",
+  "type": "Want"
+ },
+ {
+  "text": "Omaxe Fashion",
+  "type": "Want"
+ },
+ {
+  "text": "Columbia Sportswear",
+  "type": "Want"
+ },
+ {
+  "text": "Puma Sportswear",
+  "type": "Want"
+ },
+ {
+  "text": "Raymond Home",
+  "type": "Want"
+ },
+ {
+  "text": "Pepe Jeans Online",
+  "type": "Want"
+ },
+ {
+  "text": "Wrangler Online",
+  "type": "Want"
+ },
+ {
+  "text": "Woodland Online",
+  "type": "Want"
+ },
+ {
+  "text": "Roadster Online",
+  "type": "Want"
+ },
+ {
+  "text": "Wynk Online",
+  "type": "Want"
+ },
+ {
+  "text": "Fabindia Online",
+  "type": "Want"
+ },
+ {
+  "text": "Forever 21",
+  "type": "Want"
+ },
+ {
+  "text": "Shoppers Stop Online",
+  "type": "Want"
+ },
+ {
+  "text": "Myntra Online",
+  "type": "Want"
+ },
+ {
+  "text": "Flipkart Online",
+  "type": "Want"
+ },
+ {
+  "text": "Amazon Online",
+  "type": "Want"
+ },
+ {
+  "text": "Kraftly Online",
+  "type": "Want"
+ },
+ {
+  "text": "Jaypee Online",
+  "type": "Want"
+ },
+ {
+  "text": "Omaxe Online",
+  "type": "Want"
+ },
+ {
+  "text": "Columbia Online",
+  "type": "Want"
+ },
+ {
+  "text": "Puma Online",
+  "type": "Want"
+ },
+ {
+  "text": "Raymond Online",
+  "type": "Want"
+ },
+ {
+  "text": "Pepe Jeans Online",
+  "type": "Want"
+ },
+ {
+  "text": "Wrangler Online",
+  "type": "Want"
+ },
+ {
+  "text": "Woodland Online",
+  "type": "Want"
+ },
+ {
+  "text": "Roadster Online",
+  "type": "Want"
+ },
+ {
+  "text": "Wynk Online",
+  "type": "Want"
+ },
+ {
+  "text": "Bewakoof Online",
+  "type": "Want"
+ },
+ {
+  "text": "Urbanest Online",
+  "type": "Want"
+ },
+ {
+  "text": "Zivame Online",
+  "type": "Want"
+ },
+ {
+  "text": "Hutker Online",
+  "type": "Want"
+ },
+ {
+  "text": "PurThread Online",
+  "type": "Need"
+ },
+ {
+  "text": "TCS Online",
+  "type": "Want"
+ },
+ {
+  "text": "Tanishq Online",
+  "type": "Want"
+ },
+ {
+  "text": "Titan Online",
+  "type": "Want"
+ },
+ {
+  "text": "PVR Online",
+  "type": "Want"
+ },
+ {
+  "text": "Kotak Jewellers Online",
+  "type": "Want"
+ },
+ {
+  "text": "Pepe Jeans Outlet",
+  "type": "Want"
+ },
+ {
+  "text": "Wrangler Outlet",
+  "type": "Want"
+ },
+ {
+  "text": "Woodland Outlet",
+  "type": "Want"
+ },
+ {
+  "text": "Roadster Outlet",
+  "type": "Want"
+ },
+ {
+  "text": "Wynk Outlet",
+  "type": "Want"
+ },
+ {
+  "text": "Fabindia Outlet",
+  "type": "Want"
+ },
+ {
+  "text": "Forever New Outlet",
+  "type": "Want"
+ },
+ {
+  "text": "Shoppers Stop Outlet",
+  "type": "Want"
+ },
+ {
+  "text": "Myntra Outlet",
+  "type": "Want"
+ },
+ {
+  "text": "Flipkart Outlet",
+  "type": "Want"
+ },
+ {
+  "text": "Amazon Outlet",
+  "type": "Want"
+ },
+ {
+  "text": "Kraftly Outlet",
+  "type": "Want"
+ },
+ {
+  "text": "Jaypee Outlet",
+  "type": "Want"
+ },
+ {
+  "text": "Omaxe Outlet",
+  "type": "Want"
+ },
+ {
+  "text": "Columbia Outlet",
+  "type": "Want"
+ },
+ {
+  "text": "Puma Outlet",
+  "type": "Want"
+ },
+ {
+  "text": "Raymond Outlet",
+  "type": "Want"
+ },
+ {
+  "text": "Bewakoof Outlet",
+  "type": "Want"
+ },
+ {
+  "text": "Urbanest Outlet",
+  "type": "Want"
+ },
+ {
+  "text": "Zivame Outlet",
+  "type": "Want"
+ },
+ {
+  "text": "Hutker Outlet",
+  "type": "Want"
+ }
+]

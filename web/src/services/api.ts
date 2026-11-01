@@ -36,9 +36,11 @@ import type {
   ChatMessage,
   EnvelopeData,
   SubscriptionSuggestion,
+  PaymentMethod,
+  PaymentMethodPayload,
 } from '../types';
 
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000';
 
 export const api = axios.create({
   baseURL: BASE_URL,
@@ -325,6 +327,33 @@ export async function deleteIncome(id: string): Promise<{ success: boolean; id: 
 export async function getIncomeFlow(): Promise<IncomeFlowResponse> {
   const { data } = await api.get('/api/income/flow');
   return data?.data || data;
+}
+
+// ── Payment methods (UPI, debit and credit cards) ───────────────────────────
+
+export async function getPaymentMethods(): Promise<PaymentMethod[]> {
+  const { data } = await api.get('/api/payment-methods');
+  return data?.data || [];
+}
+
+export async function createPaymentMethod(payload: PaymentMethodPayload): Promise<PaymentMethod> {
+  const { data } = await api.post('/api/payment-methods', payload);
+  return data.data;
+}
+
+export async function updatePaymentMethod(id: string, payload: Partial<PaymentMethodPayload>): Promise<PaymentMethod> {
+  const { data } = await api.put(`/api/payment-methods/${id}`, payload);
+  return data.data;
+}
+
+export async function deletePaymentMethod(id: string): Promise<void> {
+  await api.delete(`/api/payment-methods/${id}`);
+}
+
+/** Pays a credit card bill from the bank balance. */
+export async function payCreditCardBill(id: string, amount: number): Promise<PaymentMethod> {
+  const { data } = await api.post(`/api/payment-methods/${id}/pay`, { amount });
+  return data.data;
 }
 
 // ── Liabilities ──────────────────────────────────────────────────────────────

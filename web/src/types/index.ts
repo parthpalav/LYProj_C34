@@ -81,6 +81,49 @@ export interface Transaction {
   needsReview?: boolean;
   liabilityId?: string;
   scheduledFor?: string;
+  /** null = unspecified (bank balance), 'cash', or a PaymentMethod id */
+  paymentMethodId?: string | null;
+}
+
+export type PaymentMethodKind = 'upi' | 'debit_card' | 'credit_card';
+
+export const CASH_METHOD_ID = 'cash';
+
+export interface CreditCardSummary {
+  creditLimit: number;
+  outstanding: number;
+  available: number;
+  /** Purchases since the last statement; billed on the next one. */
+  unbilled: number;
+  amountDue: number;
+  overdueAmount: number;
+  lastStatementDate: string;
+  dueDate: string;
+  nextStatementDate: string;
+}
+
+export interface PaymentMethod {
+  id: string;
+  kind: PaymentMethodKind;
+  nickname: string;
+  last4?: string | null;
+  upiId?: string | null;
+  creditLimit?: number | null;
+  outstanding?: number;
+  statementDay?: number | null;
+  dueDay?: number | null;
+  status: 'active' | 'archived';
+  credit?: CreditCardSummary;
+}
+
+export interface PaymentMethodPayload {
+  kind: PaymentMethodKind;
+  nickname: string;
+  last4?: string;
+  upiId?: string;
+  creditLimit?: number;
+  statementDay?: number;
+  dueDay?: number;
 }
 
 export interface Liability {
@@ -437,6 +480,7 @@ export interface TransactionPayload {
   needsReview?: boolean;
   liabilityId?: string;
   expectedScheduledFor?: string;
+  paymentMethodId?: string | null;
 }
 
 export interface ChatMessage {

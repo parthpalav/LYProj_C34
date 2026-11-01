@@ -12,6 +12,7 @@ import { updateUserProfile } from '../services/api';
 import { formatCurrencyINR, getUserInitials } from '../utils/formatters';
 import type { User } from '../types';
 import { readAssumptions } from '../utils/assumptions';
+import { PaymentMethodsSection } from '../components/profile/PaymentMethodsSection';
 
 // Defaults matching system financial policy (same as mobile Profile).
 const DEFAULT_RETURN_RATE = 0.08;
@@ -201,6 +202,8 @@ export const ProfilePage: React.FC = () => {
           <Button variant="outline" leftIcon={<SlidersHorizontal size={15} />} onClick={openEdit}>Edit assumptions</Button>
         </div>
       </section>
+
+      <PaymentMethodsSection notify={(message, type) => setToast({ message, type })} />
 
       <section className="parity-card">
         <div className="parity-row" style={{ justifyContent: 'space-between' }}>

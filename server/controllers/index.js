@@ -35,6 +35,7 @@ import User        from '../models/User.js';
 import Transaction, { VALID_CATEGORIES, VALID_TYPES } from '../models/Transaction.js';
 import Liability   from '../models/Liability.js';
 import { calculateNextDueDate } from './liabilityController.js';
+import { resolvePaymentMethodId, chargeSource, refundSource, PaymentMethodError } from '../services/PaymentMethodService.js';
 import FMIHistory  from '../models/FMIHistory.js';
 import Alert       from '../models/Alert.js';
 import Envelope    from '../models/Envelope.js';
@@ -67,6 +68,7 @@ function normalizeTransaction(tx) {
     isAnomaly:           tx.isAnomaly ?? false,
     liabilityId:         tx.liabilityId,
     scheduledFor:        tx.scheduledFor,
+    paymentMethodId:     tx.paymentMethodId ?? null,
     createdAt:           tx.createdAt,
     updatedAt:           tx.updatedAt
   };
@@ -830,6 +832,14 @@ router.post('/transactions', async (req, res, next) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
+    let paymentMethodId;
+    try {
+      paymentMethodId = await resolvePaymentMethodId(userId, req.body.paymentMethodId);
+    } catch (err) {
+      if (err instanceof PaymentMethodError) return res.status(err.status).json({ error: err.message });
+      throw err;
+    }
+
     // Call sentiment analyzer and ML classifier (graceful fallback if ML is offline)
     const sentimentResult = analyzeSentiment(rawDesc, new Date());
     let classificationSource = req.body.classificationSource || 'manual';
@@ -958,11 +968,13 @@ router.post('/transactions', async (req, res, next) => {
       }
     }
 
-    // Deduct current balance only after all validations pass
-    await User.findOneAndUpdate(
-      { id: userId },
-      { $inc: { currentBalance: -debitAmount } }
-    );
+    // Deduct from the bank balance or the credit card only after all validations pass
+    try {
+      await chargeSource(userId, paymentMethodId, debitAmount);
+    } catch (err) {
+      if (err instanceof PaymentMethodError) return res.status(err.status).json({ error: err.message });
+      throw err;
+    }
 
     let tx;
     try {
@@ -983,6 +995,7 @@ router.post('/transactions', async (req, res, next) => {
         needsReview,
         liabilityId:         validatedLiabilityId,
         scheduledFor:        scheduledFor,
+        paymentMethodId,
         tags:                sentimentResult.tags || [],
         description:         req.body.description || 'manual input',
         timestamp:           req.body.timestamp ? new Date(req.body.timestamp) : new Date()
@@ -1009,19 +1022,13 @@ router.post('/transactions', async (req, res, next) => {
       }
     } catch (createError) {
       if (createError.code === 11000 && createError.keyPattern && createError.keyPattern.liabilityId && createError.keyPattern.scheduledFor) {
-         // Revert user balance on concurrency failure
-         await User.findOneAndUpdate(
-           { id: userId },
-           { $inc: { currentBalance: debitAmount } }
-         );
+         // Revert the charge on concurrency failure
+         await refundSource(userId, paymentMethodId, debitAmount);
          return res.status(409).json({ error: 'The scheduled payment was just fulfilled by another transaction. Please try again.' });
       }
 
-      // revert user balance on create failure
-      await User.findOneAndUpdate(
-        { id: userId },
-        { $inc: { currentBalance: debitAmount } }
-      );
+      // revert the charge on create failure
+      await refundSource(userId, paymentMethodId, debitAmount);
       throw createError;
     }
 
@@ -1043,7 +1050,7 @@ router.put('/transactions/:id', async (req, res, next) => {
     const EDITABLE_FIELDS = [
       'amount', 'category', 'type', 'description', 'sentiment', 'confidenceScore', 
       'timestamp', 'tags', 'categorySource', 'typeSource', 'categoryConfidence', 
-      'typeConfidence', 'needsReview', 'liabilityId'
+      'typeConfidence', 'needsReview', 'liabilityId', 'paymentMethodId'
     ];
     const sanitized = {};
     for (const field of EDITABLE_FIELDS) {
@@ -1066,6 +1073,15 @@ router.put('/transactions/:id', async (req, res, next) => {
           return res.status(400).json({ error: 'Invalid or inactive liability' });
         }
         sanitized.liabilityId = liability.id;
+      }
+    }
+
+    if (sanitized.paymentMethodId !== undefined) {
+      try {
+        sanitized.paymentMethodId = await resolvePaymentMethodId(userId, sanitized.paymentMethodId);
+      } catch (err) {
+        if (err instanceof PaymentMethodError) return res.status(err.status).json({ error: err.message });
+        throw err;
       }
     }
 
@@ -1131,16 +1147,30 @@ router.put('/transactions/:id', async (req, res, next) => {
     }
 
     let updated;
-    if (sanitized.amount !== undefined) {
+    if (sanitized.amount !== undefined || sanitized.paymentMethodId !== undefined) {
       const oldTx = await Transaction.findOne({ id: req.params.id, userId }).lean();
       if (!oldTx) return res.status(404).json({ error: 'Transaction not found' });
 
-      // Expense accounting: balanceDelta = oldAmount - newAmount
-      // If new amount is smaller, balance increases (+); if new amount is larger, balance decreases (-).
-      const balanceDelta = oldTx.amount - sanitized.amount;
+      // Move the money: give the old amount back to the old source, then take the
+      // new amount from the new source (bank balance or credit card).
+      const oldSource = oldTx.paymentMethodId ?? null;
+      const newSource = sanitized.paymentMethodId !== undefined ? sanitized.paymentMethodId : oldSource;
+      const newAmount = sanitized.amount !== undefined ? sanitized.amount : oldTx.amount;
+      const moved = oldSource !== newSource || oldTx.amount !== newAmount;
+      const undoMove = async () => {
+        await refundSource(userId, newSource, newAmount);
+        await chargeSource(userId, oldSource, oldTx.amount, { force: true });
+      };
 
-      if (balanceDelta !== 0) {
-        await User.findOneAndUpdate(userFilter(userId), { $inc: { currentBalance: balanceDelta } });
+      if (moved) {
+        await refundSource(userId, oldSource, oldTx.amount);
+        try {
+          await chargeSource(userId, newSource, newAmount);
+        } catch (err) {
+          await chargeSource(userId, oldSource, oldTx.amount, { force: true });
+          if (err instanceof PaymentMethodError) return res.status(err.status).json({ error: err.message });
+          throw err;
+        }
       }
 
       try {
@@ -1151,15 +1181,11 @@ router.put('/transactions/:id', async (req, res, next) => {
         ).lean();
 
         if (!updated) {
-          if (balanceDelta !== 0) {
-            await User.findOneAndUpdate(userFilter(userId), { $inc: { currentBalance: -balanceDelta } });
-          }
+          if (moved) await undoMove();
           return res.status(404).json({ error: 'Transaction not found' });
         }
       } catch (updateErr) {
-        if (balanceDelta !== 0) {
-          await User.findOneAndUpdate(userFilter(userId), { $inc: { currentBalance: -balanceDelta } });
-        }
+        if (moved) await undoMove();
         throw updateErr;
       }
     } else {
@@ -1188,18 +1214,20 @@ router.delete('/transactions/:id', async (req, res, next) => {
 
     const refundAmount = oldTx.amount;
 
-    // Refund operating balance for deleted expense
-    await User.findOneAndUpdate(userFilter(userId), { $inc: { currentBalance: refundAmount } });
+    const source = oldTx.paymentMethodId ?? null;
+
+    // Refund the bank balance or credit card for the deleted expense
+    await refundSource(userId, source, refundAmount);
 
     try {
       const deleted = await Transaction.findOneAndDelete({ id: req.params.id, userId }).lean();
       if (!deleted) {
-        // Rollback balance refund if delete fails
-        await User.findOneAndUpdate(userFilter(userId), { $inc: { currentBalance: -refundAmount } });
+        // Rollback refund if delete fails
+        await chargeSource(userId, source, refundAmount, { force: true });
         return res.status(404).json({ error: 'Transaction not found' });
       }
     } catch (deleteErr) {
-      await User.findOneAndUpdate(userFilter(userId), { $inc: { currentBalance: -refundAmount } });
+      await chargeSource(userId, source, refundAmount, { force: true });
       throw deleteErr;
     }
 

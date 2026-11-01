@@ -137,3 +137,23 @@
 .sug-cat { font-weight: 600; }
 .sug-dot { color: var(--text-tertiary); }
 .sug-type { color: var(--text-secondary); }
+
+/* Credit cards (Liabilities tab) */
+.cc-section { display: grid; gap: 12px; margin-bottom: 20px; }
+.cc-section h2 { margin: 0; font-size: 16px; color: var(--text-primary); }
+.cc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+.cc-card { padding: 16px; border: 1px solid var(--border-default); border-radius: var(--radius-lg); background: var(--bg-surface); display: grid; gap: 10px; }
+.cc-card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+.cc-card-head strong { color: var(--text-primary); }
+.cc-card-head span { color: var(--text-secondary); font-size: 13px; }
+.cc-bar { height: 6px; border-radius: 999px; background: var(--border-default); overflow: hidden; }
+.cc-bar > span { display: block; height: 100%; background: var(--accent-primary); }
+.cc-bar.is-high > span { background: var(--danger); }
+.cc-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; margin: 0; font-size: 13px; }
+.cc-facts dt { color: var(--text-secondary); }
+.cc-facts dd { margin: 0; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.cc-badge { font-size: 12px; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+.cc-badge.is-overdue { background: var(--danger-subtle); color: var(--danger-text); }
+.cc-badge.is-due { background: var(--warning-subtle); color: var(--warning-text); }
+.cc-card-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.tx-paid-with { font-size: 12px; color: var(--text-secondary); white-space: nowrap; }

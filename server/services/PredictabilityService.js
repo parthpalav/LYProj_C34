@@ -52,6 +52,7 @@ import {
   MAX_ANNUAL_CONTRIBUTION_GROWTH_RATE
 } from '../config/financialRules.js';
 import { attachMonteCarloSimulation } from '../utils/monteCarloAdapter.js';
+import { totalCreditCardOutstanding } from './PaymentMethodService.js';
 
 /**
  * Pure deterministic snapshot builder.
@@ -613,11 +614,12 @@ export async function getPredictabilitySnapshot(userIdOrUser, options = {}) {
 
   const queryUid = user.id || uid;
 
-  const [incomes, transactions, assets, liabilities] = await Promise.all([
+  const [incomes, transactions, assets, liabilities, creditCardOutstanding] = await Promise.all([
     Income.find({ userId: queryUid }).lean(),
     Transaction.find({ userId: queryUid }).lean(),
     Asset.find({ userId: queryUid }).lean(),
-    Liability.find({ userId: queryUid, status: { $ne: 'deleted' } }).lean()
+    Liability.find({ userId: queryUid, status: { $ne: 'deleted' } }).lean(),
+    totalCreditCardOutstanding(queryUid)
   ]);
 
   const data = {
@@ -625,7 +627,8 @@ export async function getPredictabilitySnapshot(userIdOrUser, options = {}) {
     incomes,
     transactions,
     assets,
-    liabilities
+    liabilities,
+    creditCardOutstanding
   };
 
   const resolved = resolveForecastInputs(data, options);

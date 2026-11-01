@@ -2,7 +2,7 @@ import PaymentMethod, { CASH_METHOD_ID } from '../models/PaymentMethod.js';
 import Transaction from '../models/Transaction.js';
 import mongoose from 'mongoose';
 import User from '../models/User.js';
-import { creditCardSummary, recentStatementCloses } from '../utils/creditCycle.js';
+import { balanceAdjustments, creditCardSummary, recentStatementCloses } from '../utils/creditCycle.js';
 import { toZoned, fromZoned } from '../utils/userTime.js';
 import { getUserTimezone } from './userTimezone.js';
 
@@ -71,6 +71,27 @@ export async function refundSource(userId, paymentMethodId, amount) {
   await PaymentMethod.findOneAndUpdate({ id: card.id, userId: String(userId) }, { $inc: { outstanding: -amount } });
 }
 
+// Tracked purchases on a card since `zonedFrom`, with zoned timestamps.
+async function zonedChargesSince(userId, cardId, zonedFrom, tz) {
+  const charges = await Transaction.find(
+    { userId: String(userId), paymentMethodId: cardId, timestamp: { $gte: fromZoned(zonedFrom, tz) } },
+    { amount: 1, timestamp: 1, _id: 0 }
+  ).lean();
+  return charges.map((c) => ({ amount: c.amount, timestamp: toZoned(c.timestamp, tz) }));
+}
+
+// Fields that set a card's used amount to what the user reports, e.g. debt carried
+// from before they started tracking. `card` needs statementDay, and id once saved.
+export async function cardBalanceFields(userId, card, used, billedUnpaid, now = new Date()) {
+  const tz = await getUserTimezone(userId);
+  const zonedNow = toZoned(now, tz);
+  const [, prevClose] = recentStatementCloses(card.statementDay, zonedNow);
+  const charges = card.id ? await zonedChargesSince(userId, card.id, prevClose, tz) : [];
+  const adjustments = balanceAdjustments(card.statementDay, used, billedUnpaid, charges, zonedNow)
+    .map((a) => ({ amount: a.amount, timestamp: fromZoned(a.timestamp, tz) }));
+  return { outstanding: used, balanceAdjustments: adjustments };
+}
+
 // Adds limit/outstanding/due-date figures to credit cards for the API response.
 // Cycles run in the user's timezone: dates are zoned for the math, then unzoned.
 export async function withCreditSummaries(userId, methods, now = new Date()) {
@@ -80,12 +101,9 @@ export async function withCreditSummaries(userId, methods, now = new Date()) {
   return Promise.all(methods.map(async (m) => {
     if (m.kind !== 'credit_card') return m;
     const [, prevClose] = recentStatementCloses(m.statementDay, zonedNow);
-    const charges = await Transaction.find(
-      { userId: String(userId), paymentMethodId: m.id, timestamp: { $gte: fromZoned(prevClose, tz) } },
-      { amount: 1, timestamp: 1, _id: 0 }
-    ).lean();
-    const zonedCharges = charges.map((c) => ({ amount: c.amount, timestamp: toZoned(c.timestamp, tz) }));
-    const credit = creditCardSummary(m, zonedCharges, zonedNow);
+    const charges = await zonedChargesSince(userId, m.id, prevClose, tz);
+    const adjustments = (m.balanceAdjustments || []).map((a) => ({ amount: a.amount, timestamp: toZoned(a.timestamp, tz) }));
+    const credit = creditCardSummary(m, [...charges, ...adjustments], zonedNow);
     for (const key of ['lastStatementDate', 'dueDate', 'nextStatementDate']) credit[key] = fromZoned(credit[key], tz);
     return { ...m, credit };
   }));

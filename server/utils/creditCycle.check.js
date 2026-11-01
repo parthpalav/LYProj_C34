@@ -1,6 +1,6 @@
 // Self-check for creditCycle.js. Run: node utils/creditCycle.check.js
 import assert from 'node:assert/strict';
-import { recentStatementCloses, nextStatementClose, dueDateForClose, creditCardSummary } from './creditCycle.js';
+import { recentStatementCloses, nextStatementClose, dueDateForClose, creditCardSummary, balanceAdjustments } from './creditCycle.js';
 
 const d = (s) => new Date(s + 'T00:00:00.000Z');
 const iso = (x) => x.toISOString().slice(0, 10);
@@ -59,5 +59,37 @@ s = creditCardSummary(card, charges, d('2026-11-22'));
 assert.equal(s.amountDue, 12000);
 assert.equal(s.overdueAmount, 7000);
 assert.equal(iso(s.dueDate), '2026-12-10');
+
+// Reported balance on a new card (no tracked purchases): 10000 used, 4000 unpaid
+// from the Oct 20 statement. 4000 is due Nov 10; the other 6000 bills on Nov 20.
+const fresh = { ...card, outstanding: 10000 };
+let adj = balanceAdjustments(20, 10000, 4000, [], d('2026-11-01'));
+s = creditCardSummary(fresh, adj, d('2026-11-01'));
+assert.equal(s.unbilled, 6000);
+assert.equal(s.amountDue, 4000);
+assert.equal(iso(s.dueDate), '2026-11-10');
+assert.equal(s.overdueAmount, 0);
+// Unpaid past Nov 10: only the reported statement amount is overdue.
+assert.equal(creditCardSummary(fresh, adj, d('2026-11-12')).overdueAmount, 4000);
+// After the Nov 20 statement the 6000 is billed too.
+s = creditCardSummary(fresh, adj, d('2026-11-22'));
+assert.equal(s.amountDue, 10000);
+assert.equal(s.overdueAmount, 4000);
+
+// All reported as current-cycle spend: nothing due now, no false overdue alert,
+// even when the latest due date has passed (statement 5th, due 25th, today Nov 1).
+adj = balanceAdjustments(5, 10000, 0, [], d('2026-11-01'));
+s = creditCardSummary({ creditLimit: 50000, outstanding: 10000, statementDay: 5, dueDay: 25 }, adj, d('2026-11-01'));
+assert.equal(s.amountDue, 0);
+assert.equal(s.overdueAmount, 0);
+assert.equal(iso(s.dueDate), '2026-11-25');
+
+// Correcting a tracked card: reported figures win over the tracked split.
+adj = balanceAdjustments(20, 15000, 3000, charges, d('2026-11-01'));
+s = creditCardSummary({ ...card, outstanding: 15000 }, [...charges, ...adj], d('2026-11-01'));
+assert.equal(s.unbilled, 12000);
+assert.equal(s.amountDue, 3000);
+assert.equal(s.overdueAmount, 0);
+assert.deepEqual(adj.map((a) => a.amount), [-4000, 7000]);
 
 console.log('creditCycle checks passed');

@@ -82,6 +82,23 @@ export function creditCardSummary(card, recentCharges, now = new Date()) {
   };
 }
 
+/**
+ * Synthetic charges that make the cycle sums match a balance the user reports:
+ * `billedUnpaid` sits on the latest statement and the rest of `used` is unbilled.
+ * Amounts can be negative when tracked purchases already exceed what was reported.
+ * @param {Array<{amount:number,timestamp:Date}>} recentCharges  tracked card purchases since the previous statement close
+ */
+export function balanceAdjustments(statementDay, used, billedUnpaid, recentCharges, now = new Date()) {
+  const [lastClose, prevClose] = recentStatementCloses(statementDay, now);
+  const sumBetween = (from, to) => recentCharges
+    .filter((c) => { const t = new Date(c.timestamp); return t >= from && t < to; })
+    .reduce((s, c) => s + c.amount, 0);
+  return [
+    { amount: round2(billedUnpaid - sumBetween(prevClose, lastClose)), timestamp: new Date(lastClose.getTime() - 1) },
+    { amount: round2(used - billedUnpaid - sumBetween(lastClose, Infinity)), timestamp: now }
+  ].filter((a) => a.amount !== 0);
+}
+
 function round2(n) {
   return Math.round(n * 100) / 100;
 }

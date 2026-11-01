@@ -122,6 +122,34 @@ async function run() {
   assert.equal(res.data.data.outstanding, 500);
   assert.equal(await balance(), startBalance - 100 - 400);
 
+  // Reported balance: total used and unpaid statement amount, bank untouched.
+  res = await api('PUT', `/payment-methods/${cc.id}/balance`, { used: 1200, billedUnpaid: 0 });
+  assert.equal(res.status, 400, 'used above the limit must be rejected');
+  res = await api('PUT', `/payment-methods/${cc.id}/balance`, { used: 300, billedUnpaid: 400 });
+  assert.equal(res.status, 400, 'unpaid statement above used must be rejected');
+  res = await api('PUT', `/payment-methods/${cc.id}/balance`, { used: 800, billedUnpaid: 200 });
+  assert.equal(res.status, 200, JSON.stringify(res.data));
+  assert.equal(res.data.data.credit.outstanding, 800);
+  assert.equal(res.data.data.credit.amountDue, 200);
+  assert.equal(res.data.data.credit.unbilled, 600);
+  assert.equal(await balance(), startBalance - 100 - 400);
+  res = await api('PUT', `/payment-methods/${cc.id}/balance`, { used: 500, billedUnpaid: 0 });
+  assert.equal(res.status, 200, JSON.stringify(res.data));
+
+  // A new card can start with a balance carried over from before tracking.
+  res = await api('POST', '/payment-methods', { kind: 'credit_card', nickname: 'Old Card', last4: '5555', creditLimit: 2000, statementDay: 20, dueDay: 10, used: 3000 });
+  assert.equal(res.status, 400, 'opening balance above the limit must be rejected');
+  res = await api('POST', '/payment-methods', { kind: 'credit_card', nickname: 'Old Card', last4: '5555', creditLimit: 2000, statementDay: 20, dueDay: 10, used: 1500, billedUnpaid: 500 });
+  assert.equal(res.status, 201, JSON.stringify(res.data));
+  const oldCard = res.data.data;
+  createdMethods.push(oldCard.id);
+  assert.equal(oldCard.credit.outstanding, 1500);
+  assert.equal(oldCard.credit.amountDue, 500);
+  assert.equal(oldCard.credit.available, 500);
+  // Clear it so cleanup can remove it.
+  res = await api('PUT', `/payment-methods/${oldCard.id}/balance`, { used: 0 });
+  assert.equal(res.status, 200, JSON.stringify(res.data));
+
   // Card debt shows in net worth inputs.
   res = await api('GET', '/predictability');
   if (res.status === 200) {

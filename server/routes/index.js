@@ -50,6 +50,7 @@ router.post('/payment-methods', authMiddleware, paymentMethodController.createPa
 router.put('/payment-methods/:id', authMiddleware, paymentMethodController.updatePaymentMethod);
 router.delete('/payment-methods/:id', authMiddleware, paymentMethodController.deletePaymentMethod);
 router.post('/payment-methods/:id/pay', authMiddleware, paymentMethodController.payCreditCardBill);
+router.put('/payment-methods/:id/balance', authMiddleware, paymentMethodController.setCreditCardBalance);
 
 // Asset routes
 router.get('/assets', authMiddleware, assetController.getAssets);

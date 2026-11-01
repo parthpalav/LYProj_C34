@@ -24,6 +24,10 @@ const paymentMethodSchema = new mongoose.Schema(
     outstanding: { type: Number, default: 0 },
     statementDay: dayOfMonth,
     dueDay: dayOfMonth,
+    // Synthetic charges from a balance the user typed in (debt from before they
+    // started tracking). They count in billing cycles like purchases but are not
+    // transactions, so they never show up in spending.
+    balanceAdjustments: { type: [{ amount: Number, timestamp: Date, _id: false }], default: [] },
     status: { type: String, enum: ['active', 'archived'], default: 'active' }
   },
   { timestamps: true, versionKey: false }

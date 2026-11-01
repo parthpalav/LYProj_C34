@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import PaymentMethod, { PAYMENT_METHOD_KINDS } from '../models/PaymentMethod.js';
 import User from '../models/User.js';
-import { withCreditSummaries } from '../services/PaymentMethodService.js';
+import { cardBalanceFields, withCreditSummaries } from '../services/PaymentMethodService.js';
 
 const UPI_ID_RE = /^[a-z0-9._-]{2,256}@[a-z][a-z0-9.-]{1,63}$/i;
 const LAST4_RE = /^\d{4}$/;
@@ -58,6 +58,19 @@ function validateFields(kind, payload, { partial }) {
   return out;
 }
 
+// Validates a reported card balance: total used and the part still unpaid from
+// the latest statement. Returns an error string or { used, billedUnpaid }.
+function validateBalance(payload, creditLimit) {
+  const used = Number(payload.used ?? 0);
+  const billedUnpaid = Number(payload.billedUnpaid ?? 0);
+  if (!Number.isFinite(used) || used < 0) return 'Amount used must be 0 or more';
+  if (used > creditLimit) return `Amount used cannot exceed the credit limit (${creditLimit})`;
+  if (!Number.isFinite(billedUnpaid) || billedUnpaid < 0) return 'Unpaid statement amount must be 0 or more';
+  if (billedUnpaid > used) return 'Unpaid statement amount cannot be more than the total used';
+  const round2 = (n) => Math.round(n * 100) / 100;
+  return { used: round2(used), billedUnpaid: round2(billedUnpaid) };
+}
+
 // Archived methods are included so old transactions can still show their label.
 export const getPaymentMethods = async (req, res, next) => {
   try {
@@ -76,6 +89,14 @@ export const createPaymentMethod = async (req, res, next) => {
     }
     const fields = validateFields(payload.kind, payload, { partial: false });
     if (typeof fields === 'string') return bad(res, fields);
+
+    if (payload.kind === 'credit_card' && (payload.used !== undefined || payload.billedUnpaid !== undefined)) {
+      const balance = validateBalance(payload, fields.creditLimit);
+      if (typeof balance === 'string') return bad(res, balance);
+      if (balance.used > 0) {
+        Object.assign(fields, await cardBalanceFields(userId, fields, balance.used, balance.billedUnpaid));
+      }
+    }
 
     const method = await PaymentMethod.create({ id: crypto.randomUUID(), userId, kind: payload.kind, ...fields });
     const [data] = await withCreditSummaries(userId, [method.toObject()]);
@@ -120,6 +141,30 @@ export const deletePaymentMethod = async (req, res, next) => {
     const exists = await PaymentMethod.exists({ id: req.params.id, userId, status: 'active' });
     if (!exists) return res.status(404).json({ success: false, error: 'Payment method not found' });
     return bad(res, 'Pay off the outstanding balance before removing this card');
+  } catch (error) { next(error); }
+};
+
+// Sets the used amount on a card to what the user reports (no bank balance change).
+export const setCreditCardBalance = async (req, res, next) => {
+  try {
+    const userId = String(req.user.id);
+    const card = await PaymentMethod.findOne({ id: req.params.id, userId, kind: 'credit_card', status: 'active' }).lean();
+    if (!card) return res.status(404).json({ success: false, error: 'Credit card not found' });
+
+    const balance = validateBalance(req.body || {}, card.creditLimit);
+    if (typeof balance === 'string') return bad(res, balance);
+
+    const fields = await cardBalanceFields(userId, card, balance.used, balance.billedUnpaid);
+    // Matching the old outstanding means a purchase or payment that landed mid-update is not overwritten.
+    const updated = await PaymentMethod.findOneAndUpdate(
+      { id: card.id, userId, status: 'active', outstanding: card.outstanding },
+      { $set: fields },
+      { new: true }
+    ).lean();
+    if (!updated) return res.status(409).json({ success: false, error: 'The card changed while saving. Try again.' });
+
+    const [data] = await withCreditSummaries(userId, [updated]);
+    res.json({ success: true, data });
   } catch (error) { next(error); }
 };
 

@@ -10,7 +10,7 @@
     "typecheck": "tsc -b",
     "lint": "oxlint",
     "preview": "vite preview",
-    "test": "node --experimental-strip-types src/utils/assumptions.check.ts && node --experimental-strip-types src/utils/goalProgress.check.ts && node --experimental-strip-types src/utils/timezone.check.ts"
+    "test": "node --experimental-strip-types src/utils/assumptions.check.ts && node --experimental-strip-types src/utils/goalProgress.check.ts && node --experimental-strip-types src/utils/timezone.check.ts && node --experimental-strip-types src/utils/dueAlerts.check.ts"
   },
   "dependencies": {
     "axios": "^1.20.0",

@@ -40,7 +40,7 @@ async function runTests() {
       id: 'L1-math', userId: 'U1', name: 'Coffee', amount: 100, category: 'Food & Dining', type: 'Need',
       autoDeduct: true, frequency: 'daily', startDate: new Date('2026-08-01T00:00:00Z')
     });
-    const nextDue = calculateNextDueDate(liability, new Date('2026-08-05T12:00:00Z'));
+    const nextDue = calculateNextDueDate(liability, new Date('2026-08-05T12:00:00Z'), 'UTC');
     assert.strictEqual(nextDue.getUTCFullYear(), 2026);
     assert.strictEqual(nextDue.getUTCMonth(), 7); // August
     assert.strictEqual(nextDue.getUTCDate(), 6);
@@ -53,7 +53,7 @@ async function runTests() {
       dayOfWeek: 1 // Monday
     });
     // August 5th 2026 is Wednesday -> Next Monday is August 10th
-    const nextDue = calculateNextDueDate(liability, new Date('2026-08-05T12:00:00Z'));
+    const nextDue = calculateNextDueDate(liability, new Date('2026-08-05T12:00:00Z'), 'UTC');
     assert.strictEqual(nextDue.getUTCFullYear(), 2026);
     assert.strictEqual(nextDue.getUTCMonth(), 7);
     assert.strictEqual(nextDue.getUTCDate(), 10);
@@ -66,13 +66,13 @@ async function runTests() {
       dayOfMonth: 31
     });
     // From Jan 31 -> Feb 28
-    const nextDueJan = calculateNextDueDate(liability, new Date('2026-01-31T00:00:00Z'));
+    const nextDueJan = calculateNextDueDate(liability, new Date('2026-01-31T00:00:00Z'), 'UTC');
     assert.strictEqual(nextDueJan.getUTCFullYear(), 2026);
     assert.strictEqual(nextDueJan.getUTCMonth(), 1); // Feb
     assert.strictEqual(nextDueJan.getUTCDate(), 28);
 
     // From Feb 28 -> March 31
-    const nextDueFeb = calculateNextDueDate(liability, new Date('2026-02-28T00:00:00Z'));
+    const nextDueFeb = calculateNextDueDate(liability, new Date('2026-02-28T00:00:00Z'), 'UTC');
     assert.strictEqual(nextDueFeb.getUTCFullYear(), 2026);
     assert.strictEqual(nextDueFeb.getUTCMonth(), 2); // March
     assert.strictEqual(nextDueFeb.getUTCDate(), 31);
@@ -85,13 +85,13 @@ async function runTests() {
       monthOfYear: 2, dayOfMonth: 29
     });
     // Leap year 2024
-    const nextDue24 = calculateNextDueDate(liability, new Date('2023-12-01T00:00:00Z'));
+    const nextDue24 = calculateNextDueDate(liability, new Date('2023-12-01T00:00:00Z'), 'UTC');
     assert.strictEqual(nextDue24.getUTCFullYear(), 2024);
     assert.strictEqual(nextDue24.getUTCMonth(), 1);
     assert.strictEqual(nextDue24.getUTCDate(), 29);
 
     // Non-leap year 2025 -> Feb 28
-    const nextDue25 = calculateNextDueDate(liability, new Date('2024-03-01T00:00:00Z'));
+    const nextDue25 = calculateNextDueDate(liability, new Date('2024-03-01T00:00:00Z'), 'UTC');
     assert.strictEqual(nextDue25.getUTCFullYear(), 2025);
     assert.strictEqual(nextDue25.getUTCMonth(), 1);
     assert.strictEqual(nextDue25.getUTCDate(), 28);
@@ -114,7 +114,8 @@ async function runTests() {
       email: 'sched-test@finaura.test',
       currentBalance: 50000,
       monthlyIncome: 60000,
-      processedLiabilityOccurrences: []
+      processedLiabilityOccurrences: [],
+      timezone: 'UTC' // expectations below are written in UTC midnights
     });
   }
 

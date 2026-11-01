@@ -356,6 +356,12 @@ export async function payCreditCardBill(id: string, amount: number): Promise<Pay
   return data.data;
 }
 
+/** Sets a card's used amount to what the user reports. The bank balance is not touched. */
+export async function setCreditCardBalance(id: string, used: number, billedUnpaid: number): Promise<PaymentMethod> {
+  const { data } = await api.put(`/api/payment-methods/${id}/balance`, { used, billedUnpaid });
+  return data.data;
+}
+
 // ── Liabilities ──────────────────────────────────────────────────────────────
 
 export async function createLiability(payload: LiabilityPayload): Promise<Liability> {

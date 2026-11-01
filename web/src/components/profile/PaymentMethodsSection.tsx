@@ -11,7 +11,7 @@ import type { PaymentMethod, PaymentMethodKind, PaymentMethodPayload } from '../
 
 type Notify = (message: string, type: 'success' | 'error' | 'warning') => void;
 
-const EMPTY = { kind: 'upi' as PaymentMethodKind, nickname: '', last4: '', upiId: '', creditLimit: '', statementDay: '', dueDay: '' };
+const EMPTY = { kind: 'upi' as PaymentMethodKind, nickname: '', last4: '', upiId: '', creditLimit: '', statementDay: '', dueDay: '', used: '', billedUnpaid: '' };
 
 export const PaymentMethodsSection: React.FC<{ notify: Notify }> = ({ notify }) => {
   const { active, isLoading, error, refetch } = usePaymentMethods();
@@ -36,6 +36,8 @@ export const PaymentMethodsSection: React.FC<{ notify: Notify }> = ({ notify }) 
       creditLimit: m.creditLimit != null ? String(m.creditLimit) : '',
       statementDay: m.statementDay != null ? String(m.statementDay) : '',
       dueDay: m.dueDay != null ? String(m.dueDay) : '',
+      used: '',
+      billedUnpaid: '',
     });
     setFormError('');
     setOpen(true);
@@ -59,6 +61,15 @@ export const PaymentMethodsSection: React.FC<{ notify: Notify }> = ({ notify }) 
       if (!Number.isInteger(stmt) || stmt < 1 || stmt > 31) return setFormError('Statement day must be a date from 1 to 31.');
       if (!Number.isInteger(due) || due < 1 || due > 31) return setFormError('Due day must be a date from 1 to 31.');
       Object.assign(payload, { creditLimit: limit, statementDay: stmt, dueDay: due });
+      if (!editing) {
+        const used = Number(form.used || 0);
+        const billedUnpaid = Number(form.billedUnpaid || 0);
+        if (!Number.isFinite(used) || used < 0) return setFormError('Amount already used must be ₹0 or more.');
+        if (used > limit) return setFormError('Amount already used cannot be more than the credit limit.');
+        if (!Number.isFinite(billedUnpaid) || billedUnpaid < 0) return setFormError('Unpaid statement amount must be ₹0 or more.');
+        if (billedUnpaid > used) return setFormError('Unpaid statement amount cannot be more than the amount already used.');
+        if (used > 0) Object.assign(payload, { used, billedUnpaid });
+      }
     }
     setSaving(true);
     try {
@@ -170,6 +181,20 @@ export const PaymentMethodsSection: React.FC<{ notify: Notify }> = ({ notify }) 
                   <span className="parity-hint">Day of the month the bill must be paid</span>
                 </div>
               </div>
+              {!editing && (
+                <div className="parity-grid-2">
+                  <div className="form-group">
+                    <label htmlFor="pm-used" className="form-label">Already used (₹, optional)</label>
+                    <input id="pm-used" className="form-input" inputMode="decimal" placeholder="0" value={form.used} onChange={(e) => set('used', e.target.value)} />
+                    <span className="parity-hint">Total owed on the card right now</span>
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="pm-billed" className="form-label">Unpaid from last statement (₹)</label>
+                    <input id="pm-billed" className="form-input" inputMode="decimal" placeholder="0" value={form.billedUnpaid} onChange={(e) => set('billedUnpaid', e.target.value)} />
+                    <span className="parity-hint">Part of it already billed and not yet paid</span>
+                  </div>
+                </div>
+              )}
             </>
           )}
           <div className="modal-footer">

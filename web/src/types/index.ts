@@ -126,6 +126,10 @@ export interface PaymentMethodPayload {
   creditLimit?: number;
   statementDay?: number;
   dueDay?: number;
+  /** Credit cards, on create: amount already used before tracking started. */
+  used?: number;
+  /** Credit cards, on create: part of `used` still unpaid from the latest statement. */
+  billedUnpaid?: number;
 }
 
 export interface Liability {

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '../ui/Button';
 import { Modal } from '../ui/Modal';
 import { useAuth } from '../../hooks/useAuth';
-import { payCreditCardBill } from '../../services/api';
+import { payCreditCardBill, setCreditCardBalance } from '../../services/api';
 import { formatCurrencyINR, formatDateFull } from '../../utils/formatters';
 import type { PaymentMethod } from '../../types';
 
@@ -21,6 +21,9 @@ export const CreditCardsSection: React.FC<CreditCardsSectionProps> = ({ cards, o
   const [amount, setAmount] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const [adjusting, setAdjusting] = useState<PaymentMethod | null>(null);
+  const [used, setUsed] = useState('');
+  const [billedUnpaid, setBilledUnpaid] = useState('');
 
   if (cards.length === 0) {
     return (
@@ -52,6 +55,36 @@ export const CreditCardsSection: React.FC<CreditCardsSectionProps> = ({ cards, o
       refreshUser().catch(() => undefined);
     } catch (err: any) {
       setError(err?.response?.data?.error || "Payment not recorded. Check your connection and try again.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const openAdjust = (card: PaymentMethod) => {
+    const c = card.credit!;
+    setAdjusting(card);
+    setUsed(String(Math.max(0, c.outstanding)));
+    setBilledUnpaid(String(c.amountDue));
+    setError('');
+  };
+
+  const submitAdjust = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!adjusting?.credit) return;
+    const u = Number(used || 0);
+    const b = Number(billedUnpaid || 0);
+    if (!Number.isFinite(u) || u < 0) return setError('Amount used must be ₹0 or more.');
+    if (u > adjusting.credit.creditLimit) return setError(`Amount used cannot be more than the ${formatCurrencyINR(adjusting.credit.creditLimit)} limit.`);
+    if (!Number.isFinite(b) || b < 0) return setError('Unpaid statement amount must be ₹0 or more.');
+    if (b > u) return setError('Unpaid statement amount cannot be more than the amount used.');
+    setBusy(true);
+    try {
+      await setCreditCardBalance(adjusting.id, u, b);
+      setAdjusting(null);
+      notify(`${adjusting.nickname} balance updated.`, 'success');
+      onChanged();
+    } catch (err: any) {
+      setError(err?.response?.data?.error || "Balance not saved. Check your connection and try again.");
     } finally {
       setBusy(false);
     }
@@ -107,7 +140,10 @@ export const CreditCardsSection: React.FC<CreditCardsSectionProps> = ({ cards, o
 
               <div className="cc-card-foot">
                 <span className="text-secondary text-sm">Next statement {formatDateFull(c.nextStatementDate)}</span>
-                <Button size="sm" variant="outline" disabled={c.outstanding <= 0} onClick={() => openPay(card)}>Pay bill</Button>
+                <div className="parity-actions">
+                  <Button size="sm" variant="ghost" onClick={() => openAdjust(card)}>Update balance</Button>
+                  <Button size="sm" variant="outline" disabled={c.outstanding <= 0} onClick={() => openPay(card)}>Pay bill</Button>
+                </div>
               </div>
             </article>
           );
@@ -139,6 +175,34 @@ export const CreditCardsSection: React.FC<CreditCardsSectionProps> = ({ cards, o
           <div className="modal-footer">
             <Button type="button" variant="outline" onClick={() => setPaying(null)} disabled={busy}>Cancel</Button>
             <Button type="submit" isLoading={busy}>Pay</Button>
+          </div>
+        </form>
+      </Modal>
+      <Modal isOpen={Boolean(adjusting)} onClose={() => setAdjusting(null)} title={`Update ${adjusting?.nickname ?? 'card'} balance`} subtitle="Enter what your card app or statement shows. Use this for spending you did not record here. Your bank balance does not change." maxWidth="460px">
+        <form onSubmit={submitAdjust} className="activity-form">
+          {error && <div className="form-error-banner" role="alert"><span>{error}</span></div>}
+          <div className="form-group">
+            <label htmlFor="cc-used" className="form-label">Total used now (₹)</label>
+            <div className="input-currency-wrapper">
+              <span className="input-prefix">₹</span>
+              <input id="cc-used" className="form-input with-prefix" inputMode="decimal" value={used} onChange={(e) => { setUsed(e.target.value); setError(''); }} />
+            </div>
+            <span className="parity-hint">Everything owed on the card, billed or not</span>
+          </div>
+          <div className="form-group">
+            <label htmlFor="cc-billed" className="form-label">Unpaid from last statement (₹)</label>
+            <div className="input-currency-wrapper">
+              <span className="input-prefix">₹</span>
+              <input id="cc-billed" className="form-input with-prefix" inputMode="decimal" value={billedUnpaid} onChange={(e) => { setBilledUnpaid(e.target.value); setError(''); }} />
+            </div>
+            <span className="parity-hint">
+              {adjusting?.credit ? `Billed on ${formatDateFull(adjusting.credit.lastStatementDate)} and not paid yet. ` : ''}
+              The rest is billed on your next statement.
+            </span>
+          </div>
+          <div className="modal-footer">
+            <Button type="button" variant="outline" onClick={() => setAdjusting(null)} disabled={busy}>Cancel</Button>
+            <Button type="submit" isLoading={busy}>Save</Button>
           </div>
         </form>
       </Modal>

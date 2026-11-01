@@ -53,6 +53,7 @@ import {
 } from '../config/financialRules.js';
 import { attachMonteCarloSimulation } from '../utils/monteCarloAdapter.js';
 import { totalCreditCardOutstanding } from './PaymentMethodService.js';
+import { zoneForecastInput } from './userTimezone.js';
 
 /**
  * Pure deterministic snapshot builder.
@@ -631,8 +632,10 @@ export async function getPredictabilitySnapshot(userIdOrUser, options = {}) {
     creditCardOutstanding
   };
 
-  const resolved = resolveForecastInputs(data, options);
-  const snapshot = buildPredictabilitySnapshot(data, options);
+  const [zonedData, zonedOptions] = zoneForecastInput(data, options);
+  const resolved = resolveForecastInputs(zonedData, zonedOptions);
+  const snapshot = buildPredictabilitySnapshot(zonedData, zonedOptions);
+  snapshot.generatedAt = new Date().toISOString(); // real instant, not the zoned reference date
 
-  return attachMonteCarloSimulation(snapshot, resolved, options);
+  return attachMonteCarloSimulation(snapshot, resolved, zonedOptions);
 }

@@ -31,6 +31,7 @@ import { NextStep } from '../components/ui/NextStep';
 import { FMI_NAME } from '../utils/presentation';
 import { AdjustBalanceModal } from '../components/dashboard/AdjustBalanceModal';
 import { Toast } from '../components/ui/Toast';
+import { getAppTimezone, zparts } from '../utils/timezone';
 
 export const OverviewPage: React.FC = () => {
   const { user } = useAuth();
@@ -76,7 +77,7 @@ export const OverviewPage: React.FC = () => {
 
   // Dynamic time-of-day greeting
   const getGreeting = () => {
-    const hour = new Date().getHours();
+    const hour = zparts().hours;
     if (hour < 12) return 'Good morning';
     if (hour < 17) return 'Good afternoon';
     return 'Good evening';
@@ -145,7 +146,7 @@ export const OverviewPage: React.FC = () => {
           <span className="overview-context-badge">Financial Intelligence</span>
           <h1 className="overview-title">{greetingHeadline}</h1>
           <p className="overview-subtitle">
-            Your personal finances · {new Date().toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })}
+            Your personal finances · {new Date().toLocaleDateString('en-IN', { timeZone: getAppTimezone(), month: 'long', year: 'numeric' })}
           </p>
         </div>
 
@@ -156,7 +157,7 @@ export const OverviewPage: React.FC = () => {
           </Button>
           {lastUpdated && (
             <span className="overview-last-updated">
-              Updated {lastUpdated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              Updated {lastUpdated.toLocaleTimeString([], { timeZone: getAppTimezone(), hour: '2-digit', minute: '2-digit' })}
             </span>
           )}
           <Button

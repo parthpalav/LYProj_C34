@@ -10,6 +10,7 @@ import { getTransactions, updateTransaction } from '../services/api';
 import { formatCurrencyINR, getTransactionDate } from '../utils/formatters';
 import { CANONICAL_CATEGORIES, VALID_TRANSACTION_TYPES } from '../types';
 import type { Transaction, TransactionType } from '../types';
+import { getAppTimezone } from '../utils/timezone';
 
 /**
  * One card at a time for transactions the classifier flagged as unsure. Confirming or correcting sends a
@@ -95,7 +96,7 @@ export const ReviewPage: React.FC = () => {
             <h2 style={{ marginTop: 12 }}>{current.description || 'Transaction'}</h2>
             <div className="review-amount">{formatCurrencyINR(Math.abs(current.amount))}</div>
             <p className="parity-muted">
-              {getTransactionDate(current).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' })}
+              {getTransactionDate(current).toLocaleDateString('en-IN', { timeZone: getAppTimezone(), weekday: 'short', day: 'numeric', month: 'short' })}
               {' · '}FINAURA guessed <strong>{current.category} · {current.type ?? 'Need'}</strong>
             </p>
 

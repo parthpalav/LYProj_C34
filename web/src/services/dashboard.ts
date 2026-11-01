@@ -5,6 +5,7 @@ import type {
   CashFlowMonth,
 } from '../types';
 import { getTransactionDate } from '../utils/formatters';
+import { getAppTimezone, zdate, zparts } from '../utils/timezone';
 
 /**
  * Computes trailing 6 calendar months of Cash Flow (Income, Expenses, Net Flow)
@@ -21,14 +22,15 @@ export function buildCashFlowHistory(
 
   // Generate ordered list of month intervals from oldest to current
   for (let i = monthCount - 1; i >= 0; i--) {
-    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-    const year = d.getFullYear();
-    const month = d.getMonth();
-    const startOfMonth = new Date(year, month, 1, 0, 0, 0, 0);
-    const endOfMonth = new Date(year, month + 1, 0, 23, 59, 59, 999);
+    const d = zdate(zparts(now).year, zparts(now).month - i, 1);
+    const year = zparts(d).year;
+    const month = zparts(d).month;
+    const startOfMonth = zdate(year, month, 1, 0, 0, 0, 0);
+    const endOfMonth = zdate(year, month + 1, 0, 23, 59, 59, 999);
 
     const monthKey = `${year}-${String(month + 1).padStart(2, '0')}`;
     const monthLabel = new Intl.DateTimeFormat('en-IN', {
+      timeZone: getAppTimezone(),
       month: 'short',
       year: 'numeric',
     }).format(d);

@@ -1,4 +1,5 @@
-// Credit card billing-cycle math. All dates are UTC, matching calculateNextDueDate.
+// Credit card billing-cycle math on UTC calendar fields. Callers pass dates already
+// shifted to the user's timezone (utils/userTime.js toZoned) and unshift the results.
 //
 // A statement covers purchases up to the end of `statementDay`. The bill for that
 // statement is due on the next `dueDay` after it. Payments are applied to billed
@@ -59,10 +60,12 @@ export function creditCardSummary(card, recentCharges, now = new Date()) {
   const amountDue = round2(Math.max(0, outstanding - unbilled));
   const lastDue = dueDateForClose(lastClose, card.dueDay);
 
-  // Overdue: whatever was billed on the latest statement whose due date already passed.
-  const passedClose = lastDue < now ? lastClose : prevClose;
-  const passedDue = dueDateForClose(passedClose, card.dueDay);
-  const overdueAmount = passedDue < now ? round2(Math.max(0, outstanding - sumSince(passedClose))) : 0;
+  // Overdue: whatever was billed on the latest statement whose due day has fully ended.
+  const duePassed = (due) => due.getTime() + DAY_MS <= now.getTime();
+  const passedClose = duePassed(lastDue) ? lastClose : prevClose;
+  const overdueAmount = duePassed(dueDateForClose(passedClose, card.dueDay))
+    ? round2(Math.max(0, outstanding - sumSince(passedClose)))
+    : 0;
 
   const nextClose = nextStatementClose(card.statementDay, now);
 

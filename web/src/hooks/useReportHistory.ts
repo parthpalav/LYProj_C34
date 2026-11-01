@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { HistoricalMonthSummary } from '../types';
 import { getTransactions, getIncomes, getFMIHistory } from '../services/api';
+import { dateKey, zparts } from '../utils/timezone';
 
 export type HistoryRange = '6M' | '12M' | 'YTD';
 
@@ -29,7 +30,7 @@ export function useReportHistory() {
       const now = new Date();
       let monthsCount = 6;
       if (range === '12M') monthsCount = 12;
-      else if (range === 'YTD') monthsCount = now.getUTCMonth() + 1;
+      else if (range === 'YTD') monthsCount = zparts(now).month + 1;
 
       // Build target months in chronological order
       const targetMonths: { year: number; month: number; period: string; label: string }[] = [];
@@ -39,9 +40,10 @@ export function useReportHistory() {
       ];
 
       for (let i = monthsCount - 1; i >= 0; i--) {
-        const d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - i, 1));
-        const y = d.getUTCFullYear();
-        const m = d.getUTCMonth() + 1;
+        const nz = zparts(now);
+        const shifted = new Date(Date.UTC(nz.year, nz.month - i, 1)); // calendar math only
+        const y = shifted.getUTCFullYear();
+        const m = shifted.getUTCMonth() + 1;
         const pKey = `${y}-${String(m).padStart(2, '0')}`;
         targetMonths.push({
           year: y,
@@ -76,7 +78,7 @@ export function useReportHistory() {
       for (const inc of incomes) {
         if (!inc.timestamp) continue;
         const d = new Date(inc.timestamp);
-        const pKey = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}`;
+        const pKey = dateKey(d).slice(0, 7);
         const entry = monthMap.get(pKey);
         if (entry) {
           entry.totalIncome += Number(inc.amount) || 0;
@@ -88,7 +90,7 @@ export function useReportHistory() {
       for (const tx of transactions) {
         if (!tx.timestamp) continue;
         const d = new Date(tx.timestamp);
-        const pKey = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}`;
+        const pKey = dateKey(d).slice(0, 7);
         const entry = monthMap.get(pKey);
         if (entry) {
           const amt = Number(tx.amount) || 0;
@@ -106,7 +108,7 @@ export function useReportHistory() {
       for (const fmi of fmiHistory) {
         if (!fmi.timestamp) continue;
         const d = new Date(fmi.timestamp);
-        const pKey = `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}`;
+        const pKey = dateKey(d).slice(0, 7);
         if (monthMap.has(pKey)) {
           const arr = fmiScoresMap.get(pKey) || [];
           arr.push(Number(fmi.score) || 0);

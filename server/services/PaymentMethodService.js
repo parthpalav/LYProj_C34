@@ -3,6 +3,8 @@ import Transaction from '../models/Transaction.js';
 import mongoose from 'mongoose';
 import User from '../models/User.js';
 import { creditCardSummary, recentStatementCloses } from '../utils/creditCycle.js';
+import { toZoned, fromZoned } from '../utils/userTime.js';
+import { getUserTimezone } from './userTimezone.js';
 
 // Same lookup as controllers/index.js userFilter: legacy users may only match on _id.
 function userFilter(userId) {
@@ -70,15 +72,22 @@ export async function refundSource(userId, paymentMethodId, amount) {
 }
 
 // Adds limit/outstanding/due-date figures to credit cards for the API response.
+// Cycles run in the user's timezone: dates are zoned for the math, then unzoned.
 export async function withCreditSummaries(userId, methods, now = new Date()) {
+  if (!methods.some((m) => m.kind === 'credit_card')) return methods;
+  const tz = await getUserTimezone(userId);
+  const zonedNow = toZoned(now, tz);
   return Promise.all(methods.map(async (m) => {
     if (m.kind !== 'credit_card') return m;
-    const [, prevClose] = recentStatementCloses(m.statementDay, now);
+    const [, prevClose] = recentStatementCloses(m.statementDay, zonedNow);
     const charges = await Transaction.find(
-      { userId: String(userId), paymentMethodId: m.id, timestamp: { $gte: prevClose } },
+      { userId: String(userId), paymentMethodId: m.id, timestamp: { $gte: fromZoned(prevClose, tz) } },
       { amount: 1, timestamp: 1, _id: 0 }
     ).lean();
-    return { ...m, credit: creditCardSummary(m, charges, now) };
+    const zonedCharges = charges.map((c) => ({ amount: c.amount, timestamp: toZoned(c.timestamp, tz) }));
+    const credit = creditCardSummary(m, zonedCharges, zonedNow);
+    for (const key of ['lastStatementDate', 'dueDate', 'nextStatementDate']) credit[key] = fromZoned(credit[key], tz);
+    return { ...m, credit };
   }));
 }
 

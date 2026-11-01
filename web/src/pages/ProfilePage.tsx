@@ -13,6 +13,7 @@ import { formatCurrencyINR, getUserInitials } from '../utils/formatters';
 import type { User } from '../types';
 import { readAssumptions } from '../utils/assumptions';
 import { PaymentMethodsSection } from '../components/profile/PaymentMethodsSection';
+import { DEFAULT_TIMEZONE, TIMEZONE_OPTIONS, todayKey } from '../utils/timezone';
 
 // Defaults matching system financial policy (same as mobile Profile).
 const DEFAULT_RETURN_RATE = 0.08;
@@ -78,6 +79,7 @@ export const ProfilePage: React.FC = () => {
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
   const [avatarBusy, setAvatarBusy] = useState(false);
+  const [tzBusy, setTzBusy] = useState(false);
   const [confirmSignOut, setConfirmSignOut] = useState(false);
   const [toast, setToast] = useState<{ message: string | null; type: 'success' | 'error' | 'warning' }>({ message: null, type: 'success' });
 
@@ -136,6 +138,20 @@ export const ProfilePage: React.FC = () => {
       setToast({ message: tooLarge ? 'That photo is too large. Try a smaller one.' : 'Photo not saved. Check your connection and try again.', type: 'error' });
     } finally {
       setAvatarBusy(false);
+    }
+  };
+
+  const saveTimezone = async (timezone: string) => {
+    if (!user || timezone === (user.timezone ?? DEFAULT_TIMEZONE)) return;
+    setTzBusy(true);
+    try {
+      const res = await updateUserProfile({ timezone });
+      setUser(res?.user ?? { ...user, timezone });
+      setToast({ message: 'Timezone saved. Dates, bills and reports now follow it.', type: 'success' });
+    } catch (err: any) {
+      setToast({ message: err?.response?.data?.error || "Couldn't save the timezone. Try again.", type: 'error' });
+    } finally {
+      setTzBusy(false);
     }
   };
 
@@ -216,6 +232,25 @@ export const ProfilePage: React.FC = () => {
       </section>
 
       <section className="parity-card">
+        <div className="parity-row" style={{ justifyContent: 'space-between' }}>
+          <div>
+            <h2>Timezone</h2>
+            <p className="parity-muted">Sets when days and months start for your reports, bill due dates and card statements.</p>
+          </div>
+          <select
+            aria-label="Timezone"
+            className="form-select"
+            style={{ maxWidth: 280 }}
+            value={user?.timezone ?? DEFAULT_TIMEZONE}
+            disabled={tzBusy}
+            onChange={(e) => saveTimezone(e.target.value)}
+          >
+            {TIMEZONE_OPTIONS.map((o) => <option key={o.id} value={o.id}>{o.label}</option>)}
+          </select>
+        </div>
+      </section>
+
+      <section className="parity-card">
         <h2>Your money</h2>
         <nav className="profile-links" aria-label="Your money">
           {LINKS.map((l) => <Link key={l.to} to={l.to}>{l.title}<span>{l.subtitle}</span></Link>)}
@@ -252,7 +287,7 @@ export const ProfilePage: React.FC = () => {
             ))}
             <div className="form-group">
               <label htmlFor="pf-dob" className="form-label">Date of birth</label>
-              <input id="pf-dob" className="form-input" type="date" max={new Date().toISOString().slice(0, 10)} value={dob} onChange={(e) => setDob(e.target.value)} />
+              <input id="pf-dob" className="form-input" type="date" max={todayKey()} value={dob} onChange={(e) => setDob(e.target.value)} />
             </div>
           </div>
           <div className="modal-footer">

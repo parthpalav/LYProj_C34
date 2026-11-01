@@ -25,6 +25,8 @@ export interface User {
   expectedWithdrawalRate?: number;
   lifestyleAdjustmentRatio?: number;
   emergencyFundTargetMonths?: number;
+  /** IANA timezone; defaults to Asia/Kolkata */
+  timezone?: string;
   goals?: string[];
   onboardingComplete?: boolean;
   onboardingCompleted?: boolean;

@@ -7,6 +7,7 @@ import { formatCurrencyINR } from '../../utils/formatters';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
 import { Sparkles } from 'lucide-react';
+import { dateInputToISO, dateKey, getAppTimezone, todayKey } from '../../utils/timezone';
 
 export interface TransactionModalProps {
   isOpen: boolean;
@@ -70,14 +71,14 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
           setCategory(initialTransaction.category || CANONICAL_CATEGORIES[0]);
           setType(initialTransaction.type || 'Need');
           const txDate = initialTransaction.timestamp ? new Date(initialTransaction.timestamp) : new Date();
-          setDate(txDate.toISOString().slice(0, 10));
+          setDate(dateKey(txDate));
           setUserTouchedCategory(true);
         } else {
           setAmount('');
           setDescription('');
           setCategory(CANONICAL_CATEGORIES[0]);
           setType('Need');
-          setDate(new Date().toISOString().slice(0, 10));
+          setDate(todayKey());
           setUserTouchedCategory(false);
         }
         setSuggestion(null);
@@ -185,7 +186,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
         category,
         type,
         description: description.trim() || 'Expense',
-        timestamp: date ? new Date(date).toISOString() : new Date().toISOString(),
+        timestamp: dateInputToISO(date),
         classificationSource: isEditing ? 'manual' : (userTouchedCategory ? 'manual' : (suggestion?.classificationSource || 'manual')),
       };
       // On edit, only send it when changed: a removed card can't be re-selected, only kept.
@@ -417,7 +418,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
               <label className="form-help-text" style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 6 }}>
                 <input type="checkbox" checked={markAsPaid} onChange={(e) => setMarkAsPaid(e.target.checked)} />
                 {markAsPaid
-                  ? `Covers the payment due ${new Date(linked.nextDueDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}, so it won't auto-deduct twice.`
+                  ? `Covers the payment due ${new Date(linked.nextDueDate).toLocaleDateString('en-IN', { timeZone: getAppTimezone(), day: 'numeric', month: 'short' })}, so it won't auto-deduct twice.`
                   : 'Record as an extra payment. The scheduled deduction still runs.'}
               </label>
             )}

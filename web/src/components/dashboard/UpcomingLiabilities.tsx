@@ -5,6 +5,7 @@ import type { Liability } from '../../types';
 import { formatCurrencyINR, formatDateShort } from '../../utils/formatters';
 import { getSortedUpcomingLiabilities } from '../../services/dashboard';
 import { EmptyState } from './EmptyState';
+import { getAppTimezone } from '../../utils/timezone';
 
 interface UpcomingLiabilitiesProps {
   liabilities: Liability[];
@@ -73,7 +74,7 @@ export const UpcomingLiabilities: React.FC<UpcomingLiabilitiesProps> = ({
               <div className="liability-due-row">
                 <span
                   className="liability-due-date"
-                  title={liability.nextDueDate ? new Date(liability.nextDueDate).toLocaleDateString() : 'Scheduled'}
+                  title={liability.nextDueDate ? new Date(liability.nextDueDate).toLocaleDateString('en-IN', { timeZone: getAppTimezone() }) : 'Scheduled'}
                 >
                   {getDueLabel(liability.nextDueDate)}
                 </span>

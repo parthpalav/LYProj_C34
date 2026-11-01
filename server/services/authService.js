@@ -16,6 +16,7 @@ import {
   DEFAULT_EMERGENCY_MONTHS
 } from '../config/financialRules.js';
 import { getJwtSecret, config } from '../config/env.js';
+import { resolveTimezone } from '../utils/userTime.js';
 
 const BCRYPT_ROUNDS = config.BCRYPT_ROUNDS;
 
@@ -61,6 +62,7 @@ export function stripUser(user) {
     expectedWithdrawalRate: user.expectedWithdrawalRate ?? DEFAULT_WITHDRAWAL_RATE,
     lifestyleAdjustmentRatio: user.lifestyleAdjustmentRatio ?? DEFAULT_LIFESTYLE_RATIO,
     emergencyFundTargetMonths: user.emergencyFundTargetMonths ?? DEFAULT_EMERGENCY_MONTHS,
+    timezone: resolveTimezone(user.timezone),
     goals: user.goals || [],
     onboardingComplete: isComplete,
     onboardingCompleted: isComplete

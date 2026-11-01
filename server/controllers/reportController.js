@@ -1,6 +1,8 @@
 import Transaction from '../models/Transaction.js';
 import Income from '../models/Income.js';
 import FMIHistory from '../models/FMIHistory.js';
+import { toZoned, fromZoned } from '../utils/userTime.js';
+import { getUserTimezone } from '../services/userTimezone.js';
 
 /**
  * GET /api/reports/monthly
@@ -36,8 +38,9 @@ export async function getMonthlyReport(req, res, next) {
       }
     }
 
-    // Default to current calendar month (UTC) if omitted
-    const now = new Date();
+    // Default to the current calendar month in the user's timezone if omitted
+    const tz = await getUserTimezone(userId);
+    const now = toZoned(new Date(), tz);
     if (year === undefined) {
       year = now.getUTCFullYear();
     }
@@ -60,9 +63,9 @@ export async function getMonthlyReport(req, res, next) {
       });
     }
 
-    // Calculate deterministic UTC period bounds
-    const startDate = new Date(Date.UTC(year, month - 1, 1, 0, 0, 0, 0));
-    const endDate = new Date(Date.UTC(year, month, 1, 0, 0, 0, 0));
+    // Period bounds: month start/end at 00:00 in the user's timezone
+    const startDate = fromZoned(new Date(Date.UTC(year, month - 1, 1, 0, 0, 0, 0)), tz);
+    const endDate = fromZoned(new Date(Date.UTC(year, month, 1, 0, 0, 0, 0)), tz);
 
     // Parallel query for stored records strictly scoped to req.user.id
     const [transactions, incomes, fmiSnapshots] = await Promise.all([

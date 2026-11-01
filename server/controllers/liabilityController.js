@@ -2,6 +2,8 @@ import crypto from 'crypto';
 import Liability from '../models/Liability.js';
 import Transaction from '../models/Transaction.js';
 import { logger } from '../utils/logger.js';
+import { DEFAULT_TIMEZONE, toZoned, fromZoned } from '../utils/userTime.js';
+import { getUserTimezone } from '../services/userTimezone.js';
 
 function userFilter(userId) {
   return { userId: String(userId) };
@@ -62,7 +64,7 @@ export const createLiability = async (req, res, next) => {
 
     // We can pre-calculate nextDueDate or let the scheduler do it.
     // It's safer to pre-calculate it now so the UI shows it immediately.
-    newLiability.nextDueDate = calculateNextDueDate(newLiability, new Date());
+    newLiability.nextDueDate = calculateNextDueDate(newLiability, new Date(), await getUserTimezone(userId));
 
     await newLiability.save();
     res.status(201).json({ success: true, data: newLiability });
@@ -140,12 +142,12 @@ export const updateLiability = async (req, res, next) => {
       
       if (!prevAutoDeduct && payload.autoDeduct) {
         // Re-enabled: calculate next due date from NOW
-        liability.nextDueDate = calculateNextDueDate(liability, new Date());
+        liability.nextDueDate = calculateNextDueDate(liability, new Date(), await getUserTimezone(userId));
       }
     }
 
     if (frequencyChanged && liability.autoDeduct) {
-      liability.nextDueDate = calculateNextDueDate(liability, new Date());
+      liability.nextDueDate = calculateNextDueDate(liability, new Date(), await getUserTimezone(userId));
     }
 
     await liability.save();
@@ -303,11 +305,15 @@ export const getLiabilityTransactions = async (req, res, next) => {
   }
 };
 
-// Helper for recurrence
-export function calculateNextDueDate(liability, fromDate = new Date()) {
+// Helper for recurrence. Due dates fall at 00:00 in the user's timezone `tz`.
+export function calculateNextDueDate(liability, fromDate = new Date(), tz = DEFAULT_TIMEZONE) {
   if (!liability.autoDeduct) return null;
+  const zonedStart = liability.startDate ? toZoned(liability.startDate, tz) : liability.startDate;
+  return fromZoned(calculateNextDueDateUtc({ ...liability.toObject?.() ?? liability, startDate: zonedStart }, toZoned(fromDate, tz)), tz);
+}
 
-  // Work strictly in UTC to prevent timezone offsets from shifting dates 
+// Recurrence math on UTC calendar fields (inputs pre-shifted by calculateNextDueDate).
+function calculateNextDueDateUtc(liability, fromDate) {
   const baseDate = liability.startDate && liability.startDate > fromDate ? liability.startDate : fromDate;
   const nextDate = new Date(baseDate);
 

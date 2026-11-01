@@ -46,6 +46,10 @@ s = creditCardSummary({ ...card, outstanding: 2000 }, charges, d('2026-11-01'));
 assert.equal(s.amountDue, 0);
 assert.equal(iso(s.dueDate), '2026-12-10');
 
+// Paying on the due day itself is on time.
+s = creditCardSummary(card, charges, new Date('2026-11-10T20:00:00Z'));
+assert.equal(s.overdueAmount, 0);
+
 // Unpaid past due date: overdue.
 s = creditCardSummary(card, charges, d('2026-11-12'));
 assert.equal(s.overdueAmount, 7000);

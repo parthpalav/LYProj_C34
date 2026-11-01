@@ -3,6 +3,7 @@ import type { Liability, LiabilityPayload, TransactionType } from '../../types';
 import { CANONICAL_CATEGORIES, VALID_TRANSACTION_TYPES } from '../../types';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
+import { dateKey, dateKeyToDate, todayKey, zparts } from '../../utils/timezone';
 
 export interface LiabilityModalProps {
   isOpen: boolean;
@@ -69,7 +70,7 @@ export const LiabilityModal: React.FC<LiabilityModalProps> = ({
           setType(initialLiability.type || 'Need');
           setFrequency(initialLiability.frequency || 'monthly');
           const d = initialLiability.startDate ? new Date(initialLiability.startDate) : new Date();
-          setStartDate(d.toISOString().slice(0, 10));
+          setStartDate(dateKey(d));
           setAutoDeduct(initialLiability.autoDeduct ?? true);
           setDayOfWeek(initialLiability.dayOfWeek ?? 1);
           setDayOfMonth(initialLiability.dayOfMonth ?? 1);
@@ -80,11 +81,11 @@ export const LiabilityModal: React.FC<LiabilityModalProps> = ({
           setCategory('Debt & Loan Payments');
           setType('Need');
           setFrequency('monthly');
-          setStartDate(new Date().toISOString().slice(0, 10));
+          setStartDate(todayKey());
           setAutoDeduct(true);
           setDayOfWeek(1);
-          setDayOfMonth(new Date().getDate());
-          setMonthOfYear(new Date().getMonth() + 1);
+          setDayOfMonth(zparts().day);
+          setMonthOfYear(zparts().month + 1);
         }
         setFormError(null);
         setIsLoading(false);
@@ -119,7 +120,7 @@ export const LiabilityModal: React.FC<LiabilityModalProps> = ({
         category,
         type,
         frequency,
-        startDate: startDate ? new Date(startDate).toISOString() : new Date().toISOString(),
+        startDate: startDate ? dateKeyToDate(startDate).toISOString() : new Date().toISOString(),
         autoDeduct,
         dayOfWeek: frequency === 'weekly' ? Number(dayOfWeek) : null,
         dayOfMonth: frequency === 'monthly' || frequency === 'yearly' ? Number(dayOfMonth) : null,

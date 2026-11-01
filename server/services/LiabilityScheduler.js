@@ -4,6 +4,7 @@ import Liability from '../models/Liability.js';
 import Transaction from '../models/Transaction.js';
 import User from '../models/User.js';
 import { calculateNextDueDate } from '../controllers/liabilityController.js';
+import { getUserTimezone } from './userTimezone.js';
 import { logger } from '../utils/logger.js';
 
 let schedulerInterval = null;
@@ -178,7 +179,7 @@ export async function processSingleLiability(liability, now = new Date(), staleT
     // Step 4: Finalize the Liability (Advance nextDueDate and clear processing state)
     // Only workers holding the current processingToken may finalize!
     // Derive nextDate from scheduledFor (the occurrence being processed) to preserve recurrence cadence
-    const nextDate = calculateNextDueDate(liability, scheduledFor);
+    const nextDate = calculateNextDueDate(liability, scheduledFor, await getUserTimezone(liability.userId));
     const finalized = await Liability.findOneAndUpdate(
       {
         id: liability.id,

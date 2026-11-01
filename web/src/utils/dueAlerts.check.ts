@@ -1,6 +1,6 @@
 // Self-check for dueAlerts.ts. Run: node --experimental-strip-types src/utils/dueAlerts.check.ts
 import assert from 'node:assert/strict';
-import { buildDueAlerts, daysUntil, dueLabel } from './dueAlerts.ts';
+import { buildDueAlerts, buildReviewAlerts, daysUntil, dueLabel } from './dueAlerts.ts';
 import { setAppTimezone } from './timezone.ts';
 
 setAppTimezone('Asia/Kolkata');
@@ -48,4 +48,16 @@ assert.deepEqual(
 assert.equal(dueLabel({ daysUntil: 0, overdue: false }), 'Due today');
 assert.equal(dueLabel({ daysUntil: 1, overdue: false }), 'Due tomorrow');
 assert.equal(dueLabel({ daysUntil: 6, overdue: false }), 'Due in 6 days');
+
+// Monthly asset review: market assets only, one calendar month after the last confirmation.
+{
+  const asset = (id: string, extra = {}) => ({ id, assetType: 'Mutual Fund', lastReviewedAt: '2026-10-01T06:00:00Z', ...extra }) as any;
+  const reviewIds = (list: any[], at = now) => buildReviewAlerts(list, at).map((a) => a.id);
+  assert.deepEqual(reviewIds([asset('due'), asset('fresh', { lastReviewedAt: '2026-10-15T06:00:00Z' })]), ['due']);
+  assert.deepEqual(reviewIds([asset('fd', { assetType: 'Fixed Deposit' }), asset('rd', { assetType: 'Recurring Deposit' }), asset('cash', { assetType: 'Cash & Bank' })]), []);
+  assert.deepEqual(reviewIds([asset('legacy', { lastReviewedAt: null, createdAt: '2026-09-20T00:00:00Z' })]), ['legacy']);
+  // 31 Jan confirmation is due on 28 Feb, not 3 Mar.
+  assert.deepEqual(reviewIds([asset('jan', { lastReviewedAt: '2027-01-31T06:00:00Z' })], new Date('2027-02-28T07:00:00Z')), ['jan']);
+  assert.deepEqual(reviewIds([asset('jan', { lastReviewedAt: '2027-01-31T06:00:00Z' })], new Date('2027-02-27T07:00:00Z')), []);
+}
 console.log('dueAlerts checks passed');

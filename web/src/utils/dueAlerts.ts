@@ -1,4 +1,4 @@
-import type { Liability, PaymentMethod } from '../types';
+import type { Asset, Liability, PaymentMethod } from '../types';
 import { dateKey } from './timezone.ts';
 
 /** Bills start showing in the bell this many days before they fall due. */
@@ -63,4 +63,28 @@ export function dueLabel(a: Pick<DueAlert, 'daysUntil' | 'overdue'>): string {
   if (a.daysUntil === 0) return 'Due today';
   if (a.daysUntil === 1) return 'Due tomorrow';
   return `Due in ${a.daysUntil} days`;
+}
+
+/** Fixed-rate deposits: the server computes their value, so they never need a review. */
+export const FIXED_INCOME_TYPES = ['Fixed Deposit', 'Recurring Deposit'];
+/** Market-linked assets whose value and return drift; the user confirms them monthly. */
+export const REVIEW_ASSET_TYPES = ['Mutual Fund', 'Equity', 'Gold', 'Commodities', 'Cryptocurrency'];
+
+/** Same calendar day one month later, clamped to month end (31 Jan -> 28/29 Feb). */
+function oneMonthAfter(d: Date): Date {
+  const out = new Date(d);
+  const day = out.getUTCDate();
+  out.setUTCDate(1);
+  out.setUTCMonth(out.getUTCMonth() + 1);
+  out.setUTCDate(Math.min(day, new Date(Date.UTC(out.getUTCFullYear(), out.getUTCMonth() + 1, 0)).getUTCDate()));
+  return out;
+}
+
+/** Market assets not confirmed for a month (falls back to creation date), oldest first. */
+export function buildReviewAlerts(assets: Asset[], now: Date = new Date()): Asset[] {
+  const lastOf = (a: Asset) => new Date(a.lastReviewedAt || a.createdAt || '');
+  return assets
+    .filter((a) => REVIEW_ASSET_TYPES.includes(a.assetType))
+    .filter((a) => { const last = lastOf(a); return !isNaN(last.getTime()) && oneMonthAfter(last) <= now; })
+    .sort((a, b) => lastOf(a).getTime() - lastOf(b).getTime());
 }

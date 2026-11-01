@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { getPredictability, getAssets, getLiabilities } from '../services/api';
 import type { PredictabilitySnapshot, Asset, Liability } from '../types';
+import { ASSETS_CHANGED_EVENT } from '../components/plan/AssetReviewModal';
 
 export function useNetWorth() {
   const [snapshot, setSnapshot] = useState<PredictabilitySnapshot | null>(null);
@@ -35,6 +36,13 @@ export function useNetWorth() {
       await fetchNetWorthData(false);
     }
     void loadData();
+  }, [fetchNetWorthData]);
+
+  // A bell check-in changes asset values outside this page's own forms.
+  useEffect(() => {
+    const onChanged = () => void fetchNetWorthData(false);
+    window.addEventListener(ASSETS_CHANGED_EVENT, onChanged);
+    return () => window.removeEventListener(ASSETS_CHANGED_EVENT, onChanged);
   }, [fetchNetWorthData]);
 
   // Correction #1: Direct authoritative knownNetWorth from backend

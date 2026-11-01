@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import type { Asset, AssetClass, AssetLiquidity } from '../../types';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
+import { FIXED_INCOME_TYPES } from '../../utils/dueAlerts';
+import { dateKey, dateKeyToDate, todayKey } from '../../utils/timezone';
 
 interface AssetModalProps {
   isOpen: boolean;
@@ -15,9 +17,11 @@ const COMMON_ASSET_TYPES = [
   'Mutual Fund',
   'Equity',
   'Fixed Deposit',
+  'Recurring Deposit',
   'Provident Fund / PPF',
   'Cash & Bank',
   'Gold',
+  'Commodities',
   'Real Estate',
   'Cryptocurrency',
   'Other',
@@ -37,7 +41,13 @@ export const AssetModal: React.FC<AssetModalProps> = ({
   const [liquidity, setLiquidity] = useState<AssetLiquidity>('liquid');
   const [includedInFireCorpus, setIncludedInFireCorpus] = useState(true);
   const [notes, setNotes] = useState('');
+  const [monthlyContribution, setMonthlyContribution] = useState<string>('');
+  const [principal, setPrincipal] = useState<string>('');
+  const [startDate, setStartDate] = useState<string>('');
+  const [tenureMonths, setTenureMonths] = useState<string>('');
   const [saving, setSaving] = useState(false);
+  const isFixed = FIXED_INCOME_TYPES.includes(assetType);
+  const isRD = assetType === 'Recurring Deposit';
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -54,6 +64,10 @@ export const AssetModal: React.FC<AssetModalProps> = ({
       setLiquidity(assetToEdit.liquidity || 'liquid');
       setIncludedInFireCorpus(Boolean(assetToEdit.includedInFireCorpus));
       setNotes(assetToEdit.notes || '');
+      setMonthlyContribution(assetToEdit.monthlyContribution != null ? String(assetToEdit.monthlyContribution) : '');
+      setPrincipal(assetToEdit.principal != null ? String(assetToEdit.principal) : '');
+      setStartDate(assetToEdit.startDate ? dateKey(assetToEdit.startDate) : todayKey());
+      setTenureMonths(assetToEdit.tenureMonths != null ? String(assetToEdit.tenureMonths) : '');
     } else {
       setName('');
       setAssetType('Mutual Fund');
@@ -63,6 +77,10 @@ export const AssetModal: React.FC<AssetModalProps> = ({
       setLiquidity('liquid');
       setIncludedInFireCorpus(true);
       setNotes('');
+      setMonthlyContribution('');
+      setPrincipal('');
+      setStartDate(todayKey());
+      setTenureMonths('');
     }
     setError(null);
   }, [assetToEdit, isOpen]);
@@ -87,8 +105,33 @@ export const AssetModal: React.FC<AssetModalProps> = ({
     }
 
     const numVal = parseFloat(currentValue);
-    if (isNaN(numVal) || numVal < 0) {
+    if (!isFixed && (isNaN(numVal) || numVal < 0)) {
       setError('Current value must be a non-negative number');
+      return;
+    }
+
+    const sip = monthlyContribution.trim() === '' ? null : Number(monthlyContribution);
+    const deposit = Number(principal);
+    const tenure = Number(tenureMonths);
+    if (isFixed) {
+      if (isRD ? !(sip !== null && sip > 0) : !(deposit > 0)) {
+        setError(isRD ? 'Monthly installment must be greater than 0' : 'Deposit amount must be greater than 0');
+        return;
+      }
+      if (annualReturnRate.trim() === '') {
+        setError('Interest rate is required for a deposit');
+        return;
+      }
+      if (!startDate || startDate > todayKey()) {
+        setError('Start date is required and cannot be in the future');
+        return;
+      }
+      if (!(Number.isInteger(tenure) && tenure >= 1 && tenure <= 600)) {
+        setError('Tenure must be a whole number of months (1 - 600)');
+        return;
+      }
+    } else if (sip !== null && !(sip >= 0)) {
+      setError('Monthly SIP must be 0 or more');
       return;
     }
 
@@ -108,7 +151,15 @@ export const AssetModal: React.FC<AssetModalProps> = ({
         name: name.trim(),
         assetType: assetType.trim(),
         assetClass,
-        currentValue: numVal,
+        // FD/RD value is computed by the server from the deposit details.
+        ...(isFixed
+          ? {
+              principal: isRD ? null : deposit,
+              startDate: dateKeyToDate(startDate).toISOString(),
+              tenureMonths: tenure,
+            }
+          : { currentValue: numVal, principal: null, startDate: null, tenureMonths: null }),
+        monthlyContribution: sip,
         annualReturnRate: parsedReturnRate,
         liquidity,
         includedInFireCorpus: assetClass === 'NON_INVESTABLE' ? false : includedInFireCorpus,
@@ -167,7 +218,13 @@ export const AssetModal: React.FC<AssetModalProps> = ({
               id="asset-type"
               className="form-select"
               value={assetType}
-              onChange={(e) => setAssetType(e.target.value)}
+              onChange={(e) => {
+                const next = e.target.value;
+                setAssetType(next);
+                // Deposits can't be spent until maturity; new ones default to locked.
+                if (!assetToEdit && FIXED_INCOME_TYPES.includes(next)) setLiquidity('locked');
+                else if (!assetToEdit && FIXED_INCOME_TYPES.includes(assetType)) setLiquidity('liquid');
+              }}
             >
               {COMMON_ASSET_TYPES.map((t) => (
                 <option key={t} value={t}>
@@ -194,45 +251,140 @@ export const AssetModal: React.FC<AssetModalProps> = ({
           </div>
         </div>
 
-        <div className="form-row">
-          <div className="form-group flex-1">
-            <label htmlFor="current-value" className="form-label">
-              Current Value (₹) <span className="text-danger">*</span>
-            </label>
-            <div className="input-currency-wrapper">
-              <span className="currency-prefix">₹</span>
+        {isFixed ? (
+          <>
+            <div className="form-row">
+              <div className="form-group flex-1">
+                <label htmlFor="deposit-amount" className="form-label">
+                  {isRD ? 'Monthly Installment (₹)' : 'Deposit Amount (₹)'} <span className="text-danger">*</span>
+                </label>
+                <div className="input-currency-wrapper">
+                  <span className="currency-prefix">₹</span>
+                  <input
+                    id="deposit-amount"
+                    type="number"
+                    step="any"
+                    min="0"
+                    className="form-input currency-input"
+                    placeholder="0.00"
+                    value={isRD ? monthlyContribution : principal}
+                    onChange={(e) => (isRD ? setMonthlyContribution : setPrincipal)(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+              <div className="form-group flex-1">
+                <label htmlFor="annual-return" className="form-label">
+                  Interest Rate (% / yr) <span className="text-danger">*</span>
+                </label>
+                <input
+                  id="annual-return"
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  max="100"
+                  className="form-input"
+                  placeholder="e.g. 7.1"
+                  value={annualReturnRate}
+                  onChange={(e) => setAnnualReturnRate(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+            <div className="form-row">
+              <div className="form-group flex-1">
+                <label htmlFor="deposit-start" className="form-label">
+                  Start Date <span className="text-danger">*</span>
+                </label>
+                <input
+                  id="deposit-start"
+                  type="date"
+                  className="form-input"
+                  max={todayKey()}
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-group flex-1">
+                <label htmlFor="deposit-tenure" className="form-label">
+                  Tenure (months) <span className="text-danger">*</span>
+                </label>
+                <input
+                  id="deposit-tenure"
+                  type="number"
+                  step="1"
+                  min="1"
+                  max="600"
+                  className="form-input"
+                  placeholder="e.g. 12"
+                  value={tenureMonths}
+                  onChange={(e) => setTenureMonths(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+            <span className="input-hint">
+              Current value grows automatically at this rate (quarterly compounding). No monthly check-in needed.
+            </span>
+          </>
+        ) : (
+          <div className="form-row">
+            <div className="form-group flex-1">
+              <label htmlFor="current-value" className="form-label">
+                Current Value (₹) <span className="text-danger">*</span>
+              </label>
+              <div className="input-currency-wrapper">
+                <span className="currency-prefix">₹</span>
+                <input
+                  id="current-value"
+                  type="number"
+                  step="any"
+                  min="0"
+                  className="form-input currency-input"
+                  placeholder="0.00"
+                  value={currentValue}
+                  onChange={(e) => setCurrentValue(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="form-group flex-1">
+              <label htmlFor="annual-return" className="form-label">
+                Expected Return (% / yr)
+              </label>
               <input
-                id="current-value"
+                id="annual-return"
+                type="number"
+                step="0.1"
+                min="0"
+                max="100"
+                className="form-input"
+                placeholder="e.g. 10.0"
+                value={annualReturnRate}
+                onChange={(e) => setAnnualReturnRate(e.target.value)}
+              />
+              <span className="input-hint">Default is profile baseline (8%)</span>
+            </div>
+
+            <div className="form-group flex-1">
+              <label htmlFor="monthly-sip" className="form-label">
+                Monthly SIP (₹)
+              </label>
+              <input
+                id="monthly-sip"
                 type="number"
                 step="any"
                 min="0"
-                className="form-input currency-input"
-                placeholder="0.00"
-                value={currentValue}
-                onChange={(e) => setCurrentValue(e.target.value)}
-                required
+                className="form-input"
+                placeholder="Optional"
+                value={monthlyContribution}
+                onChange={(e) => setMonthlyContribution(e.target.value)}
               />
             </div>
           </div>
-
-          <div className="form-group flex-1">
-            <label htmlFor="annual-return" className="form-label">
-              Expected Return (% / yr)
-            </label>
-            <input
-              id="annual-return"
-              type="number"
-              step="0.1"
-              min="0"
-              max="100"
-              className="form-input"
-              placeholder="e.g. 10.0"
-              value={annualReturnRate}
-              onChange={(e) => setAnnualReturnRate(e.target.value)}
-            />
-            <span className="input-hint">Default is profile baseline (8%)</span>
-          </div>
-        </div>
+        )}
 
         <div className="form-row">
           <div className="form-group flex-1">

@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { TrendingUp, Pencil, Trash2, Flame, Ban, Plus } from 'lucide-react';
 import type { Asset } from '../../types';
 import { getAssetClassLabel, getAssetLiquidityLabel } from '../../hooks/useAssets';
+import { formatDateFull } from '../../utils/formatters';
 
 interface AssetsTableProps {
   assets: Asset[];
@@ -12,6 +13,18 @@ interface AssetsTableProps {
 
 function formatINR(val: number): string {
   return `₹${Math.round(val).toLocaleString('en-IN')}`;
+}
+
+/** SIP / deposit summary shown under the asset name. */
+function planLine(asset: Asset): string | null {
+  const parts: string[] = [];
+  if (asset.monthlyContribution) {
+    parts.push(`${asset.assetType === 'Recurring Deposit' ? 'Installment' : 'SIP'} ${formatINR(asset.monthlyContribution)}/mo`);
+  }
+  if (asset.maturityDate && asset.maturityValue !== undefined) {
+    parts.push(`${asset.matured ? 'Matured' : 'Matures'} ${formatDateFull(asset.maturityDate)} · ${formatINR(asset.maturityValue)}`);
+  }
+  return parts.length ? parts.join(' · ') : null;
 }
 
 export const AssetsTable: React.FC<AssetsTableProps> = ({
@@ -118,6 +131,7 @@ export const AssetsTable: React.FC<AssetsTableProps> = ({
                     <tr key={asset.id}>
                       <td className="td-name">
                         <strong>{asset.name}</strong>
+                        {planLine(asset) && <span className="td-notes">{planLine(asset)}</span>}
                         {asset.notes && <span className="td-notes">{asset.notes}</span>}
                       </td>
                       <td>
@@ -215,6 +229,7 @@ export const AssetsTable: React.FC<AssetsTableProps> = ({
 
                   <div className="plan-asset-card-meta">
                     <span>Expected Return: <strong>{returnRateStr}</strong></span>
+                    {planLine(asset) && <span>{planLine(asset)}</span>}
                   </div>
 
                   {asset.notes && <p className="plan-asset-card-notes">{asset.notes}</p>}

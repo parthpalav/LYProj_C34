@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { getPredictability } from '../services/api';
 import type { PredictabilitySnapshot } from '../types';
+import { ASSETS_CHANGED_EVENT } from '../components/plan/AssetReviewModal';
 
 export function useFirePlan() {
   const [snapshot, setSnapshot] = useState<PredictabilitySnapshot | null>(null);
@@ -26,6 +27,13 @@ export function useFirePlan() {
       await fetchFireData(false);
     }
     void loadData();
+  }, [fetchFireData]);
+
+  // A bell check-in changes asset values outside this page's own forms.
+  useEffect(() => {
+    const onChanged = () => void fetchFireData(false);
+    window.addEventListener(ASSETS_CHANGED_EVENT, onChanged);
+    return () => window.removeEventListener(ASSETS_CHANGED_EVENT, onChanged);
   }, [fetchFireData]);
 
   const retirement = snapshot?.retirement ?? null;

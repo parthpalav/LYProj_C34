@@ -55,6 +55,10 @@ export const LiabilityModal: React.FC<LiabilityModalProps> = ({
   const [dayOfWeek, setDayOfWeek] = useState<number>(1);
   const [dayOfMonth, setDayOfMonth] = useState<number>(1);
   const [monthOfYear, setMonthOfYear] = useState<number>(1);
+  // Optional loan details: feed net worth and the debt-free date.
+  const [outstanding, setOutstanding] = useState<string>('');
+  const [interestRate, setInterestRate] = useState<string>('');
+  const [monthsLeft, setMonthsLeft] = useState<string>('');
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [formError, setFormError] = useState<string | null>(null);
@@ -75,6 +79,9 @@ export const LiabilityModal: React.FC<LiabilityModalProps> = ({
           setDayOfWeek(initialLiability.dayOfWeek ?? 1);
           setDayOfMonth(initialLiability.dayOfMonth ?? 1);
           setMonthOfYear(initialLiability.monthOfYear ?? 1);
+          setOutstanding(initialLiability.outstandingBalance != null ? String(initialLiability.outstandingBalance) : '');
+          setInterestRate(initialLiability.interestRate != null ? String(Math.round(initialLiability.interestRate * 10000) / 100) : '');
+          setMonthsLeft(initialLiability.remainingTermMonths != null ? String(initialLiability.remainingTermMonths) : '');
         } else {
           setName('');
           setAmount('');
@@ -86,6 +93,9 @@ export const LiabilityModal: React.FC<LiabilityModalProps> = ({
           setDayOfWeek(1);
           setDayOfMonth(zparts().day);
           setMonthOfYear(zparts().month + 1);
+          setOutstanding('');
+          setInterestRate('');
+          setMonthsLeft('');
         }
         setFormError(null);
         setIsLoading(false);
@@ -112,6 +122,23 @@ export const LiabilityModal: React.FC<LiabilityModalProps> = ({
       return;
     }
 
+    const optional = (v: string) => (v.trim() === '' ? null : Number(v));
+    const loanBalance = optional(outstanding);
+    const loanRate = optional(interestRate);
+    const loanMonths = optional(monthsLeft);
+    if (loanBalance !== null && !(loanBalance >= 0)) {
+      setFormError('Outstanding balance must be 0 or more.');
+      return;
+    }
+    if (loanRate !== null && !(loanRate >= 0 && loanRate <= 100)) {
+      setFormError('Interest rate must be between 0% and 100%.');
+      return;
+    }
+    if (loanMonths !== null && !(Number.isInteger(loanMonths) && loanMonths >= 0)) {
+      setFormError('Months remaining must be a whole number.');
+      return;
+    }
+
     setIsLoading(true);
     try {
       const payload: LiabilityPayload = {
@@ -125,6 +152,9 @@ export const LiabilityModal: React.FC<LiabilityModalProps> = ({
         dayOfWeek: frequency === 'weekly' ? Number(dayOfWeek) : null,
         dayOfMonth: frequency === 'monthly' || frequency === 'yearly' ? Number(dayOfMonth) : null,
         monthOfYear: frequency === 'yearly' ? Number(monthOfYear) : null,
+        outstandingBalance: loanBalance,
+        interestRate: loanRate === null ? null : loanRate / 100,
+        remainingTermMonths: loanMonths,
       };
 
       await onSubmit(payload);
@@ -325,6 +355,59 @@ export const LiabilityModal: React.FC<LiabilityModalProps> = ({
               ))}
             </select>
           </div>
+        </div>
+
+        {/* Loan details (optional) */}
+        <div className="form-grid-2">
+          <div className="form-group">
+            <label htmlFor="liab-outstanding" className="form-label">
+              Outstanding Balance (₹)
+            </label>
+            <div className="input-currency-wrapper">
+              <span className="input-prefix">₹</span>
+              <input
+                id="liab-outstanding"
+                type="number"
+                step="any"
+                min="0"
+                placeholder="Optional, for loans"
+                className="form-input with-prefix"
+                value={outstanding}
+                onChange={(e) => setOutstanding(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="form-group">
+            <label htmlFor="liab-rate" className="form-label">
+              Interest Rate (% / yr)
+            </label>
+            <input
+              id="liab-rate"
+              type="number"
+              step="0.01"
+              min="0"
+              max="100"
+              placeholder="Optional"
+              className="form-input"
+              value={interestRate}
+              onChange={(e) => setInterestRate(e.target.value)}
+            />
+          </div>
+        </div>
+        <div className="form-group">
+          <label htmlFor="liab-months-left" className="form-label">
+            Months Remaining
+          </label>
+          <input
+            id="liab-months-left"
+            type="number"
+            step="1"
+            min="0"
+            placeholder="Optional, e.g. 48 EMIs left"
+            className="form-input"
+            value={monthsLeft}
+            onChange={(e) => setMonthsLeft(e.target.value)}
+          />
         </div>
 
         {/* Start Date */}

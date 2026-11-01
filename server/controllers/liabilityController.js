@@ -9,6 +9,28 @@ function userFilter(userId) {
   return { userId: String(userId) };
 }
 
+/** Optional loan details (outstanding principal, interest rate in % or fraction, months left). Returns { fields } or { error }. */
+function parseLoanFields(payload) {
+  const fields = {};
+  const blank = (v) => v === null || v === '';
+  if (payload.outstandingBalance !== undefined) {
+    const v = blank(payload.outstandingBalance) ? null : Number(payload.outstandingBalance);
+    if (v !== null && !(Number.isFinite(v) && v >= 0)) return { error: 'Outstanding balance must be a non-negative number' };
+    fields.outstandingBalance = v;
+  }
+  if (payload.interestRate !== undefined) {
+    const v = blank(payload.interestRate) ? null : Number(payload.interestRate);
+    if (v !== null && !(Number.isFinite(v) && v >= 0 && v <= 100)) return { error: 'Interest rate must be between 0% and 100%' };
+    fields.interestRate = v === null ? null : v > 1 ? v / 100 : v;
+  }
+  if (payload.remainingTermMonths !== undefined) {
+    const v = blank(payload.remainingTermMonths) ? null : Number(payload.remainingTermMonths);
+    if (v !== null && !(Number.isInteger(v) && v >= 0)) return { error: 'Remaining term must be a whole number of months' };
+    fields.remainingTermMonths = v;
+  }
+  return { fields };
+}
+
 export const getLiabilities = async (req, res, next) => {
   try {
     const userId = req.user.id || req.user._id;
@@ -45,6 +67,11 @@ export const createLiability = async (req, res, next) => {
       return res.status(400).json({ success: false, error: 'Valid startDate is required' });
     }
 
+    const loan = parseLoanFields(payload);
+    if (loan.error) {
+      return res.status(400).json({ success: false, error: loan.error });
+    }
+
     const newLiability = new Liability({
       id: crypto.randomUUID(),
       userId: String(userId),
@@ -59,7 +86,8 @@ export const createLiability = async (req, res, next) => {
       dayOfMonth: payload.dayOfMonth,
       monthOfYear: payload.monthOfYear,
       nextDueDate: null, // Will be calculated by scheduler or initially
-      status: 'active'
+      status: 'active',
+      ...loan.fields
     });
 
     // We can pre-calculate nextDueDate or let the scheduler do it.
@@ -101,6 +129,11 @@ export const updateLiability = async (req, res, next) => {
       }
       liability.amount = numAmount;
     }
+    const loan = parseLoanFields(payload);
+    if (loan.error) {
+      return res.status(400).json({ success: false, error: loan.error });
+    }
+    liability.set(loan.fields);
     if (payload.category !== undefined) liability.category = payload.category;
     if (payload.type !== undefined) liability.type = payload.type;
     

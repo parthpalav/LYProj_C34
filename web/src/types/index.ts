@@ -166,6 +166,18 @@ export interface Asset {
   includedInFireCorpus: boolean;
   liquidity: AssetLiquidity;
   notes?: string;
+  /** SIP amount, or the installment of a Recurring Deposit. */
+  monthlyContribution?: number | null;
+  /** FD deposit amount. */
+  principal?: number | null;
+  startDate?: string | null;
+  tenureMonths?: number | null;
+  lastReviewedAt?: string | null;
+  createdAt?: string;
+  /** Server-computed for a complete FD/RD. */
+  maturityValue?: number;
+  maturityDate?: string;
+  matured?: boolean;
 }
 
 export interface IncomeRecord {
@@ -561,6 +573,10 @@ export interface LiabilityPayload {
   dayOfWeek?: number | null;
   dayOfMonth?: number | null;
   monthOfYear?: number | null;
+  outstandingBalance?: number | null;
+  /** Percent (e.g. 9.5) or fraction; the server normalises to a fraction. */
+  interestRate?: number | null;
+  remainingTermMonths?: number | null;
 }
 
 export interface LiabilityTransactionsResponse {

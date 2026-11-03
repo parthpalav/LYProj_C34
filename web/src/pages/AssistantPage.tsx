@@ -6,6 +6,7 @@ import { useAuth } from '../hooks/useAuth';
 import { getChatHistory, sendMessageToAgent } from '../services/api';
 import { getUserFirstName } from '../utils/formatters';
 import type { ChatMessage } from '../types';
+import { getAppTimezone } from '../utils/timezone';
 
 // Same grounded prompts as the mobile assistant.
 const QUICK_PROMPTS = [
@@ -51,7 +52,7 @@ function RichText({ text }: { text: string }) {
 const time = (iso?: string) => {
   if (!iso) return '';
   const d = new Date(iso);
-  return Number.isNaN(d.getTime()) ? '' : d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  return Number.isNaN(d.getTime()) ? '' : d.toLocaleTimeString([], { timeZone: getAppTimezone(), hour: '2-digit', minute: '2-digit' });
 };
 
 export const AssistantPage: React.FC = () => {

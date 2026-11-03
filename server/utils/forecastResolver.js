@@ -199,6 +199,10 @@ export function resolveForecastInputs(data, options = {}) {
     }
   }
 
+  // Money owed on credit cards counts as debt (fed in by getPredictabilitySnapshot).
+  const creditCardOutstanding = Number(data.creditCardOutstanding) || 0;
+  knownOutstandingPrincipal += creditCardOutstanding;
+
   const knownNetWorth = totalAssetValue - knownOutstandingPrincipal;
 
   // 4. Resolve Forecast Data Quality & Availability

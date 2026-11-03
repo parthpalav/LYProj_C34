@@ -22,8 +22,7 @@ export const GoalCard: React.FC<GoalCardProps> = ({ goal, onEdit, onDelete, onFu
   const remaining = Math.max(0, target - saved);
 
   const formattedDate = goal.targetDate
-    ? new Date(goal.targetDate).toLocaleDateString('en-IN', {
-        month: 'short',
+    ? new Date(goal.targetDate).toLocaleDateString('en-IN', { timeZone: 'UTC', month: 'short', // date-only value
         year: 'numeric',
       })
     : null;

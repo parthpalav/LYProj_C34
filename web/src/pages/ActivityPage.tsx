@@ -3,6 +3,9 @@ import { useSearchParams } from 'react-router-dom';
 import { useTransactions } from '../hooks/useTransactions';
 import { useIncome } from '../hooks/useIncome';
 import { useLiabilities } from '../hooks/useLiabilities';
+import { usePaymentMethods } from '../hooks/usePaymentMethods';
+import { CreditCardsSection } from '../components/activity/CreditCardsSection';
+import { transactionPaymentLabel } from '../utils/paymentMethods';
 import type { Transaction, IncomeRecord, Liability, TransactionPayload, IncomePayload, LiabilityPayload } from '../types';
 import { formatCurrencyINR } from '../utils/formatters';
 import { getPacingReport } from '../services/api';
@@ -47,6 +50,8 @@ export const ActivityPage: React.FC = () => {
   const txState = useTransactions();
   const incState = useIncome();
   const liabState = useLiabilities();
+  const payState = usePaymentMethods();
+  const creditCards = payState.active.filter((m) => m.kind === 'credit_card');
 
   // Toast feedback state
   const [toast, setToast] = useState<{ message: string | null; type: 'success' | 'error' | 'info' | 'warning' }>({
@@ -92,6 +97,9 @@ export const ActivityPage: React.FC = () => {
   const [isDeletingLiab, setIsDeletingLiab] = useState(false);
   const [historyLiab, setHistoryLiab] = useState<Liability | null>(null);
 
+  const isCardTx = (tx: Transaction | null) =>
+    Boolean(tx?.paymentMethodId && payState.methods.find((m) => m.id === tx.paymentMethodId)?.kind === 'credit_card');
+
   // ── Transaction Action Handlers ───────────────────────────────────────────
 
   const handleOpenAddTx = () => {
@@ -107,9 +115,11 @@ export const ActivityPage: React.FC = () => {
   const handleSaveTx = async (payload: TransactionPayload) => {
     if (editingTx) {
       await txState.edit(editingTx.id, payload);
+      payState.refetch();
       showToast('Transaction updated successfully.');
     } else {
       await txState.add(payload);
+      payState.refetch();
       if (payload.type === 'Investment') {
         celebrate({ kind: 'fireworks', title: `${formatCurrencyINR(payload.amount)} invested`, subtitle: 'Your future self says thanks. Investments this month just went up.' });
       } else {
@@ -135,7 +145,9 @@ export const ActivityPage: React.FC = () => {
     setIsDeletingTx(true);
     try {
       await txState.remove(deletingTx.id);
-      showToast(`Transaction deleted. ₹${deletingTx.amount} refunded to balance.`);
+      payState.refetch();
+      const refundedTo = isCardTx(deletingTx) ? transactionPaymentLabel(deletingTx.paymentMethodId, payState.methods) : 'balance';
+      showToast(`Transaction deleted. ₹${deletingTx.amount} refunded to ${refundedTo}.`);
       setDeletingTx(null);
     } catch (err: any) {
       showToast(err?.response?.data?.error || 'Failed to delete transaction.', 'error');
@@ -338,6 +350,7 @@ export const ActivityPage: React.FC = () => {
               {/* Transactions Ledger Table / Cards */}
               <TransactionTable
                 transactions={txState.paginatedTransactions}
+                paymentMethods={payState.methods}
                 page={txState.page}
                 totalPages={txState.totalPages}
                 onPageChange={txState.setPage}
@@ -357,6 +370,7 @@ export const ActivityPage: React.FC = () => {
             onClose={closeTransaction}
             onSubmit={handleSaveTx}
             initialTransaction={editingTx}
+            paymentMethods={payState.methods}
           />
 
           {/* Delete Transaction Confirmation Dialog */}
@@ -366,7 +380,9 @@ export const ActivityPage: React.FC = () => {
             onConfirm={handleConfirmDeleteTx}
             title="Delete Transaction?"
             message={`Are you sure you want to delete "${deletingTx?.description || 'this transaction'}"?`}
-            warningNote={`Reconciliation Notice: Deleting this transaction will reverse its effect on your operating balance. ${formatCurrencyINR(deletingTx?.amount)} will be refunded back to your account.`}
+            warningNote={isCardTx(deletingTx)
+              ? `Reconciliation Notice: This was a credit card purchase. ${formatCurrencyINR(deletingTx?.amount)} will be returned to the card's available credit, not your bank balance.`
+              : `Reconciliation Notice: Deleting this transaction will reverse its effect on your operating balance. ${formatCurrencyINR(deletingTx?.amount)} will be refunded back to your account.`}
             confirmLabel="Delete Transaction"
             variant="danger"
             isLoading={isDeletingTx}
@@ -459,6 +475,8 @@ export const ActivityPage: React.FC = () => {
                   </span>
                 </div>
               </div>
+
+              <CreditCardsSection cards={creditCards} onChanged={payState.refetch} notify={showToast} />
 
               {/* Liability Summary Strip */}
               <LiabilitySummaryStrip

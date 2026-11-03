@@ -61,7 +61,9 @@ const transactionSchema = new mongoose.Schema(
     typeConfidence: { type: Number, default: 0 },
     needsReview: { type: Boolean, default: false },
     liabilityId: { type: String },
-    scheduledFor: { type: Date }
+    scheduledFor: { type: Date },
+    // null = unspecified (bank balance), 'cash', or a PaymentMethod id
+    paymentMethodId: { type: String, default: null }
   },
   { timestamps: true, versionKey: false }
 );
@@ -86,6 +88,9 @@ transactionSchema.index({ userId: 1, liabilityId: 1, timestamp: -1 });
 
 // Compound index to support fast user and household date-range time-series queries
 transactionSchema.index({ userId: 1, timestamp: -1 });
+
+// Supports credit card statement queries (purchases on a card since a date)
+transactionSchema.index({ userId: 1, paymentMethodId: 1, timestamp: -1 });
 
 // Export schema constants for use in controllers/validators
 export { CANONICAL_V3_CATEGORIES, VALID_CATEGORIES, VALID_TYPES };

@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { getTransactions, createTransaction, updateTransaction, deleteTransaction } from '../services/api';
 import type { Transaction, TransactionPayload } from '../types';
 import { getTransactionDate } from '../utils/formatters';
+import { dateKeyToDate, zdate, zparts } from '../utils/timezone';
 
 export type DateFilterOption = 'all' | 'this_month' | 'last_month' | 'last_3_months' | 'custom';
 export type SortOption = 'newest' | 'oldest' | 'amount_desc' | 'amount_asc';
@@ -125,8 +126,8 @@ export function useTransactions(): UseTransactionsReturn {
   // Filtering & Sorting
   const filteredTransactions = useMemo(() => {
     const now = new Date();
-    const currentYear = now.getFullYear();
-    const currentMonth = now.getMonth();
+    const currentYear = zparts(now).year;
+    const currentMonth = zparts(now).month;
 
     return transactions.filter((tx) => {
       // Search
@@ -153,31 +154,27 @@ export function useTransactions(): UseTransactionsReturn {
       // Date filter
       const txDate = getTransactionDate(tx);
       if (dateFilter === 'this_month') {
-        if (txDate.getFullYear() !== currentYear || txDate.getMonth() !== currentMonth) {
+        if (zparts(txDate).year !== currentYear || zparts(txDate).month !== currentMonth) {
           return false;
         }
       } else if (dateFilter === 'last_month') {
-        const lastMonthDate = new Date(currentYear, currentMonth - 1, 1);
-        const lastMonthYear = lastMonthDate.getFullYear();
-        const lastMonthMonth = lastMonthDate.getMonth();
-        if (txDate.getFullYear() !== lastMonthYear || txDate.getMonth() !== lastMonthMonth) {
+        const lastMonthDate = zdate(currentYear, currentMonth - 1, 1);
+        const lastMonthYear = zparts(lastMonthDate).year;
+        const lastMonthMonth = zparts(lastMonthDate).month;
+        if (zparts(txDate).year !== lastMonthYear || zparts(txDate).month !== lastMonthMonth) {
           return false;
         }
       } else if (dateFilter === 'last_3_months') {
-        const threeMonthsAgo = new Date(currentYear, currentMonth - 2, 1);
+        const threeMonthsAgo = zdate(currentYear, currentMonth - 2, 1);
         if (txDate < threeMonthsAgo) {
           return false;
         }
       } else if (dateFilter === 'custom') {
         if (customStartDate) {
-          const start = new Date(customStartDate);
-          start.setHours(0, 0, 0, 0);
-          if (txDate < start) return false;
+          if (txDate < dateKeyToDate(customStartDate)) return false;
         }
         if (customEndDate) {
-          const end = new Date(customEndDate);
-          end.setHours(23, 59, 59, 999);
-          if (txDate > end) return false;
+          if (txDate > dateKeyToDate(customEndDate, true)) return false;
         }
       }
 

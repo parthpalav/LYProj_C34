@@ -9,6 +9,7 @@ import {
   triggerCsvDownload
 } from '../utils/csvExport';
 import { getTransactions, getIncomes, getLiabilities } from '../services/api';
+import { todayKey } from '../utils/timezone';
 
 export type ExportKind = 'transactions' | 'income' | 'liabilities' | 'monthly' | null;
 
@@ -57,7 +58,7 @@ export function useReportExport() {
         return;
       }
       const csv = transactionsToCsv(data);
-      const dateStr = new Date().toISOString().slice(0, 10);
+      const dateStr = todayKey();
       triggerCsvDownload(`finaura_transactions_${dateStr}.csv`, csv);
     } catch {
       setError('Failed to generate transactions CSV.');
@@ -78,7 +79,7 @@ export function useReportExport() {
         return;
       }
       const csv = incomesToCsv(data);
-      const dateStr = new Date().toISOString().slice(0, 10);
+      const dateStr = todayKey();
       triggerCsvDownload(`finaura_income_${dateStr}.csv`, csv);
     } catch {
       setError('Failed to generate income CSV.');
@@ -99,7 +100,7 @@ export function useReportExport() {
         return;
       }
       const csv = liabilitiesToCsv(data);
-      const dateStr = new Date().toISOString().slice(0, 10);
+      const dateStr = todayKey();
       triggerCsvDownload(`finaura_liabilities_${dateStr}.csv`, csv);
     } catch {
       setError('Failed to generate liabilities CSV.');
@@ -119,7 +120,7 @@ export function useReportExport() {
         return;
       }
       const csv = monthlySummariesToCsv(rows);
-      const dateStr = new Date().toISOString().slice(0, 10);
+      const dateStr = todayKey();
       triggerCsvDownload(`finaura_monthly_summaries_${dateStr}.csv`, csv);
     } catch {
       setError('Failed to generate monthly summaries CSV.');

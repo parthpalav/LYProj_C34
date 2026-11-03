@@ -4,6 +4,7 @@ import { Button } from '../ui/Button';
 import { createLiability, getSubscriptionSuggestions } from '../../services/api';
 import { formatCurrencyINR } from '../../utils/formatters';
 import type { SubscriptionSuggestion, Transaction } from '../../types';
+import { zparts } from '../../utils/timezone';
 
 interface ActivityNudgesProps {
   transactions: Transaction[];
@@ -32,7 +33,7 @@ export const ActivityNudges: React.FC<ActivityNudgesProps> = ({ transactions, on
       await createLiability({
         name: s.name, amount: s.amount, category: s.category, type: s.type, frequency: s.frequency,
         startDate: next.toISOString(), autoDeduct: false,
-        ...(s.frequency === 'monthly' ? { dayOfMonth: next.getDate() } : { dayOfWeek: next.getDay() }),
+        ...(s.frequency === 'monthly' ? { dayOfMonth: zparts(next).day } : { dayOfWeek: zparts(next).weekday }),
       });
       setSuggestions((list) => list.filter((x) => x.key !== s.key));
       notify(`Tracking ${s.name} as a ${s.frequency} bill. Find it under Liabilities.`);

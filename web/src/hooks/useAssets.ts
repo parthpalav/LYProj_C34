@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { getAssets, createAsset, updateAsset, deleteAsset } from '../services/api';
 import type { Asset, AssetClass, AssetLiquidity } from '../types';
+import { ASSETS_CHANGED_EVENT } from '../components/plan/AssetReviewModal';
 
 export function getAssetClassLabel(cls: AssetClass | string): string {
   switch (cls) {
@@ -52,6 +53,13 @@ export function useAssets() {
       await fetchAssetsList(false);
     }
     void loadData();
+  }, [fetchAssetsList]);
+
+  // Monthly check-ins from the notification bell update assets outside this hook.
+  useEffect(() => {
+    const onChanged = () => void fetchAssetsList(false);
+    window.addEventListener(ASSETS_CHANGED_EVENT, onChanged);
+    return () => window.removeEventListener(ASSETS_CHANGED_EVENT, onChanged);
   }, [fetchAssetsList]);
 
   const addAsset = useCallback(async (payload: Omit<Asset, 'id'>) => {

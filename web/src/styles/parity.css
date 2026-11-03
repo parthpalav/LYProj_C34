@@ -86,3 +86,11 @@
   .chat-bubble-row { max-width: 90%; }
   .chat-shell { height: calc(100vh - var(--topbar-height) - 150px); }
 }
+
+/* Payment methods (Profile) */
+.pm-list { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 8px; }
+.pm-item { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 1px solid var(--border-default); border-radius: var(--radius-lg); flex-wrap: wrap; }
+.pm-icon { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border-default); color: var(--accent-primary); flex: none; }
+.pm-text { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 180px; }
+.pm-text strong { color: var(--text-primary); font-size: 14px; }
+.pm-text .parity-muted { font-size: 13px; }

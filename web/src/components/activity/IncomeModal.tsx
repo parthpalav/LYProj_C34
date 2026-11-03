@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import type { IncomeRecord, IncomePayload } from '../../types';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
+import { dateInputToISO, dateKey, todayKey } from '../../utils/timezone';
 
 export interface IncomeModalProps {
   isOpen: boolean;
@@ -46,12 +47,12 @@ export const IncomeModal: React.FC<IncomeModalProps> = ({
           setSource(initialIncome.source || 'salary');
           setDescription(initialIncome.description || '');
           const d = initialIncome.timestamp ? new Date(initialIncome.timestamp) : new Date();
-          setDate(d.toISOString().slice(0, 10));
+          setDate(dateKey(d));
         } else {
           setAmount('');
           setSource('salary');
           setDescription('');
-          setDate(new Date().toISOString().slice(0, 10));
+          setDate(todayKey());
         }
         setFormError(null);
         setIsLoading(false);
@@ -79,7 +80,7 @@ export const IncomeModal: React.FC<IncomeModalProps> = ({
         amount: parsedAmount,
         source: source.trim() || 'salary',
         description: description.trim() || 'Income',
-        timestamp: date ? new Date(date).toISOString() : new Date().toISOString(),
+        timestamp: dateInputToISO(date),
       };
 
       await onSubmit(payload);

@@ -36,6 +36,8 @@ import {
   DEFAULT_WITHDRAWAL_RATE,
   DEFAULT_LIFESTYLE_RATIO
 } from '../config/financialRules.js';
+import { resolveTimezone, zonedMonthStart, zonedDateKey } from '../utils/userTime.js';
+import { zoneForecastInput } from './userTimezone.js';
 
 /**
  * Builds a comprehensive, grounded financial context snapshot for the given user.
@@ -114,12 +116,14 @@ export async function buildChatContext(userId) {
   };
 
   // 4. Transaction Aggregations (Current Month, Previous Month, Recent Transactions)
+  // Month windows follow the user's timezone
   const now = new Date();
-  const currentMonthStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
-  const currentMonthEnd = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 0, 23, 59, 59, 999));
+  const tz = resolveTimezone(user.timezone);
+  const currentMonthStart = zonedMonthStart(now, tz);
+  const currentMonthEnd = new Date(zonedMonthStart(now, tz, 1).getTime() - 1);
 
-  const prevMonthStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 1, 1));
-  const prevMonthEnd = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 0, 23, 59, 59, 999));
+  const prevMonthStart = zonedMonthStart(now, tz, -1);
+  const prevMonthEnd = new Date(currentMonthStart.getTime() - 1);
 
   const aggregateMonthTxs = (txs) => {
     let needs = 0;
@@ -195,7 +199,7 @@ export async function buildChatContext(userId) {
     source: i.source || 'salary',
     description: i.description || i.name || i.source,
     amount: Number(i.amount) || 0,
-    timestamp: i.timestamp ? new Date(i.timestamp).toISOString().slice(0, 10) : null
+    timestamp: i.timestamp ? zonedDateKey(i.timestamp, tz) : null
   }));
 
   const income = {
@@ -259,7 +263,7 @@ export async function buildChatContext(userId) {
     category: l.category,
     type: l.type,
     frequency: l.frequency || l.recurrence || 'monthly',
-    nextDueDate: l.nextDueDate ? new Date(l.nextDueDate).toISOString().slice(0, 10) : null,
+    nextDueDate: l.nextDueDate ? zonedDateKey(l.nextDueDate, tz) : null,
     autoDeduct: l.autoDeduct === true,
     status: l.status,
     outstandingBalance: (l.outstandingBalance ?? l.outstandingPrincipal) !== undefined && (l.outstandingBalance ?? l.outstandingPrincipal) !== null ? Number(l.outstandingBalance ?? l.outstandingPrincipal) : null,
@@ -276,7 +280,7 @@ export async function buildChatContext(userId) {
   // 8. FMI Context (Deterministic In-Memory Calculation with Fallback)
   let fmiData;
   try {
-    const annotatedMonthly = annotateTransactions(currentMonthTxs);
+    const annotatedMonthly = annotateTransactions(currentMonthTxs, tz);
     const retirementGoalObj = goalDocs.find(g => /retire/i.test(g.name)) || null;
     const retirementGoal = retirementGoalObj?.targetAmount || Math.round(profile.monthlyIncome * 12 * 20);
 
@@ -286,7 +290,8 @@ export async function buildChatContext(userId) {
       currentAge: profile.age,
       retirementAge: profile.retirementAge,
       retirementGoal,
-      previousShortfall: 0
+      previousShortfall: 0,
+      timezone: tz
     };
 
     const computed = calculateFMI(fmiUser, annotatedMonthly);
@@ -353,7 +358,7 @@ export async function buildChatContext(userId) {
       assets: assetDocs,
       liabilities: liabilityDocs
     };
-    const predSnapshot = buildPredictabilitySnapshot(predData);
+    const predSnapshot = buildPredictabilitySnapshot(...zoneForecastInput(predData));
 
     if (predSnapshot && predSnapshot.forecastStatus?.available) {
       fireData = {

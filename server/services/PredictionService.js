@@ -1,3 +1,11 @@
+import { DEFAULT_TIMEZONE, toZoned } from '../utils/userTime.js';
+
+const dayOfMonth = (date, tz) => toZoned(date, tz).getUTCDate();
+const monthLength = (date, tz) => {
+  const z = toZoned(date, tz);
+  return new Date(Date.UTC(z.getUTCFullYear(), z.getUTCMonth() + 1, 0)).getUTCDate();
+};
+
 /**
  * PredictionService — Anticipatory Financial Forecasting
  *
@@ -11,9 +19,9 @@
  * @param {Date}  today — optional date override for testability
  * @returns {{ daysPassed, daysInMonth, avgDailySpend, predictedMonthlySpend, totalSpentSoFar }}
  */
-function predictMonthlySpend(transactions = [], today = new Date()) {
-  const daysPassed  = today.getDate();
-  const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+function predictMonthlySpend(transactions = [], today = new Date(), tz = DEFAULT_TIMEZONE) {
+  const daysPassed  = dayOfMonth(today, tz);
+  const daysInMonth = monthLength(today, tz);
 
   const totalSpentSoFar = transactions.reduce((acc, tx) => acc + Math.abs(tx.amount || 0), 0);
 
@@ -33,12 +41,12 @@ function predictMonthlySpend(transactions = [], today = new Date()) {
  * predictOverspend — Legacy overspend risk detector (used by dashboard + alerts)
  * Now uses real calendar math instead of hardcoded day values.
  */
-function predictOverspend(userTransactions = [], currentBalance = 0) {
+function predictOverspend(userTransactions = [], currentBalance = 0, tz = DEFAULT_TIMEZONE) {
   if (!userTransactions.length) return { risk: 'low', predictedShortfall: 0 };
 
   const today      = new Date();
-  const daysPassed = today.getDate();
-  const daysInMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate();
+  const daysPassed = dayOfMonth(today, tz);
+  const daysInMonth = monthLength(today, tz);
   const daysRemaining = Math.max(1, daysInMonth - daysPassed);
 
   const totalSpend = userTransactions.reduce((acc, tx) => acc + (tx.amount || 0), 0);

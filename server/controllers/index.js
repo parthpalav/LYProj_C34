@@ -35,6 +35,9 @@ import User        from '../models/User.js';
 import Transaction, { VALID_CATEGORIES, VALID_TYPES } from '../models/Transaction.js';
 import Liability   from '../models/Liability.js';
 import { calculateNextDueDate } from './liabilityController.js';
+import { SUPPORTED_TIMEZONES, resolveTimezone, zonedMonthStart, zonedDateKey } from '../utils/userTime.js';
+import { getUserTimezone } from '../services/userTimezone.js';
+import { resolvePaymentMethodId, chargeSource, refundSource, PaymentMethodError } from '../services/PaymentMethodService.js';
 import FMIHistory  from '../models/FMIHistory.js';
 import Alert       from '../models/Alert.js';
 import Envelope    from '../models/Envelope.js';
@@ -67,6 +70,7 @@ function normalizeTransaction(tx) {
     isAnomaly:           tx.isAnomaly ?? false,
     liabilityId:         tx.liabilityId,
     scheduledFor:        tx.scheduledFor,
+    paymentMethodId:     tx.paymentMethodId ?? null,
     createdAt:           tx.createdAt,
     updatedAt:           tx.updatedAt
   };
@@ -507,6 +511,12 @@ router.put('/user/profile', async (req, res, next) => {
     if (payload.expectedWithdrawalRate !== undefined) updateFields.expectedWithdrawalRate = Number(payload.expectedWithdrawalRate);
     if (payload.lifestyleAdjustmentRatio !== undefined) updateFields.lifestyleAdjustmentRatio = Number(payload.lifestyleAdjustmentRatio);
     if (payload.emergencyFundTargetMonths !== undefined) updateFields.emergencyFundTargetMonths = Number(payload.emergencyFundTargetMonths);
+    if (payload.timezone !== undefined) {
+      if (!SUPPORTED_TIMEZONES.includes(payload.timezone)) {
+        return res.status(400).json({ success: false, error: 'Unsupported timezone' });
+      }
+      updateFields.timezone = payload.timezone;
+    }
 
     // Validation checks
     if (updateFields.age !== undefined) {
@@ -804,7 +814,7 @@ router.get('/transactions', async (req, res, next) => {
     const txDocs  = await Transaction.find({ userId }).sort({ timestamp: -1 }).lean();
     const txList  = txDocs.map(normalizeTransaction);
     const withAnomaly = detectAnomaly(txList);
-    const annotated   = annotateTransactions(withAnomaly);
+    const annotated   = annotateTransactions(withAnomaly, await getUserTimezone(userId));
     res.json(annotated);
   } catch (error) { next(error); }
 });
@@ -830,8 +840,16 @@ router.post('/transactions', async (req, res, next) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
+    let paymentMethodId;
+    try {
+      paymentMethodId = await resolvePaymentMethodId(userId, req.body.paymentMethodId);
+    } catch (err) {
+      if (err instanceof PaymentMethodError) return res.status(err.status).json({ error: err.message });
+      throw err;
+    }
+
     // Call sentiment analyzer and ML classifier (graceful fallback if ML is offline)
-    const sentimentResult = analyzeSentiment(rawDesc, new Date());
+    const sentimentResult = analyzeSentiment(rawDesc, new Date(), resolveTimezone(userExists.timezone));
     let classificationSource = req.body.classificationSource || 'manual';
     let mlData = {
       category: null,
@@ -958,11 +976,13 @@ router.post('/transactions', async (req, res, next) => {
       }
     }
 
-    // Deduct current balance only after all validations pass
-    await User.findOneAndUpdate(
-      { id: userId },
-      { $inc: { currentBalance: -debitAmount } }
-    );
+    // Deduct from the bank balance or the credit card only after all validations pass
+    try {
+      await chargeSource(userId, paymentMethodId, debitAmount);
+    } catch (err) {
+      if (err instanceof PaymentMethodError) return res.status(err.status).json({ error: err.message });
+      throw err;
+    }
 
     let tx;
     try {
@@ -983,6 +1003,7 @@ router.post('/transactions', async (req, res, next) => {
         needsReview,
         liabilityId:         validatedLiabilityId,
         scheduledFor:        scheduledFor,
+        paymentMethodId,
         tags:                sentimentResult.tags || [],
         description:         req.body.description || 'manual input',
         timestamp:           req.body.timestamp ? new Date(req.body.timestamp) : new Date()
@@ -993,7 +1014,7 @@ router.post('/transactions', async (req, res, next) => {
         try {
           const liability = await Liability.findOne({ id: validatedLiabilityId });
           if (liability) {
-            const nextDate = calculateNextDueDate(liability, expectedNextDueDate);
+            const nextDate = calculateNextDueDate(liability, expectedNextDueDate, await getUserTimezone(userId));
             const updated = await Liability.findOneAndUpdate(
               { id: validatedLiabilityId, nextDueDate: expectedNextDueDate },
               { $set: { nextDueDate: nextDate } },
@@ -1009,19 +1030,13 @@ router.post('/transactions', async (req, res, next) => {
       }
     } catch (createError) {
       if (createError.code === 11000 && createError.keyPattern && createError.keyPattern.liabilityId && createError.keyPattern.scheduledFor) {
-         // Revert user balance on concurrency failure
-         await User.findOneAndUpdate(
-           { id: userId },
-           { $inc: { currentBalance: debitAmount } }
-         );
+         // Revert the charge on concurrency failure
+         await refundSource(userId, paymentMethodId, debitAmount);
          return res.status(409).json({ error: 'The scheduled payment was just fulfilled by another transaction. Please try again.' });
       }
 
-      // revert user balance on create failure
-      await User.findOneAndUpdate(
-        { id: userId },
-        { $inc: { currentBalance: debitAmount } }
-      );
+      // revert the charge on create failure
+      await refundSource(userId, paymentMethodId, debitAmount);
       throw createError;
     }
 
@@ -1043,7 +1058,7 @@ router.put('/transactions/:id', async (req, res, next) => {
     const EDITABLE_FIELDS = [
       'amount', 'category', 'type', 'description', 'sentiment', 'confidenceScore', 
       'timestamp', 'tags', 'categorySource', 'typeSource', 'categoryConfidence', 
-      'typeConfidence', 'needsReview', 'liabilityId'
+      'typeConfidence', 'needsReview', 'liabilityId', 'paymentMethodId'
     ];
     const sanitized = {};
     for (const field of EDITABLE_FIELDS) {
@@ -1066,6 +1081,15 @@ router.put('/transactions/:id', async (req, res, next) => {
           return res.status(400).json({ error: 'Invalid or inactive liability' });
         }
         sanitized.liabilityId = liability.id;
+      }
+    }
+
+    if (sanitized.paymentMethodId !== undefined) {
+      try {
+        sanitized.paymentMethodId = await resolvePaymentMethodId(userId, sanitized.paymentMethodId);
+      } catch (err) {
+        if (err instanceof PaymentMethodError) return res.status(err.status).json({ error: err.message });
+        throw err;
       }
     }
 
@@ -1131,16 +1155,30 @@ router.put('/transactions/:id', async (req, res, next) => {
     }
 
     let updated;
-    if (sanitized.amount !== undefined) {
+    if (sanitized.amount !== undefined || sanitized.paymentMethodId !== undefined) {
       const oldTx = await Transaction.findOne({ id: req.params.id, userId }).lean();
       if (!oldTx) return res.status(404).json({ error: 'Transaction not found' });
 
-      // Expense accounting: balanceDelta = oldAmount - newAmount
-      // If new amount is smaller, balance increases (+); if new amount is larger, balance decreases (-).
-      const balanceDelta = oldTx.amount - sanitized.amount;
+      // Move the money: give the old amount back to the old source, then take the
+      // new amount from the new source (bank balance or credit card).
+      const oldSource = oldTx.paymentMethodId ?? null;
+      const newSource = sanitized.paymentMethodId !== undefined ? sanitized.paymentMethodId : oldSource;
+      const newAmount = sanitized.amount !== undefined ? sanitized.amount : oldTx.amount;
+      const moved = oldSource !== newSource || oldTx.amount !== newAmount;
+      const undoMove = async () => {
+        await refundSource(userId, newSource, newAmount);
+        await chargeSource(userId, oldSource, oldTx.amount, { force: true });
+      };
 
-      if (balanceDelta !== 0) {
-        await User.findOneAndUpdate(userFilter(userId), { $inc: { currentBalance: balanceDelta } });
+      if (moved) {
+        await refundSource(userId, oldSource, oldTx.amount);
+        try {
+          await chargeSource(userId, newSource, newAmount);
+        } catch (err) {
+          await chargeSource(userId, oldSource, oldTx.amount, { force: true });
+          if (err instanceof PaymentMethodError) return res.status(err.status).json({ error: err.message });
+          throw err;
+        }
       }
 
       try {
@@ -1151,15 +1189,11 @@ router.put('/transactions/:id', async (req, res, next) => {
         ).lean();
 
         if (!updated) {
-          if (balanceDelta !== 0) {
-            await User.findOneAndUpdate(userFilter(userId), { $inc: { currentBalance: -balanceDelta } });
-          }
+          if (moved) await undoMove();
           return res.status(404).json({ error: 'Transaction not found' });
         }
       } catch (updateErr) {
-        if (balanceDelta !== 0) {
-          await User.findOneAndUpdate(userFilter(userId), { $inc: { currentBalance: -balanceDelta } });
-        }
+        if (moved) await undoMove();
         throw updateErr;
       }
     } else {
@@ -1188,18 +1222,20 @@ router.delete('/transactions/:id', async (req, res, next) => {
 
     const refundAmount = oldTx.amount;
 
-    // Refund operating balance for deleted expense
-    await User.findOneAndUpdate(userFilter(userId), { $inc: { currentBalance: refundAmount } });
+    const source = oldTx.paymentMethodId ?? null;
+
+    // Refund the bank balance or credit card for the deleted expense
+    await refundSource(userId, source, refundAmount);
 
     try {
       const deleted = await Transaction.findOneAndDelete({ id: req.params.id, userId }).lean();
       if (!deleted) {
-        // Rollback balance refund if delete fails
-        await User.findOneAndUpdate(userFilter(userId), { $inc: { currentBalance: -refundAmount } });
+        // Rollback refund if delete fails
+        await chargeSource(userId, source, refundAmount, { force: true });
         return res.status(404).json({ error: 'Transaction not found' });
       }
     } catch (deleteErr) {
-      await User.findOneAndUpdate(userFilter(userId), { $inc: { currentBalance: -refundAmount } });
+      await chargeSource(userId, source, refundAmount, { force: true });
       throw deleteErr;
     }
 
@@ -1219,17 +1255,16 @@ router.get('/fmi', async (req, res, next) => {
     const user = await User.findOne({ id: userId }).lean();
     const goals = await Goal.find({ userId }).lean();
 
-    // Get current month's transactions
-    const monthStart = new Date();
-    monthStart.setDate(1);
-    monthStart.setHours(0, 0, 0, 0);
+    // Get current month's transactions (month boundaries in the user's timezone)
+    const tz = resolveTimezone(user?.timezone);
+    const monthStart = zonedMonthStart(new Date(), tz);
     const monthlyExpenses = await Transaction.find({
       userId,
       timestamp: { $gte: monthStart }
     }).sort({ timestamp: -1 }).lean();
 
     // Annotate transactions for behavioral analysis
-    const annotated = annotateTransactions(monthlyExpenses);
+    const annotated = annotateTransactions(monthlyExpenses, tz);
 
     // Derive user age from dateOfBirth
     const currentAge = user?.dateOfBirth
@@ -1249,7 +1284,8 @@ router.get('/fmi', async (req, res, next) => {
       currentAge,
       retirementAge:     Number(user?.retirementAge ?? 60),
       retirementGoal,
-      previousShortfall: 0 // no historical shortfall tracking yet
+      previousShortfall: 0, // no historical shortfall tracking yet
+      timezone:          tz
     };
 
     // Calculate FMI (fully deterministic, no external service)
@@ -1257,7 +1293,7 @@ router.get('/fmi', async (req, res, next) => {
 
     // Persist or update today's FMI snapshot (at most 1 per user per calendar day)
     const now = new Date();
-    const snapshotDate = now.toISOString().slice(0, 10); // "YYYY-MM-DD" in UTC
+    const snapshotDate = zonedDateKey(now, tz); // "YYYY-MM-DD" in the user's timezone
 
     try {
       await FMIHistory.findOneAndUpdate(
@@ -1330,10 +1366,11 @@ router.get('/alerts', async (req, res, next) => {
       : totalInc - totalExp;
 
     const recentSpending = txDocs.slice(0, 4).map((tx) => tx.amount);
-    const overspend = predictOverspend(recentSpending, currentBalance);
+    const tz = resolveTimezone(user.timezone);
+    const overspend = predictOverspend(recentSpending, currentBalance, tz);
     const lowBalance = detectLowBalanceRisk(currentBalance, totalInc * 0.2);
 
-    const patterns = detectBehavioralPatterns(annotateTransactions(txDocs));
+    const patterns = detectBehavioralPatterns(annotateTransactions(txDocs, tz), tz);
     const dynamic = [];
 
     if (overspend.risk === 'high') {
@@ -1421,10 +1458,11 @@ router.get('/dashboard', async (req, res, next) => {
     const totalExp = txDocs.reduce((s, t) => s + t.amount, 0);
     const currentBalance = user?.currentBalance ?? (totalInc - totalExp);
 
-    const annotated = annotateTransactions(txDocs);
-    const patterns = detectBehavioralPatterns(annotated);
+    const tz = resolveTimezone(user?.timezone);
+    const annotated = annotateTransactions(txDocs, tz);
+    const patterns = detectBehavioralPatterns(annotated, tz);
     const recentSpending = txDocs.slice(-14).map((tx) => ({ amount: tx.amount, timestamp: tx.timestamp }));
-    const overspendData = predictOverspend(recentSpending, envelopes?.savings || 0);
+    const overspendData = predictOverspend(recentSpending, envelopes?.savings || 0, tz);
     const lowBalanceRisk = detectLowBalanceRisk(currentBalance, totalInc * 0.15, currentFmi?.score ?? 50);
     const microActions = generateMicroActions(currentFmi?.score ?? 50, overspendData);
 
@@ -1444,10 +1482,8 @@ router.get('/dashboard', async (req, res, next) => {
       pct: Math.round((val / totalRecentExp) * 100)
     }));
 
-    // ── Wants vs Needs vs Investment breakdown (current month) ──
-    const monthStart = new Date();
-    monthStart.setDate(1);
-    monthStart.setHours(0, 0, 0, 0);
+    // ── Wants vs Needs vs Investment breakdown (current month, user's timezone) ──
+    const monthStart = zonedMonthStart(new Date(), tz);
     const thisMonthTx = txDocs.filter((t) => new Date(t.timestamp) >= monthStart);
 
     const typeMap = { Need: 0, Want: 0, Investment: 0 };
@@ -1794,7 +1830,7 @@ router.get('/fis', async (req, res, next) => {
     const txDocs   = await Transaction.find({ userId }).sort({ timestamp: -1 }).lean();
     const fmiHist  = await FMIHistory.find({ userId }).sort({ timestamp: 1 }).lean();
     const envelope = await Envelope.findOne({ userId }).lean();
-    const annotated = annotateTransactions(txDocs);
+    const annotated = annotateTransactions(txDocs, await getUserTimezone(userId));
     const fisData = calculateFIS(annotated, fmiHist, envelope);
     res.json({ ...fisData, timestamp: new Date().toISOString() });
   } catch (error) { next(error); }
@@ -1808,8 +1844,9 @@ router.get('/behavior', async (req, res, next) => {
   try {
     const userId = req.user.id;
     const txDocs = await Transaction.find({ userId }).sort({ timestamp: -1 }).limit(50).lean();
-    const annotated = annotateTransactions(txDocs);
-    const patterns  = detectBehavioralPatterns(annotated);
+    const tz = await getUserTimezone(userId);
+    const annotated = annotateTransactions(txDocs, tz);
+    const patterns  = detectBehavioralPatterns(annotated, tz);
     res.json({ patterns, analyzedCount: txDocs.length });
   } catch (error) { next(error); }
 });
@@ -1822,8 +1859,9 @@ router.get('/reports/pacing', async (req, res, next) => {
   try {
     const userId = req.user.id;
     // Month range: start of current month -> start of next month
-    const start = new Date(); start.setDate(1); start.setHours(0,0,0,0);
-    const end = new Date(start); end.setMonth(start.getMonth() + 1);
+    const tz = await getUserTimezone(userId);
+    const start = zonedMonthStart(new Date(), tz);
+    const end = zonedMonthStart(new Date(), tz, 1);
 
     const agg = await Transaction.aggregate([
       { $match: { userId, timestamp: { $gte: start, $lt: end } } },
@@ -1858,9 +1896,10 @@ router.get('/reports/heatmap', async (req, res, next) => {
   try {
     const userId = req.user.id;
     const since = new Date(); since.setDate(since.getDate() - 365);
+    const timezone = await getUserTimezone(userId);
     const agg = await Transaction.aggregate([
       { $match: { userId, timestamp: { $gte: since } } },
-      { $group: { _id: { $dateToString: { format: '%Y-%m-%d', date: '$timestamp' } }, total: { $sum: { $abs: '$amount' } } } },
+      { $group: { _id: { $dateToString: { format: '%Y-%m-%d', date: '$timestamp', timezone } }, total: { $sum: { $abs: '$amount' } } } },
       { $project: { date: '$_id', totalAmount: '$total', _id: 0 } },
       { $sort: { date: 1 } }
     ]);
@@ -1877,8 +1916,9 @@ router.get('/reports/weekly', async (req, res, next) => {
     const incomes  = await Income.find({ userId, timestamp: { $gte: oneWeekAgo } }).lean();
     const envelope = await Envelope.findOne({ userId }).lean();
 
-    const annotated  = annotateTransactions(txDocs);
-    const report     = generateWeeklyReport(annotated, fmiHist);
+    const tz = await getUserTimezone(userId);
+    const annotated  = annotateTransactions(txDocs, tz);
+    const report     = generateWeeklyReport(annotated, fmiHist, tz);
     const totalIncome = incomes.reduce((s, i) => s + i.amount, 0);
     const savingsRate = envelope && totalIncome > 0
       ? Math.round((envelope.savings / totalIncome) * 100)

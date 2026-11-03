@@ -4,4 +4,15 @@ import { defineConfig } from 'vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  server: {
+    host: true,
+    allowedHosts: true, // shortcut: any Host header, fine for a temporary tunnel
+    proxy: {
+      '/api': {
+        target: 'http://localhost:4000',
+        // Drop Origin so the server's CORS check treats this as a same-origin proxied call.
+        configure: (proxy) => proxy.on('proxyReq', (req) => req.removeHeader('origin')),
+      },
+    },
+  },
 })

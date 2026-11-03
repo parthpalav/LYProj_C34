@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import type { WeeklyReport, PacingReport } from '../../types';
+import { getAppTimezone } from '../../utils/timezone';
 
 interface WeeklyReportViewProps {
   report: WeeklyReport | null;
@@ -33,7 +34,7 @@ export const WeeklyReportView: React.FC<WeeklyReportViewProps> = ({
     const n = new Date();
     const pw = new Date(n.getTime() - 7 * 24 * 60 * 60 * 1000);
     const dateOptions: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short', year: 'numeric' };
-    return `${pw.toLocaleDateString('en-US', dateOptions)} – ${n.toLocaleDateString('en-US', dateOptions)}`;
+    return `${pw.toLocaleDateString('en-US', { ...dateOptions, timeZone: getAppTimezone() })} – ${n.toLocaleDateString('en-US', { ...dateOptions, timeZone: getAppTimezone() })}`;
   }, []);
 
   if (loading) {

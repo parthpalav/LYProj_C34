@@ -1,4 +1,5 @@
 // ── Keyword dictionaries ────────────────────────────────────
+import { DEFAULT_TIMEZONE, zonedHour } from '../utils/userTime.js';
 const STRESS_KEYWORDS   = ['loan', 'emi', 'urgent', 'debt', 'borrow', 'lend', 'overdue',
                             'penalty', 'late', 'fine', 'unpaid', 'default', 'interest'];
 const POSITIVE_KEYWORDS = ['salary', 'bonus', 'refund', 'cashback', 'reward', 'income',
@@ -18,9 +19,9 @@ const TRAVEL_KEYWORDS   = ['uber', 'ola', 'rapido', 'metro', 'auto', 'bus', 'tra
  *   score: -1 to 1
  *   tags: string[] (e.g. ['impulse', 'late-night', 'stress'])
  */
-function analyzeSentiment(description = '', timestamp = new Date()) {
+function analyzeSentiment(description = '', timestamp = new Date(), tz = DEFAULT_TIMEZONE) {
   const text = (description || '').toLowerCase();
-  const hour = new Date(timestamp).getHours();
+  const hour = zonedHour(new Date(timestamp), tz);
 
   let score = 0;
   const tags = [];
@@ -63,9 +64,9 @@ function analyzeSentiment(description = '', timestamp = new Date()) {
 /**
  * Batch-annotate a list of transactions with sentiment data.
  */
-function annotateTransactions(txList) {
+function annotateTransactions(txList, tz = DEFAULT_TIMEZONE) {
   return txList.map((tx) => {
-    const result = analyzeSentiment(tx.description, tx.timestamp);
+    const result = analyzeSentiment(tx.description, tx.timestamp, tz);
     return { ...tx, sentiment: result.sentiment, sentimentScore: result.score, tags: result.tags };
   });
 }

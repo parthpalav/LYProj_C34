@@ -1,4 +1,5 @@
 import type { User } from '../types';
+import { getAppTimezone, dateKey, startOfDay } from './timezone';
 
 /**
  * Extracts 1-2 uppercase initials from a user's name or email.
@@ -102,6 +103,7 @@ export function formatDateShort(dateInput?: string | Date | null): string {
   return new Intl.DateTimeFormat('en-IN', {
     day: 'numeric',
     month: 'short',
+    timeZone: getAppTimezone(),
   }).format(d);
 }
 
@@ -116,6 +118,7 @@ export function formatDateFull(dateInput?: string | Date | null): string {
     day: 'numeric',
     month: 'short',
     year: 'numeric',
+    timeZone: getAppTimezone(),
   }).format(d);
 }
 
@@ -129,6 +132,7 @@ export function formatMonthYear(dateInput?: string | Date | null): string {
   return new Intl.DateTimeFormat('en-IN', {
     month: 'short',
     year: 'numeric',
+    timeZone: getAppTimezone(),
   }).format(d);
 }
 
@@ -140,15 +144,11 @@ export function formatRelativeDate(dateInput?: string | Date | null): string {
   const d = new Date(dateInput);
   if (isNaN(d.getTime())) return '—';
 
-  const now = new Date();
-  const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-  const startOfYesterday = startOfToday - 86400000;
-  const targetDay = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
-
-  if (targetDay === startOfToday) {
+  const target = dateKey(d);
+  if (target === dateKey(new Date())) {
     return 'Today';
   }
-  if (targetDay === startOfYesterday) {
+  if (target === dateKey(startOfDay(new Date(), -1))) {
     return 'Yesterday';
   }
   return formatDateShort(d);

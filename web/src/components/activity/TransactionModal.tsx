@@ -1,16 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
-import type { Transaction, TransactionPayload, TransactionType, ClassifierSuggestion } from '../../types';
-import { CANONICAL_CATEGORIES, VALID_TRANSACTION_TYPES } from '../../types';
-import { classifyExpense } from '../../services/api';
+import type { Transaction, TransactionPayload, TransactionType, ClassifierSuggestion, Liability, PaymentMethod } from '../../types';
+import { CANONICAL_CATEGORIES, VALID_TRANSACTION_TYPES, CASH_METHOD_ID } from '../../types';
+import { PAYMENT_KIND_LABEL, paymentMethodLabel } from '../../utils/paymentMethods';
+import { classifyExpense, getLiabilities } from '../../services/api';
+import { formatCurrencyINR } from '../../utils/formatters';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
 import { Sparkles } from 'lucide-react';
+import { dateInputToISO, dateKey, getAppTimezone, todayKey } from '../../utils/timezone';
 
 export interface TransactionModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (payload: TransactionPayload) => Promise<void>;
   initialTransaction?: Transaction | null;
+  /** Saved payment methods (archived included, so an old transaction's method still shows). */
+  paymentMethods?: PaymentMethod[];
 }
 
 export const TransactionModal: React.FC<TransactionModalProps> = ({
@@ -18,6 +23,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
   onClose,
   onSubmit,
   initialTransaction,
+  paymentMethods = [],
 }) => {
   const isEditing = Boolean(initialTransaction);
 
@@ -32,6 +38,22 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
   const [suggestion, setSuggestion] = useState<ClassifierSuggestion | null>(null);
   const [isClassifying, setIsClassifying] = useState<boolean>(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Optional link to a recurring bill (mobile QuickAdd parity)
+  const [liabilities, setLiabilities] = useState<Liability[]>([]);
+  const [liabilityId, setLiabilityId] = useState<string>('');
+  const [markAsPaid, setMarkAsPaid] = useState<boolean>(true);
+  const linked = liabilities.find((l) => l.id === liabilityId) ?? null;
+
+  // How it was paid: '' = unspecified (bank balance), 'cash', or a saved method id
+  const [paymentMethodId, setPaymentMethodId] = useState<string>('');
+  const originalMethodId = initialTransaction?.paymentMethodId ?? '';
+  const methodOptions = paymentMethods.filter((m) => m.status === 'active' || m.id === originalMethodId);
+  const chosenCard = paymentMethods.find((m) => m.id === paymentMethodId && m.kind === 'credit_card');
+  // When editing a purchase already on this card, its old amount is part of what's been used.
+  const cardAvailable = chosenCard?.credit
+    ? chosenCard.credit.available + (isEditing && originalMethodId === chosenCard.id ? initialTransaction?.amount ?? 0 : 0)
+    : null;
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [formError, setFormError] = useState<string | null>(null);
@@ -49,19 +71,22 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
           setCategory(initialTransaction.category || CANONICAL_CATEGORIES[0]);
           setType(initialTransaction.type || 'Need');
           const txDate = initialTransaction.timestamp ? new Date(initialTransaction.timestamp) : new Date();
-          setDate(txDate.toISOString().slice(0, 10));
+          setDate(dateKey(txDate));
           setUserTouchedCategory(true);
         } else {
           setAmount('');
           setDescription('');
           setCategory(CANONICAL_CATEGORIES[0]);
           setType('Need');
-          setDate(new Date().toISOString().slice(0, 10));
+          setDate(todayKey());
           setUserTouchedCategory(false);
         }
         setSuggestion(null);
         setFormError(null);
         setIsLoading(false);
+        setLiabilityId('');
+        setMarkAsPaid(true);
+        setPaymentMethodId(initialTransaction?.paymentMethodId ?? '');
       }
     };
     init();
@@ -69,6 +94,16 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
       mounted = false;
     };
   }, [isOpen, initialTransaction]);
+
+  // Active bills for the optional link; only offered when adding.
+  useEffect(() => {
+    if (!isOpen || isEditing) return;
+    let mounted = true;
+    getLiabilities()
+      .then((list) => mounted && setLiabilities(list.filter((l) => l.status === 'active' || !l.status)))
+      .catch(() => mounted && setLiabilities([]));
+    return () => { mounted = false; };
+  }, [isOpen, isEditing]);
 
   // Debounced classifier call on description change (in Add mode)
   useEffect(() => {
@@ -139,6 +174,11 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
       return;
     }
 
+    if (cardAvailable !== null && parsedAmount > cardAvailable) {
+      setFormError(`This is more than the ${formatCurrencyINR(cardAvailable)} available on ${chosenCard?.nickname}. Pick another payment method or pay the card bill first.`);
+      return;
+    }
+
     setIsLoading(true);
     try {
       const payload: TransactionPayload = {
@@ -146,9 +186,11 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
         category,
         type,
         description: description.trim() || 'Expense',
-        timestamp: date ? new Date(date).toISOString() : new Date().toISOString(),
+        timestamp: dateInputToISO(date),
         classificationSource: isEditing ? 'manual' : (userTouchedCategory ? 'manual' : (suggestion?.classificationSource || 'manual')),
       };
+      // On edit, only send it when changed: a removed card can't be re-selected, only kept.
+      if (!isEditing || paymentMethodId !== originalMethodId) payload.paymentMethodId = paymentMethodId || null;
       // Tell the server where the label came from: only a real user pick is learned as a merchant correction.
       if (!isEditing) {
         const usedSuggestion = !userTouchedCategory && suggestion?.category === category;
@@ -165,6 +207,11 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
           });
         } else {
           Object.assign(payload, { categorySource: 'default', typeSource: 'default', categoryConfidence: 0, typeConfidence: 0 });
+        }
+        if (linked) {
+          payload.liabilityId = linked.id;
+          // Covers the scheduled auto-deduction so the server doesn't charge it twice.
+          if (linked.autoDeduct && markAsPaid && linked.nextDueDate) payload.expectedScheduledFor = String(linked.nextDueDate);
         }
       }
 
@@ -221,6 +268,27 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
             />
           </div>
           {amountError ? <span id="tx-amount-error" className="entry-field-error" role="status">{amountError}</span> : <span id="tx-amount-help" className="form-help-text">Enter the amount paid. It will be recorded as an expense.</span>}
+        </div>
+
+        {/* Payment method */}
+        <div className="form-group">
+          <label htmlFor="tx-method" className="form-label">Paid with</label>
+          <select id="tx-method" className="form-select" value={paymentMethodId} onChange={(e) => setPaymentMethodId(e.target.value)}>
+            <option value="">Not specified (bank balance)</option>
+            <option value={CASH_METHOD_ID}>Cash</option>
+            {methodOptions.map((m) => (
+              <option key={m.id} value={m.id}>
+                {PAYMENT_KIND_LABEL[m.kind]} · {paymentMethodLabel(m)}{m.status === 'archived' ? ' (removed)' : ''}
+              </option>
+            ))}
+          </select>
+          <span className="form-help-text">
+            {cardAvailable !== null
+              ? `Charged to the card, not your bank balance. ${formatCurrencyINR(cardAvailable)} available.`
+              : paymentMethods.length === 0
+                ? 'Add UPI or cards in your profile to pick them here.'
+                : 'Comes out of your bank balance.'}
+          </span>
         </div>
 
         {/* Description Input */}
@@ -328,6 +396,34 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
             onChange={(e) => setDate(e.target.value)}
           />
         </div>
+
+        {/* Optional bill link */}
+        {!isEditing && liabilities.length > 0 && (
+          <div className="form-group">
+            <label htmlFor="tx-liability" className="form-label">Link to a bill (optional)</label>
+            <select
+              id="tx-liability"
+              className="form-select"
+              value={liabilityId}
+              onChange={(e) => setLiabilityId(e.target.value)}
+            >
+              <option value="">Not a bill payment</option>
+              {liabilities.map((l) => (
+                <option key={l.id} value={l.id}>
+                  {l.name} · {formatCurrencyINR(l.amount)} · {l.frequency}{l.autoDeduct ? ' · Auto deduct' : ''}
+                </option>
+              ))}
+            </select>
+            {linked?.autoDeduct && linked.nextDueDate && (
+              <label className="form-help-text" style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 6 }}>
+                <input type="checkbox" checked={markAsPaid} onChange={(e) => setMarkAsPaid(e.target.checked)} />
+                {markAsPaid
+                  ? `Covers the payment due ${new Date(linked.nextDueDate).toLocaleDateString('en-IN', { timeZone: getAppTimezone(), day: 'numeric', month: 'short' })}, so it won't auto-deduct twice.`
+                  : 'Record as an extra payment. The scheduled deduction still runs.'}
+              </label>
+            )}
+          </div>
+        )}
 
         {/* Form Actions */}
         <div className="modal-footer">

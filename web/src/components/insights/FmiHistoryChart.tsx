@@ -107,7 +107,7 @@ export const FmiHistoryChart: React.FC<FmiHistoryChartProps> = ({
                 name="FMI Score"
                 stroke="#6366f1"
                 strokeWidth={3}
-                dot={{ r: 4, fill: '#6366f1', strokeWidth: 2, stroke: '#fff' }}
+                dot={{ r: 4, fill: '#6366f1', strokeWidth: 2, stroke: 'var(--bg-surface)' }}
                 activeDot={{ r: 6, fill: '#4f46e5' }}
                 animationDuration={600}
               />

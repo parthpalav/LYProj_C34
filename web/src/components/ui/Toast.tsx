@@ -1,4 +1,5 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 
 export interface ToastProps {
   message: string | null;
@@ -9,7 +10,8 @@ export interface ToastProps {
 export const Toast: React.FC<ToastProps> = ({ message, type = 'success', onClose }) => {
   if (!message) return null;
 
-  return (
+  // Portal so a transformed page section can't trap the fixed toast.
+  return createPortal(
     <div className={`toast-notification toast-${type}`} role="status">
       <div className="toast-icon">
         {type === 'success' && (
@@ -50,6 +52,7 @@ export const Toast: React.FC<ToastProps> = ({ message, type = 'success', onClose
           ×
         </button>
       )}
-    </div>
+    </div>,
+    document.body,
   );
 };

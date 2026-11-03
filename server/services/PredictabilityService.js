@@ -52,6 +52,8 @@ import {
   MAX_ANNUAL_CONTRIBUTION_GROWTH_RATE
 } from '../config/financialRules.js';
 import { attachMonteCarloSimulation } from '../utils/monteCarloAdapter.js';
+import { totalCreditCardOutstanding } from './PaymentMethodService.js';
+import { zoneForecastInput } from './userTimezone.js';
 
 /**
  * Pure deterministic snapshot builder.
@@ -613,11 +615,12 @@ export async function getPredictabilitySnapshot(userIdOrUser, options = {}) {
 
   const queryUid = user.id || uid;
 
-  const [incomes, transactions, assets, liabilities] = await Promise.all([
+  const [incomes, transactions, assets, liabilities, creditCardOutstanding] = await Promise.all([
     Income.find({ userId: queryUid }).lean(),
     Transaction.find({ userId: queryUid }).lean(),
     Asset.find({ userId: queryUid }).lean(),
-    Liability.find({ userId: queryUid, status: { $ne: 'deleted' } }).lean()
+    Liability.find({ userId: queryUid, status: { $ne: 'deleted' } }).lean(),
+    totalCreditCardOutstanding(queryUid)
   ]);
 
   const data = {
@@ -625,11 +628,14 @@ export async function getPredictabilitySnapshot(userIdOrUser, options = {}) {
     incomes,
     transactions,
     assets,
-    liabilities
+    liabilities,
+    creditCardOutstanding
   };
 
-  const resolved = resolveForecastInputs(data, options);
-  const snapshot = buildPredictabilitySnapshot(data, options);
+  const [zonedData, zonedOptions] = zoneForecastInput(data, options);
+  const resolved = resolveForecastInputs(zonedData, zonedOptions);
+  const snapshot = buildPredictabilitySnapshot(zonedData, zonedOptions);
+  snapshot.generatedAt = new Date().toISOString(); // real instant, not the zoned reference date
 
-  return attachMonteCarloSimulation(snapshot, resolved, options);
+  return attachMonteCarloSimulation(snapshot, resolved, zonedOptions);
 }

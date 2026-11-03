@@ -126,7 +126,7 @@ export const LiabilityHistoryModal: React.FC<LiabilityHistoryModalProps> = ({
 
         {isLoading ? (
           <div className="history-loading">
-            <div className="animate-spin" style={{ width: 24, height: 24, border: '2px solid #cbd5e1', borderTopColor: '#2563eb', borderRadius: '50%' }} />
+            <div className="animate-spin" style={{ width: 24, height: 24, border: '2px solid var(--border-strong)', borderTopColor: '#2563eb', borderRadius: '50%' }} />
             <span>Loading history...</span>
           </div>
         ) : historyTransactions.length === 0 ? (

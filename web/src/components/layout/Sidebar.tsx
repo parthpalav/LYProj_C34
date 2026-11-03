@@ -11,6 +11,8 @@ import {
   Settings,
   LogOut,
   X,
+  Sparkles,
+  PiggyBank,
 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { UserAvatar } from '../ui/UserAvatar';
@@ -79,6 +81,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen = false, onClose }) => 
             <ReceiptText size={18} />
             <span>Activity</span>
           </NavLink>
+          <NavLink to="/app/roundups" className={getLinkClass} onClick={onClose}>
+            <PiggyBank size={18} />
+            <span>Round-ups</span>
+          </NavLink>
 
           <div className="sidebar-section-label">Understand</div>
           <NavLink to="/app/insights" className={getLinkClass} onClick={onClose}>
@@ -88,6 +94,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen = false, onClose }) => 
           <NavLink to="/app/family" className={getLinkClass} onClick={onClose}>
             <Users size={18} />
             <span>Family</span>
+          </NavLink>
+          <NavLink to="/app/assistant" className={getLinkClass} onClick={onClose}>
+            <Sparkles size={18} />
+            <span>Assistant</span>
           </NavLink>
 
           <div className="sidebar-section-label">Future</div>

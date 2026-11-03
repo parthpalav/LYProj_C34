@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { getFMI } from '../services/api';
 import type { FMIResponse, FMIRecord } from '../types';
+import { getAppTimezone } from '../utils/timezone';
 
 export type FmiHistoryRange = '30d' | '90d' | '6m' | '1y' | 'all';
 
@@ -61,8 +62,8 @@ export function useFmiInsights() {
       const d = new Date(item.timestamp);
       return {
         date: item.timestamp,
-        dateLabel: d.toLocaleDateString('en-IN', { month: 'short', day: 'numeric' }),
-        fullDate: d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+        dateLabel: d.toLocaleDateString('en-IN', { timeZone: getAppTimezone(), month: 'short', day: 'numeric' }),
+        fullDate: d.toLocaleDateString('en-IN', { timeZone: getAppTimezone(), day: 'numeric', month: 'short', year: 'numeric' }),
         score: item.score,
       };
     });

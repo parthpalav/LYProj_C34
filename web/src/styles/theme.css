@@ -1,0 +1,282 @@
+/* Light/dark theme. The app reads semantic tokens (index.css :root) plus this palette;
+   data-theme on <html> is set by utils/theme.ts before first paint (index.html). */
+
+:root {
+  color-scheme: light;
+  --glass-rgb: 255 255 255;
+  --text-muted: var(--text-tertiary);
+
+  --slate-50: #f8fafc;
+  --slate-100: #f1f5f9;
+  --slate-200: #e2e8f0;
+  --slate-300: #cbd5e1;
+  --slate-400: #94a3b8;
+  --slate-500: #64748b;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-800: #1e293b;
+  --slate-900: #0f172a;
+
+  --blue-50: #eff6ff;
+  --blue-100: #dbeafe;
+  --blue-200: #bfdbfe;
+  --blue-700: #1d4ed8;
+  --blue-800: #1e40af;
+  --blue-900: #1e3a8a;
+
+  --amber-50: #fffbeb;
+  --amber-200: #fde68a;
+  --amber-700: #b45309;
+  --amber-800: #92400e;
+  --amber-900: #78350f;
+
+  --red-50: #fef2f2;
+  --red-200: #fecaca;
+  --red-700: #b91c1c;
+  --red-800: #991b1b;
+
+  --emerald-50: #ecfdf5;
+  --emerald-100: #dcfce7;
+  --emerald-200: #a7f3d0;
+  --emerald-700: #047857;
+  --emerald-800: #065f46;
+  --emerald-900: #14532d;
+
+  --violet-50: #f5f3ff;
+  --violet-200: #ddd6fe;
+  --violet-700: #6d28d9;
+
+  --cyan-50: #ecfeff;
+  --cyan-200: #a5f3fc;
+  --cyan-700: #0e7490;
+
+  /* accent text that must stay readable on either surface */
+  --ink-violet: #7c3aed;
+  --ink-indigo: #4f46e5;
+  --ink-red: #dc2626;
+  --ink-rose: #e11d48;
+  --ink-blue: #2563eb;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --glass-rgb: 20 23 31;
+
+  --bg-app: #0b0d12;
+  --bg-surface: #14171f;
+  --bg-surface-subtle: #1b1f29;
+  --bg-surface-elevated: #1e2230;
+  --bg-overlay: rgba(0, 0, 0, 0.6);
+  --surface-glass: rgba(20, 23, 31, 0.72);
+
+  --text-primary: #f1f5f9;
+  --text-secondary: #a3adbf;
+  --text-tertiary: #7f8a9e;
+  --text-inverse: #ffffff;
+
+  --border-subtle: #1e2230;
+  --border-default: #262b37;
+  --border-strong: #363c4b;
+  --border-hover: #454c5d;
+
+  --accent-primary: #3b82f6;
+  --accent-hover: #60a5fa;
+  --accent-subtle: rgba(59, 130, 246, 0.16);
+  --accent-text: #93c5fd;
+
+  --danger: #ef4444; /* white button text needs the deeper red */
+  --danger-hover: #dc2626;
+  --danger-subtle: rgba(248, 113, 113, 0.14);
+  --danger-text: #fca5a5;
+
+  --success: #34d399;
+  --success-subtle: rgba(52, 211, 153, 0.14);
+  --success-text: #6ee7b7;
+
+  --warning: #fbbf24;
+  --warning-subtle: rgba(251, 191, 36, 0.14);
+  --warning-text: #fcd34d;
+
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.45), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.55), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+  --shadow-glow: 0 0 24px rgba(59, 130, 246, 0.18);
+  --shadow-drawer: -4px 0 24px rgba(0, 0, 0, 0.5);
+  --focus-ring: 0 0 0 3px rgba(59, 130, 246, 0.45);
+
+  /* neutrals flip: light shades become surfaces, dark shades become text */
+  --slate-50: #1b1f29;
+  --slate-100: #1e2230;
+  --slate-200: #262b37;
+  --slate-300: #363c4b;
+  --slate-400: #6b7588;
+  --slate-500: #8a94a8;
+  --slate-600: #a3adbf;
+  --slate-700: #c4ccd8;
+  --slate-800: #e2e8f0;
+  --slate-900: #f1f5f9;
+
+  /* tints become translucent washes, deep text shades become pastel text */
+  --blue-50: rgba(96, 165, 250, 0.12);
+  --blue-100: rgba(96, 165, 250, 0.18);
+  --blue-200: rgba(96, 165, 250, 0.32);
+  --blue-700: #60a5fa;
+  --blue-800: #93c5fd;
+  --blue-900: #bfdbfe;
+
+  --amber-50: rgba(251, 191, 36, 0.1);
+  --amber-200: rgba(251, 191, 36, 0.3);
+  --amber-700: #fbbf24;
+  --amber-800: #fcd34d;
+  --amber-900: #fde68a;
+
+  --red-50: rgba(248, 113, 113, 0.1);
+  --red-200: rgba(248, 113, 113, 0.3);
+  --red-700: #fca5a5;
+  --red-800: #fca5a5;
+
+  --emerald-50: rgba(52, 211, 153, 0.1);
+  --emerald-100: rgba(52, 211, 153, 0.16);
+  --emerald-200: rgba(52, 211, 153, 0.3);
+  --emerald-700: #34d399;
+  --emerald-800: #6ee7b7;
+  --emerald-900: #a7f3d0;
+
+  --violet-50: rgba(167, 139, 250, 0.12);
+  --violet-200: rgba(167, 139, 250, 0.3);
+  --violet-700: #c4b5fd;
+
+  --cyan-50: rgba(34, 211, 238, 0.1);
+  --cyan-200: rgba(34, 211, 238, 0.3);
+  --cyan-700: #67e8f9;
+
+  --ink-violet: #a78bfa;
+  --ink-indigo: #a5b4fc;
+  --ink-red: #f87171;
+  --ink-rose: #fb7185;
+  --ink-blue: #60a5fa;
+}
+
+/* Soft cross-fade when the theme flips (not on first paint: the class is added after load). */
+html.theme-anim,
+html.theme-anim *,
+html.theme-anim *::before,
+html.theme-anim *::after {
+  transition: background-color 260ms ease, border-color 260ms ease, color 200ms ease, fill 260ms ease !important;
+}
+
+:root[data-theme='dark'] body::before {
+  background:
+    radial-gradient(ellipse 60% 50% at 80% 8%, rgba(59, 130, 246, 0.09), transparent 70%),
+    radial-gradient(ellipse 50% 40% at 12% 88%, rgba(124, 58, 237, 0.07), transparent 70%);
+}
+
+:root[data-theme='dark'] .recharts-tooltip-cursor { fill: rgba(255, 255, 255, 0.04); }
+:root[data-theme='dark'] .recharts-cartesian-grid line { stroke: var(--border-default); }
+:root[data-theme='dark'] .recharts-text { fill: var(--text-tertiary); }
+:root[data-theme='dark'] img { color-scheme: normal; }
+:root[data-theme='dark'] select option { background: var(--bg-surface); color: var(--text-primary); }
+
+/* ── Theme toggle ─────────────────────────────────────────────── */
+.theme-toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid var(--border-default);
+  background: var(--bg-surface-subtle);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+}
+.theme-toggle:hover { border-color: var(--border-hover); transform: rotate(-12deg); }
+.theme-toggle:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.theme-toggle svg { animation: theme-icon-pop 320ms var(--ease-spring); }
+@keyframes theme-icon-pop {
+  from { transform: scale(0.4) rotate(-90deg); opacity: 0; }
+  to { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+.theme-segment {
+  display: inline-flex;
+  padding: 3px;
+  gap: 2px;
+  border-radius: 999px;
+  background: var(--bg-surface-subtle);
+  border: 1px solid var(--border-default);
+}
+.theme-segment button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.theme-segment button[aria-pressed='true'] {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
+}
+.theme-segment button:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+/* Notification bell (beside the theme toggle) */
+.notif-root { position: relative; }
+.notif-bell { position: relative; }
+.notif-bell:hover { transform: none; }
+.notif-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--danger);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: center;
+}
+.notif-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 50;
+  width: min(320px, calc(100vw - 24px));
+  max-height: 70vh;
+  overflow-y: auto;
+  border: 1px solid var(--border-default);
+  border-radius: 12px;
+  background: var(--bg-surface-elevated);
+  box-shadow: var(--shadow-sm);
+}
+.notif-head { padding: 10px 14px; font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); border-bottom: 1px solid var(--border-default); }
+.notif-empty { padding: 18px 14px; font-size: 0.875rem; color: var(--text-secondary); }
+.notif-list { list-style: none; margin: 0; padding: 0; }
+.notif-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px 12px;
+  width: 100%;
+  padding: 10px 14px;
+  border: 0;
+  background: transparent;
+  color: var(--text-primary);
+  text-align: left;
+  cursor: pointer;
+}
+.notif-item:hover, .notif-item:focus-visible { background: var(--bg-surface-subtle); outline: none; }
+.notif-title { font-size: 0.875rem; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.notif-amount { font-size: 0.875rem; font-variant-numeric: tabular-nums; }
+.notif-when { grid-column: 1 / -1; font-size: 0.75rem; color: var(--text-secondary); }
+.notif-when-urgent { color: var(--danger-text); font-weight: 600; }

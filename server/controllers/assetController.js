@@ -1,12 +1,87 @@
 import crypto from 'node:crypto';
 import Asset from '../models/Asset.js';
 import { logger } from '../utils/logger.js';
+import { fixedIncomeSnapshot, isFixedIncomeType } from '../utils/fixedIncome.js';
+import { refreshFixedIncomeValues } from '../services/AssetValuationService.js';
 
 const VALID_ASSET_CLASSES = ['FIRE_INVESTABLE', 'SEMI_LIQUID', 'NON_INVESTABLE'];
 const VALID_LIQUIDITIES = ['liquid', 'locked', 'restricted'];
 
 function userFilter(userId) {
   return { userId: String(userId) };
+}
+
+const MAX_TENURE_MONTHS = 600;
+
+/** Validates the optional SIP / FD / RD fields present in `body`. Returns { fields } or { error, code }. */
+function parsePlanFields(body, now = new Date()) {
+  const fields = {};
+  const blank = (v) => v === null || v === '';
+  const { monthlyContribution, principal, tenureMonths, startDate } = body;
+
+  if (monthlyContribution !== undefined) {
+    const v = blank(monthlyContribution) ? null : Number(monthlyContribution);
+    if (v !== null && !(Number.isFinite(v) && v >= 0)) {
+      return { error: 'Monthly SIP / installment must be a non-negative number', code: 'INVALID_MONTHLY_CONTRIBUTION' };
+    }
+    fields.monthlyContribution = v;
+  }
+  if (principal !== undefined) {
+    const v = blank(principal) ? null : Number(principal);
+    if (v !== null && !(Number.isFinite(v) && v > 0)) {
+      return { error: 'Deposit amount must be greater than 0', code: 'INVALID_PRINCIPAL' };
+    }
+    fields.principal = v;
+  }
+  if (tenureMonths !== undefined) {
+    const v = blank(tenureMonths) ? null : Number(tenureMonths);
+    if (v !== null && !(Number.isInteger(v) && v >= 1 && v <= MAX_TENURE_MONTHS)) {
+      return { error: `Tenure must be a whole number of months between 1 and ${MAX_TENURE_MONTHS}`, code: 'INVALID_TENURE' };
+    }
+    fields.tenureMonths = v;
+  }
+  if (startDate !== undefined) {
+    const v = blank(startDate) ? null : new Date(startDate);
+    if (v !== null && (isNaN(v.getTime()) || v > now)) {
+      return { error: 'Start date must be a valid date that is not in the future', code: 'INVALID_START_DATE' };
+    }
+    fields.startDate = v;
+  }
+  return { fields };
+}
+
+/**
+ * FD/RD: compute currentValue from rate, start date and tenure. Other types drop the deposit-only fields.
+ * Returns an error object when an FD/RD was given some deposit details but not enough to value it.
+ */
+function applyFixedIncome(asset, now = new Date()) {
+  if (!isFixedIncomeType(asset.assetType)) {
+    asset.principal = null;
+    asset.startDate = null;
+    asset.tenureMonths = null;
+    return null;
+  }
+  const snap = fixedIncomeSnapshot(asset, now);
+  if (snap) {
+    asset.currentValue = snap.currentValue;
+    return null;
+  }
+  const isRD = asset.assetType === 'Recurring Deposit';
+  const touched = asset.principal != null || asset.startDate != null || asset.tenureMonths != null
+    || (isRD && asset.monthlyContribution != null);
+  if (!touched) return null; // legacy FD/RD with a manual value only
+  return {
+    error: `${asset.assetType} needs ${isRD ? 'a monthly installment' : 'a deposit amount'}, interest rate, start date and tenure`,
+    code: 'INCOMPLETE_FIXED_INCOME'
+  };
+}
+
+/** API shape: the stored asset plus maturity details for a complete FD/RD. */
+function serialize(asset, now = new Date()) {
+  const obj = typeof asset.toObject === 'function' ? asset.toObject() : asset;
+  const snap = fixedIncomeSnapshot(obj, now);
+  if (!snap) return obj;
+  return { ...obj, currentValue: snap.currentValue, maturityValue: snap.maturityValue, maturityDate: snap.maturityDate, matured: snap.matured };
 }
 
 /**
@@ -16,8 +91,9 @@ function userFilter(userId) {
 export const getAssets = async (req, res, next) => {
   try {
     const userId = req.user.id || req.user._id;
+    await refreshFixedIncomeValues(userFilter(userId));
     const assets = await Asset.find(userFilter(userId)).sort({ createdAt: -1 }).lean();
-    res.json({ success: true, data: assets });
+    res.json({ success: true, data: assets.map((a) => serialize(a)) });
   } catch (error) {
     logger.error('[assetController] Error fetching assets:', error);
     next(error);
@@ -41,6 +117,7 @@ export const createAsset = async (req, res, next) => {
       liquidity,
       notes
     } = req.body;
+    const now = new Date();
 
     // Validation
     if (!name || typeof name !== 'string' || !name.trim()) {
@@ -67,7 +144,14 @@ export const createAsset = async (req, res, next) => {
       });
     }
 
-    const numValue = Number(currentValue);
+    const plan = parsePlanFields(req.body, now);
+    if (plan.error) {
+      return res.status(400).json({ success: false, error: plan.error, code: plan.code });
+    }
+
+    // A complete FD/RD gets its value computed below, so currentValue may be omitted.
+    const computed = isFixedIncomeType(assetType.trim()) && (currentValue === undefined || currentValue === null || currentValue === '');
+    const numValue = computed ? 0 : Number(currentValue);
     if (!Number.isFinite(numValue) || numValue < 0) {
       return res.status(400).json({
         success: false,
@@ -100,7 +184,7 @@ export const createAsset = async (req, res, next) => {
 
     const cleanLiquidity = (liquidity && VALID_LIQUIDITIES.includes(liquidity))
       ? liquidity
-      : 'liquid';
+      : (isFixedIncomeType(assetType) ? 'locked' : 'liquid'); // deposits can't be spent until maturity
 
     const assetId = crypto.randomUUID();
 
@@ -114,14 +198,25 @@ export const createAsset = async (req, res, next) => {
       annualReturnRate: cleanAnnualReturnRate,
       includedInFireCorpus: isIncludedInFire,
       liquidity: cleanLiquidity,
-      notes: typeof notes === 'string' ? notes.trim() : ''
+      notes: typeof notes === 'string' ? notes.trim() : '',
+      ...plan.fields,
+      lastReviewedAt: now
     });
+
+    const fixedError = applyFixedIncome(newAsset, now);
+    if (fixedError || (computed && !fixedIncomeSnapshot(newAsset, now))) {
+      return res.status(400).json({
+        success: false,
+        error: fixedError?.error || 'Current value must be a non-negative number',
+        code: fixedError?.code || 'INVALID_CURRENT_VALUE'
+      });
+    }
 
     await newAsset.save();
 
     res.status(201).json({
       success: true,
-      data: newAsset
+      data: serialize(newAsset, now)
     });
   } catch (error) {
     logger.error('[assetController] Error creating asset:', error);
@@ -148,6 +243,7 @@ export const updateAsset = async (req, res, next) => {
       notes
     } = req.body;
 
+    const now = new Date();
     const existing = await Asset.findOne({ id, ...userFilter(userId) });
     if (!existing) {
       return res.status(404).json({
@@ -246,11 +342,27 @@ export const updateAsset = async (req, res, next) => {
       existing.notes = typeof notes === 'string' ? notes.trim() : '';
     }
 
+    const plan = parsePlanFields(req.body, now);
+    if (plan.error) {
+      return res.status(400).json({ success: false, error: plan.error, code: plan.code });
+    }
+    existing.set(plan.fields);
+
+    const fixedError = applyFixedIncome(existing, now);
+    if (fixedError) {
+      return res.status(400).json({ success: false, ...fixedError });
+    }
+
+    // Confirming value or return counts as this month's review.
+    if (currentValue !== undefined || annualReturnRate !== undefined) {
+      existing.lastReviewedAt = now;
+    }
+
     await existing.save();
 
     res.json({
       success: true,
-      data: existing
+      data: serialize(existing, now)
     });
   } catch (error) {
     logger.error('[assetController] Error updating asset:', error);

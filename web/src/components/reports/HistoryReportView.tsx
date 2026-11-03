@@ -238,10 +238,10 @@ export const HistoryReportView: React.FC<HistoryReportViewProps> = ({
             <div className="report-chart-box">
               <ResponsiveContainer width="100%" height={320}>
                 <ComposedChart data={summaries} margin={{ top: 20, right: 20, left: 10, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                  <XAxis dataKey="periodLabel" stroke="#64748b" fontSize={12} tickLine={false} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border-default)" />
+                  <XAxis dataKey="periodLabel" stroke="var(--text-tertiary)" fontSize={12} tickLine={false} />
                   <YAxis
-                    stroke="#64748b"
+                    stroke="var(--text-tertiary)"
                     fontSize={12}
                     tickLine={false}
                     tickFormatter={(val) => `₹${(val / 1000).toFixed(0)}k`}
@@ -279,10 +279,10 @@ export const HistoryReportView: React.FC<HistoryReportViewProps> = ({
               <div className="report-chart-box">
                 <ResponsiveContainer width="100%" height={240}>
                   <ComposedChart data={summaries} margin={{ top: 15, right: 15, left: -10, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                    <XAxis dataKey="periodLabel" stroke="#64748b" fontSize={11} tickLine={false} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--border-default)" />
+                    <XAxis dataKey="periodLabel" stroke="var(--text-tertiary)" fontSize={11} tickLine={false} />
                     <YAxis
-                      stroke="#64748b"
+                      stroke="var(--text-tertiary)"
                       fontSize={11}
                       domain={[0, 100]}
                       tickLine={false}
@@ -316,10 +316,10 @@ export const HistoryReportView: React.FC<HistoryReportViewProps> = ({
               <div className="report-chart-box">
                 <ResponsiveContainer width="100%" height={240}>
                   <ComposedChart data={summaries} margin={{ top: 15, right: 15, left: -10, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                    <XAxis dataKey="periodLabel" stroke="#64748b" fontSize={11} tickLine={false} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--border-default)" />
+                    <XAxis dataKey="periodLabel" stroke="var(--text-tertiary)" fontSize={11} tickLine={false} />
                     <YAxis
-                      stroke="#64748b"
+                      stroke="var(--text-tertiary)"
                       fontSize={11}
                       domain={[40, 100]}
                       tickLine={false}

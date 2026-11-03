@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { getIncome, getIncomeFlow, createIncome, updateIncome, deleteIncome } from '../services/api';
 import type { IncomeRecord, IncomePayload, IncomeFlowResponse } from '../types';
+import { zparts } from '../utils/timezone';
 
 export interface UseIncomeReturn {
   incomes: IncomeRecord[];
@@ -63,8 +64,8 @@ export function useIncome(): UseIncomeReturn {
 
   const summary = useMemo(() => {
     const now = new Date();
-    const currentYear = now.getFullYear();
-    const currentMonth = now.getMonth();
+    const currentYear = zparts(now).year;
+    const currentMonth = zparts(now).month;
 
     let total = 0;
     let thisMonth = 0;
@@ -73,7 +74,7 @@ export function useIncome(): UseIncomeReturn {
       const amt = Number(inc.amount) || 0;
       total += amt;
       const d = new Date(inc.timestamp);
-      if (!isNaN(d.getTime()) && d.getFullYear() === currentYear && d.getMonth() === currentMonth) {
+      if (!isNaN(d.getTime()) && zparts(d).year === currentYear && zparts(d).month === currentMonth) {
         thisMonth += amt;
       }
     }

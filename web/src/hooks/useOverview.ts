@@ -24,6 +24,7 @@ import type {
   CashFlowMonth,
 } from '../types';
 import { getTransactionDate } from '../utils/formatters';
+import { zdate, zparts } from '../utils/timezone';
 
 export interface OverviewState {
   dashboard: DashboardData | null;
@@ -174,8 +175,8 @@ export function useOverview() {
 
     // Current month income & expenses
     const now = new Date();
-    const startOfCurrentMonth = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0, 0);
-    const endOfCurrentMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+    const startOfCurrentMonth = zdate(zparts(now).year, zparts(now).month, 1, 0, 0, 0, 0);
+    const endOfCurrentMonth = zdate(zparts(now).year, zparts(now).month + 1, 0, 23, 59, 59, 999);
 
     const currentMonthIncome = incomeData
       .filter((inc) => {

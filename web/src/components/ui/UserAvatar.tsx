@@ -42,9 +42,10 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({ user, size = 'md' }) => 
         letterSpacing: '0.5px',
         userSelect: 'none',
         flexShrink: 0,
+        overflow: 'hidden',
       }}
     >
-      {initials}
+      {user?.avatar ? <img src={user.avatar} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : initials}
     </div>
   );
 };

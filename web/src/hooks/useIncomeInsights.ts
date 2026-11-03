@@ -8,6 +8,7 @@ import type {
   IncomeTrendPoint,
   IncomeSourceSummary,
 } from '../types';
+import { getAppTimezone, zdate, zparts } from '../utils/timezone';
 
 export type IncomeRange = '6m' | '12m' | 'all';
 
@@ -58,11 +59,11 @@ export function useIncomeInsights() {
     else if (range === 'all') count = 24;
 
     for (let i = count - 1; i >= 0; i--) {
-      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      const year = d.getFullYear();
-      const month = d.getMonth() + 1;
+      const d = zdate(zparts(now).year, zparts(now).month - i, 1);
+      const year = zparts(d).year;
+      const month = zparts(d).month + 1;
       const key = `${year}-${String(month).padStart(2, '0')}`;
-      const label = d.toLocaleDateString('en-IN', { month: 'short', year: 'numeric' });
+      const label = d.toLocaleDateString('en-IN', { timeZone: getAppTimezone(), month: 'short', year: 'numeric' });
       result.push({ key, label, year, month });
     }
 
@@ -79,7 +80,7 @@ export function useIncomeInsights() {
     incomes.forEach((inc) => {
       const d = new Date(inc.timestamp);
       if (!isNaN(d.getTime())) {
-        const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+        const key = `${zparts(d).year}-${String(zparts(d).month + 1).padStart(2, '0')}`;
         const entry = map.get(key);
         if (entry) {
           entry.amount += Number(inc.amount) || 0;

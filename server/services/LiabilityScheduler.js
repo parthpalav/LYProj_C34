@@ -4,7 +4,9 @@ import Liability from '../models/Liability.js';
 import Transaction from '../models/Transaction.js';
 import User from '../models/User.js';
 import { calculateNextDueDate } from '../controllers/liabilityController.js';
+import { getUserTimezone } from './userTimezone.js';
 import { logger } from '../utils/logger.js';
+import { refreshFixedIncomeValues } from './AssetValuationService.js';
 
 let schedulerInterval = null;
 
@@ -178,7 +180,7 @@ export async function processSingleLiability(liability, now = new Date(), staleT
     // Step 4: Finalize the Liability (Advance nextDueDate and clear processing state)
     // Only workers holding the current processingToken may finalize!
     // Derive nextDate from scheduledFor (the occurrence being processed) to preserve recurrence cadence
-    const nextDate = calculateNextDueDate(liability, scheduledFor);
+    const nextDate = calculateNextDueDate(liability, scheduledFor, await getUserTimezone(liability.userId));
     const finalized = await Liability.findOneAndUpdate(
       {
         id: liability.id,
@@ -235,11 +237,16 @@ export async function processLiabilities() {
 export function startScheduler() {
   if (schedulerInterval) return;
 
+  // FD/RD values accrue daily; keep the stored value current for every reader of Asset.
+  const refreshDeposits = () => refreshFixedIncomeValues().catch((err) => logger.error('[scheduler] FD/RD value refresh failed:', err));
+
   // Run immediately on start, then periodically
   processLiabilities();
+  refreshDeposits();
 
   schedulerInterval = setInterval(() => {
     processLiabilities();
+    refreshDeposits();
   }, POLL_INTERVAL);
 
   logger.info(`Liability scheduler started. Polling every ${POLL_INTERVAL / 1000 / 60} minutes.`);

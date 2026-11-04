@@ -15,6 +15,8 @@ import { User } from '../types';
 import { createStyles, radius, typeScale, useTheme } from '../theme';
 import { enterUp } from '../motion';
 import { formatCurrency } from '../utils/format';
+import { DEFAULT_TIMEZONE, TIMEZONE_OPTIONS } from '../utils/timezone';
+import { Sheet } from '../components/ui/Sheet';
 import { Card } from '../components/ui/Card';
 import { Chip, ListRow, SectionHeader } from '../components/ui/Bits';
 import { Button } from '../components/ui/Button';
@@ -99,6 +101,9 @@ export function ProfileScreen(): React.ReactElement {
   const [avatarRenderKey, setAvatarRenderKey] = useState(0);
   const [form, setForm] = useState<Record<string, string>>({});
   const [editDOB, setEditDOB] = useState<Date>(new Date(2000, 0, 1));
+  const [tzOpen, setTzOpen] = useState(false);
+  const [tzBusy, setTzBusy] = useState(false);
+  const timezone = user?.timezone ?? DEFAULT_TIMEZONE;
   const set = (key: string) => (v: string) => { setForm((f) => ({ ...f, [key]: v })); setEditError(''); };
 
   const shownAvatar = user?.avatarLocalUri || user?.avatar || null;
@@ -231,6 +236,23 @@ export function ProfileScreen(): React.ReactElement {
     }
   };
 
+  const saveTimezone = async (tz: string) => {
+    setTzOpen(false);
+    if (!user || tz === timezone) return;
+    setTzBusy(true);
+    try {
+      const res = await updateUserProfileApi({ timezone: tz });
+      const updated = (res?.user ?? { ...user, timezone: tz }) as User;
+      setStoreUser(updated);
+      setAuthUser(updated);
+      toast('Timezone saved', { subtitle: 'Bills, card statements and reports now follow it.' });
+    } catch (err: any) {
+      toast("Couldn't save the timezone", { tone: 'error', subtitle: err?.response?.data?.error });
+    } finally {
+      setTzBusy(false);
+    }
+  };
+
   const confirmSignOut = () => {
     Alert.alert('Sign out of FINAURA?', 'You can sign back in any time with your email and password.', [
       { text: 'Cancel', style: 'cancel' },
@@ -248,7 +270,8 @@ export function ProfileScreen(): React.ReactElement {
     { icon: 'pie-chart', tint: c.info, title: 'Assets', subtitle: 'Investments, deposits and savings', route: 'Assets' },
     { icon: 'wallet', tint: c.purple, title: 'Income streams', subtitle: 'Salary and other receipts', route: 'IncomeFlow' },
     { icon: 'flag', tint: c.success, title: 'Savings goals', subtitle: 'What you are saving towards', route: 'Goals' },
-    { icon: 'calendar', tint: c.warning, title: 'Bills', subtitle: 'Recurring payments and auto-deductions', route: 'Liabilities' },
+    { icon: 'calendar', tint: c.warning, title: 'Bills', subtitle: 'Recurring payments, loans and credit cards', route: 'Liabilities' },
+    { icon: 'card', tint: c.primary, title: 'Payment methods', subtitle: 'UPI, debit and credit cards', route: 'PaymentMethods' },
     { icon: 'people-outline', tint: c.chart[3], title: 'Family & Household', subtitle: 'Combined finances, shared insights & invitations', route: 'Family' },
   ];
 
@@ -346,6 +369,16 @@ export function ProfileScreen(): React.ReactElement {
               <View style={s.divider}>
                 <ListRow icon="gift" tint={c.textMuted} title="Date of birth" subtitle={user?.dateOfBirth ? formatDay(toDate(user.dateOfBirth)) : 'Not set'} onPress={openEditModal} />
               </View>
+              <View style={s.divider}>
+                <ListRow
+                  icon="globe-outline"
+                  tint={c.textMuted}
+                  title="Timezone"
+                  subtitle={tzBusy ? 'Saving…' : TIMEZONE_OPTIONS.find((o) => o.id === timezone)?.label ?? timezone}
+                  onPress={() => !tzBusy && setTzOpen(true)}
+                  accessibilityLabel="Timezone. Sets when days and months start for bills, card statements and reports."
+                />
+              </View>
             </View>
           </Card>
 
@@ -355,6 +388,18 @@ export function ProfileScreen(): React.ReactElement {
       </Animated.ScrollView>
 
       <ScreenHeader title="You" y={y} onBack={() => navigation.goBack()} />
+
+      <Sheet visible={tzOpen} onClose={() => setTzOpen(false)} title="Timezone">
+        <Text style={s.tzIntro}>Sets when days and months start for your reports, bill due dates and card statements.</Text>
+        <ScrollView style={s.tzList}>
+          {TIMEZONE_OPTIONS.map((o) => (
+            <Pressable key={o.id} style={s.tzRow} onPress={() => saveTimezone(o.id)} accessibilityRole="button" accessibilityState={{ selected: o.id === timezone }}>
+              <Text style={s.tzLabel}>{o.label}</Text>
+              {o.id === timezone && <Ionicons name="checkmark-circle" size={20} color={c.primary} />}
+            </Pressable>
+          ))}
+        </ScrollView>
+      </Sheet>
 
       {/* Planning assumptions editor */}
       <Modal visible={editVisible} animationType="slide" presentationStyle="pageSheet" onRequestClose={() => setEditVisible(false)}>
@@ -474,4 +519,8 @@ const useSStyles = createStyles((c) => ({
   row2: { flexDirection: 'row', gap: 12 },
   error: { fontSize: 13, color: c.danger, textAlign: 'center', marginTop: 8 },
   save: { marginTop: 16 },
+  tzIntro: { ...typeScale.caption, color: c.textMuted, marginBottom: 8 },
+  tzList: { maxHeight: 420 },
+  tzRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 14, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: c.border },
+  tzLabel: { fontSize: 15, color: c.text },
 }));

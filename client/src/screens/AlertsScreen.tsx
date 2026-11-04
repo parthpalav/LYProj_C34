@@ -3,12 +3,13 @@ import { RefreshControl, StyleSheet, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { acceptFamilyInvitation, declineFamilyInvitation, getAlerts, getLiabilities, getReceivedFamilyInvitations, getTransactions } from '../services/api';
+import { acceptFamilyInvitation, declineFamilyInvitation, getAlerts, getAssets, getLiabilities, getPaymentMethods, getReceivedFamilyInvitations, getTransactions } from '../services/api';
 import { toast } from '../store/useCelebrationStore';
-import { AlertItem, FamilyInvitation, Liability } from '../types';
+import { AlertItem, Asset, FamilyInvitation } from '../types';
 import { createStyles, typeScale, useTheme } from '../theme';
 import { enterUp, exitFade, listLayout } from '../motion';
-import { dueDatesWithin } from '../utils/bills';
+import { DUE_WINDOW_DAYS, DueAlert, buildDueAlerts, buildReviewAlerts, dueLabel } from '../utils/dueAlerts';
+import { AssetReviewSheet } from '../components/assets/AssetReviewSheet';
 import { formatCurrency } from '../utils/format';
 import { Card } from '../components/ui/Card';
 import { EmptyState, IconTile, ListRow, SectionHeader } from '../components/ui/Bits';
@@ -26,18 +27,22 @@ export default function AlertsScreen() {
   const [alerts, setAlerts] = useState<AlertItem[]>([]);
   const [invites, setInvites] = useState<FamilyInvitation[]>([]);
   const [reviewCount, setReviewCount] = useState(0);
-  const [bills, setBills] = useState<{ l: Liability; date: Date }[]>([]);
+  const [bills, setBills] = useState<DueAlert[]>([]);
+  const [reviews, setReviews] = useState<Asset[]>([]);
+  const [reviewing, setReviewing] = useState<Asset | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
   const load = useCallback(async () => {
-    const [a, inv, tx, liab] = await Promise.allSettled([getAlerts(), getReceivedFamilyInvitations(), getTransactions(), getLiabilities()]);
+    // Each source fails alone: a card outage must not hide bill reminders.
+    const [a, inv, tx, liab, pm, assets] = await Promise.allSettled([getAlerts(), getReceivedFamilyInvitations(), getTransactions(), getLiabilities(), getPaymentMethods(), getAssets()]);
     if (a.status === 'fulfilled') setAlerts(a.value ?? []);
     if (inv.status === 'fulfilled') setInvites((inv.value ?? []).filter((i) => i.status === 'pending'));
     if (tx.status === 'fulfilled') setReviewCount(tx.value.filter((t) => t.needsReview).length);
-    if (liab.status === 'fulfilled') {
-      setBills(liab.value.flatMap((l) => dueDatesWithin(l, 7).slice(0, 1).map((date) => ({ l, date }))).sort((p, q) => p.date.getTime() - q.date.getTime()));
+    if (liab.status === 'fulfilled' || pm.status === 'fulfilled') {
+      setBills(buildDueAlerts(liab.status === 'fulfilled' ? liab.value : [], pm.status === 'fulfilled' ? pm.value : []));
     }
+    if (assets.status === 'fulfilled') setReviews(buildReviewAlerts(assets.value));
     setLoaded(true);
   }, []);
 
@@ -54,7 +59,7 @@ export default function AlertsScreen() {
     }
   };
 
-  const nothing = loaded && !alerts.length && !invites.length && !reviewCount && !bills.length;
+  const nothing = loaded && !alerts.length && !invites.length && !reviewCount && !bills.length && !reviews.length;
 
   return (
     <View style={styles.screen}>
@@ -98,18 +103,38 @@ export default function AlertsScreen() {
             </Card>
           )}
 
+          {reviews.length > 0 && (
+            <>
+              <SectionHeader title="Monthly check-in" />
+              <Card padded={false} style={styles.list}>
+                {reviews.map((a, i) => (
+                  <View key={a.id} style={i > 0 && styles.divider}>
+                    <ListRow
+                      icon="checkmark-done"
+                      tint={c.info}
+                      title={a.name}
+                      subtitle="Confirm value and return"
+                      value={formatCurrency(a.currentValue)}
+                      onPress={() => setReviewing(a)}
+                    />
+                  </View>
+                ))}
+              </Card>
+            </>
+          )}
+
           {bills.length > 0 && (
             <>
-              <SectionHeader title="Due this week" />
+              <SectionHeader title={`Due in the next ${DUE_WINDOW_DAYS} days`} />
               <Card padded={false} style={styles.list}>
-                {bills.map(({ l, date }, i) => (
-                  <View key={l.id} style={i > 0 && styles.divider}>
+                {bills.map((b, i) => (
+                  <View key={b.id} style={i > 0 && styles.divider}>
                     <ListRow
-                      icon="calendar"
-                      tint={c.warning}
-                      title={l.name}
-                      subtitle={`${date.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' })}${l.autoDeduct ? ' · auto deduct' : ''}`}
-                      value={formatCurrency(l.amount)}
+                      icon={b.kind === 'credit_card' ? 'card' : 'calendar'}
+                      tint={b.overdue ? c.danger : c.warning}
+                      title={b.title}
+                      subtitle={`${dueLabel(b)} · ${new Date(b.dueDate).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' })}${b.autoDeduct ? ' · auto deduct' : ''}`}
+                      value={formatCurrency(b.amount)}
                       onPress={() => navigation.navigate('Liabilities')}
                       chevron={false}
                     />
@@ -139,6 +164,7 @@ export default function AlertsScreen() {
         </View>
       </Animated.ScrollView>
       <ScreenHeader title="Notifications" y={y} onBack={() => navigation.goBack()} />
+      <AssetReviewSheet asset={reviewing} onClose={() => setReviewing(null)} onSaved={load} />
     </View>
   );
 }

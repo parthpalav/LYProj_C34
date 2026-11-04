@@ -4,10 +4,11 @@ import { Ionicons } from '@expo/vector-icons';
 import Animated from 'react-native-reanimated';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { getLiabilities, createLiability, updateLiability, deleteLiability, getLiabilitiesPaymentsSummary, getLiabilityTransactions } from '../services/api';
+import { getLiabilities, createLiability, updateLiability, deleteLiability, getLiabilitiesPaymentsSummary, getLiabilityTransactions, getPaymentMethods } from '../services/api';
 import { toast } from '../store/useCelebrationStore';
 import { enterUp, exitFade, listLayout } from '../motion';
-import { Liability, LiabilityPaymentSummary, LiabilityPaymentHistoryResponse, Transaction } from '../types';
+import { Liability, LiabilityPaymentSummary, LiabilityPaymentHistoryResponse, PaymentMethod, Transaction } from '../types';
+import { CreditCardsSection } from '../components/bills/CreditCardsSection';
 import { createStyles, radius, tabular, typeScale, useTheme } from '../theme';
 import { formatCurrency, monthlyEquivalent } from '../utils/format';
 import { dueDatesWithin, nextDue } from '../utils/bills';
@@ -71,6 +72,11 @@ export function LiabilitiesScreen() {
   const [dayOfWeek, setDayOfWeek] = useState(0);
   const [dayOfMonth, setDayOfMonth] = useState('1');
   const [monthOfYear, setMonthOfYear] = useState(1);
+  // Optional loan details: feed net worth and the debt-free date.
+  const [outstanding, setOutstanding] = useState('');
+  const [interestRate, setInterestRate] = useState('');
+  const [monthsLeft, setMonthsLeft] = useState('');
+  const [cards, setCards] = useState<PaymentMethod[]>([]);
 
   // Payment History Modal State
   const [historyModalVisible, setHistoryModalVisible] = useState(false);
@@ -83,6 +89,10 @@ export function LiabilitiesScreen() {
 
   const fetchData = useCallback(async () => {
     try {
+      // Cards fail alone: a card outage must not hide bills.
+      getPaymentMethods()
+        .then((m) => setCards(m.filter((x) => x.kind === 'credit_card' && x.status === 'active')))
+        .catch(() => {});
       const [liabilitiesData, summariesData] = await Promise.all([
         getLiabilities(),
         getLiabilitiesPaymentsSummary().catch(() => ({})),
@@ -111,6 +121,9 @@ export function LiabilitiesScreen() {
     setDayOfWeek(new Date().getDay());
     setDayOfMonth(String(new Date().getDate()));
     setMonthOfYear(new Date().getMonth() + 1);
+    setOutstanding('');
+    setInterestRate('');
+    setMonthsLeft('');
     setFormError('');
     setModalVisible(true);
   };
@@ -127,6 +140,9 @@ export function LiabilitiesScreen() {
     setDayOfWeek(liability.dayOfWeek ?? 0);
     setDayOfMonth(String(liability.dayOfMonth || 1));
     setMonthOfYear(liability.monthOfYear || 1);
+    setOutstanding(liability.outstandingBalance != null ? String(liability.outstandingBalance) : '');
+    setInterestRate(liability.interestRate != null ? String(Math.round(liability.interestRate * 10000) / 100) : '');
+    setMonthsLeft(liability.remainingTermMonths != null ? String(liability.remainingTermMonths) : '');
     setFormError('');
     setModalVisible(true);
   };
@@ -139,6 +155,13 @@ export function LiabilitiesScreen() {
     if ((frequency === 'monthly' || frequency === 'yearly') && (isNaN(dom) || dom < 1 || dom > 31)) {
       return setFormError('Day of month must be between 1 and 31.');
     }
+    const optional = (v: string) => (v.trim() === '' ? null : Number(v));
+    const loanBalance = optional(outstanding);
+    const loanRate = optional(interestRate);
+    const loanMonths = optional(monthsLeft);
+    if (loanBalance !== null && !(loanBalance >= 0)) return setFormError('Outstanding balance must be 0 or more.');
+    if (loanRate !== null && !(loanRate >= 0 && loanRate <= 100)) return setFormError('Interest rate must be between 0% and 100%.');
+    if (loanMonths !== null && !(Number.isInteger(loanMonths) && loanMonths >= 0)) return setFormError('Months remaining must be a whole number.');
 
     const payload: Partial<Liability> = {
       name: name.trim(),
@@ -148,6 +171,9 @@ export function LiabilitiesScreen() {
       autoDeduct,
       frequency,
       startDate: startDate.toISOString(),
+      outstandingBalance: loanBalance,
+      interestRate: loanRate === null ? null : loanRate / 100,
+      remainingTermMonths: loanMonths,
     };
     if (frequency === 'weekly') payload.dayOfWeek = dayOfWeek;
     if (frequency === 'monthly') payload.dayOfMonth = dom;
@@ -245,13 +271,16 @@ export function LiabilitiesScreen() {
     if (loadFailed && !liabilities.length) return <ErrorState onRetry={fetchData} />;
     if (activeLiabilities.length === 0) {
       return (
-        <EmptyState
+        <>
+          {cards.length > 0 && <View style={styles.body}><CreditCardsSection cards={cards} onChanged={fetchData} /></View>}
+          <EmptyState
           emoji="📅"
           title="No bills yet"
           message="Add rent, EMIs, subscriptions or insurance to see what's due and when."
           actionLabel="Add a bill"
           onAction={openAddModal}
-        />
+          />
+        </>
       );
     }
     return (
@@ -273,6 +302,8 @@ export function LiabilitiesScreen() {
             </View>
           </Card>
         </Animated.View>
+
+        <CreditCardsSection cards={cards} onChanged={fetchData} />
 
         {/* Due-date strip */}
         <SectionHeader title="Coming up" action={selectedDay ? 'Show all' : undefined} onAction={() => setSelectedDay(null)} />
@@ -341,6 +372,9 @@ export function LiabilitiesScreen() {
                 <View style={styles.badges}>
                   <Badge label={item.autoDeduct ? 'Auto deduct on' : 'Pay manually'} tone={item.autoDeduct ? 'success' : 'neutral'} />
                   <Badge label={item.type} tone="primary" />
+                  {item.outstandingBalance != null && (
+                    <Badge label={`${formatCurrency(item.outstandingBalance)} left${item.interestRate != null ? ` · ${Math.round(item.interestRate * 10000) / 100}%` : ''}${item.remainingTermMonths != null ? ` · ${item.remainingTermMonths} mo` : ''}`} tone="warning" />
+                  )}
                   {hasPayments ? (
                     <Badge label={`Last paid ${shortDate(new Date(summary.lastPaymentDate!))}`} />
                   ) : (
@@ -431,6 +465,13 @@ export function LiabilitiesScreen() {
               <Field label="Day of month" icon="calendar-number-outline" value={dayOfMonth} onChangeText={(v) => { setDayOfMonth(v.replace(/[^0-9]/g, '')); setFormError(''); }} keyboardType="number-pad" hint="1 to 31. Shorter months use their last day." />
             )}
             <DateField label="Starts on" value={startDate} onChange={setStartDate} />
+
+            <Text style={styles.label}>Loan details (optional)</Text>
+            <Field label="Outstanding balance (₹)" icon="trending-down-outline" value={outstanding} onChangeText={(v) => { setOutstanding(v.replace(/[^0-9.]/g, '')); setFormError(''); }} keyboardType="decimal-pad" placeholder="For loans" hint="Counts in net worth and your debt-free date." />
+            <View style={styles.row2}>
+              <View style={styles.flex}><Field label="Interest % / yr" value={interestRate} onChangeText={(v) => { setInterestRate(v.replace(/[^0-9.]/g, '')); setFormError(''); }} keyboardType="decimal-pad" placeholder="e.g. 9.5" /></View>
+              <View style={styles.flex}><Field label="Months remaining" value={monthsLeft} onChangeText={(v) => { setMonthsLeft(v.replace(/[^0-9]/g, '')); setFormError(''); }} keyboardType="number-pad" placeholder="e.g. 48" /></View>
+            </View>
 
             <Text style={styles.label}>Category</Text>
             <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chipRow}>
@@ -584,6 +625,7 @@ const useStyles = createStyles((c) => ({
   sheetBody: { padding: 20, paddingBottom: 48 },
   label: { ...typeScale.overline, color: c.textSubtle, marginTop: 8, marginBottom: 10 },
   chipRow: { flexDirection: 'row', gap: 8, marginBottom: 14 },
+  row2: { flexDirection: 'row', gap: 12 },
   chipWrap: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 14 },
   switchRow: { flexDirection: 'row', alignItems: 'center', gap: 12, padding: 14, borderRadius: radius.md, backgroundColor: c.surface, borderWidth: 1, borderColor: c.border },
   error: { fontSize: 13, color: c.danger, textAlign: 'center', marginTop: 14 },

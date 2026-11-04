@@ -47,7 +47,7 @@ export const AssetReviewModal: React.FC<AssetReviewModalProps> = ({ asset, onClo
     <Modal
       isOpen
       onClose={onClose}
-      title={`Monthly check-in: ${asset.name}`}
+      title={`Update value: ${asset.name}`}
       subtitle={`${asset.assetType}${last ? ` · last confirmed ${formatDateFull(last)}` : ''}`}
       maxWidth="460px"
     >

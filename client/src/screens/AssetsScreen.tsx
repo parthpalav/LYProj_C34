@@ -1,9 +1,8 @@
-import React, { useState, useCallback, useMemo } from 'react';
-import { Alert, KeyboardAvoidingView, Modal, Platform, Pressable, RefreshControl, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import { Alert, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Animated from 'react-native-reanimated';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useFocusEffect } from '@react-navigation/native';
 import { getAssets, createAsset, updateAsset, deleteAsset } from '../services/api';
 import { Asset, AssetClass, AssetLiquidity } from '../types';
 import { toast } from '../store/useCelebrationStore';
@@ -15,7 +14,6 @@ import { Card } from '../components/ui/Card';
 import { Badge, Chip, EmptyState, ErrorState, IconTile, MoneyText, SectionHeader } from '../components/ui/Bits';
 import { Button } from '../components/ui/Button';
 import { Field } from '../components/ui/Field';
-import { LargeTitle, ScreenHeader, useHeaderHeight, useScrollHeader } from '../components/ui/ScreenHeader';
 import { DateField } from '../components/ui/DateField';
 import { AssetReviewSheet } from '../components/assets/AssetReviewSheet';
 import { FIXED_INCOME_TYPES, buildReviewAlerts } from '../utils/dueAlerts';
@@ -110,23 +108,45 @@ function planLine(asset: Asset): string | null {
 }
 
 /** Stored rates are fractions (0.07); very old records stored whole percents (7), so both display as 7%. */
+/** Display groups, in order; unknown types fall into the last one. */
+const ASSET_GROUPS: { label: string; types: string[] }[] = [
+  { label: 'Deposits (FD / RD)', types: ['Fixed Deposit', 'Recurring Deposit'] },
+  { label: 'Investments', types: ['Mutual Fund', 'Stocks / Equity', 'Equity', 'Gold', 'Commodities', 'Cryptocurrency'] },
+  { label: 'Retirement', types: ['EPF / PPF', 'Provident Fund / PPF', 'NPS'] },
+  { label: 'Cash & bank', types: ['Bank / Savings', 'Cash & Bank', 'Cash'] },
+  { label: 'Property & other', types: [] },
+];
+
+function groupAssets(assets: Asset[]) {
+  const last = ASSET_GROUPS.length - 1;
+  const idx = (a: Asset) => {
+    const i = ASSET_GROUPS.findIndex((g) => g.types.includes(a.assetType));
+    return i < 0 ? last : i;
+  };
+  return ASSET_GROUPS
+    .map((g, i) => {
+      const rows = assets.filter((a) => idx(a) === i);
+      return { label: g.label, rows, total: rows.reduce((s, a) => s + (a.currentValue || 0), 0) };
+    })
+    .filter((g) => g.rows.length > 0);
+}
+
+/** Props from the Net worth screen: bump addKey to open the add form, refreshKey to refetch. */
+export type PanelProps = { addKey: number; refreshKey: number; onTotal?: (total: number) => void };
+
 const ratePercent = (ast: Asset) =>
   ast.annualReturnRate !== undefined && ast.annualReturnRate !== null
     ? (ast.annualReturnRate > 1 ? ast.annualReturnRate : ast.annualReturnRate * 100)
     : null;
 
-export default function AssetsScreen() {
+/** Assets half of the Net worth screen: grouped holdings with one-step value updates. */
+export function AssetsPanel({ addKey, refreshKey, onTotal }: PanelProps) {
   const { c } = useTheme();
   const styles = useStyles();
-  const navigation = useNavigation<any>();
-  const insets = useSafeAreaInsets();
-  const headerHeight = useHeaderHeight();
-  const { y, onScroll } = useScrollHeader();
   const classes = ASSET_CLASS_MAP(c);
   const [assets, setAssets] = useState<Asset[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadFailed, setLoadFailed] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
 
   // Modal State
   const [modalVisible, setModalVisible] = useState(false);
@@ -161,11 +181,11 @@ export default function AssetsScreen() {
       setLoadFailed(true);
     } finally {
       setLoading(false);
-      setRefreshing(false);
     }
   }, []);
 
   useFocusEffect(useCallback(() => { fetchAssets(); }, [fetchAssets]));
+  useEffect(() => { if (refreshKey) fetchAssets(); }, [refreshKey, fetchAssets]);
 
   const openAddModal = () => {
     setEditingAsset(null);
@@ -185,6 +205,9 @@ export default function AssetsScreen() {
     setFormError('');
     setModalVisible(true);
   };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { if (addKey) openAddModal(); }, [addKey]);
 
   const openEditModal = (ast: Asset) => {
     setEditingAsset(ast);
@@ -340,6 +363,8 @@ export default function AssetsScreen() {
     })
     .reduce((sum, a) => sum + (a.currentValue || 0), 0);
   const byClass = (k: AssetClass) => assets.filter((a) => a.assetClass === k).reduce((s, a) => s + (a.currentValue || 0), 0);
+  useEffect(() => { onTotal?.(totalAssets); }, [onTotal, totalAssets]);
+  const groups = groupAssets(assets);
   const composition = (['FIRE_INVESTABLE', 'SEMI_LIQUID', 'NON_INVESTABLE'] as AssetClass[])
     .map((k) => ({ k, value: byClass(k) }))
     .filter((x) => x.value > 0);
@@ -383,11 +408,13 @@ export default function AssetsScreen() {
           </Card>
         </Animated.View>
 
-        <SectionHeader title="Holdings" action={assets.length ? 'Add' : undefined} onAction={openAddModal} />
         {assets.length === 0 ? (
           <EmptyState emoji="💼" title="No assets added yet" message="Add deposits, funds, PF or gold to see your net worth and retirement corpus." actionLabel="+ Add First Asset" onAction={openAddModal} />
         ) : (
-          assets.map((ast, index) => {
+          groups.map((group) => (
+          <View key={group.label}>
+          <SectionHeader title={`${group.label} · ${formatINR(group.total)}`} />
+          {group.rows.map((ast, index) => {
             const cls = classes[ast.assetClass] || classes.NON_INVESTABLE;
             const liq = LIQUIDITY_MAP[ast.liquidity || 'liquid'];
             const rate = ratePercent(ast);
@@ -410,10 +437,10 @@ export default function AssetsScreen() {
                   {!!planLine(ast) && <Text style={styles.notes}>{planLine(ast)}</Text>}
                   {!!ast.notes && <Text style={styles.notes} numberOfLines={2}>{ast.notes}</Text>}
                   <View style={styles.actions}>
-                    {dueReview.has(ast.id) && (
-                      <Pressable style={styles.action} onPress={() => setReviewing(ast)} accessibilityRole="button" accessibilityLabel={`Monthly check-in for ${ast.name}`}>
-                        <Ionicons name="checkmark-done-outline" size={16} color={c.primary} />
-                        <Text style={[styles.actionText, { color: c.primary }]}>Check in</Text>
+                    {ast.tenureMonths == null && (
+                      <Pressable style={styles.action} onPress={() => setReviewing(ast)} accessibilityRole="button" accessibilityLabel={`Update value of ${ast.name}`}>
+                        <Ionicons name={dueReview.has(ast.id) ? 'checkmark-done-outline' : 'refresh-outline'} size={16} color={c.primary} />
+                        <Text style={[styles.actionText, { color: c.primary }]}>{dueReview.has(ast.id) ? 'Check in' : 'Update'}</Text>
                       </Pressable>
                     )}
                     <Pressable style={styles.action} onPress={() => openEditModal(ast)} accessibilityRole="button" accessibilityLabel={`Edit ${ast.name}`}>
@@ -428,7 +455,9 @@ export default function AssetsScreen() {
                 </Card>
               </Animated.View>
             );
-          })
+          })}
+          </View>
+          ))
         )}
       </View>
     );
@@ -437,26 +466,8 @@ export default function AssetsScreen() {
   const rateLabel = getRateLabel(assetType === 'Other' ? customType : assetType);
 
   return (
-    <View style={styles.container}>
-      <Animated.ScrollView
-        onScroll={onScroll}
-        scrollEventThrottle={16}
-        contentContainerStyle={{ paddingTop: headerHeight, paddingBottom: insets.bottom + 40 }}
-        showsVerticalScrollIndicator={false}
-        refreshControl={<RefreshControl refreshing={refreshing} progressViewOffset={headerHeight} onRefresh={() => { setRefreshing(true); fetchAssets(); }} />}
-      >
-        <LargeTitle
-          title="Assets"
-          subtitle="Investable wealth, deposits and liquidity"
-          right={
-            <Pressable style={styles.addBtn} onPress={openAddModal} accessibilityRole="button" accessibilityLabel="Add Financial Asset">
-              <Ionicons name="add" size={22} color={c.onPrimary} />
-            </Pressable>
-          }
-        />
-        {body()}
-      </Animated.ScrollView>
-      <ScreenHeader title="Assets" y={y} onBack={() => navigation.goBack()} />
+    <>
+      {body()}
 
       <Modal visible={modalVisible} animationType="slide" presentationStyle="pageSheet" onRequestClose={() => setModalVisible(false)}>
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.sheet}>
@@ -546,16 +557,14 @@ export default function AssetsScreen() {
         </KeyboardAvoidingView>
       </Modal>
       <AssetReviewSheet asset={reviewing} onClose={() => setReviewing(null)} onSaved={fetchAssets} />
-    </View>
+    </>
   );
 }
 
 const useStyles = createStyles((c) => ({
-  container: { flex: 1, backgroundColor: c.bg },
   flex: { flex: 1 },
   body: { paddingHorizontal: 16 },
   gap: { marginBottom: 12 },
-  addBtn: { width: 42, height: 42, borderRadius: 21, alignItems: 'center', justifyContent: 'center', backgroundColor: c.primary, marginBottom: 4 },
   heroLabel: { ...typeScale.caption, color: c.onAuroraMuted },
   heroValue: { ...typeScale.display, color: c.onAurora, marginTop: 2 },
   track: { flexDirection: 'row', height: 10, borderRadius: 5, overflow: 'hidden', marginTop: 16, backgroundColor: 'rgba(255,255,255,0.12)' },

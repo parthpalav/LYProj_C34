@@ -12,7 +12,7 @@ interface NetWorthSummaryProps {
 
 function formatINR(val: number): string {
   const isNeg = val < 0;
-  const abs = Math.abs(val);
+  const abs = Math.round(Math.abs(val));
   return `${isNeg ? '-' : ''}₹${abs.toLocaleString('en-IN')}`;
 }
 

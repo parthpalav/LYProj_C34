@@ -130,3 +130,30 @@ export function spanLabel(a: Date, b: Date): string {
   if (a.getMonth() === b.getMonth()) return `${a.getDate()} – ${dayMonth(b)}`;
   return `${dayMonth(a)} – ${dayMonth(b)}`;
 }
+
+export type MonthSection<T> = { key: string; title: string; spent: number; invested: number; data: T[] };
+
+/** Device-calendar month sections, newest first; spent is Need + Want, invested is Investment. */
+export function groupByMonth<T extends Spend>(txs: T[]): MonthSection<T>[] {
+  const map = new Map<string, T[]>();
+  for (const tx of txs) {
+    const d = new Date(tx.timestamp);
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+    if (!map.has(key)) map.set(key, []);
+    map.get(key)!.push(tx);
+  }
+  return [...map.entries()]
+    .sort(([a], [b]) => b.localeCompare(a))
+    .map(([key, rows]) => {
+      const [y, m] = key.split('-').map(Number);
+      const data = [...rows].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+      const sum = (pick: (tx: T) => boolean) => data.filter(pick).reduce((s, tx) => s + Math.abs(tx.amount), 0);
+      return {
+        key,
+        title: new Date(y, m - 1, 1).toLocaleDateString('en-IN', { month: 'long', year: 'numeric' }),
+        spent: sum((tx) => tx.type !== 'Investment'),
+        invested: sum((tx) => tx.type === 'Investment'),
+        data,
+      };
+    });
+}

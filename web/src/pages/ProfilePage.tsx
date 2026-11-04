@@ -61,10 +61,10 @@ const FIELDS: Array<{ key: string; label: string; hint?: string; type?: string }
 ];
 
 const LINKS = [
-  { to: '/app/plan?tab=assets', title: 'Assets', subtitle: 'Investments, deposits and savings' },
+  { to: '/app/net-worth?tab=assets', title: 'Assets', subtitle: 'Investments, deposits and savings' },
   { to: '/app/activity?tab=income', title: 'Income streams', subtitle: 'Salary and other receipts' },
   { to: '/app/plan?tab=goals', title: 'Savings goals', subtitle: 'What you are saving towards' },
-  { to: '/app/activity?tab=liabilities', title: 'Bills', subtitle: 'Recurring payments and auto-deductions' },
+  { to: '/app/net-worth?tab=liabilities', title: 'Liabilities', subtitle: 'Loans, EMIs, cards and recurring bills' },
   { to: '/app/roundups', title: 'Round-ups', subtitle: 'Save the loose change' },
   { to: '/app/family', title: 'Family & Household', subtitle: 'Combined finances and invitations' },
 ];

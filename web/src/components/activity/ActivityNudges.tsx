@@ -8,7 +8,7 @@ import { zparts } from '../../utils/timezone';
 
 interface ActivityNudgesProps {
   transactions: Transaction[];
-  onBillTracked: () => void;
+  onBillTracked?: () => void;
   notify: (message: string, type?: 'success' | 'error' | 'info') => void;
 }
 
@@ -37,7 +37,7 @@ export const ActivityNudges: React.FC<ActivityNudgesProps> = ({ transactions, on
       });
       setSuggestions((list) => list.filter((x) => x.key !== s.key));
       notify(`Tracking ${s.name} as a ${s.frequency} bill. Find it under Liabilities.`);
-      onBillTracked();
+      onBillTracked?.();
     } catch {
       notify("Couldn't add that bill.", 'error');
     } finally {

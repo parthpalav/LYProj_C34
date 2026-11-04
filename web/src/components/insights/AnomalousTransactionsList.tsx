@@ -43,7 +43,7 @@ export const AnomalousTransactionsList: React.FC<AnomalousTransactionsListProps>
                   <div className="anomaly-header-line">
                     <span className="anomaly-item-desc font-semibold">{tx.description || 'Expense'}</span>
                     {tx.type && (
-                      <span className={`type-tag badge-type-${tx.type.toLowerCase()}`}>
+                      <span className={`badge-type badge-type-${tx.type.toLowerCase()}`}>
                         {tx.type}
                       </span>
                     )}

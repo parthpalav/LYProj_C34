@@ -15,6 +15,7 @@ const ROUTE_TITLES: Record<string, string> = {
   '/app/activity': 'Activity',
   '/app/insights': 'Insights',
   '/app/plan': 'Plan',
+  '/app/net-worth': 'Net worth',
   '/app/reports': 'Reports',
   '/app/family': 'Family',
   '/app/profile': 'Profile',

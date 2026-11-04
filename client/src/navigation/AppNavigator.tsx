@@ -7,11 +7,10 @@ import { DashboardScreen } from '../screens/DashboardScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
 import { TransactionsScreen } from '../screens/TransactionsScreen';
 import { TransactionEntryScreen } from '../screens/TransactionEntryScreen';
-import { LiabilitiesScreen } from '../screens/LiabilitiesScreen';
 import { FinancialOutlookScreen } from '../screens/FinancialOutlookScreen';
 import { FmiScreen } from '../screens/FmiScreen';
 import { IncomeFlowScreen } from '../screens/IncomeFlowScreen';
-import AssetsScreen from '../screens/AssetsScreen';
+import { NetWorthScreen } from '../screens/NetWorthScreen';
 import FamilyScreen from '../screens/FamilyScreen';
 import { GoalPlannerScreen } from '../screens/GoalPlannerScreen';
 import { PlanScreen } from '../screens/PlanScreen';
@@ -124,10 +123,11 @@ export function AppNavigator(): React.ReactElement {
           <Stack.Screen name="FinancialOutlook" component={FinancialOutlookScreen} />
           <Stack.Screen name="FMI" component={FmiScreen} />
           <Stack.Screen name="IncomeFlow" component={IncomeFlowScreen} />
-          <Stack.Screen name="Assets" component={AssetsScreen} />
+          {/* Assets and Liabilities are the two segments of one Net worth screen. */}
+          <Stack.Screen name="Assets" component={NetWorthScreen} />
           <Stack.Screen name="Family" component={FamilyScreen} />
           <Stack.Screen name="Goals" component={GoalPlannerScreen} />
-          <Stack.Screen name="Liabilities" component={LiabilitiesScreen} />
+          <Stack.Screen name="Liabilities" component={NetWorthScreen} />
           <Stack.Screen name="Profile" component={ProfileScreen} />
           <Stack.Screen name="Alerts" component={AlertsScreen} />
           <Stack.Screen name="Review" component={ReviewScreen} />

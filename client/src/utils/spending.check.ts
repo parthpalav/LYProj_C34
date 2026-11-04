@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { addDays, bucketLabel, buildSeries, inDayRange, indexAtX, periodRange, rangeFor, spanLabel, yTicks } from './spending.ts';
+import { addDays, bucketLabel, buildSeries, groupByMonth, inDayRange, indexAtX, periodRange, rangeFor, spanLabel, yTicks } from './spending.ts';
 import { formatCompact } from './format.ts';
 
 const now = new Date(2026, 9, 29, 15, 30); // 29 Oct 2026, afternoon
@@ -90,3 +90,18 @@ assert.ok(inDayRange(new Date(2025, 11, 20, 23, 59).toISOString(), cust));
 assert.ok(!inDayRange(new Date(2025, 11, 19, 23, 59).toISOString(), cust));
 assert.ok(inDayRange(new Date(2026, 10, 4, 22, 0).toISOString(), cust), 'end day is inclusive');
 console.log('spending ok');
+
+// Month sections for the Activity list
+{
+  const rows = [
+    { amount: 500, timestamp: at(10, 3), type: 'Need' as const },
+    { amount: 1000, timestamp: at(10, 1), type: 'Investment' as const },
+    { amount: 200, timestamp: at(9, 31), type: 'Want' as const },
+    { amount: 300, timestamp: at(10, 2), type: 'Want' as const },
+  ];
+  const months = groupByMonth(rows);
+  assert.deepEqual(months.map((m) => [m.key, m.data.length, m.spent, m.invested]), [['2026-11', 3, 800, 1000], ['2026-10', 1, 200, 0]]);
+  assert.deepEqual(months[0].data.map((t) => t.amount), [500, 300, 1000], 'newest first within the month');
+  assert.match(months[0].title, /November 2026/);
+  assert.deepEqual(groupByMonth([]), []);
+}

@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { Navigate, useSearchParams } from 'react-router-dom';
 import { useTransactions } from '../hooks/useTransactions';
 import { useIncome } from '../hooks/useIncome';
-import { useLiabilities } from '../hooks/useLiabilities';
 import { usePaymentMethods } from '../hooks/usePaymentMethods';
-import { CreditCardsSection } from '../components/activity/CreditCardsSection';
 import { transactionPaymentLabel } from '../utils/paymentMethods';
-import type { Transaction, IncomeRecord, Liability, TransactionPayload, IncomePayload, LiabilityPayload } from '../types';
+import type { Transaction, IncomeRecord, TransactionPayload, IncomePayload } from '../types';
 import { formatCurrencyINR, getTransactionDate } from '../utils/formatters';
 import { dateKey } from '../utils/timezone';
 import { getPacingReport } from '../services/api';
@@ -22,10 +20,6 @@ import { IncomeSummaryStrip } from '../components/activity/IncomeSummaryStrip';
 import { IncomeTable } from '../components/activity/IncomeTable';
 import { IncomeModal } from '../components/activity/IncomeModal';
 
-import { LiabilitySummaryStrip } from '../components/activity/LiabilitySummaryStrip';
-import { LiabilityTable } from '../components/activity/LiabilityTable';
-import { LiabilityModal } from '../components/activity/LiabilityModal';
-import { LiabilityHistoryModal } from '../components/activity/LiabilityHistoryModal';
 
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { Toast } from '../components/ui/Toast';
@@ -38,10 +32,9 @@ import { celebrate } from '../utils/celebrate';
 export const ActivityPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Tab State preserved in URL (?tab=transactions | income | liabilities)
+  // Tab State preserved in URL (?tab=transactions | income)
   const tabParam = searchParams.get('tab');
-  const activeTab: ActivityTabKey =
-    tabParam === 'income' || tabParam === 'liabilities' ? tabParam : 'transactions';
+  const activeTab: ActivityTabKey = tabParam === 'income' ? 'income' : 'transactions';
 
   const handleTabChange = (newTab: ActivityTabKey) => {
     setSearchParams({ tab: newTab });
@@ -59,9 +52,7 @@ export const ActivityPage: React.FC = () => {
     return Number.isFinite(min) ? dateKey(new Date(min)) : null;
   }, [txState.transactions]);
   const incState = useIncome();
-  const liabState = useLiabilities();
   const payState = usePaymentMethods();
-  const creditCards = payState.active.filter((m) => m.kind === 'credit_card');
 
   // Toast feedback state
   const [toast, setToast] = useState<{ message: string | null; type: 'success' | 'error' | 'info' | 'warning' }>({
@@ -99,13 +90,6 @@ export const ActivityPage: React.FC = () => {
   const [editingInc, setEditingInc] = useState<IncomeRecord | null>(null);
   const [deletingInc, setDeletingInc] = useState<IncomeRecord | null>(null);
   const [isDeletingInc, setIsDeletingInc] = useState(false);
-
-  // Liability modals & actions state
-  const [isLiabModalOpen, setIsLiabModalOpen] = useState(false);
-  const [editingLiab, setEditingLiab] = useState<Liability | null>(null);
-  const [deletingLiab, setDeletingLiab] = useState<Liability | null>(null);
-  const [isDeletingLiab, setIsDeletingLiab] = useState(false);
-  const [historyLiab, setHistoryLiab] = useState<Liability | null>(null);
 
   const isCardTx = (tx: Transaction | null) =>
     Boolean(tx?.paymentMethodId && payState.methods.find((m) => m.id === tx.paymentMethodId)?.kind === 'credit_card');
@@ -203,42 +187,6 @@ export const ActivityPage: React.FC = () => {
     }
   };
 
-  // ── Liability Action Handlers ─────────────────────────────────────────────
-
-  const handleOpenAddLiab = () => {
-    setEditingLiab(null);
-    setIsLiabModalOpen(true);
-  };
-
-  const handleOpenEditLiab = (l: Liability) => {
-    setEditingLiab(l);
-    setIsLiabModalOpen(true);
-  };
-
-  const handleSaveLiab = async (payload: LiabilityPayload) => {
-    if (editingLiab) {
-      await liabState.edit(editingLiab.id, payload);
-      showToast('Recurring liability updated.');
-    } else {
-      await liabState.add(payload);
-      showToast('Recurring liability created.');
-    }
-  };
-
-  const handleConfirmDeleteLiab = async () => {
-    if (!deletingLiab) return;
-    setIsDeletingLiab(true);
-    try {
-      await liabState.remove(deletingLiab.id);
-      showToast(`Obligation removed.`);
-      setDeletingLiab(null);
-    } catch (err: any) {
-      showToast(err?.response?.data?.error || 'Failed to remove liability.', 'error');
-    } finally {
-      setIsDeletingLiab(false);
-    }
-  };
-
   const isTxFiltered =
     Boolean(txState.searchQuery.trim()) ||
     txState.categoryFilter !== 'ALL' ||
@@ -246,6 +194,9 @@ export const ActivityPage: React.FC = () => {
     txState.dateFilter !== 'all' ||
     Boolean(txState.customStartDate) ||
     Boolean(txState.customEndDate);
+
+  // Liabilities moved to the Net worth page; keep old links working.
+  if (tabParam === 'liabilities') return <Navigate to="/app/net-worth?tab=liabilities" replace />;
 
   return (
     <div className="activity-page animate-fade-in">
@@ -262,7 +213,7 @@ export const ActivityPage: React.FC = () => {
           <span className="overview-context-badge">MONEY & CASH FLOW</span>
           <h1 className="overview-title">Activity</h1>
           <p className="overview-subtitle">
-            Inspect, record, and maintain your transactions, income streams, and recurring liabilities
+            Inspect, record, and maintain your transactions and income streams
           </p>
         </div>
 
@@ -287,16 +238,6 @@ export const ActivityPage: React.FC = () => {
               Record Income
             </Button>
           )}
-          {activeTab === 'liabilities' && (
-            <Button
-              type="button"
-              variant="primary"
-              onClick={handleOpenAddLiab}
-              leftIcon={<Plus size={16} strokeWidth={2.5} />}
-            >
-              Add Liability
-            </Button>
-          )}
         </div>
       </header>
 
@@ -307,7 +248,6 @@ export const ActivityPage: React.FC = () => {
         counts={{
           transactions: txState.transactions.length,
           income: incState.incomes.length,
-          liabilities: liabState.liabilities.length,
         }}
       />
 
@@ -324,7 +264,7 @@ export const ActivityPage: React.FC = () => {
             <SkeletonCard height={280} />
           ) : (
             <>
-              <ActivityNudges transactions={txState.transactions} onBillTracked={liabState.refetch} notify={showToast} />
+              <ActivityNudges transactions={txState.transactions} notify={showToast} />
 
               {/* Filter Toolbar */}
               <TransactionFilterToolbar
@@ -348,23 +288,24 @@ export const ActivityPage: React.FC = () => {
                 minDate={earliestTxKey}
               />
 
-              {/* Filter Summary Strip */}
-              <TransactionSummaryStrip
+              {/* Filter Summary Strip: month headers carry the totals until a filter is on */}
+              {isTxFiltered && <TransactionSummaryStrip
                 count={txState.summary.count}
                 totalSpend={txState.summary.totalSpend}
                 needsTotal={txState.summary.needsTotal}
                 wantsTotal={txState.summary.wantsTotal}
                 investmentsTotal={txState.summary.investmentsTotal}
                 isFiltered={isTxFiltered}
-              />
+              />}
 
               {/* Transactions Ledger Table / Cards */}
               <TransactionTable
                 transactions={txState.paginatedTransactions}
+                allTransactions={txState.filteredTransactions}
+                groupByMonth={txState.sortBy === 'newest' || txState.sortBy === 'oldest'}
                 paymentMethods={payState.methods}
-                page={txState.page}
-                totalPages={txState.totalPages}
-                onPageChange={txState.setPage}
+                hasMore={txState.hasMore}
+                onShowMore={txState.showMore}
                 onEdit={handleOpenEditTx}
                 onDelete={(tx) => setDeletingTx(tx)}
                 onAddClick={handleOpenAddTx}
@@ -465,77 +406,6 @@ export const ActivityPage: React.FC = () => {
         </div>
       )}
 
-      {/* ─────────────────────────────────────────────────────────────────── */}
-      {/* TAB 3: LIABILITIES                                                 */}
-      {/* ─────────────────────────────────────────────────────────────────── */}
-      {activeTab === 'liabilities' && (
-        <div className="activity-tab-content">
-          {liabState.error && (
-            <SectionError message={liabState.error} onRetry={liabState.refetch} />
-          )}
-
-          {liabState.isLoading ? (
-            <SkeletonCard height={280} />
-          ) : (
-            <>
-              {/* Toolbar Info */}
-              <div className="activity-toolbar">
-                <div className="toolbar-search-wrap">
-                  <span className="text-secondary text-sm font-medium">
-                    Recurring commitments, auto-deductions, and schedule tracking
-                  </span>
-                </div>
-              </div>
-
-              <CreditCardsSection cards={creditCards} onChanged={payState.refetch} notify={showToast} />
-
-              {/* Liability Summary Strip */}
-              <LiabilitySummaryStrip
-                activeCount={liabState.summary.activeCount}
-                dueNext30Days={liabState.summary.dueNext30Days}
-                nearestDueDate={liabState.summary.nearestDueDate}
-              />
-
-              {/* Liability Table */}
-              <LiabilityTable
-                liabilities={liabState.liabilities}
-                onEdit={handleOpenEditLiab}
-                onDelete={(l) => setDeletingLiab(l)}
-                onViewHistory={(l) => setHistoryLiab(l)}
-                onAddClick={handleOpenAddLiab}
-              />
-            </>
-          )}
-
-          {/* Add / Edit Liability Modal */}
-          <LiabilityModal
-            isOpen={isLiabModalOpen}
-            onClose={() => setIsLiabModalOpen(false)}
-            onSubmit={handleSaveLiab}
-            initialLiability={editingLiab}
-          />
-
-          {/* Liability Payment History Modal */}
-          <LiabilityHistoryModal
-            isOpen={Boolean(historyLiab)}
-            onClose={() => setHistoryLiab(null)}
-            liability={historyLiab}
-          />
-
-          {/* Remove Liability Confirmation Dialog */}
-          <ConfirmDialog
-            isOpen={Boolean(deletingLiab)}
-            onClose={() => setDeletingLiab(null)}
-            onConfirm={handleConfirmDeleteLiab}
-            title="Remove Recurring Obligation?"
-            message={`Are you sure you want to remove "${deletingLiab?.name}"?`}
-            warningNote="Schedule Notice: Removing this liability deactivates it and disables any future scheduled auto-deductions. Prior transactions recorded by this obligation remain intact in your ledger."
-            confirmLabel="Remove Obligation"
-            variant="danger"
-            isLoading={isDeletingLiab}
-          />
-        </div>
-      )}
     </div>
   );
 };

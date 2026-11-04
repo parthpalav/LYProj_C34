@@ -1,5 +1,5 @@
-import React, { useMemo } from 'react';
-import { TrendingUp, Pencil, Trash2, Flame, Ban, Plus } from 'lucide-react';
+import React, { Fragment, useMemo } from 'react';
+import { TrendingUp, Pencil, Trash2, Flame, Ban, Plus, RefreshCw } from 'lucide-react';
 import type { Asset } from '../../types';
 import { getAssetClassLabel, getAssetLiquidityLabel } from '../../hooks/useAssets';
 import { formatDateFull } from '../../utils/formatters';
@@ -9,7 +9,34 @@ interface AssetsTableProps {
   onAddAsset: () => void;
   onEditAsset: (asset: Asset) => void;
   onDeleteAsset: (asset: Asset) => void;
+  /** One-step value refresh; hidden for deposits whose value the server computes. */
+  onUpdateValue?: (asset: Asset) => void;
 }
+
+/** Display groups, in order; unknown types fall into the last one. */
+const ASSET_GROUPS: { label: string; types: string[] }[] = [
+  { label: 'Deposits (FD / RD)', types: ['Fixed Deposit', 'Recurring Deposit'] },
+  { label: 'Investments', types: ['Mutual Fund', 'Equity', 'Stocks / Equity', 'Gold', 'Commodities', 'Cryptocurrency'] },
+  { label: 'Retirement', types: ['Provident Fund / PPF', 'EPF / PPF', 'NPS'] },
+  { label: 'Cash & bank', types: ['Cash & Bank', 'Bank / Savings', 'Cash'] },
+  { label: 'Property & other', types: [] },
+];
+
+function groupAssets(assets: Asset[]) {
+  const last = ASSET_GROUPS.length - 1;
+  const idx = (a: Asset) => {
+    const i = ASSET_GROUPS.findIndex((g) => g.types.includes(a.assetType));
+    return i < 0 ? last : i;
+  };
+  return ASSET_GROUPS
+    .map((g, i) => {
+      const rows = assets.filter((a) => idx(a) === i);
+      return { label: g.label, rows, total: rows.reduce((s, a) => s + (Number(a.currentValue) || 0), 0) };
+    })
+    .filter((g) => g.rows.length > 0);
+}
+
+const canUpdateValue = (a: Asset) => a.tenureMonths == null;
 
 function formatINR(val: number): string {
   return `₹${Math.round(val).toLocaleString('en-IN')}`;
@@ -32,7 +59,9 @@ export const AssetsTable: React.FC<AssetsTableProps> = ({
   onAddAsset,
   onEditAsset,
   onDeleteAsset,
+  onUpdateValue,
 }) => {
+  const groups = useMemo(() => groupAssets(assets), [assets]);
   // Presentation-only aggregation by assetClass — uses exact persisted values
   const classSummary = useMemo(() => {
     const map: Record<string, number> = {};
@@ -49,9 +78,9 @@ export const AssetsTable: React.FC<AssetsTableProps> = ({
     <div className="plan-surface-card">
       <div className="plan-section-header plan-section-header--row">
         <div>
-          <h3 className="plan-section-title">Financial Assets Ledger</h3>
+          <h3 className="plan-section-title">What you own</h3>
           <p className="plan-section-subtitle">
-            Manage your investment portfolio, liquid reserves, and capital assets
+            Grouped by type. Use Update to refresh a value in one step.
           </p>
         </div>
         <button
@@ -113,14 +142,21 @@ export const AssetsTable: React.FC<AssetsTableProps> = ({
                   <th>Type</th>
                   <th>Classification</th>
                   <th>Liquidity</th>
-                  <th>Expected Return</th>
+                  <th>Return</th>
                   <th>Current Value</th>
                   <th>FIRE Status</th>
                   <th className="th-actions">Actions</th>
                 </tr>
               </thead>
-              <tbody>
-                {assets.map((asset) => {
+              {groups.map((group) => (
+              <tbody key={group.label}>
+                <tr className="plan-group-row">
+                  <th colSpan={8} scope="colgroup">
+                    <span>{group.label}</span>
+                    <span className="plan-group-total tabular-nums">{formatINR(group.total)}</span>
+                  </th>
+                </tr>
+                {group.rows.map((asset) => {
                   const returnRateStr =
                     asset.annualReturnRate !== undefined && asset.annualReturnRate !== null
                       ? `${(asset.annualReturnRate * 100).toFixed(1)}%`
@@ -156,15 +192,26 @@ export const AssetsTable: React.FC<AssetsTableProps> = ({
                       <td>
                         {asset.includedInFireCorpus ? (
                           <span className="plan-fire-badge plan-fire-badge--in">
-                            <Flame size={12} /> Included in FIRE corpus
+                            <Flame size={12} /> In FIRE corpus
                           </span>
                         ) : (
                           <span className="plan-fire-badge plan-fire-badge--out">
-                            <Ban size={12} /> Excluded from FIRE corpus
+                            <Ban size={12} /> Not in FIRE
                           </span>
                         )}
                       </td>
                       <td className="td-actions">
+                        {onUpdateValue && canUpdateValue(asset) && (
+                          <button
+                            type="button"
+                            className="plan-icon-btn plan-icon-btn--edit"
+                            onClick={() => onUpdateValue(asset)}
+                            aria-label={`Update value of ${asset.name}`}
+                            title="Update value"
+                          >
+                            <RefreshCw size={14} />
+                          </button>
+                        )}
                         <button
                           type="button"
                           className="plan-icon-btn plan-icon-btn--edit"
@@ -188,12 +235,19 @@ export const AssetsTable: React.FC<AssetsTableProps> = ({
                   );
                 })}
               </tbody>
+              ))}
             </table>
           </div>
 
           {/* Mobile Cards View */}
           <div className="plan-cards-stack mobile-only">
-            {assets.map((asset) => {
+            {groups.map((group) => (
+            <Fragment key={group.label}>
+            <div className="plan-group-row plan-group-row--card">
+              <span>{group.label}</span>
+              <span className="plan-group-total tabular-nums">{formatINR(group.total)}</span>
+            </div>
+            {group.rows.map((asset) => {
               const returnRateStr =
                 asset.annualReturnRate !== undefined && asset.annualReturnRate !== null
                   ? `${(asset.annualReturnRate * 100).toFixed(1)}%`
@@ -235,6 +289,16 @@ export const AssetsTable: React.FC<AssetsTableProps> = ({
                   {asset.notes && <p className="plan-asset-card-notes">{asset.notes}</p>}
 
                   <div className="plan-asset-card-actions">
+                    {onUpdateValue && canUpdateValue(asset) && (
+                      <button
+                        type="button"
+                        className="plan-icon-btn plan-icon-btn--edit"
+                        onClick={() => onUpdateValue(asset)}
+                        aria-label={`Update value of ${asset.name}`}
+                      >
+                        <RefreshCw size={13} /> Update
+                      </button>
+                    )}
                     <button
                       type="button"
                       className="plan-icon-btn plan-icon-btn--edit"
@@ -255,6 +319,8 @@ export const AssetsTable: React.FC<AssetsTableProps> = ({
                 </div>
               );
             })}
+            </Fragment>
+            ))}
           </div>
         </>
       )}

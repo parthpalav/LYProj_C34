@@ -9,6 +9,7 @@ import type {
   CategoryMovementItem,
 } from '../types';
 import { getTransactionDate } from '../utils/formatters';
+import { daysInMonth, getAppTimezone, zdate, zparts } from '../utils/timezone';
 
 export function useSpendingInsights() {
   const [range, setRange] = useState<SpendingRange>('6m');
@@ -52,14 +53,14 @@ export function useSpendingInsights() {
     if (range === '3m') count = 3;
     else if (range === '6m') count = 6;
     else if (range === '12m') count = 12;
-    else if (range === 'ytd') count = now.getMonth() + 1;
+    else if (range === 'ytd') count = zparts(now).month + 1;
 
     for (let i = count - 1; i >= 0; i--) {
-      const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      const year = d.getFullYear();
-      const month = d.getMonth() + 1;
+      const d = zdate(zparts(now).year, zparts(now).month - i, 1);
+      const year = zparts(d).year;
+      const month = zparts(d).month + 1;
       const key = `${year}-${String(month).padStart(2, '0')}`;
-      const label = d.toLocaleDateString('en-IN', { month: 'short', year: 'numeric' });
+      const label = d.toLocaleDateString('en-IN', { timeZone: getAppTimezone(), month: 'short', year: 'numeric' });
       result.push({ key, label, year, month });
     }
 
@@ -79,13 +80,13 @@ export function useSpendingInsights() {
     for (let i = 0; i < bucketCount; i++) {
       const daysFromNowStart = days - (i * step);
       const daysFromNowEnd = (i === bucketCount - 1) ? 0 : days - ((i + 1) * step - 1);
-      const bStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - daysFromNowStart, 0, 0, 0, 0);
-      const bEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate() - daysFromNowEnd, 23, 59, 59, 999);
-      const sMonth = bStart.toLocaleDateString('en-IN', { month: 'short' });
-      const eMonth = bEnd.toLocaleDateString('en-IN', { month: 'short' });
+      const bStart = zdate(zparts(now).year, zparts(now).month, zparts(now).day - daysFromNowStart, 0, 0, 0, 0);
+      const bEnd = zdate(zparts(now).year, zparts(now).month, zparts(now).day - daysFromNowEnd, 23, 59, 59, 999);
+      const sMonth = bStart.toLocaleDateString('en-IN', { timeZone: getAppTimezone(), month: 'short' });
+      const eMonth = bEnd.toLocaleDateString('en-IN', { timeZone: getAppTimezone(), month: 'short' });
       const label = (sMonth === eMonth)
-        ? `${bStart.getDate()}–${bEnd.getDate()} ${sMonth}`
-        : `${bStart.getDate()} ${sMonth} – ${bEnd.getDate()} ${eMonth}`;
+        ? `${zparts(bStart).day}–${zparts(bEnd).day} ${sMonth}`
+        : `${zparts(bStart).day} ${sMonth} – ${zparts(bEnd).day} ${eMonth}`;
       buckets.push({
         key: `bucket-${i}`,
         label,
@@ -103,8 +104,8 @@ export function useSpendingInsights() {
     if (isRollingRange) {
       const days = range === '30d' ? 30 : 90;
       return {
-        rangeStartDate: new Date(now.getFullYear(), now.getMonth(), now.getDate() - days, 0, 0, 0, 0),
-        rangeEndDate: new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999),
+        rangeStartDate: zdate(zparts(now).year, zparts(now).month, zparts(now).day - days, 0, 0, 0, 0),
+        rangeEndDate: zdate(zparts(now).year, zparts(now).month, zparts(now).day, 23, 59, 59, 999),
       };
     }
 
@@ -116,7 +117,7 @@ export function useSpendingInsights() {
     }
     const first = monthsInRange[0];
     return {
-      rangeStartDate: new Date(first.year, first.month - 1, 1, 0, 0, 0, 0),
+      rangeStartDate: zdate(first.year, first.month - 1, 1, 0, 0, 0, 0),
       rangeEndDate: undefined,
     };
   }, [range, isRollingRange, monthsInRange]);
@@ -185,7 +186,7 @@ export function useSpendingInsights() {
 
     rangeTransactions.forEach((tx) => {
       const d = getTransactionDate(tx);
-      const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+      const key = `${zparts(d).year}-${String(zparts(d).month + 1).padStart(2, '0')}`;
       const entry = monthlyMap.get(key);
       if (entry) {
         const amt = Math.abs(Number(tx.amount) || 0);
@@ -271,20 +272,20 @@ export function useSpendingInsights() {
   // Compares Month-to-date (Days 1 to currentDay) vs same days in previous month
   const momComparison = useMemo(() => {
     const now = new Date();
-    const currentYear = now.getFullYear();
-    const currentMonth = now.getMonth(); // 0-indexed
-    const currentDay = now.getDate();
+    const currentYear = zparts(now).year;
+    const currentMonth = zparts(now).month; // 0-indexed
+    const currentDay = zparts(now).day;
 
-    const currentMtdStart = new Date(currentYear, currentMonth, 1, 0, 0, 0, 0);
+    const currentMtdStart = zdate(currentYear, currentMonth, 1, 0, 0, 0, 0);
     const currentMtdEnd = now;
 
-    const prevMtdStart = new Date(currentYear, currentMonth - 1, 1, 0, 0, 0, 0);
-    const daysInPrevMonth = new Date(currentYear, currentMonth, 0).getDate();
+    const prevMtdStart = zdate(currentYear, currentMonth - 1, 1, 0, 0, 0, 0);
+    const daysInPrevMonth = daysInMonth(currentYear, currentMonth - 1);
     const prevCompareDay = Math.min(currentDay, daysInPrevMonth);
-    const prevMtdEnd = new Date(currentYear, currentMonth - 1, prevCompareDay, 23, 59, 59, 999);
+    const prevMtdEnd = zdate(currentYear, currentMonth - 1, prevCompareDay, 23, 59, 59, 999);
 
-    const prevMonthName = prevMtdStart.toLocaleDateString('en-IN', { month: 'short' });
-    const currentMonthName = currentMtdStart.toLocaleDateString('en-IN', { month: 'short' });
+    const prevMonthName = prevMtdStart.toLocaleDateString('en-IN', { timeZone: getAppTimezone(), month: 'short' });
+    const currentMonthName = currentMtdStart.toLocaleDateString('en-IN', { timeZone: getAppTimezone(), month: 'short' });
 
     const periodLabel = `MTD (Days 1–${currentDay}) vs ${prevMonthName} 1–${prevCompareDay}`;
 
@@ -341,17 +342,17 @@ export function useSpendingInsights() {
   // Identifies 3 largest category changes between the exact same comparable periods
   const categoryMovements = useMemo<CategoryMovementItem[]>(() => {
     const now = new Date();
-    const currentYear = now.getFullYear();
-    const currentMonth = now.getMonth();
-    const currentDay = now.getDate();
+    const currentYear = zparts(now).year;
+    const currentMonth = zparts(now).month;
+    const currentDay = zparts(now).day;
 
-    const currentMtdStart = new Date(currentYear, currentMonth, 1, 0, 0, 0, 0);
+    const currentMtdStart = zdate(currentYear, currentMonth, 1, 0, 0, 0, 0);
     const currentMtdEnd = now;
 
-    const prevMtdStart = new Date(currentYear, currentMonth - 1, 1, 0, 0, 0, 0);
-    const daysInPrevMonth = new Date(currentYear, currentMonth, 0).getDate();
+    const prevMtdStart = zdate(currentYear, currentMonth - 1, 1, 0, 0, 0, 0);
+    const daysInPrevMonth = daysInMonth(currentYear, currentMonth - 1);
     const prevCompareDay = Math.min(currentDay, daysInPrevMonth);
-    const prevMtdEnd = new Date(currentYear, currentMonth - 1, prevCompareDay, 23, 59, 59, 999);
+    const prevMtdEnd = zdate(currentYear, currentMonth - 1, prevCompareDay, 23, 59, 59, 999);
 
     const curCatMap = new Map<string, number>();
     const prevCatMap = new Map<string, number>();

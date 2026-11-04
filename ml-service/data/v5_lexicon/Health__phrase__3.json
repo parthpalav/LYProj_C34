@@ -1,0 +1,214 @@
+[
+ {
+  "text": "new insulin",
+  "type": "Need"
+ },
+ {
+  "text": "x ray charges",
+  "type": "Need"
+ },
+ {
+  "text": "eye checkup",
+  "type": "Need"
+ },
+ {
+  "text": "tooth filling",
+  "type": "Need"
+ },
+ {
+  "text": "cough syrup",
+  "type": "Need"
+ },
+ {
+  "text": "vitamin b12",
+  "type": "Want"
+ },
+ {
+  "text": "pantop tablet",
+  "type": "Need"
+ },
+ {
+  "text": "flu shot",
+  "type": "Need"
+ },
+ {
+  "text": "surgery fee",
+  "type": "Need"
+ },
+ {
+  "text": "orthodontist visit",
+  "type": "Need"
+ },
+ {
+  "text": "gym membership",
+  "type": "Want"
+ },
+ {
+  "text": "yoga mat",
+  "type": "Want"
+ },
+ {
+  "text": "fitness band",
+  "type": "Want"
+ },
+ {
+  "text": "protein shake",
+  "type": "Want"
+ },
+ {
+  "text": "gym gloves",
+  "type": "Want"
+ },
+ {
+  "text": "supplement pow",
+  "type": "Want"
+ },
+ {
+  "text": "vitamin c",
+  "type": "Want"
+ },
+ {
+  "text": "blood test kit",
+  "type": "Need"
+ },
+ {
+  "text": "dentist visit",
+  "type": "Need"
+ },
+ {
+  "text": "eye drops",
+  "type": "Need"
+ },
+ {
+  "text": "medicine refill",
+  "type": "Need"
+ },
+ {
+  "text": "physio therapy",
+  "type": "Need"
+ },
+ {
+  "text": "fluoride toothpaste",
+  "type": "Need"
+ },
+ {
+  "text": "diabetes kit",
+  "type": "Need"
+ },
+ {
+  "text": "emergency kit",
+  "type": "Need"
+ },
+ {
+  "text": "covid test",
+  "type": "Need"
+ },
+ {
+  "text": "vitamin d",
+  "type": "Want"
+ },
+ {
+  "text": "health checkup",
+  "type": "Need"
+ },
+ {
+  "text": "cardiac scan",
+  "type": "Need"
+ },
+ {
+  "text": "injury brace",
+  "type": "Need"
+ },
+ {
+  "text": "orthodontist bill",
+  "type": "Need"
+ },
+ {
+  "text": "fluoro gel",
+  "type": "Need"
+ },
+ {
+  "text": "flu shots",
+  "type": "Need"
+ },
+ {
+  "text": "sugar test",
+  "type": "Need"
+ },
+ {
+  "text": "medicines delivery",
+  "type": "Need"
+ },
+ {
+  "text": "vitamin tablet",
+  "type": "Want"
+ },
+ {
+  "text": "influenza vaccine",
+  "type": "Need"
+ },
+ {
+  "text": "blood test",
+  "type": "Need"
+ },
+ {
+  "text": "pain relief",
+  "type": "Need"
+ },
+ {
+  "text": "vitamin a",
+  "type": "Want"
+ },
+ {
+  "text": "health supplements",
+  "type": "Want"
+ },
+ {
+  "text": "dental care",
+  "type": "Need"
+ },
+ {
+  "text": "vitamin e",
+  "type": "Want"
+ },
+ {
+  "text": "medicines",
+  "type": "Need"
+ },
+ {
+  "text": "vitamin b",
+  "type": "Want"
+ },
+ {
+  "text": "emergency care",
+  "type": "Need"
+ },
+ {
+  "text": "diabetes supplies",
+  "type": "Need"
+ },
+ {
+  "text": "fluoride rinse",
+  "type": "Need"
+ },
+ {
+  "text": "fitness classes",
+  "type": "Want"
+ },
+ {
+  "text": "fitness band",
+  "type": "Want"
+ },
+ {
+  "text": "protein powder",
+  "type": "Want"
+ },
+ {
+  "text": "gym wear",
+  "type": "Want"
+ },
+ {
+  "text": "probiotics",
+  "type": "Want"
+ }
+]

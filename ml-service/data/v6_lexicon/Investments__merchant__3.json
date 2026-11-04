@@ -1,0 +1,318 @@
+[
+ {
+  "text": "Axis Mutual",
+  "type": "Investment"
+ },
+ {
+  "text": "Birla Sunlife Mutual",
+  "type": "Investment"
+ },
+ {
+  "text": "Bajaj Capital",
+  "type": "Investment"
+ },
+ {
+  "text": "DSP BlackRock",
+  "type": "Investment"
+ },
+ {
+  "text": "Edelweiss",
+  "type": "Investment"
+ },
+ {
+  "text": "Fidelity",
+  "type": "Investment"
+ },
+ {
+  "text": "IDBI Mutual",
+  "type": "Investment"
+ },
+ {
+  "text": "IDFC Bank",
+  "type": "Investment"
+ },
+ {
+  "text": "Kotak Mahindra",
+  "type": "Investment"
+ },
+ {
+  "text": "Motilal Oswal",
+  "type": "Investment"
+ },
+ {
+  "text": "Navi Mutual",
+  "type": "Investment"
+ },
+ {
+  "text": "PineBridge",
+  "type": "Investment"
+ },
+ {
+  "text": "Principal Mutual",
+  "type": "Investment"
+ },
+ {
+  "text": "Quantum Mutual",
+  "type": "Investment"
+ },
+ {
+  "text": "SBI Mutual",
+  "type": "Investment"
+ },
+ {
+  "text": "Sundaram Mutual",
+  "type": "Investment"
+ },
+ {
+  "text": "Taurus Mutual",
+  "type": "Investment"
+ },
+ {
+  "text": "Union Mutual",
+  "type": "Investment"
+ },
+ {
+  "text": "UTI Mutual",
+  "type": "Investment"
+ },
+ {
+  "text": "Aditya Birla Tax",
+  "type": "Investment"
+ },
+ {
+  "text": "Axis Equity",
+  "type": "Investment"
+ },
+ {
+  "text": "Birla Sunlife Tax",
+  "type": "Investment"
+ },
+ {
+  "text": "DSP Tax",
+  "type": "Investment"
+ },
+ {
+  "text": "Franklin Tax",
+  "type": "Investment"
+ },
+ {
+  "text": "HDFC Equity",
+  "type": "Investment"
+ },
+ {
+  "text": "HDFC Tax",
+  "type": "Investment"
+ },
+ {
+  "text": "ICICI Equity",
+  "type": "Investment"
+ },
+ {
+  "text": "ICICI Tax",
+  "type": "Investment"
+ },
+ {
+  "text": "IDBI Tax",
+  "type": "Investment"
+ },
+ {
+  "text": "IDFC Tax",
+  "type": "Investment"
+ },
+ {
+  "text": "Kotak Tax",
+  "type": "Investment"
+ },
+ {
+  "text": "Motilal Oswal Tax",
+  "type": "Investment"
+ },
+ {
+  "text": "Nippon Tax",
+  "type": "Investment"
+ },
+ {
+  "text": "PineBridge Tax",
+  "type": "Investment"
+ },
+ {
+  "text": "Principal Tax",
+  "type": "Investment"
+ },
+ {
+  "text": "Quantum Tax",
+  "type": "Investment"
+ },
+ {
+  "text": "SBI Tax",
+  "type": "Investment"
+ },
+ {
+  "text": "Sundaram Tax",
+  "type": "Investment"
+ },
+ {
+  "text": "Taurus Tax",
+  "type": "Investment"
+ },
+ {
+  "text": "Union Tax",
+  "type": "Investment"
+ },
+ {
+  "text": "UTI Tax",
+  "type": "Investment"
+ },
+ {
+  "text": "Axis Gold",
+  "type": "Investment"
+ },
+ {
+  "text": "Birla Sunlife Gold",
+  "type": "Investment"
+ },
+ {
+  "text": "DSP Gold",
+  "type": "Investment"
+ },
+ {
+  "text": "Franklin Gold",
+  "type": "Investment"
+ },
+ {
+  "text": "HDFC Gold",
+  "type": "Investment"
+ },
+ {
+  "text": "ICICI Gold",
+  "type": "Investment"
+ },
+ {
+  "text": "IDBI Gold",
+  "type": "Investment"
+ },
+ {
+  "text": "IDFC Gold",
+  "type": "Investment"
+ },
+ {
+  "text": "Kotak Gold",
+  "type": "Investment"
+ },
+ {
+  "text": "Motilal Oswal Gold",
+  "type": "Investment"
+ },
+ {
+  "text": "Nippon Gold",
+  "type": "Investment"
+ },
+ {
+  "text": "PineBridge Gold",
+  "type": "Investment"
+ },
+ {
+  "text": "Principal Gold",
+  "type": "Investment"
+ },
+ {
+  "text": "Quantum Gold",
+  "type": "Investment"
+ },
+ {
+  "text": "SBI Gold",
+  "type": "Investment"
+ },
+ {
+  "text": "Sundaram Gold",
+  "type": "Investment"
+ },
+ {
+  "text": "Taurus Gold",
+  "type": "Investment"
+ },
+ {
+  "text": "Union Gold",
+  "type": "Investment"
+ },
+ {
+  "text": "UTI Gold",
+  "type": "Investment"
+ },
+ {
+  "text": "Axis NPS",
+  "type": "Investment"
+ },
+ {
+  "text": "Birla Sunlife NPS",
+  "type": "Investment"
+ },
+ {
+  "text": "DSP NPS",
+  "type": "Investment"
+ },
+ {
+  "text": "Franklin NPS",
+  "type": "Investment"
+ },
+ {
+  "text": "HDFC NPS",
+  "type": "Investment"
+ },
+ {
+  "text": "ICICI NPS",
+  "type": "Investment"
+ },
+ {
+  "text": "IDBI NPS",
+  "type": "Investment"
+ },
+ {
+  "text": "IDFC NPS",
+  "type": "Investment"
+ },
+ {
+  "text": "Kotak NPS",
+  "type": "Investment"
+ },
+ {
+  "text": "Motilal Oswal NPS",
+  "type": "Investment"
+ },
+ {
+  "text": "Nippon NPS",
+  "type": "Investment"
+ },
+ {
+  "text": "PineBridge NPS",
+  "type": "Investment"
+ },
+ {
+  "text": "Principal NPS",
+  "type": "Investment"
+ },
+ {
+  "text": "Quantum NPS",
+  "type": "Investment"
+ },
+ {
+  "text": "SBI NPS",
+  "type": "Investment"
+ },
+ {
+  "text": "Sundaram NPS",
+  "type": "Investment"
+ },
+ {
+  "text": "Taurus NPS",
+  "type": "Investment"
+ },
+ {
+  "text": "Union NPS",
+  "type": "Investment"
+ },
+ {
+  "text": "UTI NPS",
+  "type": "Investment"
+ }
+]

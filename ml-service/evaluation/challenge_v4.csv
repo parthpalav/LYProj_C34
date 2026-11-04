@@ -93,14 +93,14 @@ protein powder,Health,Want
 yoga classes,Health,Want
 practo consultation,Health,Need
 UPI/DR/301234567890/MEDPLUS PHARMACY/ybl,Health,Need
-udemy python course,Education,Investment
-college fees,Education,Investment
+udemy python course,Education,Need
+college fees,Education,Need
 school fees,Education,Need
 ncert books for son,Education,Need
-coaching for jee,Education,Investment
-aws certification exam,Education,Investment
+coaching for jee,Education,Need
+aws certification exam,Education,Need
 stationery for kids,Education,Need
-coursera subscription,Education,Investment
+coursera subscription,Education,Need
 haircut,Personal Care,Want
 salon facial,Personal Care,Want
 toothpaste and soap,Personal Care,Need
@@ -149,3 +149,10 @@ domino's pizza,Food & Dining,Want
 blinkit,Groceries,Need
 pharmeasy medicines,Health,Need
 dhan app sip,Investments,Investment
+board game cafe entry and games,Entertainment,Want
+STAR SPORTS CAFE,Entertainment,Want
+cafe latte and croissant,Food & Dining,Want
+school van fees,Education,Need
+college semester fees,Education,Need
+irctc train ticket booking,Transport & Travel,Want
+local bus pass,Transport & Travel,Need

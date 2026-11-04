@@ -11,6 +11,7 @@
  */
 
 import type { Transaction, IncomeRecord, Liability } from '../types';
+import { dateKey } from './timezone';
 
 /**
  * Formula triggers that could execute malicious spreadsheet formulas
@@ -99,7 +100,7 @@ export function transactionsToCsv(transactions: Transaction[]): string {
   ];
 
   const rows = transactions.map((tx) => [
-    tx.timestamp ? new Date(tx.timestamp).toISOString().slice(0, 10) : '',
+    tx.timestamp ? dateKey(tx.timestamp) : '',
     tx.description || '',
     tx.category || 'Misc',
     tx.type || 'Need',
@@ -115,7 +116,7 @@ export function incomesToCsv(incomes: IncomeRecord[]): string {
   const headers = ['Date', 'Source', 'Amount', 'Description'];
 
   const rows = incomes.map((inc) => [
-    inc.timestamp ? new Date(inc.timestamp).toISOString().slice(0, 10) : '',
+    inc.timestamp ? dateKey(inc.timestamp) : '',
     inc.source || 'salary',
     Number(inc.amount) || 0,
     inc.description || ''
@@ -145,7 +146,7 @@ export function liabilitiesToCsv(liabilities: Liability[]): string {
     l.outstandingBalance !== null && l.outstandingBalance !== undefined ? Number(l.outstandingBalance) : '',
     l.interestRate !== null && l.interestRate !== undefined ? Number(l.interestRate) : '',
     l.frequency || 'monthly',
-    l.nextDueDate ? new Date(l.nextDueDate).toISOString().slice(0, 10) : '',
+    l.nextDueDate ? dateKey(l.nextDueDate) : '',
     l.status || 'active'
   ]);
 

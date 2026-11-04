@@ -1,0 +1,306 @@
+[
+ {
+  "text": "DailyNeeds",
+  "type": "Need"
+ },
+ {
+  "text": "GrocerBasket",
+  "type": "Need"
+ },
+ {
+  "text": "FreshBasket",
+  "type": "Need"
+ },
+ {
+  "text": "QuickMarts",
+  "type": "Need"
+ },
+ {
+  "text": "FreshMyntra",
+  "type": "Need"
+ },
+ {
+  "text": "FreshOasis",
+  "type": "Need"
+ },
+ {
+  "text": "FreshGrocer",
+  "type": "Need"
+ },
+ {
+  "text": "Spree",
+  "type": "Need"
+ },
+ {
+  "text": "Fresh2Mypack",
+  "type": "Need"
+ },
+ {
+  "text": "SuperBazaar",
+  "type": "Need"
+ },
+ {
+  "text": "MilkMart",
+  "type": "Need"
+ },
+ {
+  "text": "VeggieVille",
+  "type": "Need"
+ },
+ {
+  "text": "GreenCart",
+  "type": "Need"
+ },
+ {
+  "text": "FreshWave",
+  "type": "Need"
+ },
+ {
+  "text": "DailyGrocer",
+  "type": "Need"
+ },
+ {
+  "text": "FreshCrate",
+  "type": "Need"
+ },
+ {
+  "text": "FruitsNMore",
+  "type": "Need"
+ },
+ {
+  "text": "MunchiesMart",
+  "type": "Want"
+ },
+ {
+  "text": "TreatBox",
+  "type": "Want"
+ },
+ {
+  "text": "SnackSquad",
+  "type": "Want"
+ },
+ {
+  "text": "SweetCorner",
+  "type": "Want"
+ },
+ {
+  "text": "ChocoCrave",
+  "type": "Want"
+ },
+ {
+  "text": "DessertDelight",
+  "type": "Want"
+ },
+ {
+  "text": "YummyBits",
+  "type": "Want"
+ },
+ {
+  "text": "CrunchMart",
+  "type": "Want"
+ },
+ {
+  "text": "LuxeGrocery",
+  "type": "Want"
+ },
+ {
+  "text": "GourmetGarden",
+  "type": "Want"
+ },
+ {
+  "text": "FancyFoods",
+  "type": "Want"
+ },
+ {
+  "text": "ExoticEdibles",
+  "type": "Want"
+ },
+ {
+  "text": "PremiumPantry",
+  "type": "Want"
+ },
+ {
+  "text": "FineFare",
+  "type": "Want"
+ },
+ {
+  "text": "TemptationsTreats",
+  "type": "Want"
+ },
+ {
+  "text": "GourmetGoods",
+  "type": "Want"
+ },
+ {
+  "text": "LuxuryLarder",
+  "type": "Want"
+ },
+ {
+  "text": "EliteEats",
+  "type": "Want"
+ },
+ {
+  "text": "GourmetGifts",
+  "type": "Want"
+ },
+ {
+  "text": "DeluxeDelicacies",
+  "type": "Want"
+ },
+ {
+  "text": "ChocoCherish",
+  "type": "Want"
+ },
+ {
+  "text": "FancyFavourites",
+  "type": "Want"
+ },
+ {
+  "text": "LuxeLunches",
+  "type": "Want"
+ },
+ {
+  "text": "PremiumPies",
+  "type": "Want"
+ },
+ {
+  "text": "GourmetGems",
+  "type": "Want"
+ },
+ {
+  "text": "LuxuryLunches",
+  "type": "Want"
+ },
+ {
+  "text": "GourmetGala",
+  "type": "Want"
+ },
+ {
+  "text": "DeluxeDesserts",
+  "type": "Want"
+ },
+ {
+  "text": "EliteEdibles",
+  "type": "Want"
+ },
+ {
+  "text": "GourmetGalore",
+  "type": "Want"
+ },
+ {
+  "text": "DeluxeDelights",
+  "type": "Want"
+ },
+ {
+  "text": "EliteEats",
+  "type": "Want"
+ },
+ {
+  "text": "LuxeLunches",
+  "type": "Want"
+ },
+ {
+  "text": "GourmetGifts",
+  "type": "Want"
+ },
+ {
+  "text": "DeluxeDesserts",
+  "type": "Want"
+ },
+ {
+  "text": "EliteEdibles",
+  "type": "Want"
+ },
+ {
+  "text": "GourmetGala",
+  "type": "Want"
+ },
+ {
+  "text": "InvestGrocery",
+  "type": "Investment"
+ },
+ {
+  "text": "GrowMyBag",
+  "type": "Investment"
+ },
+ {
+  "text": "GroceryVault",
+  "type": "Investment"
+ },
+ {
+  "text": "InvestFood",
+  "type": "Investment"
+ },
+ {
+  "text": "GrowMyBasket",
+  "type": "Investment"
+ },
+ {
+  "text": "GrowMyLunch",
+  "type": "Investment"
+ },
+ {
+  "text": "GrowMyMeal",
+  "type": "Investment"
+ },
+ {
+  "text": "GroceryGrowth",
+  "type": "Investment"
+ },
+ {
+  "text": "GrowMyFood",
+  "type": "Investment"
+ },
+ {
+  "text": "GrowMyGrocery",
+  "type": "Investment"
+ },
+ {
+  "text": "GroceryUp",
+  "type": "Investment"
+ },
+ {
+  "text": "GroceryGrow",
+  "type": "Investment"
+ },
+ {
+  "text": "GrowMyEats",
+  "type": "Investment"
+ },
+ {
+  "text": "GroceryBoost",
+  "type": "Investment"
+ },
+ {
+  "text": "GrowMySupplies",
+  "type": "Investment"
+ },
+ {
+  "text": "GrowMyMealPlan",
+  "type": "Investment"
+ },
+ {
+  "text": "GrowMyDiet",
+  "type": "Investment"
+ },
+ {
+  "text": "GroceryInvest",
+  "type": "Investment"
+ },
+ {
+  "text": "GroceryGrowPlus",
+  "type": "Investment"
+ },
+ {
+  "text": "GrowMyGroceries",
+  "type": "Investment"
+ },
+ {
+  "text": "GroceryGrowthPlus",
+  "type": "Investment"
+ },
+ {
+  "text": "GrowMyGroceryPlus",
+  "type": "Investment"
+ }
+]

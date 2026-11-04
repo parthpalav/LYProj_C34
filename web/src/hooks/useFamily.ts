@@ -19,6 +19,7 @@ import type {
   FamilyMember,
 } from '../types';
 import { getHumanReadableFamilyError } from '../utils/familyFormatters';
+import { celebrate } from '../utils/celebrate';
 
 export function useFamily() {
   const { user } = useAuth();
@@ -127,6 +128,7 @@ export function useFamily() {
     try {
       await acceptFamilyInvitation(invitationId);
       await fetchFamilyData(true);
+      celebrate({ kind: 'confetti', title: 'Welcome to the Family!', subtitle: 'You have joined the household. Your shared overview is ready.' });
       return { success: true };
     } catch (err: unknown) {
       const msg = getHumanReadableFamilyError(err, 'Failed to accept invitation.');

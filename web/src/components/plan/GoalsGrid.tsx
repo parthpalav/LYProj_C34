@@ -11,6 +11,7 @@ interface GoalsGridProps {
   onAddGoal: () => void;
   onEditGoal: (goal: Goal) => void;
   onDeleteGoal: (goal: Goal) => void;
+  onFundGoal?: (goal: Goal) => void;
 }
 
 function formatINR(val: number): string {
@@ -25,6 +26,7 @@ export const GoalsGrid: React.FC<GoalsGridProps> = ({
   onAddGoal,
   onEditGoal,
   onDeleteGoal,
+  onFundGoal,
 }) => {
   return (
     <div className="plan-goals-section">
@@ -80,6 +82,7 @@ export const GoalsGrid: React.FC<GoalsGridProps> = ({
               goal={goal}
               onEdit={onEditGoal}
               onDelete={onDeleteGoal}
+              onFund={onFundGoal}
             />
           ))}
         </div>

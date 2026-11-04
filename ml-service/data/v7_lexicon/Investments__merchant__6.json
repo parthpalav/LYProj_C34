@@ -1,0 +1,322 @@
+[
+ {
+  "text": "Jio BlackRock Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Bajaj Finserv Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Baroda Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Jio BlackRock MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Bajaj Finserv MF",
+  "type": "Investment"
+ },
+ {
+  "text": "Tata Digital India Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Sundaram Small Cap Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Kotak Emerging Equity Growth",
+  "type": "Investment"
+ },
+ {
+  "text": "HDFC Midcap Direct Plan",
+  "type": "Investment"
+ },
+ {
+  "text": "HDFC Flexi Cap Growth",
+  "type": "Investment"
+ },
+ {
+  "text": "SBI Small Cap Direct",
+  "type": "Investment"
+ },
+ {
+  "text": "SBI Magnum Equity Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "ICICI Pru Bluechip Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Axis Long Term Equity",
+  "type": "Investment"
+ },
+ {
+  "text": "Axis Small Cap Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Nippon India Small Cap",
+  "type": "Investment"
+ },
+ {
+  "text": "Nippon India Liquid Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Mirae Asset Large Cap",
+  "type": "Investment"
+ },
+ {
+  "text": "Parag Parikh Liquid Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Quant Small Cap Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Quant Active Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "DSP Midcap Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "DSP Equity Opportunities",
+  "type": "Investment"
+ },
+ {
+  "text": "Franklin India Bluechip",
+  "type": "Investment"
+ },
+ {
+  "text": "Franklin India Prima",
+  "type": "Investment"
+ },
+ {
+  "text": "Invesco India Contra",
+  "type": "Investment"
+ },
+ {
+  "text": "Edelweiss Balanced Advantage",
+  "type": "Investment"
+ },
+ {
+  "text": "UTI Nifty Index Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "UTI Flexi Cap Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Canara Robeco Emerging Equities",
+  "type": "Investment"
+ },
+ {
+  "text": "PGIM India Flexi Cap",
+  "type": "Investment"
+ },
+ {
+  "text": "Motilal Oswal Midcap Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Motilal Nifty Bank Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Aditya Birla Frontline Equity",
+  "type": "Investment"
+ },
+ {
+  "text": "Aditya Birla Liquid Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "ICICI Pru Liquid Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Kotak Standard Multicap",
+  "type": "Investment"
+ },
+ {
+  "text": "Kotak Corporate Bond Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Sahara Growth Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Tata Balanced Advantage",
+  "type": "Investment"
+ },
+ {
+  "text": "Principal Hybrid Equity",
+  "type": "Investment"
+ },
+ {
+  "text": "Taurus Discovery Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Union Small Cap Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Union Liquid Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Baroda BNP Balanced Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Groww Nifty Index Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Navi Nifty 50 Index",
+  "type": "Investment"
+ },
+ {
+  "text": "Mahindra Manulife Hybrid",
+  "type": "Investment"
+ },
+ {
+  "text": "Shriram Liquid Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Sundaram Ultra Short Duration",
+  "type": "Investment"
+ },
+ {
+  "text": "Bandhan Core Equity",
+  "type": "Investment"
+ },
+ {
+  "text": "Bandhan Small Cap Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "HSBC Value Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "HSBC Multi Cap Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Helios Flexi Cap",
+  "type": "Investment"
+ },
+ {
+  "text": "Trust Mid Cap Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "ITI Balanced Advantage",
+  "type": "Investment"
+ },
+ {
+  "text": "Old Bridge Liquid Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Whiteoak Large Cap Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Bharat Mutual Fund Centre",
+  "type": "Investment"
+ },
+ {
+  "text": "Shree Ganesh MF Point",
+  "type": "Investment"
+ },
+ {
+  "text": "Ambe Mutual Fund Point",
+  "type": "Investment"
+ },
+ {
+  "text": "Laxmi Mutual Fund Kendra",
+  "type": "Investment"
+ },
+ {
+  "text": "Ram Mutual Fund Sewa",
+  "type": "Investment"
+ },
+ {
+  "text": "Sai Mutual Fund Point",
+  "type": "Investment"
+ },
+ {
+  "text": "Ganpati Mutual Fund Centre",
+  "type": "Investment"
+ },
+ {
+  "text": "Vishwakarma SIP Corner",
+  "type": "Investment"
+ },
+ {
+  "text": "Gurudev Mutual Funds Agency",
+  "type": "Investment"
+ },
+ {
+  "text": "Jai Mata MF Agency",
+  "type": "Investment"
+ },
+ {
+  "text": "Sri Balaji MF Agents",
+  "type": "Investment"
+ },
+ {
+  "text": "Ashirwad Mutual Fund Agency",
+  "type": "Investment"
+ },
+ {
+  "text": "Mahalaxmi Fund House",
+  "type": "Investment"
+ },
+ {
+  "text": "Sharda Mutual Fund Point",
+  "type": "Investment"
+ },
+ {
+  "text": "Kashi Mutual Fund Agency",
+  "type": "Investment"
+ },
+ {
+  "text": "Durga SIP Agency",
+  "type": "Investment"
+ },
+ {
+  "text": "Pragati Mutual Fund Sewa",
+  "type": "Investment"
+ },
+ {
+  "text": "Om Sai Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Kedar Mutual Fund Centre",
+  "type": "Investment"
+ },
+ {
+  "text": "Vinayak SIP Point",
+  "type": "Investment"
+ },
+ {
+  "text": "Shriram Balanced Fund",
+  "type": "Investment"
+ }
+]

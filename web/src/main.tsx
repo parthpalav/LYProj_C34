@@ -10,6 +10,9 @@ import './styles/overview.css'
 import './styles/auth.css'
 import './styles/landing.css'
 import './styles/usability.css'
+import './styles/parity.css'
+import './styles/theme.css'
+import './styles/celebrate.css'
 import App from './App.tsx'
 
 createRoot(document.getElementById('root')!).render(

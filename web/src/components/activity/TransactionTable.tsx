@@ -18,13 +18,16 @@ import {
   Trash2,
   AlertCircle,
 } from 'lucide-react';
-import type { Transaction } from '../../types';
+import type { Transaction, PaymentMethod } from '../../types';
+import { transactionPaymentLabel } from '../../utils/paymentMethods';
 import { formatCurrencyINR, formatDateFull, getTransactionDate } from '../../utils/formatters';
 import { EmptyState } from '../dashboard/EmptyState';
 import { Button } from '../ui/Button';
 
 export interface TransactionTableProps {
   transactions: Transaction[];
+  /** Saved payment methods, archived included, to label each row. */
+  paymentMethods?: PaymentMethod[];
   page: number;
   totalPages: number;
   onPageChange: (newPage: number) => void;
@@ -38,6 +41,7 @@ export interface TransactionTableProps {
 
 export const TransactionTable: React.FC<TransactionTableProps> = ({
   transactions,
+  paymentMethods = [],
   page,
   totalPages,
   onPageChange,
@@ -184,6 +188,9 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({
                       </div>
                       <div className="desc-text-group">
                         <span className="desc-title">{tx.description || 'Untitled Transaction'}</span>
+                        {transactionPaymentLabel(tx.paymentMethodId, paymentMethods) && (
+                          <span className="tx-paid-with">{transactionPaymentLabel(tx.paymentMethodId, paymentMethods)}</span>
+                        )}
                         {tx.isAnomaly && (
                           <span className="anomaly-tag" title="Flagged as unusual activity compared to routine pattern">
                             <AlertCircle size={10} aria-hidden="true" />
@@ -259,7 +266,10 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({
                   </div>
                   <div className="ledger-card-info">
                     <span className="ledger-card-desc">{tx.description || 'Untitled Transaction'}</span>
-                    <span className="ledger-card-date">{formatDateFull(dateObj)}</span>
+                    <span className="ledger-card-date">
+                      {formatDateFull(dateObj)}
+                      {transactionPaymentLabel(tx.paymentMethodId, paymentMethods) && ` · ${transactionPaymentLabel(tx.paymentMethodId, paymentMethods)}`}
+                    </span>
                   </div>
                 </div>
                 <span className={`tabular-nums ledger-card-amount ${isInvestment ? 'tx-amount-investment' : 'amount-outflow'}`}>

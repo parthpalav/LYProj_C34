@@ -1,0 +1,306 @@
+[
+ {
+  "text": "Apollo Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Bhavya Medical",
+  "type": "Need"
+ },
+ {
+  "text": "City HealthCare",
+  "type": "Need"
+ },
+ {
+  "text": "Eva Dental",
+  "type": "Need"
+ },
+ {
+  "text": "Ganesh Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "HealthMitra",
+  "type": "Need"
+ },
+ {
+  "text": "Kisan Medical",
+  "type": "Need"
+ },
+ {
+  "text": "Laxmi Diagnostics",
+  "type": "Need"
+ },
+ {
+  "text": "Maa Medicare",
+  "type": "Need"
+ },
+ {
+  "text": "Medicircle",
+  "type": "Need"
+ },
+ {
+  "text": "MyDoc",
+  "type": "Need"
+ },
+ {
+  "text": "Nava Jyoti",
+  "type": "Need"
+ },
+ {
+  "text": "Piyush Dental",
+  "type": "Need"
+ },
+ {
+  "text": "Prashant Pharmacy",
+  "type": "Need"
+ },
+ {
+  "text": "Ramji Health Centre",
+  "type": "Need"
+ },
+ {
+  "text": "Shree Ayurveda Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Shubham Medical",
+  "type": "Need"
+ },
+ {
+  "text": "Suraj Diagnostics",
+  "type": "Need"
+ },
+ {
+  "text": "Swasthya Hospital",
+  "type": "Need"
+ },
+ {
+  "text": "Veda Health",
+  "type": "Need"
+ },
+ {
+  "text": "Vedic Medical",
+  "type": "Need"
+ },
+ {
+  "text": "Vedika Clinic",
+  "type": "Need"
+ },
+ {
+  "text": "Vitality Medical",
+  "type": "Need"
+ },
+ {
+  "text": "Yogendra Health",
+  "type": "Need"
+ },
+ {
+  "text": "Aayush Fitness",
+  "type": "Want"
+ },
+ {
+  "text": "BodyFuel",
+  "type": "Want"
+ },
+ {
+  "text": "FitnessMax",
+  "type": "Want"
+ },
+ {
+  "text": "GymFitPro",
+  "type": "Want"
+ },
+ {
+  "text": "PowerFit",
+  "type": "Want"
+ },
+ {
+  "text": "ProteinX",
+  "type": "Want"
+ },
+ {
+  "text": "RevolutionFit",
+  "type": "Want"
+ },
+ {
+  "text": "StrengthMax",
+  "type": "Want"
+ },
+ {
+  "text": "SupplementZone",
+  "type": "Want"
+ },
+ {
+  "text": "TitanFit",
+  "type": "Want"
+ },
+ {
+  "text": "UltimateGym",
+  "type": "Want"
+ },
+ {
+  "text": "WellnessFirst",
+  "type": "Want"
+ },
+ {
+  "text": "BodyFuel",
+  "type": "Want"
+ },
+ {
+  "text": "FitFlex",
+  "type": "Want"
+ },
+ {
+  "text": "FitMax",
+  "type": "Want"
+ },
+ {
+  "text": "FitPeak",
+  "type": "Want"
+ },
+ {
+  "text": "FitZonePro",
+  "type": "Want"
+ },
+ {
+  "text": "FitVital",
+  "type": "Want"
+ },
+ {
+  "text": "FitnessBoost",
+  "type": "Want"
+ },
+ {
+  "text": "GymElite",
+  "type": "Want"
+ },
+ {
+  "text": "HealthPeak",
+  "type": "Want"
+ },
+ {
+  "text": "PinnacleFit",
+  "type": "Want"
+ },
+ {
+  "text": "PrimePeak",
+  "type": "Want"
+ },
+ {
+  "text": "ProFitPeak",
+  "type": "Want"
+ },
+ {
+  "text": "ProteinPeak",
+  "type": "Want"
+ },
+ {
+  "text": "SupplementPeak",
+  "type": "Want"
+ },
+ {
+  "text": "UltimatePeak",
+  "type": "Want"
+ },
+ {
+  "text": "VitalPeak",
+  "type": "Want"
+ },
+ {
+  "text": "WellnessPeak",
+  "type": "Want"
+ },
+ {
+  "text": "ZestFit",
+  "type": "Want"
+ },
+ {
+  "text": "ActivePeak",
+  "type": "Want"
+ },
+ {
+  "text": "FitnessPrime",
+  "type": "Want"
+ },
+ {
+  "text": "HealthFit",
+  "type": "Want"
+ },
+ {
+  "text": "PeakFit",
+  "type": "Want"
+ },
+ {
+  "text": "SupplementFit",
+  "type": "Want"
+ },
+ {
+  "text": "VitalityFit",
+  "type": "Want"
+ },
+ {
+  "text": "WellnessFit",
+  "type": "Want"
+ },
+ {
+  "text": "ZestFit",
+  "type": "Want"
+ },
+ {
+  "text": "PeakFitPro",
+  "type": "Want"
+ },
+ {
+  "text": "FitnessPeak",
+  "type": "Want"
+ },
+ {
+  "text": "PeakHealth",
+  "type": "Want"
+ },
+ {
+  "text": "PeakSupplements",
+  "type": "Want"
+ },
+ {
+  "text": "PeakWellness",
+  "type": "Want"
+ },
+ {
+  "text": "ProFitPeak",
+  "type": "Want"
+ },
+ {
+  "text": "SupplementPeak",
+  "type": "Want"
+ },
+ {
+  "text": "VitalityPeak",
+  "type": "Want"
+ },
+ {
+  "text": "WellnessPeak",
+  "type": "Want"
+ },
+ {
+  "text": "ActivePeakPro",
+  "type": "Want"
+ },
+ {
+  "text": "PeakFitPro",
+  "type": "Want"
+ },
+ {
+  "text": "PeakSupplement",
+  "type": "Want"
+ },
+ {
+  "text": "PeakWellnessPro",
+  "type": "Want"
+ },
+ {
+  "text": "SupplementPeakPro",
+  "type": "Want"
+ }
+]

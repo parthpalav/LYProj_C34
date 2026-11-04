@@ -15,6 +15,7 @@ import {
   CONTRIBUTION_MODE
 } from '../config/financialRules.js';
 import { logger } from '../utils/logger.js';
+import { zoneForecastInput } from '../services/userTimezone.js';
 
 const ALLOWED_SCENARIO_KEYS = Object.freeze([
   'monthlyContribution',
@@ -273,9 +274,11 @@ export const evaluateScenario = async (req, res, next) => {
     }
 
     // 7. Calculate Projection Snapshot using existing tested engine
-    const resolved = resolveForecastInputs(data, options);
-    const snapshot = buildPredictabilitySnapshot(data, options);
-    const result = await attachMonteCarloSimulation(snapshot, resolved, options);
+    const [zonedData, zonedOptions] = zoneForecastInput(data, options);
+    const resolved = resolveForecastInputs(zonedData, zonedOptions);
+    const snapshot = buildPredictabilitySnapshot(zonedData, zonedOptions);
+    snapshot.generatedAt = new Date().toISOString();
+    const result = await attachMonteCarloSimulation(snapshot, resolved, zonedOptions);
 
     return res.status(200).json({
       success: true,

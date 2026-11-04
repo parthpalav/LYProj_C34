@@ -1,0 +1,242 @@
+[
+ {
+  "text": "metro ticket",
+  "type": "Need"
+ },
+ {
+  "text": "bus fare",
+  "type": "Need"
+ },
+ {
+  "text": "local train ticket",
+  "type": "Need"
+ },
+ {
+  "text": "auta ride",
+  "type": "Need"
+ },
+ {
+  "text": "fuel for car",
+  "type": "Need"
+ },
+ {
+  "text": "toll tax",
+  "type": "Need"
+ },
+ {
+  "text": "parking fee",
+  "type": "Need"
+ },
+ {
+  "text": "ev charge",
+  "type": "Need"
+ },
+ {
+  "text": "car service",
+  "type": "Need"
+ },
+ {
+  "text": "tyre repair",
+  "type": "Need"
+ },
+ {
+  "text": "new tyres",
+  "type": "Need"
+ },
+ {
+  "text": "helmet for bike",
+  "type": "Need"
+ },
+ {
+  "text": "car wash station",
+  "type": "Want"
+ },
+ {
+  "text": "intercity bus",
+  "type": "Want"
+ },
+ {
+  "text": "intercity train",
+  "type": "Want"
+ },
+ {
+  "text": "ticket for trip",
+  "type": "Want"
+ },
+ {
+  "text": "flight ticket",
+  "type": "Want"
+ },
+ {
+  "text": "hotel stay",
+  "type": "Want"
+ },
+ {
+  "text": "holidays",
+  "type": "Want"
+ },
+ {
+  "text": "cabs to work",
+  "type": "Want"
+ },
+ {
+  "text": "car parts",
+  "type": "Need"
+ },
+ {
+  "text": "fastag recharge",
+  "type": "Need"
+ },
+ {
+  "text": "toll pass",
+  "type": "Need"
+ },
+ {
+  "text": "auto ride back",
+  "type": "Need"
+ },
+ {
+  "text": "metro to work",
+  "type": "Need"
+ },
+ {
+  "text": "bike service",
+  "type": "Need"
+ },
+ {
+  "text": "bus to college",
+  "type": "Need"
+ },
+ {
+  "text": "train ticket",
+  "type": "Want"
+ },
+ {
+  "text": "flight to delhi",
+  "type": "Want"
+ },
+ {
+  "text": "hotel booking",
+  "type": "Want"
+ },
+ {
+  "text": "holiday in goa",
+  "type": "Want"
+ },
+ {
+  "text": "cabs for vacation",
+  "type": "Want"
+ },
+ {
+  "text": "car wash",
+  "type": "Want"
+ },
+ {
+  "text": "tyre change",
+  "type": "Need"
+ },
+ {
+  "text": "helmets for family",
+  "type": "Need"
+ },
+ {
+  "text": "car wash kit",
+  "type": "Want"
+ },
+ {
+  "text": "intercity bus ticket",
+  "type": "Want"
+ },
+ {
+  "text": "intercity train ticket",
+  "type": "Want"
+ },
+ {
+  "text": "flight booking",
+  "type": "Want"
+ },
+ {
+  "text": "hotel reservation",
+  "type": "Want"
+ },
+ {
+  "text": "holiday package",
+  "type": "Want"
+ },
+ {
+  "text": "cabs for travel",
+  "type": "Want"
+ },
+ {
+  "text": "car parts for repair",
+  "type": "Need"
+ },
+ {
+  "text": "toll tax for highway",
+  "type": "Need"
+ },
+ {
+  "text": "parking downtown",
+  "type": "Need"
+ },
+ {
+  "text": "ev charging station",
+  "type": "Need"
+ },
+ {
+  "text": "car service done",
+  "type": "Need"
+ },
+ {
+  "text": "tyre puncture fix",
+  "type": "Need"
+ },
+ {
+  "text": "helmet for riding",
+  "type": "Need"
+ },
+ {
+  "text": "metro pass",
+  "type": "Need"
+ },
+ {
+  "text": "local bus ticket",
+  "type": "Need"
+ },
+ {
+  "text": "local train pass",
+  "type": "Need"
+ },
+ {
+  "text": "auto fare",
+  "type": "Need"
+ },
+ {
+  "text": "fuel refill",
+  "type": "Need"
+ },
+ {
+  "text": "toll booth",
+  "type": "Need"
+ },
+ {
+  "text": "parking lot",
+  "type": "Need"
+ },
+ {
+  "text": "ev charge done",
+  "type": "Need"
+ },
+ {
+  "text": "car maintenance",
+  "type": "Need"
+ },
+ {
+  "text": "tyre replacement",
+  "type": "Need"
+ },
+ {
+  "text": "helmet for safety",
+  "type": "Need"
+ }
+]

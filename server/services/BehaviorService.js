@@ -2,9 +2,11 @@
  * BehaviorService — Behavioral pattern detection + Financial Integrity Score (FIS)
  */
 
+import { DEFAULT_TIMEZONE, zonedHour } from '../utils/userTime.js';
+
 // ── Behavioral Pattern Detection ────────────────────────────
 
-function detectBehavioralPatterns(transactions = []) {
+function detectBehavioralPatterns(transactions = [], tz = DEFAULT_TIMEZONE) {
   const patterns = [];
   if (!transactions.length) return patterns;
 
@@ -12,7 +14,7 @@ function detectBehavioralPatterns(transactions = []) {
 
   // 1. Food spike
   const foodTxs = transactions.filter((t) =>
-    ['food', 'food-drink'].includes((t.category || '').toLowerCase())
+    ['food & dining', 'food', 'food-drink'].includes((t.category || '').toLowerCase())
   );
   if (foodTxs.length) {
     const foodAvg = foodTxs.reduce((s, t) => s + t.amount, 0) / foodTxs.length;
@@ -28,7 +30,7 @@ function detectBehavioralPatterns(transactions = []) {
 
   // 2. Late-night purchases
   const lateNight = transactions.filter((t) => {
-    const h = new Date(t.timestamp).getHours();
+    const h = zonedHour(new Date(t.timestamp), tz);
     return h >= 22 || h <= 4;
   });
   if (lateNight.length >= 2) {
@@ -116,7 +118,7 @@ function calculateFIS(transactions = [], fmiHistory = [], envelopes = null) {
 
 // ── Weekly Report ────────────────────────────────────────────
 
-function generateWeeklyReport(transactions = [], fmiHistory = []) {
+function generateWeeklyReport(transactions = [], fmiHistory = [], tz = DEFAULT_TIMEZONE) {
   const totalSpend = transactions.reduce((s, t) => s + t.amount, 0);
 
   // Category breakdown
@@ -143,7 +145,7 @@ function generateWeeklyReport(transactions = [], fmiHistory = []) {
   const anomalyCount = transactions.filter((t) => t.isAnomaly).length;
 
   // Behavioral patterns
-  const patterns = detectBehavioralPatterns(transactions);
+  const patterns = detectBehavioralPatterns(transactions, tz);
 
   return {
     totalSpend: Math.round(totalSpend),

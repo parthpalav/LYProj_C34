@@ -1,24 +1,22 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  StyleSheet,
-  SafeAreaView,
-  ScrollView,
-  Modal,
-  FlatList,
-  Alert,
-  ActivityIndicator,
-  Animated,
-  Keyboard,
-} from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, Switch, Text, TextInput, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { addTransaction, classifyExpense, ClassifyResult, getLiabilities } from '../services/api';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import { popIn } from '../motion';
+import { addTransaction, classifyExpense, ClassifyResult, getLiabilities, getPacing, getPaymentMethods } from '../services/api';
+import { celebrate, toast } from '../store/useCelebrationStore';
+import { formatCurrency } from '../utils/format';
 import { useStore } from '../store/useStore';
-import { Liability } from '../types';
+import { CASH_METHOD_ID, Liability, PaymentMethod } from '../types';
+import { PAYMENT_KIND_LABEL, paymentMethodLabel } from '../utils/paymentMethods';
+import { createStyles, radius, tabular, typeScale, useTheme } from '../theme';
+import { Button } from '../components/ui/Button';
+import { Chip, IconTile } from '../components/ui/Bits';
+import { Sheet } from '../components/ui/Sheet';
+import { CategoryGrid } from '../components/ui/CategoryGrid';
+import { CATEGORY_ITEMS } from '../utils/categories';
+import { SegmentedControl } from '../components/ui/SegmentedControl';
 
 const CATEGORIES = [
   { label: 'Food & Dining', emoji: '🍽️', ml: 'Food & Dining' },
@@ -40,25 +38,38 @@ const CATEGORIES = [
 const SPEND_TYPES = ['Need', 'Want', 'Investment'] as const;
 type SpendType = (typeof SPEND_TYPES)[number];
 
+const emojiFor = (ml: string) => CATEGORIES.find((c) => c.ml === ml)?.emoji ?? '📦';
+
+const startOfDay = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+const sameDay = (a: Date, b: Date) => startOfDay(a).getTime() === startOfDay(b).getTime();
+
 interface Props {
   onClose?: () => void;
 }
 
 export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
+  const { c, isDark } = useTheme();
+  const styles = useStyles();
   const [amount, setAmount] = useState('');
   const [isAmountFocused, setIsAmountFocused] = useState(false);
   const [description, setDescription] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(CATEGORIES[0]);
   const [selectedType, setSelectedType] = useState<SpendType>('Want');
-  const [showCategoryModal, setShowCategoryModal] = useState(false);
-  const [logged, setLogged] = useState(false);
-  const [saving, setSaving] = useState(false);
+  const [date, setDate] = useState(new Date());
+  // One picker sheet at a time: iOS can't stack modal presentations.
+  const [picker, setPicker] = useState<'category' | 'liability' | 'date' | 'method' | null>(null);
+  const [formError, setFormError] = useState('');
   const [liabilities, setLiabilities] = useState<Liability[]>([]);
   const [selectedLiability, setSelectedLiability] = useState<Liability | null>(null);
-  const [showLiabilityModal, setShowLiabilityModal] = useState(false);
   const [markAsPaid, setMarkAsPaid] = useState(true);
-  const amountInputRef = useRef<TextInput>(null);
-  const { transactions, addTransaction: addToStore } = useStore();
+  // How it was paid: '' = unspecified (bank balance), 'cash', or a saved method id
+  const [methods, setMethods] = useState<PaymentMethod[]>([]);
+  const [paymentMethodId, setPaymentMethodId] = useState('');
+  const chosenMethod = methods.find((m) => m.id === paymentMethodId) ?? null;
+  const cardAvailable = chosenMethod?.kind === 'credit_card' && chosenMethod.credit ? chosenMethod.credit.available : null;
+  const amountInputRef = useRef<React.ComponentRef<typeof TextInput>>(null);
+  const transactions = useStore((s) => s.transactions);
+  const addToStore = useStore((s) => s.addTransaction);
 
   useEffect(() => {
     let mounted = true;
@@ -69,14 +80,18 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
       .catch(() => {
         if (mounted) setLiabilities([]);
       });
-    return () => { mounted = false; };
+    getPaymentMethods()
+      .then((data) => { if (mounted) setMethods(data.filter((m) => m.status === 'active')); })
+      .catch(() => {});
+    // Open with the keypad up: amount is always the first thing to type.
+    const focus = setTimeout(() => amountInputRef.current?.focus(), 450);
+    return () => { mounted = false; clearTimeout(focus); };
   }, []);
 
   // ── AI Classifier state ─────────────────────────────────────
   const [aiResult, setAiResult] = useState<ClassifyResult | null>(null);
   const [aiLoading, setAiLoading] = useState(false);
   const [typeConfirmed, setTypeConfirmed] = useState(true);
-  const badgeAnim = useRef(new Animated.Value(0)).current;
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const requestIdRef = useRef(0);
   const userOverrodeCategoryRef = useRef(false);
@@ -117,10 +132,6 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
           if (match) setSelectedCategory(match);
         }
 
-        // Animate badge in
-        badgeAnim.setValue(0);
-        Animated.spring(badgeAnim, { toValue: 1, useNativeDriver: true, tension: 120, friction: 8 }).start();
-
         // ML suggests: only pre-select if user has not manually chosen type
         if (!userOverrodeTypeRef.current) {
           if (result.type && (SPEND_TYPES as readonly string[]).includes(result.type)) {
@@ -153,49 +164,60 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
   }, [description, amount]);
 
   const parsedAmount = parseFloat(amount.replace(/[^0-9.]/g, '')) || 0;
+  const aiUnsure = !!aiResult?.needsReview && !userOverrodeCategoryRef.current;
 
-  // Real-time stats
-  const today = new Date().toDateString();
+  // Real-time stats (the amount being typed is previewed in)
+  const today = new Date();
   const todaySpend = transactions
-    .filter(t => new Date(t.timestamp).toDateString() === today && t.type !== 'Investment')
-    .reduce((s, t) => s + Math.abs(t.amount), 0) + (selectedType !== 'Investment' ? parsedAmount : 0);
+    .filter(t => sameDay(new Date(t.timestamp), today) && t.type !== 'Investment')
+    .reduce((s, t) => s + Math.abs(t.amount), 0) + (selectedType !== 'Investment' && sameDay(date, today) ? parsedAmount : 0);
 
   const startOfWeek = new Date(); startOfWeek.setDate(startOfWeek.getDate() - 7);
   const weekSpend = transactions
     .filter(t => new Date(t.timestamp) > startOfWeek && t.type !== 'Investment')
     .reduce((s, t) => s + Math.abs(t.amount), 0) + (selectedType !== 'Investment' ? parsedAmount : 0);
 
-  const wantsRatio = transactions.length > 0
-    ? Math.round((transactions.filter(t => t.sentiment === 'negative').length / transactions.length) * 100)
-    : 0;
+  // Share of the last 7 days' spending that went to Wants.
+  const weekWants = transactions
+    .filter(t => new Date(t.timestamp) > startOfWeek && t.type === 'Want')
+    .reduce((s, t) => s + Math.abs(t.amount), 0) + (selectedType === 'Want' ? parsedAmount : 0);
+  const wantsRatio = weekSpend > 0 ? Math.round((weekWants / weekSpend) * 100) : 0;
 
   const handleSelectCategoryManually = (cat: typeof CATEGORIES[number]) => {
     userOverrodeCategoryRef.current = true;
     setSelectedCategory(cat);
-    setShowCategoryModal(false);
+    setPicker(null);
   };
 
   const handleSelectTypeManually = (type: SpendType) => {
     userOverrodeTypeRef.current = true;
     setSelectedType(type);
     setTypeConfirmed(true);
+    setFormError('');
   };
 
   const handleLog = async () => {
-    if (saving) return;
     if (aiLoading) {
-      Alert.alert('AI Classifying', 'Please wait for AI classification to complete.');
+      setFormError('Hang on, FINAURA is still reading the description.');
       return;
     }
     if (parsedAmount <= 0) {
-      Alert.alert('Invalid Amount', 'Please enter a valid amount greater than 0.');
+      setFormError('Enter an amount greater than zero.');
+      amountInputRef.current?.focus();
       return;
     }
     if (!typeConfirmed) {
-      Alert.alert('Confirmation Required', 'Please confirm or select the correct transaction type.');
+      setFormError('Confirm the suggested type, or pick the right one.');
       return;
     }
-    setSaving(true);
+    if (cardAvailable !== null && parsedAmount > cardAvailable) {
+      setFormError(`This is more than the ${formatCurrency(cardAvailable)} available on ${chosenMethod?.nickname}. Pick another payment method or pay the card bill first.`);
+      return;
+    }
+    setFormError('');
+    // Keep the time of day; only the calendar day comes from the date chip.
+    const now = new Date();
+    const when = new Date(date.getFullYear(), date.getMonth(), date.getDate(), now.getHours(), now.getMinutes(), now.getSeconds());
     try {
       // Map UI category + type → server fields
       const categoryKey = selectedCategory.ml;
@@ -215,1034 +237,595 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
         description: description.trim() || selectedCategory.label,
         type: selectedType,
         confidenceScore: aiResult?.confidenceScore ?? aiResult?.confidence ?? 0,
-        categorySource: userOverrodeCategoryRef.current ? 'manual' : aiResult?.categorySource,
-        typeSource: userOverrodeTypeRef.current ? 'manual' : aiResult?.typeSource,
+        // 'default' = untouched form value with no AI result; the server never learns from it
+        categorySource: userOverrodeCategoryRef.current ? 'manual' : aiResult?.categorySource ?? 'default',
+        typeSource: userOverrodeTypeRef.current ? 'manual' : aiResult?.typeSource ?? 'default',
         categoryConfidence: userOverrodeCategoryRef.current ? 1.0 : aiResult?.categoryConfidence,
         typeConfidence: userOverrodeTypeRef.current ? 1.0 : aiResult?.typeConfidence,
         needsReview: aiResult?.needsReview,
         liabilityId: selectedLiability ? selectedLiability.id : undefined,
         expectedScheduledFor: selectedLiability && selectedLiability.autoDeduct && markAsPaid && selectedLiability.nextDueDate ? selectedLiability.nextDueDate.toString() : undefined,
-        timestamp: new Date().toISOString(),
+        timestamp: when.toISOString(),
+        paymentMethodId: paymentMethodId || null,
       });
       addToStore(newTx);
-      setLogged(true);
-      Alert.alert('Saved', `Transaction logged as ${newTx.type || selectedType} in ${newTx.category || categoryKey}.`);
-      setTimeout(() => {
-        setLogged(false);
-        onClose?.();
-      }, 1200);
-    } catch {
-      Alert.alert('Error', 'Failed to save transaction. Please check the server.');
-    } finally {
-      setSaving(false);
+      onClose?.();
+      const loggedType = newTx.type || selectedType;
+      if (loggedType === 'Investment') {
+        celebrate({ kind: 'fireworks', title: `${formatCurrency(parsedAmount)} invested`, subtitle: 'Your future self says thanks. Investments this month just went up.' });
+        return;
+      }
+      toast('Transaction logged', { subtitle: `${formatCurrency(parsedAmount)} · ${loggedType} in ${newTx.category || categoryKey}` });
+      // Budget nudge: warn (after the success toast) when this pushes Needs/Wants past the monthly limit.
+      const bucket = loggedType === 'Need' ? 'Needs' : loggedType === 'Want' ? 'Wants' : null;
+      if (bucket) {
+        getPacing()
+          .then((p) => {
+            const b = p?.[bucket];
+            if (b && b.limit > 0 && b.actual > b.limit) {
+              setTimeout(() => toast(`${bucket} over budget`, {
+                tone: 'warning',
+                subtitle: `${formatCurrency(b.actual)} spent of ${formatCurrency(b.limit)} this month.`,
+              }), 2200);
+            }
+          })
+          .catch(() => {});
+      }
+    } catch (err: any) {
+      setFormError(err?.response?.data?.error || "Couldn't save. Check your connection and try again.");
     }
   };
 
+  const methodTitle = paymentMethodId === CASH_METHOD_ID ? 'Cash' : chosenMethod ? paymentMethodLabel(chosenMethod) : 'Bank balance';
+  const methodSub = cardAvailable !== null
+    ? `Charged to the card, not your bank balance. ${formatCurrency(cardAvailable)} available.`
+    : methods.length === 0 && !paymentMethodId
+      ? 'Add UPI or cards under You › Payment methods.'
+      : 'Comes out of your bank balance.';
 
+  const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
+  const dateLabel = sameDay(date, today) ? 'Today' : sameDay(date, yesterday) ? 'Yesterday' : date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+  const alternatives = Object.entries(aiResult?.all_probs ?? {})
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 3)
+    .filter(([cat]) => cat !== selectedCategory.ml);
 
   return (
-    <SafeAreaView style={styles.safe}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <View style={styles.sheetWrapper}>
-          {/* Dark background */}
-          <View style={styles.backdrop} />
+    <View style={styles.safe}>
+      {/* Header */}
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>New expense</Text>
+        <Pressable onPress={onClose} style={styles.closeBtn} hitSlop={8} accessibilityRole="button" accessibilityLabel="Close">
+          <Ionicons name="close" size={20} color={c.textMuted} />
+        </Pressable>
+      </View>
 
-          {/* Bottom Sheet Card */}
-          <View style={styles.sheet}>
-            {/* Drag handle */}
-            <View style={styles.dragHandle} />
+      <ScrollView
+        contentContainerStyle={styles.sheet}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="interactive"
+        automaticallyAdjustKeyboardInsets
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Amount */}
+        <Text style={styles.fieldLabel}>Amount</Text>
+        <Pressable
+          style={[styles.amountContainer, isAmountFocused && styles.amountContainerFocused]}
+          onPress={() => amountInputRef.current?.focus()}
+          accessibilityRole="button"
+          accessibilityLabel="Transaction amount"
+        >
+          <View pointerEvents="none" style={styles.currencyPrefixWrap}>
+            <Text style={[styles.currencyPrefix, isAmountFocused && styles.currencyPrefixFocused]}>₹</Text>
+          </View>
+          <TextInput
+            ref={amountInputRef}
+            style={styles.amountInput}
+            value={amount}
+            onChangeText={(t) => {
+              setFormError('');
+              const cleaned = t.replace(/[^0-9.]/g, '');
+              const parts = cleaned.split('.');
+              if (parts.length > 2) {
+                setAmount(`${parts[0]}.${parts.slice(1).join('')}`);
+              } else {
+                setAmount(cleaned);
+              }
+            }}
+            keyboardType="decimal-pad"
+            placeholder="0"
+            placeholderTextColor={c.textSubtle}
+            keyboardAppearance={isDark ? 'dark' : 'light'}
+            onFocus={() => setIsAmountFocused(true)}
+            onBlur={() => setIsAmountFocused(false)}
+            accessibilityLabel="Amount value"
+          />
+        </Pressable>
 
-            {/* Header */}
-            <View style={styles.header}>
-              <Text style={styles.headerTitle}>Entry</Text>
-              <TouchableOpacity onPress={onClose} style={styles.closeBtn} activeOpacity={0.7}>
-                <Text style={styles.closeIcon}>✕</Text>
-              </TouchableOpacity>
-            </View>
+        {/* Description */}
+        <View style={styles.descRow}>
+          <Ionicons name="create-outline" size={18} color={c.textSubtle} />
+          <TextInput
+            style={styles.textInput}
+            value={description}
+            onChangeText={setDescription}
+            placeholder="What was it? e.g. Pizza, Uber ride"
+            placeholderTextColor={c.textSubtle}
+            keyboardAppearance={isDark ? 'dark' : 'light'}
+            returnKeyType="done"
+            accessibilityLabel="Description"
+          />
+          {aiLoading && <ActivityIndicator size="small" color={c.primary} />}
+        </View>
 
-            {/* Amount Field Label */}
-            <Text style={styles.fieldLabel}>Amount</Text>
-
-            {/* Amount Input Container */}
-            <TouchableOpacity
-              style={[
-                styles.amountContainer,
-                isAmountFocused && styles.amountContainerFocused,
-              ]}
-              activeOpacity={1}
-              onPress={() => amountInputRef.current?.focus()}
-              accessibilityRole="button"
-              accessibilityLabel="Transaction amount"
-            >
-              <View pointerEvents="none" style={styles.currencyPrefixWrap}>
-                <Text style={[styles.currencyPrefix, isAmountFocused && styles.currencyPrefixFocused]}>
-                  ₹
-                </Text>
-              </View>
-              <TextInput
-                ref={amountInputRef}
-                style={styles.amountInput}
-                value={amount}
-                onChangeText={(t) => {
-                  const cleaned = t.replace(/[^0-9.]/g, '');
-                  const parts = cleaned.split('.');
-                  if (parts.length > 2) {
-                    setAmount(`${parts[0]}.${parts.slice(1).join('')}`);
-                  } else {
-                    setAmount(cleaned);
-                  }
-                }}
-                keyboardType="decimal-pad"
-                placeholder="0"
-                placeholderTextColor="#94A3B8"
-                onFocus={() => setIsAmountFocused(true)}
-                onBlur={() => setIsAmountFocused(false)}
-                accessibilityLabel="Amount value"
-              />
-            </TouchableOpacity>
-
-            {/* Description */}
-            <Text style={styles.fieldLabel}>Description</Text>
-            <TextInput
-              style={styles.textInput}
-              value={description}
-              onChangeText={setDescription}
-              placeholder="e.g. Pizza, Uber ride, Book…"
-              placeholderTextColor="#A0AEC0"
-            />
-
-            {/* AI Suggestion Badge */}
-            {aiLoading && (
-              <View style={styles.aiBadgeRow}>
-                <ActivityIndicator size="small" color={BRAND_BLUE} />
-                <Text style={styles.aiBadgeLoadingText}>AI classifying…</Text>
-              </View>
-            )}
-            {!aiLoading && aiResult && aiResult.confidence > 0 && (
-              <Animated.View style={[
-                styles.aiBadgeContainer,
-                { opacity: badgeAnim, transform: [{ scale: badgeAnim }] }
-              ]}>
-                <View style={styles.aiBadgeHeader}>
-                  <Text style={styles.aiBadgeIcon}>🤖</Text>
-                  <Text style={styles.aiBadgeLabel}>AI Suggestion</Text>
-                  <Text style={styles.aiAppliedText}>Auto-applied ✓</Text>
-                </View>
-
-                {/* Main row: Category + Sentiment */}
-                <View style={styles.aiMainPred}>
-                  <Text style={styles.aiMainCategory}>
-                    {CATEGORIES.find(c => c.ml === aiResult.category)?.emoji ?? '📦'}  {aiResult.category}
-                  </Text>
-                  <Text style={styles.aiConfidence}>{Math.round(aiResult.confidence * 100)}%</Text>
-                </View>
-
-                {/* Sentiment Info */}
-                {aiResult.sentiment && (
-                  <View style={styles.sentimentContainer}>
-                    <Text style={styles.sentimentLabel}>
-                      {aiResult.sentiment_emoji} {aiResult.sentiment_label}
-                    </Text>
-                    <Text style={styles.verdictText}>{aiResult.verdict}</Text>
-                  </View>
-                )}
-
-                {/* Top 3 mini bars */}
-                <View style={{ marginTop: 8 }}>
-                  {Object.entries(aiResult.all_probs)
-                    .sort((a, b) => b[1] - a[1])
-                    .slice(0, 3)
-                    .map(([cat, prob]) => (
-                      <View key={cat} style={styles.aiBarRow}>
-                        <Text style={styles.aiBarLabel}>
-                          {CATEGORIES.find(c => c.ml === cat)?.emoji ?? '📦'} {cat}
-                        </Text>
-                        <View style={styles.aiBarTrack}>
-                          <View style={[styles.aiBarFill, { width: `${Math.round(prob * 100)}%` }]} />
-                        </View>
-                        <Text style={styles.aiBarPct}>{Math.round(prob * 100)}%</Text>
-                      </View>
-                    ))
-                  }
-                </View>
-              </Animated.View>
-            )}
-
-            {/* Category */}
-            <Text style={[styles.fieldLabel, { marginTop: 16 }]}>Category</Text>
-            <TouchableOpacity
-              style={styles.categoryPicker}
-              onPress={() => setShowCategoryModal(true)}
-              activeOpacity={0.8}
-            >
-              <Text style={styles.categoryText}>
-                {selectedCategory.label}
+        {/* AI suggestion: the chosen category plus tappable alternatives */}
+        {!aiLoading && aiResult && aiResult.confidence > 0 && (
+          <Animated.View key={aiResult.category} entering={popIn()} exiting={FadeOut} style={[styles.aiCard, aiUnsure && styles.aiCardUnsure]}>
+            <View style={styles.aiHeader}>
+              <Ionicons name="sparkles" size={14} color={aiUnsure ? c.warningStrong : c.primary} />
+              <Text style={[styles.aiLabel, aiUnsure && { color: c.warningStrong }]}>
+                {userOverrodeCategoryRef.current ? 'Your pick' : aiUnsure ? 'Not sure. Tap the right one' : 'Suggested by FINAURA'}
               </Text>
-              <View style={styles.categoryRight}>
-                <Text style={styles.categoryEmoji}>{selectedCategory.emoji}</Text>
-                <Text style={styles.chevron}>⌄</Text>
-              </View>
-            </TouchableOpacity>
-
-            {/* Spend Type Radio Buttons */}
-            <Text style={[styles.fieldLabel, { marginTop: 16 }]}>Transaction Type</Text>
-            <View style={styles.radioGroup}>
-              {SPEND_TYPES.map((type) => (
-                <TouchableOpacity
-                  key={type}
-                  style={styles.radioItem}
-                  onPress={() => handleSelectTypeManually(type)}
-                  activeOpacity={0.7}
-                >
-                  <View style={[styles.radioOuter, selectedType === type && styles.radioOuterActive]}>
-                    {selectedType === type && <View style={styles.radioDot} />}
-                  </View>
-                  <Text style={styles.radioLabel}>{type}</Text>
-                </TouchableOpacity>
+            </View>
+            <View style={styles.aiChips}>
+              <Chip label={`${emojiFor(selectedCategory.ml)} ${selectedCategory.label}`} selected onPress={() => setPicker('category')} />
+              {alternatives.map(([cat]) => (
+                <Chip
+                  key={cat}
+                  label={`${emojiFor(cat)} ${cat}`}
+                  onPress={() => {
+                    const pick = CATEGORIES.find(c => c.ml === cat);
+                    if (pick) handleSelectCategoryManually(pick);
+                  }}
+                />
               ))}
             </View>
+            {!!aiResult.verdict && <Text style={styles.aiVerdict}>{aiResult.sentiment_emoji} {aiResult.verdict}</Text>}
+          </Animated.View>
+        )}
 
-            {/* AI Type Confirmation Banner */}
-            {!typeConfirmed && aiResult && (
-              <View style={styles.aiConfirmationBanner}>
-                <Text style={styles.aiConfirmationText}>
-                  ⚠️ AI suggested: <Text style={{ fontWeight: '700' }}>{selectedType}</Text> (Low Confidence)
-                </Text>
-                <TouchableOpacity style={styles.aiConfirmButton} onPress={() => setTypeConfirmed(true)} activeOpacity={0.7}>
-                  <Text style={styles.aiConfirmButtonText}>Confirm Suggestion</Text>
-                </TouchableOpacity>
-              </View>
-            )}
+        {/* Category + date */}
+        <View style={styles.pickRow}>
+          <Pressable style={[styles.pick, styles.flex]} onPress={() => setPicker('category')} accessibilityRole="button" accessibilityLabel={`Category: ${selectedCategory.label}`}>
+            <Text style={styles.pickEmoji}>{selectedCategory.emoji}</Text>
+            <Text style={styles.pickText} numberOfLines={1}>{selectedCategory.label}</Text>
+            <Ionicons name="chevron-down" size={16} color={c.textSubtle} />
+          </Pressable>
+          <Pressable style={styles.pick} onPress={() => setPicker('date')} accessibilityRole="button" accessibilityLabel={`Date: ${dateLabel}`}>
+            <Ionicons name="calendar-outline" size={16} color={c.textMuted} />
+            <Text style={styles.pickText}>{dateLabel}</Text>
+          </Pressable>
+        </View>
 
-            {/* Optional Liability Linking */}
-            {liabilities.length > 0 && (
-              <View style={styles.liabilitySection}>
-                <Text style={styles.fieldLabel}>Link to Liability (Optional)</Text>
-                {!selectedLiability ? (
-                  <TouchableOpacity
-                    style={styles.linkLiabilityBtn}
-                    onPress={() => setShowLiabilityModal(true)}
-                    activeOpacity={0.7}
-                  >
-                    <Ionicons name="link-outline" size={16} color={BRAND_BLUE} />
-                    <Text style={styles.linkLiabilityBtnText}>+ Select a liability to link</Text>
-                  </TouchableOpacity>
-                ) : (
-                  <View style={styles.linkedLiabilityCard}>
-                    <TouchableOpacity
-                      style={styles.linkedLiabilityInfo}
-                      onPress={() => setShowLiabilityModal(true)}
-                      activeOpacity={0.8}
-                    >
-                      <View style={styles.linkedIconWrap}>
-                        <Ionicons name="calendar" size={18} color={BRAND_BLUE} />
-                      </View>
-                      <View style={{ flex: 1 }}>
-                        <Text style={styles.linkedLiabilityName} numberOfLines={1}>
-                          {selectedLiability.name}
-                        </Text>
-                        <Text style={styles.linkedLiabilityMeta}>
-                          ₹{selectedLiability.amount.toLocaleString()} · {selectedLiability.category} · {selectedLiability.type}
-                          {selectedLiability.autoDeduct ? ' · Auto Deduct' : ''}
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={styles.unlinkBtn}
-                      onPress={() => setSelectedLiability(null)}
-                      hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-                    >
-                      <Ionicons name="close-circle" size={20} color="#94A3B8" />
-                    </TouchableOpacity>
-                  </View>
-                )}
+        {/* Spend type */}
+        <Text style={styles.fieldLabel}>Type</Text>
+        <SegmentedControl
+          segments={SPEND_TYPES.map((type) => ({ key: type, label: type, dot: { Need: c.info, Want: c.warningStrong, Investment: c.successStrong }[type] }))}
+          value={selectedType}
+          onChange={handleSelectTypeManually}
+          accessibilityLabel="Spend type"
+        />
 
-                {/* Informational note & Toggle for Auto Deduct liabilities */}
-                {selectedLiability && selectedLiability.autoDeduct && selectedLiability.nextDueDate && (
-                  <View style={styles.autoDeductControlContainer}>
-                    <TouchableOpacity
-                      style={styles.markAsPaidToggle}
-                      activeOpacity={0.7}
-                      onPress={() => setMarkAsPaid(!markAsPaid)}
-                    >
-                      <View style={[styles.checkbox, markAsPaid && styles.checkboxActive]}>
-                        {markAsPaid && <Ionicons name="checkmark" size={12} color="#FFFFFF" />}
-                      </View>
-                      <View style={{ flex: 1, marginLeft: 8 }}>
-                        <Text style={styles.markAsPaidTitle}>Mark next scheduled payment as paid</Text>
-                        <Text style={styles.markAsPaidDesc}>
-                          {markAsPaid
-                            ? `Satisfies payment due ${new Date(selectedLiability.nextDueDate).toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })} and prevents duplicate auto-deduction.`
-                            : 'Added to payment history. Next Auto Deduct date remains unchanged.'}
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                  </View>
-                )}
-              </View>
-            )}
+        {/* AI type confirmation (low confidence) */}
+        {!typeConfirmed && aiResult && (
+          <Animated.View entering={FadeIn} style={styles.aiConfirmationBanner}>
+            <Text style={styles.aiConfirmationText}>
+              FINAURA thinks this is a <Text style={styles.bold}>{selectedType}</Text>, but it's not sure.
+            </Text>
+            <Button label="Looks right" size="sm" variant="secondary" onPress={() => { setTypeConfirmed(true); setFormError(''); }} />
+          </Animated.View>
+        )}
 
-            {/* Log Button */}
-            <TouchableOpacity
-              style={[styles.logButton, logged && styles.logButtonSuccess]}
-              onPress={handleLog}
-              activeOpacity={0.85}
-              disabled={saving}
-            >
-              {saving ? (
-                <ActivityIndicator color="#fff" />
-              ) : (
-                <Text style={styles.logButtonText}>
-                  {logged ? '✓ Logged!' : 'Log Transaction'}
-                </Text>
-              )}
-            </TouchableOpacity>
-
-            {/* Summary Footer */}
-            <View style={styles.summaryRow}>
-              <View style={styles.summaryItem}>
-                <Text style={styles.summaryLabel}>Today's Spend</Text>
-                <Text style={styles.summaryValue}>
-                  ₹{todaySpend.toFixed(0)}
-                </Text>
-              </View>
-              <View style={styles.summaryDivider} />
-              <View style={styles.summaryItem}>
-                <Text style={styles.summaryLabel}>7-Day Spend</Text>
-                <Text style={styles.summaryValue}>₹{weekSpend.toFixed(0)}</Text>
-              </View>
-              <View style={styles.summaryDivider} />
-              <View style={styles.summaryItem}>
-                <Text style={styles.summaryLabel}>Wants Ratio</Text>
-                <Text style={styles.summaryValue}>{wantsRatio}%</Text>
-              </View>
+        {/* Optional liability link */}
+        {liabilities.length > 0 && (
+          <Pressable style={styles.linkRow} onPress={() => setPicker('liability')} accessibilityRole="button" accessibilityLabel="Link to a bill">
+            <IconTile icon={selectedLiability ? 'calendar' : 'link-outline'} tint={c.primary} size={36} />
+            <View style={styles.flex}>
+              <Text style={styles.linkTitle} numberOfLines={1}>{selectedLiability ? selectedLiability.name : 'Link to a bill (optional)'}</Text>
+              <Text style={styles.linkSub} numberOfLines={1}>
+                {selectedLiability
+                  ? `${formatCurrency(selectedLiability.amount)} · ${selectedLiability.frequency}${selectedLiability.autoDeduct ? ' · Auto deduct' : ''}`
+                  : 'Record this as a payment for a tracked Liability'}
+              </Text>
             </View>
+            {selectedLiability ? (
+              <Pressable onPress={() => setSelectedLiability(null)} hitSlop={8} accessibilityRole="button" accessibilityLabel="Unlink bill">
+                <Ionicons name="close-circle" size={20} color={c.textSubtle} />
+              </Pressable>
+            ) : (
+              <Ionicons name="chevron-forward" size={18} color={c.textSubtle} />
+            )}
+          </Pressable>
+        )}
+
+        {selectedLiability?.autoDeduct && selectedLiability.nextDueDate && (
+          <View style={styles.markPaid}>
+            <View style={styles.flex}>
+              <Text style={styles.linkTitle}>Mark next scheduled payment as paid</Text>
+              <Text style={styles.linkSub}>
+                {markAsPaid
+                  ? `Covers the payment due ${new Date(selectedLiability.nextDueDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}, so it won't auto-deduct twice.`
+                  : 'Adds to payment history; the next auto-deduct date stays the same.'}
+              </Text>
+            </View>
+            <Switch value={markAsPaid} onValueChange={setMarkAsPaid} trackColor={{ true: c.primary }} />
+          </View>
+        )}
+
+        {/* Payment method */}
+        <Pressable style={styles.linkRow} onPress={() => setPicker('method')} accessibilityRole="button" accessibilityLabel={`Paid with: ${methodTitle}`}>
+          <IconTile icon={chosenMethod?.kind === 'upi' ? 'phone-portrait-outline' : chosenMethod ? 'card-outline' : paymentMethodId === CASH_METHOD_ID ? 'cash-outline' : 'wallet-outline'} tint={c.primary} size={36} />
+          <View style={styles.flex}>
+            <Text style={styles.linkTitle} numberOfLines={1}>Paid with · {methodTitle}</Text>
+            <Text style={styles.linkSub} numberOfLines={2}>{methodSub}</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={18} color={c.textSubtle} />
+        </Pressable>
+
+        {!!formError && <Animated.Text entering={FadeIn} style={styles.formError} accessibilityRole="alert">{formError}</Animated.Text>}
+
+        <Button label={parsedAmount > 0 ? `Log ${formatCurrency(parsedAmount)}` : 'Log expense'} onPress={handleLog} style={styles.logButton} />
+
+        {/* Running totals, including what's being typed */}
+        <View style={styles.summaryRow}>
+          <View style={styles.summaryItem}>
+            <Text style={styles.summaryLabel}>Today</Text>
+            <Text style={styles.summaryValue}>{formatCurrency(todaySpend)}</Text>
+          </View>
+          <View style={styles.summaryDivider} />
+          <View style={styles.summaryItem}>
+            <Text style={styles.summaryLabel}>Last 7 days</Text>
+            <Text style={styles.summaryValue}>{formatCurrency(weekSpend)}</Text>
+          </View>
+          <View style={styles.summaryDivider} />
+          <View style={styles.summaryItem}>
+            <Text style={styles.summaryLabel}>Wants share</Text>
+            <Text style={styles.summaryValue}>{wantsRatio}%</Text>
           </View>
         </View>
-      </TouchableWithoutFeedback>
+      </ScrollView>
 
-      {/* Category Modal */}
-      <Modal
-        visible={showCategoryModal}
-        transparent
-        animationType="slide"
-        onRequestClose={() => setShowCategoryModal(false)}
-      >
-        <TouchableOpacity
-          style={styles.modalOverlay}
-          activeOpacity={1}
-          onPress={() => setShowCategoryModal(false)}
-        >
-          <View style={styles.modalSheet}>
-            <View style={styles.dragHandle} />
-            <Text style={styles.modalTitle}>Select Category</Text>
-            <FlatList
-              data={CATEGORIES}
-              keyExtractor={(item) => item.label}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  style={[
-                    styles.modalItem,
-                    selectedCategory.label === item.label && styles.modalItemActive,
-                  ]}
-                  onPress={() => handleSelectCategoryManually(item)}
-                  activeOpacity={0.7}
-                >
-                  <Text style={styles.modalItemEmoji}>{item.emoji}</Text>
-                  <Text
-                    style={[
-                      styles.modalItemText,
-                      selectedCategory.label === item.label && styles.modalItemTextActive,
-                    ]}
-                  >
-                    {item.label}
+      {/* Category picker */}
+      <Sheet visible={picker === 'category'} onClose={() => setPicker(null)} title="Category">
+        <ScrollView style={styles.sheetScroll} showsVerticalScrollIndicator={false}>
+          <CategoryGrid
+            items={CATEGORY_ITEMS}
+            isSelected={(key) => selectedCategory.label === key}
+            onPress={(key) => { const item = CATEGORIES.find((cat) => cat.label === key); if (item) handleSelectCategoryManually(item); }}
+          />
+        </ScrollView>
+      </Sheet>
+
+      {/* Date picker */}
+      <Sheet visible={picker === 'date'} onClose={() => setPicker(null)} title="When was it?">
+        <View style={styles.typeRow}>
+          <Chip label="Today" selected={sameDay(date, today)} onPress={() => { setDate(today); setPicker(null); }} style={styles.flex} />
+          <Chip label="Yesterday" selected={sameDay(date, yesterday)} onPress={() => { setDate(yesterday); setPicker(null); }} style={styles.flex} />
+        </View>
+        <DateTimePicker
+          value={date}
+          mode="date"
+          display="inline"
+          maximumDate={today}
+          themeVariant={isDark ? 'dark' : 'light'}
+          accentColor={c.primary}
+          onChange={(_, d) => d && setDate(d)}
+        />
+        <Button label="Done" onPress={() => setPicker(null)} />
+      </Sheet>
+
+      {/* Payment method picker */}
+      <Sheet visible={picker === 'method'} onClose={() => setPicker(null)} title="Paid with">
+        <ScrollView style={styles.liabilityList}>
+          {[
+            { id: '', title: 'Not specified', sub: 'Comes out of your bank balance', icon: 'wallet-outline' as const },
+            { id: CASH_METHOD_ID, title: 'Cash', sub: 'Comes out of your bank balance', icon: 'cash-outline' as const },
+            ...methods.map((m) => ({
+              id: m.id,
+              title: paymentMethodLabel(m),
+              sub: m.kind === 'credit_card' && m.credit ? `${PAYMENT_KIND_LABEL[m.kind]} · ${formatCurrency(m.credit.available)} available` : PAYMENT_KIND_LABEL[m.kind],
+              icon: m.kind === 'upi' ? 'phone-portrait-outline' as const : 'card-outline' as const,
+            })),
+          ].map((o) => {
+            const isSelected = paymentMethodId === o.id;
+            return (
+              <Pressable
+                key={o.id || 'none'}
+                style={[styles.liabilityItem, isSelected && styles.liabilityItemActive]}
+                onPress={() => { setPaymentMethodId(o.id); setFormError(''); setPicker(null); }}
+                accessibilityRole="button"
+                accessibilityState={{ selected: isSelected }}
+              >
+                <IconTile icon={o.icon} tint={c.primary} size={36} />
+                <View style={styles.flex}>
+                  <Text style={styles.linkTitle}>{o.title}</Text>
+                  <Text style={styles.linkSub}>{o.sub}</Text>
+                </View>
+                {isSelected && <Ionicons name="checkmark-circle" size={20} color={c.primary} />}
+              </Pressable>
+            );
+          })}
+        </ScrollView>
+      </Sheet>
+
+      {/* Liability picker */}
+      <Sheet visible={picker === 'liability'} onClose={() => setPicker(null)} title="Link to a bill">
+        <ScrollView style={styles.liabilityList}>
+          {[null, ...liabilities].map((item) => {
+            const isSelected = (selectedLiability?.id ?? null) === (item?.id ?? null);
+            return (
+              <Pressable
+                key={item?.id ?? 'none'}
+                style={[styles.liabilityItem, isSelected && styles.liabilityItemActive]}
+                onPress={() => { setSelectedLiability(item); setPicker(null); }}
+                accessibilityRole="button"
+                accessibilityState={{ selected: isSelected }}
+              >
+                <IconTile icon={item ? 'calendar-outline' : 'remove-circle-outline'} tint={item ? c.primary : c.textMuted} size={36} />
+                <View style={styles.flex}>
+                  <Text style={styles.linkTitle}>{item ? item.name : "Don't link"}</Text>
+                  <Text style={styles.linkSub}>
+                    {item ? `${formatCurrency(item.amount)} · ${item.category} · ${item.frequency}${item.autoDeduct ? ' · Auto' : ''}` : 'A standalone expense'}
                   </Text>
-                  {selectedCategory.label === item.label && (
-                    <Text style={styles.checkmark}>✓</Text>
-                  )}
-                </TouchableOpacity>
-              )}
-            />
-          </View>
-        </TouchableOpacity>
-      </Modal>
-
-      {/* Liability Picker Modal */}
-      <Modal
-        visible={showLiabilityModal}
-        transparent
-        animationType="slide"
-        onRequestClose={() => setShowLiabilityModal(false)}
-      >
-        <TouchableOpacity
-          style={styles.modalOverlay}
-          activeOpacity={1}
-          onPress={() => setShowLiabilityModal(false)}
-        >
-          <View style={styles.modalSheet}>
-            <View style={styles.dragHandle} />
-            <Text style={styles.modalTitle}>Link to Liability</Text>
-            <Text style={styles.modalSubtitle}>Record this transaction against a tracked commitment</Text>
-
-            <FlatList
-              data={liabilities}
-              keyExtractor={(item) => item.id}
-              ListHeaderComponent={
-                <TouchableOpacity
-                  style={[
-                    styles.liabilityModalItem,
-                    selectedLiability === null && styles.modalItemActive,
-                  ]}
-                  onPress={() => {
-                    setSelectedLiability(null);
-                    setShowLiabilityModal(false);
-                  }}
-                  activeOpacity={0.7}
-                >
-                  <View style={styles.unlinkedIconBox}>
-                    <Ionicons name="remove-circle-outline" size={20} color="#64748B" />
-                  </View>
-                  <View style={{ flex: 1 }}>
-                    <Text style={styles.modalItemText}>None (Do not link)</Text>
-                    <Text style={styles.liabilityItemSub}>Standard standalone transaction</Text>
-                  </View>
-                  {selectedLiability === null && (
-                    <Text style={styles.checkmark}>✓</Text>
-                  )}
-                </TouchableOpacity>
-              }
-              renderItem={({ item }) => {
-                const isSelected = selectedLiability?.id === item.id;
-                return (
-                  <TouchableOpacity
-                    style={[
-                      styles.liabilityModalItem,
-                      isSelected && styles.modalItemActive,
-                    ]}
-                    onPress={() => {
-                      setSelectedLiability(item);
-                      setShowLiabilityModal(false);
-                    }}
-                    activeOpacity={0.7}
-                  >
-                    <View style={styles.liabilityIconBox}>
-                      <Ionicons name="calendar-outline" size={20} color={BRAND_BLUE} />
-                    </View>
-                    <View style={{ flex: 1 }}>
-                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-                        <Text style={[styles.modalItemText, isSelected && styles.modalItemTextActive]}>
-                          {item.name}
-                        </Text>
-                        {item.autoDeduct && (
-                          <View style={styles.autoDeductPill}>
-                            <Ionicons name="flash" size={9} color="#059669" />
-                            <Text style={styles.autoDeductPillText}>Auto</Text>
-                          </View>
-                        )}
-                      </View>
-                      <Text style={styles.liabilityItemSub}>
-                        ₹{item.amount.toLocaleString()} · {item.category} · {item.type} · {item.frequency}
-                      </Text>
-                    </View>
-                    {isSelected && (
-                      <Text style={styles.checkmark}>✓</Text>
-                    )}
-                  </TouchableOpacity>
-                );
-              }}
-            />
-          </View>
-        </TouchableOpacity>
-      </Modal>
-    </SafeAreaView>
+                </View>
+                {isSelected && <Ionicons name="checkmark-circle" size={20} color={c.primary} />}
+              </Pressable>
+            );
+          })}
+        </ScrollView>
+      </Sheet>
+    </View>
   );
 }
 
-const BRAND_BLUE = '#3B3BDE';
-const GREEN = '#3DBE7B';
-const AI_BG = '#F0F0FF';
-const AI_BORDER = '#C7C7FF';
-
-const styles = StyleSheet.create({
+const useStyles = createStyles((c) => ({
   safe: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: c.surface,
   },
-  backdrop: {
-    ...StyleSheet.absoluteFill,
-    backgroundColor: '#1A1A3E',
-  },
-  sheetWrapper: {
+  flex: {
     flex: 1,
-    justifyContent: 'flex-end',
   },
-  sheet: {
-    backgroundColor: '#FFFFFF',
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
-    paddingHorizontal: 24,
-    paddingBottom: 32,
-    paddingTop: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: -4 },
-    shadowOpacity: 0.12,
-    shadowRadius: 16,
-    elevation: 12,
+  bold: {
+    fontWeight: '700',
   },
-  dragHandle: {
-    width: 40,
-    height: 4,
-    backgroundColor: '#E2E8F0',
-    borderRadius: 99,
-    alignSelf: 'center',
-    marginBottom: 16,
-  },
-
-  // Header
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 16,
-    position: 'relative',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingTop: 22,
+    paddingBottom: 6,
   },
   headerTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#1A202C',
-    letterSpacing: 0.2,
+    ...typeScale.title,
+    color: c.text,
   },
   closeBtn: {
-    position: 'absolute',
-    right: 0,
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: '#F1F5F9',
+    width: 34,
+    height: 34,
+    borderRadius: 17,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: c.surfaceAlt,
   },
-  closeIcon: {
-    fontSize: 14,
-    color: '#64748B',
-    fontWeight: '700',
+  sheet: {
+    paddingHorizontal: 20,
+    paddingBottom: 40,
   },
-
-  // Amount Container & Inputs
+  fieldLabel: {
+    ...typeScale.overline,
+    color: c.textSubtle,
+    marginTop: 18,
+    marginBottom: 8,
+  },
   amountContainer: {
-    minHeight: 64,
-    borderRadius: 16,
-    borderWidth: 1.5,
-    borderColor: '#E2E8F0',
-    backgroundColor: '#F8FAFC',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 16,
-    marginBottom: 16,
+    justifyContent: 'center',
+    minHeight: 64,
+    paddingVertical: 14,
+    borderRadius: 16,
+    borderWidth: 1.5,
+    borderColor: c.border,
+    backgroundColor: c.bg,
   },
   amountContainerFocused: {
-    borderColor: BRAND_BLUE,
-    backgroundColor: '#FFFFFF',
-    borderWidth: 2,
+    borderColor: c.primary,
+    backgroundColor: c.primarySoft,
   },
   currencyPrefixWrap: {
-    marginRight: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
+    marginRight: 4,
   },
   currencyPrefix: {
-    fontSize: 30,
+    fontSize: 32,
     fontWeight: '700',
-    color: '#64748B',
-    lineHeight: 36,
+    color: c.textSubtle,
   },
   currencyPrefixFocused: {
-    color: BRAND_BLUE,
+    fontSize: 32,
+    fontWeight: '700',
+    color: c.primary,
   },
   amountInput: {
-    flex: 1,
-    fontSize: 32,
+    minWidth: 60,
+    fontSize: 44,
     fontWeight: '800',
-    color: '#1A202C',
-    letterSpacing: -0.5,
-    paddingVertical: 8,
-    minHeight: 48,
+    letterSpacing: -1,
+    color: c.text,
+    ...tabular,
   },
-
-  // Fields
-  fieldLabel: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#64748B',
-    marginBottom: 8,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-  },
-  textInput: {
-    height: 48,
-    borderRadius: 12,
-    borderWidth: 1.5,
-    borderColor: '#E2E8F0',
-    paddingHorizontal: 14,
-    fontSize: 15,
-    color: '#1A202C',
-    backgroundColor: '#FAFAFA',
-  },
-  categoryPicker: {
-    height: 48,
-    borderRadius: 12,
-    borderWidth: 1.5,
-    borderColor: '#E2E8F0',
-    paddingHorizontal: 14,
+  descRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#FAFAFA',
+    gap: 10,
+    height: 52,
+    marginTop: 12,
+    paddingHorizontal: 14,
+    borderRadius: radius.md,
+    backgroundColor: c.surfaceAlt,
   },
-  categoryText: {
-    fontSize: 15,
-    color: '#1A202C',
-    fontWeight: '500',
+  textInput: {
+    flex: 1,
+    height: '100%',
+    fontSize: 16,
+    color: c.text,
   },
-  categoryRight: {
+  aiCard: {
+    marginTop: 12,
+    padding: 14,
+    borderRadius: radius.lg,
+    backgroundColor: c.primarySoft,
+    gap: 10,
+  },
+  aiCardUnsure: {
+    backgroundColor: c.warningSoft,
+  },
+  aiHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
   },
-  categoryEmoji: {
-    fontSize: 18,
+  aiLabel: {
+    ...typeScale.label,
+    color: c.primary,
   },
-  chevron: {
-    fontSize: 18,
-    color: '#64748B',
-    fontWeight: '700',
+  aiChips: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
   },
-
-  // Log button
-  logButton: {
-    height: 54,
-    borderRadius: 27,
-    backgroundColor: BRAND_BLUE,
+  aiVerdict: {
+    ...typeScale.caption,
+    color: c.textMuted,
+  },
+  pickRow: {
+    flexDirection: 'row',
+    gap: 10,
+    marginTop: 12,
+  },
+  pick: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: BRAND_BLUE,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.35,
-    shadowRadius: 10,
-    elevation: 8,
-    marginBottom: 24,
+    gap: 8,
+    height: 48,
+    paddingHorizontal: 14,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    borderColor: c.border,
+    backgroundColor: c.surface,
   },
-  logButtonSuccess: {
-    backgroundColor: GREEN,
-    shadowColor: GREEN,
+  pickEmoji: {
+    fontSize: 18,
   },
-  logButtonText: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#FFFFFF',
-    letterSpacing: 0.3,
+  pickText: {
+    flexShrink: 1,
+    fontSize: 15,
+    fontWeight: '600',
+    color: c.text,
   },
-
-  // Summary
+  typeRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 8,
+  },
+  aiConfirmationBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginTop: 10,
+    padding: 12,
+    borderRadius: radius.md,
+    backgroundColor: c.warningSoft,
+  },
+  aiConfirmationText: {
+    flex: 1,
+    fontSize: 13,
+    lineHeight: 18,
+    color: c.text,
+  },
+  linkRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    marginTop: 16,
+    padding: 12,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    borderColor: c.border,
+  },
+  linkTitle: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: c.text,
+  },
+  linkSub: {
+    fontSize: 12,
+    color: c.textMuted,
+    marginTop: 2,
+  },
+  markPaid: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    marginTop: 8,
+    padding: 12,
+    borderRadius: radius.md,
+    backgroundColor: c.surfaceAlt,
+  },
+  formError: {
+    fontSize: 13,
+    color: c.danger,
+    marginTop: 14,
+    textAlign: 'center',
+  },
+  logButton: {
+    marginTop: 18,
+  },
   summaryRow: {
     flexDirection: 'row',
-    backgroundColor: '#F8FAFC',
-    borderRadius: 16,
-    paddingVertical: 16,
-    paddingHorizontal: 8,
-    borderWidth: 1,
-    borderColor: '#EEF2F7',
+    alignItems: 'center',
+    marginTop: 16,
+    paddingVertical: 12,
+    borderRadius: radius.md,
+    backgroundColor: c.bg,
   },
   summaryItem: {
     flex: 1,
     alignItems: 'center',
-    gap: 4,
   },
   summaryDivider: {
     width: 1,
-    backgroundColor: '#E2E8F0',
+    height: 26,
+    backgroundColor: c.border,
   },
   summaryLabel: {
     fontSize: 11,
-    color: '#94A3B8',
-    fontWeight: '500',
-    textAlign: 'center',
+    color: c.textSubtle,
   },
   summaryValue: {
-    fontSize: 16,
-    fontWeight: '800',
-    color: '#1A202C',
-    letterSpacing: -0.3,
-  },
-
-  // ── AI Badge styles ───────────────────────────────────────
-  aiBadgeRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    marginTop: 8,
-    paddingLeft: 4,
-  },
-  aiBadgeLoadingText: {
-    fontSize: 12,
-    color: BRAND_BLUE,
-    fontWeight: '500',
-  },
-  aiBadgeContainer: {
-    marginTop: 10,
-    backgroundColor: AI_BG,
-    borderRadius: 14,
-    borderWidth: 1.5,
-    borderColor: AI_BORDER,
-    padding: 12,
-  },
-  aiBadgeHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
-    gap: 6,
-  },
-  aiBadgeIcon: { fontSize: 16 },
-  aiBadgeLabel: {
-    fontSize: 11,
-    fontWeight: '700',
-    color: BRAND_BLUE,
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
-    flex: 1,
-  },
-  aiAppliedText: {
-    fontSize: 11,
-    color: BRAND_BLUE,
-    fontWeight: '700',
-  },
-  aiMainPred: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  aiMainCategory: {
-    fontSize: 16,
-    fontWeight: '800',
-    color: '#1A202C',
-  },
-  aiConfidence: {
-    fontSize: 18,
-    fontWeight: '900',
-    color: GREEN,
-    letterSpacing: -0.5,
-  },
-  sentimentContainer: {
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    padding: 8,
-    marginTop: 8,
-    borderWidth: 1,
-    borderColor: '#e2e8f0',
-  },
-  sentimentLabel: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: '#1A202C',
-  },
-  verdictText: {
-    fontSize: 11,
-    color: '#4A5568',
-    marginTop: 2,
-  },
-  aiBarRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    marginBottom: 5,
-  },
-  aiBarLabel: {
-    fontSize: 11,
-    color: '#64748B',
-    width: 90,
-  },
-  aiBarTrack: {
-    flex: 1,
-    height: 5,
-    backgroundColor: '#DDE0FF',
-    borderRadius: 99,
-    overflow: 'hidden',
-  },
-  aiBarFill: {
-    height: '100%',
-    backgroundColor: BRAND_BLUE,
-    borderRadius: 99,
-  },
-  aiBarPct: {
-    fontSize: 10,
-    color: '#64748B',
-    fontWeight: '600',
-    width: 28,
-    textAlign: 'right',
-  },
-
-  // Modal
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.45)',
-    justifyContent: 'flex-end',
-  },
-  modalSheet: {
-    backgroundColor: '#FFFFFF',
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    paddingTop: 12,
-    paddingBottom: 40,
-    maxHeight: '60%',
-  },
-  modalTitle: {
-    fontSize: 17,
-    fontWeight: '700',
-    color: '#1A202C',
-    textAlign: 'center',
-    marginBottom: 12,
-    paddingHorizontal: 24,
-  },
-  modalItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 14,
-    paddingHorizontal: 24,
-    gap: 14,
-  },
-  modalItemActive: {
-    backgroundColor: '#EEF2FF',
-  },
-  modalItemEmoji: {
-    fontSize: 22,
-  },
-  modalItemText: {
-    flex: 1,
     fontSize: 15,
-    fontWeight: '500',
-    color: '#374151',
-  },
-  modalItemTextActive: {
-    color: BRAND_BLUE,
     fontWeight: '700',
-  },
-  checkmark: {
-    fontSize: 16,
-    color: BRAND_BLUE,
-    fontWeight: '700',
-  },
-
-  // Radio buttons
-  radioGroup: {
-    flexDirection: 'row',
-    gap: 16,
-    marginVertical: 16,
-  },
-  radioItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    flex: 1,
-  },
-  radioOuter: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    borderWidth: 2,
-    borderColor: '#E2E8F0',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#FAFAFA',
-  },
-  radioOuterActive: {
-    borderColor: BRAND_BLUE,
-    backgroundColor: '#EEF2FF',
-  },
-  radioDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: BRAND_BLUE,
-  },
-  radioLabel: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#1A202C',
-    flex: 1,
-  },
-  aiConfirmationBanner: {
-    backgroundColor: '#FFFBEB',
-    borderColor: '#FCD34D',
-    borderWidth: 1,
-    borderRadius: 8,
-    padding: 12,
-    marginTop: 8,
-    marginBottom: 16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    gap: 8,
-  },
-  aiConfirmationText: {
-    fontSize: 12,
-    color: '#92400E',
-    flex: 1,
-  },
-  aiConfirmButton: {
-    backgroundColor: '#F59E0B',
-    borderRadius: 6,
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-  },
-  aiConfirmButtonText: {
-    color: '#FFFFFF',
-    fontSize: 11,
-    fontWeight: '700',
-  },
-
-  // ── Liability Linking styles ──────────────────────────────
-  liabilitySection: {
-    marginVertical: 12,
-  },
-  linkLiabilityBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    paddingVertical: 12,
-    paddingHorizontal: 14,
-    borderRadius: 12,
-    borderWidth: 1.5,
-    borderColor: '#DDE0FF',
-    borderStyle: 'dashed',
-    backgroundColor: '#F8FAFF',
-  },
-  linkLiabilityBtnText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: BRAND_BLUE,
-  },
-  linkedLiabilityCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 12,
-    borderRadius: 12,
-    borderWidth: 1.5,
-    borderColor: '#C7C7FF',
-    backgroundColor: '#F0F0FF',
-  },
-  linkedLiabilityInfo: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  linkedIconWrap: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: '#DBEAFE',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  linkedLiabilityName: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: '#1A202C',
-  },
-  linkedLiabilityMeta: {
-    fontSize: 12,
-    color: '#4B5563',
+    color: c.text,
     marginTop: 2,
+    ...tabular,
   },
-  unlinkBtn: {
-    padding: 4,
-    marginLeft: 8,
+  sheetScroll: {
+    flexGrow: 0,
+    flexShrink: 1,
   },
-  autoDeductControlContainer: {
-    backgroundColor: '#EEF2FF',
-    borderRadius: 8,
-    marginTop: 6,
-    overflow: 'hidden',
+  liabilityList: {
+    maxHeight: 420,
   },
-  markAsPaidToggle: {
+  liabilityItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 10,
-  },
-  checkbox: {
-    width: 20,
-    height: 20,
-    borderRadius: 4,
-    borderWidth: 1.5,
-    borderColor: BRAND_BLUE,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-  },
-  checkboxActive: {
-    backgroundColor: BRAND_BLUE,
-  },
-  markAsPaidTitle: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#1A202C',
-    marginBottom: 2,
-  },
-  markAsPaidDesc: {
-    fontSize: 11,
-    color: '#4338CA',
-  },
-  modalSubtitle: {
-    fontSize: 12,
-    color: '#64748B',
-    textAlign: 'center',
-    marginBottom: 14,
-    paddingHorizontal: 24,
-  },
-  liabilityModalItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
     gap: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F1F5F9',
+    padding: 12,
+    borderRadius: radius.md,
+    marginBottom: 6,
   },
-  liabilityIconBox: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#EEF2FF',
-    alignItems: 'center',
-    justifyContent: 'center',
+  liabilityItemActive: {
+    backgroundColor: c.primarySoft,
   },
-  unlinkedIconBox: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#F1F5F9',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  liabilityItemSub: {
-    fontSize: 12,
-    color: '#64748B',
-    marginTop: 2,
-  },
-  autoDeductPill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#ECFDF5',
-    paddingHorizontal: 5,
-    paddingVertical: 1,
-    borderRadius: 4,
-    gap: 2,
-  },
-  autoDeductPillText: {
-    fontSize: 9,
-    color: '#059669',
-    fontWeight: '700',
-  },
-});
+}));

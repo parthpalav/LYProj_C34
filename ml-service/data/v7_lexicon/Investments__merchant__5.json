@@ -1,0 +1,354 @@
+[
+ {
+  "text": "Amar Gold Corner",
+  "type": "Investment"
+ },
+ {
+  "text": "Ankita Stock Market",
+  "type": "Investment"
+ },
+ {
+  "text": "Aptus Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Ashok Bond House",
+  "type": "Investment"
+ },
+ {
+  "text": "Bharat Gold Emporium",
+  "type": "Investment"
+ },
+ {
+  "text": "Chirag NPS Corner",
+  "type": "Investment"
+ },
+ {
+  "text": "Dhanish Stock Market",
+  "type": "Investment"
+ },
+ {
+  "text": "Easylife Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Finance Focus",
+  "type": "Investment"
+ },
+ {
+  "text": "Gold Savings House",
+  "type": "Investment"
+ },
+ {
+  "text": "Guru Mutual Market",
+  "type": "Investment"
+ },
+ {
+  "text": "Harish Bond Market",
+  "type": "Investment"
+ },
+ {
+  "text": "ICICI Mutual Fund Corner",
+  "type": "Investment"
+ },
+ {
+  "text": "Invest Smart",
+  "type": "Investment"
+ },
+ {
+  "text": "Jyoti Gold Shop",
+  "type": "Investment"
+ },
+ {
+  "text": "Kailash ETF Emporium",
+  "type": "Investment"
+ },
+ {
+  "text": "Krishna Stock Market",
+  "type": "Investment"
+ },
+ {
+  "text": "Lakshmi Gold Store",
+  "type": "Investment"
+ },
+ {
+  "text": "Mohan Bond House",
+  "type": "Investment"
+ },
+ {
+  "text": "Money Master",
+  "type": "Investment"
+ },
+ {
+  "text": "Nishant PPF Corner",
+  "type": "Investment"
+ },
+ {
+  "text": "Ojas Mutual Fund Emporium",
+  "type": "Investment"
+ },
+ {
+  "text": "Prem Stock Corner",
+  "type": "Investment"
+ },
+ {
+  "text": "Rahul Bond Market",
+  "type": "Investment"
+ },
+ {
+  "text": "Saraswati Gold Emporium",
+  "type": "Investment"
+ },
+ {
+  "text": "Saurabh Mutual Fund Store",
+  "type": "Investment"
+ },
+ {
+  "text": "Shyam NPS Emporium",
+  "type": "Investment"
+ },
+ {
+  "text": "Stock Savvy",
+  "type": "Investment"
+ },
+ {
+  "text": "Sunil Bond House",
+  "type": "Investment"
+ },
+ {
+  "text": "Tech Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Umesh Gold Emporium",
+  "type": "Investment"
+ },
+ {
+  "text": "Vishal Stock Market",
+  "type": "Investment"
+ },
+ {
+  "text": "Wealthy Gold Emporium",
+  "type": "Investment"
+ },
+ {
+  "text": "XYZ Financial",
+  "type": "Investment"
+ },
+ {
+  "text": "Abhay Financial Services",
+  "type": "Investment"
+ },
+ {
+  "text": "Bharti Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Chitra Gold Emporium",
+  "type": "Investment"
+ },
+ {
+  "text": "Deb Investment House",
+  "type": "Investment"
+ },
+ {
+  "text": "Eshaan PPF Corner",
+  "type": "Investment"
+ },
+ {
+  "text": "Finance Guru",
+  "type": "Investment"
+ },
+ {
+  "text": "Gold House of India",
+  "type": "Investment"
+ },
+ {
+  "text": "Hinduja Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Invest Plus",
+  "type": "Investment"
+ },
+ {
+  "text": "Jagdish Bond Market",
+  "type": "Investment"
+ },
+ {
+  "text": "Krishna ETF Emporium",
+  "type": "Investment"
+ },
+ {
+  "text": "Lakshmi Stock Market",
+  "type": "Investment"
+ },
+ {
+  "text": "Money Matters",
+  "type": "Investment"
+ },
+ {
+  "text": "Nirmal PPF Corner",
+  "type": "Investment"
+ },
+ {
+  "text": "Ojas Mutual Fund Market",
+  "type": "Investment"
+ },
+ {
+  "text": "Prem Gold Emporium",
+  "type": "Investment"
+ },
+ {
+  "text": "Ram Bond Market",
+  "type": "Investment"
+ },
+ {
+  "text": "Saraswati Gold House",
+  "type": "Investment"
+ },
+ {
+  "text": "Shiv Gold Emporium",
+  "type": "Investment"
+ },
+ {
+  "text": "Stock Master",
+  "type": "Investment"
+ },
+ {
+  "text": "Sunil Mutual Fund Emporium",
+  "type": "Investment"
+ },
+ {
+  "text": "Tech Bond House",
+  "type": "Investment"
+ },
+ {
+  "text": "Umesh Gold Market",
+  "type": "Investment"
+ },
+ {
+  "text": "Vishal Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Wealth Investment",
+  "type": "Investment"
+ },
+ {
+  "text": "XYZ Gold Emporium",
+  "type": "Investment"
+ },
+ {
+  "text": "Yash PPF Corner",
+  "type": "Investment"
+ },
+ {
+  "text": "Zee Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Abhi Bond House",
+  "type": "Investment"
+ },
+ {
+  "text": "Bharti NPS Corner",
+  "type": "Investment"
+ },
+ {
+  "text": "Chitra Stock Market",
+  "type": "Investment"
+ },
+ {
+  "text": "Deb Gold Emporium",
+  "type": "Investment"
+ },
+ {
+  "text": "Eshaan ETF Emporium",
+  "type": "Investment"
+ },
+ {
+  "text": "Finance Expert",
+  "type": "Investment"
+ },
+ {
+  "text": "Gold Emporium",
+  "type": "Investment"
+ },
+ {
+  "text": "Hinduja Bond Market",
+  "type": "Investment"
+ },
+ {
+  "text": "Invest Wealth",
+  "type": "Investment"
+ },
+ {
+  "text": "Jagdish Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Krishna PPF Corner",
+  "type": "Investment"
+ },
+ {
+  "text": "Lakshmi ETF Emporium",
+  "type": "Investment"
+ },
+ {
+  "text": "Money Empire",
+  "type": "Investment"
+ },
+ {
+  "text": "Nirmal Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Ojas Bond House",
+  "type": "Investment"
+ },
+ {
+  "text": "Prem Gold House",
+  "type": "Investment"
+ },
+ {
+  "text": "Ram ETF Emporium",
+  "type": "Investment"
+ },
+ {
+  "text": "Saraswati Stock Market",
+  "type": "Investment"
+ },
+ {
+  "text": "Shiv Bond Market",
+  "type": "Investment"
+ },
+ {
+  "text": "Stock Expert",
+  "type": "Investment"
+ },
+ {
+  "text": "Sunil Gold Emporium",
+  "type": "Investment"
+ },
+ {
+  "text": "Tech Mutual Emporium",
+  "type": "Investment"
+ },
+ {
+  "text": "Umesh Gold House",
+  "type": "Investment"
+ },
+ {
+  "text": "Vishal ETF Market",
+  "type": "Investment"
+ },
+ {
+  "text": "Wealth Bond House",
+  "type": "Investment"
+ },
+ {
+  "text": "XYZ Investment",
+  "type": "Investment"
+ }
+]

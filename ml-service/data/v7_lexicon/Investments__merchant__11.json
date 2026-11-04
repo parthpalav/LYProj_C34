@@ -1,0 +1,322 @@
+[
+ {
+  "text": "Tier I Pension Account",
+  "type": "Investment"
+ },
+ {
+  "text": "Tier II Pension Account",
+  "type": "Investment"
+ },
+ {
+  "text": "NPS Tier-I Contribution",
+  "type": "Investment"
+ },
+ {
+  "text": "NPS Tier-II Top Up",
+  "type": "Investment"
+ },
+ {
+  "text": "NPS Vatsalya Top Up",
+  "type": "Investment"
+ },
+ {
+  "text": "PRAN Contribution",
+  "type": "Investment"
+ },
+ {
+  "text": "PRAN Top Up",
+  "type": "Investment"
+ },
+ {
+  "text": "PRAN Account Fee",
+  "type": "Investment"
+ },
+ {
+  "text": "CRA NPS Charge",
+  "type": "Investment"
+ },
+ {
+  "text": "CRA Pension Fee",
+  "type": "Investment"
+ },
+ {
+  "text": "NPS CRA Debit",
+  "type": "Investment"
+ },
+ {
+  "text": "NSDL CRA Pension",
+  "type": "Investment"
+ },
+ {
+  "text": "KFintech NPS Debit",
+  "type": "Investment"
+ },
+ {
+  "text": "CAMS NPS Debit",
+  "type": "Investment"
+ },
+ {
+  "text": "Karvy NPS Debit",
+  "type": "Investment"
+ },
+ {
+  "text": "SBI Pension Funds",
+  "type": "Investment"
+ },
+ {
+  "text": "HDFC Pension Management",
+  "type": "Investment"
+ },
+ {
+  "text": "ICICI Prudential Pension Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "LIC Pension Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Axis Pension Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Kotak Pension Scheme",
+  "type": "Investment"
+ },
+ {
+  "text": "UTI Retirement Solutions",
+  "type": "Investment"
+ },
+ {
+  "text": "Max Life Pension Plan",
+  "type": "Investment"
+ },
+ {
+  "text": "Aegon Pension Plan",
+  "type": "Investment"
+ },
+ {
+  "text": "Tata Pension Plan",
+  "type": "Investment"
+ },
+ {
+  "text": "Birla Pension Plan",
+  "type": "Investment"
+ },
+ {
+  "text": "Edelweiss Pension Plan",
+  "type": "Investment"
+ },
+ {
+  "text": "Reliance Pension Plan",
+  "type": "Investment"
+ },
+ {
+  "text": "Aviva Pension Plan",
+  "type": "Investment"
+ },
+ {
+  "text": "Bajaj Pension Plan",
+  "type": "Investment"
+ },
+ {
+  "text": "Shriram Pension Plan",
+  "type": "Investment"
+ },
+ {
+  "text": "Sundaram Pension Plan",
+  "type": "Investment"
+ },
+ {
+  "text": "Canara Pension Plan",
+  "type": "Investment"
+ },
+ {
+  "text": "BOB Pension Plan",
+  "type": "Investment"
+ },
+ {
+  "text": "Pension Fund Contribution",
+  "type": "Investment"
+ },
+ {
+  "text": "Retirement Fund Contribution",
+  "type": "Investment"
+ },
+ {
+  "text": "Retirement Corpus Deposit",
+  "type": "Investment"
+ },
+ {
+  "text": "Pension Corpus Top Up",
+  "type": "Investment"
+ },
+ {
+  "text": "Pension Top Up Form",
+  "type": "Investment"
+ },
+ {
+  "text": "NPS Auto Choice Form",
+  "type": "Investment"
+ },
+ {
+  "text": "NPS Active Choice Form",
+  "type": "Investment"
+ },
+ {
+  "text": "NPS Lifecycle Form",
+  "type": "Investment"
+ },
+ {
+  "text": "NPS Scheme Change Form",
+  "type": "Investment"
+ },
+ {
+  "text": "NPS Withdrawal Form",
+  "type": "Investment"
+ },
+ {
+  "text": "NPS Exit Form",
+  "type": "Investment"
+ },
+ {
+  "text": "NPS Nomination Form",
+  "type": "Investment"
+ },
+ {
+  "text": "NPS KYC Form",
+  "type": "Investment"
+ },
+ {
+  "text": "NPS Registration Form",
+  "type": "Investment"
+ },
+ {
+  "text": "NPS Tier-I Registration",
+  "type": "Investment"
+ },
+ {
+  "text": "NPS Ekyc Fee",
+  "type": "Investment"
+ },
+ {
+  "text": "NPS Account Opening Charge",
+  "type": "Investment"
+ },
+ {
+  "text": "NPS Transaction Charge",
+  "type": "Investment"
+ },
+ {
+  "text": "NPS Maintenance Charge",
+  "type": "Investment"
+ },
+ {
+  "text": "NPS Annual Charge",
+  "type": "Investment"
+ },
+ {
+  "text": "NPS Statement Fee",
+  "type": "Investment"
+ },
+ {
+  "text": "Pension Form Counter",
+  "type": "Investment"
+ },
+ {
+  "text": "Pension Form Kendra",
+  "type": "Investment"
+ },
+ {
+  "text": "Pension Seva Kendra",
+  "type": "Investment"
+ },
+ {
+  "text": "Pension Sewa Kendra",
+  "type": "Investment"
+ },
+ {
+  "text": "Nivesh Pension Kendra",
+  "type": "Investment"
+ },
+ {
+  "text": "Pension Point Kendra",
+  "type": "Investment"
+ },
+ {
+  "text": "Vriddha Pension Kendra",
+  "type": "Investment"
+ },
+ {
+  "text": "Shanti Pension Seva",
+  "type": "Investment"
+ },
+ {
+  "text": "Sanchay Pension Centre",
+  "type": "Investment"
+ },
+ {
+  "text": "Bhavishya Pension Point",
+  "type": "Investment"
+ },
+ {
+  "text": "Bhavishya Nidhi Kendra",
+  "type": "Investment"
+ },
+ {
+  "text": "Suraksha Pension Seva",
+  "type": "Investment"
+ },
+ {
+  "text": "Anand Pension Corner",
+  "type": "Investment"
+ },
+ {
+  "text": "Laxmi Pension Corner",
+  "type": "Investment"
+ },
+ {
+  "text": "Ganesh Pension Corner",
+  "type": "Investment"
+ },
+ {
+  "text": "Shiv Pension Point",
+  "type": "Investment"
+ },
+ {
+  "text": "Radha Pension Corner",
+  "type": "Investment"
+ },
+ {
+  "text": "Sai Pension Seva",
+  "type": "Investment"
+ },
+ {
+  "text": "Mahalaxmi Pension Point",
+  "type": "Investment"
+ },
+ {
+  "text": "Tirupati Pension Centre",
+  "type": "Investment"
+ },
+ {
+  "text": "Vaishnavi Pension Point",
+  "type": "Investment"
+ },
+ {
+  "text": "Pension Nidhi Kendra",
+  "type": "Investment"
+ },
+ {
+  "text": "Sewa Pension Counter",
+  "type": "Investment"
+ },
+ {
+  "text": "PFRDA Pension Deposit",
+  "type": "Investment"
+ },
+ {
+  "text": "Pension Vriddhi Kendra",
+  "type": "Investment"
+ }
+]

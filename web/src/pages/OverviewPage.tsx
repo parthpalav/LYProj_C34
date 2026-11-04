@@ -24,11 +24,14 @@ import { AlertsPanel } from '../components/dashboard/AlertsPanel';
 import { UpcomingLiabilities } from '../components/dashboard/UpcomingLiabilities';
 import { RecentActivityTable } from '../components/dashboard/RecentActivityTable';
 import { FutureOutlookPanel } from '../components/dashboard/FutureOutlookPanel';
-import { getFamilyDashboard } from '../services/api';
+import { getFamilyDashboard, getReceivedFamilyInvitations } from '../services/api';
 import type { FamilyDashboard } from '../types';
 import { FamilyOverviewCard } from '../components/family/FamilyOverviewCard';
 import { NextStep } from '../components/ui/NextStep';
 import { FMI_NAME } from '../utils/presentation';
+import { AdjustBalanceModal } from '../components/dashboard/AdjustBalanceModal';
+import { Toast } from '../components/ui/Toast';
+import { getAppTimezone, zparts } from '../utils/timezone';
 
 export const OverviewPage: React.FC = () => {
   const { user } = useAuth();
@@ -74,7 +77,7 @@ export const OverviewPage: React.FC = () => {
 
   // Dynamic time-of-day greeting
   const getGreeting = () => {
-    const hour = new Date().getHours();
+    const hour = zparts().hours;
     if (hour < 12) return 'Good morning';
     if (hour < 17) return 'Good afternoon';
     return 'Good evening';
@@ -102,6 +105,25 @@ export const OverviewPage: React.FC = () => {
     };
   }, [user]);
 
+  // Pending household invitations (mobile Notifications parity)
+  const [pendingInvites, setPendingInvites] = React.useState(0);
+  React.useEffect(() => {
+    let mounted = true;
+    getReceivedFamilyInvitations()
+      .then((list) => mounted && setPendingInvites(list.filter((i) => !i.status || i.status === 'pending').length))
+      .catch(() => {});
+    return () => { mounted = false; };
+  }, []);
+  const reviewCount = transactions.filter((t) => t.needsReview).length;
+
+  const [adjustingBalance, setAdjustingBalance] = React.useState(false);
+  const [toastMessage, setToastMessage] = React.useState<string | null>(null);
+  React.useEffect(() => {
+    if (!toastMessage) return;
+    const t = setTimeout(() => setToastMessage(null), 3500);
+    return () => clearTimeout(t);
+  }, [toastMessage]);
+
   const handleRefresh = () => {
     refetch();
     getFamilyDashboard()
@@ -111,21 +133,31 @@ export const OverviewPage: React.FC = () => {
 
   return (
     <div className="overview-page">
+      <Toast message={toastMessage} type="success" onClose={() => setToastMessage(null)} />
+      <AdjustBalanceModal
+        isOpen={adjustingBalance}
+        onClose={() => setAdjustingBalance(false)}
+        currentBalance={currentBalance}
+        onUpdated={(message) => { setToastMessage(message); refetch(); }}
+      />
       {/* Page Header */}
       <header className="overview-header overview-section-hero">
         <div className="overview-header-left">
           <span className="overview-context-badge">Financial Intelligence</span>
           <h1 className="overview-title">{greetingHeadline}</h1>
           <p className="overview-subtitle">
-            Your personal finances · {new Date().toLocaleDateString('en-IN', { month: 'long', year: 'numeric' })}
+            Your personal finances · {new Date().toLocaleDateString('en-IN', { timeZone: getAppTimezone(), month: 'long', year: 'numeric' })}
           </p>
         </div>
 
         <div className="overview-header-right">
           <Link className="next-step-action" to="/app/activity?entry=new"><Plus size={16} aria-hidden="true" />Record expense</Link>
+          <Button variant="outline" size="sm" onClick={() => setAdjustingBalance(true)} disabled={isLoading} leftIcon={<Wallet size={14} />}>
+            Adjust balance
+          </Button>
           {lastUpdated && (
             <span className="overview-last-updated">
-              Updated {lastUpdated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              Updated {lastUpdated.toLocaleTimeString([], { timeZone: getAppTimezone(), hour: '2-digit', minute: '2-digit' })}
             </span>
           )}
           <Button
@@ -213,6 +245,29 @@ export const OverviewPage: React.FC = () => {
           </>
         )}
       </section>
+
+      {(pendingInvites > 0 || reviewCount > 0) && (
+        <section className="overview-section-hero" aria-label="Needs your attention">
+          {pendingInvites > 0 && (
+            <div className="parity-nudge">
+              <div>
+                <strong>{pendingInvites} household {pendingInvites === 1 ? 'invitation' : 'invitations'} waiting</strong>
+                <span>Accept to share a combined view while keeping personal accounts private.</span>
+              </div>
+              <Link className="next-step-action" to="/app/family">Respond</Link>
+            </div>
+          )}
+          {reviewCount > 0 && (
+            <div className="parity-nudge parity-nudge-warn">
+              <div>
+                <strong>{reviewCount} AI {reviewCount === 1 ? 'guess' : 'guesses'} to check</strong>
+                <span>Confirm or correct labels FINAURA wasn't sure about.</span>
+              </div>
+              <Link className="next-step-action" to="/app/review">Review now</Link>
+            </div>
+          )}
+        </section>
+      )}
 
       {!isLoading && !sectionErrors.transactions && transactions.length === 0 && (
         <NextStep

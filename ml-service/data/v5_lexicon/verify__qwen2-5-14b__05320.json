@@ -1,0 +1,202 @@
+[
+ {
+  "i": 5320,
+  "category": "Health",
+  "type": "Want"
+ },
+ {
+  "i": 5321,
+  "category": "Health",
+  "type": "Want"
+ },
+ {
+  "i": 5322,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5323,
+  "category": "Groceries",
+  "type": "Want"
+ },
+ {
+  "i": 5324,
+  "category": "Groceries",
+  "type": "Need"
+ },
+ {
+  "i": 5325,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5326,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5327,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5328,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5329,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5330,
+  "category": "Insurance",
+  "type": "Need"
+ },
+ {
+  "i": 5331,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5332,
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ {
+  "i": 5333,
+  "category": "Health",
+  "type": "Want"
+ },
+ {
+  "i": 5334,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5335,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5336,
+  "category": "Health",
+  "type": "Want"
+ },
+ {
+  "i": 5337,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5338,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5339,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 5340,
+  "category": "Health",
+  "type": "Want"
+ },
+ {
+  "i": 5341,
+  "category": "Education",
+  "type": "Investment"
+ },
+ {
+  "i": 5342,
+  "category": "Education",
+  "type": "Investment"
+ },
+ {
+  "i": 5343,
+  "category": "Education",
+  "type": "Investment"
+ },
+ {
+  "i": 5344,
+  "category": "Education",
+  "type": "Investment"
+ },
+ {
+  "i": 5345,
+  "category": "Education",
+  "type": "Investment"
+ },
+ {
+  "i": 5346,
+  "category": "Education",
+  "type": "Investment"
+ },
+ {
+  "i": 5347,
+  "category": "Education",
+  "type": "Investment"
+ },
+ {
+  "i": 5348,
+  "category": "Education",
+  "type": "Investment"
+ },
+ {
+  "i": 5349,
+  "category": "Education",
+  "type": "Investment"
+ },
+ {
+  "i": 5350,
+  "category": "Education",
+  "type": "Investment"
+ },
+ {
+  "i": 5351,
+  "category": "Education",
+  "type": "Investment"
+ },
+ {
+  "i": 5352,
+  "category": "Education",
+  "type": "Investment"
+ },
+ {
+  "i": 5353,
+  "category": "Education",
+  "type": "Investment"
+ },
+ {
+  "i": 5354,
+  "category": "Education",
+  "type": "Need"
+ },
+ {
+  "i": 5355,
+  "category": "Education",
+  "type": "Need"
+ },
+ {
+  "i": 5356,
+  "category": "Education",
+  "type": "Need"
+ },
+ {
+  "i": 5357,
+  "category": "Education",
+  "type": "Need"
+ },
+ {
+  "i": 5358,
+  "category": "Education",
+  "type": "Need"
+ },
+ {
+  "i": 5359,
+  "category": "Education",
+  "type": "Need"
+ }
+]

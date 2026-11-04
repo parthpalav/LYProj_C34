@@ -12,7 +12,7 @@ import controllerRouter from '../../controllers/index.js';
 import Transaction from '../../models/Transaction.js';
 import User from '../../models/User.js';
 import MerchantPreference from '../../models/MerchantPreference.js';
-import { merchantKey } from '../../services/MerchantMemoryService.js';
+import { merchantKey, recallMerchant } from '../../services/MerchantMemoryService.js';
 
 function mockRes() {
   return {
@@ -44,6 +44,9 @@ async function run() {
   assert.equal(merchantKey('Zomato dinner order ₹450'), 'zomato dinner');
   assert.equal(merchantKey('500 Zomato dinner order'), 'zomato dinner');
   assert.equal(merchantKey('IMPS/P2A/309812345678/MOM/SBIN0001234'), 'mom');
+  assert.equal(merchantKey('UPI/412345678901/Payment from Ph/swiggy8@ybl/YES BANK LIMITED YBS'), 'ph swiggy yes');
+  assert.equal(merchantKey('UPI-SWIGGY-SWIGGY8@YBL-YESB0YBLUPI-412345678901-UPI'), 'swiggy');
+  assert.equal(merchantKey('POS 416021XXXXXX6172 TATA 1MG JAIPUR'), 'tata 1mg jaipur');
   assert.equal(merchantKey('   '), '');
   console.log('  ✅ merchantKey normalisation');
 
@@ -108,6 +111,45 @@ async function run() {
   assert.equal(r6.statusCode, 201);
   assert.ok(await MerchantPreference.findOne({ userId: 'MEM_USER_B', merchantKey: 'cult fit' }));
   console.log('  ✅ manual POST stores merchant preference');
+
+  // 6b. Same merchant, different free text: matched on the shared leading token
+  const r6b = mockRes();
+  await classify({ user: { id: 'MEM_USER_B' }, body: { text: 'cult gym renewal' } }, r6b, fail);
+  assert.equal(r6b.data.category, 'Health');
+  assert.equal(r6b.data.classificationSource, 'user_memory');
+  console.log('  ✅ memory matches merchant despite different free text');
+
+  // 6c. Longest shared prefix wins; an equal-length tie with different labels is left to ML
+  await MerchantPreference.create([
+    { userId: 'MEM_USER_A', merchantKey: 'uber ride home', category: 'Transport & Travel', type: 'Want' },
+    { userId: 'MEM_USER_A', merchantKey: 'uber eats lunch', category: 'Food & Dining', type: 'Want' }
+  ]);
+  assert.equal((await recallMerchant('MEM_USER_A', 'Uber eats dinner')).category, 'Food & Dining');
+  assert.equal(await recallMerchant('MEM_USER_A', 'uber to college'), null);
+  console.log('  ✅ longest prefix wins, ambiguous tie defers to ML');
+
+  // 7. A category with no stated source (e.g. an untouched form default) is not a correction
+  await new Promise((r) => setTimeout(r, 5));
+  const r7 = mockRes();
+  await post({ user: { id: 'MEM_USER_B' }, body: { amount: 40, description: 'Sharma tea stall', category: 'Food & Dining', type: 'Want' } }, r7, fail);
+  assert.equal(r7.statusCode, 201);
+  assert.equal(r7.data.categorySource, 'client');
+  assert.equal(await MerchantPreference.findOne({ userId: 'MEM_USER_B', merchantKey: 'sharma tea stall' }), null);
+  console.log('  ✅ sourceless category POST is not remembered');
+
+  // 8. ML service answering 500 must use the keyword fallback, not save Misc
+  const realFetch = globalThis.fetch;
+  globalThis.fetch = async () => new Response('boom', { status: 500 });
+  try {
+    const r8 = mockRes();
+    await post({ user: { id: 'MEM_USER_B' }, body: { amount: 300, description: 'electricity bill' } }, r8, fail);
+    assert.equal(r8.statusCode, 201);
+    assert.equal(r8.data.categorySource, 'fallback');
+    assert.notEqual(r8.data.category, 'Misc');
+  } finally {
+    globalThis.fetch = realFetch;
+  }
+  console.log('  ✅ ML 5xx falls back to keywords');
 
   await Promise.all([
     Transaction.deleteMany({ userId: { $in: users } }),

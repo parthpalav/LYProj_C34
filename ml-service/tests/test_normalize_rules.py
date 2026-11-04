@@ -28,6 +28,10 @@ class TestNormalize(unittest.TestCase):
             "FAASOS TXN POS PURCHASE": "faasos",
             "IMPS/P2A/309812345678/MOM/SBIN0001234": "mom",
             "paid zomato.order@hdfcbank 450": "paid zomato order",
+            "UPI/412345678901/Payment from Ph/swiggy8@ybl/YES BANK LIMITED YBS": "payment from ph swiggy yes bank limited",
+            "NWD-512345XXXXXX1234-S1ANMU12-MUMBAI": "mumbai",
+            "UPI-SWIGGY-SWIGGY8@YBL-YESB0YBLUPI-412345678901-UPI": "swiggy",
+            "POS 416021XXXXXX6172 TATA 1MG JAIPUR": "tata 1mg jaipur",
         }
         for raw, expected in cases.items():
             self.assertEqual(clean_text(raw), expected, raw)
@@ -57,6 +61,24 @@ class TestRuleFalsePositives(unittest.TestCase):
             res = match_merchant_rule(text)
             self.assertIsNotNone(res, text)
             self.assertEqual(res["category"], cat, text)
+
+    def test_rubric_boundaries(self):
+        # (text) -> (category, type) per data/CATEGORY_RUBRIC.md; None = left to the model
+        cases = {
+            "board game cafe entry": ("Entertainment", "Want"),
+            "star sports cafe": ("Entertainment", "Want"),
+            "cafe mocha and sandwich": ("Food & Dining", "Want"),
+            "school fees": ("Education", "Need"),
+            "school van fees": ("Education", "Need"),
+            "college fees": ("Education", "Need"),
+            "irctc train ticket booking": ("Transport & Travel", "Want"),
+            "local bus pass": ("Transport & Travel", "Need"),
+            "tata play dth": ("Utilities & Bills", "Need"),
+            "bus ticket to pune": None,
+        }
+        for text, want in cases.items():
+            res = match_merchant_rule(text)
+            self.assertEqual(res and (res["category"], res["type"]), want, text)
 
 
 class TestPipelinePairs(unittest.TestCase):

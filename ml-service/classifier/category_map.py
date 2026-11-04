@@ -100,7 +100,7 @@ CATEGORY_TYPE: dict[str, str] = {
     "Shopping":              "Want",
     "Entertainment":         "Want",
     "Health":                "Need",
-    "Education":             "Investment",
+    "Education":             "Need",
     "Personal Care":         "Want",
     "Insurance":             "Need",
     "Investments":           "Investment",
@@ -119,7 +119,7 @@ ALLOWED_TYPES: dict[str, list[str]] = {
     "Shopping":              ["Want", "Need"],
     "Entertainment":         ["Want"],
     "Health":                ["Need", "Want"],
-    "Education":             ["Investment", "Need"],
+    "Education":             ["Need"],  # Investment is only for money that buys a financial asset
     "Personal Care":         ["Want", "Need"],
     "Insurance":             ["Need"],
     "Investments":           ["Investment"],

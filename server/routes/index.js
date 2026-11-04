@@ -5,6 +5,8 @@ import * as predictabilityController from '../controllers/predictabilityControll
 import * as assetController from '../controllers/assetController.js';
 import * as reportController from '../controllers/reportController.js';
 import * as familyController from '../controllers/familyController.js';
+import * as subscriptionController from '../controllers/subscriptionController.js';
+import * as paymentMethodController from '../controllers/paymentMethodController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 import { computeRateLimiter } from '../middleware/rateLimiter.js';
 
@@ -31,6 +33,9 @@ router.post('/predictability/scenario', authMiddleware, computeRateLimiter, pred
 // Report routes
 router.get('/reports/monthly', authMiddleware, reportController.getMonthlyReport);
 
+// Recurring-charge suggestions (subscriptions not yet tracked as liabilities)
+router.get('/subscriptions/suggestions', authMiddleware, subscriptionController.getSubscriptionSuggestions);
+
 // Liability routes
 router.get('/liabilities', authMiddleware, liabilityController.getLiabilities);
 router.get('/liabilities/payments-summary', authMiddleware, liabilityController.getLiabilitiesPaymentsSummary);
@@ -38,6 +43,14 @@ router.get('/liabilities/:id/transactions', authMiddleware, liabilityController.
 router.post('/liabilities', authMiddleware, liabilityController.createLiability);
 router.put('/liabilities/:id', authMiddleware, liabilityController.updateLiability);
 router.delete('/liabilities/:id', authMiddleware, liabilityController.deleteLiability);
+
+// Payment method routes (UPI, debit and credit cards)
+router.get('/payment-methods', authMiddleware, paymentMethodController.getPaymentMethods);
+router.post('/payment-methods', authMiddleware, paymentMethodController.createPaymentMethod);
+router.put('/payment-methods/:id', authMiddleware, paymentMethodController.updatePaymentMethod);
+router.delete('/payment-methods/:id', authMiddleware, paymentMethodController.deletePaymentMethod);
+router.post('/payment-methods/:id/pay', authMiddleware, paymentMethodController.payCreditCardBill);
+router.put('/payment-methods/:id/balance', authMiddleware, paymentMethodController.setCreditCardBalance);
 
 // Asset routes
 router.get('/assets', authMiddleware, assetController.getAssets);

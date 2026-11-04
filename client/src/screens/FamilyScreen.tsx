@@ -10,13 +10,13 @@ import {
   ActivityIndicator,
   Alert,
   RefreshControl,
-  SafeAreaView,
   KeyboardAvoidingView,
   Platform,
-  StatusBar,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { celebrate, toast } from '../store/useCelebrationStore';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   getCurrentFamily,
   getReceivedFamilyInvitations,
@@ -36,23 +36,10 @@ import {
   FamilyMember,
 } from '../types';
 
+import { createStyles, useTheme, Palette } from '../theme';
+import { ThemeToggle } from '../components/ui/ThemeToggle';
 // ── Design Tokens ─────────────────────────────────────────────
-const BLUE = '#2563EB';
-const BLUE_LIGHT = '#EFF6FF';
-const GREEN = '#10B981';
-const GREEN_LIGHT = '#ECFDF5';
-const AMBER = '#F59E0B';
-const AMBER_LIGHT = '#FFFBEB';
-const RED = '#EF4444';
-const RED_LIGHT = '#FEF2F2';
-const PURPLE = '#7C3AED';
-const PURPLE_LIGHT = '#F5F3FF';
-const BG = '#F8FAFC';
-const CARD_BG = '#FFFFFF';
-const TEXT_PRIMARY = '#0F172A';
-const TEXT_SECONDARY = '#475569';
-const TEXT_MUTED = '#94A3B8';
-const BORDER = '#E2E8F0';
+const tokens = (c: Palette) => ({ BLUE: c.primary, BLUE_LIGHT: c.primarySoft, GREEN: c.success, GREEN_LIGHT: c.successSoft, AMBER: c.warning, AMBER_LIGHT: c.warningSoft, RED: c.danger, RED_LIGHT: c.dangerSoft, PURPLE: c.purple, PURPLE_LIGHT: c.primarySoft, BG: c.bg, CARD_BG: c.surface, TEXT_PRIMARY: c.text, TEXT_SECONDARY: c.textMuted, TEXT_MUTED: c.textSubtle, BORDER: c.border });
 
 // ── Helpers ───────────────────────────────────────────────────
 
@@ -124,6 +111,9 @@ export function formatExpiry(dateStr?: string | null): string {
 }
 
 export default function FamilyScreen(): React.ReactElement {
+  const { c } = useTheme();
+  const { BLUE, BLUE_LIGHT, GREEN, GREEN_LIGHT, AMBER, AMBER_LIGHT, RED, PURPLE, PURPLE_LIGHT, TEXT_PRIMARY, TEXT_SECONDARY, TEXT_MUTED } = tokens(c);
+  const styles = useStyles();
   const navigation = useNavigation<any>();
 
   // State
@@ -208,7 +198,7 @@ export default function FamilyScreen(): React.ReactElement {
       await sendFamilyInvitation(trimmed);
       setInviteModalVisible(false);
       setInviteEmail('');
-      Alert.alert('Invitation Sent', `A Family invitation was sent to ${trimmed}.`);
+      celebrate({ kind: 'toast', title: 'Invitation sent', subtitle: `A Family invitation was sent to ${trimmed}.` });
       fetchFamilyData();
     } catch (err: any) {
       const msg = getHumanReadableError(err, 'Failed to send invitation.');
@@ -222,11 +212,11 @@ export default function FamilyScreen(): React.ReactElement {
     setActionLoadingId(`accept-${invitationId}`);
     try {
       await acceptFamilyInvitation(invitationId);
-      Alert.alert('Welcome to the Family!', 'You have successfully joined the Family.');
+      celebrate({ kind: 'confetti', title: 'Welcome to the Family!', subtitle: 'You have joined the household. Your shared overview is ready.' });
       await fetchFamilyData();
     } catch (err: any) {
       const msg = getHumanReadableError(err, 'Failed to accept invitation.');
-      Alert.alert('Error', msg);
+      toast(msg, { tone: 'error' });
     } finally {
       setActionLoadingId(null);
     }
@@ -237,9 +227,10 @@ export default function FamilyScreen(): React.ReactElement {
     try {
       await declineFamilyInvitation(invitationId);
       setReceivedInvitations((prev) => prev.filter((i) => i.id !== invitationId));
+      toast('Invitation declined', { tone: 'info' });
     } catch (err: any) {
       const msg = getHumanReadableError(err, 'Failed to decline invitation.');
-      Alert.alert('Error', msg);
+      toast(msg, { tone: 'error' });
     } finally {
       setActionLoadingId(null);
     }
@@ -250,9 +241,10 @@ export default function FamilyScreen(): React.ReactElement {
     try {
       await cancelFamilyInvitation(invitationId);
       setSentInvitations((prev) => prev.filter((i) => i.id !== invitationId));
+      toast('Invitation cancelled', { tone: 'info' });
     } catch (err: any) {
       const msg = getHumanReadableError(err, 'Failed to cancel invitation.');
-      Alert.alert('Error', msg);
+      toast(msg, { tone: 'error' });
     } finally {
       setActionLoadingId(null);
     }
@@ -271,11 +263,11 @@ export default function FamilyScreen(): React.ReactElement {
             setActionLoadingId(`remove-${member.userId}`);
             try {
               await removeFamilyMember(member.userId);
-              Alert.alert('Member Removed', `${member.name} was removed from the Family.`);
+              toast('Member removed', { tone: 'info', subtitle: `${member.name} was removed from the Family.` });
               await fetchFamilyData();
             } catch (err: any) {
               const msg = getHumanReadableError(err, 'Failed to remove member.');
-              Alert.alert('Error', msg);
+              toast(msg, { tone: 'error' });
             } finally {
               setActionLoadingId(null);
             }
@@ -302,14 +294,14 @@ export default function FamilyScreen(): React.ReactElement {
           setActionLoadingId('leave-family');
           try {
             await leaveFamily();
-            Alert.alert(
-              isSoleOwner ? 'Family Disbanded' : 'Family Left',
-              isSoleOwner ? 'Your Family has been closed.' : 'You have left the Family.'
-            );
+            toast(isSoleOwner ? 'Family disbanded' : 'You left the Family', {
+              tone: 'info',
+              subtitle: isSoleOwner ? 'Your Family has been closed.' : 'Your personal data is unchanged.',
+            });
             await fetchFamilyData();
           } catch (err: any) {
             const msg = getHumanReadableError(err, 'Failed to leave family.');
-            Alert.alert('Error', msg);
+            toast(msg, { tone: 'error' });
           } finally {
             setActionLoadingId(null);
           }
@@ -323,7 +315,6 @@ export default function FamilyScreen(): React.ReactElement {
   if (loading) {
     return (
       <SafeAreaView style={styles.container}>
-        <StatusBar barStyle="dark-content" backgroundColor={BG} />
         <View style={styles.header}>
           <TouchableOpacity
             style={styles.backBtn}
@@ -331,11 +322,12 @@ export default function FamilyScreen(): React.ReactElement {
             accessibilityRole="button"
             accessibilityLabel="Go back"
           >
-            <Ionicons name="arrow-back" size={24} color={TEXT_PRIMARY} />
+            <Ionicons name="chevron-back" size={24} color={TEXT_PRIMARY} />
           </TouchableOpacity>
           <View style={styles.headerTitleWrap}>
             <Text style={styles.headerTitle}>Family & Household</Text>
           </View>
+          <ThemeToggle style={styles.headerToggle} />
         </View>
         <View style={styles.loadingWrap}>
           <ActivityIndicator size="large" color={BLUE} />
@@ -350,7 +342,6 @@ export default function FamilyScreen(): React.ReactElement {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor={BG} />
 
       {/* ── App Header ────────────────────────────────────────── */}
       <View style={styles.header}>
@@ -360,7 +351,7 @@ export default function FamilyScreen(): React.ReactElement {
           accessibilityRole="button"
           accessibilityLabel="Go back"
         >
-          <Ionicons name="arrow-back" size={24} color={TEXT_PRIMARY} />
+          <Ionicons name="chevron-back" size={24} color={TEXT_PRIMARY} />
         </TouchableOpacity>
         <View style={styles.headerTitleWrap}>
           <Text style={styles.headerTitle}>Family & Household</Text>
@@ -382,6 +373,7 @@ export default function FamilyScreen(): React.ReactElement {
             <Ionicons name="person-add-outline" size={20} color={BLUE} />
           </TouchableOpacity>
         )}
+        <ThemeToggle style={styles.headerToggle} />
       </View>
 
       <ScrollView
@@ -837,7 +829,7 @@ export default function FamilyScreen(): React.ReactElement {
                       styles.typeBarSegment,
                       {
                         flex: Math.max(1, dashboard.typeBreakdown.need.percentageOfOutflow || 1),
-                        backgroundColor: '#3B82F6',
+                        backgroundColor: c.primary,
                       },
                     ]}
                   />
@@ -846,7 +838,7 @@ export default function FamilyScreen(): React.ReactElement {
                       styles.typeBarSegment,
                       {
                         flex: Math.max(1, dashboard.typeBreakdown.want.percentageOfOutflow || 1),
-                        backgroundColor: '#F59E0B',
+                        backgroundColor: c.warning,
                       },
                     ]}
                   />
@@ -855,7 +847,7 @@ export default function FamilyScreen(): React.ReactElement {
                       styles.typeBarSegment,
                       {
                         flex: Math.max(1, dashboard.typeBreakdown.investment.percentageOfOutflow || 1),
-                        backgroundColor: '#10B981',
+                        backgroundColor: c.success,
                       },
                     ]}
                   />
@@ -864,21 +856,21 @@ export default function FamilyScreen(): React.ReactElement {
                 {/* Breakdown Legend Rows */}
                 <View style={styles.typeLegendCol}>
                   <View style={styles.typeLegendRow}>
-                    <View style={[styles.typeLegendDot, { backgroundColor: '#3B82F6' }]} />
+                    <View style={[styles.typeLegendDot, { backgroundColor: c.primary }]} />
                     <Text style={styles.typeLegendLabel}>Needs (Essential)</Text>
                     <Text style={styles.typeLegendAmount}>{formatINR(dashboard.typeBreakdown.need.amount)}</Text>
                     <Text style={styles.typeLegendPct}>{dashboard.typeBreakdown.need.percentageOfOutflow}%</Text>
                   </View>
 
                   <View style={styles.typeLegendRow}>
-                    <View style={[styles.typeLegendDot, { backgroundColor: '#F59E0B' }]} />
+                    <View style={[styles.typeLegendDot, { backgroundColor: c.warning }]} />
                     <Text style={styles.typeLegendLabel}>Wants (Discretionary)</Text>
                     <Text style={styles.typeLegendAmount}>{formatINR(dashboard.typeBreakdown.want.amount)}</Text>
                     <Text style={styles.typeLegendPct}>{dashboard.typeBreakdown.want.percentageOfOutflow}%</Text>
                   </View>
 
                   <View style={styles.typeLegendRow}>
-                    <View style={[styles.typeLegendDot, { backgroundColor: '#10B981' }]} />
+                    <View style={[styles.typeLegendDot, { backgroundColor: c.success }]} />
                     <Text style={styles.typeLegendLabel}>Investments (Flow)</Text>
                     <Text style={styles.typeLegendAmount}>{formatINR(dashboard.typeBreakdown.investment.amount)}</Text>
                     <Text style={styles.typeLegendPct}>{dashboard.typeBreakdown.investment.percentageOfOutflow}%</Text>
@@ -1080,7 +1072,9 @@ export default function FamilyScreen(): React.ReactElement {
 }
 
 // ── Stylesheet ────────────────────────────────────────────────
-const styles = StyleSheet.create({
+const useStyles = createStyles((c) => {
+  const { BLUE, BLUE_LIGHT, RED, PURPLE, PURPLE_LIGHT, BG, CARD_BG, TEXT_PRIMARY, TEXT_SECONDARY, TEXT_MUTED, BORDER } = tokens(c);
+  return {
   container: {
     flex: 1,
     backgroundColor: BG,
@@ -1116,6 +1110,9 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: BLUE_LIGHT,
   },
+  headerToggle: {
+    marginLeft: 8,
+  },
   scrollContent: {
     padding: 16,
     paddingBottom: 40,
@@ -1142,13 +1139,13 @@ const styles = StyleSheet.create({
     padding: 12,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: '#BFDBFE',
+    borderColor: c.primarySoft,
     gap: 10,
   },
   privacyText: {
     flex: 1,
     fontSize: 12,
-    color: '#1E40AF',
+    color: c.primary,
     lineHeight: 17,
     fontWeight: '500',
   },
@@ -1251,8 +1248,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#FECACA',
-    backgroundColor: '#FEF2F2',
+    borderColor: c.dangerSoft,
+    backgroundColor: c.dangerSoft,
   },
   declineBtnText: {
     fontSize: 12,
@@ -1440,7 +1437,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#E2E8F0',
+    backgroundColor: c.border,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
@@ -1468,8 +1465,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 6,
     borderWidth: 1,
-    borderColor: '#FECACA',
-    backgroundColor: '#FEF2F2',
+    borderColor: c.dangerSoft,
+    backgroundColor: c.dangerSoft,
   },
   removeMemberBtnText: {
     fontSize: 11,
@@ -1480,7 +1477,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 6,
-    backgroundColor: '#F1F5F9',
+    backgroundColor: c.surfaceAlt,
   },
   youBadgeText: {
     fontSize: 11,
@@ -1589,7 +1586,7 @@ const styles = StyleSheet.create({
   },
   progressBarTrack: {
     height: 6,
-    backgroundColor: '#E2E8F0',
+    backgroundColor: c.border,
     borderRadius: 3,
     overflow: 'hidden',
     marginVertical: 4,
@@ -1652,7 +1649,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     overflow: 'hidden',
     marginVertical: 12,
-    backgroundColor: '#E2E8F0',
+    backgroundColor: c.border,
   },
   typeBarSegment: {
     height: '100%',
@@ -1788,8 +1785,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: '#FECACA',
-    backgroundColor: '#FEF2F2',
+    borderColor: c.dangerSoft,
+    backgroundColor: c.dangerSoft,
   },
   leaveBtnText: {
     fontSize: 13,
@@ -1857,9 +1854,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    backgroundColor: '#FEF2F2',
+    backgroundColor: c.dangerSoft,
     borderWidth: 1,
-    borderColor: '#FECACA',
+    borderColor: c.dangerSoft,
     padding: 10,
     borderRadius: 8,
     marginBottom: 12,
@@ -1921,4 +1918,5 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#FFFFFF',
   },
+};
 });

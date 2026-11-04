@@ -1,0 +1,230 @@
+[
+ {
+  "text": "electricity bill",
+  "type": "Need"
+ },
+ {
+  "text": "water tax",
+  "type": "Need"
+ },
+ {
+  "text": "gas cylinder",
+  "type": "Need"
+ },
+ {
+  "text": "pipd gas bill",
+  "type": "Need"
+ },
+ {
+  "text": "broadband recharge",
+  "type": "Need"
+ },
+ {
+  "text": "chai sutta",
+  "type": "Want"
+ },
+ {
+  "text": "doodh bill",
+  "type": "Need"
+ },
+ {
+  "text": "dth recharge",
+  "type": "Need"
+ },
+ {
+  "text": "internet bill",
+  "type": "Need"
+ },
+ {
+  "text": "gobar gas",
+  "type": "Need"
+ },
+ {
+  "text": "electric meter",
+  "type": "Need"
+ },
+ {
+  "text": "phone recharge",
+  "type": "Need"
+ },
+ {
+  "text": "nasa bill",
+  "type": "Need"
+ },
+ {
+  "text": "broadband bill",
+  "type": "Need"
+ },
+ {
+  "text": "wifi bill",
+  "type": "Need"
+ },
+ {
+  "text": "gas bill",
+  "type": "Need"
+ },
+ {
+  "text": "mobile recharge",
+  "type": "Need"
+ },
+ {
+  "text": "dth bill",
+  "type": "Need"
+ },
+ {
+  "text": "electricity charges",
+  "type": "Need"
+ },
+ {
+  "text": "water bill",
+  "type": "Need"
+ },
+ {
+  "text": "sabzi wala bill",
+  "type": "Want"
+ },
+ {
+  "text": "broadband charges",
+  "type": "Need"
+ },
+ {
+  "text": "electricity consumption",
+  "type": "Need"
+ },
+ {
+  "text": "water supply bill",
+  "type": "Need"
+ },
+ {
+  "text": "pipd gas charge",
+  "type": "Need"
+ },
+ {
+  "text": "electricity tax",
+  "type": "Need"
+ },
+ {
+  "text": "gas refill",
+  "type": "Need"
+ },
+ {
+  "text": "dth subscription",
+  "type": "Need"
+ },
+ {
+  "text": "phone bill",
+  "type": "Need"
+ },
+ {
+  "text": "broadband renewal",
+  "type": "Need"
+ },
+ {
+  "text": "internet charges",
+  "type": "Need"
+ },
+ {
+  "text": "gas bill pay",
+  "type": "Need"
+ },
+ {
+  "text": "mobile recharge done",
+  "type": "Need"
+ },
+ {
+  "text": "electricity bill paid",
+  "type": "Need"
+ },
+ {
+  "text": "water payment",
+  "type": "Need"
+ },
+ {
+  "text": "pipd gas payment",
+  "type": "Need"
+ },
+ {
+  "text": "broadband payment",
+  "type": "Need"
+ },
+ {
+  "text": "wifi payment",
+  "type": "Need"
+ },
+ {
+  "text": "dth payment",
+  "type": "Need"
+ },
+ {
+  "text": "electricity usage",
+  "type": "Need"
+ },
+ {
+  "text": "water usage",
+  "type": "Need"
+ },
+ {
+  "text": "gas cylinder order",
+  "type": "Need"
+ },
+ {
+  "text": "pipd gas refill",
+  "type": "Need"
+ },
+ {
+  "text": "broadband renewal done",
+  "type": "Need"
+ },
+ {
+  "text": "internet renewal",
+  "type": "Need"
+ },
+ {
+  "text": "gas refill order",
+  "type": "Need"
+ },
+ {
+  "text": "dth recharge done",
+  "type": "Need"
+ },
+ {
+  "text": "phone bill paid",
+  "type": "Need"
+ },
+ {
+  "text": "broadband payment done",
+  "type": "Need"
+ },
+ {
+  "text": "wifi payment done",
+  "type": "Need"
+ },
+ {
+  "text": "dth payment done",
+  "type": "Need"
+ },
+ {
+  "text": "electricity bill auto pay",
+  "type": "Need"
+ },
+ {
+  "text": "water bill auto pay",
+  "type": "Need"
+ },
+ {
+  "text": "pipd gas auto pay",
+  "type": "Need"
+ },
+ {
+  "text": "broadband auto pay",
+  "type": "Need"
+ },
+ {
+  "text": "wifi auto pay",
+  "type": "Need"
+ },
+ {
+  "text": "dth auto pay",
+  "type": "Need"
+ }
+]

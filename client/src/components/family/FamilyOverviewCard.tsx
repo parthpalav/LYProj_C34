@@ -8,18 +8,9 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { FamilyDashboard } from '../../types';
 
+import { createStyles, useTheme, Palette } from '../../theme';
 // ── Design Tokens ──────────────────────────────────────────
-const BLUE = '#2563EB';
-const GREEN = '#10B981';
-const AMBER = '#F59E0B';
-const PURPLE = '#7C3AED';
-const PURPLE_LIGHT = '#F3E8FF';
-const DARK = '#0F172A';
-const GRAY_600 = '#475569';
-const GRAY_400 = '#94A3B8';
-const BORDER = '#E2E8F0';
-const BG_CARD = '#FFFFFF';
-const BG_SUBTLE = '#F8FAFC';
+const tokens = (c: Palette) => ({ BLUE: c.primary, GREEN: c.success, AMBER: c.warning, PURPLE: c.purple, PURPLE_LIGHT: c.purpleSoft, DARK: c.text, GRAY_600: c.textMuted, GRAY_400: c.textSubtle, BORDER: c.border, BG_CARD: c.surface, BG_SUBTLE: c.bg });
 
 // ── Formatting Helpers ─────────────────────────────────────
 function formatCurrency(n: number | null | undefined): string {
@@ -54,6 +45,9 @@ export function FamilyOverviewCard({
   dashboard,
   onPressViewDetails,
 }: FamilyOverviewCardProps): React.ReactElement {
+  const { c } = useTheme();
+  const { BLUE, GREEN, AMBER, PURPLE, DARK } = tokens(c);
+  const styles = useStyles();
   const fmi = dashboard?.fmi;
   const fmiScore = fmi?.score ?? 0;
   const badge = getFmiBadge(fmiScore, fmi?.fmiLabel);
@@ -217,7 +211,9 @@ export function FamilyOverviewCard({
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = createStyles((c) => {
+  const { BLUE, PURPLE, PURPLE_LIGHT, DARK, GRAY_600, GRAY_400, BORDER, BG_CARD, BG_SUBTLE } = tokens(c);
+  return {
   card: {
     backgroundColor: BG_CARD,
     borderRadius: 16,
@@ -379,11 +375,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     gap: 10,
-    backgroundColor: '#FFFBEB',
+    backgroundColor: c.warningSoft,
     borderRadius: 10,
     padding: 10,
     borderWidth: 1,
-    borderColor: '#FDE68A',
+    borderColor: c.warningSoft,
     marginBottom: 12,
   },
   insightIconBadge: {
@@ -395,12 +391,12 @@ const styles = StyleSheet.create({
   insightTitle: {
     fontSize: 11,
     fontWeight: '700',
-    color: '#92400E',
+    color: c.warningStrong,
     marginBottom: 2,
   },
   insightText: {
     fontSize: 11,
-    color: '#78350F',
+    color: c.warningStrong,
     lineHeight: 15,
   },
   actionRow: {
@@ -415,4 +411,5 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: BLUE,
   },
+};
 });

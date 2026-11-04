@@ -7,14 +7,17 @@ import {
   TouchableWithoutFeedback,
   StyleSheet,
   ActivityIndicator,
-  Alert,
-  SafeAreaView,
   Keyboard,
 } from 'react-native';
 import { updateCurrentBalance } from '../services/api';
 import { useStore } from '../store/useStore';
+import { useAuthStore } from '../store/useAuthStore';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { celebrate, toast } from '../store/useCelebrationStore';
+import { formatCurrency } from '../utils/format';
 
-const BLUE = '#3B3BDE';
+import { createStyles, Palette } from '../theme';
+const tokens = (c: Palette) => ({ BLUE: c.primary });
 const GREEN = '#22C880';
 
 interface Props {
@@ -22,7 +25,10 @@ interface Props {
 }
 
 export function UpdateBalanceScreen({ onClose }: Props): React.ReactElement {
-  const { user, setUser } = useStore();
+  const styles = useStyles();
+  const user = useStore((s) => s.user);
+  const setUser = useStore((s) => s.setUser);
+  const setAuthUser = useAuthStore((s) => s.setUser);
   const [operation, setOperation] = useState<'credit' | 'debit'>('credit');
   const [amount, setAmount] = useState('');
   const [saving, setSaving] = useState(false);
@@ -37,12 +43,12 @@ export function UpdateBalanceScreen({ onClose }: Props): React.ReactElement {
     if (saving) return;
 
     if (!user?.id) {
-      Alert.alert('Error', 'User information not available');
+      toast('Please sign in again', { tone: 'error' });
       return;
     }
 
     if (isNaN(parsedAmount) || parsedAmount <= 0) {
-      Alert.alert('Invalid Amount', 'Please enter a valid amount greater than 0.');
+      toast('Enter an amount greater than zero', { tone: 'warning' });
       return;
     }
 
@@ -51,17 +57,19 @@ export function UpdateBalanceScreen({ onClose }: Props): React.ReactElement {
       const response = await updateCurrentBalance(user.id, operation, parsedAmount);
       
       // Update local store
-      setUser({
-        ...user,
-        currentBalance: response.currentBalance,
-      });
+      // Both stores hold the user; update both so Home and You agree.
+      setUser({ ...user, currentBalance: response.currentBalance });
+      const authUser = useAuthStore.getState().user;
+      if (authUser) setAuthUser({ ...authUser, currentBalance: response.currentBalance });
 
-      Alert.alert('Success', 'Bank balance updated successfully!');
-      setTimeout(() => {
-        onClose?.();
-      }, 500);
+      onClose?.();
+      celebrate({
+        kind: 'toast',
+        title: 'Balance updated',
+        subtitle: `${operation === 'credit' ? 'Added' : 'Deducted'} ${formatCurrency(parsedAmount)}. New balance ${formatCurrency(response.currentBalance)}.`,
+      });
     } catch (error) {
-      Alert.alert('Error', 'Failed to update balance. Please try again.');
+      toast("Couldn't update your balance", { tone: 'error', subtitle: 'Check your connection and try again.' });
       console.error(error);
     } finally {
       setSaving(false);
@@ -82,7 +90,7 @@ export function UpdateBalanceScreen({ onClose }: Props): React.ReactElement {
         <View style={styles.card}>
           <Text style={styles.label}>Current Balance</Text>
           <View style={styles.balanceBox}>
-            <Text style={styles.balanceValue}>₹{currentBalance.toFixed(2)}</Text>
+            <Text style={styles.balanceValue}>{formatCurrency(currentBalance)}</Text>
           </View>
 
           <Text style={styles.label}>Transaction Type</Text>
@@ -119,7 +127,7 @@ export function UpdateBalanceScreen({ onClose }: Props): React.ReactElement {
           <View style={styles.infoBox}>
             <Text style={styles.infoLabel}>New Balance Preview</Text>
             <Text style={styles.infoValue}>
-              ₹{projectedBalance.toFixed(2)}
+              {formatCurrency(projectedBalance)}
             </Text>
           </View>
 
@@ -152,10 +160,12 @@ export function UpdateBalanceScreen({ onClose }: Props): React.ReactElement {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = createStyles((c) => {
+  const { BLUE } = tokens(c);
+  return {
   safe: {
     flex: 1,
-    backgroundColor: '#f6f8fc',
+    backgroundColor: c.bg,
   },
   container: {
     flex: 1,
@@ -171,19 +181,19 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 26,
     fontWeight: '800',
-    color: '#101827',
+    color: c.text,
   },
   closeBtn: {
     fontSize: 24,
-    color: '#6b7280',
+    color: c.textMuted,
     fontWeight: '700',
   },
   card: {
-    backgroundColor: '#ffffff',
+    backgroundColor: c.surface,
     borderRadius: 20,
     padding: 24,
     borderWidth: 1,
-    borderColor: '#e7ebf2',
+    borderColor: c.border,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
@@ -193,28 +203,28 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 12,
     fontWeight: '700',
-    color: '#6b7280',
+    color: c.textMuted,
     textTransform: 'uppercase',
     letterSpacing: 0.4,
     marginBottom: 12,
   },
   balanceBox: {
     borderWidth: 1,
-    borderColor: '#dbe3f0',
+    borderColor: c.border,
     borderRadius: 12,
     padding: 14,
     marginBottom: 20,
-    backgroundColor: '#f8fafc',
+    backgroundColor: c.bg,
   },
   balanceValue: {
     fontSize: 24,
     fontWeight: '800',
-    color: '#0f172a',
+    color: c.text,
   },
   segmentWrap: {
     flexDirection: 'row',
     borderWidth: 1,
-    borderColor: '#dbe3f0',
+    borderColor: c.border,
     borderRadius: 12,
     marginBottom: 20,
     overflow: 'hidden',
@@ -223,15 +233,15 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     paddingVertical: 12,
-    backgroundColor: '#f8fafc',
+    backgroundColor: c.bg,
   },
   segmentBtnActive: {
-    backgroundColor: '#e6edff',
+    backgroundColor: c.primarySoft,
   },
   segmentText: {
     fontSize: 14,
     fontWeight: '700',
-    color: '#475569',
+    color: c.textMuted,
     textTransform: 'uppercase',
   },
   segmentTextActive: {
@@ -241,10 +251,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: '#e2e8f0',
+    borderColor: c.border,
     borderRadius: 12,
     paddingHorizontal: 16,
-    backgroundColor: '#fafafa',
+    backgroundColor: c.surface,
     marginBottom: 20,
   },
   currencySymbol: {
@@ -258,19 +268,19 @@ const styles = StyleSheet.create({
     height: 56,
     fontSize: 24,
     fontWeight: '800',
-    color: '#101827',
+    color: c.text,
   },
   infoBox: {
-    backgroundColor: '#eef2ff',
+    backgroundColor: c.primarySoft,
     borderRadius: 12,
     padding: 16,
     marginBottom: 24,
     borderWidth: 1,
-    borderColor: '#d7e3ff',
+    borderColor: c.primarySoft,
   },
   infoLabel: {
     fontSize: 12,
-    color: '#6b7280',
+    color: c.textMuted,
     fontWeight: '600',
     marginBottom: 4,
   },
@@ -301,7 +311,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.3,
   },
   cancelBtn: {
-    color: '#6b7280',
+    color: c.textMuted,
     fontSize: 14,
     fontWeight: '600',
     textAlign: 'center',
@@ -313,9 +323,10 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 12,
-    color: '#6b7280',
+    color: c.textMuted,
     textAlign: 'center',
     lineHeight: 18,
     fontWeight: '500',
   },
+};
 });

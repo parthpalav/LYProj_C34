@@ -15,6 +15,7 @@ import { AssetModal } from '../components/plan/AssetModal';
 // Goals Components
 import { GoalsGrid } from '../components/plan/GoalsGrid';
 import { GoalModal } from '../components/plan/GoalModal';
+import { FundGoalModal } from '../components/plan/FundGoalModal';
 
 // FIRE Components
 import { FireHeroSummary } from '../components/plan/FireHeroSummary';
@@ -83,6 +84,7 @@ export const PlanPage: React.FC = () => {
   const [goalToEdit, setGoalToEdit] = useState<Goal | null>(null);
 
   const [goalToDelete, setGoalToDelete] = useState<Goal | null>(null);
+  const [goalToFund, setGoalToFund] = useState<Goal | null>(null);
   const [deletingGoal, setDeletingGoal] = useState(false);
 
   // Asset Actions
@@ -275,6 +277,7 @@ export const PlanPage: React.FC = () => {
                 onAddGoal={handleOpenAddGoal}
                 onEditGoal={handleOpenEditGoal}
                 onDeleteGoal={(goal) => setGoalToDelete(goal)}
+                onFundGoal={(goal) => setGoalToFund(goal)}
               />
             )}
           </div>
@@ -403,6 +406,12 @@ export const PlanPage: React.FC = () => {
         onClose={() => setGoalModalOpen(false)}
         onSave={handleSaveGoal}
         goalToEdit={goalToEdit}
+      />
+
+      <FundGoalModal
+        goal={goalToFund}
+        onClose={() => setGoalToFund(null)}
+        onSave={async (goal, newSaved) => { await goalsDomain.editGoal(goal.id, { savedAmount: newSaved }); }}
       />
 
       <ConfirmDialog

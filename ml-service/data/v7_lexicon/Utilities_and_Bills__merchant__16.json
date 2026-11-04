@@ -1,0 +1,322 @@
+[
+  {
+    "text": "Prepaid Meter Recharge",
+    "type": "Need"
+  },
+  {
+    "text": "Smart Meter Recharge",
+    "type": "Need"
+  },
+  {
+    "text": "Prepaid Power Recharge",
+    "type": "Need"
+  },
+  {
+    "text": "Power Meter Recharge Kiosk",
+    "type": "Need"
+  },
+  {
+    "text": "Bijli Meter Recharge",
+    "type": "Need"
+  },
+  {
+    "text": "Electricity Token Recharge",
+    "type": "Need"
+  },
+  {
+    "text": "Meter Token Recharge",
+    "type": "Need"
+  },
+  {
+    "text": "Prepaid Meter Token",
+    "type": "Need"
+  },
+  {
+    "text": "Prepaid Electric Token",
+    "type": "Need"
+  },
+  {
+    "text": "STS Token Recharge",
+    "type": "Need"
+  },
+  {
+    "text": "Prepaid Electricity STS Token",
+    "type": "Need"
+  },
+  {
+    "text": "Bijli Recharge Point",
+    "type": "Need"
+  },
+  {
+    "text": "Electric Recharge Centre",
+    "type": "Need"
+  },
+  {
+    "text": "Power Token Shop",
+    "type": "Need"
+  },
+  {
+    "text": "Vidyut Recharge Kendra",
+    "type": "Need"
+  },
+  {
+    "text": "Adani Prepaid Meter",
+    "type": "Need"
+  },
+  {
+    "text": "Tata Prepaid Meter",
+    "type": "Need"
+  },
+  {
+    "text": "Tata Power Prepaid",
+    "type": "Need"
+  },
+  {
+    "text": "BSES Prepaid Recharge",
+    "type": "Need"
+  },
+  {
+    "text": "Torrent Prepaid Recharge",
+    "type": "Need"
+  },
+  {
+    "text": "MSEDCL Prepaid Recharge",
+    "type": "Need"
+  },
+  {
+    "text": "TNEB Prepaid Token",
+    "type": "Need"
+  },
+  {
+    "text": "UPPCL Prepaid Recharge",
+    "type": "Need"
+  },
+  {
+    "text": "KSEB Prepaid Token",
+    "type": "Need"
+  },
+  {
+    "text": "BESCOM Prepaid Token",
+    "type": "Need"
+  },
+  {
+    "text": "MPEB Prepaid Recharge",
+    "type": "Need"
+  },
+  {
+    "text": "BSEB Prepaid Token",
+    "type": "Need"
+  },
+  {
+    "text": "PSPCL Prepaid Recharge",
+    "type": "Need"
+  },
+  {
+    "text": "JVVNL Prepaid Token",
+    "type": "Need"
+  },
+  {
+    "text": "DGVCL Prepaid Recharge",
+    "type": "Need"
+  },
+  {
+    "text": "PGVCL Prepaid Recharge",
+    "type": "Need"
+  },
+  {
+    "text": "UGVCL Prepaid Recharge",
+    "type": "Need"
+  },
+  {
+    "text": "MGVCL Prepaid Token",
+    "type": "Need"
+  },
+  {
+    "text": "MSEDCL Pune Prepaid",
+    "type": "Need"
+  },
+  {
+    "text": "Hyderabad Prepaid Token",
+    "type": "Need"
+  },
+  {
+    "text": "TSSPDCL Prepaid Recharge",
+    "type": "Need"
+  },
+  {
+    "text": "APSPDCL Prepaid Token",
+    "type": "Need"
+  },
+  {
+    "text": "TPCODL Prepaid Token",
+    "type": "Need"
+  },
+  {
+    "text": "Bihar Prepaid Meter",
+    "type": "Need"
+  },
+  {
+    "text": "Assam Prepaid Recharge",
+    "type": "Need"
+  },
+  {
+    "text": "UHBVN Prepaid Token",
+    "type": "Need"
+  },
+  {
+    "text": "DHBVN Prepaid Token",
+    "type": "Need"
+  },
+  {
+    "text": "Ludhiana Prepaid Meter",
+    "type": "Need"
+  },
+  {
+    "text": "Chandigarh Prepaid Recharge",
+    "type": "Need"
+  },
+  {
+    "text": "Jharkhand Prepaid Token",
+    "type": "Need"
+  },
+  {
+    "text": "Chhattisgarh Prepaid Token",
+    "type": "Need"
+  },
+  {
+    "text": "Goa Prepaid Recharge",
+    "type": "Need"
+  },
+  {
+    "text": "Kerala Prepaid Recharge",
+    "type": "Need"
+  },
+  {
+    "text": "Madhya Pradesh Prepaid Token",
+    "type": "Need"
+  },
+  {
+    "text": "Rajasthan Prepaid Token",
+    "type": "Need"
+  },
+  {
+    "text": "Shop Prepaid Token",
+    "type": "Need"
+  },
+  {
+    "text": "Kiosk Prepaid Token",
+    "type": "Need"
+  },
+  {
+    "text": "Electricity Recharge Counter",
+    "type": "Need"
+  },
+  {
+    "text": "Bijli Token Counter",
+    "type": "Need"
+  },
+  {
+    "text": "Power Token Counter",
+    "type": "Need"
+  },
+  {
+    "text": "Electric Token Point",
+    "type": "Need"
+  },
+  {
+    "text": "Prepaid Token Kiosk",
+    "type": "Need"
+  },
+  {
+    "text": "Electricity Token Kiosk",
+    "type": "Need"
+  },
+  {
+    "text": "Meter Recharge Kiosk",
+    "type": "Need"
+  },
+  {
+    "text": "Meter Top Up Point",
+    "type": "Need"
+  },
+  {
+    "text": "Electricity Top Up",
+    "type": "Need"
+  },
+  {
+    "text": "Prepaid Top Up Meter",
+    "type": "Need"
+  },
+  {
+    "text": "Electricity Top Up Point",
+    "type": "Need"
+  },
+  {
+    "text": "Prepaid Power Token Shop",
+    "type": "Need"
+  },
+  {
+    "text": "Ganesh Electric Token",
+    "type": "Need"
+  },
+  {
+    "text": "Shri Sai Meter Recharge",
+    "type": "Need"
+  },
+  {
+    "text": "Laxmi Power Recharge",
+    "type": "Need"
+  },
+  {
+    "text": "Om Electric Recharge",
+    "type": "Need"
+  },
+  {
+    "text": "Ambe Power Token",
+    "type": "Need"
+  },
+  {
+    "text": "Balaji Electric Recharge",
+    "type": "Need"
+  },
+  {
+    "text": "Hanuman Power Recharge",
+    "type": "Need"
+  },
+  {
+    "text": "Shiv Shakti Bijli Recharge",
+    "type": "Need"
+  },
+  {
+    "text": "Maa Durga Power Token",
+    "type": "Need"
+  },
+  {
+    "text": "Krishna Electric Shop",
+    "type": "Need"
+  },
+  {
+    "text": "Sai Power Recharge",
+    "type": "Need"
+  },
+  {
+    "text": "Vishwakarma Electric Token",
+    "type": "Need"
+  },
+  {
+    "text": "Surya Power Point",
+    "type": "Need"
+  },
+  {
+    "text": "Gopal Electric Recharge",
+    "type": "Need"
+  },
+  {
+    "text": "Nandi Bijli Token",
+    "type": "Need"
+  },
+  {
+    "text": "Kedarnath Power Recharge",
+    "type": "Need"
+  }
+]

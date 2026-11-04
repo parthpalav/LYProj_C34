@@ -17,6 +17,7 @@ import {
 import { Link } from 'react-router-dom';
 import type { MonthlyReport } from '../../types';
 import type { AvailableMonth } from '../../hooks/useMonthlyReport';
+import { getAppTimezone } from '../../utils/timezone';
 
 interface MonthlyReportViewProps {
   report: MonthlyReport | null;
@@ -81,7 +82,7 @@ export const MonthlyReportView: React.FC<MonthlyReportViewProps> = ({
           </h2>
           <p className="report-period-text">
             {report
-              ? `${new Date(report.startDate).toLocaleDateString('en-US', { day: 'numeric', month: 'short' })} – ${new Date(new Date(report.endDate).getTime() - 86400000).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}`
+              ? `${new Date(report.startDate).toLocaleDateString('en-US', { timeZone: getAppTimezone(), day: 'numeric', month: 'short' })} – ${new Date(new Date(report.endDate).getTime() - 86400000).toLocaleDateString('en-US', { timeZone: getAppTimezone(), day: 'numeric', month: 'short', year: 'numeric' })}`
               : ''}
           </p>
         </div>

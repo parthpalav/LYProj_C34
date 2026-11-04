@@ -21,14 +21,13 @@ prompts in classifier/generate_llm_dataset.py, which embed the rules below verba
   donations, tips, repairs of personal items (tailor, cobbler, watch, keys), unknown merchants -> Misc.
 
 ## Type rules
-- Housing, Utilities & Bills, Debt & Loan Payments, Insurance: always Need. Entertainment: always Want. Investments: always Investment.
+- Investment is only for money that buys a financial asset (the Investments category).
+- Housing, Utilities & Bills, Debt & Loan Payments, Insurance, Education: always Need. Entertainment: always Want. Investments: always Investment.
 - Food & Dining: Want; Need only for office canteen, hostel mess or tiffin service.
 - Groceries: Need; Want only for snacks and treats (chips, biscuits, chocolates, sweets, dry fruits, instant noodles).
 - Transport & Travel: Need for fuel, EV charging, tolls, parking, metro, local bus/train, auto rickshaw, vehicle service and repair;
   Want for app cabs, intercity or long-distance tickets, flights, hotels, holidays, car wash and accessories.
 - Shopping: Want; Need for essentials (school uniform, spectacles, rain gear, replacement work chargers).
 - Health: Need; Want for gym, fitness classes, yoga and protein/fitness supplements.
-- Education: Need for school-level costs (school fees, school books, kids' stationery, school van, home tuition for a child);
-  Investment for everything an adult does to build skills or qualifications (college, degrees, coaching, courses, exams, certifications, lessons).
 - Personal Care: Want; Need for basic hygiene (soap, toothpaste, shampoo, razor, sanitary products).
 - Misc: Need; Want only for donations, tips and gifts of money.

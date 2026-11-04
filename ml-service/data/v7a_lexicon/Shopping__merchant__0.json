@@ -1,0 +1,414 @@
+[
+ {
+  "text": "Myntra",
+  "type": "Want"
+ },
+ {
+  "text": "Flipkart",
+  "type": "Want"
+ },
+ {
+  "text": "Amazon",
+  "type": "Want"
+ },
+ {
+  "text": "JayPee",
+  "type": "Want"
+ },
+ {
+  "text": "FabIndia",
+  "type": "Want"
+ },
+ {
+  "text": "ShoppersStop",
+  "type": "Want"
+ },
+ {
+  "text": "PVR",
+  "type": "Want"
+ },
+ {
+  "text": "Zivame",
+  "type": "Want"
+ },
+ {
+  "text": "ForeverNew",
+  "type": "Want"
+ },
+ {
+  "text": "Pepe Jeans",
+  "type": "Want"
+ },
+ {
+  "text": "Levi's",
+  "type": "Want"
+ },
+ {
+  "text": "Wrangler",
+  "type": "Want"
+ },
+ {
+  "text": "Adidas",
+  "type": "Want"
+ },
+ {
+  "text": "Nike",
+  "type": "Want"
+ },
+ {
+  "text": "Puma",
+  "type": "Want"
+ },
+ {
+  "text": "Roadster",
+  "type": "Want"
+ },
+ {
+  "text": "Woodland",
+  "type": "Want"
+ },
+ {
+  "text": "Lee",
+  "type": "Want"
+ },
+ {
+  "text": "Columbia",
+  "type": "Want"
+ },
+ {
+  "text": "Reebok",
+  "type": "Want"
+ },
+ {
+  "text": "Bata",
+  "type": "Want"
+ },
+ {
+  "text": "Biba",
+  "type": "Want"
+ },
+ {
+  "text": "PepperFrost",
+  "type": "Want"
+ },
+ {
+  "text": "W",
+  "type": "Want"
+ },
+ {
+  "text": "Forever 21",
+  "type": "Want"
+ },
+ {
+  "text": "UrbanClap",
+  "type": "Want"
+ },
+ {
+  "text": "Kraftly",
+  "type": "Want"
+ },
+ {
+  "text": "BoAt",
+  "type": "Want"
+ },
+ {
+  "text": "Noise",
+  "type": "Want"
+ },
+ {
+  "text": "Samsung",
+  "type": "Want"
+ },
+ {
+  "text": "LG",
+  "type": "Want"
+ },
+ {
+  "text": "Apple",
+  "type": "Want"
+ },
+ {
+  "text": "OnePlus",
+  "type": "Want"
+ },
+ {
+  "text": "Realme",
+  "type": "Want"
+ },
+ {
+  "text": "Infinix",
+  "type": "Want"
+ },
+ {
+  "text": "Xiaomi",
+  "type": "Want"
+ },
+ {
+  "text": "Lenovo",
+  "type": "Want"
+ },
+ {
+  "text": "Dell",
+  "type": "Want"
+ },
+ {
+  "text": "HP",
+  "type": "Want"
+ },
+ {
+  "text": "Acer",
+  "type": "Want"
+ },
+ {
+  "text": "Philips",
+  "type": "Want"
+ },
+ {
+  "text": "Midea",
+  "type": "Want"
+ },
+ {
+  "text": "Whirlpool",
+  "type": "Want"
+ },
+ {
+  "text": "Bajaj",
+  "type": "Want"
+ },
+ {
+  "text": "Godrej",
+  "type": "Want"
+ },
+ {
+  "text": "Panasonic",
+  "type": "Want"
+ },
+ {
+  "text": "Brother",
+  "type": "Want"
+ },
+ {
+  "text": "Canon",
+  "type": "Want"
+ },
+ {
+  "text": "HP",
+  "type": "Want"
+ },
+ {
+  "text": "Canon",
+  "type": "Want"
+ },
+ {
+  "text": "Fastrack",
+  "type": "Want"
+ },
+ {
+  "text": "Titan",
+  "type": "Want"
+ },
+ {
+  "text": "Casio",
+  "type": "Want"
+ },
+ {
+  "text": "Rado",
+  "type": "Want"
+ },
+ {
+  "text": "Omaxe",
+  "type": "Want"
+ },
+ {
+  "text": "Raymond",
+  "type": "Want"
+ },
+ {
+  "text": "Wynk",
+  "type": "Want"
+ },
+ {
+  "text": "Myntra",
+  "type": "Want"
+ },
+ {
+  "text": "Snapdeal",
+  "type": "Want"
+ },
+ {
+  "text": "Kotak Jewellers",
+  "type": "Want"
+ },
+ {
+  "text": "Tanishq",
+  "type": "Want"
+ },
+ {
+  "text": "TCS",
+  "type": "Need"
+ },
+ {
+  "text": "KFC",
+  "type": "Want"
+ },
+ {
+  "text": "PVR",
+  "type": "Want"
+ },
+ {
+  "text": "RelianceFresh",
+  "type": "Need"
+ },
+ {
+  "text": "Flipkart",
+  "type": "Want"
+ },
+ {
+  "text": "Amazon",
+  "type": "Want"
+ },
+ {
+  "text": "Zivame",
+  "type": "Want"
+ },
+ {
+  "text": "ForeverNew",
+  "type": "Want"
+ },
+ {
+  "text": "Pepe Jeans",
+  "type": "Want"
+ },
+ {
+  "text": "Adidas",
+  "type": "Want"
+ },
+ {
+  "text": "Nike",
+  "type": "Want"
+ },
+ {
+  "text": "Puma",
+  "type": "Want"
+ },
+ {
+  "text": "Bata",
+  "type": "Want"
+ },
+ {
+  "text": "Biba",
+  "type": "Want"
+ },
+ {
+  "text": "PepperFrost",
+  "type": "Want"
+ },
+ {
+  "text": "BoAt",
+  "type": "Want"
+ },
+ {
+  "text": "Noise",
+  "type": "Want"
+ },
+ {
+  "text": "Samsung",
+  "type": "Want"
+ },
+ {
+  "text": "LG",
+  "type": "Want"
+ },
+ {
+  "text": "Apple",
+  "type": "Want"
+ },
+ {
+  "text": "OnePlus",
+  "type": "Want"
+ },
+ {
+  "text": "Realme",
+  "type": "Want"
+ },
+ {
+  "text": "Infinix",
+  "type": "Want"
+ },
+ {
+  "text": "Xiaomi",
+  "type": "Want"
+ },
+ {
+  "text": "Dell",
+  "type": "Want"
+ },
+ {
+  "text": "HP",
+  "type": "Want"
+ },
+ {
+  "text": "Acer",
+  "type": "Want"
+ },
+ {
+  "text": "Philips",
+  "type": "Want"
+ },
+ {
+  "text": "Midea",
+  "type": "Want"
+ },
+ {
+  "text": "Whirlpool",
+  "type": "Want"
+ },
+ {
+  "text": "Bajaj",
+  "type": "Want"
+ },
+ {
+  "text": "Godrej",
+  "type": "Want"
+ },
+ {
+  "text": "Panasonic",
+  "type": "Want"
+ },
+ {
+  "text": "Brother",
+  "type": "Want"
+ },
+ {
+  "text": "Canon",
+  "type": "Want"
+ },
+ {
+  "text": "Fastrack",
+  "type": "Want"
+ },
+ {
+  "text": "Titan",
+  "type": "Want"
+ },
+ {
+  "text": "Casio",
+  "type": "Want"
+ },
+ {
+  "text": "Rado",
+  "type": "Want"
+ },
+ {
+  "text": "Omaxe",
+  "type": "Want"
+ },
+ {
+  "text": "Raymond",
+  "type": "Want"
+ },
+ {
+  "text": "Wynk",
+  "type": "Want"
+ }
+]

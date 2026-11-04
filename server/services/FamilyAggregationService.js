@@ -17,6 +17,9 @@ import User from '../models/User.js';
 import Transaction from '../models/Transaction.js';
 import Income from '../models/Income.js';
 import { getActiveFamilyForUser } from './FamilyService.js';
+import { DEFAULT_TIMEZONE, toZoned, zonedMonthStart } from '../utils/userTime.js';
+import { getUserTimezone } from './userTimezone.js';
+import { daysInMonth as fmiDaysInMonth, dayOfMonth as fmiDayOfMonth } from './FMIService.js';
 
 // ── Calendar Month Boundary Helpers (Aligned with Individual FMI) ────────────
 
@@ -27,8 +30,8 @@ import { getActiveFamilyForUser } from './FamilyService.js';
  * @param {Date} date
  * @returns {number}
  */
-export function daysInMonth(date = new Date()) {
-  return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+export function daysInMonth(date = new Date(), tz = DEFAULT_TIMEZONE) {
+  return fmiDaysInMonth(date, tz);
 }
 
 /**
@@ -38,8 +41,8 @@ export function daysInMonth(date = new Date()) {
  * @param {Date} date
  * @returns {number}
  */
-export function dayOfMonth(date = new Date()) {
-  return date.getDate();
+export function dayOfMonth(date = new Date(), tz = DEFAULT_TIMEZONE) {
+  return fmiDayOfMonth(date, tz);
 }
 
 /**
@@ -48,15 +51,16 @@ export function dayOfMonth(date = new Date()) {
  * @param {Date} [referenceDate=new Date()]
  * @returns {Object} { month, year, startDate, endDate, daysPassed, daysInMonth }
  */
-export function getMonthPeriod(referenceDate = new Date()) {
-  const year = referenceDate.getFullYear();
-  const month = referenceDate.getMonth() + 1; // 1-indexed (1-12)
+export function getMonthPeriod(referenceDate = new Date(), tz = DEFAULT_TIMEZONE) {
+  const zoned = toZoned(referenceDate, tz);
+  const year = zoned.getUTCFullYear();
+  const month = zoned.getUTCMonth() + 1; // 1-indexed (1-12)
 
-  const startDate = new Date(year, month - 1, 1, 0, 0, 0, 0);
-  const endDate = new Date(year, month, 0, 23, 59, 59, 999);
+  const startDate = zonedMonthStart(referenceDate, tz);
+  const endDate = new Date(zonedMonthStart(referenceDate, tz, 1).getTime() - 1);
 
-  const passed = dayOfMonth(referenceDate);
-  const total = daysInMonth(referenceDate);
+  const passed = dayOfMonth(referenceDate, tz);
+  const total = daysInMonth(referenceDate, tz);
 
   return {
     month,
@@ -115,7 +119,7 @@ export async function getHouseholdSummary(userId, referenceDate = new Date()) {
   }
 
   // 2. Derive calendar month period (using exact FMI semantics)
-  const period = getMonthPeriod(referenceDate);
+  const period = getMonthPeriod(referenceDate, await getUserTimezone(userId));
 
   // 3. Resolve member planning declared income
   const objectIdCandidates = memberUserIds.filter((id) => mongoose.Types.ObjectId.isValid(id));

@@ -1,0 +1,1390 @@
+[
+ {
+  "text": "LIC",
+  "type": "Need"
+ },
+ {
+  "text": "Life Insurance Corporation",
+  "type": "Need"
+ },
+ {
+  "text": "LIC of India",
+  "type": "Need"
+ },
+ {
+  "text": "HDFC Life",
+  "type": "Need"
+ },
+ {
+  "text": "SBI Life",
+  "type": "Need"
+ },
+ {
+  "text": "ICICI Prudential Life",
+  "type": "Need"
+ },
+ {
+  "text": "ICICI Pru Life",
+  "type": "Need"
+ },
+ {
+  "text": "Max Life",
+  "type": "Need"
+ },
+ {
+  "text": "Axis Max Life",
+  "type": "Need"
+ },
+ {
+  "text": "Bajaj Allianz Life",
+  "type": "Need"
+ },
+ {
+  "text": "Bajaj Life",
+  "type": "Need"
+ },
+ {
+  "text": "Kotak Life",
+  "type": "Need"
+ },
+ {
+  "text": "Kotak Mahindra Life",
+  "type": "Need"
+ },
+ {
+  "text": "Tata AIA Life",
+  "type": "Need"
+ },
+ {
+  "text": "Tata AIA",
+  "type": "Need"
+ },
+ {
+  "text": "Aditya Birla Sun Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "ABSLI",
+  "type": "Need"
+ },
+ {
+  "text": "Birla Sun Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "PNB MetLife",
+  "type": "Need"
+ },
+ {
+  "text": "MetLife India",
+  "type": "Need"
+ },
+ {
+  "text": "Canara HSBC Life",
+  "type": "Need"
+ },
+ {
+  "text": "Canara HSBC",
+  "type": "Need"
+ },
+ {
+  "text": "Bharti AXA Life",
+  "type": "Need"
+ },
+ {
+  "text": "Reliance Nippon Life",
+  "type": "Need"
+ },
+ {
+  "text": "Nippon Life India",
+  "type": "Need"
+ },
+ {
+  "text": "Aviva Life",
+  "type": "Need"
+ },
+ {
+  "text": "Aviva India",
+  "type": "Need"
+ },
+ {
+  "text": "Edelweiss Tokio Life",
+  "type": "Need"
+ },
+ {
+  "text": "Edelweiss Life",
+  "type": "Need"
+ },
+ {
+  "text": "IndiaFirst Life",
+  "type": "Need"
+ },
+ {
+  "text": "Star Union Dai-ichi",
+  "type": "Need"
+ },
+ {
+  "text": "Future Generali Life",
+  "type": "Need"
+ },
+ {
+  "text": "Generali Central Life",
+  "type": "Need"
+ },
+ {
+  "text": "Shriram Life",
+  "type": "Need"
+ },
+ {
+  "text": "Sahara Life",
+  "type": "Need"
+ },
+ {
+  "text": "Pramerica Life",
+  "type": "Need"
+ },
+ {
+  "text": "Exide Life",
+  "type": "Need"
+ },
+ {
+  "text": "Ageas Federal Life",
+  "type": "Need"
+ },
+ {
+  "text": "Ageas Federal",
+  "type": "Need"
+ },
+ {
+  "text": "Aegon Life",
+  "type": "Need"
+ },
+ {
+  "text": "Go Digit Life",
+  "type": "Need"
+ },
+ {
+  "text": "Acko Life",
+  "type": "Need"
+ },
+ {
+  "text": "Bandhan Life",
+  "type": "Need"
+ },
+ {
+  "text": "Postal Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "PLI",
+  "type": "Need"
+ },
+ {
+  "text": "Rural Postal Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Kotak Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Aegon Religare",
+  "type": "Need"
+ },
+ {
+  "text": "Max New York Life",
+  "type": "Need"
+ },
+ {
+  "text": "ICICI Prudential",
+  "type": "Need"
+ },
+ {
+  "text": "IDBI Federal Life",
+  "type": "Need"
+ },
+ {
+  "text": "Canara Life",
+  "type": "Need"
+ },
+ {
+  "text": "Aditya Birla Life",
+  "type": "Need"
+ },
+ {
+  "text": "New India Assurance",
+  "type": "Need"
+ },
+ {
+  "text": "National Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Oriental Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "United India Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "ICICI Lombard",
+  "type": "Need"
+ },
+ {
+  "text": "Bajaj Allianz General",
+  "type": "Need"
+ },
+ {
+  "text": "Bajaj General",
+  "type": "Need"
+ },
+ {
+  "text": "HDFC Ergo",
+  "type": "Need"
+ },
+ {
+  "text": "HDFC ERGO General",
+  "type": "Need"
+ },
+ {
+  "text": "Tata AIG",
+  "type": "Need"
+ },
+ {
+  "text": "Tata AIG General",
+  "type": "Need"
+ },
+ {
+  "text": "Reliance General",
+  "type": "Need"
+ },
+ {
+  "text": "SBI General",
+  "type": "Need"
+ },
+ {
+  "text": "Royal Sundaram",
+  "type": "Need"
+ },
+ {
+  "text": "Cholamandalam MS",
+  "type": "Need"
+ },
+ {
+  "text": "Chola MS",
+  "type": "Need"
+ },
+ {
+  "text": "Chola MS General",
+  "type": "Need"
+ },
+ {
+  "text": "IFFCO Tokio",
+  "type": "Need"
+ },
+ {
+  "text": "Future Generali India",
+  "type": "Need"
+ },
+ {
+  "text": "Generali Central",
+  "type": "Need"
+ },
+ {
+  "text": "Liberty General",
+  "type": "Need"
+ },
+ {
+  "text": "Liberty Videocon",
+  "type": "Need"
+ },
+ {
+  "text": "Navi General",
+  "type": "Need"
+ },
+ {
+  "text": "Zuno General",
+  "type": "Need"
+ },
+ {
+  "text": "Raheja QBE",
+  "type": "Need"
+ },
+ {
+  "text": "Magma HDI",
+  "type": "Need"
+ },
+ {
+  "text": "Magma General",
+  "type": "Need"
+ },
+ {
+  "text": "Universal Sompo",
+  "type": "Need"
+ },
+ {
+  "text": "Shriram General",
+  "type": "Need"
+ },
+ {
+  "text": "Kotak General",
+  "type": "Need"
+ },
+ {
+  "text": "Zurich Kotak",
+  "type": "Need"
+ },
+ {
+  "text": "Digit Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Go Digit",
+  "type": "Need"
+ },
+ {
+  "text": "Acko",
+  "type": "Need"
+ },
+ {
+  "text": "Acko General",
+  "type": "Need"
+ },
+ {
+  "text": "Agriculture Insurance Company",
+  "type": "Need"
+ },
+ {
+  "text": "AIC of India",
+  "type": "Need"
+ },
+ {
+  "text": "ECGC",
+  "type": "Need"
+ },
+ {
+  "text": "Edelweiss General",
+  "type": "Need"
+ },
+ {
+  "text": "Kotak Mahindra General",
+  "type": "Need"
+ },
+ {
+  "text": "Cigna TTK",
+  "type": "Need"
+ },
+ {
+  "text": "ManipalCigna",
+  "type": "Need"
+ },
+ {
+  "text": "Manipal Cigna",
+  "type": "Need"
+ },
+ {
+  "text": "Star Health",
+  "type": "Need"
+ },
+ {
+  "text": "Care Health",
+  "type": "Need"
+ },
+ {
+  "text": "Care Health Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Religare Health",
+  "type": "Need"
+ },
+ {
+  "text": "Niva Bupa",
+  "type": "Need"
+ },
+ {
+  "text": "Max Bupa",
+  "type": "Need"
+ },
+ {
+  "text": "Aditya Birla Health",
+  "type": "Need"
+ },
+ {
+  "text": "ABHI",
+  "type": "Need"
+ },
+ {
+  "text": "Galaxy Health",
+  "type": "Need"
+ },
+ {
+  "text": "Bajaj Allianz Health",
+  "type": "Need"
+ },
+ {
+  "text": "Go Digit General",
+  "type": "Need"
+ },
+ {
+  "text": "HDFC Ergo Health",
+  "type": "Need"
+ },
+ {
+  "text": "Apollo Munich",
+  "type": "Need"
+ },
+ {
+  "text": "Apollo Health Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Oriental Insurance Co",
+  "type": "Need"
+ },
+ {
+  "text": "New India Assurance Co",
+  "type": "Need"
+ },
+ {
+  "text": "United India Insurance Co",
+  "type": "Need"
+ },
+ {
+  "text": "National Insurance Co",
+  "type": "Need"
+ },
+ {
+  "text": "Reliance Health Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Future Generali General",
+  "type": "Need"
+ },
+ {
+  "text": "SBI General Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Zurich Kotak General",
+  "type": "Need"
+ },
+ {
+  "text": "DHFL General",
+  "type": "Need"
+ },
+ {
+  "text": "Bharti AXA General",
+  "type": "Need"
+ },
+ {
+  "text": "Shriram General Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Tata AIG Motor",
+  "type": "Need"
+ },
+ {
+  "text": "ICICI Lombard Health",
+  "type": "Need"
+ },
+ {
+  "text": "Star Health Allied",
+  "type": "Need"
+ },
+ {
+  "text": "Fairfax Digit",
+  "type": "Need"
+ },
+ {
+  "text": "Navi Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Policybazaar",
+  "type": "Need"
+ },
+ {
+  "text": "Policy Bazaar",
+  "type": "Need"
+ },
+ {
+  "text": "InsuranceDekho",
+  "type": "Need"
+ },
+ {
+  "text": "Insurance Dekho",
+  "type": "Need"
+ },
+ {
+  "text": "Turtlemint",
+  "type": "Need"
+ },
+ {
+  "text": "Coverfox",
+  "type": "Need"
+ },
+ {
+  "text": "RenewBuy",
+  "type": "Need"
+ },
+ {
+  "text": "Ditto Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Ditto",
+  "type": "Need"
+ },
+ {
+  "text": "Onsurity",
+  "type": "Need"
+ },
+ {
+  "text": "Plum Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Loop Health",
+  "type": "Need"
+ },
+ {
+  "text": "Visit Health",
+  "type": "Need"
+ },
+ {
+  "text": "Paytm Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "PhonePe Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Bimaplan",
+  "type": "Need"
+ },
+ {
+  "text": "Insurancekart",
+  "type": "Need"
+ },
+ {
+  "text": "Acko Drive",
+  "type": "Need"
+ },
+ {
+  "text": "Digit Drive",
+  "type": "Need"
+ },
+ {
+  "text": "Gromo",
+  "type": "Need"
+ },
+ {
+  "text": "Probus Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Probus",
+  "type": "Need"
+ },
+ {
+  "text": "Bima Yaari",
+  "type": "Need"
+ },
+ {
+  "text": "Bimadeals",
+  "type": "Need"
+ },
+ {
+  "text": "Bajaj Finserv Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Cover Fox",
+  "type": "Need"
+ },
+ {
+  "text": "Insurance Samadhan",
+  "type": "Need"
+ },
+ {
+  "text": "Mintpro",
+  "type": "Need"
+ },
+ {
+  "text": "Easy Policy",
+  "type": "Need"
+ },
+ {
+  "text": "EasyPolicy",
+  "type": "Need"
+ },
+ {
+  "text": "Policy Boss",
+  "type": "Need"
+ },
+ {
+  "text": "PolicyBoss",
+  "type": "Need"
+ },
+ {
+  "text": "Finnovate Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Matrix Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Mobikwik Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Google Pay Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Zopper",
+  "type": "Need"
+ },
+ {
+  "text": "Bima Pay",
+  "type": "Need"
+ },
+ {
+  "text": "BimaPay",
+  "type": "Need"
+ },
+ {
+  "text": "Bima Sugam",
+  "type": "Need"
+ },
+ {
+  "text": "Insurance Panda",
+  "type": "Need"
+ },
+ {
+  "text": "Beema Bazaar",
+  "type": "Need"
+ },
+ {
+  "text": "Jio Insurance Broking",
+  "type": "Need"
+ },
+ {
+  "text": "Jio Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Tata AIG Renewal",
+  "type": "Need"
+ },
+ {
+  "text": "Paisabazaar Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Bankbazaar Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Edelweiss Insurance Broking",
+  "type": "Need"
+ },
+ {
+  "text": "LIC Jeevan Anand",
+  "type": "Need"
+ },
+ {
+  "text": "LIC Jeevan Umang",
+  "type": "Need"
+ },
+ {
+  "text": "LIC Tech Term",
+  "type": "Need"
+ },
+ {
+  "text": "LIC Jeevan Labh",
+  "type": "Need"
+ },
+ {
+  "text": "LIC Jeevan Saral",
+  "type": "Need"
+ },
+ {
+  "text": "LIC New Endowment",
+  "type": "Need"
+ },
+ {
+  "text": "HDFC Life Click 2 Protect",
+  "type": "Need"
+ },
+ {
+  "text": "HDFC Life Sanchay",
+  "type": "Need"
+ },
+ {
+  "text": "HDFC Life Sanchay Plus",
+  "type": "Need"
+ },
+ {
+  "text": "HDFC Life Pension",
+  "type": "Need"
+ },
+ {
+  "text": "SBI Life Smart",
+  "type": "Need"
+ },
+ {
+  "text": "SBI Life Eshield",
+  "type": "Need"
+ },
+ {
+  "text": "SBI Life Smart Wealth",
+  "type": "Need"
+ },
+ {
+  "text": "ICICI Pru iProtect",
+  "type": "Need"
+ },
+ {
+  "text": "ICICI Pru Signature",
+  "type": "Need"
+ },
+ {
+  "text": "ICICI Pru GIFT",
+  "type": "Need"
+ },
+ {
+  "text": "Max Life Smart Term",
+  "type": "Need"
+ },
+ {
+  "text": "Max Life Smart Wealth",
+  "type": "Need"
+ },
+ {
+  "text": "Tata AIA Sampoorna Raksha",
+  "type": "Need"
+ },
+ {
+  "text": "Tata AIA Fortune Guarantee",
+  "type": "Need"
+ },
+ {
+  "text": "Bajaj Allianz Smart Protect",
+  "type": "Need"
+ },
+ {
+  "text": "Bajaj Allianz Goal Assure",
+  "type": "Need"
+ },
+ {
+  "text": "Kotak Gen2Gen",
+  "type": "Need"
+ },
+ {
+  "text": "Kotak Premier",
+  "type": "Need"
+ },
+ {
+  "text": "PNB MetLife Mera Term",
+  "type": "Need"
+ },
+ {
+  "text": "Term Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Term Plan",
+  "type": "Need"
+ },
+ {
+  "text": "Health Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Health Insurance Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Motor Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Car Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Bike Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Two Wheeler Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Life Insurance Premium",
+  "type": "Need"
+ },
+ {
+  "text": "ULIP Premium",
+  "type": "Need"
+ },
+ {
+  "text": "ULIP",
+  "type": "Need"
+ },
+ {
+  "text": "Insurance Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Endowment Plan",
+  "type": "Need"
+ },
+ {
+  "text": "Annuity Plan",
+  "type": "Need"
+ },
+ {
+  "text": "Travel Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Crop Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "PMJJBY",
+  "type": "Need"
+ },
+ {
+  "text": "PMSBY",
+  "type": "Need"
+ },
+ {
+  "text": "Pradhan Mantri Jeevan Jyoti",
+  "type": "Need"
+ },
+ {
+  "text": "Pradhan Mantri Suraksha Bima",
+  "type": "Need"
+ },
+ {
+  "text": "PMFBY",
+  "type": "Need"
+ },
+ {
+  "text": "Home Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Fire Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Marine Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Pet Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Cyber Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Mediclaim",
+  "type": "Need"
+ },
+ {
+  "text": "Mediclaim Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Family Floater",
+  "type": "Need"
+ },
+ {
+  "text": "Personal Accident Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Critical Illness Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Child Plan Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Pension Plan Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Money Back Policy",
+  "type": "Need"
+ },
+ {
+  "text": "Whole Life Policy",
+  "type": "Need"
+ },
+ {
+  "text": "Group Insurance Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Third Party Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Comprehensive Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Insurance Renewal",
+  "type": "Need"
+ },
+ {
+  "text": "Policy Renewal",
+  "type": "Need"
+ },
+ {
+  "text": "Policy Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Premium Payment",
+  "type": "Need"
+ },
+ {
+  "text": "Insurance Policy",
+  "type": "Need"
+ },
+ {
+  "text": "Life Cover",
+  "type": "Need"
+ },
+ {
+  "text": "Health Cover",
+  "type": "Need"
+ },
+ {
+  "text": "Motor Policy",
+  "type": "Need"
+ },
+ {
+  "text": "Car Insurance Renewal",
+  "type": "Need"
+ },
+ {
+  "text": "Bike Insurance Renewal",
+  "type": "Need"
+ },
+ {
+  "text": "Health Policy Renewal",
+  "type": "Need"
+ },
+ {
+  "text": "Super Top Up",
+  "type": "Need"
+ },
+ {
+  "text": "Top Up Health Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Senior Citizen Health Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Group Mediclaim",
+  "type": "Need"
+ },
+ {
+  "text": "Employee Group Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Ayushman Bharat Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Shop Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Shopkeeper Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Livestock Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Cattle Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Gadget Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Mobile Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Extended Warranty Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Loan Protection Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Credit Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Smart Term Plan",
+  "type": "Need"
+ },
+ {
+  "text": "Savings Plan Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Guaranteed Return Plan",
+  "type": "Need"
+ },
+ {
+  "text": "Pension Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Life Insurance Corporation Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Life Insurance Corporation Premium",
+  "type": "Need"
+ },
+ {
+  "text": "SBI Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "SBI Life Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Max Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Max Life Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Axis Max Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Axis Max Life Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Kotak Life Premium",
+  "type": "Need"
+ },
+ {
+  "text": "ABSLI Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "ABSLI Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Birla Sun Life Insurance Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Birla Sun Life Insurance Premium",
+  "type": "Need"
+ },
+ {
+  "text": "PNB MetLife Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "PNB MetLife Premium",
+  "type": "Need"
+ },
+ {
+  "text": "MetLife India Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "MetLife India Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Canara HSBC Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Canara HSBC Life Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Canara HSBC Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Canara HSBC Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Bharti AXA Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Bharti AXA Life Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Reliance Nippon Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Reliance Nippon Life Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Nippon Life India Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Nippon Life India Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Aviva Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Aviva Life Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Aviva India Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Aviva India Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Edelweiss Tokio Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Edelweiss Tokio Life Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Edelweiss Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Edelweiss Life Premium",
+  "type": "Need"
+ },
+ {
+  "text": "IndiaFirst Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "IndiaFirst Life Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Star Union Dai-ichi Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Star Union Dai-ichi Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Future Generali Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Future Generali Life Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Generali Central Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Generali Central Life Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Shriram Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Shriram Life Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Sahara Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Sahara Life Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Pramerica Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Pramerica Life Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Exide Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Exide Life Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Ageas Federal Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Ageas Federal Life Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Ageas Federal Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Ageas Federal Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Aegon Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Aegon Life Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Go Digit Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Go Digit Life Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Acko Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Acko Life Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Bandhan Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Bandhan Life Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Postal Life Insurance Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Postal Life Insurance Premium",
+  "type": "Need"
+ },
+ {
+  "text": "PLI Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "PLI Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Rural Postal Life Insurance Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Rural Postal Life Insurance Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Aegon Religare Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Aegon Religare Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Max New York Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "IDBI Federal Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "IDBI Federal Life Premium",
+  "type": "Need"
+ },
+ {
+  "text": "Canara Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Aditya Birla Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Aditya Birla Life Premium",
+  "type": "Need"
+ },
+ {
+  "text": "New India Assurance Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "New India Assurance Premium",
+  "type": "Need"
+ },
+ {
+  "text": "National Insurance Insurance",
+  "type": "Need"
+ }
+]

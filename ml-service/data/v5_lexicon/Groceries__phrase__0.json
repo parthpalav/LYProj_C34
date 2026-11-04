@@ -1,0 +1,234 @@
+[
+ {
+  "text": "milk",
+  "type": "Need"
+ },
+ {
+  "text": "biscuits",
+  "type": "Want"
+ },
+ {
+  "text": "vegetables",
+  "type": "Need"
+ },
+ {
+  "text": "dal",
+  "type": "Need"
+ },
+ {
+  "text": "atta",
+  "type": "Need"
+ },
+ {
+  "text": "chai sutta",
+  "type": "Need"
+ },
+ {
+  "text": "fruits",
+  "type": "Need"
+ },
+ {
+  "text": "sabzi wala",
+  "type": "Need"
+ },
+ {
+  "text": "doodh",
+  "type": "Need"
+ },
+ {
+  "text": "maggi",
+  "type": "Want"
+ },
+ {
+  "text": "samosa",
+  "type": "Want"
+ },
+ {
+  "text": "jam and bread",
+  "type": "Need"
+ },
+ {
+  "text": "chai",
+  "type": "Need"
+ },
+ {
+  "text": "toothpaste",
+  "type": "Need"
+ },
+ {
+  "text": "shampoo",
+  "type": "Need"
+ },
+ {
+  "text": "sugar",
+  "type": "Need"
+ },
+ {
+  "text": "salt",
+  "type": "Need"
+ },
+ {
+  "text": "soap",
+  "type": "Need"
+ },
+ {
+  "text": "bathing soap",
+  "type": "Need"
+ },
+ {
+  "text": "sanitary pad",
+  "type": "Need"
+ },
+ {
+  "text": "chocolate",
+  "type": "Want"
+ },
+ {
+  "text": "imported snacks",
+  "type": "Want"
+ },
+ {
+  "text": "patties",
+  "type": "Want"
+ },
+ {
+  "text": "sweets",
+  "type": "Want"
+ },
+ {
+  "text": "butter",
+  "type": "Need"
+ },
+ {
+  "text": "oil",
+  "type": "Need"
+ },
+ {
+  "text": "kitchen napkins",
+  "type": "Need"
+ },
+ {
+  "text": "toothbrush",
+  "type": "Need"
+ },
+ {
+  "text": "tissues",
+  "type": "Need"
+ },
+ {
+  "text": "handwash",
+  "type": "Need"
+ },
+ {
+  "text": "washing powder",
+  "type": "Need"
+ },
+ {
+  "text": "detergent",
+  "type": "Need"
+ },
+ {
+  "text": "sabzi",
+  "type": "Need"
+ },
+ {
+  "text": "paneer",
+  "type": "Need"
+ },
+ {
+  "text": "biscuit",
+  "type": "Want"
+ },
+ {
+  "text": "maggie noodles",
+  "type": "Want"
+ },
+ {
+  "text": "masala",
+  "type": "Need"
+ },
+ {
+  "text": "samosa masala",
+  "type": "Need"
+ },
+ {
+  "text": "noodles",
+  "type": "Want"
+ },
+ {
+  "text": "butter chicken",
+  "type": "Want"
+ },
+ {
+  "text": "chips",
+  "type": "Want"
+ },
+ {
+  "text": "coco biscuits",
+  "type": "Want"
+ },
+ {
+  "text": "dry fruits",
+  "type": "Want"
+ },
+ {
+  "text": "kaju barfi",
+  "type": "Want"
+ },
+ {
+  "text": "milk packet",
+  "type": "Need"
+ },
+ {
+  "text": "samosa packet",
+  "type": "Want"
+ },
+ {
+  "text": "cookies",
+  "type": "Want"
+ },
+ {
+  "text": "ghee",
+  "type": "Need"
+ },
+ {
+  "text": "cooking oil",
+  "type": "Need"
+ },
+ {
+  "text": "tea leaves",
+  "type": "Need"
+ },
+ {
+  "text": "baking soda",
+  "type": "Need"
+ },
+ {
+  "text": "sabji",
+  "type": "Need"
+ },
+ {
+  "text": "eggs",
+  "type": "Need"
+ },
+ {
+  "text": "bread",
+  "type": "Need"
+ },
+ {
+  "text": "sugar candy",
+  "type": "Want"
+ },
+ {
+  "text": "choco bar",
+  "type": "Want"
+ },
+ {
+  "text": "cake",
+  "type": "Want"
+ },
+ {
+  "text": "ice cream",
+  "type": "Want"
+ }
+]

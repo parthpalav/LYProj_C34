@@ -3,6 +3,8 @@ import { useLocation } from 'react-router-dom';
 import { Menu } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { UserAvatar } from '../ui/UserAvatar';
+import { ThemeToggle } from '../ui/ThemeToggle';
+import { NotificationBell } from '../ui/NotificationBell';
 
 export interface TopBarProps {
   onToggleSidebar?: () => void;
@@ -17,6 +19,9 @@ const ROUTE_TITLES: Record<string, string> = {
   '/app/family': 'Family',
   '/app/profile': 'Profile',
   '/app/settings': 'Settings',
+  '/app/assistant': 'Assistant',
+  '/app/roundups': 'Round-ups',
+  '/app/review': 'Check AI guesses',
 };
 
 export const TopBar: React.FC<TopBarProps> = ({ onToggleSidebar }) => {
@@ -52,6 +57,8 @@ export const TopBar: React.FC<TopBarProps> = ({ onToggleSidebar }) => {
 
       {/* Right: Authenticated User Display */}
       <div className="topbar-right">
+        <NotificationBell />
+        <ThemeToggle />
         <span className="topbar-user-name">
           {firstName}
         </span>

@@ -1,236 +1,156 @@
-import { BottomTabBarButtonProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ChatScreen } from '../screens/ChatScreen';
 import { DashboardScreen } from '../screens/DashboardScreen';
 import { ProfileScreen } from '../screens/ProfileScreen';
 import { TransactionsScreen } from '../screens/TransactionsScreen';
+import { TransactionEntryScreen } from '../screens/TransactionEntryScreen';
 import { LiabilitiesScreen } from '../screens/LiabilitiesScreen';
 import { FinancialOutlookScreen } from '../screens/FinancialOutlookScreen';
 import { FmiScreen } from '../screens/FmiScreen';
 import { IncomeFlowScreen } from '../screens/IncomeFlowScreen';
 import AssetsScreen from '../screens/AssetsScreen';
 import FamilyScreen from '../screens/FamilyScreen';
+import { GoalPlannerScreen } from '../screens/GoalPlannerScreen';
+import { PlanScreen } from '../screens/PlanScreen';
+import { LoginScreen } from '../screens/LoginScreen';
+import { OnboardingScreen } from '../screens/OnboardingScreen';
+import { WelcomeScreen } from '../screens/WelcomeScreen';
+import AlertsScreen from '../screens/AlertsScreen';
+import { ReviewScreen } from '../screens/ReviewScreen';
+import { EnvelopesScreen } from '../screens/EnvelopesScreen';
+import { RecapScreen } from '../screens/RecapScreen';
+import { InsightsScreen } from '../screens/InsightsScreen';
+import { SpendingScreen } from '../screens/SpendingScreen';
+import { PaymentMethodsScreen } from '../screens/PaymentMethodsScreen';
+import { TabBar } from '../components/navigation/TabBar';
+import { withFocusFade } from '../components/navigation/FocusFade';
+import { useAuthStore } from '../store/useAuthStore';
+import { createStyles, useTheme } from '../theme';
 
 export type RootTabParamList = {
-  Transactions: undefined;
   Dashboard: undefined;
+  Transactions: undefined;
+  Plan: undefined;
   Chat: undefined;
-  Profile: undefined;
-  Liabilities: undefined;
 };
 
 export type RootStackParamList = {
+  Auth: undefined;
+  Onboarding: undefined;
+  Welcome: undefined;
   MainTabs: undefined;
+  QuickAdd: undefined;
   FinancialOutlook: undefined;
   FMI: undefined;
   IncomeFlow: undefined;
   Assets: undefined;
   Family: undefined;
+  Goals: undefined;
+  Liabilities: undefined;
+  Profile: undefined;
+  Alerts: undefined;
+  Review: undefined;
+  Envelopes: undefined;
+  Recap: undefined;
+  Insights: undefined;
+  Spending: undefined;
+  PaymentMethods: undefined;
 };
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-function tabIconName(routeName: keyof RootTabParamList, focused: boolean): React.ComponentProps<typeof Ionicons>['name'] {
-  if (routeName === 'Transactions') return focused ? 'swap-horizontal' : 'swap-horizontal-outline';
-  if (routeName === 'Dashboard') return focused ? 'home' : 'home-outline';
-  if (routeName === 'Liabilities') return focused ? 'calendar' : 'calendar-outline';
-  if (routeName === 'Chat') return focused ? 'sparkles' : 'sparkles-outline';
-  return focused ? 'person-circle' : 'person-circle-outline';
-}
-
-function HomeTabButton({ onPress, accessibilityState }: BottomTabBarButtonProps): React.ReactElement {
-  const isFocused = Boolean(accessibilityState?.selected);
-  const tintColor = isFocused ? '#1e293b' : '#94a3b8';
-
-  return (
-    <Pressable
-      onPress={onPress}
-      style={styles.homeButtonWrap}
-      accessibilityRole="tab"
-      accessibilityState={{ selected: isFocused }}
-      accessibilityLabel="Home"
-    >
-      <View style={[styles.homeButton, isFocused ? styles.homeButtonActive : undefined]}>
-        <Ionicons
-          name={isFocused ? 'home' : 'home-outline'}
-          size={22}
-          color={tintColor}
-        />
-        <Text style={[styles.homeLabel, { color: tintColor }]}>Home</Text>
-      </View>
-    </Pressable>
-  );
-}
+// Wrapped once at module level so each tab keeps a stable component identity.
+const HomeTab = withFocusFade(DashboardScreen);
+const ActivityTab = withFocusFade(TransactionsScreen);
+const PlanTab = withFocusFade(PlanScreen);
+const ChatTab = withFocusFade(ChatScreen);
 
 function MainTabNavigator(): React.ReactElement {
-  const insets = useSafeAreaInsets();
-
+  const styles = useStyles();
+  const { c } = useTheme();
   return (
     <Tab.Navigator
       initialRouteName="Dashboard"
-      screenOptions={({ route }) => ({
-        headerStyle: { backgroundColor: '#f8f9fb' },
-        headerTitleStyle: { fontWeight: '700' },
-        tabBarActiveTintColor: '#1e293b',
-        tabBarInactiveTintColor: '#94a3b8',
-        tabBarLabelStyle: styles.tabLabel,
-        tabBarAllowFontScaling: false,
-        tabBarItemStyle: styles.tabItem,
-        tabBarStyle: [styles.tabBar, { height: 60 + insets.bottom, paddingBottom: Math.max(6, insets.bottom) }],
-        tabBarHideOnKeyboard: true,
-        tabBarIcon: ({ focused, color, size }) => (
-          <View style={styles.tabIconWrap}>
-            <Ionicons
-              name={tabIconName(route.name as keyof RootTabParamList, focused)}
-              size={route.name === 'Dashboard' ? size + 2 : 22}
-              color={color}
-            />
-            {focused && route.name !== 'Dashboard' && <View style={styles.activeIndicator} />}
-          </View>
-        ),
-      })}
+      tabBar={(props) => <TabBar {...props} />}
+      screenOptions={{
+        headerStyle: { backgroundColor: c.bg },
+        headerTitleStyle: styles.headerTitle,
+        headerShadowVisible: false,
+      }}
     >
-      <Tab.Screen name="Transactions" component={TransactionsScreen} />
-      <Tab.Screen name="Liabilities" component={LiabilitiesScreen} />
-      <Tab.Screen
-        name="Dashboard"
-        component={DashboardScreen}
-        options={{
-          title: 'Home',
-          tabBarButton: (props) => <HomeTabButton {...props} />,
-          tabBarItemStyle: styles.homeItem,
-        }}
-      />
-      <Tab.Screen name="Chat" component={ChatScreen} options={{ title: 'AI' }} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen name="Dashboard" component={HomeTab} options={{ title: 'Home', headerShown: false }} />
+      <Tab.Screen name="Transactions" component={ActivityTab} options={{ title: 'Activity', headerShown: false }} />
+      <Tab.Screen name="Plan" component={PlanTab} options={{ headerShown: false }} />
+      <Tab.Screen name="Chat" component={ChatTab} options={{ title: 'AI', headerShown: false }} />
     </Tab.Navigator>
   );
 }
 
+function QuickAddRoute(): React.ReactElement {
+  const navigation = useNavigation();
+  return <TransactionEntryScreen onClose={() => navigation.goBack()} />;
+}
+
+function WelcomeRoute(): React.ReactElement {
+  const dismissWelcome = useAuthStore((s) => s.dismissWelcome);
+  return <WelcomeScreen onContinue={dismissWelcome} />;
+}
+
+/**
+ * One stack for the whole app. Auth, onboarding and welcome are conditional screens (the React
+ * Navigation auth-flow pattern), so moving between them cross-fades instead of hard-swapping trees.
+ */
 export function AppNavigator(): React.ReactElement {
+  const token = useAuthStore((s) => s.token);
+  const user = useAuthStore((s) => s.user);
+  const onboardingCompleted = useAuthStore((s) => s.onboardingCompleted);
+  const showWelcome = useAuthStore((s) => s.showWelcome);
+  const onboarded = Boolean(onboardingCompleted || user?.onboardingComplete || user?.onboardingCompleted);
+
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="MainTabs" component={MainTabNavigator} />
-      <Stack.Screen
-        name="FinancialOutlook"
-        component={FinancialOutlookScreen}
-        options={{
-          headerShown: false,
-          animation: 'slide_from_right',
-        }}
-      />
-      <Stack.Screen
-        name="FMI"
-        component={FmiScreen}
-        options={{
-          headerShown: false,
-          animation: 'slide_from_right',
-        }}
-      />
-      <Stack.Screen
-        name="IncomeFlow"
-        component={IncomeFlowScreen}
-        options={{
-          headerShown: false,
-          animation: 'slide_from_right',
-        }}
-      />
-      <Stack.Screen
-        name="Assets"
-        component={AssetsScreen}
-        options={{
-          headerShown: false,
-          animation: 'slide_from_right',
-        }}
-      />
-      <Stack.Screen
-        name="Family"
-        component={FamilyScreen}
-        options={{
-          headerShown: false,
-          animation: 'slide_from_right',
-        }}
-      />
+    <Stack.Navigator screenOptions={{ headerShown: false, animation: 'default', animationTypeForReplace: 'push' }}>
+      {!token ? (
+        <Stack.Screen name="Auth" component={LoginScreen} options={{ animation: 'fade' }} />
+      ) : !onboarded ? (
+        <Stack.Screen name="Onboarding" component={OnboardingScreen} options={{ animation: 'fade' }} />
+      ) : (
+        <>
+          {showWelcome && <Stack.Screen name="Welcome" component={WelcomeRoute} options={{ animation: 'fade' }} />}
+          <Stack.Screen name="MainTabs" component={MainTabNavigator} options={{ animation: 'fade' }} />
+          <Stack.Screen name="FinancialOutlook" component={FinancialOutlookScreen} />
+          <Stack.Screen name="FMI" component={FmiScreen} />
+          <Stack.Screen name="IncomeFlow" component={IncomeFlowScreen} />
+          <Stack.Screen name="Assets" component={AssetsScreen} />
+          <Stack.Screen name="Family" component={FamilyScreen} />
+          <Stack.Screen name="Goals" component={GoalPlannerScreen} />
+          <Stack.Screen name="Liabilities" component={LiabilitiesScreen} />
+          <Stack.Screen name="Profile" component={ProfileScreen} />
+          <Stack.Screen name="Alerts" component={AlertsScreen} />
+          <Stack.Screen name="Review" component={ReviewScreen} />
+          <Stack.Screen name="Envelopes" component={EnvelopesScreen} />
+          <Stack.Screen name="Insights" component={InsightsScreen} />
+          <Stack.Screen name="Spending" component={SpendingScreen} />
+          <Stack.Screen name="PaymentMethods" component={PaymentMethodsScreen} />
+          <Stack.Screen name="Recap" component={RecapScreen} options={{ presentation: 'fullScreenModal', animation: 'fade' }} />
+          <Stack.Screen
+            name="QuickAdd"
+            component={QuickAddRoute}
+            options={{ presentation: 'formSheet', sheetAllowedDetents: 'large', sheetGrabberVisible: true, sheetCornerRadius: 28 }}
+          />
+        </>
+      )}
     </Stack.Navigator>
   );
 }
 
-
-const styles = StyleSheet.create({
-  tabBar: {
-    paddingTop: 6,
-    backgroundColor: '#ffffff',
-    borderTopWidth: 1,
-    borderTopColor: '#f1f5f9',
-    shadowColor: '#0f172a',
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.04,
-    shadowRadius: 8,
-    elevation: 4,
+const useStyles = createStyles((c) => ({
+  headerTitle: {
+    fontSize: 17,
+    fontWeight: '700',
+    color: c.text,
   },
-  tabItem: {
-    paddingHorizontal: 4,
-    minWidth: 0,
-  },
-  tabLabel: {
-    fontSize: 10,
-    fontWeight: '600',
-    marginTop: 2,
-    letterSpacing: 0.1,
-  },
-  tabIconWrap: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
-  },
-  activeIndicator: {
-    position: 'absolute',
-    bottom: -4,
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: '#2563EB',
-  },
-  homeItem: {
-    marginTop: -14,
-  },
-  homeButtonWrap: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-  },
-  homeButton: {
-    minWidth: 64,
-    height: 54,
-    borderRadius: 18,
-    backgroundColor: '#eef2ff',
-    borderWidth: 2,
-    borderColor: '#ffffff',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    shadowColor: '#1e293b',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.08,
-    shadowRadius: 6,
-    elevation: 4,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  homeButtonActive: {
-    backgroundColor: '#dbeafe',
-    borderColor: '#ffffff',
-    shadowOpacity: 0.16,
-    elevation: 6,
-  },
-  homeLabel: {
-    fontSize: 10,
-    fontWeight: '600',
-    marginTop: 2,
-    letterSpacing: 0.1,
-  },
-});
+}));

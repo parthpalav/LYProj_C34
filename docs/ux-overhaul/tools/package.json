@@ -1,0 +1,6 @@
+{
+  "name": "ux-overhaul-tools",
+  "private": true,
+  "type": "commonjs",
+  "dependencies": { "docx": "9.5.1", "ws": "8.18.0" }
+}

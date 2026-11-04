@@ -1,0 +1,322 @@
+[
+  {
+    "text": "BRPL",
+    "type": "Need"
+  },
+  {
+    "text": "TPDDL",
+    "type": "Need"
+  },
+  {
+    "text": "BYPL",
+    "type": "Need"
+  },
+  {
+    "text": "NDMC Delhi",
+    "type": "Need"
+  },
+  {
+    "text": "HVPNL",
+    "type": "Need"
+  },
+  {
+    "text": "HPPCL",
+    "type": "Need"
+  },
+  {
+    "text": "PDD J&K",
+    "type": "Need"
+  },
+  {
+    "text": "JSEB",
+    "type": "Need"
+  },
+  {
+    "text": "KEB Karnataka",
+    "type": "Need"
+  },
+  {
+    "text": "KSEB Thrissur",
+    "type": "Need"
+  },
+  {
+    "text": "MPEB",
+    "type": "Need"
+  },
+  {
+    "text": "MPPKVVCL Bhopal",
+    "type": "Need"
+  },
+  {
+    "text": "MAHADISCOM",
+    "type": "Need"
+  },
+  {
+    "text": "MSPDCL Imphal",
+    "type": "Need"
+  },
+  {
+    "text": "MPDD Aizawl",
+    "type": "Need"
+  },
+  {
+    "text": "DoP Nagaland",
+    "type": "Need"
+  },
+  {
+    "text": "GRIDCO Odisha",
+    "type": "Need"
+  },
+  {
+    "text": "GEB Gujarat",
+    "type": "Need"
+  },
+  {
+    "text": "BSEB Bihar",
+    "type": "Need"
+  },
+  {
+    "text": "ASEB Assam",
+    "type": "Need"
+  },
+  {
+    "text": "APSEB",
+    "type": "Need"
+  },
+  {
+    "text": "DoP Arunachal",
+    "type": "Need"
+  },
+  {
+    "text": "CSPGCL",
+    "type": "Need"
+  },
+  {
+    "text": "CED Chandigarh",
+    "type": "Need"
+  },
+  {
+    "text": "GED Goa",
+    "type": "Need"
+  },
+  {
+    "text": "PED Puducherry",
+    "type": "Need"
+  },
+  {
+    "text": "BKESL Bharatpur",
+    "type": "Need"
+  },
+  {
+    "text": "RVPN Rajasthan",
+    "type": "Need"
+  },
+  {
+    "text": "SPD Sikkim",
+    "type": "Need"
+  },
+  {
+    "text": "TNEB Chennai",
+    "type": "Need"
+  },
+  {
+    "text": "TSECL Agartala",
+    "type": "Need"
+  },
+  {
+    "text": "UPPCL Meerut",
+    "type": "Need"
+  },
+  {
+    "text": "UPCL Dehradun",
+    "type": "Need"
+  },
+  {
+    "text": "CESC Ltd",
+    "type": "Need"
+  },
+  {
+    "text": "Ladakh Power Dept",
+    "type": "Need"
+  },
+  {
+    "text": "LPD Lakshadweep",
+    "type": "Need"
+  },
+  {
+    "text": "A&N DoP",
+    "type": "Need"
+  },
+  {
+    "text": "DNHDDPCL",
+    "type": "Need"
+  },
+  {
+    "text": "Himachal Power Corp",
+    "type": "Need"
+  },
+  {
+    "text": "MeECL Shillong",
+    "type": "Need"
+  },
+  {
+    "text": "SBPDCL Patna",
+    "type": "Need"
+  },
+  {
+    "text": "NBPDCL Muzaffarpur",
+    "type": "Need"
+  },
+  {
+    "text": "BSPHCL Patna",
+    "type": "Need"
+  },
+  {
+    "text": "KESCO Kanpur",
+    "type": "Need"
+  },
+  {
+    "text": "PSEB Patiala",
+    "type": "Need"
+  },
+  {
+    "text": "CSPDCL Bilaspur",
+    "type": "Need"
+  },
+  {
+    "text": "TGNPDCL Warangal",
+    "type": "Need"
+  },
+  {
+    "text": "TSSPDCL Hyderabad",
+    "type": "Need"
+  },
+  {
+    "text": "TPWODL Burla",
+    "type": "Need"
+  },
+  {
+    "text": "TPSODL Berhampur",
+    "type": "Need"
+  },
+  {
+    "text": "NESCO Balasore",
+    "type": "Need"
+  },
+  {
+    "text": "SOUTHCO Berhampur",
+    "type": "Need"
+  },
+  {
+    "text": "WESCO Burla",
+    "type": "Need"
+  },
+  {
+    "text": "CESU Cuttack",
+    "type": "Need"
+  },
+  {
+    "text": "PVVNL Agra",
+    "type": "Need"
+  },
+  {
+    "text": "DVVNL Agra",
+    "type": "Need"
+  },
+  {
+    "text": "MVVNL Lucknow",
+    "type": "Need"
+  },
+  {
+    "text": "PuVVNL Gorakhpur",
+    "type": "Need"
+  },
+  {
+    "text": "JVVNL Jaipur",
+    "type": "Need"
+  },
+  {
+    "text": "JdVVNL Jodhpur",
+    "type": "Need"
+  },
+  {
+    "text": "AVVNL Ajmer",
+    "type": "Need"
+  },
+  {
+    "text": "UHBVN Gurugram",
+    "type": "Need"
+  },
+  {
+    "text": "DHBVN Hisar",
+    "type": "Need"
+  },
+  {
+    "text": "TNPDCL Tirunelveli",
+    "type": "Need"
+  },
+  {
+    "text": "TANGEDCO Coimbatore",
+    "type": "Need"
+  },
+  {
+    "text": "KPTCL Mysuru",
+    "type": "Need"
+  },
+  {
+    "text": "HESCOM Hubballi",
+    "type": "Need"
+  },
+  {
+    "text": "MESCOM Mangaluru",
+    "type": "Need"
+  },
+  {
+    "text": "CHESCOM Chamarajanagar",
+    "type": "Need"
+  },
+  {
+    "text": "BESCOM Bengaluru",
+    "type": "Need"
+  },
+  {
+    "text": "GESCOM Kalaburagi",
+    "type": "Need"
+  },
+  {
+    "text": "JBVNL Ranchi",
+    "type": "Need"
+  },
+  {
+    "text": "PSPCL Amritsar",
+    "type": "Need"
+  },
+  {
+    "text": "UPCL Haridwar",
+    "type": "Need"
+  },
+  {
+    "text": "MSEDCL Nagpur",
+    "type": "Need"
+  },
+  {
+    "text": "MSEB Pune",
+    "type": "Need"
+  },
+  {
+    "text": "WBSEDCL Howrah",
+    "type": "Need"
+  },
+  {
+    "text": "PSPCL Ludhiana",
+    "type": "Need"
+  },
+  {
+    "text": "TSNPDCL Karimnagar",
+    "type": "Need"
+  },
+  {
+    "text": "CSPDCL Raipur",
+    "type": "Need"
+  }
+]

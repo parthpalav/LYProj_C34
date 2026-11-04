@@ -1,0 +1,322 @@
+[
+ {
+  "text": "Apollo Munich Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Bajaj Allianz Life",
+  "type": "Need"
+ },
+ {
+  "text": "Canara Robeco",
+  "type": "Need"
+ },
+ {
+  "text": "Cholamandalam General",
+  "type": "Need"
+ },
+ {
+  "text": "Cigna",
+  "type": "Need"
+ },
+ {
+  "text": "DPS Life",
+  "type": "Need"
+ },
+ {
+  "text": "Edelweiss Life",
+  "type": "Need"
+ },
+ {
+  "text": "HSBC Life",
+  "type": "Need"
+ },
+ {
+  "text": "ICICI Lombard",
+  "type": "Need"
+ },
+ {
+  "text": "Kotak Life",
+  "type": "Need"
+ },
+ {
+  "text": "LIC",
+  "type": "Need"
+ },
+ {
+  "text": "Max Bupa",
+  "type": "Need"
+ },
+ {
+  "text": "New India Assurance",
+  "type": "Need"
+ },
+ {
+  "text": "PNB MetLife",
+  "type": "Need"
+ },
+ {
+  "text": "Royal Sundaram",
+  "type": "Need"
+ },
+ {
+  "text": "Star Health",
+  "type": "Need"
+ },
+ {
+  "text": "Tata AIA Life",
+  "type": "Need"
+ },
+ {
+  "text": "Tata AIA Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Motors",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Standard Life",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Standard Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "United India Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Universal Sompo",
+  "type": "Need"
+ },
+ {
+  "text": "Vijaya Lakshmi Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Vijaya Lakshmi Life",
+  "type": "Need"
+ },
+ {
+  "text": "Wolverine General Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Birla Sun Life",
+  "type": "Need"
+ },
+ {
+  "text": "Canara HSBC",
+  "type": "Need"
+ },
+ {
+  "text": "Canara HSBC Life",
+  "type": "Need"
+ },
+ {
+  "text": "Edelweiss General",
+  "type": "Need"
+ },
+ {
+  "text": "Edelweiss General Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "HSBC Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "HSBC Oriental Bank",
+  "type": "Need"
+ },
+ {
+  "text": "HSBC Oriental Life",
+  "type": "Need"
+ },
+ {
+  "text": "ICICI Prudential",
+  "type": "Need"
+ },
+ {
+  "text": "Kotak Mahindra",
+  "type": "Need"
+ },
+ {
+  "text": "Life Insurance Corporation",
+  "type": "Need"
+ },
+ {
+  "text": "Max Bupa Health",
+  "type": "Need"
+ },
+ {
+  "text": "PNB MetLife Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Royal Sundaram General",
+  "type": "Need"
+ },
+ {
+  "text": "Star Health and Allied",
+  "type": "Need"
+ },
+ {
+  "text": "Tata AIA",
+  "type": "Need"
+ },
+ {
+  "text": "Tata AIA General",
+  "type": "Need"
+ },
+ {
+  "text": "Tata AIA Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Standard Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "United India Insurance Company",
+  "type": "Need"
+ },
+ {
+  "text": "Universal Sompo Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Vijaya Lakshmi General",
+  "type": "Need"
+ },
+ {
+  "text": "Vijaya Lakshmi Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Wolverine Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Aegon Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "AFL Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Apollo Munich Health Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Aviva Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Bharti Pensions",
+  "type": "Need"
+ },
+ {
+  "text": "Cholamandalam Life",
+  "type": "Need"
+ },
+ {
+  "text": "Cholamandalam Motor",
+  "type": "Need"
+ },
+ {
+  "text": "Cholamandalam Travel",
+  "type": "Need"
+ },
+ {
+  "text": "Cholamandalam Health",
+  "type": "Need"
+ },
+ {
+  "text": "Cigna TTK",
+  "type": "Need"
+ },
+ {
+  "text": "DPS Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Edelweiss Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "ICICI Lombard General",
+  "type": "Need"
+ },
+ {
+  "text": "ICICI Prudential Life",
+  "type": "Need"
+ },
+ {
+  "text": "Kotak General",
+  "type": "Need"
+ },
+ {
+  "text": "Kotak Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "LIC Health",
+  "type": "Need"
+ },
+ {
+  "text": "Max Bupa Health Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "New India General",
+  "type": "Need"
+ },
+ {
+  "text": "Punjab National Life",
+  "type": "Need"
+ },
+ {
+  "text": "Royal Sundaram General Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Star Health and Allied Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Standard Life",
+  "type": "Need"
+ },
+ {
+  "text": "United India General",
+  "type": "Need"
+ },
+ {
+  "text": "Universal Sompo General",
+  "type": "Need"
+ },
+ {
+  "text": "Vijaya Lakshmi General Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Wolverine General",
+  "type": "Need"
+ },
+ {
+  "text": "Aegon General",
+  "type": "Need"
+ },
+ {
+  "text": "Aviva General",
+  "type": "Need"
+ },
+ {
+  "text": "Cholamandalam Health Insurance",
+  "type": "Need"
+ }
+]

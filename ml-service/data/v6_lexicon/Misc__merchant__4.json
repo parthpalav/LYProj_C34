@@ -1,0 +1,290 @@
+[
+ {
+  "text": "Bundl Technologies",
+  "type": "Need"
+ },
+ {
+  "text": "Bajaj Allianz General Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "CredAble",
+  "type": "Need"
+ },
+ {
+  "text": "India Post",
+  "type": "Need"
+ },
+ {
+  "text": "ICICI Bank",
+  "type": "Need"
+ },
+ {
+  "text": "IDBI Bank",
+  "type": "Need"
+ },
+ {
+  "text": "IndusInd Bank",
+  "type": "Need"
+ },
+ {
+  "text": "Indian Railway Catering and Tourism Corporation",
+  "type": "Need"
+ },
+ {
+  "text": "Jio PaymentsBank",
+  "type": "Need"
+ },
+ {
+  "text": "Kotak Mahindra Bank",
+  "type": "Need"
+ },
+ {
+  "text": "LIC",
+  "type": "Need"
+ },
+ {
+  "text": "Money Tap",
+  "type": "Need"
+ },
+ {
+  "text": "Mobikwik",
+  "type": "Need"
+ },
+ {
+  "text": "NPCI",
+  "type": "Need"
+ },
+ {
+  "text": "Paytm",
+  "type": "Need"
+ },
+ {
+  "text": "PhonePe",
+  "type": "Need"
+ },
+ {
+  "text": "PNB Housing Finance",
+  "type": "Need"
+ },
+ {
+  "text": "RBL Bank",
+  "type": "Need"
+ },
+ {
+  "text": "SBI",
+  "type": "Need"
+ },
+ {
+  "text": "Scripbox",
+  "type": "Need"
+ },
+ {
+  "text": "State Bank of India",
+  "type": "Need"
+ },
+ {
+  "text": "Syndicate Bank",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Capital",
+  "type": "Need"
+ },
+ {
+  "text": "Tech Mahindra",
+  "type": "Need"
+ },
+ {
+  "text": "TCS",
+  "type": "Need"
+ },
+ {
+  "text": "TransUnion CIBIL",
+  "type": "Need"
+ },
+ {
+  "text": "UPI Payment",
+  "type": "Need"
+ },
+ {
+  "text": "Vodafone Idea",
+  "type": "Need"
+ },
+ {
+  "text": "Vijaya Bank",
+  "type": "Need"
+ },
+ {
+  "text": "Vodafone Mobile Services",
+  "type": "Need"
+ },
+ {
+  "text": "Xceler",
+  "type": "Need"
+ },
+ {
+  "text": "Zomato",
+  "type": "Need"
+ },
+ {
+  "text": "Flipkart",
+  "type": "Want"
+ },
+ {
+  "text": "Amazon",
+  "type": "Want"
+ },
+ {
+  "text": "Myntra",
+  "type": "Want"
+ },
+ {
+  "text": "Nykaa",
+  "type": "Want"
+ },
+ {
+  "text": "Paytm Mall",
+  "type": "Want"
+ },
+ {
+  "text": "Swiggy Instamart",
+  "type": "Want"
+ },
+ {
+  "text": "Snapdeal",
+  "type": "Want"
+ },
+ {
+  "text": "Firstcry",
+  "type": "Want"
+ },
+ {
+  "text": "Flipkart Pay Later",
+  "type": "Need"
+ },
+ {
+  "text": "Amazon Pay Later",
+  "type": "Need"
+ },
+ {
+  "text": "Paytm Pay Later",
+  "type": "Need"
+ },
+ {
+  "text": "PhonePe Pay Later",
+  "type": "Need"
+ },
+ {
+  "text": "EMI Buddy",
+  "type": "Need"
+ },
+ {
+  "text": "Cleartrip",
+  "type": "Want"
+ },
+ {
+  "text": "MakeMyTrip",
+  "type": "Want"
+ },
+ {
+  "text": "Yatra",
+  "type": "Want"
+ },
+ {
+  "text": "IIFL",
+  "type": "Need"
+ },
+ {
+  "text": "Bajaj Finserv",
+  "type": "Need"
+ },
+ {
+  "text": "Bajaj Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Indiabulls Housing Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Kotak Mahindra Finance",
+  "type": "Need"
+ },
+ {
+  "text": "PNB MetLife",
+  "type": "Need"
+ },
+ {
+  "text": "ICICI Prudential Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "SBI Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Axis Bank",
+  "type": "Need"
+ },
+ {
+  "text": "HDFC Bank",
+  "type": "Need"
+ },
+ {
+  "text": "HDFC Life",
+  "type": "Need"
+ },
+ {
+  "text": "Bajaj Allianz",
+  "type": "Need"
+ },
+ {
+  "text": "Tata AIA Life",
+  "type": "Need"
+ },
+ {
+  "text": "SBI Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Kotak Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "ICICI Prudential Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "HDFC Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Sundaram Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Mirae Asset Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Aditya Birla Sun Life Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "IDFC Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "L&T Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Barclays Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Edelweiss Mutual Fund",
+  "type": "Investment"
+ }
+]

@@ -1,0 +1,254 @@
+[
+ {
+  "text": "sabzi wala 500",
+  "type": "Need"
+ },
+ {
+  "text": "bank charges",
+  "type": "Need"
+ },
+ {
+  "text": "upi to mom",
+  "type": "Need"
+ },
+ {
+  "text": "metro ticket",
+  "type": "Need"
+ },
+ {
+  "text": "court fine",
+  "type": "Need"
+ },
+ {
+  "text": "cinema booking",
+  "type": "Want"
+ },
+ {
+  "text": "cinema tickets",
+  "type": "Want"
+ },
+ {
+  "text": "online recharge",
+  "type": "Need"
+ },
+ {
+  "text": "tiffin 150",
+  "type": "Need"
+ },
+ {
+  "text": "candy from kiosk",
+  "type": "Want"
+ },
+ {
+  "text": "laundry service",
+  "type": "Need"
+ },
+ {
+  "text": "internet bill",
+  "type": "Need"
+ },
+ {
+  "text": "water bill",
+  "type": "Need"
+ },
+ {
+  "text": "ice cream from shop",
+  "type": "Want"
+ },
+ {
+  "text": "doodh 50",
+  "type": "Need"
+ },
+ {
+  "text": "chai sutta",
+  "type": "Need"
+ },
+ {
+  "text": "sugar 40",
+  "type": "Need"
+ },
+ {
+  "text": "repair watch",
+  "type": "Need"
+ },
+ {
+  "text": "repair cycle",
+  "type": "Need"
+ },
+ {
+  "text": "covid test",
+  "type": "Need"
+ },
+ {
+  "text": "meditation class",
+  "type": "Want"
+ },
+ {
+  "text": "meditation app",
+  "type": "Want"
+ },
+ {
+  "text": "gym membership",
+  "type": "Want"
+ },
+ {
+  "text": "gym session",
+  "type": "Want"
+ },
+ {
+  "text": "protein bar",
+  "type": "Want"
+ },
+ {
+  "text": "protein shake",
+  "type": "Want"
+ },
+ {
+  "text": "donate to ngo",
+  "type": "Want"
+ },
+ {
+  "text": "donate to temple",
+  "type": "Want"
+ },
+ {
+  "text": "donate to church",
+  "type": "Want"
+ },
+ {
+  "text": "tip to waiter",
+  "type": "Want"
+ },
+ {
+  "text": "tip to delivery",
+  "type": "Want"
+ },
+ {
+  "text": "cash from atm",
+  "type": "Need"
+ },
+ {
+  "text": "courier charges",
+  "type": "Need"
+ },
+ {
+  "text": "electricity bill",
+  "type": "Need"
+ },
+ {
+  "text": "fuel card recharge",
+  "type": "Need"
+ },
+ {
+  "text": "gym dues",
+  "type": "Want"
+ },
+ {
+  "text": "gym pass",
+  "type": "Want"
+ },
+ {
+  "text": "gym kit",
+  "type": "Want"
+ },
+ {
+  "text": "gift card 1000",
+  "type": "Want"
+ },
+ {
+  "text": "taxi ride",
+  "type": "Want"
+ },
+ {
+  "text": "holiday booking",
+  "type": "Want"
+ },
+ {
+  "text": "flight ticket",
+  "type": "Want"
+ },
+ {
+  "text": "hotel stay",
+  "type": "Want"
+ },
+ {
+  "text": "cabs to airport",
+  "type": "Want"
+ },
+ {
+  "text": "car wash",
+  "type": "Want"
+ },
+ {
+  "text": "car repair",
+  "type": "Need"
+ },
+ {
+  "text": "metro pass",
+  "type": "Need"
+ },
+ {
+  "text": "milk 50",
+  "type": "Need"
+ },
+ {
+  "text": "chai pack",
+  "type": "Need"
+ },
+ {
+  "text": "repair phone",
+  "type": "Need"
+ },
+ {
+  "text": "repair laptop",
+  "type": "Need"
+ },
+ {
+  "text": "donation to school",
+  "type": "Want"
+ },
+ {
+  "text": "donation to society",
+  "type": "Want"
+ },
+ {
+  "text": "donation to temple festival",
+  "type": "Want"
+ },
+ {
+  "text": "donation to church festival",
+  "type": "Want"
+ },
+ {
+  "text": "donation to charity",
+  "type": "Want"
+ },
+ {
+  "text": "donation to community",
+  "type": "Want"
+ },
+ {
+  "text": "donation to temple construction",
+  "type": "Want"
+ },
+ {
+  "text": "donation to temple repairs",
+  "type": "Want"
+ },
+ {
+  "text": "donation to temple festival expenses",
+  "type": "Want"
+ },
+ {
+  "text": "donation to temple festival decorations",
+  "type": "Want"
+ },
+ {
+  "text": "tip to driver",
+  "type": "Want"
+ },
+ {
+  "text": "tip to porter",
+  "type": "Want"
+ }
+]

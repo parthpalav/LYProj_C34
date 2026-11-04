@@ -1,0 +1,322 @@
+[
+ {
+  "text": "Indiapost PPF Account",
+  "type": "Investment"
+ },
+ {
+  "text": "India Post PPF",
+  "type": "Investment"
+ },
+ {
+  "text": "India Post NSC",
+  "type": "Investment"
+ },
+ {
+  "text": "India Post KVP",
+  "type": "Investment"
+ },
+ {
+  "text": "India Post SSY",
+  "type": "Investment"
+ },
+ {
+  "text": "India Post MIS",
+  "type": "Investment"
+ },
+ {
+  "text": "India Post RD",
+  "type": "Investment"
+ },
+ {
+  "text": "India Post TD",
+  "type": "Investment"
+ },
+ {
+  "text": "Sukanya Samriddhi Acct",
+  "type": "Investment"
+ },
+ {
+  "text": "SSY Deposit",
+  "type": "Investment"
+ },
+ {
+  "text": "SSY Account Deposit",
+  "type": "Investment"
+ },
+ {
+  "text": "SSA Deposit Counter",
+  "type": "Investment"
+ },
+ {
+  "text": "NSC Purchase Counter",
+  "type": "Investment"
+ },
+ {
+  "text": "NSC VIII Issue",
+  "type": "Investment"
+ },
+ {
+  "text": "NSC IX Certificate",
+  "type": "Investment"
+ },
+ {
+  "text": "KVP Certificate Purchase",
+  "type": "Investment"
+ },
+ {
+  "text": "Kisan Patra Counter",
+  "type": "Investment"
+ },
+ {
+  "text": "Indira Vikas Patra",
+  "type": "Investment"
+ },
+ {
+  "text": "Monthly Income Scheme PO",
+  "type": "Investment"
+ },
+ {
+  "text": "Post Office MIS Deposit",
+  "type": "Investment"
+ },
+ {
+  "text": "PO Time Deposit 5Y",
+  "type": "Investment"
+ },
+ {
+  "text": "PO Savings Scheme Deposit",
+  "type": "Investment"
+ },
+ {
+  "text": "PO Recurring Deposit Counter",
+  "type": "Investment"
+ },
+ {
+  "text": "SCSS Account Deposit",
+  "type": "Investment"
+ },
+ {
+  "text": "SCSS Deposit Counter",
+  "type": "Investment"
+ },
+ {
+  "text": "Senior Citizen Deposit Post",
+  "type": "Investment"
+ },
+ {
+  "text": "PPF Deposit Counter",
+  "type": "Investment"
+ },
+ {
+  "text": "PPF Annual Deposit",
+  "type": "Investment"
+ },
+ {
+  "text": "PPF Subscription Counter",
+  "type": "Investment"
+ },
+ {
+  "text": "PPF Yearly Contribution",
+  "type": "Investment"
+ },
+ {
+  "text": "PPF Pass Book Entry",
+  "type": "Investment"
+ },
+ {
+  "text": "PPF Account Opening Fee",
+  "type": "Investment"
+ },
+ {
+  "text": "PPF Extension Fee",
+  "type": "Investment"
+ },
+ {
+  "text": "PPF Maturity Deposit",
+  "type": "Investment"
+ },
+ {
+  "text": "Public Provident Account",
+  "type": "Investment"
+ },
+ {
+  "text": "Sarkari Bachat Yojana",
+  "type": "Investment"
+ },
+ {
+  "text": "Sarkari Bachat Patra",
+  "type": "Investment"
+ },
+ {
+  "text": "Govt Small Savings Counter",
+  "type": "Investment"
+ },
+ {
+  "text": "Small Savings Scheme Deposit",
+  "type": "Investment"
+ },
+ {
+  "text": "Small Savings Post Counter",
+  "type": "Investment"
+ },
+ {
+  "text": "National Savings Scheme",
+  "type": "Investment"
+ },
+ {
+  "text": "Post Office Bachat Kendra",
+  "type": "Investment"
+ },
+ {
+  "text": "Dak Ghar Bachat",
+  "type": "Investment"
+ },
+ {
+  "text": "Dakghar Savings Counter",
+  "type": "Investment"
+ },
+ {
+  "text": "Shri Ganesh Post Bachat",
+  "type": "Investment"
+ },
+ {
+  "text": "Sukanya Yojana Deposit",
+  "type": "Investment"
+ },
+ {
+  "text": "Kanya Samriddhi Deposit",
+  "type": "Investment"
+ },
+ {
+  "text": "Beti Samriddhi Deposit",
+  "type": "Investment"
+ },
+ {
+  "text": "Balika Samriddhi Deposit",
+  "type": "Investment"
+ },
+ {
+  "text": "Kisan Vikas Counter",
+  "type": "Investment"
+ },
+ {
+  "text": "Vikas Patra Counter",
+  "type": "Investment"
+ },
+ {
+  "text": "Atal Pension Deposit",
+  "type": "Investment"
+ },
+ {
+  "text": "PM Bachat Yojana",
+  "type": "Investment"
+ },
+ {
+  "text": "Mahila Samman Certificate",
+  "type": "Investment"
+ },
+ {
+  "text": "MSSC Deposit Counter",
+  "type": "Investment"
+ },
+ {
+  "text": "Post Office Savings Bank",
+  "type": "Investment"
+ },
+ {
+  "text": "Post Office SB Account",
+  "type": "Investment"
+ },
+ {
+  "text": "Circle Post Office Savings",
+  "type": "Investment"
+ },
+ {
+  "text": "Head Post Office Deposit",
+  "type": "Investment"
+ },
+ {
+  "text": "Sub Post Office Savings",
+  "type": "Investment"
+ },
+ {
+  "text": "Gram Post Savings Kendra",
+  "type": "Investment"
+ },
+ {
+  "text": "Gram Dak Bachat",
+  "type": "Investment"
+ },
+ {
+  "text": "Tehsil Post Deposit",
+  "type": "Investment"
+ },
+ {
+  "text": "Vikas Bachat Kendra",
+  "type": "Investment"
+ },
+ {
+  "text": "Sukhi Bachat Kendra",
+  "type": "Investment"
+ },
+ {
+  "text": "Sahyog Post Savings",
+  "type": "Investment"
+ },
+ {
+  "text": "Shikshan Bachat Yojana",
+  "type": "Investment"
+ },
+ {
+  "text": "Vidya Bachat Scheme",
+  "type": "Investment"
+ },
+ {
+  "text": "Ghar Bachat Yojana",
+  "type": "Investment"
+ },
+ {
+  "text": "Bharat Bachat Kendra",
+  "type": "Investment"
+ },
+ {
+  "text": "Lok Bachat Counter",
+  "type": "Investment"
+ },
+ {
+  "text": "Nagarik Bachat Yojana",
+  "type": "Investment"
+ },
+ {
+  "text": "Kanya Bachat Patra",
+  "type": "Investment"
+ },
+ {
+  "text": "Bal Bachat Yojana",
+  "type": "Investment"
+ },
+ {
+  "text": "Vridha Bachat Yojana",
+  "type": "Investment"
+ },
+ {
+  "text": "Shram Bachat Yojana",
+  "type": "Investment"
+ },
+ {
+  "text": "Sainik Bachat Patra",
+  "type": "Investment"
+ },
+ {
+  "text": "PO Monthly Savings Counter",
+  "type": "Investment"
+ },
+ {
+  "text": "SSY Post Counter",
+  "type": "Investment"
+ },
+ {
+  "text": "Girl Child Savings Deposit",
+  "type": "Investment"
+ }
+]

@@ -28,6 +28,8 @@ import {
   calculateMemberGoalDetail
 } from './FMIService.js';
 import { normalizeCategory, getHouseholdSummary } from './FamilyAggregationService.js';
+import { zonedHour } from '../utils/userTime.js';
+import { getUserTimezone } from './userTimezone.js';
 
 /**
  * Computes Family FMI using the Phase 3 household aggregate DTO.
@@ -47,6 +49,7 @@ export async function getFamilyFMI(userId, precomputedAggregate = null, referenc
   }
 
   const { family, income, spending, investments, pacing, period } = aggregateData;
+  const tz = await getUserTimezone(userId);
   const memberUserIds = family.members.map((m) => String(m.userId));
   const memberCount = family.memberCount || memberUserIds.length || 1;
 
@@ -124,7 +127,7 @@ export async function getFamilyFMI(userId, precomputedAggregate = null, referenc
 
   // Rule 2: Late-night purchases (Scaled by member count: 2 * N)
   const lateNightTxs = memberTxs.filter((t) => {
-    const h = new Date(t.timestamp).getHours();
+    const h = zonedHour(new Date(t.timestamp), tz);
     return h >= 22 || h <= 4;
   });
   const scaledLateNightThreshold = 2 * memberCount;

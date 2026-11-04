@@ -8,6 +8,7 @@ const RAIL_TOKENS = new Set([
   'upi', 'dr', 'cr', 'neft', 'imps', 'rtgs', 'pos', 'ach', 'nach', 'bil', 'onl', 'ecom',
   'txn', 'trf', 'ref', 'mmt', 'int', 'inb', 'mb', 'ib', 'vps', 'vsi', 'pur', 'purchase',
   'debit', 'credit', 'card', 'p2a', 'p2m', 'collect', 'pay', 'sent', 'received', 'upiintent',
+  'nwd', 'atw', 'wdl', 'pcd', 'yesb', 'ybs', 'netbank', 'autopay',
   'okaxis', 'oksbi', 'okicici', 'okhdfcbank', 'ybl', 'ibl', 'axl', 'apl', 'paytm',
   'hdfcbank', 'icici', 'sbi', 'axis', 'kotak', 'yesbank', 'idfcbank', 'barodampay', 'fbl',
   'axisbank', 'icicibank', 'sbin', 'utib', 'hdfc', 'kkbk', 'punb', 'jupiteraxis', 'freecharge'
@@ -18,14 +19,21 @@ const KEY_STOPWORDS = new Set([
   'rs', 'inr', 'transfer', 'sent', 'online', 'monthly', 'weekly', 'today', 'yesterday'
 ]);
 
+// Reference numbers, card masks and terminal ids; short brand tokens like 1mg, box8, 5paisa survive.
+const isRef = (t) => {
+  const digits = (t.match(/\d/g) || []).length;
+  return digits > 0 && (t.length > 6 || digits > 2 || digits === t.length);
+};
+
 export function merchantKey(raw) {
   let text = String(raw || '').toLowerCase().replace(/['’`]/g, '');
   if (BANK_STRING.test(text)) {
     text = text
       .replace(/\b[a-z]{4}0[a-z0-9]{6}\b/g, ' ')
-      .replace(/([a-z0-9._-]+)@[a-z]+/g, '$1')
+      .replace(/([a-z0-9._-]+)@[a-z]+/g, (_, local) => local.replace(/\d+/g, ' '))
       .split(/[\s/|\-_*:,.#]+/)
-      .filter((t) => t && !/\d/.test(t) && !RAIL_TOKENS.has(t))
+      .filter((t) => t && !isRef(t) && !RAIL_TOKENS.has(t))
+      .filter((t, k, all) => all.indexOf(t) === k) // HDFC repeats the payee as name and VPA
       .join(' ');
   }
   text = text
@@ -42,7 +50,35 @@ export function merchantKey(raw) {
 export async function recallMerchant(userId, description) {
   const key = merchantKey(description);
   if (!userId || !key) return null;
-  return MerchantPreference.findOne({ userId: String(userId), merchantKey: key }).lean();
+  const tokens = key.split(' ');
+  const first = tokens[0].replace(/\+/g, '\\+');
+  const prefs = await MerchantPreference.find({
+    userId: String(userId),
+    merchantKey: { $regex: `^${first}( |$)` }
+  }).lean();
+  const exact = prefs.find((p) => p.merchantKey === key);
+  if (exact) return exact;
+
+  // Typed text mixes merchant and free words ("zomato dinner" vs "zomato lunch"), so fall back
+  // to the pref sharing the longest leading run of tokens; a tie with different labels is ambiguous.
+  // shortcut: a shared first word alone borrows the label ("uber eats" gets an "uber ride" label
+  // until corrected once); upgrade to a merchant dictionary if real use shows frequent misses.
+  let best = null;
+  let bestShared = 0;
+  let ambiguous = false;
+  for (const pref of prefs) {
+    const prefTokens = pref.merchantKey.split(' ');
+    let shared = 0;
+    while (shared < prefTokens.length && prefTokens[shared] === tokens[shared]) shared++;
+    if (shared > bestShared) {
+      best = pref;
+      bestShared = shared;
+      ambiguous = false;
+    } else if (shared === bestShared && (pref.category !== best.category || pref.type !== best.type)) {
+      ambiguous = true;
+    }
+  }
+  return ambiguous ? null : best;
 }
 
 export async function rememberMerchant(userId, description, category, type) {

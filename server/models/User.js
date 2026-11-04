@@ -7,6 +7,7 @@ import {
   DEFAULT_LIFESTYLE_RATIO,
   DEFAULT_EMERGENCY_MONTHS
 } from '../config/financialRules.js';
+import { DEFAULT_TIMEZONE, SUPPORTED_TIMEZONES } from '../utils/userTime.js';
 
 
 
@@ -69,6 +70,8 @@ const userSchema = new mongoose.Schema(
         message: 'Emergency fund target months must be an integer between 0 and 36'
       }
     },
+    // IANA timezone for all calendar logic (statements, due dates, reports)
+    timezone: { type: String, enum: SUPPORTED_TIMEZONES, default: DEFAULT_TIMEZONE },
     goals: { type: [String], default: [] },
     processedLiabilityOccurrences: { type: [String], default: [] },
     onboardingComplete: { type: Boolean, default: false },

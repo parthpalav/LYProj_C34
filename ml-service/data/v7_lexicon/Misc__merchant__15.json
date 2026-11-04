@@ -1,0 +1,322 @@
+[
+ {
+  "text": "Ahmedabad Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Jaipur Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Lucknow Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Patna Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Indore Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Bhopal Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Nagpur Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Surat Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Vadodara Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Chandigarh Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Ludhiana Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Dehradun Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Kanpur Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Thane Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Navi Mumbai Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Kochi Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Trivandrum City Police Fine",
+  "type": "Need"
+ },
+ {
+  "text": "Coimbatore Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Madurai Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Vizag Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Vijayawada Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Mysore Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Mangalore Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Guwahati Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Ranchi Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Raipur Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Bhubaneswar Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Goa Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Srinagar Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Shimla Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Gwalior Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Jabalpur Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Udaipur Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Jodhpur Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Amritsar Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Faridabad Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Ghaziabad Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Greater Noida Traffic Police",
+  "type": "Need"
+ },
+ {
+  "text": "Lucknow Traffic Challan Desk",
+  "type": "Need"
+ },
+ {
+  "text": "Challan Payment Gateway",
+  "type": "Need"
+ },
+ {
+  "text": "Virtual Court Challan",
+  "type": "Need"
+ },
+ {
+  "text": "Traffic Court Fine",
+  "type": "Need"
+ },
+ {
+  "text": "Overspeed Challan",
+  "type": "Need"
+ },
+ {
+  "text": "Helmet Fine Challan",
+  "type": "Need"
+ },
+ {
+  "text": "Wrong Parking Challan",
+  "type": "Need"
+ },
+ {
+  "text": "Signal Jump Challan",
+  "type": "Need"
+ },
+ {
+  "text": "No Helmet Challan",
+  "type": "Need"
+ },
+ {
+  "text": "Seat Belt Fine",
+  "type": "Need"
+ },
+ {
+  "text": "Triple Riding Fine",
+  "type": "Need"
+ },
+ {
+  "text": "Red Light Violation Fine",
+  "type": "Need"
+ },
+ {
+  "text": "Lane Driving Fine",
+  "type": "Need"
+ },
+ {
+  "text": "Drunk Driving Challan",
+  "type": "Need"
+ },
+ {
+  "text": "Pollution Certificate Challan",
+  "type": "Need"
+ },
+ {
+  "text": "Expired Insurance Fine",
+  "type": "Need"
+ },
+ {
+  "text": "Uninsured Vehicle Fine",
+  "type": "Need"
+ },
+ {
+  "text": "Illegal Parking Penalty",
+  "type": "Need"
+ },
+ {
+  "text": "No Parking Penalty",
+  "type": "Need"
+ },
+ {
+  "text": "Rash Driving Fine",
+  "type": "Need"
+ },
+ {
+  "text": "Mobile While Driving Fine",
+  "type": "Need"
+ },
+ {
+  "text": "Police Traffic Fine Pay",
+  "type": "Need"
+ },
+ {
+  "text": "Traffic Police Offence Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Highway Patrol Fine",
+  "type": "Need"
+ },
+ {
+  "text": "Highway Police Challan",
+  "type": "Need"
+ },
+ {
+  "text": "Toll Evasion Fine",
+  "type": "Need"
+ },
+ {
+  "text": "Bus Lane Violation Fine",
+  "type": "Need"
+ },
+ {
+  "text": "Speed Camera Challan",
+  "type": "Need"
+ },
+ {
+  "text": "Speed Radar Fine",
+  "type": "Need"
+ },
+ {
+  "text": "RTO Challan Payment",
+  "type": "Need"
+ },
+ {
+  "text": "Motor Vehicle Department Fine",
+  "type": "Need"
+ },
+ {
+  "text": "MVD Fine Desk",
+  "type": "Need"
+ },
+ {
+  "text": "Transport Enforcement Fine",
+  "type": "Need"
+ },
+ {
+  "text": "Enforcement Squad Fine",
+  "type": "Need"
+ },
+ {
+  "text": "Parking Enforcement Fine",
+  "type": "Need"
+ },
+ {
+  "text": "Municipal Parking Penalty",
+  "type": "Need"
+ },
+ {
+  "text": "Auto Rickshaw Challan",
+  "type": "Need"
+ },
+ {
+  "text": "Taxi Permit Fine",
+  "type": "Need"
+ },
+ {
+  "text": "Overloaded Vehicle Fine",
+  "type": "Need"
+ },
+ {
+  "text": "Heavy Vehicle Fine",
+  "type": "Need"
+ },
+ {
+  "text": "Goods Vehicle Penalty",
+  "type": "Need"
+ },
+ {
+  "text": "Jalandhar Traffic Police",
+  "type": "Need"
+ }
+]

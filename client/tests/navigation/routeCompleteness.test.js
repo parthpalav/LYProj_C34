@@ -78,7 +78,7 @@ test('Feature Representation 3: IncomeFlowScreen represents Multi-Source, Timeli
 test('Feature Representation 4: LiabilitiesScreen represents Schedules, Auto-Deduct, Mark-Paid, and Payment History', () => {
   const code = readScreen('LiabilitiesScreen.tsx');
   assert.ok(code.includes('autoDeduct') || code.includes('Auto Deduct'), 'Auto-Deduct feature represented');
-  assert.ok(code.includes('nextDueDate') || code.includes('Due Date') || code.includes('Upcoming'), 'Due date schedule represented');
+  assert.ok(code.includes('nextDue(') || code.includes('nextDueDate') || code.includes('Upcoming'), 'Due date schedule represented');
   assert.ok(code.includes('getLiabilityTransactions') || code.includes('Payment History'), 'Payment history represented');
 });
 
@@ -126,7 +126,7 @@ test('Feature Representation 9: AssetsScreen and Profile represent financial ass
   assert.ok(assetCode.includes('Mutual Fund'), 'Mutual Fund preset present');
 
   const profCode = readScreen('ProfileScreen.tsx');
-  assert.ok(profCode.includes("navigate('Assets')"), 'Profile links to Assets screen');
+  assert.ok(profCode.includes("route: 'Assets'") && profCode.includes('navigation.navigate(l.route)'), 'Profile links to Assets screen');
 });
 
 test('Feature Representation 10: FinancialOutlookScreen represents interactive Strategy Selector and Presets', () => {
@@ -164,16 +164,13 @@ test('Route Integrity 1: AppNavigator registers all primary tabs and stack scree
 
 test('Route Integrity 2: Envelopes is NOT a primary tab destination', () => {
   const content = readClientFile('src/navigation/AppNavigator.tsx');
+  const tabs = content.slice(content.indexOf('<Tab.Navigator'), content.indexOf('</Tab.Navigator>'));
+  const tabParams = content.slice(content.indexOf('RootTabParamList = {'), content.indexOf('};', content.indexOf('RootTabParamList = {')));
 
-  assert.ok(
-    !content.includes('name="Envelopes"'),
-    'Envelopes is NOT registered as a tab screen'
-  );
-
-  assert.ok(
-    !content.includes('Envelopes: undefined'),
-    'Envelopes is NOT in RootTabParamList'
-  );
+  assert.ok(!tabs.includes('name="Envelopes"'), 'Envelopes is NOT registered as a tab screen');
+  assert.ok(!tabParams.includes('Envelopes'), 'Envelopes is NOT in RootTabParamList');
+  // It lives in the stack, reached from the Plan hub's Round-ups tile.
+  assert.ok(content.includes('<Stack.Screen name="Envelopes"'), 'Envelopes is a stack screen');
 });
 
 test('Route Integrity 3: Chat remains available in primary navigation', () => {
@@ -197,8 +194,8 @@ test('Route Integrity 4: Assets can be reached directly from Home (Dashboard)', 
     'Dashboard has direct navigation to Assets screen'
   );
   assert.ok(
-    content.includes('Financial Assets'),
-    'Dashboard includes Financial Assets card'
+    content.includes('accessibilityLabel="View all assets"'),
+    'Dashboard includes an Assets tile'
   );
 });
 
@@ -206,7 +203,7 @@ test('Route Integrity 5: Profile → Assets link is preserved', () => {
   const content = readClientFile('src/screens/ProfileScreen.tsx');
 
   assert.ok(
-    content.includes("navigate('Assets')"),
+    content.includes("route: 'Assets'") && content.includes('navigation.navigate(l.route)'),
     'Profile still links to Assets screen'
   );
 });
@@ -232,9 +229,9 @@ test('Route Integrity 7: DashboardScreen navigation CTAs match registered routes
   }
 });
 
-test('Route Integrity 8: TransactionEntry and UpdateBalance modals are mounted in parent screens', () => {
-  const txContent = readClientFile('src/screens/TransactionsScreen.tsx');
-  assert.ok(txContent.includes('<TransactionEntryScreen'), 'TransactionEntryScreen is mounted in TransactionsScreen modal');
+test('Route Integrity 8: TransactionEntry (QuickAdd route) and UpdateBalance modal are mounted', () => {
+  const navContent = readClientFile('src/navigation/AppNavigator.tsx');
+  assert.ok(navContent.includes('<TransactionEntryScreen'), 'TransactionEntryScreen is mounted as the QuickAdd sheet route');
 
   const dashContent = readClientFile('src/screens/DashboardScreen.tsx');
   assert.ok(dashContent.includes('<UpdateBalanceScreen'), 'UpdateBalanceScreen is mounted in DashboardScreen modal');

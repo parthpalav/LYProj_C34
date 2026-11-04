@@ -1,0 +1,874 @@
+[
+ {
+  "text": "Naturals Salon",
+  "type": "Want"
+ },
+ {
+  "text": "Lakme Salon",
+  "type": "Want"
+ },
+ {
+  "text": "Jawed Habib",
+  "type": "Want"
+ },
+ {
+  "text": "Toni and Guy",
+  "type": "Want"
+ },
+ {
+  "text": "Toni&Guy",
+  "type": "Want"
+ },
+ {
+  "text": "Enrich Salon",
+  "type": "Want"
+ },
+ {
+  "text": "Green Trends",
+  "type": "Want"
+ },
+ {
+  "text": "YLG Salon",
+  "type": "Want"
+ },
+ {
+  "text": "Bodycraft",
+  "type": "Want"
+ },
+ {
+  "text": "Looks Salon",
+  "type": "Want"
+ },
+ {
+  "text": "Geetanjali Salon",
+  "type": "Want"
+ },
+ {
+  "text": "Affinity Salon",
+  "type": "Want"
+ },
+ {
+  "text": "Kromakay",
+  "type": "Want"
+ },
+ {
+  "text": "Juice Salon",
+  "type": "Want"
+ },
+ {
+  "text": "Hair Masters",
+  "type": "Want"
+ },
+ {
+  "text": "Truefitt and Hill",
+  "type": "Want"
+ },
+ {
+  "text": "Studio 11",
+  "type": "Want"
+ },
+ {
+  "text": "Shahnaz Husain",
+  "type": "Want"
+ },
+ {
+  "text": "VLCC",
+  "type": "Want"
+ },
+ {
+  "text": "Kaya Skin Clinic",
+  "type": "Want"
+ },
+ {
+  "text": "Oliva Clinic",
+  "type": "Want"
+ },
+ {
+  "text": "Bblunt",
+  "type": "Want"
+ },
+ {
+  "text": "Berry Salon",
+  "type": "Want"
+ },
+ {
+  "text": "Livon Salon",
+  "type": "Want"
+ },
+ {
+  "text": "Sassy Salon",
+  "type": "Want"
+ },
+ {
+  "text": "Trends Salon",
+  "type": "Want"
+ },
+ {
+  "text": "Tressmart",
+  "type": "Want"
+ },
+ {
+  "text": "O2 Spa",
+  "type": "Want"
+ },
+ {
+  "text": "Urban Company",
+  "type": "Want"
+ },
+ {
+  "text": "Urban Clap",
+  "type": "Want"
+ },
+ {
+  "text": "Yes Madam",
+  "type": "Want"
+ },
+ {
+  "text": "Vanity Cube",
+  "type": "Want"
+ },
+ {
+  "text": "Glamup",
+  "type": "Want"
+ },
+ {
+  "text": "Mantra Spa",
+  "type": "Want"
+ },
+ {
+  "text": "Jolie Spa",
+  "type": "Want"
+ },
+ {
+  "text": "Spa Ceylon",
+  "type": "Want"
+ },
+ {
+  "text": "The Body Shop",
+  "type": "Want"
+ },
+ {
+  "text": "Forest Essentials",
+  "type": "Want"
+ },
+ {
+  "text": "Kama Ayurveda",
+  "type": "Want"
+ },
+ {
+  "text": "Nykaa",
+  "type": "Want"
+ },
+ {
+  "text": "Nykaa Luxe",
+  "type": "Want"
+ },
+ {
+  "text": "Nykaa Man",
+  "type": "Want"
+ },
+ {
+  "text": "Purplle",
+  "type": "Want"
+ },
+ {
+  "text": "Tira",
+  "type": "Want"
+ },
+ {
+  "text": "Tira Beauty",
+  "type": "Want"
+ },
+ {
+  "text": "Sephora India",
+  "type": "Want"
+ },
+ {
+  "text": "Sephora",
+  "type": "Want"
+ },
+ {
+  "text": "Smytten",
+  "type": "Want"
+ },
+ {
+  "text": "MyGlamm",
+  "type": "Want"
+ },
+ {
+  "text": "Mamaearth",
+  "type": "Want"
+ },
+ {
+  "text": "Minimalist",
+  "type": "Want"
+ },
+ {
+  "text": "Plum",
+  "type": "Want"
+ },
+ {
+  "text": "Plum Goodness",
+  "type": "Want"
+ },
+ {
+  "text": "Sugar Cosmetics",
+  "type": "Want"
+ },
+ {
+  "text": "Bombay Shaving Company",
+  "type": "Want"
+ },
+ {
+  "text": "Beardo",
+  "type": "Want"
+ },
+ {
+  "text": "The Man Company",
+  "type": "Want"
+ },
+ {
+  "text": "Ustraa",
+  "type": "Want"
+ },
+ {
+  "text": "Bella Vita",
+  "type": "Want"
+ },
+ {
+  "text": "Wow Skin Science",
+  "type": "Want"
+ },
+ {
+  "text": "Dot and Key",
+  "type": "Want"
+ },
+ {
+  "text": "Pilgrim",
+  "type": "Want"
+ },
+ {
+  "text": "Foxtale",
+  "type": "Want"
+ },
+ {
+  "text": "The Derma Co",
+  "type": "Want"
+ },
+ {
+  "text": "Dr Sheths",
+  "type": "Want"
+ },
+ {
+  "text": "Deconstruct",
+  "type": "Want"
+ },
+ {
+  "text": "Reequil",
+  "type": "Want"
+ },
+ {
+  "text": "Aqualogica",
+  "type": "Want"
+ },
+ {
+  "text": "Honasa",
+  "type": "Want"
+ },
+ {
+  "text": "Lotus Herbals",
+  "type": "Want"
+ },
+ {
+  "text": "Biotique",
+  "type": "Want"
+ },
+ {
+  "text": "Khadi Natural",
+  "type": "Want"
+ },
+ {
+  "text": "Vaadi Herbals",
+  "type": "Want"
+ },
+ {
+  "text": "Lakme",
+  "type": "Want"
+ },
+ {
+  "text": "Maybelline",
+  "type": "Want"
+ },
+ {
+  "text": "Loreal Paris",
+  "type": "Want"
+ },
+ {
+  "text": "Revlon",
+  "type": "Want"
+ },
+ {
+  "text": "Colorbar",
+  "type": "Want"
+ },
+ {
+  "text": "Faces Canada",
+  "type": "Want"
+ },
+ {
+  "text": "Swiss Beauty",
+  "type": "Want"
+ },
+ {
+  "text": "Renee Cosmetics",
+  "type": "Want"
+ },
+ {
+  "text": "Elle 18",
+  "type": "Want"
+ },
+ {
+  "text": "Nivea",
+  "type": "Want"
+ },
+ {
+  "text": "Garnier",
+  "type": "Want"
+ },
+ {
+  "text": "Neutrogena",
+  "type": "Want"
+ },
+ {
+  "text": "Cetaphil",
+  "type": "Want"
+ },
+ {
+  "text": "Himalaya Herbals",
+  "type": "Want"
+ },
+ {
+  "text": "Ponds",
+  "type": "Want"
+ },
+ {
+  "text": "Vaseline",
+  "type": "Want"
+ },
+ {
+  "text": "Olay",
+  "type": "Want"
+ },
+ {
+  "text": "Clean and Clear",
+  "type": "Want"
+ },
+ {
+  "text": "Clearasil",
+  "type": "Want"
+ },
+ {
+  "text": "Fiama",
+  "type": "Want"
+ },
+ {
+  "text": "Jovees",
+  "type": "Want"
+ },
+ {
+  "text": "Patanjali Saundarya",
+  "type": "Want"
+ },
+ {
+  "text": "Gulabari",
+  "type": "Want"
+ },
+ {
+  "text": "Parachute Advansed",
+  "type": "Want"
+ },
+ {
+  "text": "Bajaj Almond Drops",
+  "type": "Want"
+ },
+ {
+  "text": "Dabur Amla",
+  "type": "Want"
+ },
+ {
+  "text": "Vatika",
+  "type": "Want"
+ },
+ {
+  "text": "Indulekha",
+  "type": "Want"
+ },
+ {
+  "text": "Kesh King",
+  "type": "Want"
+ },
+ {
+  "text": "Navratna",
+  "type": "Want"
+ },
+ {
+  "text": "Emami",
+  "type": "Want"
+ },
+ {
+  "text": "Zandu Balm",
+  "type": "Want"
+ },
+ {
+  "text": "Boroplus",
+  "type": "Want"
+ },
+ {
+  "text": "Fair and Handsome",
+  "type": "Want"
+ },
+ {
+  "text": "Glow and Lovely",
+  "type": "Want"
+ },
+ {
+  "text": "Pantene",
+  "type": "Want"
+ },
+ {
+  "text": "Head and Shoulders",
+  "type": "Want"
+ },
+ {
+  "text": "Tresemme",
+  "type": "Want"
+ },
+ {
+  "text": "Dove",
+  "type": "Want"
+ },
+ {
+  "text": "Sunsilk",
+  "type": "Want"
+ },
+ {
+  "text": "Clinic Plus",
+  "type": "Want"
+ },
+ {
+  "text": "Matrix Professional",
+  "type": "Want"
+ },
+ {
+  "text": "Wella Professionals",
+  "type": "Want"
+ },
+ {
+  "text": "Schwarzkopf",
+  "type": "Want"
+ },
+ {
+  "text": "Streax",
+  "type": "Want"
+ },
+ {
+  "text": "Godrej Expert",
+  "type": "Want"
+ },
+ {
+  "text": "Mcaffeine",
+  "type": "Want"
+ },
+ {
+  "text": "Pee Safe",
+  "type": "Want"
+ },
+ {
+  "text": "Sirona",
+  "type": "Want"
+ },
+ {
+  "text": "Sebamed",
+  "type": "Want"
+ },
+ {
+  "text": "Wild Stone",
+  "type": "Want"
+ },
+ {
+  "text": "Park Avenue",
+  "type": "Want"
+ },
+ {
+  "text": "Axe",
+  "type": "Want"
+ },
+ {
+  "text": "Fogg",
+  "type": "Want"
+ },
+ {
+  "text": "Engage",
+  "type": "Want"
+ },
+ {
+  "text": "Denver",
+  "type": "Want"
+ },
+ {
+  "text": "Layerr",
+  "type": "Want"
+ },
+ {
+  "text": "Skinn",
+  "type": "Want"
+ },
+ {
+  "text": "Old Spice",
+  "type": "Want"
+ },
+ {
+  "text": "Yardley London",
+  "type": "Want"
+ },
+ {
+  "text": "Philips Trimmer",
+  "type": "Want"
+ },
+ {
+  "text": "Braun Grooming",
+  "type": "Want"
+ },
+ {
+  "text": "Havells Trimmer",
+  "type": "Want"
+ },
+ {
+  "text": "Syska Trimmer",
+  "type": "Want"
+ },
+ {
+  "text": "Vega Hair",
+  "type": "Want"
+ },
+ {
+  "text": "Remington",
+  "type": "Want"
+ },
+ {
+  "text": "Panasonic Trimmer",
+  "type": "Want"
+ },
+ {
+  "text": "Kemei",
+  "type": "Want"
+ },
+ {
+  "text": "Nova Trimmer",
+  "type": "Want"
+ },
+ {
+  "text": "Ikonic Pro",
+  "type": "Want"
+ },
+ {
+  "text": "Dyson Airwrap",
+  "type": "Want"
+ },
+ {
+  "text": "Wahl",
+  "type": "Want"
+ },
+ {
+  "text": "Oral B Electric",
+  "type": "Want"
+ },
+ {
+  "text": "Sensodyne",
+  "type": "Want"
+ },
+ {
+  "text": "Pepsodent",
+  "type": "Want"
+ },
+ {
+  "text": "Closeup",
+  "type": "Want"
+ },
+ {
+  "text": "Meswak",
+  "type": "Want"
+ },
+ {
+  "text": "Vicco",
+  "type": "Want"
+ },
+ {
+  "text": "Himalaya Toothpaste",
+  "type": "Want"
+ },
+ {
+  "text": "Insight Cosmetics",
+  "type": "Want"
+ },
+ {
+  "text": "Dr Batras Hair",
+  "type": "Want"
+ },
+ {
+  "text": "Shahnaz Husain Salon",
+  "type": "Want"
+ },
+ {
+  "text": "Kaya Clinic",
+  "type": "Want"
+ },
+ {
+  "text": "Dermalogica",
+  "type": "Want"
+ },
+ {
+  "text": "Dr Rashel",
+  "type": "Want"
+ },
+ {
+  "text": "Lakme Cosmetics",
+  "type": "Want"
+ },
+ {
+  "text": "Biotique Store",
+  "type": "Want"
+ },
+ {
+  "text": "Nyle",
+  "type": "Want"
+ },
+ {
+  "text": "Chik Shampoo",
+  "type": "Want"
+ },
+ {
+  "text": "Keo Karpin",
+  "type": "Want"
+ },
+ {
+  "text": "Brylcreem",
+  "type": "Want"
+ },
+ {
+  "text": "Set Wet",
+  "type": "Want"
+ },
+ {
+  "text": "Nihar Naturals",
+  "type": "Want"
+ },
+ {
+  "text": "Bajaj Brahmi",
+  "type": "Want"
+ },
+ {
+  "text": "Mysore Sandal",
+  "type": "Want"
+ },
+ {
+  "text": "Cinthol Talc",
+  "type": "Want"
+ },
+ {
+  "text": "Navratna Talc",
+  "type": "Want"
+ },
+ {
+  "text": "Yardley Talc",
+  "type": "Want"
+ },
+ {
+  "text": "Himalaya Baby",
+  "type": "Want"
+ },
+ {
+  "text": "Colgate",
+  "type": "Need"
+ },
+ {
+  "text": "Colgate Palmolive",
+  "type": "Need"
+ },
+ {
+  "text": "Dabur Red",
+  "type": "Need"
+ },
+ {
+  "text": "Dabur Red Paste",
+  "type": "Need"
+ },
+ {
+  "text": "Lifebuoy",
+  "type": "Need"
+ },
+ {
+  "text": "Dettol",
+  "type": "Need"
+ },
+ {
+  "text": "Dettol Handwash",
+  "type": "Need"
+ },
+ {
+  "text": "Whisper",
+  "type": "Need"
+ },
+ {
+  "text": "Stayfree",
+  "type": "Need"
+ },
+ {
+  "text": "Sofy",
+  "type": "Need"
+ },
+ {
+  "text": "Carefree",
+  "type": "Need"
+ },
+ {
+  "text": "Gillette",
+  "type": "Need"
+ },
+ {
+  "text": "Gillette Razor",
+  "type": "Need"
+ },
+ {
+  "text": "Gillette Mach3",
+  "type": "Need"
+ },
+ {
+  "text": "Lux",
+  "type": "Need"
+ },
+ {
+  "text": "Liril",
+  "type": "Need"
+ },
+ {
+  "text": "Rexona",
+  "type": "Need"
+ },
+ {
+  "text": "Pears",
+  "type": "Need"
+ },
+ {
+  "text": "Hamam",
+  "type": "Need"
+ },
+ {
+  "text": "Cinthol",
+  "type": "Need"
+ },
+ {
+  "text": "Santoor",
+  "type": "Need"
+ },
+ {
+  "text": "Medimix",
+  "type": "Need"
+ },
+ {
+  "text": "Margo",
+  "type": "Need"
+ },
+ {
+  "text": "Savlon",
+  "type": "Need"
+ },
+ {
+  "text": "Patanjali Dant Kanti",
+  "type": "Need"
+ },
+ {
+  "text": "Dant Kanti",
+  "type": "Need"
+ },
+ {
+  "text": "Babool",
+  "type": "Need"
+ },
+ {
+  "text": "Anchor Toothpaste",
+  "type": "Need"
+ },
+ {
+  "text": "Johnsons Baby",
+  "type": "Need"
+ },
+ {
+  "text": "Pampers",
+  "type": "Need"
+ },
+ {
+  "text": "Huggies",
+  "type": "Need"
+ },
+ {
+  "text": "MamyPoko",
+  "type": "Need"
+ },
+ {
+  "text": "Mee Mee",
+  "type": "Need"
+ },
+ {
+  "text": "Pigeon India",
+  "type": "Need"
+ },
+ {
+  "text": "Himalaya Shampoo",
+  "type": "Need"
+ },
+ {
+  "text": "Meera Herbal",
+  "type": "Need"
+ },
+ {
+  "text": "Supermax Blade",
+  "type": "Need"
+ },
+ {
+  "text": "7 O Clock Blade",
+  "type": "Need"
+ },
+ {
+  "text": "Topaz Blade",
+  "type": "Need"
+ },
+ {
+  "text": "Vi-John",
+  "type": "Need"
+ },
+ {
+  "text": "Wilkinson Sword",
+  "type": "Need"
+ },
+ {
+  "text": "Medimix Soap",
+  "type": "Need"
+ },
+ {
+  "text": "Godrej No 1",
+  "type": "Need"
+ },
+ {
+  "text": "Palmolive",
+  "type": "Need"
+ },
+ {
+  "text": "Dettol Sanitizer",
+  "type": "Need"
+ },
+ {
+  "text": "Lifebuoy Handwash",
+  "type": "Need"
+ }
+]

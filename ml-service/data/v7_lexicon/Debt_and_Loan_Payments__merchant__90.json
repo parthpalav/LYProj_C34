@@ -1,0 +1,1590 @@
+[
+ {
+  "text": "Bajaj Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Bajaj Finserv",
+  "type": "Need"
+ },
+ {
+  "text": "Bajaj Housing Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Capital",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Capital Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Capital Housing",
+  "type": "Need"
+ },
+ {
+  "text": "HDB Financial",
+  "type": "Need"
+ },
+ {
+  "text": "HDB Financial Services",
+  "type": "Need"
+ },
+ {
+  "text": "HDBFS",
+  "type": "Need"
+ },
+ {
+  "text": "Muthoot Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Muthoot Fincorp",
+  "type": "Need"
+ },
+ {
+  "text": "Muthoot Capital",
+  "type": "Need"
+ },
+ {
+  "text": "Manappuram",
+  "type": "Need"
+ },
+ {
+  "text": "Manappuram Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Asirvad Microfinance",
+  "type": "Need"
+ },
+ {
+  "text": "Shriram Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Shriram Transport",
+  "type": "Need"
+ },
+ {
+  "text": "Shriram City Union",
+  "type": "Need"
+ },
+ {
+  "text": "Shriram Housing",
+  "type": "Need"
+ },
+ {
+  "text": "LIC Housing Finance",
+  "type": "Need"
+ },
+ {
+  "text": "LIC HFL",
+  "type": "Need"
+ },
+ {
+  "text": "PNB Housing",
+  "type": "Need"
+ },
+ {
+  "text": "PNB Housing Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Aditya Birla Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Aditya Birla Capital",
+  "type": "Need"
+ },
+ {
+  "text": "ABFL",
+  "type": "Need"
+ },
+ {
+  "text": "Aditya Birla Housing Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Mahindra Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Mahindra and Mahindra Financial",
+  "type": "Need"
+ },
+ {
+  "text": "Mahindra Home Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Cholamandalam Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Chola Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Cholamandalam Investment",
+  "type": "Need"
+ },
+ {
+  "text": "Sundaram Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Sundaram Home Finance",
+  "type": "Need"
+ },
+ {
+  "text": "L&T Finance",
+  "type": "Need"
+ },
+ {
+  "text": "L and T Finance",
+  "type": "Need"
+ },
+ {
+  "text": "LTFS",
+  "type": "Need"
+ },
+ {
+  "text": "Poonawalla Fincorp",
+  "type": "Need"
+ },
+ {
+  "text": "Magma Fincorp",
+  "type": "Need"
+ },
+ {
+  "text": "Piramal Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Piramal Capital",
+  "type": "Need"
+ },
+ {
+  "text": "Piramal Capital Housing",
+  "type": "Need"
+ },
+ {
+  "text": "DHFL",
+  "type": "Need"
+ },
+ {
+  "text": "Dewan Housing",
+  "type": "Need"
+ },
+ {
+  "text": "Indiabulls Housing",
+  "type": "Need"
+ },
+ {
+  "text": "Sammaan Capital",
+  "type": "Need"
+ },
+ {
+  "text": "Indiabulls Home Loans",
+  "type": "Need"
+ },
+ {
+  "text": "IIFL Finance",
+  "type": "Need"
+ },
+ {
+  "text": "IIFL Home Loans",
+  "type": "Need"
+ },
+ {
+  "text": "IIFL Samasta",
+  "type": "Need"
+ },
+ {
+  "text": "Samasta Microfinance",
+  "type": "Need"
+ },
+ {
+  "text": "Capri Global",
+  "type": "Need"
+ },
+ {
+  "text": "Capri Global Capital",
+  "type": "Need"
+ },
+ {
+  "text": "Aavas Financiers",
+  "type": "Need"
+ },
+ {
+  "text": "Aptus Value Housing",
+  "type": "Need"
+ },
+ {
+  "text": "Home First Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Can Fin Homes",
+  "type": "Need"
+ },
+ {
+  "text": "Repco Home Finance",
+  "type": "Need"
+ },
+ {
+  "text": "GRUH Finance",
+  "type": "Need"
+ },
+ {
+  "text": "India Shelter",
+  "type": "Need"
+ },
+ {
+  "text": "Aadhar Housing Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Hero FinCorp",
+  "type": "Need"
+ },
+ {
+  "text": "Kotak Mahindra Prime",
+  "type": "Need"
+ },
+ {
+  "text": "Kotak Prime",
+  "type": "Need"
+ },
+ {
+  "text": "TVS Credit",
+  "type": "Need"
+ },
+ {
+  "text": "TVS Credit Services",
+  "type": "Need"
+ },
+ {
+  "text": "Fullerton India",
+  "type": "Need"
+ },
+ {
+  "text": "Fullerton India Credit",
+  "type": "Need"
+ },
+ {
+  "text": "SMFG India Credit",
+  "type": "Need"
+ },
+ {
+  "text": "SMFG India Home Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Clix Capital",
+  "type": "Need"
+ },
+ {
+  "text": "CreditAccess Grameen",
+  "type": "Need"
+ },
+ {
+  "text": "Satin Creditcare",
+  "type": "Need"
+ },
+ {
+  "text": "Spandana Sphoorty",
+  "type": "Need"
+ },
+ {
+  "text": "Spandana",
+  "type": "Need"
+ },
+ {
+  "text": "Annapurna Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Muthoot Microfin",
+  "type": "Need"
+ },
+ {
+  "text": "Navi Finserv",
+  "type": "Need"
+ },
+ {
+  "text": "Berar Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Vistaar Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Veritas Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Ummeed Housing",
+  "type": "Need"
+ },
+ {
+  "text": "Five Star Business Finance",
+  "type": "Need"
+ },
+ {
+  "text": "MAS Financial Services",
+  "type": "Need"
+ },
+ {
+  "text": "Arman Financial",
+  "type": "Need"
+ },
+ {
+  "text": "Paisalo Digital",
+  "type": "Need"
+ },
+ {
+  "text": "Edelweiss Retail Finance",
+  "type": "Need"
+ },
+ {
+  "text": "ECL Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Religare Finvest",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Motors Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Toyota Financial Services",
+  "type": "Need"
+ },
+ {
+  "text": "Mahindra Rural Housing",
+  "type": "Need"
+ },
+ {
+  "text": "Hinduja Leyland Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Hinduja Housing Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Kogta Financial",
+  "type": "Need"
+ },
+ {
+  "text": "Ess Kay Fincorp",
+  "type": "Need"
+ },
+ {
+  "text": "IIFL Gold Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Rupeek",
+  "type": "Need"
+ },
+ {
+  "text": "IndiaGold",
+  "type": "Need"
+ },
+ {
+  "text": "Muthoot Gold Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Muthoot Gold",
+  "type": "Need"
+ },
+ {
+  "text": "Manappuram Gold",
+  "type": "Need"
+ },
+ {
+  "text": "Manappuram Gold Loan",
+  "type": "Need"
+ },
+ {
+  "text": "GIC Housing Finance",
+  "type": "Need"
+ },
+ {
+  "text": "ICICI Home Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Sundaram BNP Paribas Home Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Grihum Housing",
+  "type": "Need"
+ },
+ {
+  "text": "Shubham Housing",
+  "type": "Need"
+ },
+ {
+  "text": "Vastu Housing",
+  "type": "Need"
+ },
+ {
+  "text": "Axis Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Ambit Finvest",
+  "type": "Need"
+ },
+ {
+  "text": "Oxyzo",
+  "type": "Need"
+ },
+ {
+  "text": "Vivriti Capital",
+  "type": "Need"
+ },
+ {
+  "text": "Moneyboxx",
+  "type": "Need"
+ },
+ {
+  "text": "Cars24 Financial Services",
+  "type": "Need"
+ },
+ {
+  "text": "Home Credit India",
+  "type": "Need"
+ },
+ {
+  "text": "Home Credit",
+  "type": "Need"
+ },
+ {
+  "text": "Bajaj Finserv EMI Card",
+  "type": "Need"
+ },
+ {
+  "text": "Bajaj EMI Card",
+  "type": "Need"
+ },
+ {
+  "text": "Insta EMI Card",
+  "type": "Need"
+ },
+ {
+  "text": "EMI Network Card",
+  "type": "Need"
+ },
+ {
+  "text": "Bajaj Finance EMI",
+  "type": "Need"
+ },
+ {
+  "text": "Bajaj Finance Personal Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Capital Personal Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Navi Personal Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Navi Home Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Navi Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Navi",
+  "type": "Need"
+ },
+ {
+  "text": "KreditBee",
+  "type": "Need"
+ },
+ {
+  "text": "Kredit Bee",
+  "type": "Need"
+ },
+ {
+  "text": "MoneyView",
+  "type": "Need"
+ },
+ {
+  "text": "Money View",
+  "type": "Need"
+ },
+ {
+  "text": "Fibe",
+  "type": "Need"
+ },
+ {
+  "text": "EarlySalary",
+  "type": "Need"
+ },
+ {
+  "text": "Early Salary",
+  "type": "Need"
+ },
+ {
+  "text": "CASHe",
+  "type": "Need"
+ },
+ {
+  "text": "Kissht",
+  "type": "Need"
+ },
+ {
+  "text": "OnEMI",
+  "type": "Need"
+ },
+ {
+  "text": "Ring Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Slice",
+  "type": "Need"
+ },
+ {
+  "text": "Slice Card",
+  "type": "Need"
+ },
+ {
+  "text": "Uni Cards",
+  "type": "Need"
+ },
+ {
+  "text": "Uni Card",
+  "type": "Need"
+ },
+ {
+  "text": "OneCard",
+  "type": "Need"
+ },
+ {
+  "text": "One Card",
+  "type": "Need"
+ },
+ {
+  "text": "Freecharge Pay Later",
+  "type": "Need"
+ },
+ {
+  "text": "Paytm Postpaid",
+  "type": "Need"
+ },
+ {
+  "text": "Paytm Postpaid Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Paytm Loan",
+  "type": "Need"
+ },
+ {
+  "text": "MobiKwik Zip",
+  "type": "Need"
+ },
+ {
+  "text": "MobiKwik Zip EMI",
+  "type": "Need"
+ },
+ {
+  "text": "Simpl",
+  "type": "Need"
+ },
+ {
+  "text": "Simpl Pay Later",
+  "type": "Need"
+ },
+ {
+  "text": "LazyPay",
+  "type": "Need"
+ },
+ {
+  "text": "Lazy Pay",
+  "type": "Need"
+ },
+ {
+  "text": "Amazon Pay Later",
+  "type": "Need"
+ },
+ {
+  "text": "Flipkart Pay Later",
+  "type": "Need"
+ },
+ {
+  "text": "ZestMoney",
+  "type": "Need"
+ },
+ {
+  "text": "Zest Money",
+  "type": "Need"
+ },
+ {
+  "text": "ZestMoney EMI",
+  "type": "Need"
+ },
+ {
+  "text": "Pay Later",
+  "type": "Need"
+ },
+ {
+  "text": "Pay Later Dues",
+  "type": "Need"
+ },
+ {
+  "text": "ePayLater",
+  "type": "Need"
+ },
+ {
+  "text": "Axio",
+  "type": "Need"
+ },
+ {
+  "text": "Capital Float",
+  "type": "Need"
+ },
+ {
+  "text": "Lendingkart",
+  "type": "Need"
+ },
+ {
+  "text": "Indifi",
+  "type": "Need"
+ },
+ {
+  "text": "FlexiLoans",
+  "type": "Need"
+ },
+ {
+  "text": "NeoGrowth",
+  "type": "Need"
+ },
+ {
+  "text": "Aye Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Kinara Capital",
+  "type": "Need"
+ },
+ {
+  "text": "Mintifi",
+  "type": "Need"
+ },
+ {
+  "text": "MoneyTap",
+  "type": "Need"
+ },
+ {
+  "text": "Money Tap",
+  "type": "Need"
+ },
+ {
+  "text": "StashFin",
+  "type": "Need"
+ },
+ {
+  "text": "Stash Fin",
+  "type": "Need"
+ },
+ {
+  "text": "Zype",
+  "type": "Need"
+ },
+ {
+  "text": "PaySense",
+  "type": "Need"
+ },
+ {
+  "text": "Dhani",
+  "type": "Need"
+ },
+ {
+  "text": "Dhani Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Dhani Services",
+  "type": "Need"
+ },
+ {
+  "text": "Dhani Pay",
+  "type": "Need"
+ },
+ {
+  "text": "Prefr",
+  "type": "Need"
+ },
+ {
+  "text": "Branch International",
+  "type": "Need"
+ },
+ {
+  "text": "True Balance",
+  "type": "Need"
+ },
+ {
+  "text": "Cashbean",
+  "type": "Need"
+ },
+ {
+  "text": "Rapid Rupee",
+  "type": "Need"
+ },
+ {
+  "text": "mPokket",
+  "type": "Need"
+ },
+ {
+  "text": "Smartcoin",
+  "type": "Need"
+ },
+ {
+  "text": "Nira Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Credy",
+  "type": "Need"
+ },
+ {
+  "text": "LoanTap",
+  "type": "Need"
+ },
+ {
+  "text": "Loan Tap",
+  "type": "Need"
+ },
+ {
+  "text": "Finnable",
+  "type": "Need"
+ },
+ {
+  "text": "Pocketly",
+  "type": "Need"
+ },
+ {
+  "text": "PayRupik",
+  "type": "Need"
+ },
+ {
+  "text": "FlexSalary",
+  "type": "Need"
+ },
+ {
+  "text": "Avail Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Snapmint",
+  "type": "Need"
+ },
+ {
+  "text": "Snapmint EMI",
+  "type": "Need"
+ },
+ {
+  "text": "Postpe",
+  "type": "Need"
+ },
+ {
+  "text": "BharatPe Postpe",
+  "type": "Need"
+ },
+ {
+  "text": "Ola Postpaid",
+  "type": "Need"
+ },
+ {
+  "text": "Jio Financial Services",
+  "type": "Need"
+ },
+ {
+  "text": "ICICI Pay Later",
+  "type": "Need"
+ },
+ {
+  "text": "HDFC Flexipay",
+  "type": "Need"
+ },
+ {
+  "text": "Flexipay",
+  "type": "Need"
+ },
+ {
+  "text": "PayU Finance",
+  "type": "Need"
+ },
+ {
+  "text": "Airtel Finance",
+  "type": "Need"
+ },
+ {
+  "text": "CRED",
+  "type": "Need"
+ },
+ {
+  "text": "CRED Bill Pay",
+  "type": "Need"
+ },
+ {
+  "text": "CRED Pay",
+  "type": "Need"
+ },
+ {
+  "text": "CRED Cash",
+  "type": "Need"
+ },
+ {
+  "text": "CRED Flash",
+  "type": "Need"
+ },
+ {
+  "text": "Paytm Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Amazon Pay Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "PhonePe Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Freecharge Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "MobiKwik Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Credit Card Payment",
+  "type": "Need"
+ },
+ {
+  "text": "Credit Card Dues",
+  "type": "Need"
+ },
+ {
+  "text": "Card Outstanding",
+  "type": "Need"
+ },
+ {
+  "text": "CC Bill Payment",
+  "type": "Need"
+ },
+ {
+  "text": "Credit Card Repayment",
+  "type": "Need"
+ },
+ {
+  "text": "EMI",
+  "type": "Need"
+ },
+ {
+  "text": "Loan EMI",
+  "type": "Need"
+ },
+ {
+  "text": "Home Loan EMI",
+  "type": "Need"
+ },
+ {
+  "text": "Personal Loan EMI",
+  "type": "Need"
+ },
+ {
+  "text": "Car Loan EMI",
+  "type": "Need"
+ },
+ {
+  "text": "Bike Loan EMI",
+  "type": "Need"
+ },
+ {
+  "text": "Education Loan EMI",
+  "type": "Need"
+ },
+ {
+  "text": "Gold Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Loan Repayment",
+  "type": "Need"
+ },
+ {
+  "text": "Loan Installment",
+  "type": "Need"
+ },
+ {
+  "text": "Loan Payment",
+  "type": "Need"
+ },
+ {
+  "text": "Vehicle Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Two Wheeler Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Consumer Durable Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Mortgage",
+  "type": "Need"
+ },
+ {
+  "text": "Housing Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Business Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Mudra Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Student Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Education Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Loan Against Property",
+  "type": "Need"
+ },
+ {
+  "text": "LAP EMI",
+  "type": "Need"
+ },
+ {
+  "text": "Top-up Loan",
+  "type": "Need"
+ },
+ {
+  "text": "NACH EMI",
+  "type": "Need"
+ },
+ {
+  "text": "ECS EMI",
+  "type": "Need"
+ },
+ {
+  "text": "Auto Debit EMI",
+  "type": "Need"
+ },
+ {
+  "text": "Phone EMI",
+  "type": "Need"
+ },
+ {
+  "text": "Mobile EMI",
+  "type": "Need"
+ },
+ {
+  "text": "Laptop EMI",
+  "type": "Need"
+ },
+ {
+  "text": "Appliance EMI",
+  "type": "Need"
+ },
+ {
+  "text": "No Cost EMI",
+  "type": "Need"
+ },
+ {
+  "text": "Loan Closure",
+  "type": "Need"
+ },
+ {
+  "text": "Loan Foreclosure",
+  "type": "Need"
+ },
+ {
+  "text": "Overdue EMI",
+  "type": "Need"
+ },
+ {
+  "text": "Instalment",
+  "type": "Need"
+ },
+ {
+  "text": "Installment Payment",
+  "type": "Need"
+ },
+ {
+  "text": "Credit Card EMI",
+  "type": "Need"
+ },
+ {
+  "text": "Amazon EMI",
+  "type": "Need"
+ },
+ {
+  "text": "Flipkart EMI",
+  "type": "Need"
+ },
+ {
+  "text": "HDFC Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "HDFC Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "HDFC Bank Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "HDFC Bank Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "SBI Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "SBI Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "SBI Card Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "SBI Card Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "ICICI Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "ICICI Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "ICICI Bank Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "ICICI Bank Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Axis Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "Axis Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Axis Bank Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "Axis Bank Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Kotak Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "Kotak Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Kotak Mahindra Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "Kotak Mahindra Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "IndusInd Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "IndusInd Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "IndusInd Bank Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "IndusInd Bank Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Yes Bank Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "Yes Bank Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "RBL Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "RBL Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "RBL Bank Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "RBL Bank Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "IDFC First Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "IDFC First Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "IDFC First Bank Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "AU Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "AU Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "AU Bank Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "AU Bank Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Standard Chartered Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "Standard Chartered Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "SC Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "SC Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "HSBC Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "HSBC Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Amex Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "Amex Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "American Express Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "American Express Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Citi Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "Citi Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Citibank Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "Citibank Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "BOB Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "BOB Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Bank of Baroda Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "Federal Bank Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "Federal Bank Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "PNB Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "PNB Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Canara Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "Canara Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Neu Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Neu Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Amazon Pay ICICI Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "Flipkart Axis Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "Flipkart Axis Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Swiggy HDFC Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "Swiggy HDFC Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Myntra Kotak Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "Myntra Kotak Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Airtel Axis Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "Airtel Axis Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "OneCard Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "OneCard Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Slice Credit Card",
+  "type": "Need"
+ },
+ {
+  "text": "Slice Credit Card Bill",
+  "type": "Need"
+ },
+ {
+  "text": "SBI Home Loan",
+  "type": "Need"
+ },
+ {
+  "text": "SBI Personal Loan",
+  "type": "Need"
+ },
+ {
+  "text": "SBI Car Loan",
+  "type": "Need"
+ },
+ {
+  "text": "HDFC Home Loan",
+  "type": "Need"
+ },
+ {
+  "text": "HDFC Personal Loan",
+  "type": "Need"
+ },
+ {
+  "text": "HDFC Car Loan",
+  "type": "Need"
+ },
+ {
+  "text": "ICICI Home Loan",
+  "type": "Need"
+ },
+ {
+  "text": "ICICI Personal Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Axis Home Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Axis Personal Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Axis Car Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Kotak Home Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Kotak Personal Loan",
+  "type": "Need"
+ },
+ {
+  "text": "PNB Home Loan",
+  "type": "Need"
+ },
+ {
+  "text": "PNB Personal Loan",
+  "type": "Need"
+ },
+ {
+  "text": "PNB Car Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Bank of Baroda Home Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Bank of Baroda Personal Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Bank of Baroda Car Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Canara Home Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Canara Personal Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Canara Car Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Union Bank Home Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Union Bank Personal Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Union Bank Car Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Bank of India Home Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Bank of India Personal Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Bank of India Car Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Indian Bank Home Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Indian Bank Personal Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Indian Bank Car Loan",
+  "type": "Need"
+ },
+ {
+  "text": "IDFC First Home Loan",
+  "type": "Need"
+ },
+ {
+  "text": "IDFC First Personal Loan",
+  "type": "Need"
+ },
+ {
+  "text": "IDFC First Car Loan",
+  "type": "Need"
+ },
+ {
+  "text": "IndusInd Home Loan",
+  "type": "Need"
+ },
+ {
+  "text": "IndusInd Personal Loan",
+  "type": "Need"
+ },
+ {
+  "text": "IndusInd Car Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Yes Bank Home Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Yes Bank Personal Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Yes Bank Car Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Federal Bank Home Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Federal Bank Personal Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Federal Bank Car Loan",
+  "type": "Need"
+ },
+ {
+  "text": "IDBI Home Loan",
+  "type": "Need"
+ },
+ {
+  "text": "IDBI Personal Loan",
+  "type": "Need"
+ },
+ {
+  "text": "IDBI Car Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Central Bank Home Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Central Bank Personal Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Central Bank Car Loan",
+  "type": "Need"
+ },
+ {
+  "text": "UCO Bank Home Loan",
+  "type": "Need"
+ },
+ {
+  "text": "UCO Bank Personal Loan",
+  "type": "Need"
+ },
+ {
+  "text": "UCO Bank Car Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Bandhan Bank Home Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Bandhan Bank Personal Loan",
+  "type": "Need"
+ },
+ {
+  "text": "Bandhan Bank Car Loan",
+  "type": "Need"
+ },
+ {
+  "text": "AU Bank Home Loan",
+  "type": "Need"
+ },
+ {
+  "text": "AU Bank Personal Loan",
+  "type": "Need"
+ }
+]

@@ -1,0 +1,202 @@
+[
+ {
+  "i": 1800,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 1801,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 1802,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 1803,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 1804,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 1805,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 1806,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 1807,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 1808,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 1809,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 1810,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 1811,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 1812,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 1813,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 1814,
+  "category": "Shopping",
+  "type": "Want"
+ },
+ {
+  "i": 1815,
+  "category": "Shopping",
+  "type": "Want"
+ },
+ {
+  "i": 1816,
+  "category": "Shopping",
+  "type": "Want"
+ },
+ {
+  "i": 1817,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 1818,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 1819,
+  "category": "Groceries",
+  "type": "Need"
+ },
+ {
+  "i": 1820,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 1821,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 1822,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 1823,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 1824,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 1825,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 1826,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 1827,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 1828,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 1829,
+  "category": "Shopping",
+  "type": "Want"
+ },
+ {
+  "i": 1830,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 1831,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 1832,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 1833,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 1834,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 1835,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 1836,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 1837,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 1838,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 1839,
+  "category": "Misc",
+  "type": "Want"
+ }
+]

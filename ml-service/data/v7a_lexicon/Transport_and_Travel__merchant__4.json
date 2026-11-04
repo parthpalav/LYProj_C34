@@ -1,0 +1,314 @@
+[
+ {
+  "text": "Airtel FASTag",
+  "type": "Need"
+ },
+ {
+  "text": "Axle Parking",
+  "type": "Need"
+ },
+ {
+  "text": "Bajaj Autocabs",
+  "type": "Want"
+ },
+ {
+  "text": "Byke Mobility",
+  "type": "Need"
+ },
+ {
+  "text": "Car Parking Solutions",
+  "type": "Need"
+ },
+ {
+  "text": "ChargePoint",
+  "type": "Need"
+ },
+ {
+  "text": "CNG Corp",
+  "type": "Need"
+ },
+ {
+  "text": "Delhi Auto Parts",
+  "type": "Need"
+ },
+ {
+  "text": "Eco FASTag",
+  "type": "Need"
+ },
+ {
+  "text": "Ecometer",
+  "type": "Need"
+ },
+ {
+  "text": "EasyMetro",
+  "type": "Need"
+ },
+ {
+  "text": "EasyPark",
+  "type": "Need"
+ },
+ {
+  "text": "FastCharge",
+  "type": "Need"
+ },
+ {
+  "text": "GoMetro",
+  "type": "Need"
+ },
+ {
+  "text": "GreenParking",
+  "type": "Need"
+ },
+ {
+  "text": "HappyRide",
+  "type": "Want"
+ },
+ {
+  "text": "HitTaxi",
+  "type": "Want"
+ },
+ {
+  "text": "Hydrogen Fuel",
+  "type": "Need"
+ },
+ {
+  "text": "IndiaMetro",
+  "type": "Need"
+ },
+ {
+  "text": "Intelligent Parking",
+  "type": "Need"
+ },
+ {
+  "text": "JetToll",
+  "type": "Need"
+ },
+ {
+  "text": "Kisan Parking",
+  "type": "Need"
+ },
+ {
+  "text": "LPG Petrol",
+  "type": "Need"
+ },
+ {
+  "text": "MetroCommute",
+  "type": "Need"
+ },
+ {
+  "text": "MyAutoDrive",
+  "type": "Want"
+ },
+ {
+  "text": "NewDelhiTaxi",
+  "type": "Want"
+ },
+ {
+  "text": "Ola",
+  "type": "Want"
+ },
+ {
+  "text": "OnTheGoParking",
+  "type": "Need"
+ },
+ {
+  "text": "ParkMyWay",
+  "type": "Need"
+ },
+ {
+  "text": "PetrolPump",
+  "type": "Need"
+ },
+ {
+  "text": "PayAndPark",
+  "type": "Need"
+ },
+ {
+  "text": "Petro India",
+  "type": "Need"
+ },
+ {
+  "text": "QuickMetro",
+  "type": "Need"
+ },
+ {
+  "text": "RedBus",
+  "type": "Want"
+ },
+ {
+  "text": "Reliance Jio FASTag",
+  "type": "Need"
+ },
+ {
+  "text": "RentACarIndia",
+  "type": "Want"
+ },
+ {
+  "text": "SafeParking",
+  "type": "Need"
+ },
+ {
+  "text": "ScooterCharge",
+  "type": "Need"
+ },
+ {
+  "text": "SelfDriveIndia",
+  "type": "Want"
+ },
+ {
+  "text": "SmartPark",
+  "type": "Need"
+ },
+ {
+  "text": "SriMetro",
+  "type": "Need"
+ },
+ {
+  "text": "SuperRide",
+  "type": "Want"
+ },
+ {
+  "text": "SwiggyRush",
+  "type": "Want"
+ },
+ {
+  "text": "Tata FASTag",
+  "type": "Need"
+ },
+ {
+  "text": "Toll India",
+  "type": "Need"
+ },
+ {
+  "text": "Toll Plaza",
+  "type": "Need"
+ },
+ {
+  "text": "TravelFast",
+  "type": "Want"
+ },
+ {
+  "text": "Uber",
+  "type": "Want"
+ },
+ {
+  "text": "Vikram Parking",
+  "type": "Need"
+ },
+ {
+  "text": "VRS",
+  "type": "Need"
+ },
+ {
+  "text": "Wego",
+  "type": "Want"
+ },
+ {
+  "text": "WheelParking",
+  "type": "Need"
+ },
+ {
+  "text": "XpressBus",
+  "type": "Want"
+ },
+ {
+  "text": "ZoomCars",
+  "type": "Want"
+ },
+ {
+  "text": "Zopper Parking",
+  "type": "Need"
+ },
+ {
+  "text": "DriveFast",
+  "type": "Want"
+ },
+ {
+  "text": "MetroPass",
+  "type": "Need"
+ },
+ {
+  "text": "TaxiForYou",
+  "type": "Want"
+ },
+ {
+  "text": "BusRide",
+  "type": "Want"
+ },
+ {
+  "text": "EzyRide",
+  "type": "Want"
+ },
+ {
+  "text": "ParkEasy",
+  "type": "Need"
+ },
+ {
+  "text": "RentACar",
+  "type": "Want"
+ },
+ {
+  "text": "MetroRide",
+  "type": "Need"
+ },
+ {
+  "text": "CabHunt",
+  "type": "Want"
+ },
+ {
+  "text": "DriveEasy",
+  "type": "Want"
+ },
+ {
+  "text": "AutoRaja",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiMate",
+  "type": "Want"
+ },
+ {
+  "text": "DriveMate",
+  "type": "Want"
+ },
+ {
+  "text": "RideEasy",
+  "type": "Want"
+ },
+ {
+  "text": "CarPark",
+  "type": "Need"
+ },
+ {
+  "text": "TollFree",
+  "type": "Need"
+ },
+ {
+  "text": "FuelFast",
+  "type": "Need"
+ },
+ {
+  "text": "AutoDrive",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiNow",
+  "type": "Want"
+ },
+ {
+  "text": "MetroRush",
+  "type": "Need"
+ },
+ {
+  "text": "DriveGo",
+  "type": "Want"
+ },
+ {
+  "text": "ParkGo",
+  "type": "Need"
+ },
+ {
+  "text": "CabGo",
+  "type": "Want"
+ }
+]

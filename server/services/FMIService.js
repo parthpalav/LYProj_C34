@@ -17,6 +17,7 @@
  */
 
 import { detectBehavioralPatterns } from './BehaviorService.js';
+import { DEFAULT_TIMEZONE, toZoned } from '../utils/userTime.js';
 
 // ── Helpers ──────────────────────────────────────────────────
 
@@ -28,12 +29,13 @@ export function lerp(ratio, low, high) {
   return low + (high - low) * Math.min(1, Math.max(0, ratio));
 }
 
-export function daysInMonth(date = new Date()) {
-  return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+export function daysInMonth(date = new Date(), tz = DEFAULT_TIMEZONE) {
+  const z = toZoned(date, tz);
+  return new Date(Date.UTC(z.getUTCFullYear(), z.getUTCMonth() + 1, 0)).getUTCDate();
 }
 
-export function dayOfMonth(date = new Date()) {
-  return date.getDate();
+export function dayOfMonth(date = new Date(), tz = DEFAULT_TIMEZONE) {
+  return toZoned(date, tz).getUTCDate();
 }
 
 export function formatCurrency(n) {
@@ -233,8 +235,8 @@ function calculateFMI(user = {}, expenses = []) {
     .reduce((sum, tx) => sum + Math.abs(tx.amount || 0), 0);
 
   // ── STEP 3: Prediction Model ─────────────────────────────
-  const daysPassed   = dayOfMonth(now);
-  const totalDays    = daysInMonth(now);
+  const daysPassed   = dayOfMonth(now, user.timezone);
+  const totalDays    = daysInMonth(now, user.timezone);
   const avgDailySpend = daysPassed > 0 ? totalSpent / daysPassed : 0;
   const predictedMonthlySpend = avgDailySpend * totalDays;
 
@@ -255,7 +257,7 @@ function calculateFMI(user = {}, expenses = []) {
   const status = d2Result.status;
 
   // ▸ D3 — Behavioral Risk (30%)
-  const patterns = detectBehavioralPatterns(expenses);
+  const patterns = detectBehavioralPatterns(expenses, user.timezone);
 
   let riskPenalty = 0;
   let riskFactors = [];

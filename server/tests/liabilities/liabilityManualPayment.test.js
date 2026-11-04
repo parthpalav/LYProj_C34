@@ -51,8 +51,8 @@ async function runTests() {
   // Create test users
   const initialBalance = 500000;
   await User.create([
-    { id: 'USER_C', name: 'User C', email: 'userc@example.com', currentBalance: initialBalance },
-    { id: 'USER_D', name: 'User D', email: 'userd@example.com', currentBalance: initialBalance }
+    { id: 'USER_C', name: 'User C', email: 'userc@example.com', currentBalance: initialBalance, timezone: 'UTC' }, // expectations use UTC midnights
+    { id: 'USER_D', name: 'User D', email: 'userd@example.com', currentBalance: initialBalance, timezone: 'UTC' }
   ]);
 
   const postTxHandler = getHandler('POST', '/transactions');

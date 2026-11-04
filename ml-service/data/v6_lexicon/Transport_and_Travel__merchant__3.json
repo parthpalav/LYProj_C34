@@ -1,0 +1,282 @@
+[
+ {
+  "text": "Flipkart SmartBuy",
+  "type": "Want"
+ },
+ {
+  "text": "IRCTC",
+  "type": "Need"
+ },
+ {
+  "text": "OLA",
+  "type": "Want"
+ },
+ {
+  "text": "PAYTM",
+  "type": "Need"
+ },
+ {
+  "text": "Uber",
+  "type": "Want"
+ },
+ {
+  "text": "SwiggyRush",
+  "type": "Need"
+ },
+ {
+  "text": "Zoomcar",
+  "type": "Want"
+ },
+ {
+  "text": "Rapido",
+  "type": "Want"
+ },
+ {
+  "text": "Delhivery",
+  "type": "Want"
+ },
+ {
+  "text": "Paytm FASTag",
+  "type": "Need"
+ },
+ {
+  "text": "PetroIndia",
+  "type": "Need"
+ },
+ {
+  "text": "Mahanagar Gas",
+  "type": "Want"
+ },
+ {
+  "text": "Ola Electric",
+  "type": "Want"
+ },
+ {
+  "text": "Ulaa Car",
+  "type": "Want"
+ },
+ {
+  "text": "ZoomOn",
+  "type": "Want"
+ },
+ {
+  "text": "RideOn",
+  "type": "Want"
+ },
+ {
+  "text": "MoveOn",
+  "type": "Want"
+ },
+ {
+  "text": "CamsFly",
+  "type": "Want"
+ },
+ {
+  "text": "ParkHere",
+  "type": "Need"
+ },
+ {
+  "text": "AutoRaja",
+  "type": "Want"
+ },
+ {
+  "text": "Cab4U",
+  "type": "Want"
+ },
+ {
+  "text": "DriveEasy",
+  "type": "Want"
+ },
+ {
+  "text": "FleetNow",
+  "type": "Want"
+ },
+ {
+  "text": "RideEasy",
+  "type": "Want"
+ },
+ {
+  "text": "Taxi4U",
+  "type": "Want"
+ },
+ {
+  "text": "TollEasy",
+  "type": "Need"
+ },
+ {
+  "text": "FuelNow",
+  "type": "Need"
+ },
+ {
+  "text": "MetroPass",
+  "type": "Need"
+ },
+ {
+  "text": "BusPlus",
+  "type": "Need"
+ },
+ {
+  "text": "AutoHero",
+  "type": "Want"
+ },
+ {
+  "text": "CabMate",
+  "type": "Want"
+ },
+ {
+  "text": "DriveMate",
+  "type": "Want"
+ },
+ {
+  "text": "FleetMate",
+  "type": "Want"
+ },
+ {
+  "text": "RideMate",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiMate",
+  "type": "Want"
+ },
+ {
+  "text": "TollMate",
+  "type": "Need"
+ },
+ {
+  "text": "FuelMate",
+  "type": "Need"
+ },
+ {
+  "text": "MetroMate",
+  "type": "Need"
+ },
+ {
+  "text": "BusMate",
+  "type": "Need"
+ },
+ {
+  "text": "FuelRush",
+  "type": "Need"
+ },
+ {
+  "text": "TollRush",
+  "type": "Need"
+ },
+ {
+  "text": "ParkRush",
+  "type": "Need"
+ },
+ {
+  "text": "RideRush",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiRush",
+  "type": "Want"
+ },
+ {
+  "text": "AutoDrive",
+  "type": "Want"
+ },
+ {
+  "text": "CabDrive",
+  "type": "Want"
+ },
+ {
+  "text": "DriveNow",
+  "type": "Want"
+ },
+ {
+  "text": "FleetDrive",
+  "type": "Want"
+ },
+ {
+  "text": "RideDrive",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiDrive",
+  "type": "Want"
+ },
+ {
+  "text": "TollDrive",
+  "type": "Need"
+ },
+ {
+  "text": "FuelDrive",
+  "type": "Need"
+ },
+ {
+  "text": "MetroDrive",
+  "type": "Need"
+ },
+ {
+  "text": "BusDrive",
+  "type": "Need"
+ },
+ {
+  "text": "FuelGo",
+  "type": "Need"
+ },
+ {
+  "text": "TollGo",
+  "type": "Need"
+ },
+ {
+  "text": "ParkGo",
+  "type": "Need"
+ },
+ {
+  "text": "RideGo",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiGo",
+  "type": "Want"
+ },
+ {
+  "text": "AutoFly",
+  "type": "Want"
+ },
+ {
+  "text": "CabFly",
+  "type": "Want"
+ },
+ {
+  "text": "DriveFly",
+  "type": "Want"
+ },
+ {
+  "text": "FleetFly",
+  "type": "Want"
+ },
+ {
+  "text": "RideFly",
+  "type": "Want"
+ },
+ {
+  "text": "TaxiFly",
+  "type": "Want"
+ },
+ {
+  "text": "TollFly",
+  "type": "Need"
+ },
+ {
+  "text": "FuelFly",
+  "type": "Need"
+ },
+ {
+  "text": "MetroFly",
+  "type": "Need"
+ },
+ {
+  "text": "BusFly",
+  "type": "Need"
+ },
+ {
+  "text": "ParkNow",
+  "type": "Need"
+ }
+]

@@ -1,0 +1,322 @@
+[
+{
+"text": "BillDesk Insurance",
+"type": "Need"
+},
+{
+"text": "BillDesk Premium",
+"type": "Need"
+},
+{
+"text": "BillDesk Ins Pay",
+"type": "Need"
+},
+{
+"text": "Razorpay Insurance",
+"type": "Need"
+},
+{
+"text": "Razorpay Premium",
+"type": "Need"
+},
+{
+"text": "CCAvenue Insurance",
+"type": "Need"
+},
+{
+"text": "CCAvenue Premium",
+"type": "Need"
+},
+{
+"text": "PayU Insurance",
+"type": "Need"
+},
+{
+"text": "PayU Premium",
+"type": "Need"
+},
+{
+"text": "Cashfree Insurance",
+"type": "Need"
+},
+{
+"text": "Cashfree Premium",
+"type": "Need"
+},
+{
+"text": "Juspay Insurance",
+"type": "Need"
+},
+{
+"text": "Instamojo Insurance",
+"type": "Need"
+},
+{
+"text": "Freecharge Insurance",
+"type": "Need"
+},
+{
+"text": "Ola Money Insurance",
+"type": "Need"
+},
+{
+"text": "Airtel Money Insurance",
+"type": "Need"
+},
+{
+"text": "Airtel Payments Premium",
+"type": "Need"
+},
+{
+"text": "BHIM UPI Premium",
+"type": "Need"
+},
+{
+"text": "BHIM Insurance Pay",
+"type": "Need"
+},
+{
+"text": "NACH Insurance Debit",
+"type": "Need"
+},
+{
+"text": "NACH Premium Debit",
+"type": "Need"
+},
+{
+"text": "ECS Insurance Debit",
+"type": "Need"
+},
+{
+"text": "ECS Premium Debit",
+"type": "Need"
+},
+{
+"text": "NEFT Insurance Premium",
+"type": "Need"
+},
+{
+"text": "IMPS Insurance Premium",
+"type": "Need"
+},
+{
+"text": "Net Banking Premium",
+"type": "Need"
+},
+{
+"text": "ACH Insurance Debit",
+"type": "Need"
+},
+{
+"text": "eNACH Premium",
+"type": "Need"
+},
+{
+"text": "eMandate Premium",
+"type": "Need"
+},
+{
+"text": "Mandate Insurance Debit",
+"type": "Need"
+},
+{
+"text": "UPI Insurance Auto",
+"type": "Need"
+},
+{
+"text": "AutoPay Premium",
+"type": "Need"
+},
+{
+"text": "SI Insurance Mandate",
+"type": "Need"
+},
+{
+"text": "Standing Instruction Premium",
+"type": "Need"
+},
+{
+"text": "Auto Debit Premium",
+"type": "Need"
+},
+{
+"text": "Ins Auto Debit",
+"type": "Need"
+},
+{
+"text": "Pay Insurance Online",
+"type": "Need"
+},
+{
+"text": "Insurance Pay Gateway",
+"type": "Need"
+},
+{
+"text": "PG Insurance Premium",
+"type": "Need"
+},
+{
+"text": "Premium Gateway",
+"type": "Need"
+},
+{
+"text": "Easebuzz Premium",
+"type": "Need"
+},
+{
+"text": "Pine Labs Insurance",
+"type": "Need"
+},
+{
+"text": "Paynimo Insurance",
+"type": "Need"
+},
+{
+"text": "Atom Insurance Pay",
+"type": "Need"
+},
+{
+"text": "Worldline Insurance Pay",
+"type": "Need"
+},
+{
+"text": "Sabpaisa Premium",
+"type": "Need"
+},
+{
+"text": "Qfix Premium",
+"type": "Need"
+},
+{
+"text": "BBPS Insurance",
+"type": "Need"
+},
+{
+"text": "BBPS Premium Pay",
+"type": "Need"
+},
+{
+"text": "Setu Insurance",
+"type": "Need"
+},
+{
+"text": "Setu Premium",
+"type": "Need"
+},
+{
+"text": "Pinelabs Premium",
+"type": "Need"
+},
+{
+"text": "Mswipe Insurance",
+"type": "Need"
+},
+{
+"text": "Easepay Insurance",
+"type": "Need"
+},
+{
+"text": "Payzapp Insurance",
+"type": "Need"
+},
+{
+"text": "MobiKwik Premium",
+"type": "Need"
+},
+{
+"text": "Airpay Insurance",
+"type": "Need"
+},
+{
+"text": "Payphi Premium",
+"type": "Need"
+},
+{
+"text": "Juspay Premium",
+"type": "Need"
+},
+{
+"text": "Instamojo Premium",
+"type": "Need"
+},
+{
+"text": "Zaakpay Insurance",
+"type": "Need"
+},
+{
+"text": "PayGlocal Premium",
+"type": "Need"
+},
+{
+"text": "Fampay Insurance",
+"type": "Need"
+},
+{
+"text": "Slice Insurance Pay",
+"type": "Need"
+},
+{
+"text": "Pay2All Insurance",
+"type": "Need"
+},
+{
+"text": "Kiwi Premium Pay",
+"type": "Need"
+},
+{
+"text": "Mobikwik Auto Pay Ins",
+"type": "Need"
+},
+{
+"text": "Jupiter Insurance Pay",
+"type": "Need"
+},
+{
+"text": "Mahaonline Premium",
+"type": "Need"
+},
+{
+"text": "Bill Pay Insurance",
+"type": "Need"
+},
+{
+"text": "Bill Pay Premium",
+"type": "Need"
+},
+{
+"text": "Online Bill Premium",
+"type": "Need"
+},
+{
+"text": "Insurance Bill Pay",
+"type": "Need"
+},
+{
+"text": "Premium Bill Pay",
+"type": "Need"
+},
+{
+"text": "Premium Collect Online",
+"type": "Need"
+},
+{
+"text": "Insurance Collect Pay",
+"type": "Need"
+},
+{
+"text": "ICICI Pay Insurance",
+"type": "Need"
+},
+{
+"text": "HDFC Pay Insurance",
+"type": "Need"
+},
+{
+"text": "Axis Pay Premium",
+"type": "Need"
+},
+{
+"text": "Easy Premium Pay",
+"type": "Need"
+}
+]

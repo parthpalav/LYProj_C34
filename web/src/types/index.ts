@@ -25,6 +25,8 @@ export interface User {
   expectedWithdrawalRate?: number;
   lifestyleAdjustmentRatio?: number;
   emergencyFundTargetMonths?: number;
+  /** IANA timezone; defaults to Asia/Kolkata */
+  timezone?: string;
   goals?: string[];
   onboardingComplete?: boolean;
   onboardingCompleted?: boolean;
@@ -81,6 +83,53 @@ export interface Transaction {
   needsReview?: boolean;
   liabilityId?: string;
   scheduledFor?: string;
+  /** null = unspecified (bank balance), 'cash', or a PaymentMethod id */
+  paymentMethodId?: string | null;
+}
+
+export type PaymentMethodKind = 'upi' | 'debit_card' | 'credit_card';
+
+export const CASH_METHOD_ID = 'cash';
+
+export interface CreditCardSummary {
+  creditLimit: number;
+  outstanding: number;
+  available: number;
+  /** Purchases since the last statement; billed on the next one. */
+  unbilled: number;
+  amountDue: number;
+  overdueAmount: number;
+  lastStatementDate: string;
+  dueDate: string;
+  nextStatementDate: string;
+}
+
+export interface PaymentMethod {
+  id: string;
+  kind: PaymentMethodKind;
+  nickname: string;
+  last4?: string | null;
+  upiId?: string | null;
+  creditLimit?: number | null;
+  outstanding?: number;
+  statementDay?: number | null;
+  dueDay?: number | null;
+  status: 'active' | 'archived';
+  credit?: CreditCardSummary;
+}
+
+export interface PaymentMethodPayload {
+  kind: PaymentMethodKind;
+  nickname: string;
+  last4?: string;
+  upiId?: string;
+  creditLimit?: number;
+  statementDay?: number;
+  dueDay?: number;
+  /** Credit cards, on create: amount already used before tracking started. */
+  used?: number;
+  /** Credit cards, on create: part of `used` still unpaid from the latest statement. */
+  billedUnpaid?: number;
 }
 
 export interface Liability {
@@ -117,6 +166,18 @@ export interface Asset {
   includedInFireCorpus: boolean;
   liquidity: AssetLiquidity;
   notes?: string;
+  /** SIP amount, or the installment of a Recurring Deposit. */
+  monthlyContribution?: number | null;
+  /** FD deposit amount. */
+  principal?: number | null;
+  startDate?: string | null;
+  tenureMonths?: number | null;
+  lastReviewedAt?: string | null;
+  createdAt?: string;
+  /** Server-computed for a complete FD/RD. */
+  maturityValue?: number;
+  maturityDate?: string;
+  matured?: boolean;
 }
 
 export interface IncomeRecord {
@@ -435,6 +496,35 @@ export interface TransactionPayload {
   categoryConfidence?: number;
   typeConfidence?: number;
   needsReview?: boolean;
+  liabilityId?: string;
+  expectedScheduledFor?: string;
+  paymentMethodId?: string | null;
+}
+
+export interface ChatMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: string;
+}
+
+export interface EnvelopeData {
+  rent: number;
+  food: number;
+  savings: number;
+  targetSavings: number;
+}
+
+export interface SubscriptionSuggestion {
+  key: string;
+  name: string;
+  amount: number;
+  frequency: 'weekly' | 'monthly';
+  occurrences: number;
+  lastDate: string;
+  nextExpected: string;
+  category: string;
+  type: 'Need' | 'Want' | 'Investment';
 }
 
 export interface ClassifierSuggestion {
@@ -446,6 +536,8 @@ export interface ClassifierSuggestion {
   typeConfidence?: number;
   needsReview?: boolean;
   classificationSource?: string;
+  categorySource?: string;
+  typeSource?: string;
   sentiment?: string;
   sentiment_label?: string;
 }
@@ -481,6 +573,10 @@ export interface LiabilityPayload {
   dayOfWeek?: number | null;
   dayOfMonth?: number | null;
   monthOfYear?: number | null;
+  outstandingBalance?: number | null;
+  /** Percent (e.g. 9.5) or fraction; the server normalises to a fraction. */
+  interestRate?: number | null;
+  remainingTermMonths?: number | null;
 }
 
 export interface LiabilityTransactionsResponse {

@@ -3,7 +3,6 @@
     "name": "lyproj-client",
     "slug": "lyproj-client",
     "version": "1.0.0",
-    "sdkVersion": "57.0.0",
     "platforms": [
       "ios",
       "android"
@@ -24,6 +23,7 @@
       "expo-secure-store",
       "expo-splash-screen",
       "expo-status-bar"
-    ]
+    ],
+    "userInterfaceStyle": "automatic"
   }
 }

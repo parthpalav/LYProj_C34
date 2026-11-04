@@ -1,0 +1,306 @@
+[
+ {
+  "text": "Nandini Milk",
+  "type": "Need"
+ },
+ {
+  "text": "Mohan Grocery",
+  "type": "Need"
+ },
+ {
+  "text": "Kumar Kirana",
+  "type": "Need"
+ },
+ {
+  "text": "Ram Grocery",
+  "type": "Need"
+ },
+ {
+  "text": "Raj Vegetables",
+  "type": "Need"
+ },
+ {
+  "text": "Shree Supermarket",
+  "type": "Need"
+ },
+ {
+  "text": "Sai Staples",
+  "type": "Need"
+ },
+ {
+  "text": "Suresh Grocery",
+  "type": "Need"
+ },
+ {
+  "text": "Ganesh Fresh",
+  "type": "Need"
+ },
+ {
+  "text": "Krishna Dmart",
+  "type": "Need"
+ },
+ {
+  "text": "Lakshmi Grocers",
+  "type": "Need"
+ },
+ {
+  "text": "Prem Kirana",
+  "type": "Need"
+ },
+ {
+  "text": "Sri Vegetables",
+  "type": "Need"
+ },
+ {
+  "text": "Tiffin Mart",
+  "type": "Need"
+ },
+ {
+  "text": "Vinayak Staples",
+  "type": "Need"
+ },
+ {
+  "text": "Wala Kirana",
+  "type": "Need"
+ },
+ {
+  "text": "Zoya Foods",
+  "type": "Need"
+ },
+ {
+  "text": "Babu Grocery",
+  "type": "Need"
+ },
+ {
+  "text": "Bharat Mart",
+  "type": "Need"
+ },
+ {
+  "text": "Chandu Grocery",
+  "type": "Need"
+ },
+ {
+  "text": "Dev Kirana",
+  "type": "Need"
+ },
+ {
+  "text": "Esha Supermarket",
+  "type": "Need"
+ },
+ {
+  "text": "Girish Vegetables",
+  "type": "Need"
+ },
+ {
+  "text": "Harish Grocers",
+  "type": "Need"
+ },
+ {
+  "text": "Iyer Kirana",
+  "type": "Need"
+ },
+ {
+  "text": "Jaggi Fresh",
+  "type": "Need"
+ },
+ {
+  "text": "Kumar Bazaar",
+  "type": "Need"
+ },
+ {
+  "text": "Lalit Super",
+  "type": "Need"
+ },
+ {
+  "text": "Mohan Kirana",
+  "type": "Need"
+ },
+ {
+  "text": "Naveen Staples",
+  "type": "Need"
+ },
+ {
+  "text": "Pritam Groceries",
+  "type": "Need"
+ },
+ {
+  "text": "Rajesh Bazaar",
+  "type": "Need"
+ },
+ {
+  "text": "Sham Kirana",
+  "type": "Need"
+ },
+ {
+  "text": "Sunil Grocery",
+  "type": "Need"
+ },
+ {
+  "text": "Tilak Super",
+  "type": "Need"
+ },
+ {
+  "text": "Usha Grocers",
+  "type": "Need"
+ },
+ {
+  "text": "Vasudev Bazaar",
+  "type": "Need"
+ },
+ {
+  "text": "Yadav Vegetables",
+  "type": "Need"
+ },
+ {
+  "text": "Aarti Kirana",
+  "type": "Need"
+ },
+ {
+  "text": "Bharat Kirana",
+  "type": "Need"
+ },
+ {
+  "text": "Chitra Supermarket",
+  "type": "Need"
+ },
+ {
+  "text": "Durga Grocery",
+  "type": "Need"
+ },
+ {
+  "text": "Esha Kirana",
+  "type": "Need"
+ },
+ {
+  "text": "Gangadhar Fresh",
+  "type": "Need"
+ },
+ {
+  "text": "Hemant Bazaar",
+  "type": "Need"
+ },
+ {
+  "text": "Inder Grocers",
+  "type": "Need"
+ },
+ {
+  "text": "Jasmin Vegetables",
+  "type": "Need"
+ },
+ {
+  "text": "Kiran Fresh",
+  "type": "Need"
+ },
+ {
+  "text": "Laxmi Super",
+  "type": "Need"
+ },
+ {
+  "text": "Manu Kirana",
+  "type": "Need"
+ },
+ {
+  "text": "Nandini Staples",
+  "type": "Need"
+ },
+ {
+  "text": "Praful Groceries",
+  "type": "Need"
+ },
+ {
+  "text": "Raju Bazaar",
+  "type": "Need"
+ },
+ {
+  "text": "Saraswati Kirana",
+  "type": "Need"
+ },
+ {
+  "text": "Sunil Kirana",
+  "type": "Need"
+ },
+ {
+  "text": "Tilak Supermarket",
+  "type": "Need"
+ },
+ {
+  "text": "Usha Grocery",
+  "type": "Need"
+ },
+ {
+  "text": "Vikas Fresh",
+  "type": "Need"
+ },
+ {
+  "text": "Yadav Grocery",
+  "type": "Need"
+ },
+ {
+  "text": "Choco Delight",
+  "type": "Want"
+ },
+ {
+  "text": "Lays Corner",
+  "type": "Want"
+ },
+ {
+  "text": "Munchies Mart",
+  "type": "Want"
+ },
+ {
+  "text": "Treat Bazaar",
+  "type": "Want"
+ },
+ {
+  "text": "Whiskas House",
+  "type": "Want"
+ },
+ {
+  "text": "Kinderjoy Store",
+  "type": "Want"
+ },
+ {
+  "text": "Dairyjoy Corner",
+  "type": "Want"
+ },
+ {
+  "text": "Filo Fresh",
+  "type": "Want"
+ },
+ {
+  "text": "Crunchies Mart",
+  "type": "Want"
+ },
+ {
+  "text": "Chips Hub",
+  "type": "Want"
+ },
+ {
+  "text": "Sweet Corner",
+  "type": "Want"
+ },
+ {
+  "text": "Snack Palace",
+  "type": "Want"
+ },
+ {
+  "text": "Tasty Treats",
+  "type": "Want"
+ },
+ {
+  "text": "Nuts N More",
+  "type": "Want"
+ },
+ {
+  "text": "Choco Haven",
+  "type": "Want"
+ },
+ {
+  "text": "Sweets Corner",
+  "type": "Want"
+ },
+ {
+  "text": "Munchie Hub",
+  "type": "Want"
+ }
+]

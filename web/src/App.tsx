@@ -10,6 +10,7 @@ import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { ResetPasswordPage } from './pages/ResetPasswordPage';
 import { PlaceholderPage } from './pages/PlaceholderPage';
 import { NotFoundPage } from './pages/NotFoundPage';
+import { CelebrationHost } from './components/ui/CelebrationHost';
 import { LoadingScreen } from './components/ui/LoadingScreen';
 
 // Lazy load major workspace pages for optimal bundle chunking (Part 7)
@@ -19,13 +20,22 @@ const InsightsPage = React.lazy(() => import('./pages/InsightsPage').then((m) =>
 const PlanPage = React.lazy(() => import('./pages/PlanPage').then((m) => ({ default: m.PlanPage })));
 const ReportsPage = React.lazy(() => import('./pages/ReportsPage').then((m) => ({ default: m.ReportsPage })));
 const FamilyPage = React.lazy(() => import('./pages/FamilyPage').then((m) => ({ default: m.FamilyPage })));
+const AssistantPage = React.lazy(() => import('./pages/AssistantPage'));
+const RoundupsPage = React.lazy(() => import('./pages/RoundupsPage'));
+const ReviewPage = React.lazy(() => import('./pages/ReviewPage'));
+const ProfilePage = React.lazy(() => import('./pages/ProfilePage'));
+const OnboardingPage = React.lazy(() => import('./pages/OnboardingPage'));
+
+// Same rule as the mobile navigator: either flag marks setup as done.
+const isOnboarded = (u: { onboardingComplete?: boolean; onboardingCompleted?: boolean } | null) =>
+  Boolean(u?.onboardingComplete || u?.onboardingCompleted);
 
 /**
  * Route wrapper requiring valid authenticated session.
  * Displays clean branded loading screen while bootstrapping auth.
  */
-const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isAuthenticated, isLoading } = useAuth();
+const ProtectedRoute: React.FC<{ children: React.ReactNode; onboarding?: boolean }> = ({ children, onboarding = false }) => {
+  const { isAuthenticated, isLoading, user } = useAuth();
 
   if (isLoading) {
     return <LoadingScreen message="Verifying session credentials..." />;
@@ -33,6 +43,14 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
+  }
+
+  // New accounts finish setup first; finished accounts never see setup again.
+  if (!onboarding && !isOnboarded(user)) {
+    return <Navigate to="/onboarding" replace />;
+  }
+  if (onboarding && isOnboarded(user)) {
+    return <Navigate to="/app" replace />;
   }
 
   return (
@@ -102,6 +120,16 @@ export const App: React.FC = () => {
             }
           />
 
+          {/* First-run setup (mobile Onboarding parity) */}
+          <Route
+            path="/onboarding"
+            element={
+              <ProtectedRoute onboarding>
+                <OnboardingPage />
+              </ProtectedRoute>
+            }
+          />
+
           {/* Protected Application Routes */}
           <Route
             path="/app"
@@ -129,35 +157,13 @@ export const App: React.FC = () => {
             {/* Family & Household Workspace */}
             <Route path="family" element={<FamilyPage />} />
 
-            {/* Profile Placeholder */}
-            <Route
-              path="profile"
-              element={
-                <PlaceholderPage
-                  title="Profile & Financial Assumptions"
-                  description="Manage personal demographics and financial modeling parameters."
-                  plannedFeatures={[
-                    {
-                      name: 'Personal Information',
-                      description: 'Full name, email address, avatar, date of birth, and derived age.',
-                    },
-                    {
-                      name: 'Family & Household',
-                      description: 'Manage family members, pending invitations, and shared household financial overview.',
-                      link: '/app/family',
-                    },
-                    {
-                      name: 'Income & Retirement Targets',
-                      description: 'Monthly baseline income, target retirement age, and user retirement corpus goal.',
-                    },
-                    {
-                      name: 'Financial Modeling Assumptions',
-                      description: 'Expected return rate, inflation rate, safe withdrawal rate, lifestyle ratio, and emergency fund months.',
-                    },
-                  ]}
-                />
-              }
-            />
+            {/* Mobile parity: AI assistant, round-up vault, classifier review queue */}
+            <Route path="assistant" element={<AssistantPage />} />
+            <Route path="roundups" element={<RoundupsPage />} />
+            <Route path="review" element={<ReviewPage />} />
+
+            {/* Profile & Financial Assumptions */}
+            <Route path="profile" element={<ProfilePage />} />
 
             {/* Settings Placeholder */}
             <Route
@@ -191,6 +197,7 @@ export const App: React.FC = () => {
           {/* 404 Catch-All */}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
+        <CelebrationHost />
       </BrowserRouter>
     </AuthProvider>
   );

@@ -1,0 +1,318 @@
+[
+ {
+  "text": "Alfa Auto",
+  "type": "Need"
+ },
+ {
+  "text": "AutoMate",
+  "type": "Need"
+ },
+ {
+  "text": "Bharat Autoparts",
+  "type": "Need"
+ },
+ {
+  "text": "City Auto Service",
+  "type": "Need"
+ },
+ {
+  "text": "EcoFuel Station",
+  "type": "Need"
+ },
+ {
+  "text": "FuelFast",
+  "type": "Need"
+ },
+ {
+  "text": "GoToll",
+  "type": "Need"
+ },
+ {
+  "text": "HireDrive",
+  "type": "Need"
+ },
+ {
+  "text": "MetroTicket",
+  "type": "Need"
+ },
+ {
+  "text": "ParkEase",
+  "type": "Need"
+ },
+ {
+  "text": "Rapid Auto Repair",
+  "type": "Need"
+ },
+ {
+  "text": "ScootieRide",
+  "type": "Need"
+ },
+ {
+  "text": "TollPass",
+  "type": "Need"
+ },
+ {
+  "text": "VehiCharge",
+  "type": "Need"
+ },
+ {
+  "text": "ZapFuel",
+  "type": "Need"
+ },
+ {
+  "text": "AutoRaj",
+  "type": "Need"
+ },
+ {
+  "text": "CityCab",
+  "type": "Want"
+ },
+ {
+  "text": "DriveEase",
+  "type": "Want"
+ },
+ {
+  "text": "GoMetro",
+  "type": "Want"
+ },
+ {
+  "text": "ParkNow",
+  "type": "Want"
+ },
+ {
+  "text": "RideHire",
+  "type": "Want"
+ },
+ {
+  "text": "ScootieGo",
+  "type": "Want"
+ },
+ {
+  "text": "TollExpress",
+  "type": "Want"
+ },
+ {
+  "text": "ZapRide",
+  "type": "Want"
+ },
+ {
+  "text": "CityFuel",
+  "type": "Need"
+ },
+ {
+  "text": "MetroGo",
+  "type": "Want"
+ },
+ {
+  "text": "ParkSmart",
+  "type": "Want"
+ },
+ {
+  "text": "RideNow",
+  "type": "Want"
+ },
+ {
+  "text": "ScootieRent",
+  "type": "Want"
+ },
+ {
+  "text": "TollEase",
+  "type": "Need"
+ },
+ {
+  "text": "ZapToll",
+  "type": "Want"
+ },
+ {
+  "text": "AutoFast",
+  "type": "Need"
+ },
+ {
+  "text": "CityRide",
+  "type": "Want"
+ },
+ {
+  "text": "DriveNow",
+  "type": "Want"
+ },
+ {
+  "text": "ParkHere",
+  "type": "Want"
+ },
+ {
+  "text": "RideOn",
+  "type": "Want"
+ },
+ {
+  "text": "ScootieRentals",
+  "type": "Want"
+ },
+ {
+  "text": "TollSmart",
+  "type": "Want"
+ },
+ {
+  "text": "ZapTollGo",
+  "type": "Want"
+ },
+ {
+  "text": "AutoFix",
+  "type": "Need"
+ },
+ {
+  "text": "CityTaxi",
+  "type": "Want"
+ },
+ {
+  "text": "DriveSmart",
+  "type": "Want"
+ },
+ {
+  "text": "ParkQuick",
+  "type": "Want"
+ },
+ {
+  "text": "RideUp",
+  "type": "Want"
+ },
+ {
+  "text": "ScootieShare",
+  "type": "Want"
+ },
+ {
+  "text": "TollQuick",
+  "type": "Want"
+ },
+ {
+  "text": "ZapTollPay",
+  "type": "Want"
+ },
+ {
+  "text": "AutoRush",
+  "type": "Need"
+ },
+ {
+  "text": "CityRideGo",
+  "type": "Want"
+ },
+ {
+  "text": "DriveUp",
+  "type": "Want"
+ },
+ {
+  "text": "ParkSmartly",
+  "type": "Want"
+ },
+ {
+  "text": "RideWise",
+  "type": "Want"
+ },
+ {
+  "text": "ScootieTours",
+  "type": "Want"
+ },
+ {
+  "text": "TollWise",
+  "type": "Want"
+ },
+ {
+  "text": "ZapTravel",
+  "type": "Want"
+ },
+ {
+  "text": "AutoSpeed",
+  "type": "Need"
+ },
+ {
+  "text": "CityRides",
+  "type": "Want"
+ },
+ {
+  "text": "DriveWise",
+  "type": "Want"
+ },
+ {
+  "text": "ParkWise",
+  "type": "Want"
+ },
+ {
+  "text": "RideX",
+  "type": "Want"
+ },
+ {
+  "text": "ScootieTrips",
+  "type": "Want"
+ },
+ {
+  "text": "TollWisePro",
+  "type": "Want"
+ },
+ {
+  "text": "ZapTravelGo",
+  "type": "Want"
+ },
+ {
+  "text": "AutoToll",
+  "type": "Need"
+ },
+ {
+  "text": "CityTaxiGo",
+  "type": "Want"
+ },
+ {
+  "text": "DriveX",
+  "type": "Want"
+ },
+ {
+  "text": "ParkWiseX",
+  "type": "Want"
+ },
+ {
+  "text": "RideXtra",
+  "type": "Want"
+ },
+ {
+  "text": "ScootieWheels",
+  "type": "Want"
+ },
+ {
+  "text": "TollWiseX",
+  "type": "Want"
+ },
+ {
+  "text": "ZapTravelPro",
+  "type": "Want"
+ },
+ {
+  "text": "AutoWise",
+  "type": "Need"
+ },
+ {
+  "text": "CityTaxiX",
+  "type": "Want"
+ },
+ {
+  "text": "DriveXtra",
+  "type": "Want"
+ },
+ {
+  "text": "ParkXtra",
+  "type": "Want"
+ },
+ {
+  "text": "RideXtraPro",
+  "type": "Want"
+ },
+ {
+  "text": "ScootieXtra",
+  "type": "Want"
+ },
+ {
+  "text": "TollXtra",
+  "type": "Want"
+ },
+ {
+  "text": "ZapTravelXtra",
+  "type": "Want"
+ }
+]

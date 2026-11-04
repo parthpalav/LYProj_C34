@@ -1,0 +1,314 @@
+[
+ {
+  "text": "BarHop",
+  "type": "Want"
+ },
+ {
+  "text": "ClubBrew",
+  "type": "Want"
+ },
+ {
+  "text": "DrinksDen",
+  "type": "Want"
+ },
+ {
+  "text": "GameGeeks",
+  "type": "Want"
+ },
+ {
+  "text": "GamingRealm",
+  "type": "Want"
+ },
+ {
+  "text": "JoyNights",
+  "type": "Want"
+ },
+ {
+  "text": "LuxeBar",
+  "type": "Want"
+ },
+ {
+  "text": "MirthMingle",
+  "type": "Want"
+ },
+ {
+  "text": "NiteCafe",
+  "type": "Want"
+ },
+ {
+  "text": "PleasurePubs",
+  "type": "Want"
+ },
+ {
+  "text": "RivieraRoulette",
+  "type": "Want"
+ },
+ {
+  "text": "SohoScreen",
+  "type": "Want"
+ },
+ {
+  "text": "SoulBars",
+  "type": "Want"
+ },
+ {
+  "text": "TasteTrails",
+  "type": "Want"
+ },
+ {
+  "text": "ViveScreen",
+  "type": "Want"
+ },
+ {
+  "text": "WhisperWine",
+  "type": "Want"
+ },
+ {
+  "text": "BuzzBinge",
+  "type": "Want"
+ },
+ {
+  "text": "CineMania",
+  "type": "Want"
+ },
+ {
+  "text": "DigitalDrama",
+  "type": "Want"
+ },
+ {
+  "text": "EpicEntertainment",
+  "type": "Want"
+ },
+ {
+  "text": "FireFlyFlicks",
+  "type": "Want"
+ },
+ {
+  "text": "GameStation",
+  "type": "Want"
+ },
+ {
+  "text": "HighRoller",
+  "type": "Want"
+ },
+ {
+  "text": "JoyRide",
+  "type": "Want"
+ },
+ {
+  "text": "LuxeLounge",
+  "type": "Want"
+ },
+ {
+  "text": "NiteRush",
+  "type": "Want"
+ },
+ {
+  "text": "PleasurePond",
+  "type": "Want"
+ },
+ {
+  "text": "RetroGames",
+  "type": "Want"
+ },
+ {
+  "text": "SalsaStage",
+  "type": "Want"
+ },
+ {
+  "text": "SparkleScreen",
+  "type": "Want"
+ },
+ {
+  "text": "SoulSage",
+  "type": "Want"
+ },
+ {
+  "text": "TasteTales",
+  "type": "Want"
+ },
+ {
+  "text": "VividVista",
+  "type": "Want"
+ },
+ {
+  "text": "WhisperWineBar",
+  "type": "Want"
+ },
+ {
+  "text": "CasinoCafe",
+  "type": "Want"
+ },
+ {
+  "text": "CinemaHut",
+  "type": "Want"
+ },
+ {
+  "text": "GameCafe",
+  "type": "Want"
+ },
+ {
+  "text": "LuxePubs",
+  "type": "Want"
+ },
+ {
+  "text": "MirthNights",
+  "type": "Want"
+ },
+ {
+  "text": "NiteNook",
+  "type": "Want"
+ },
+ {
+  "text": "PleasureVibes",
+  "type": "Want"
+ },
+ {
+  "text": "RivieraRoulette",
+  "type": "Want"
+ },
+ {
+  "text": "SohoScreenRoom",
+  "type": "Want"
+ },
+ {
+  "text": "SoulHaven",
+  "type": "Want"
+ },
+ {
+  "text": "TasteTalesBrew",
+  "type": "Want"
+ },
+ {
+  "text": "ViveScreenHub",
+  "type": "Want"
+ },
+ {
+  "text": "WhisperWineHub",
+  "type": "Want"
+ },
+ {
+  "text": "BuzzBar",
+  "type": "Want"
+ },
+ {
+  "text": "CineCafe",
+  "type": "Want"
+ },
+ {
+  "text": "DigitalDramaHub",
+  "type": "Want"
+ },
+ {
+  "text": "EpicEntertainmentHall",
+  "type": "Want"
+ },
+ {
+  "text": "FireFlyFlicksRoom",
+  "type": "Want"
+ },
+ {
+  "text": "GameStationBrew",
+  "type": "Want"
+ },
+ {
+  "text": "HighRollerLuxe",
+  "type": "Want"
+ },
+ {
+  "text": "JoyRideMirth",
+  "type": "Want"
+ },
+ {
+  "text": "LuxeLoungeVivid",
+  "type": "Want"
+ },
+ {
+  "text": "NiteRushSalsa",
+  "type": "Want"
+ },
+ {
+  "text": "PleasureVibesRiviera",
+  "type": "Want"
+ },
+ {
+  "text": "RetroGamesSoul",
+  "type": "Want"
+ },
+ {
+  "text": "SalsaStageSparkle",
+  "type": "Want"
+ },
+ {
+  "text": "SparkleScreenVivid",
+  "type": "Want"
+ },
+ {
+  "text": "SoulSageWhisper",
+  "type": "Want"
+ },
+ {
+  "text": "TasteTalesWhisper",
+  "type": "Want"
+ },
+ {
+  "text": "ViveScreenWhisper",
+  "type": "Want"
+ },
+ {
+  "text": "WhisperWineHubVivid",
+  "type": "Want"
+ },
+ {
+  "text": "CasinoCafeLuxe",
+  "type": "Want"
+ },
+ {
+  "text": "CinemaHutRiviera",
+  "type": "Want"
+ },
+ {
+  "text": "GameCafeSparkle",
+  "type": "Want"
+ },
+ {
+  "text": "LuxePubsVive",
+  "type": "Want"
+ },
+ {
+  "text": "MirthNightsSalsa",
+  "type": "Want"
+ },
+ {
+  "text": "NiteNookBuzz",
+  "type": "Want"
+ },
+ {
+  "text": "PleasureVibesSoul",
+  "type": "Want"
+ },
+ {
+  "text": "RivieraRouletteNite",
+  "type": "Want"
+ },
+ {
+  "text": "SohoScreenVive",
+  "type": "Want"
+ },
+ {
+  "text": "SoulHavenWhisper",
+  "type": "Want"
+ },
+ {
+  "text": "TasteTalesVive",
+  "type": "Want"
+ },
+ {
+  "text": "ViveScreenSalsa",
+  "type": "Want"
+ },
+ {
+  "text": "WhisperWineHubBuzz",
+  "type": "Want"
+ }
+]

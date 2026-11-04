@@ -31,6 +31,21 @@ const assetSchema = new mongoose.Schema(
       type: Boolean,
       default: false
     },
+    // SIP amount for market assets; installment for a Recurring Deposit.
+    monthlyContribution: {
+      type: Number,
+      default: null,
+      validate: {
+        validator: (v) => v === null || v === undefined || (Number.isFinite(v) && v >= 0),
+        message: 'Monthly contribution must be a non-negative finite number'
+      }
+    },
+    // FD / RD only: with annualReturnRate these let the server compute currentValue (utils/fixedIncome.js).
+    principal: { type: Number, default: null },
+    startDate: { type: Date, default: null },
+    tenureMonths: { type: Number, default: null },
+    // Last time the user confirmed value and return; drives the monthly review prompt for market assets.
+    lastReviewedAt: { type: Date, default: null },
     liquidity: { type: String, default: 'liquid' }, // e.g. liquid, locked, restricted
     notes: { type: String, default: '' }
   },

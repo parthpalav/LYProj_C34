@@ -2,9 +2,33 @@ import crypto from 'crypto';
 import Liability from '../models/Liability.js';
 import Transaction from '../models/Transaction.js';
 import { logger } from '../utils/logger.js';
+import { DEFAULT_TIMEZONE, toZoned, fromZoned } from '../utils/userTime.js';
+import { getUserTimezone } from '../services/userTimezone.js';
 
 function userFilter(userId) {
   return { userId: String(userId) };
+}
+
+/** Optional loan details (outstanding principal, interest rate in % or fraction, months left). Returns { fields } or { error }. */
+function parseLoanFields(payload) {
+  const fields = {};
+  const blank = (v) => v === null || v === '';
+  if (payload.outstandingBalance !== undefined) {
+    const v = blank(payload.outstandingBalance) ? null : Number(payload.outstandingBalance);
+    if (v !== null && !(Number.isFinite(v) && v >= 0)) return { error: 'Outstanding balance must be a non-negative number' };
+    fields.outstandingBalance = v;
+  }
+  if (payload.interestRate !== undefined) {
+    const v = blank(payload.interestRate) ? null : Number(payload.interestRate);
+    if (v !== null && !(Number.isFinite(v) && v >= 0 && v <= 100)) return { error: 'Interest rate must be between 0% and 100%' };
+    fields.interestRate = v === null ? null : v > 1 ? v / 100 : v;
+  }
+  if (payload.remainingTermMonths !== undefined) {
+    const v = blank(payload.remainingTermMonths) ? null : Number(payload.remainingTermMonths);
+    if (v !== null && !(Number.isInteger(v) && v >= 0)) return { error: 'Remaining term must be a whole number of months' };
+    fields.remainingTermMonths = v;
+  }
+  return { fields };
 }
 
 export const getLiabilities = async (req, res, next) => {
@@ -43,6 +67,11 @@ export const createLiability = async (req, res, next) => {
       return res.status(400).json({ success: false, error: 'Valid startDate is required' });
     }
 
+    const loan = parseLoanFields(payload);
+    if (loan.error) {
+      return res.status(400).json({ success: false, error: loan.error });
+    }
+
     const newLiability = new Liability({
       id: crypto.randomUUID(),
       userId: String(userId),
@@ -57,12 +86,13 @@ export const createLiability = async (req, res, next) => {
       dayOfMonth: payload.dayOfMonth,
       monthOfYear: payload.monthOfYear,
       nextDueDate: null, // Will be calculated by scheduler or initially
-      status: 'active'
+      status: 'active',
+      ...loan.fields
     });
 
     // We can pre-calculate nextDueDate or let the scheduler do it.
     // It's safer to pre-calculate it now so the UI shows it immediately.
-    newLiability.nextDueDate = calculateNextDueDate(newLiability, new Date());
+    newLiability.nextDueDate = calculateNextDueDate(newLiability, new Date(), await getUserTimezone(userId), { inclusive: true });
 
     await newLiability.save();
     res.status(201).json({ success: true, data: newLiability });
@@ -99,6 +129,11 @@ export const updateLiability = async (req, res, next) => {
       }
       liability.amount = numAmount;
     }
+    const loan = parseLoanFields(payload);
+    if (loan.error) {
+      return res.status(400).json({ success: false, error: loan.error });
+    }
+    liability.set(loan.fields);
     if (payload.category !== undefined) liability.category = payload.category;
     if (payload.type !== undefined) liability.type = payload.type;
     
@@ -140,12 +175,12 @@ export const updateLiability = async (req, res, next) => {
       
       if (!prevAutoDeduct && payload.autoDeduct) {
         // Re-enabled: calculate next due date from NOW
-        liability.nextDueDate = calculateNextDueDate(liability, new Date());
+        liability.nextDueDate = calculateNextDueDate(liability, new Date(), await getUserTimezone(userId), { inclusive: true });
       }
     }
 
     if (frequencyChanged && liability.autoDeduct) {
-      liability.nextDueDate = calculateNextDueDate(liability, new Date());
+      liability.nextDueDate = calculateNextDueDate(liability, new Date(), await getUserTimezone(userId), { inclusive: true });
     }
 
     await liability.save();
@@ -303,63 +338,51 @@ export const getLiabilityTransactions = async (req, res, next) => {
   }
 };
 
-// Helper for recurrence
-export function calculateNextDueDate(liability, fromDate = new Date()) {
+// Helper for recurrence. Due dates fall at 00:00 in the user's timezone `tz`.
+//   inclusive: false (default) -> first occurrence strictly after fromDate's day. Used after a
+//              charge, where fromDate is the occurrence just processed.
+//   inclusive: true            -> today's day counts. Used when a bill is created, re-enabled or
+//              rescheduled, so a bill due today is due today, not next cycle.
+// The first occurrence is never before the startDate's day.
+export function calculateNextDueDate(liability, fromDate = new Date(), tz = DEFAULT_TIMEZONE, { inclusive = false } = {}) {
   if (!liability.autoDeduct) return null;
+  const zonedStart = liability.startDate ? toZoned(liability.startDate, tz) : null;
+  const plain = liability.toObject?.() ?? liability;
+  return fromZoned(calculateNextDueDateUtc({ ...plain, startDate: zonedStart }, toZoned(fromDate, tz), inclusive), tz);
+}
 
-  // Work strictly in UTC to prevent timezone offsets from shifting dates 
-  const baseDate = liability.startDate && liability.startDate > fromDate ? liability.startDate : fromDate;
-  const nextDate = new Date(baseDate);
+const DAY_MS = 24 * 60 * 60 * 1000;
 
-  if (liability.frequency === 'daily') {
-    if (nextDate.getTime() <= fromDate.getTime() && liability.startDate.getTime() <= fromDate.getTime()) {
-      // If we are calculating after a deduction, or starting today but it's passed
-      nextDate.setUTCDate(nextDate.getUTCDate() + 1);
-    }
-  } else if (liability.frequency === 'weekly') {
+function clampedUtcDate(year, month, day) {
+  const lastDay = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+  return new Date(Date.UTC(year, month, Math.min(day, lastDay)));
+}
+
+// Recurrence math on UTC calendar fields (inputs pre-shifted by calculateNextDueDate).
+function calculateNextDueDateUtc(liability, fromDate, inclusive) {
+  const dayStart = (d) => Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
+  let earliest = dayStart(fromDate) + (inclusive ? 0 : DAY_MS);
+  if (liability.startDate) earliest = Math.max(earliest, dayStart(liability.startDate));
+  const min = new Date(earliest);
+  const year = min.getUTCFullYear();
+  const month = min.getUTCMonth();
+
+  if (liability.frequency === 'weekly') {
     const targetDay = liability.dayOfWeek || 0;
-    const currentDay = nextDate.getUTCDay();
-    let daysToAdd = targetDay - currentDay;
-    if (daysToAdd <= 0) {
-      daysToAdd += 7;
-    }
-    nextDate.setUTCDate(nextDate.getUTCDate() + daysToAdd);
-  } else if (liability.frequency === 'monthly') {
+    const daysToAdd = (targetDay - min.getUTCDay() + 7) % 7;
+    return new Date(earliest + daysToAdd * DAY_MS);
+  }
+  if (liability.frequency === 'monthly') {
     const targetDay = liability.dayOfMonth || 1;
-    let nextMonth = nextDate.getUTCMonth();
-    let nextYear = nextDate.getUTCFullYear();
-
-    if (nextDate.getUTCDate() > targetDay || nextDate.getTime() <= fromDate.getTime()) {
-      nextMonth++;
-      if (nextMonth > 11) {
-        nextMonth = 0;
-        nextYear++;
-      }
-    }
-
-    const lastDayOfTargetMonth = new Date(Date.UTC(nextYear, nextMonth + 1, 0)).getUTCDate();
-    const safeDay = Math.min(targetDay, lastDayOfTargetMonth);
-    
-    nextDate.setUTCFullYear(nextYear, nextMonth, safeDay);
-  } else if (liability.frequency === 'yearly') {
+    const candidate = clampedUtcDate(year, month, targetDay);
+    return candidate >= min ? candidate : clampedUtcDate(year, month + 1, targetDay);
+  }
+  if (liability.frequency === 'yearly') {
     const targetMonth = (liability.monthOfYear || 1) - 1; // 0-11
     const targetDay = liability.dayOfMonth || 1;
-    
-    let nextYear = nextDate.getUTCFullYear();
-    
-    if (nextDate.getUTCMonth() > targetMonth || 
-       (nextDate.getUTCMonth() === targetMonth && nextDate.getUTCDate() > targetDay) ||
-       nextDate.getTime() <= fromDate.getTime()) {
-      nextYear++;
-    }
-
-    const lastDayOfTargetMonth = new Date(Date.UTC(nextYear, targetMonth + 1, 0)).getUTCDate();
-    const safeDay = Math.min(targetDay, lastDayOfTargetMonth);
-    
-    nextDate.setUTCFullYear(nextYear, targetMonth, safeDay);
+    const candidate = clampedUtcDate(year, targetMonth, targetDay);
+    return candidate >= min ? candidate : clampedUtcDate(year + 1, targetMonth, targetDay);
   }
-
-  // Ensure time is reset to 00:00:00 UTC for clean comparisons
-  nextDate.setUTCHours(0, 0, 0, 0);
-  return nextDate;
+  // daily
+  return min;
 }

@@ -1,0 +1,322 @@
+[
+ {
+  "text": "uber cab to office",
+  "type": "Want"
+ },
+ {
+  "text": "ola cab to office",
+  "type": "Want"
+ },
+ {
+  "text": "cab to office today",
+  "type": "Want"
+ },
+ {
+  "text": "cab ride to office",
+  "type": "Want"
+ },
+ {
+  "text": "cab to airport",
+  "type": "Want"
+ },
+ {
+  "text": "cab to airport early morning",
+  "type": "Want"
+ },
+ {
+  "text": "cab to mall",
+  "type": "Want"
+ },
+ {
+  "text": "cab to mall for shopping",
+  "type": "Want"
+ },
+ {
+  "text": "cab to office late night",
+  "type": "Want"
+ },
+ {
+  "text": "cab ride to airport",
+  "type": "Want"
+ },
+ {
+  "text": "cab ride to mall",
+  "type": "Want"
+ },
+ {
+  "text": "office cab ride",
+  "type": "Want"
+ },
+ {
+  "text": "app cab to office",
+  "type": "Want"
+ },
+ {
+  "text": "app cab to airport",
+  "type": "Want"
+ },
+ {
+  "text": "app cab to mall",
+  "type": "Want"
+ },
+ {
+  "text": "cab ride home from mall",
+  "type": "Want"
+ },
+ {
+  "text": "airport cab ride",
+  "type": "Want"
+ },
+ {
+  "text": "airport drop cab",
+  "type": "Want"
+ },
+ {
+  "text": "airport pickup cab",
+  "type": "Want"
+ },
+ {
+  "text": "cab airport drop",
+  "type": "Want"
+ },
+ {
+  "text": "cab for airport drop",
+  "type": "Want"
+ },
+ {
+  "text": "cab for airport pickup",
+  "type": "Want"
+ },
+ {
+  "text": "cab for office drop",
+  "type": "Want"
+ },
+ {
+  "text": "late office cab ride",
+  "type": "Want"
+ },
+ {
+  "text": "night cab from office",
+  "type": "Want"
+ },
+ {
+  "text": "cab from mall home",
+  "type": "Want"
+ },
+ {
+  "text": "cab back from airport",
+  "type": "Want"
+ },
+ {
+  "text": "cab to phoenix mall",
+  "type": "Want"
+ },
+ {
+  "text": "cab to citywalk mall",
+  "type": "Want"
+ },
+ {
+  "text": "cab to dlf mall",
+  "type": "Want"
+ },
+ {
+  "text": "cab to forum mall",
+  "type": "Want"
+ },
+ {
+  "text": "cab to office in rain",
+  "type": "Want"
+ },
+ {
+  "text": "uber to office",
+  "type": "Want"
+ },
+ {
+  "text": "uber airport drop",
+  "type": "Want"
+ },
+ {
+  "text": "uber mall ride",
+  "type": "Want"
+ },
+ {
+  "text": "uber ride to mall",
+  "type": "Want"
+ },
+ {
+  "text": "uber ride to airport",
+  "type": "Want"
+ },
+ {
+  "text": "ola ride to airport",
+  "type": "Want"
+ },
+ {
+  "text": "ola ride to office",
+  "type": "Want"
+ },
+ {
+  "text": "ola cab office",
+  "type": "Want"
+ },
+ {
+  "text": "rapido ride to office",
+  "type": "Want"
+ },
+ {
+  "text": "rapido bike office ride",
+  "type": "Want"
+ },
+ {
+  "text": "carpool ride to office",
+  "type": "Want"
+ },
+ {
+  "text": "cab share to airport",
+  "type": "Want"
+ },
+ {
+  "text": "cab share to mall",
+  "type": "Want"
+ },
+ {
+  "text": "airport cab share",
+  "type": "Want"
+ },
+ {
+  "text": "prime cab airport",
+  "type": "Want"
+ },
+ {
+  "text": "sedan cab airport",
+  "type": "Want"
+ },
+ {
+  "text": "suv cab airport",
+  "type": "Want"
+ },
+ {
+  "text": "cab ride with luggage",
+  "type": "Want"
+ },
+ {
+  "text": "cab to airport with bags",
+  "type": "Want"
+ },
+ {
+  "text": "cab booked for office",
+  "type": "Want"
+ },
+ {
+  "text": "cab booked for mall",
+  "type": "Want"
+ },
+ {
+  "text": "cab booking for office",
+  "type": "Want"
+ },
+ {
+  "text": "cab booking airport",
+  "type": "Want"
+ },
+ {
+  "text": "app cab late night",
+  "type": "Want"
+ },
+ {
+  "text": "cab home from office",
+  "type": "Want"
+ },
+ {
+  "text": "cab ride for office party",
+  "type": "Want"
+ },
+ {
+  "text": "cab for mall shopping",
+  "type": "Want"
+ },
+ {
+  "text": "cab to multiplex",
+  "type": "Want"
+ },
+ {
+  "text": "cab to cinema hall",
+  "type": "Want"
+ },
+ {
+  "text": "cab to market mall",
+  "type": "Want"
+ },
+ {
+  "text": "cab from airport to home",
+  "type": "Want"
+ },
+ {
+  "text": "cab from home to airport",
+  "type": "Want"
+ },
+ {
+  "text": "airport transfer cab",
+  "type": "Want"
+ },
+ {
+  "text": "airport transfer ride",
+  "type": "Want"
+ },
+ {
+  "text": "uber to airport",
+  "type": "Want"
+ },
+ {
+  "text": "ola to mall",
+  "type": "Want"
+ },
+ {
+  "text": "cab to railway station",
+  "type": "Want"
+ },
+ {
+  "text": "cab ride to station",
+  "type": "Want"
+ },
+ {
+  "text": "cab to office with colleagues",
+  "type": "Want"
+ },
+ {
+  "text": "cab to office from airport",
+  "type": "Want"
+ },
+ {
+  "text": "cab to airport on holiday",
+  "type": "Want"
+ },
+ {
+  "text": "cab for mall visit weekend",
+  "type": "Want"
+ },
+ {
+  "text": "mall visit cab weekend",
+  "type": "Want"
+ },
+ {
+  "text": "cab to airport before dawn",
+  "type": "Want"
+ },
+ {
+  "text": "cab to airport after office",
+  "type": "Want"
+ },
+ {
+  "text": "cab to office for meeting",
+  "type": "Want"
+ },
+ {
+  "text": "uber ride to office late",
+  "type": "Want"
+ },
+ {
+  "text": "ola airport ride early",
+  "type": "Want"
+ }
+]

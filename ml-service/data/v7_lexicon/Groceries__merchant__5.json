@@ -1,0 +1,234 @@
+[
+ {
+  "text": "FreshMart",
+  "type": "Need"
+ },
+ {
+  "text": "FreshFruits",
+  "type": "Need"
+ },
+ {
+  "text": "FreshVeggies",
+  "type": "Need"
+ },
+ {
+  "text": "DairyDelight",
+  "type": "Need"
+ },
+ {
+  "text": "VeggieVilla",
+  "type": "Need"
+ },
+ {
+  "text": "FreshDairy",
+  "type": "Need"
+ },
+ {
+  "text": "MilkMilk",
+  "type": "Need"
+ },
+ {
+  "text": "KrishiKirana",
+  "type": "Need"
+ },
+ {
+  "text": "KrishiBazaar",
+  "type": "Need"
+ },
+ {
+  "text": "KrishiKart",
+  "type": "Need"
+ },
+ {
+  "text": "KrishiFresh",
+  "type": "Need"
+ },
+ {
+  "text": "DailyDelight",
+  "type": "Need"
+ },
+ {
+  "text": "DailyDeli",
+  "type": "Need"
+ },
+ {
+  "text": "DailyNeeds",
+  "type": "Need"
+ },
+ {
+  "text": "FreshNeeds",
+  "type": "Need"
+ },
+ {
+  "text": "VeggieMart",
+  "type": "Need"
+ },
+ {
+  "text": "VeggieVend",
+  "type": "Need"
+ },
+ {
+  "text": "FarmFruits",
+  "type": "Need"
+ },
+ {
+  "text": "FarmFinesse",
+  "type": "Need"
+ },
+ {
+  "text": "FarmVend",
+  "type": "Need"
+ },
+ {
+  "text": "FarmFresh",
+  "type": "Need"
+ },
+ {
+  "text": "FreshPick",
+  "type": "Need"
+ },
+ {
+  "text": "FreshBite",
+  "type": "Need"
+ },
+ {
+  "text": "FreshVend",
+  "type": "Need"
+ },
+ {
+  "text": "FreshChoice",
+  "type": "Need"
+ },
+ {
+  "text": "FreshCuts",
+  "type": "Need"
+ },
+ {
+  "text": "FreshNest",
+  "type": "Need"
+ },
+ {
+  "text": "FreshNestDeliveries",
+  "type": "Need"
+ },
+ {
+  "text": "FreshNestMart",
+  "type": "Need"
+ },
+ {
+  "text": "FreshNestKirana",
+  "type": "Need"
+ },
+ {
+  "text": "FreshNestMarket",
+  "type": "Need"
+ },
+ {
+  "text": "FreshNestOnline",
+  "type": "Need"
+ },
+ {
+  "text": "FreshNestPantry",
+  "type": "Need"
+ },
+ {
+  "text": "FreshNestVend",
+  "type": "Need"
+ },
+ {
+  "text": "FreshNestVeggie",
+  "type": "Need"
+ },
+ {
+  "text": "FreshNestMarketplace",
+  "type": "Need"
+ },
+ {
+  "text": "FreshNestOnlineMart",
+  "type": "Need"
+ },
+ {
+  "text": "FreshNestKiranaMart",
+  "type": "Need"
+ },
+ {
+  "text": "FreshNestGrocery",
+  "type": "Need"
+ },
+ {
+  "text": "FreshNestFresh",
+  "type": "Need"
+ },
+ {
+  "text": "FreshNestFruits",
+  "type": "Need"
+ },
+ {
+  "text": "FreshNestVeggies",
+  "type": "Need"
+ },
+ {
+  "text": "FreshNestPantryVend",
+  "type": "Need"
+ },
+ {
+  "text": "FreshNestMarketVend",
+  "type": "Need"
+ },
+ {
+  "text": "FreshNestPantryKirana",
+  "type": "Need"
+ },
+ {
+  "text": "FreshNestMarketKirana",
+  "type": "Need"
+ },
+ {
+  "text": "FreshNestPantryDeliveries",
+  "type": "Need"
+ },
+ {
+  "text": "FreshNestMarketDeliveries",
+  "type": "Need"
+ },
+ {
+  "text": "FreshNestPantryFresh",
+  "type": "Need"
+ },
+ {
+  "text": "FreshNestMarketFresh",
+  "type": "Need"
+ },
+ {
+  "text": "FreshNestPantryFruits",
+  "type": "Need"
+ },
+ {
+  "text": "FreshNestMarketFruits",
+  "type": "Need"
+ },
+ {
+  "text": "FreshNestPantryVeggies",
+  "type": "Need"
+ },
+ {
+  "text": "FreshNestMarketVeggies",
+  "type": "Need"
+ },
+ {
+  "text": "SweetTreats",
+  "type": "Want"
+ },
+ {
+  "text": "ChocoDelights",
+  "type": "Want"
+ },
+ {
+  "text": "ChocoTreats",
+  "type": "Want"
+ },
+ {
+  "text": "DairyJoy",
+  "type": "Want"
+ }
+]

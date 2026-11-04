@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import type { User, LoginPayload, RegisterPayload } from '../types';
 import { AuthContext } from './auth-context-base';
+import { setAppTimezone } from '../utils/timezone';
 import {
   tokenStorage,
   setAuthToken,
@@ -13,6 +14,8 @@ import {
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  // Set during render so every child formats and groups dates in the user's timezone.
+  setAppTimezone(user?.timezone);
 
   const refreshUser = useCallback(async () => {
     try {
@@ -99,6 +102,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         register,
         logout,
         refreshUser,
+        setUser,
       }}
     >
       {children}

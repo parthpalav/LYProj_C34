@@ -1,0 +1,5670 @@
+{
+ "Kinderjoy Store": {
+  "category": "Groceries",
+  "type": "Want"
+ },
+ "Reckitt Benckiser": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "HealthPeak": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "L&T Mutual Fund": {
+  "category": "Investments",
+  "type": "Investment"
+ },
+ "chai sutta milk shop": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "laundry pickup fee": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "school tie": {
+  "category": "Shopping",
+  "type": "Need"
+ },
+ "new mobile cable": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "health ins claim receipt": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "Soni Rare Coins": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Jockey Underwear": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Garuda Esports": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "birthday cake": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "TATA SRL": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "Jyoti Gold Shop": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Zanobi": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "new mobile screen protector": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Healthkart Pharmacy": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "new mobile battery": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "sabzi bill kit": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "stationery for priya": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Ved": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "shaving brush": {
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ "gym dues": {
+  "category": "Health",
+  "type": "Want"
+ },
+ "stock tracker app": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "GourmetGarden": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "bicycle lock": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "KPL": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "shoes for gym": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "cash for chai and biscuits": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "laundry service home delivery": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "fitness socks": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Mitsubishi": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "new laptop for studies": {
+  "category": "Shopping",
+  "type": "Need"
+ },
+ "salsa lessons": {
+  "category": "Education",
+  "type": "Need"
+ },
+ "Choco Delight": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "upi to mom for rent": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "shoes for college": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "chowk chaudhary (sabkuch karne wala)": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "Sparsh": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "Nearbuy": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "doodh party": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "Sanjeev Biryani": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "cash for autorickshaw": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "etf dividend": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "Hairology Store": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "The Seoulist": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "bicycle repair": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "cab to hospital": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "chowk puri": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "DeluxeDelicacies": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "samosa": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "FineFare": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "MetroGo": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "Walmart": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "FancyFavourites": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "ParkSmartly": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "Olives": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "doodh and pastries for party": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "diesel for trip": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "health food suppl": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "doodh and cakes for party": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "Whisper": {
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ "Herbaland": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "Krusty Corn": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Isa Charities": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "maid detergent": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "gym wear": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "health ins claim": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "Health Aid": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "handyman service": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "local bus for outing": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "Red Street": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "cash for street musician": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "cash for evening tea": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "BusFly": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "Jain Cleaning Services": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "Rahul Sports": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "stationery for kid": {
+  "category": "Education",
+  "type": "Need"
+ },
+ "Piramal Enterprises": {
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ "cash for tea and biscuits": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "scrip sale": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "Rejuvate": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "Denis Lingo": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Prabhat Pipes": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "PepperFrost": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Lux Soap": {
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ "Reliance Digital": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "parking at hotel": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "imli juice": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Ferrero": {
+  "category": "Groceries",
+  "type": "Want"
+ },
+ "toll tax for holiday": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "Anand Charities": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "new mobile battery backup": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "IDBI Federal Life": {
+  "category": "Insurance",
+  "type": "Need"
+ },
+ "friend's bday": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "BusHail": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "mobile payment done": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "sabzi bill": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "vitamin suppl": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "YummyBits": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "electric bill charges": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "kids stationary": {
+  "category": "Education",
+  "type": "Need"
+ },
+ "Haier": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Kamani Tubes": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "health food store 3": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Mahanagar Gas": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "Shruthi Handmade": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Gulzaar": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "DriveFast": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "Shakti Temple": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "repair costs": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Karnataka Emporium": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "TechFix": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "sabzi bill kit service": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "cashback offer": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "stationery scale": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Salon Services": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "ICICI Prudential Mutual Fund": {
+  "category": "Investments",
+  "type": "Investment"
+ },
+ "OTT": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "january water tax": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "cash for toll tax": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "new fan for bedroom": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "january gas bill": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "Kiran Sports": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "new backpack": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "candy from kiosk": {
+  "category": "Groceries",
+  "type": "Want"
+ },
+ "KolkataTrain": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "parking at airport": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "CDSL": {
+  "category": "Investments",
+  "type": "Investment"
+ },
+ "liq in": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "security guard tips": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "new winter coat": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "chowk puri bill kit service": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "chai sutta for sister": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Gupta Stamp Collecting": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "smartphone for dad": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "parking at market": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "vr headset": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "ChocoCrave": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "rte challan": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Taurus Tax": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Umesh Gold House": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Spencers": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "halloween candy for party": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "TATA": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "new game console": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Tata Cliq SmartBuy": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "tiffin tikka": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Narayan Temple": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "Tulsi Charitable Trust": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "Shetty Auto Repair": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "gas pura": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "auto rickshaw fare": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "Kumar Yoga Studio": {
+  "category": "Health",
+  "type": "Want"
+ },
+ "cable bill": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "gift for my friend": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "new water bottle for mom": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "courier refund": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "Vimala's Bakery": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "My Beauty Bar": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "vitamin b": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "health ins plan": {
+  "category": "Insurance",
+  "type": "Need"
+ },
+ "Prime X": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Renu Tailor": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "shaving soap": {
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ "gaming console": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Vichy Normaderm": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "new water bottle for gym": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Chitra Gold Emporium": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "chaat from sabzi wala": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "sabzi bill kit service bill": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Bosky": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "taxi to metro": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "chai sutta for cousin's party": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "taxi ride": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "Hindware": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "vitamin tablet": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "WICKED": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "Vidya General": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "cash for chai and paan": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "MakeMyTrip": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "Munchie Hub": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Walgreens": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "toll for holiday trip": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "Zeenath Sports": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "lunch at office": {
+  "category": "Food & Dining",
+  "type": "Need"
+ },
+ "Yummahub": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Fountainhead": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Quartz X": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "monthly bill": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "new mobile": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "RTO Fees": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Saraswati Stationery": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "ZomatoPay": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "health fair": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "Shiv Gold Emporium": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "RBL Wallet": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "stationery office": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "laptop repair": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "electric meter bill": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "chowk puri bill kit": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "chocolate for sister": {
+  "category": "Groceries",
+  "type": "Want"
+ },
+ "AutoFly": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "doodh ki party": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "samosa box": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Isa Donation": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "GourmetGems": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "ac repair man": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "Gupta Old Books": {
+  "category": "Education",
+  "type": "Need"
+ },
+ "cash for snacks and tea": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "helmet for riding": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "HINDUSTAN PETROCHEMICAL": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "SweetTreats": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Rajesh Beauty Parlour": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "PayUmoney": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "healthcare plan": {
+  "category": "Insurance",
+  "type": "Need"
+ },
+ "cashback site": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "ParkWise": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "fluoride toothpaste": {
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ "Ganesha Charities": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "Sukanya Samriddhi": {
+  "category": "Investments",
+  "type": "Investment"
+ },
+ "BangaloreTraffic": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "slic bill": {
+  "category": "Insurance",
+  "type": "Need"
+ },
+ "Rextalk": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Money Matters": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "new suit for job interview": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Siemens": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Shanti Fees": {
+  "category": "Education",
+  "type": "Need"
+ },
+ "school cap": {
+  "category": "Shopping",
+  "type": "Need"
+ },
+ "fuel for holiday": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "Zovi": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Cholamandalam": {
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ "Prakash's Store": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "tiffin service for guests": {
+  "category": "Food & Dining",
+  "type": "Need"
+ },
+ "cash for tea & snacks": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "stationary for my kid": {
+  "category": "Education",
+  "type": "Need"
+ },
+ "Crompton Greaves": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "maid backpack": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "doodh for puja": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "Lakme Naturals": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "Kali Temple": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "Gold House of India": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Citi Bank": {
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ "chocolate for friend": {
+  "category": "Groceries",
+  "type": "Want"
+ },
+ "Vishakha Pipes": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "Sharma Tennis Court": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "new pencil case": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Mohan's Bakery": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "cash for snacks": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "stationery pencil sharpener": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "maid tissue": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "chai sutta for society": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "shampoo dispenser": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Choco Haven": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "stationery": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "cable for laptop": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "health ins claim follow-up": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "Chand Family Tiffin": {
+  "category": "Food & Dining",
+  "type": "Need"
+ },
+ "GourmetGalore": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "laundry service delivery": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "cash for cigarettes": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "gift for brother birthday": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "JBM Auto": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "dining & drinks": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "TollWisePro": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "ChocoTreats": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "emi for LIC policy": {
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ "Savji Brothers": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "MumbaiTraffic": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "L'Oreal Professionnel": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "Quiz Master": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "Support": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "guitar strings": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "sabzi wala for veggies": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Work Charger": {
+  "category": "Shopping",
+  "type": "Need"
+ },
+ "Postmates": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "ZapToll": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "massager gift": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "chowk idhar udhar": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Paytm First": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Wipro Holcombe": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "doodh milkman": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Maha Metered Cabs": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "new bedspread": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "taxi to coach station": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "IdeaPad": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "deodrant": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "fd interest": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "Tiffin Mart": {
+  "category": "Food & Dining",
+  "type": "Need"
+ },
+ "gift for engagement party": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "PVR": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "Union Tax": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "UrbanElectronics": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "cashback card": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "Pandora": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "gamer mouse": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "stationary kit": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Tiffin Charges": {
+  "category": "Food & Dining",
+  "type": "Need"
+ },
+ "Servify": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Durga Charities": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "earphones for fitness": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "HealthyEats": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "TasteTales": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "SwiggyPay": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Replacement": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "PeakHealth": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "chalta hai": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "Mariamman Temple": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "new formal shoes": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Madhu Tailor": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "flight cancellation fee": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "PurThread": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Tata Steel": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Volunteer": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "Birla Sunlife Insurance": {
+  "category": "Insurance",
+  "type": "Need"
+ },
+ "Voguez": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "laundry service home pickup": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "new mobile case": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "GooglePay": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Herbalife": {
+  "category": "Health",
+  "type": "Want"
+ },
+ "Snack Palace": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "9ine": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Bajaj Auto": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "Pepperfry": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "gift for my teacher birthday": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Treats Corner": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Tata Chemicals": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "doodh for my sister": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "sweets for colleague": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "ABB": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Red X": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "doodh milk shop": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "TGLC": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "online yoga course": {
+  "category": "Health",
+  "type": "Want"
+ },
+ "Lakshmi Charities": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "chai sutta metro": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "office lunch": {
+  "category": "Food & Dining",
+  "type": "Need"
+ },
+ "earphones for dad": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "hand soap": {
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ "Zara Hair": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "doodh for home": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "laptop charger repair": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "cleaning supplies": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "ONGCB": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "laundry service charge": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Gupta Basketball Court": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "cash for local snacks": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "ParkSmart": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "gaming mouse": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "sweets for holi": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Bulldog": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "XYZ Financial": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "new laptop mouse": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "nkl bill": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "january water bill tax": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "Byke Mobility": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "january water bill": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "Cleartrip": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "IDBI Federal Policy": {
+  "category": "Insurance",
+  "type": "Need"
+ },
+ "health food items 3": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Tiffin Room Express": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "gift for friend's birthday": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "shaving foam": {
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ "doodh for wedding": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "chai sutta milk delivery": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Wynk": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "train journey": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "digital gold sell": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "Luxe": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Rain Gear": {
+  "category": "Shopping",
+  "type": "Need"
+ },
+ "InstaPay": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "laundry service pickup charge": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "White Hat Services": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Krishna Tax Services": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "swimming gear": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Raj's Store": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "solar panel maintenance": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "soap pack": {
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ "Johnson & Johnson": {
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ "Dermatics": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "gym membership renewal": {
+  "category": "Health",
+  "type": "Want"
+ },
+ "Swiggy Grocery": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Sony": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "hair clippers": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "shoe repair": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "sweets box": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Soni Chess Club": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "RelianceFresh": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "HAVELLS": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "gaming pc": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Soni Bridge Club": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "med insurance claim": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "Nivea": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "Wibmo": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Mistry Eyewear": {
+  "category": "Shopping",
+  "type": "Need"
+ },
+ "Sharma Vintage Cars": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "Sai Charities": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "car repair": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "Pine": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Punjab Tractors": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "new winter jacket": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "cashback online": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "Water Charges": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "fruit and vegetable salad": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "PVR Online": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "body wash": {
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ "Hindustan Petroleum Corporation": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "Kapil's Store": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "electricity bill apr": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "Hub X": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "stationery pen holder": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Soni Volleyball Court": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "Sharma Boxing Gym": {
+  "category": "Health",
+  "type": "Want"
+ },
+ "january internet bill": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "INTEX": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Swiggy Corporate": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "gym coaching": {
+  "category": "Health",
+  "type": "Want"
+ },
+ "Principal Tax": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Goddess Temple": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "doodh aur samosa": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Trend X": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "India X": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "doodh pura": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "new kurta for brother": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "shampoo refill": {
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ "TrainsRUs": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "doodh market": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "city bus ticket": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "Ram Charities": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "doodh market stall": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "school transport": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "Meditation Minds": {
+  "category": "Health",
+  "type": "Want"
+ },
+ "virtual reality headset": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "new phone case for work": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "TradingView": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "toll payment for trip": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "GrowMyLunch": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "gas bill (delayed)": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "stationery pencil": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "gym socks": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "protein bar": {
+  "category": "Health",
+  "type": "Want"
+ },
+ "repair cycle": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "massager device": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "Bundl Technologies": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "acne cream": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "razor kit": {
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ "chai sutta milkman": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "doodh uncle stall": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Toiletries": {
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ "laundry service online": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "MoneyClub": {
+  "category": "Investments",
+  "type": "Investment"
+ },
+ "WellnessPeak": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "chai sutta for uncle": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "ServoPro": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "doodh bheja": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Hanuman Charities": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "Spree": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "gift for brother engagement": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "stock dividend": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "chai sutta for bhaiya": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "PayZapp": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "school uniforms": {
+  "category": "Shopping",
+  "type": "Need"
+ },
+ "office farewell": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "new laptop for my college": {
+  "category": "Shopping",
+  "type": "Need"
+ },
+ "paytm bill": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "Sail": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "doodh for my brother": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Biosilk": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "Agarwal Services": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Tata Digital": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "stationery set": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Citibank": {
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ "EMI Buddy": {
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ "Aarti's Sweet Corner": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "doodh and sweets for friends": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "new charger": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Naturals": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "meditation app": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "Sharma Barber": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "barbeque session": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "gift for cousin wedding": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Anmol Pipes": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "school needs": {
+  "category": "Education",
+  "type": "Need"
+ },
+ "Olive Bar": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "Sangeeta Services": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Indorama": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "UrbanGardener": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "Prem Gold Emporium": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "GourmetGala": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "sweets banta": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Gupta Custom Paintings": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Vapin Vihari Express": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Star Bazaar": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "IRCTC": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "new bookshelf for study": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "cash for temple puja": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "parking garage": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "gift for my principal": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "dance class fees": {
+  "category": "Education",
+  "type": "Need"
+ },
+ "mangoes and wine": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "Durga Temple": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "doodh and cookies for group": {
+  "category": "Groceries",
+  "type": "Want"
+ },
+ "Uflex": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Zest Repair": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "doodh kit": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "toothbrush pack": {
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ "new ceiling fan": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "doodh milk stall": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Prakash Art": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "taxi to station": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "french fries for snacks": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "gaming headset": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "talcum powder": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "samosa and pakora mix": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "SaaS": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "ScootieWheels": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "Cashify": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "house cleaning supplies": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Singh Electricals": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "doodh delivery": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Milaap": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "doodh milk for school": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Sai Handicrafts": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "gym session": {
+  "category": "Health",
+  "type": "Want"
+ },
+ "fitness wear": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "festival food": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "sabh kiosk plan": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "Shyam's Mutual Mart": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Badaam house": {
+  "category": "Groceries",
+  "type": "Want"
+ },
+ "chocolate for neighbour": {
+  "category": "Groceries",
+  "type": "Want"
+ },
+ "Jindal Steel & Power": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Sarvangan": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Kabuliwala": {
+  "category": "Groceries",
+  "type": "Want"
+ },
+ "health food store 2": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Curefit": {
+  "category": "Health",
+  "type": "Want"
+ },
+ "Dairy Milk": {
+  "category": "Groceries",
+  "type": "Want"
+ },
+ "new tires for bike": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "shampoo pack": {
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ "cash for chota paan": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Alley Street": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Aditya Birla Sun Life Mutual Fund": {
+  "category": "Investments",
+  "type": "Investment"
+ },
+ "Dove Essentials": {
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ "cash for delivery guy": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "new uniform for college": {
+  "category": "Shopping",
+  "type": "Need"
+ },
+ "Kaizen": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "meditation class": {
+  "category": "Health",
+  "type": "Want"
+ },
+ "maid shoes": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "LocalBanya": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Mahindra Lifespace": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "UrbanTree": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Vip X": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Premium X": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "INDIAN OIL": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "Hutker": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "fuel card recharge": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "Lalji's Store": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "gift card 1000": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Rajesh Tailor": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "ScootieXtra": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "samsung phone": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "sabji wali ki ruko": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Shree Jewellers": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "new power bank": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "LuxeGrocery": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "new laptop for uni": {
+  "category": "Shopping",
+  "type": "Need"
+ },
+ "NMRC": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "TollSmart": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "school glasses": {
+  "category": "Shopping",
+  "type": "Need"
+ },
+ "Green X": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "EasyPay": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Kumar Dentist Clinic": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "Zoho": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "EliteEdibles": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "electric scooter repair": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "stationery paper": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "fitness tracker": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "TasteTalesVive": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Tiffin House": {
+  "category": "Food & Dining",
+  "type": "Need"
+ },
+ "stationery items": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "cabs to airport": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "Bright Future": {
+  "category": "Education",
+  "type": "Need"
+ },
+ "tiffin service for wedding": {
+  "category": "Food & Dining",
+  "type": "Need"
+ },
+ "uncle's bday gift": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "doodh bill kit": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Khari Baoli Express": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Yash Tiffin": {
+  "category": "Food & Dining",
+  "type": "Need"
+ },
+ "UrbanLadder": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "stationery pen": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Style Master": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "upi to gandhiji": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "TollQuick": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "furniture polish": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "chai aur namak": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "cash for metro ticket": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "health coaching": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "Procter & Gamble": {
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ "Flipkart Pay Later": {
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ "doodh for my kid": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "sabzi wala for kids": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "parking for event": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "bakery fresh bread": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Amit Services": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Kook N Kak": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Sai Staples": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Sunfeast": {
+  "category": "Groceries",
+  "type": "Want"
+ },
+ "duster kit": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Tasty Treats": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "gamer pc build": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "DriveSmart": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "handwash": {
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ "school bag strap": {
+  "category": "Education",
+  "type": "Need"
+ },
+ "VitalityPeak": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "GourmetGoods": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "karate uniform": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Luxury X": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Lotus": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "Sharma Kirana": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Cholamandalam MS": {
+  "category": "Insurance",
+  "type": "Need"
+ },
+ "new gaming setup": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Policybazaar": {
+  "category": "Insurance",
+  "type": "Need"
+ },
+ "Prime Street": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "PayU": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "new dress for office": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Hindustan Aeronautics": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Soni Rare Peanuts": {
+  "category": "Groceries",
+  "type": "Want"
+ },
+ "Soni Jeweller": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Dance Zone": {
+  "category": "Education",
+  "type": "Need"
+ },
+ "TreatBox": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Bunnings": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "diwali sweets": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "BusMate": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "metro for event": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "gas pura bill kit": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "HDFC Wallet": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "TasteTrails": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Star X": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "RideHail": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "FreshBite": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Dolce & Gabbana": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "health food": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "BusRide": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "TasteTalesBrew": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Dairyjoy Corner": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "slic due": {
+  "category": "Insurance",
+  "type": "Need"
+ },
+ "TechPoint": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "doodh 50": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Gupta Puzzle Club": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "emergency loan repayment": {
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ "DriveHail": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "razor pack": {
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ "Mishra Optometrist": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "PremiumPies": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Gupta Swimming Pool": {
+  "category": "Health",
+  "type": "Want"
+ },
+ "Rivian": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "pay bhim upi": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "drawing supplies": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Rane": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "TAXIFARE": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "auto to market": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "ICICI Housing": {
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ "Steel Authority of India": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "office laptop cover": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Dewan Repairs": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Sugarday": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "new work shoes": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "health tonic": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "Maggie Corner": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Hindustan Petroleum Ltd": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "new laptop for coding": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Nisha's Handicraft": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Finance Expert": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "council tax": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "helmets for family": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "Saraswati Temple Donation": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "Shiva Temple": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "maid nail file": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "fastag for trip": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "Kali Charities": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "Guru's Store": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "OYO": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "sanitary pad": {
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ "Pooja Parivesh": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "new tiffin box": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "mtl tikka": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "friend's wedding card": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "laundry pickup and delivery": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "TemptationsTreats": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Heyy": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "HSBC": {
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ "Britannia": {
+  "category": "Groceries",
+  "type": "Want"
+ },
+ "Ram's Jewellery": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Turbocor": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Shriram EPC": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "electric scooter battery": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "Amar Gold Corner": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "PrimePeak": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "new shoes for college": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "ChocoCherish": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "DeluxeDesserts": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "gamer console": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "LuxuryLunches": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Ampco Pumps": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "new lunch box": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "accident in": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "Sylk": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Bajaj Electricals": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "smartphone": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Dove Shampoo": {
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ "PeakWellness": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "laundry delivery fee": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "gift for friend baby shower": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Soni Art Supplies": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Grooming": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "Alankar": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Pepsi Corner": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "mobile phone repair": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "cash to maid": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "trv licec": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "Fresh Start": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "SweetCorner": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "toll for weekend trip": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "Vikas's Store": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "metro ticket for holiday": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "ParkWiseX": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "gift for anniversary": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "holiday booking": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "pressure cooker": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "patties": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "cash for local tea": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "tiffin van charge": {
+  "category": "Food & Dining",
+  "type": "Need"
+ },
+ "office snacks": {
+  "category": "Food & Dining",
+  "type": "Need"
+ },
+ "Tiffin Room": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "UltraTech Cement": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "Pop X": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "doodh tikka": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Zee Entertainment": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "gift for friend wedding": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "vitamin b12": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "Sai Baba Temple": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "PurThread Online": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "vitamin e": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "Ankush Pipes": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "Times Internet": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "tiffin 150": {
+  "category": "Food & Dining",
+  "type": "Need"
+ },
+ "gift for colleague farewell": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "electric scooter charge upgrade": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "electric razor": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "dance class": {
+  "category": "Education",
+  "type": "Need"
+ },
+ "ice cream from shop": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "VividVista": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "paytm bill payment": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "AhmedabadTraffic": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "office tea": {
+  "category": "Food & Dining",
+  "type": "Need"
+ },
+ "Golden X": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "tai chi lessons": {
+  "category": "Education",
+  "type": "Need"
+ },
+ "school van fare": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "bottle opener fee": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "tiffin charges": {
+  "category": "Food & Dining",
+  "type": "Need"
+ },
+ "cash for paan wala": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Nandini Tiffin": {
+  "category": "Food & Dining",
+  "type": "Need"
+ },
+ "gift card for anniversary": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "office shoes repair": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Prem Gold House": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "chowk puri bill": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Niraj's Store": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Chetan Repair": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Bepanthen": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "Umesh Gold Emporium": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "City Gas": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "parking bill at mall": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "Help": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "cooker gas refill": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "gift for friend's engagement": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "health app subscription": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "chai sutta for the week": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "MoneyWise": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "IDFC Bank": {
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ "school transport online": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "milk 50": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "laundry delivery charge": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Kapil Tubes": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "IndusInd Bank Pay": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "gift for boss farewell": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "ParkXtra": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "stationary items for exams": {
+  "category": "Education",
+  "type": "Need"
+ },
+ "TollXtra": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "Reddy Music School": {
+  "category": "Education",
+  "type": "Need"
+ },
+ "Sharma Antiquarian Books": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "ZapTollGo": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "LuxeLunches": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "mango jam for toast": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Aarogya Nutri Care": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "work laptop repair": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Umesh Gold Market": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Lipton Tea": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Neha Eye Care": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "toothpaste roll": {
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ "conditioner": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "gift for friend new job": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "school tie clip": {
+  "category": "Shopping",
+  "type": "Need"
+ },
+ "bill daal": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "Razorpay": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "electric scooter charge plan": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "cinema booking": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "maid's birthday gift": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "maid comb": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "Shree Thakur Dairy": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "society chajji bill kit": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "scooter battery change": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "Padmini": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Srivastava Dance Academy": {
+  "category": "Education",
+  "type": "Need"
+ },
+ "Sweets Corner": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "smartwatch for health": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Parking": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "The Shalimar Gardens": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "health insurance plan": {
+  "category": "Insurance",
+  "type": "Need"
+ },
+ "Mahanagar": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "Vijay Pipes": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "samosa pack": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Hanuman Temple": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "Swiggy Pay": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Pulse X": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "GrowMyDiet": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "cashback": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "RideRUs": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "personal coach": {
+  "category": "Health",
+  "type": "Want"
+ },
+ "doodh ki bar": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "january phone bill": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "tiffin bill": {
+  "category": "Food & Dining",
+  "type": "Need"
+ },
+ "PremiumPantry": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "WellnessNow": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "dabur toothpaste": {
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ "chai sutta delivery": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "cash for street food": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "SOSFix": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "taxi to bus stand": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "Saraswati Temple": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "electric scooter charge fee": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "Garnier Men": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "health ins claim fee": {
+  "category": "Insurance",
+  "type": "Need"
+ },
+ "gas pura bill kit service": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "nkl due": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "gym kit": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "doodh ki dukaan": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "january electricity tax": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "AhmedabadTrain": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "bakery bread": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "SBI Pocket": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Ola Electric": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "chocolate for school": {
+  "category": "Groceries",
+  "type": "Want"
+ },
+ "friend's emergency fund": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "sabzi wala chargin": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "MERCEDES": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "Aroma Store": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "new sofa for living room": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "DelhiTraffic": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "PNB Digital Banking": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Rajesh Auto Repair": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "Sunsilk": {
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ "CNG India": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "LuxuryLarder": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Ganesha Donation": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "Saregama": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "munchies at pub": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "new mobile cover": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "meditation app subscription": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "ev charge for holiday": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "SoulHaven": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "ParkQuick": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "PuneBus": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "toothpaste pack": {
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ "lip balm for winter": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "Creme Blanche": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "Ram Temple": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "RailHail": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "Kissan Jam": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Alkylatte": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Gourmet Store": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Britannia Biscuits": {
+  "category": "Groceries",
+  "type": "Want"
+ },
+ "Godrej Interio": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "cash to carpenter": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "Sharma Petrol Pump": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "courtesy flowers": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Satcon Technologies": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Larsen & Toubro": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "doodh dabba": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Lakshmi Donation": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "stationary set for exam": {
+  "category": "Education",
+  "type": "Need"
+ },
+ "FancyFoods": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Heinemann": {
+  "category": "Education",
+  "type": "Need"
+ },
+ "New Krishna Hair Salon": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "doodh bill kit bill": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "nrega": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "homeopathy kit": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "Indian Railway Catering and Tourism Corporation": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "maid towel": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "CineCafe": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Soda X": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Barclays Mutual Fund": {
+  "category": "Investments",
+  "type": "Investment"
+ },
+ "Aggreko": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "doodh for mausi": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "GourmetGifts": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "petrol for holiday": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "Mundra Port": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "gift for niece wedding": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "replacement bedsheet": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "PuneTraffic": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Tasty Tiffin": {
+  "category": "Food & Dining",
+  "type": "Need"
+ },
+ "cash for parking": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "Johnson's": {
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ "repair fee": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "stationery set for priya": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "sports massage": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "Bijoy": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "SnackSquad": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Chitra Handicrafts": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "chai sutta for dad": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Saraswati Charities": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "health food items 2": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "kismat jyoti": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "taxi to railway station": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "tiffin service for birthday": {
+  "category": "Food & Dining",
+  "type": "Need"
+ },
+ "Gold Emporium": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Alleyway Street": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "society chajji bill kit service bill": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "online recharge": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "Cadbury": {
+  "category": "Groceries",
+  "type": "Want"
+ },
+ "TasteTalesWhisper": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Mirae Asset Mutual Fund": {
+  "category": "Investments",
+  "type": "Investment"
+ },
+ "new shoes for hiking": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Dr. Skin Solutions": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "Water Charges 2": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "JayPee": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Metro Charges": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "Tata Play Plus": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "samsung flip": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Delhivery": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "school belt": {
+  "category": "Shopping",
+  "type": "Need"
+ },
+ "Aliaxis": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "vitamin supplements": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "chai sutta july": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "new phone charger": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "dine and dance": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "cash for paan": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "JoyRide": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "january sewerage tax": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "home safety kit": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "january sewage bill": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "EliteEats": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "scooter repair": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "stock sell": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "sabh kiosk upgrade": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "med insurance": {
+  "category": "Insurance",
+  "type": "Need"
+ },
+ "AutoDrive": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "Deb Gold Emporium": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "new kurta for work": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "DairyJoy": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "january electricity bill": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "saree for work": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "school socks": {
+  "category": "Shopping",
+  "type": "Need"
+ },
+ "new tie for work": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "chowmein office": {
+  "category": "Food & Dining",
+  "type": "Need"
+ },
+ "GrowMyMealPlan": {
+  "category": "Food & Dining",
+  "type": "Need"
+ },
+ "tattoo removal": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "Lakshmi Gold Store": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "rent for house": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "gaming gear": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "electric scooter charge": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "BHIM UPI": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "sweets for neighbor": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "FreeCharge": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "choti's tiffin": {
+  "category": "Food & Dining",
+  "type": "Need"
+ },
+ "Vapin Vihari": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "gift for friend moving": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "chai sutta for mom": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Wynk Store": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "Peri Peri Sauce": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "health ins claim inquiry": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "CityCabs": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "cloud storage subscription": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "Reliance Stationery": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "health ins claim status": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "cabs for doctor": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "ABN AMRO": {
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ "HINDUSTAN PETROLEUM": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "Cafe Bollywood": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Ganesha Temple": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "Mistry Mason": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "slic payment": {
+  "category": "Insurance",
+  "type": "Need"
+ },
+ "petrol pump charges": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "stationary set for school": {
+  "category": "Education",
+  "type": "Need"
+ },
+ "Pista Popcorns": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "cricket kit": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Amazon Pay Later": {
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ "health magazine subscription": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "taxi to railway": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "chai tea": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "SAP Labs India": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Mohan's Store": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Pepay": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "auto to clinic": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "brokerage fee": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "Nagpal Repairs": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "cash for tea": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "FreshToHome": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "ICICI Wallet": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Kure Bazaar": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "Shah Sewage": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "doodh and snacks for friends": {
+  "category": "Groceries",
+  "type": "Want"
+ },
+ "office chair for back pain": {
+  "category": "Shopping",
+  "type": "Need"
+ },
+ "Scripbox": {
+  "category": "Investments",
+  "type": "Investment"
+ },
+ "CredAble": {
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ "Ponds Men": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "ebook subscription": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "DriveX": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "TaxisRUs": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "hair oil for dandruff": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "Baskin Robbins": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "health ins claim payment": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "beef burger": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "ICICI Pockets": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "gift voucher for birthday": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "tea at office": {
+  "category": "Food & Dining",
+  "type": "Need"
+ },
+ "gas pura bill": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "Srinivasan Plumber": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "water bill charges": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "TCL": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "NMDC": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "DriveUp": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "gym class": {
+  "category": "Health",
+  "type": "Want"
+ },
+ "Arpita's Biryani": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Unilever": {
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ "cashback mobile": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "Essel World": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "Hyatt Vellore": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "Golden Street": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "We Care Medical Store": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "kaju katli for sharing": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Sharma Antique Furniture": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "cash for local snacks and tea": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "doodh event": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "Stark": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Hotels X": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "Hanuman Donation": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "Tata Consultancy Services": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Wynk Outlet": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "PainAway": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "Cashfree": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "earphones for yoga": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Bakery Delight": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "doodh night": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "bathing soap": {
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ "circus ticket": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "health ins claim process": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "sweets": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "new suit for interview": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "new watchband": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "chowk puri bill kit service bill": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "fuel for weekend trip": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "new water bottle": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "gift for my teacher": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "health coach": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "fluoride rinse": {
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ "Sri Balaji": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Gupta Soccer Field": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "Sarvesh's Store": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "health food store 4": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "doodh and cake for celebration": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "Fresh dough": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Kedem": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "doodh milk delivery": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Instamojo": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "cash for barber": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "Mukand": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Zooplus": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "health ins claim submission": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "Dreams Ice Cream": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "helmet for safety": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "Gratitude": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "Furnature": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "gift for mother's day": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Nissan": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "Whiskas House": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "repair scooter": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "NiteCafe": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "health ins claim refund": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "Marico": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Lipton Herbal Tea": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "new bedsheet set": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "gift for dad birthday": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Juspay": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "UrbanFlower": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "chai pe namak": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Tata Play": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "Maggi": {
+  "category": "Groceries",
+  "type": "Want"
+ },
+ "school ride": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "health blog subscription": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "Zoya's Handicraft": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "gift for mom moving": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "stationery eraser": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "paytm bill pay": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "dvd player": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "lakmi visha": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "ev charger installation": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "barbeque joint": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Titan Company": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "gift for housewarming": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "stationary for kids": {
+  "category": "Education",
+  "type": "Need"
+ },
+ "health seminar": {
+  "category": "Education",
+  "type": "Need"
+ },
+ "new mobile holder": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Tata Play Gold": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "Gul Ahmed Home": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "laundry service charge delivery": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Hemal's Tiffin Service Express": {
+  "category": "Food & Dining",
+  "type": "Need"
+ },
+ "samosa chutney": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "stationery crayon": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Bhavya's Store": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "cashback website": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "SwiggyRush": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Sunil's Store": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "repair fridge": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "winter woollen socks": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "DriveRUs": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "helmet for bike": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "water tank fill": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "Sharma Table Tennis Club": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "Kali Donation": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "Isa Temple": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "Federal Bank E-SMART": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Muthoot Finance": {
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ "Pankaj Polythene": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "mango juice for refreshment": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Hemal's Tiffin Express": {
+  "category": "Food & Dining",
+  "type": "Need"
+ },
+ "Baroda Bank": {
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ "slic dues": {
+  "category": "Insurance",
+  "type": "Need"
+ },
+ "new shoes for gym": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Krishna Temple": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "Nexxus": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "Durga Donation": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "stationary items": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "gift for wedding": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "chai sutta for brother": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Wellness Hub": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "TollWiseX": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "tiffin box": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Itron": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "gas bill (postdated)": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "taxi ride office": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "Peri Peri": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "dabba": {
+  "category": "Food & Dining",
+  "type": "Need"
+ },
+ "comb": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "M&M": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "Gupta Art Gallery": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "doodh wala bill": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Tata Play Lite+": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "sabzi wala 500": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "doodh kitni": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Sharma Scrabble Club": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "Ganesh Temple": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "Saraswati Donation": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "freelance work transfer": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "MentorPlus": {
+  "category": "Education",
+  "type": "Need"
+ },
+ "OlaMoney": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "doodh for my cousin": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "massage therapy": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "Sharma Electrician": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "vitamins": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "school bag": {
+  "category": "Education",
+  "type": "Need"
+ },
+ "gift for father's day": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "cash for local train": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "water tank": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "Barber Services": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "Shakti Donation": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "Nutrihub": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "Reliance Retail": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Kotak Mahindra Finance": {
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ "Amma's Kitchen": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Filo Fresh": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "gift for anniversary party": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "gift for mom anniversary": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "school fee online": {
+  "category": "Education",
+  "type": "Need"
+ },
+ "TollExpress": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "mobile recharge online": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "NeoBanks": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Taj Tiffin": {
+  "category": "Food & Dining",
+  "type": "Need"
+ },
+ "Biotique Bio": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "Tempo Auto": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "car cover": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "Welspun India": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "tiffin van tikka": {
+  "category": "Food & Dining",
+  "type": "Need"
+ },
+ "NPS International": {
+  "category": "Education",
+  "type": "Need"
+ },
+ "Temple Donations": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "herbal tea": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "school fees transfer": {
+  "category": "Education",
+  "type": "Need"
+ },
+ "new winter gloves": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "maid's gift on Diwali": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "Soni Cricket Ground": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "auto rickshaw fare to home": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "fruit and vegetable juice": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Nagarjuna Fertilisers": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "biryani pack": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "cash for local paan": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "cashback for app": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "W": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "ebook reader": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Tata Elxsi": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "cash to electrician": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "Sai Temple": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "milk tea mix": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "gift for friend new home": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "stationary for exams": {
+  "category": "Education",
+  "type": "Need"
+ },
+ "unclear payment": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "new wallet for myself": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Ecozen": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "RentalHippo": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Mangalam Sweets": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "new headphones for zoom calls": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "mango lassi for guests": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "dancing classes": {
+  "category": "Education",
+  "type": "Need"
+ },
+ "Chetan's Shop": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "DriveFly": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "HMH India": {
+  "category": "Education",
+  "type": "Need"
+ },
+ "fuel for weekend": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "chai sutta milk stall": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "cash for chai sutta": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "gift for friend engagement": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "cake": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Kumar Security Guard": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "VRS": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "health ins claim settlement": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "parking fee for weekend market": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "laundry pickup charges": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "movie streaming subscription": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "Ananda Cafe": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "new fridge water filter": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "health food store": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "TollWise": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "phone screen repair": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Shri Thakur Dairy": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "ChocoDelights": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Grand X": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "laundry pickup and delivery charge": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "gift for my mom birthday": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Vodafone Mobile Services": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "upi to landlord": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "Kedia Tubes": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "Spa Services": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "new wallet for aunt": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "cash for milk delivery": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Sundaram Mutual Fund": {
+  "category": "Investments",
+  "type": "Investment"
+ },
+ "UrbanElectricity": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "new curtains for home": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Premier X": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Vaseline": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "new mobile battery pack": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "footwear repair": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Firstcry": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "taxi to airport": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "Yatra": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "laundry service": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Safal": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "winter jacket for son": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Beauticane": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "Wynk Online": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "new shoes for sports": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Samsung Service": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "broker fees for dad": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "Granny's Handicraft": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Sai Donation": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "Jupiter": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Fincare": {
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ "ulip payment": {
+  "category": "Insurance",
+  "type": "Need"
+ },
+ "Narayan Temple Donation": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "festival lights": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "sugar 40": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Shriram City Union Finance": {
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ "Nxtbase": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "OGX": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "Narayan Electricals": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "Chitra's Ice Cream": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "gaming pc parts": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "vitamin a": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "Tech Savvy": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "shaving cream dispenser": {
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ "ScootieRide": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "doodh bill march": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Healthkart+": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "health food items": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "gift for sister birthday": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "gaming headsets": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "cash for vegetable vendor": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "AI Tool Subscription": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "Zara Parlor": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "new books": {
+  "category": "Education",
+  "type": "Need"
+ },
+ "new pillow for neck pain": {
+  "category": "Shopping",
+  "type": "Need"
+ },
+ "gift for my mom": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "MirthMingle": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "Pista": {
+  "category": "Groceries",
+  "type": "Want"
+ },
+ "Tata Clarity": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Nava Jyoti": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "gift for cousin moving": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "gas leakage upgrade": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "Standard Chartered": {
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ "Aditya Birla Sun Life": {
+  "category": "Insurance",
+  "type": "Need"
+ },
+ "school van cost": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "zumba dance class": {
+  "category": "Health",
+  "type": "Want"
+ },
+ "Ecometer": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "maggie": {
+  "category": "Groceries",
+  "type": "Want"
+ },
+ "gift for sister's birthday": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Parle": {
+  "category": "Groceries",
+  "type": "Want"
+ },
+ "Loreal Paris": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "train travel": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "maid soap": {
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ "chai sutta market": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "home insurance": {
+  "category": "Insurance",
+  "type": "Need"
+ },
+ "water bill feb": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "Tata Teleservices": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "Lakshmi Temple": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "Saraswati Gold Emporium": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "shoes for office": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Shri Devi Foundation": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "Yes Bank Pay": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "DessertDelight": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "InstaCart": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Shakti Charities": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "med rep": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "Indian Oil Corporation": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "new water heater": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Zoom": {
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ "munchies for movie night": {
+  "category": "Groceries",
+  "type": "Want"
+ },
+ "ZapTollPay": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "Healthkart": {
+  "category": "Health",
+  "type": "Want"
+ },
+ "Standard Life": {
+  "category": "Insurance",
+  "type": "Need"
+ },
+ "health supplement": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "Feroz Repairs": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Trend Street": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "chai sutta market stall": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Godrej No More": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Healthcare Aid": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "Aker": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "cash for evening chai": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Sunil Sports": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "metro ticket for event": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "Fairway Pharmacy": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "MyAutoDrive": {
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ "UberMoney": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "SoulSage": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "gift for sister wedding": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "High Street": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Eyewear": {
+  "category": "Shopping",
+  "type": "Need"
+ },
+ "Bhagat Footwear": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Patanjali Aloe Vera": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "Wella Professionals": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "mf dividend": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "HireDrive": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "Kellogg's": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "tickets for show": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "gobar": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "sunday market": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "Paisa": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Idea Future": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Vinod Tailor": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "candy for party": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "train ticket": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "Meesho": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "UrbanSparks": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "shoe polish": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "maid hairclip": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "cash for fruit vendor": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "MeteredTaxi": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "health ins claim documents": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "kala chana": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "earphones for new laptop": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Latha's Catering": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "health ins claim form": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "Healthcare Charges": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "Kiran Footcare": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "cashback app": {
+  "category": "XX",
+  "type": "Need"
+ },
+ "Vidimax": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "stationary for priya": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Blue Bus Services": {
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ "TRESemme": {
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ "Green Street": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "AU Small Finance Bank": {
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ "Standard Tax": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Oberoi Realty": {
+  "category": "Housing",
+  "type": "Need"
+ },
+ "dookhi fees": {
+  "category": "Education",
+  "type": "Need"
+ },
+ "fashion gala": {
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ "tiffin charge": {
+  "category": "Food & Dining",
+  "type": "Need"
+ },
+ "doodh bai": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "laundry pickup charge": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Andritz": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Ram Donation": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "doodh for mom": {
+  "category": "Groceries",
+  "type": "Need"
+ },
+ "gift for my friend birthday": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Soni Gym": {
+  "category": "Health",
+  "type": "Want"
+ },
+ "maid toothbrush": {
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ "WellnessFirst": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "repair expense": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "new gaming pc": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "new earphones": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "chai pani": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "glasses prescription": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "Oxigen Wallet": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "uncle's birthday": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "DeluxeDelights": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "Rajwada Repairs": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "Gift": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "JBF Steel": {
+  "category": "Misc",
+  "type": "Need"
+ },
+ "samosa packet": {
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ "hair brush": {
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ "XYZ Gold Emporium": {
+  "category": "Shopping",
+  "type": "Want"
+ },
+ "Spectacles": {
+  "category": "Shopping",
+  "type": "Need"
+ },
+ "cash for street artist": {
+  "category": "Misc",
+  "type": "Want"
+ },
+ "vitamin c": {
+  "category": "Health",
+  "type": "Need"
+ },
+ "UnicornPay": {
+  "category": "Misc",
+  "type": "Need"
+ }
+}

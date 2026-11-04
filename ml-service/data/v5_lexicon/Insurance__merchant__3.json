@@ -1,0 +1,294 @@
+[
+ {
+  "text": "Acko",
+  "type": "Need"
+ },
+ {
+  "text": "Apollo Munich Health",
+  "type": "Need"
+ },
+ {
+  "text": "AXA",
+  "type": "Need"
+ },
+ {
+  "text": "Bharti General",
+  "type": "Need"
+ },
+ {
+  "text": "Bharti Pensions",
+  "type": "Need"
+ },
+ {
+  "text": "Canara Robeco",
+  "type": "Need"
+ },
+ {
+  "text": "Chola General",
+  "type": "Need"
+ },
+ {
+  "text": "Cigna TTK",
+  "type": "Need"
+ },
+ {
+  "text": "ICICI Lombard",
+  "type": "Need"
+ },
+ {
+  "text": "IFB General",
+  "type": "Need"
+ },
+ {
+  "text": "Kotak General",
+  "type": "Need"
+ },
+ {
+  "text": "Liberty General",
+  "type": "Need"
+ },
+ {
+  "text": "L&T General",
+  "type": "Need"
+ },
+ {
+  "text": "Max Bupa",
+  "type": "Need"
+ },
+ {
+  "text": "Navi Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Phoenix Shield",
+  "type": "Need"
+ },
+ {
+  "text": "Royal Sundaram",
+  "type": "Need"
+ },
+ {
+  "text": "SBI General",
+  "type": "Need"
+ },
+ {
+  "text": "SBI Life",
+  "type": "Need"
+ },
+ {
+  "text": "Shriram General",
+  "type": "Need"
+ },
+ {
+  "text": "TATA AIA",
+  "type": "Need"
+ },
+ {
+  "text": "TATA AIA Life",
+  "type": "Need"
+ },
+ {
+  "text": "TATA SRL",
+  "type": "Need"
+ },
+ {
+  "text": "TATA SRL Life",
+  "type": "Need"
+ },
+ {
+  "text": "TATA AIG",
+  "type": "Need"
+ },
+ {
+  "text": "TATA AIG Life",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Health",
+  "type": "Need"
+ },
+ {
+  "text": "TATA Health",
+  "type": "Need"
+ },
+ {
+  "text": "United India",
+  "type": "Need"
+ },
+ {
+  "text": "Universal Sompo",
+  "type": "Need"
+ },
+ {
+  "text": "Vidya General",
+  "type": "Need"
+ },
+ {
+  "text": "Vidya General Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Bajaj Allianz Health",
+  "type": "Need"
+ },
+ {
+  "text": "Future Generali Health",
+  "type": "Need"
+ },
+ {
+  "text": "Future Generali India",
+  "type": "Need"
+ },
+ {
+  "text": "HDFC ERGO",
+  "type": "Need"
+ },
+ {
+  "text": "HDFC Life",
+  "type": "Need"
+ },
+ {
+  "text": "HSBC Life",
+  "type": "Need"
+ },
+ {
+  "text": "ICICI Prudential",
+  "type": "Need"
+ },
+ {
+  "text": "Edelweiss General",
+  "type": "Need"
+ },
+ {
+  "text": "Edelweiss Life",
+  "type": "Need"
+ },
+ {
+  "text": "Edelweiss Tokio Life",
+  "type": "Need"
+ },
+ {
+  "text": "Edelweiss Tokio Health",
+  "type": "Need"
+ },
+ {
+  "text": "Edelweiss Tokio Motor",
+  "type": "Need"
+ },
+ {
+  "text": "Edelweiss Tokio Personal Accident",
+  "type": "Need"
+ },
+ {
+  "text": "Edelweiss Tokio Travel",
+  "type": "Need"
+ },
+ {
+  "text": "Bajaj Allianz General Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Bajaj Allianz Health Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Bajaj Allianz Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Apollo Munich Health Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Birla Sun Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Canara HSBC Oriental Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Cholamandalam General Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Cholamandalam Health Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Cholamandalam Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Cholamandalam Motor Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Cholamandalam Personal Accident Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Cholamandalam Travel Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "DPS Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Edelweiss General Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Edelweiss Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Edelweiss Tokio Health Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Edelweiss Tokio Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Edelweiss Tokio Motor Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Edelweiss Tokio Personal Accident Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Edelweiss Tokio Travel Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Future Generali",
+  "type": "Need"
+ },
+ {
+  "text": "Future Generali Health Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Future Generali India",
+  "type": "Need"
+ },
+ {
+  "text": "Future Generali Life Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Future Generali Motor Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Future Generali Personal Accident Insurance",
+  "type": "Need"
+ },
+ {
+  "text": "Future Generali Travel Insurance",
+  "type": "Need"
+ }
+]

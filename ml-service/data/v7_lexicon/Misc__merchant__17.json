@@ -1,0 +1,322 @@
+[
+ {
+  "text": "ATM WDL SBI Branch",
+  "type": "Need"
+ },
+ {
+  "text": "ATM CSH WDL",
+  "type": "Need"
+ },
+ {
+  "text": "ATM CASH DEBIT",
+  "type": "Need"
+ },
+ {
+  "text": "CASH WDL AT POS",
+  "type": "Need"
+ },
+ {
+  "text": "ATM Withdrawal Off Site",
+  "type": "Need"
+ },
+ {
+  "text": "ATM Withdrawal On Site",
+  "type": "Need"
+ },
+ {
+  "text": "Cardless Cash Withdrawal",
+  "type": "Need"
+ },
+ {
+  "text": "YONO Cash Withdrawal",
+  "type": "Need"
+ },
+ {
+  "text": "Cash at Bank Counter",
+  "type": "Need"
+ },
+ {
+  "text": "Cash Withdrawal Counter",
+  "type": "Need"
+ },
+ {
+  "text": "Cash Withdrawal Cheque Slip",
+  "type": "Need"
+ },
+ {
+  "text": "Self Cheque Cash Withdrawal",
+  "type": "Need"
+ },
+ {
+  "text": "ATM Cash Dispense Fail",
+  "type": "Need"
+ },
+ {
+  "text": "ATM Dispense Failed Reversal",
+  "type": "Need"
+ },
+ {
+  "text": "ATM Card Cash Out",
+  "type": "Need"
+ },
+ {
+  "text": "ATM Local Withdrawal",
+  "type": "Need"
+ },
+ {
+  "text": "ATM Foreign Withdrawal",
+  "type": "Need"
+ },
+ {
+  "text": "ATM Overseas Withdrawal",
+  "type": "Need"
+ },
+ {
+  "text": "ATM Cash Out Kiosk",
+  "type": "Need"
+ },
+ {
+  "text": "Cash Pick Up ATM",
+  "type": "Need"
+ },
+ {
+  "text": "Cash Pickup Counter",
+  "type": "Need"
+ },
+ {
+  "text": "Withdrawal at Kiosk",
+  "type": "Need"
+ },
+ {
+  "text": "Cash Out Bank Branch",
+  "type": "Need"
+ },
+ {
+  "text": "Cash Out Via Card",
+  "type": "Need"
+ },
+ {
+  "text": "Union ATM Cash WDL Pune",
+  "type": "Need"
+ },
+ {
+  "text": "Indusind ATM Cash",
+  "type": "Need"
+ },
+ {
+  "text": "Federal ATM WDL",
+  "type": "Need"
+ },
+ {
+  "text": "Bandhan ATM Cash",
+  "type": "Need"
+ },
+ {
+  "text": "IDBI ATM WDL",
+  "type": "Need"
+ },
+ {
+  "text": "Canara Bank WDL Cash",
+  "type": "Need"
+ },
+ {
+  "text": "Central Bank ATM WDL",
+  "type": "Need"
+ },
+ {
+  "text": "Bank of Baroda ATM WDL",
+  "type": "Need"
+ },
+ {
+  "text": "Allahabad Bank ATM WDL",
+  "type": "Need"
+ },
+ {
+  "text": "Andhra Bank ATM Cash",
+  "type": "Need"
+ },
+ {
+  "text": "Dena Bank ATM WDL",
+  "type": "Need"
+ },
+ {
+  "text": "Corporation Bank ATM WDL",
+  "type": "Need"
+ },
+ {
+  "text": "Oriental Bank ATM WDL",
+  "type": "Need"
+ },
+ {
+  "text": "United Bank ATM WDL",
+  "type": "Need"
+ },
+ {
+  "text": "Karnataka Bank ATM WDL",
+  "type": "Need"
+ },
+ {
+  "text": "South Indian Bank ATM WDL",
+  "type": "Need"
+ },
+ {
+  "text": "Tamilnad Mercantile ATM",
+  "type": "Need"
+ },
+ {
+  "text": "Lakshmi Vilas ATM Cash",
+  "type": "Need"
+ },
+ {
+  "text": "Saraswat Bank ATM WDL",
+  "type": "Need"
+ },
+ {
+  "text": "Cosmos Bank ATM WDL",
+  "type": "Need"
+ },
+ {
+  "text": "Jana Bank ATM WDL",
+  "type": "Need"
+ },
+ {
+  "text": "Ujjivan ATM Cash",
+  "type": "Need"
+ },
+ {
+  "text": "Equitas ATM WDL",
+  "type": "Need"
+ },
+ {
+  "text": "AU Small Finance ATM",
+  "type": "Need"
+ },
+ {
+  "text": "Suryoday ATM WDL",
+  "type": "Need"
+ },
+ {
+  "text": "Utkarsh ATM Cash",
+  "type": "Need"
+ },
+ {
+  "text": "Airtel Payments Bank ATM",
+  "type": "Need"
+ },
+ {
+  "text": "Paytm Payments Bank ATM WDL",
+  "type": "Need"
+ },
+ {
+  "text": "Fino Bank ATM Cash",
+  "type": "Need"
+ },
+ {
+  "text": "India Post Payments ATM WDL",
+  "type": "Need"
+ },
+ {
+  "text": "ATM WDL Chandni Chowk",
+  "type": "Need"
+ },
+ {
+  "text": "ATM WDL Connaught Place",
+  "type": "Need"
+ },
+ {
+  "text": "ATM WDL Sector 62",
+  "type": "Need"
+ },
+ {
+  "text": "ATM WDL Andheri West",
+  "type": "Need"
+ },
+ {
+  "text": "ATM WDL Koramangala",
+  "type": "Need"
+ },
+ {
+  "text": "ATM WDL Hitech City",
+  "type": "Need"
+ },
+ {
+  "text": "ATM WDL MG Road",
+  "type": "Need"
+ },
+ {
+  "text": "ATM WDL Salt Lake",
+  "type": "Need"
+ },
+ {
+  "text": "ATM WDL Karol Bagh",
+  "type": "Need"
+ },
+ {
+  "text": "ATM WDL Model Town",
+  "type": "Need"
+ },
+ {
+  "text": "ATM WDL Indiranagar",
+  "type": "Need"
+ },
+ {
+  "text": "ATM WDL Kothrud",
+  "type": "Need"
+ },
+ {
+  "text": "ATM WDL Borivali",
+  "type": "Need"
+ },
+ {
+  "text": "ATM WDL Vashi",
+  "type": "Need"
+ },
+ {
+  "text": "ATM WDL Rajouri Garden",
+  "type": "Need"
+ },
+ {
+  "text": "ATM WDL Civil Lines",
+  "type": "Need"
+ },
+ {
+  "text": "ATM WDL Shivaji Nagar",
+  "type": "Need"
+ },
+ {
+  "text": "ATM WDL Sadar Bazar",
+  "type": "Need"
+ },
+ {
+  "text": "ATM WDL Gandhi Road",
+  "type": "Need"
+ },
+ {
+  "text": "ATM WDL Bus Stand",
+  "type": "Need"
+ },
+ {
+  "text": "ATM WDL Railway Station",
+  "type": "Need"
+ },
+ {
+  "text": "ATM WDL Mall Road",
+  "type": "Need"
+ },
+ {
+  "text": "ATM WDL Market Square",
+  "type": "Need"
+ },
+ {
+  "text": "ATM WDL Fort Area",
+  "type": "Need"
+ },
+ {
+  "text": "ATM WDL Old City",
+  "type": "Need"
+ },
+ {
+  "text": "ATM WDL Gold Market",
+  "type": "Need"
+ }
+]

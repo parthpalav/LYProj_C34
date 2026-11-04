@@ -1,29 +1,46 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, View, StyleSheet } from 'react-native';
+import * as SplashScreen from 'expo-splash-screen';
+import React, { useEffect } from 'react';
+import { StyleSheet } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AppNavigator } from './src/navigation/AppNavigator';
-import { WelcomeScreen } from './src/screens/WelcomeScreen';
 import { useStore } from './src/store/useStore';
 import { useAuthStore } from './src/store/useAuthStore';
-import { LoginScreen } from './src/screens/LoginScreen';
-import { OnboardingScreen } from './src/screens/OnboardingScreen';
+import { CelebrationHost } from './src/components/motion/CelebrationHost';
+import { useFonts, Inter_300Light, Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold, Inter_800ExtraBold, Inter_900Black } from '@expo-google-fonts/inter';
+import { navigationTheme, useTheme } from './src/theme';
+import { useThemeStore } from './src/store/useThemeStore';
 
-export default function App(): React.ReactElement {
+// Keep the native splash up until auth, theme and fonts are ready, then fade it out.
+SplashScreen.preventAutoHideAsync().catch(() => {});
+SplashScreen.setOptions({ duration: 400, fade: true });
+
+export default function App(): React.ReactElement | null {
   const token = useAuthStore((state) => state.token);
   const authUser = useAuthStore((state) => state.user);
-  const onboardingCompleted = useAuthStore((state) => state.onboardingCompleted);
-  const showWelcome = useAuthStore((state) => state.showWelcome);
-  const dismissWelcome = useAuthStore((state) => state.dismissWelcome);
   const initializing = useAuthStore((state) => state.initializing);
   const initAuth = useAuthStore((state) => state.initAuth);
   const setUser = useStore((state) => state.setUser);
+  const themeHydrated = useThemeStore((state) => state.hydrated);
+  const hydrateTheme = useThemeStore((state) => state.hydrate);
+  const { c, isDark } = useTheme();
+  const [fontsLoaded, fontError] = useFonts({
+    Inter_300Light, Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold, Inter_800ExtraBold, Inter_900Black,
+  });
+  // A font load failure falls back to the system font rather than blocking the app.
+  const ready = !initializing && themeHydrated && (fontsLoaded || !!fontError);
 
   // Initialize auth state from SecureStore on startup
   useEffect(() => {
     initAuth();
-  }, [initAuth]);
+    hydrateTheme();
+  }, [initAuth, hydrateTheme]);
+
+  useEffect(() => {
+    if (ready) SplashScreen.hideAsync().catch(() => {});
+  }, [ready]);
 
   // Sync auth user to the main app store so all screens can access it
   useEffect(() => {
@@ -45,61 +62,24 @@ export default function App(): React.ReactElement {
     }
   }, [authUser, setUser]);
 
-  if (initializing) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#3B3BDE" />
-      </View>
-    );
-  }
+  if (!ready) return null;
 
-  // Not authenticated — show login flow
-  if (!token) {
-    return (
-      <SafeAreaProvider>
-        <StatusBar style="dark" />
-        <LoginScreen />
-      </SafeAreaProvider>
-    );
-  }
-
-  // Authenticated but onboarding incomplete — show onboarding flow
-  const isComplete = Boolean(onboardingCompleted || authUser?.onboardingComplete || authUser?.onboardingCompleted);
-  if (!isComplete) {
-    return (
-      <SafeAreaProvider>
-        <StatusBar style="dark" />
-        <OnboardingScreen />
-      </SafeAreaProvider>
-    );
-  }
-
-  // Explicit successful login transition for onboarded users
-  if (showWelcome) {
-    return (
-      <SafeAreaProvider>
-        <StatusBar style="dark" />
-        <WelcomeScreen onContinue={dismissWelcome} />
-      </SafeAreaProvider>
-    );
-  }
-
-  // Authenticated & onboarded — show the full app
   return (
-    <SafeAreaProvider>
-      <NavigationContainer>
-        <StatusBar style="dark" />
-        <AppNavigator />
-      </NavigationContainer>
-    </SafeAreaProvider>
+    <GestureHandlerRootView style={[styles.root, { backgroundColor: c.bg }]}>
+      <SafeAreaProvider>
+        <NavigationContainer theme={navigationTheme(c, isDark)}>
+          {/* The signed-out screens sit on the dark aurora, so they always want light status text. */}
+          <StatusBar style={!token || isDark ? 'light' : 'dark'} />
+          <AppNavigator />
+        </NavigationContainer>
+        <CelebrationHost />
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }
 
 const styles = StyleSheet.create({
-  loadingContainer: {
+  root: {
     flex: 1,
-    backgroundColor: '#F4F6FA',
-    justifyContent: 'center',
-    alignItems: 'center',
-  }
+  },
 });

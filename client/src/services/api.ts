@@ -7,7 +7,8 @@ import {
   FISData, FMIRecord, FMIResponse, Goal, IncomeFlowData, IncomeRecord,
   Transaction, WeeklyReport, User, Liability, LiabilityPaymentSummary,
   LiabilityPaymentHistoryResponse, PredictabilitySnapshot, PredictabilityResponse,
-  Asset, PredictabilityQueryOptions, FamilySummary, FamilyInvitation, FamilyDashboard, FamilyDashboardResponse
+  Asset, PredictabilityQueryOptions, FamilySummary, FamilyInvitation, FamilyDashboard, FamilyDashboardResponse,
+  SubscriptionSuggestion, MonthlyReport, ScenarioOverrides, PaymentMethod, PaymentMethodPayload,
 } from '../types';
 
 export interface NewTransaction {
@@ -25,6 +26,8 @@ export interface NewTransaction {
   timestamp?:      string;
   liabilityId?:    string;
   expectedScheduledFor?: string;
+  /** null = bank balance, 'cash', or a saved payment method id */
+  paymentMethodId?: string | null;
 }
 
 export interface NewGoalPayload {
@@ -78,6 +81,12 @@ export function setAuthToken(token?: string): void {
 }
 
 // ── 401 Refresh Token Queue Interceptor ────────────────────────
+// The auth store registers this; api.ts can't import the store without a cycle.
+let onSessionExpired: (() => void) | null = null;
+export function setSessionExpiredHandler(handler: () => void): void {
+  onSessionExpired = handler;
+}
+
 let isRefreshing = false;
 let failedQueue: Array<{ resolve: (token: string) => void; reject: (err: any) => void }> = [];
 
@@ -134,10 +143,17 @@ api.interceptors.response.use(
         processQueue(null, accessToken);
         originalRequest.headers.Authorization = `Bearer ${accessToken}`;
         return api(originalRequest);
-      } catch (refreshErr) {
+      } catch (refreshErr: any) {
         processQueue(refreshErr, null);
-        await secureStorage.clearTokens();
-        setAuthToken(undefined);
+        // Only a rejected refresh ends the session; a network blip keeps the user signed in.
+        const rejected = refreshErr?.response
+          ? [401, 403].includes(refreshErr.response.status)
+          : refreshErr?.message === 'No refresh token available';
+        if (rejected) {
+          await secureStorage.clearTokens();
+          setAuthToken(undefined);
+          onSessionExpired?.();
+        }
         return Promise.reject(refreshErr);
       } finally {
         isRefreshing = false;
@@ -425,6 +441,40 @@ export async function classifyExpense(text: string): Promise<ClassifyResult> {
   return data;
 }
 
+// ── Payment methods (UPI, debit and credit cards) ────────────
+
+/** All saved payment methods, archived included (needed to label old transactions). */
+export async function getPaymentMethods(): Promise<PaymentMethod[]> {
+  const { data } = await api.get('/api/payment-methods');
+  return data?.data || [];
+}
+
+export async function createPaymentMethod(payload: PaymentMethodPayload): Promise<PaymentMethod> {
+  const { data } = await api.post('/api/payment-methods', payload);
+  return data.data;
+}
+
+export async function updatePaymentMethod(id: string, payload: Partial<PaymentMethodPayload>): Promise<PaymentMethod> {
+  const { data } = await api.put(`/api/payment-methods/${id}`, payload);
+  return data.data;
+}
+
+export async function deletePaymentMethod(id: string): Promise<void> {
+  await api.delete(`/api/payment-methods/${id}`);
+}
+
+/** Pays a credit card bill from the bank balance. */
+export async function payCreditCardBill(id: string, amount: number): Promise<PaymentMethod> {
+  const { data } = await api.post(`/api/payment-methods/${id}/pay`, { amount });
+  return data.data;
+}
+
+/** Sets a card's used amount to what the user reports. The bank balance is not touched. */
+export async function setCreditCardBalance(id: string, used: number, billedUnpaid: number): Promise<PaymentMethod> {
+  const { data } = await api.put(`/api/payment-methods/${id}/balance`, { used, billedUnpaid });
+  return data.data;
+}
+
 // ── Liabilities ───────────────────────────────────────────────
 
 export async function getLiabilities(): Promise<Liability[]> {
@@ -445,6 +495,24 @@ export async function getLiabilityTransactions(
   const { data } = await api.get(`/api/liabilities/${id}/transactions`, {
     params: { page, limit }
   });
+  return data.data;
+}
+
+/** Re-runs the forecast with what-if overrides; read-only and rate limited on the server. */
+export async function runScenario(overrides: ScenarioOverrides): Promise<PredictabilitySnapshot> {
+  const { data } = await api.post('/api/predictability/scenario', overrides);
+  return data?.data || data;
+}
+
+/** Income, spending mix, top categories and health-score change for one calendar month (default: current). */
+export async function getMonthlyReport(year?: number, month?: number): Promise<MonthlyReport> {
+  const { data } = await api.get('/api/reports/monthly', { params: { year, month } });
+  return data.data;
+}
+
+/** Charges that repeat weekly or monthly at a steady amount and are not yet tracked as liabilities. */
+export async function getSubscriptionSuggestions(): Promise<SubscriptionSuggestion[]> {
+  const { data } = await api.get('/api/subscriptions/suggestions');
   return data.data;
 }
 

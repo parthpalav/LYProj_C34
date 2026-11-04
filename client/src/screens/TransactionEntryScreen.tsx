@@ -4,11 +4,12 @@ import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { popIn } from '../motion';
-import { addTransaction, classifyExpense, ClassifyResult, getLiabilities, getPacing } from '../services/api';
+import { addTransaction, classifyExpense, ClassifyResult, getLiabilities, getPacing, getPaymentMethods } from '../services/api';
 import { celebrate, toast } from '../store/useCelebrationStore';
 import { formatCurrency } from '../utils/format';
 import { useStore } from '../store/useStore';
-import { Liability } from '../types';
+import { CASH_METHOD_ID, Liability, PaymentMethod } from '../types';
+import { PAYMENT_KIND_LABEL, paymentMethodLabel } from '../utils/paymentMethods';
 import { createStyles, radius, tabular, typeScale, useTheme } from '../theme';
 import { Button } from '../components/ui/Button';
 import { Chip, IconTile } from '../components/ui/Bits';
@@ -56,11 +57,16 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
   const [selectedType, setSelectedType] = useState<SpendType>('Want');
   const [date, setDate] = useState(new Date());
   // One picker sheet at a time: iOS can't stack modal presentations.
-  const [picker, setPicker] = useState<'category' | 'liability' | 'date' | null>(null);
+  const [picker, setPicker] = useState<'category' | 'liability' | 'date' | 'method' | null>(null);
   const [formError, setFormError] = useState('');
   const [liabilities, setLiabilities] = useState<Liability[]>([]);
   const [selectedLiability, setSelectedLiability] = useState<Liability | null>(null);
   const [markAsPaid, setMarkAsPaid] = useState(true);
+  // How it was paid: '' = unspecified (bank balance), 'cash', or a saved method id
+  const [methods, setMethods] = useState<PaymentMethod[]>([]);
+  const [paymentMethodId, setPaymentMethodId] = useState('');
+  const chosenMethod = methods.find((m) => m.id === paymentMethodId) ?? null;
+  const cardAvailable = chosenMethod?.kind === 'credit_card' && chosenMethod.credit ? chosenMethod.credit.available : null;
   const amountInputRef = useRef<React.ComponentRef<typeof TextInput>>(null);
   const transactions = useStore((s) => s.transactions);
   const addToStore = useStore((s) => s.addTransaction);
@@ -74,6 +80,9 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
       .catch(() => {
         if (mounted) setLiabilities([]);
       });
+    getPaymentMethods()
+      .then((data) => { if (mounted) setMethods(data.filter((m) => m.status === 'active')); })
+      .catch(() => {});
     // Open with the keypad up: amount is always the first thing to type.
     const focus = setTimeout(() => amountInputRef.current?.focus(), 450);
     return () => { mounted = false; clearTimeout(focus); };
@@ -201,6 +210,10 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
       setFormError('Confirm the suggested type, or pick the right one.');
       return;
     }
+    if (cardAvailable !== null && parsedAmount > cardAvailable) {
+      setFormError(`This is more than the ${formatCurrency(cardAvailable)} available on ${chosenMethod?.nickname}. Pick another payment method or pay the card bill first.`);
+      return;
+    }
     setFormError('');
     // Keep the time of day; only the calendar day comes from the date chip.
     const now = new Date();
@@ -233,6 +246,7 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
         liabilityId: selectedLiability ? selectedLiability.id : undefined,
         expectedScheduledFor: selectedLiability && selectedLiability.autoDeduct && markAsPaid && selectedLiability.nextDueDate ? selectedLiability.nextDueDate.toString() : undefined,
         timestamp: when.toISOString(),
+        paymentMethodId: paymentMethodId || null,
       });
       addToStore(newTx);
       onClose?.();
@@ -257,10 +271,17 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
           })
           .catch(() => {});
       }
-    } catch {
-      setFormError("Couldn't save. Check your connection and try again.");
+    } catch (err: any) {
+      setFormError(err?.response?.data?.error || "Couldn't save. Check your connection and try again.");
     }
   };
+
+  const methodTitle = paymentMethodId === CASH_METHOD_ID ? 'Cash' : chosenMethod ? paymentMethodLabel(chosenMethod) : 'Bank balance';
+  const methodSub = cardAvailable !== null
+    ? `Charged to the card, not your bank balance. ${formatCurrency(cardAvailable)} available.`
+    : methods.length === 0 && !paymentMethodId
+      ? 'Add UPI or cards under You › Payment methods.'
+      : 'Comes out of your bank balance.';
 
   const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
   const dateLabel = sameDay(date, today) ? 'Today' : sameDay(date, yesterday) ? 'Yesterday' : date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
@@ -431,6 +452,16 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
           </View>
         )}
 
+        {/* Payment method */}
+        <Pressable style={styles.linkRow} onPress={() => setPicker('method')} accessibilityRole="button" accessibilityLabel={`Paid with: ${methodTitle}`}>
+          <IconTile icon={chosenMethod?.kind === 'upi' ? 'phone-portrait-outline' : chosenMethod ? 'card-outline' : paymentMethodId === CASH_METHOD_ID ? 'cash-outline' : 'wallet-outline'} tint={c.primary} size={36} />
+          <View style={styles.flex}>
+            <Text style={styles.linkTitle} numberOfLines={1}>Paid with · {methodTitle}</Text>
+            <Text style={styles.linkSub} numberOfLines={2}>{methodSub}</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={18} color={c.textSubtle} />
+        </Pressable>
+
         {!!formError && <Animated.Text entering={FadeIn} style={styles.formError} accessibilityRole="alert">{formError}</Animated.Text>}
 
         <Button label={parsedAmount > 0 ? `Log ${formatCurrency(parsedAmount)}` : 'Log expense'} onPress={handleLog} style={styles.logButton} />
@@ -481,6 +512,40 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
           onChange={(_, d) => d && setDate(d)}
         />
         <Button label="Done" onPress={() => setPicker(null)} />
+      </Sheet>
+
+      {/* Payment method picker */}
+      <Sheet visible={picker === 'method'} onClose={() => setPicker(null)} title="Paid with">
+        <ScrollView style={styles.liabilityList}>
+          {[
+            { id: '', title: 'Not specified', sub: 'Comes out of your bank balance', icon: 'wallet-outline' as const },
+            { id: CASH_METHOD_ID, title: 'Cash', sub: 'Comes out of your bank balance', icon: 'cash-outline' as const },
+            ...methods.map((m) => ({
+              id: m.id,
+              title: paymentMethodLabel(m),
+              sub: m.kind === 'credit_card' && m.credit ? `${PAYMENT_KIND_LABEL[m.kind]} · ${formatCurrency(m.credit.available)} available` : PAYMENT_KIND_LABEL[m.kind],
+              icon: m.kind === 'upi' ? 'phone-portrait-outline' as const : 'card-outline' as const,
+            })),
+          ].map((o) => {
+            const isSelected = paymentMethodId === o.id;
+            return (
+              <Pressable
+                key={o.id || 'none'}
+                style={[styles.liabilityItem, isSelected && styles.liabilityItemActive]}
+                onPress={() => { setPaymentMethodId(o.id); setFormError(''); setPicker(null); }}
+                accessibilityRole="button"
+                accessibilityState={{ selected: isSelected }}
+              >
+                <IconTile icon={o.icon} tint={c.primary} size={36} />
+                <View style={styles.flex}>
+                  <Text style={styles.linkTitle}>{o.title}</Text>
+                  <Text style={styles.linkSub}>{o.sub}</Text>
+                </View>
+                {isSelected && <Ionicons name="checkmark-circle" size={20} color={c.primary} />}
+              </Pressable>
+            );
+          })}
+        </ScrollView>
       </Sheet>
 
       {/* Liability picker */}

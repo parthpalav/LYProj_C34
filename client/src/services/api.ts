@@ -8,7 +8,7 @@ import {
   Transaction, WeeklyReport, User, Liability, LiabilityPaymentSummary,
   LiabilityPaymentHistoryResponse, PredictabilitySnapshot, PredictabilityResponse,
   Asset, PredictabilityQueryOptions, FamilySummary, FamilyInvitation, FamilyDashboard, FamilyDashboardResponse,
-  SubscriptionSuggestion, MonthlyReport, ScenarioOverrides,
+  SubscriptionSuggestion, MonthlyReport, ScenarioOverrides, PaymentMethod, PaymentMethodPayload,
 } from '../types';
 
 export interface NewTransaction {
@@ -26,6 +26,8 @@ export interface NewTransaction {
   timestamp?:      string;
   liabilityId?:    string;
   expectedScheduledFor?: string;
+  /** null = bank balance, 'cash', or a saved payment method id */
+  paymentMethodId?: string | null;
 }
 
 export interface NewGoalPayload {
@@ -437,6 +439,40 @@ export interface ClassifyResult {
 export async function classifyExpense(text: string): Promise<ClassifyResult> {
   const { data } = await api.post('/api/classify', { text });
   return data;
+}
+
+// ── Payment methods (UPI, debit and credit cards) ────────────
+
+/** All saved payment methods, archived included (needed to label old transactions). */
+export async function getPaymentMethods(): Promise<PaymentMethod[]> {
+  const { data } = await api.get('/api/payment-methods');
+  return data?.data || [];
+}
+
+export async function createPaymentMethod(payload: PaymentMethodPayload): Promise<PaymentMethod> {
+  const { data } = await api.post('/api/payment-methods', payload);
+  return data.data;
+}
+
+export async function updatePaymentMethod(id: string, payload: Partial<PaymentMethodPayload>): Promise<PaymentMethod> {
+  const { data } = await api.put(`/api/payment-methods/${id}`, payload);
+  return data.data;
+}
+
+export async function deletePaymentMethod(id: string): Promise<void> {
+  await api.delete(`/api/payment-methods/${id}`);
+}
+
+/** Pays a credit card bill from the bank balance. */
+export async function payCreditCardBill(id: string, amount: number): Promise<PaymentMethod> {
+  const { data } = await api.post(`/api/payment-methods/${id}/pay`, { amount });
+  return data.data;
+}
+
+/** Sets a card's used amount to what the user reports. The bank balance is not touched. */
+export async function setCreditCardBalance(id: string, used: number, billedUnpaid: number): Promise<PaymentMethod> {
+  const { data } = await api.put(`/api/payment-methods/${id}/balance`, { used, billedUnpaid });
+  return data.data;
 }
 
 // ── Liabilities ───────────────────────────────────────────────

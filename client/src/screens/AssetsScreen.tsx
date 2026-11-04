@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { Alert, KeyboardAvoidingView, Modal, Platform, Pressable, RefreshControl, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Animated from 'react-native-reanimated';
@@ -16,17 +16,23 @@ import { Badge, Chip, EmptyState, ErrorState, IconTile, MoneyText, SectionHeader
 import { Button } from '../components/ui/Button';
 import { Field } from '../components/ui/Field';
 import { LargeTitle, ScreenHeader, useHeaderHeight, useScrollHeader } from '../components/ui/ScreenHeader';
+import { DateField } from '../components/ui/DateField';
+import { AssetReviewSheet } from '../components/assets/AssetReviewSheet';
+import { FIXED_INCOME_TYPES, buildReviewAlerts } from '../utils/dueAlerts';
 
 type IconName = React.ComponentProps<typeof Ionicons>['name'];
 
 const ASSET_TYPE_PRESETS = [
   'Fixed Deposit',
+  'Recurring Deposit',
   'Mutual Fund',
   'Stocks / Equity',
   'Bank / Savings',
   'EPF / PPF',
   'NPS',
   'Gold',
+  'Commodities',
+  'Cryptocurrency',
   'Real Estate',
   'Cash',
   'Other',
@@ -34,6 +40,9 @@ const ASSET_TYPE_PRESETS = [
 
 const TYPE_ICON: Record<string, IconName> = {
   'Fixed Deposit': 'lock-closed',
+  'Recurring Deposit': 'repeat',
+  Commodities: 'cube',
+  Cryptocurrency: 'logo-bitcoin',
   'Mutual Fund': 'trending-up',
   'Stocks / Equity': 'stats-chart',
   'Bank / Savings': 'card',
@@ -87,6 +96,19 @@ export function getRateLabel(type: string): { label: string; placeholder: string
   return { label: 'Expected Annual Return (% p.a.)', placeholder: 'e.g. 8.00' };
 }
 
+/** SIP / deposit summary shown under the asset name. */
+function planLine(asset: Asset): string | null {
+  const parts: string[] = [];
+  if (asset.monthlyContribution) {
+    parts.push(`${asset.assetType === 'Recurring Deposit' ? 'Installment' : 'SIP'} ${formatINR(asset.monthlyContribution)}/mo`);
+  }
+  if (asset.maturityDate && asset.maturityValue !== undefined) {
+    const when = new Date(asset.maturityDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+    parts.push(`${asset.matured ? 'Matured' : 'Matures'} ${when} · ${formatINR(asset.maturityValue)}`);
+  }
+  return parts.length ? parts.join(' · ') : null;
+}
+
 /** Stored rates are fractions (0.07); very old records stored whole percents (7), so both display as 7%. */
 const ratePercent = (ast: Asset) =>
   ast.annualReturnRate !== undefined && ast.annualReturnRate !== null
@@ -121,6 +143,14 @@ export default function AssetsScreen() {
   const [includedInFireCorpus, setIncludedInFireCorpus] = useState(true);
   const [liquidity, setLiquidity] = useState<AssetLiquidity>('locked');
   const [notes, setNotes] = useState('');
+  const [monthlyContribution, setMonthlyContribution] = useState('');
+  const [principal, setPrincipal] = useState('');
+  const [startDate, setStartDate] = useState(new Date());
+  const [tenureMonths, setTenureMonths] = useState('');
+  const [reviewing, setReviewing] = useState<Asset | null>(null);
+  const isFixed = FIXED_INCOME_TYPES.includes(assetType);
+  const isRD = assetType === 'Recurring Deposit';
+  const dueReview = useMemo(() => new Set(buildReviewAlerts(assets).map((a) => a.id)), [assets]);
 
   const fetchAssets = useCallback(async () => {
     try {
@@ -148,6 +178,10 @@ export default function AssetsScreen() {
     setIncludedInFireCorpus(true);
     setLiquidity('locked');
     setNotes('');
+    setMonthlyContribution('');
+    setPrincipal('');
+    setStartDate(new Date());
+    setTenureMonths('');
     setFormError('');
     setModalVisible(true);
   };
@@ -168,6 +202,10 @@ export default function AssetsScreen() {
     setIncludedInFireCorpus(ast.includedInFireCorpus);
     setLiquidity(ast.liquidity || 'liquid');
     setNotes(ast.notes || '');
+    setMonthlyContribution(ast.monthlyContribution != null ? String(ast.monthlyContribution) : '');
+    setPrincipal(ast.principal != null ? String(ast.principal) : '');
+    setStartDate(ast.startDate ? new Date(ast.startDate) : new Date());
+    setTenureMonths(ast.tenureMonths != null ? String(ast.tenureMonths) : '');
     setFormError('');
     setModalVisible(true);
   };
@@ -184,7 +222,7 @@ export default function AssetsScreen() {
   const handleTypeSelect = (type: string) => {
     setAssetType(type);
     // Sensible defaults based on preset
-    if (type === 'Fixed Deposit') {
+    if (type === 'Fixed Deposit' || type === 'Recurring Deposit') {
       setAssetClass('FIRE_INVESTABLE');
       setIncludedInFireCorpus(true);
       setLiquidity('locked');
@@ -212,7 +250,18 @@ export default function AssetsScreen() {
     const finalType = assetType === 'Other' ? customType.trim() : assetType;
     if (!finalType) return setFormError('Pick a type, or describe it under Other.');
     const val = parseFloat(currentValue);
-    if (isNaN(val) || val < 0) return setFormError('Enter the current value (zero or more).');
+    if (!isFixed && (isNaN(val) || val < 0)) return setFormError('Enter the current value (zero or more).');
+    const sip = monthlyContribution.trim() === '' ? null : Number(monthlyContribution);
+    const deposit = Number(principal);
+    const tenure = Number(tenureMonths);
+    if (isFixed) {
+      if (isRD ? !(sip !== null && sip > 0) : !(deposit > 0)) return setFormError(isRD ? 'Monthly installment must be greater than 0.' : 'Deposit amount must be greater than 0.');
+      if (annualReturnRate.trim() === '') return setFormError('Interest rate is required for a deposit.');
+      if (startDate > new Date()) return setFormError('Start date cannot be in the future.');
+      if (!(Number.isInteger(tenure) && tenure >= 1 && tenure <= 600)) return setFormError('Tenure must be a whole number of months (1 to 600).');
+    } else if (sip !== null && !(sip >= 0)) {
+      return setFormError('Monthly SIP must be 0 or more.');
+    }
     if (assetClass === 'NON_INVESTABLE' && includedInFireCorpus) return setFormError('Net-worth-only assets cannot count towards FIRE.');
 
     let parsedRate: number | null = null;
@@ -228,18 +277,21 @@ export default function AssetsScreen() {
         name: name.trim(),
         assetType: finalType,
         assetClass,
-        currentValue: val,
+        // FD/RD value is computed by the server from the deposit details.
+        ...(isFixed
+          ? { principal: isRD ? null : deposit, startDate: startDate.toISOString(), tenureMonths: tenure }
+          : { currentValue: val, principal: null, startDate: null, tenureMonths: null }),
+        monthlyContribution: sip,
         annualReturnRate: parsedRate,
         includedInFireCorpus: assetClass === 'NON_INVESTABLE' ? false : includedInFireCorpus,
         liquidity,
         notes: notes.trim(),
       };
-      if (editingAsset) await updateAsset(editingAsset.id, payload);
-      else await createAsset(payload);
+      const saved = editingAsset ? await updateAsset(editingAsset.id, payload) : await createAsset(payload);
       setModalVisible(false);
       fetchAssets();
       toast(editingAsset ? 'Asset updated' : 'Asset added', {
-        subtitle: `${name.trim()} · ${formatINR(val)}${!editingAsset && payload.includedInFireCorpus ? ' · counts towards FIRE' : ''}`,
+        subtitle: `${name.trim()} · ${formatINR(saved?.currentValue ?? val)}${!editingAsset && payload.includedInFireCorpus ? ' · counts towards FIRE' : ''}`,
       });
     } catch (err: any) {
       setFormError(err.response?.data?.error || "Couldn't save. Check your connection and try again.");
@@ -355,8 +407,15 @@ export default function AssetsScreen() {
                     {ast.includedInFireCorpus && ast.assetClass !== 'NON_INVESTABLE' && <Badge label="In FIRE corpus" tone="success" />}
                     <Badge label={liq.label} />
                   </View>
+                  {!!planLine(ast) && <Text style={styles.notes}>{planLine(ast)}</Text>}
                   {!!ast.notes && <Text style={styles.notes} numberOfLines={2}>{ast.notes}</Text>}
                   <View style={styles.actions}>
+                    {dueReview.has(ast.id) && (
+                      <Pressable style={styles.action} onPress={() => setReviewing(ast)} accessibilityRole="button" accessibilityLabel={`Monthly check-in for ${ast.name}`}>
+                        <Ionicons name="checkmark-done-outline" size={16} color={c.primary} />
+                        <Text style={[styles.actionText, { color: c.primary }]}>Check in</Text>
+                      </Pressable>
+                    )}
                     <Pressable style={styles.action} onPress={() => openEditModal(ast)} accessibilityRole="button" accessibilityLabel={`Edit ${ast.name}`}>
                       <Ionicons name="create-outline" size={16} color={c.textMuted} />
                       <Text style={[styles.actionText, { color: c.textMuted }]}>Edit</Text>
@@ -416,8 +475,35 @@ export default function AssetsScreen() {
             {assetType === 'Other' && <Field label="Describe it" value={customType} onChangeText={setCustomType} placeholder="e.g. Bonds, Crypto" />}
 
             <Field label="Name" icon="pricetag-outline" value={name} onChangeText={(v) => { setName(v); setFormError(''); }} placeholder="e.g. HDFC FD, Nifty 50 Index Fund" />
-            <Field label="Current value (₹)" icon="cash-outline" value={currentValue} onChangeText={(v) => { setCurrentValue(v); setFormError(''); }} keyboardType="numeric" placeholder="150000" />
-            <Field label={rateLabel.label} icon="trending-up-outline" value={annualReturnRate} onChangeText={setAnnualReturnRate} keyboardType="numeric" placeholder={rateLabel.placeholder} hint="Optional. Enter a percentage, like 7.25." />
+            {isFixed ? (
+              <>
+                <Field
+                  label={isRD ? 'Monthly installment (₹)' : 'Deposit amount (₹)'}
+                  icon="cash-outline"
+                  value={isRD ? monthlyContribution : principal}
+                  onChangeText={(v) => { (isRD ? setMonthlyContribution : setPrincipal)(v); setFormError(''); }}
+                  keyboardType="numeric"
+                  placeholder={isRD ? '5000' : '100000'}
+                />
+                <Field label="Interest rate (% p.a.)" icon="trending-up-outline" value={annualReturnRate} onChangeText={(v) => { setAnnualReturnRate(v); setFormError(''); }} keyboardType="numeric" placeholder="e.g. 7.1" />
+                <DateField label="Start date" value={startDate} onChange={setStartDate} maximumDate={new Date()} />
+                <Field
+                  label="Tenure (months)"
+                  icon="hourglass-outline"
+                  value={tenureMonths}
+                  onChangeText={(v) => { setTenureMonths(v.replace(/[^0-9]/g, '')); setFormError(''); }}
+                  keyboardType="number-pad"
+                  placeholder="e.g. 12"
+                  hint="Value grows automatically at this rate (quarterly compounding). No monthly check-in needed."
+                />
+              </>
+            ) : (
+              <>
+                <Field label="Current value (₹)" icon="cash-outline" value={currentValue} onChangeText={(v) => { setCurrentValue(v); setFormError(''); }} keyboardType="numeric" placeholder="150000" />
+                <Field label={rateLabel.label} icon="trending-up-outline" value={annualReturnRate} onChangeText={setAnnualReturnRate} keyboardType="numeric" placeholder={rateLabel.placeholder} hint="Optional. Enter a percentage, like 7.25." />
+                <Field label="Monthly SIP (₹)" icon="repeat-outline" value={monthlyContribution} onChangeText={(v) => { setMonthlyContribution(v); setFormError(''); }} keyboardType="numeric" placeholder="Optional" />
+              </>
+            )}
 
             <Text style={styles.label}>What is it for?</Text>
             {(Object.keys(classes) as AssetClass[]).map((k) => (
@@ -459,6 +545,7 @@ export default function AssetsScreen() {
           </ScrollView>
         </KeyboardAvoidingView>
       </Modal>
+      <AssetReviewSheet asset={reviewing} onClose={() => setReviewing(null)} onSaved={fetchAssets} />
     </View>
   );
 }

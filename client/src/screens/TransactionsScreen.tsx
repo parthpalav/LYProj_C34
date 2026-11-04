@@ -4,11 +4,12 @@ import { Ionicons } from '@expo/vector-icons';
 import Animated from 'react-native-reanimated';
 import ReanimatedSwipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { createLiability, deleteTransaction, getSubscriptionSuggestions, getTransactions, updateTransaction } from '../services/api';
+import { createLiability, deleteTransaction, getPaymentMethods, getSubscriptionSuggestions, getTransactions, updateTransaction } from '../services/api';
 import { useStore } from '../store/useStore';
 import { toast } from '../store/useCelebrationStore';
 import { Palette, createStyles, radius, tabular, typeScale, useTheme } from '../theme';
-import { SubscriptionSuggestion, Transaction } from '../types';
+import { PaymentMethod, SubscriptionSuggestion, Transaction } from '../types';
+import { transactionPaymentLabel } from '../utils/paymentMethods';
 import { formatCurrency } from '../utils/format';
 import { enterUp, exitFade, listLayout } from '../motion';
 import { useTabBarSpace } from '../components/navigation/TabBar';
@@ -151,8 +152,8 @@ const AnimatedSectionList = Animated.createAnimatedComponent(SectionList<Transac
 
 // ── Row ────────────────────────────────────────────────────────────────────
 
-function TxRow({ item, index, onEdit, onDelete, onOptions }: {
-  item: Transaction; index: number;
+function TxRow({ item, index, paidWith, onEdit, onDelete, onOptions }: {
+  item: Transaction; index: number; paidWith?: string | null;
   onEdit: (tx: Transaction) => void; onDelete: (tx: Transaction) => void; onOptions: (tx: Transaction) => void;
 }) {
   const styles = useStyles();
@@ -211,9 +212,10 @@ function TxRow({ item, index, onEdit, onDelete, onOptions }: {
               <Text style={styles.metaDot}>·</Text>
               <Text style={styles.dateText}>{timeOf(item.timestamp)}</Text>
             </View>
-            {(item.needsReview || (item.tags && item.tags.length > 0)) && (
+            {(item.needsReview || !!paidWith || (item.tags && item.tags.length > 0)) && (
               <View style={styles.tagsRow}>
                 {item.needsReview && <Badge label="Check category" tone="warning" />}
+                {!!paidWith && <Badge label={paidWith} />}
                 {item.tags?.slice(0, 2).map((t) => <Badge key={t} label={t.toUpperCase()} />)}
               </View>
             )}
@@ -260,6 +262,8 @@ export function TransactionsScreen(): React.ReactElement {
   const [pickingCategory, setPickingCategory] = useState(false);
   const [overflowTx, setOverflowTx] = useState<Transaction | null>(null);
   const [suggestions, setSuggestions] = useState<SubscriptionSuggestion[]>([]);
+  // Archived included, so old transactions keep their label.
+  const [methods, setMethods] = useState<PaymentMethod[]>([]);
   // Deletes wait out the Undo window before reaching the server.
   const pendingDeletes = useRef(new Map<string, ReturnType<typeof setTimeout>>());
 
@@ -277,6 +281,7 @@ export function TransactionsScreen(): React.ReactElement {
       setRefreshing(false);
     }
     getSubscriptionSuggestions().then(setSuggestions).catch(() => {});
+    getPaymentMethods().then(setMethods).catch(() => {});
   }, [setTransactions]);
 
   // Refetch on every focus: QuickAdd is a sheet over this screen, so closing it refocuses here.
@@ -316,7 +321,9 @@ export function TransactionsScreen(): React.ReactElement {
     pendingDeletes.current.set(tx.id, timer);
     toast('Transaction deleted', {
       tone: 'info',
-      subtitle: `${tx.description || tx.category} · ${formatCurrency(Math.abs(tx.amount))}`,
+      subtitle: methods.find((m) => m.id === tx.paymentMethodId)?.kind === 'credit_card'
+        ? `${formatCurrency(Math.abs(tx.amount))} goes back to ${transactionPaymentLabel(tx.paymentMethodId, methods)}, not your bank balance`
+        : `${tx.description || tx.category} · ${formatCurrency(Math.abs(tx.amount))}`,
       action: { label: 'Undo', onPress: () => { clearTimeout(timer); pendingDeletes.current.delete(tx.id); restore(tx); } },
     });
   };
@@ -369,8 +376,8 @@ export function TransactionsScreen(): React.ReactElement {
       setEditTx(null);
       toast(categoryChanged || typeChanged ? 'Updated. FINAURA will remember this merchant.' : 'Transaction updated');
       fetchTransactions();
-    } catch {
-      setEditError("Couldn't save. Check your connection and try again.");
+    } catch (err: any) {
+      setEditError(err?.response?.data?.error || "Couldn't save. Check your connection and try again.");
     }
   };
 
@@ -610,7 +617,7 @@ export function TransactionsScreen(): React.ReactElement {
         sections={sections}
         keyExtractor={(item: Transaction) => item.id}
         renderItem={({ item, index }) => (
-          <TxRow item={item} index={index} onEdit={handleEdit} onDelete={handleDelete} onOptions={setOverflowTx} />
+          <TxRow item={item} index={index} paidWith={transactionPaymentLabel(item.paymentMethodId, methods)} onEdit={handleEdit} onDelete={handleDelete} onOptions={setOverflowTx} />
         )}
         renderSectionHeader={({ section }) => (
           <View style={styles.sectionHeader}>

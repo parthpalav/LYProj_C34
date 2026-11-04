@@ -54,6 +54,53 @@ export interface Transaction {
   needsReview?: boolean;
   liabilityId?: string;
   scheduledFor?: string;
+  /** null = unspecified (bank balance), 'cash', or a PaymentMethod id */
+  paymentMethodId?: string | null;
+}
+
+export type PaymentMethodKind = 'upi' | 'debit_card' | 'credit_card';
+
+export const CASH_METHOD_ID = 'cash';
+
+export interface CreditCardSummary {
+  creditLimit: number;
+  outstanding: number;
+  available: number;
+  /** Purchases since the last statement; billed on the next one. */
+  unbilled: number;
+  amountDue: number;
+  overdueAmount: number;
+  lastStatementDate: string;
+  dueDate: string;
+  nextStatementDate: string;
+}
+
+export interface PaymentMethod {
+  id: string;
+  kind: PaymentMethodKind;
+  nickname: string;
+  last4?: string | null;
+  upiId?: string | null;
+  creditLimit?: number | null;
+  outstanding?: number;
+  statementDay?: number | null;
+  dueDay?: number | null;
+  status: 'active' | 'archived';
+  credit?: CreditCardSummary;
+}
+
+export interface PaymentMethodPayload {
+  kind: PaymentMethodKind;
+  nickname: string;
+  last4?: string;
+  upiId?: string;
+  creditLimit?: number;
+  statementDay?: number;
+  dueDay?: number;
+  /** Credit cards, on create: amount already used before tracking started. */
+  used?: number;
+  /** Credit cards, on create: part of `used` still unpaid from the latest statement. */
+  billedUnpaid?: number;
 }
 
 export interface Liability {
@@ -70,6 +117,10 @@ export interface Liability {
   dayOfMonth?: number | null;
   monthOfYear?: number | null;
   nextDueDate?: string | null;
+  /** Optional loan details; interestRate is a fraction (0.095). */
+  outstandingBalance?: number | null;
+  interestRate?: number | null;
+  remainingTermMonths?: number | null;
   status: 'active' | 'deleted';
   createdAt?: string;
   updatedAt?: string;
@@ -108,6 +159,17 @@ export interface Asset {
   includedInFireCorpus: boolean;
   liquidity: AssetLiquidity;
   notes?: string;
+  /** SIP amount, or the installment of a Recurring Deposit. */
+  monthlyContribution?: number | null;
+  /** FD deposit amount. */
+  principal?: number | null;
+  startDate?: string | null;
+  tenureMonths?: number | null;
+  lastReviewedAt?: string | null;
+  /** Server-computed for a complete FD/RD. */
+  maturityValue?: number;
+  maturityDate?: string;
+  matured?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -276,6 +338,8 @@ export interface User {
   expectedWithdrawalRate?: number;
   lifestyleAdjustmentRatio?: number;
   emergencyFundTargetMonths?: number;
+  /** IANA timezone; defaults to Asia/Kolkata */
+  timezone?: string;
   goals?: string[];
   onboardingComplete?: boolean;
   onboardingCompleted?: boolean;

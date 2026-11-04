@@ -15,6 +15,7 @@ import {
   getGoals,
   getIncome,
   getLiabilities,
+  getPaymentMethods,
   getPredictability,
   getTransactions,
   getUserProfile,
@@ -27,11 +28,13 @@ import {
   FMIResponse,
   IncomeRecord,
   Liability,
+  PaymentMethod,
   PredictabilitySnapshot,
 } from '../types';
 import { createStyles, Palette, radius, tabular, typeScale, useTheme } from '../theme';
 import { enterUp } from '../motion';
 import { dueDatesWithin } from '../utils/bills';
+import { buildDueAlerts, buildReviewAlerts } from '../utils/dueAlerts';
 import { monthlyEquivalent } from '../utils/format';
 import { buildSeries, rangeFor } from '../utils/spending';
 import { AnimatedBar, AnimatedSegment } from '../components/motion/AnimatedBar';
@@ -122,8 +125,11 @@ export function DashboardScreen(): React.ReactElement {
   const [liabilities, setLiabilities] = useState<Liability[]>([]);
   const [fmiData, setFmiData] = useState<FMIResponse | null>(null);
   const [assets, setAssets] = useState<Asset[] | null>(null);
+  const [cards, setCards] = useState<PaymentMethod[]>([]);
   const [income, setIncome] = useState<IncomeRecord[] | null>(null);
-  const [attention, setAttention] = useState(0);
+  const [serverAttention, setAttention] = useState(0);
+  // Bell badge also counts bills due this week, card bills and monthly asset check-ins (same as the Notifications screen).
+  const attention = serverAttention + buildDueAlerts(liabilities, cards).length + buildReviewAlerts(assets ?? []).length;
   const loadedRef = useRef(false);
   const lastHeavyRef = useRef(0);
 
@@ -184,11 +190,12 @@ export function DashboardScreen(): React.ReactElement {
     // Trigger supplemental family fetch in parallel without blocking main spinner
     void fetchFamilyContext();
     // Bell badge: alerts plus pending household invites; never blocks Home.
-    void Promise.allSettled([getAlerts(), getReceivedFamilyInvitations()]).then(([a, inv]) => {
+    void Promise.allSettled([getAlerts(), getReceivedFamilyInvitations(), getPaymentMethods()]).then(([a, inv, pm]) => {
       setAttention(
         (a.status === 'fulfilled' ? a.value?.length ?? 0 : 0) +
         (inv.status === 'fulfilled' ? (inv.value ?? []).filter((i) => i.status === 'pending').length : 0),
       );
+      if (pm.status === 'fulfilled') setCards(pm.value);
     });
 
     const results = await Promise.allSettled([

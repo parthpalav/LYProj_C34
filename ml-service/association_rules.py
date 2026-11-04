@@ -27,7 +27,8 @@ def apriori(baskets, min_support=0.05, max_len=3):
     n = len(sets)
     if n == 0:
         return {}
-    min_count = min_support * n
+    # Epsilon: 0.07 * 100 is 7.000000000000001 in floating point, which would drop a support of exactly 0.07
+    min_count = min_support * n - 1e-9
 
     item_counts = Counter(item for b in sets for item in b)
     current = {frozenset([i]): c for i, c in item_counts.items() if c >= min_count}

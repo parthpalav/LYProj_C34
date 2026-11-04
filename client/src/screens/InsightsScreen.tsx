@@ -179,7 +179,7 @@ export function InsightsScreen() {
             <Card padded={false} style={s.list}>
               <Text style={[s.outSub, { paddingTop: 10 }]}>
                 Apriori rules from {predicted.basketCount} days of purchases
-                {predicted.basis?.items.length ? ` · based on ${predicted.basis.isToday ? 'today' : 'your last purchase day'}: ${predicted.basis.items.join(', ')}` : ''}
+                {predicted.basis ? ` · based on today (${predicted.basis.weekday})${predicted.basis.items.length ? `: ${predicted.basis.items.join(', ')}` : ''}` : ''}
               </Text>
               {(predicted.predictions ?? []).length === 0 ? (
                 <Text style={[s.outSub, { paddingVertical: 12 }]}>No strong rule matches that day yet.</Text>
@@ -189,7 +189,7 @@ export function InsightsScreen() {
                     <IconTile icon="sparkles" tint={c.primary} size={36} />
                     <View style={s.flex}>
                       <Text style={s.outTitle} numberOfLines={1}>{p.label}</Text>
-                      <Text style={s.outSub} numberOfLines={2}>because you bought {p.because.join(' + ')}</Text>
+                      <Text style={s.outSub} numberOfLines={2}>{p.reason}</Text>
                     </View>
                     <View style={{ alignItems: 'flex-end' }}>
                       <Text style={s.outAmount}>{Math.round(p.confidence * 100)}%</Text>

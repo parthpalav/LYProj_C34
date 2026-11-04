@@ -1,7 +1,6 @@
 import React from 'react';
 import { usePurchasePredictions } from '../../hooks/usePurchasePredictions';
-import { formatCurrencyINR, formatDateShort } from '../../utils/formatters';
-import { dateKeyToDate } from '../../utils/timezone';
+import { formatCurrencyINR } from '../../utils/formatters';
 import { SectionError } from '../dashboard/SectionError';
 
 const pct = (x: number) => `${Math.round(x * 100)}%`;
@@ -17,7 +16,7 @@ export const PredictedPurchasesCard: React.FC = () => {
           <span className="overview-context-badge">ASSOCIATION RULES · APRIORI</span>
           <h3 className="card-title">Likely next purchases</h3>
           <p className="card-subtitle">
-            Each day's purchases form a basket. Apriori finds items you often buy on the same day and predicts what usually follows.
+            Each day's purchases form a basket. Apriori finds items you often buy on the same day or weekday and predicts what usually follows. Your most frequent buys fill any gaps.
           </p>
         </div>
       </div>
@@ -36,7 +35,7 @@ export const PredictedPurchasesCard: React.FC = () => {
         <div className="predicted-grid">
           <div>
             <h4 className="predicted-heading">
-              {data.basis?.isToday ? 'Based on today' : `Based on ${data.basis?.date ? formatDateShort(dateKeyToDate(data.basis.date)) : 'your last purchases'}`}
+              {`Based on today${data.basis?.weekday ? ` (${data.basis.weekday})` : ''}`}
               {data.basis?.items.length ? `: ${data.basis.items.join(', ')}` : ''}
             </h4>
             {data.predictions && data.predictions.length > 0 ? (
@@ -45,7 +44,7 @@ export const PredictedPurchasesCard: React.FC = () => {
                   <li key={p.item} className="predicted-item">
                     <div>
                       <strong>{p.label}</strong>
-                      <span className="predicted-why">because you bought {p.because.join(' + ')}</span>
+                      <span className="predicted-why">{p.reason}</span>
                     </div>
                     <div className="predicted-metrics">
                       <span className="predicted-confidence">{pct(p.confidence)} likely</span>

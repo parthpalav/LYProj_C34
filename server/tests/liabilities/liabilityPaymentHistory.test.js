@@ -210,7 +210,10 @@ async function runTests() {
     nextDueDate: new Date('2026-08-01T00:00:00Z')
   });
 
-  await processLiabilities();
+  // Fixtures are dated Aug-Sep 2026. Pin the scheduler clock to mid-August so only L_SCHED (due 1 Aug)
+  // is due; with the real clock, later months are overdue and each run books one more occurrence.
+  const SCHEDULER_NOW = new Date('2026-08-15T00:00:00Z');
+  await processLiabilities(SCHEDULER_NOW);
 
   const req5 = { user: { id: 'USER_A' }, params: { id: 'L_SCHED' }, query: {} };
   const res5 = mockRes();
@@ -221,7 +224,7 @@ async function runTests() {
   assert.strictEqual(res5.data.data.transactions[0].amount, 3000);
 
   // Run scheduler again — idempotency test
-  await processLiabilities();
+  await processLiabilities(SCHEDULER_NOW);
   const res5Retry = mockRes();
   await getLiabilityTransactions(req5, res5Retry, (err) => { if (err) throw err; });
   assert.strictEqual(res5Retry.data.data.transactions.length, 1, 'Duplicate scheduler run must not duplicate history');

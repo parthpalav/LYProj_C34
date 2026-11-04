@@ -820,15 +820,19 @@ export interface PurchasePredictions {
   reason?: 'NOT_ENOUGH_HISTORY' | 'SERVICE_UNAVAILABLE';
   basketCount: number;
   minBaskets?: number;
-  basis?: { date: string | null; isToday: boolean; items: string[] };
+  /** Today's purchases plus today's weekday: what the rules are matched against. */
+  basis?: { date: string; weekday: string; items: string[] };
   predictions?: Array<{
     item: string;
     label: string;
     kind: 'category' | 'merchant';
+    /** 'rule' = an association rule fired; 'frequency' = filled from how often the user buys it. */
+    source: 'rule' | 'frequency';
     confidence: number;
-    lift: number;
+    lift: number | null;
     support: number;
     because: string[];
+    reason: string;
     typicalAmount: number | null;
   }>;
   rules?: Array<{ antecedent: string[]; consequent: string; support: number; confidence: number; lift: number }>;

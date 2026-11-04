@@ -349,6 +349,7 @@ def classify_expense():
 _MAX_BASKETS = 5000
 _MAX_BASKET_ITEMS = 50
 _MAX_ITEM_CHARS = 80
+_MAX_RULES = 1000  # response-size guard; the demo users mine 49-122 rules
 
 
 def _bounded_float(payload, key, default, lo, hi):
@@ -364,7 +365,9 @@ def _bounded_float(payload, key, default, lo, hi):
 @app.post('/association-rules')
 def association_rules_endpoint():
     """Body: {baskets: string[][], min_support?: 0.05, min_confidence?: 0.4, max_len?: 3}.
-    Returns {basket_count, itemset_count, rules: [{antecedent, consequent, support, confidence, lift}] (top 50)}."""
+    Returns {basket_count, itemset_count, rules: [{antecedent, consequent, support, confidence, lift}]}.
+    Only rules with lift > 1 are returned (up to _MAX_RULES). The caller filters further, so a fixed
+    top-N cut here would let rules it discards crowd out the useful ones."""
     payload = request.get_json(force=True, silent=True)
     if not payload or not isinstance(payload, dict):
         return jsonify({'error': 'Invalid JSON body'}), 400
@@ -388,11 +391,11 @@ def association_rules_endpoint():
         return jsonify({'error': str(e)}), 400
 
     itemsets = apriori(baskets, min_support=min_support, max_len=max_len)
-    rules = generate_rules(itemsets, min_confidence=min_confidence)
+    rules = [r for r in generate_rules(itemsets, min_confidence=min_confidence) if r['lift'] > 1]
     return jsonify(_sanitize_json({
         'basket_count': sum(1 for b in baskets if b),
         'itemset_count': len(itemsets),
-        'rules': rules[:50],
+        'rules': rules[:_MAX_RULES],
     }))
 
 

@@ -49,6 +49,13 @@ class TestApriori(unittest.TestCase):
         self.assertAlmostEqual(r['lift'], 1.25)
         self.assertTrue(all(r['confidence'] >= 0.6 for r in rules))
 
+    def test_support_equal_to_threshold_is_frequent(self):
+        # 0.07 * 100 == 7.000000000000001 in floating point
+        for n, ms in [(100, 0.07), (50, 0.14), (100, 0.29)]:
+            k = round(ms * n)
+            sets = apriori([['a']] * k + [['b']] * (n - k), min_support=ms, max_len=1)
+            self.assertIn(frozenset(['a']), sets, (n, ms))
+
     def test_empty(self):
         self.assertEqual(apriori([], 0.5), {})
         self.assertEqual(generate_rules({}), [])
@@ -70,6 +77,16 @@ class TestAssociationRulesApi(unittest.TestCase):
         self.assertTrue(data['rules'])
         top = data['rules'][0]
         self.assertEqual(set(top), {'antecedent', 'consequent', 'support', 'confidence', 'lift'})
+
+    def test_returns_only_positive_lift_rules_without_top_50_cut(self):
+        # 12 independent-ish items over 60 baskets: well over 50 rules before the lift filter
+        baskets = [[f'i{j}' for j in range(12) if (b * (j + 3)) % 7 < 4] for b in range(60)]
+        mined = generate_rules(apriori(baskets, 0.05, 3), 0.0)
+        res = self.post({'baskets': baskets, 'min_support': 0.05, 'min_confidence': 0.0})
+        rules = res.get_json()['rules']
+        self.assertTrue(all(r['lift'] > 1 for r in rules))
+        self.assertEqual(len(rules), sum(1 for r in mined if r['lift'] > 1))
+        self.assertGreater(len(rules), 50)
 
     def test_rejects_bad_input(self):
         for body in [

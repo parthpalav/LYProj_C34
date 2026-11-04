@@ -63,6 +63,10 @@ async function setup() {
   return false;
 }
 
+// Sources the ML layer reports when no rule matches: the fine-tuned joint model (finaura_v4) when it is
+// loaded, else the legacy pair (TF-IDF for category, MiniLM for type).
+const MODEL_SOURCES = { category: ['finaura_v4', 'tfidf_v2', 'tfidf'], type: ['finaura_v4', 'minilm'] };
+
 async function runTests() {
   console.log('\n' + '='.repeat(70));
   console.log('  V2 & MINILM INTEGRATION REGRESSION TESTS');
@@ -75,10 +79,10 @@ async function runTests() {
     assert(res.data.category === 'Entertainment' && res.data.categorySource === 'merchant_rule', 
       'Category Integration: Rule wins for Netflix', `got ${res.data.category} / ${res.data.categorySource}`);
     
-    // TF-IDF V2 Fallback
+    // ML model fallback
     res = await api('POST', '/classify', { text: 'ordered some delivery meal from an online kitchen because did not cook' });
-    assert(res.data.category === 'Food & Dining' && res.data.categorySource === 'tfidf_v2',
-      'Category Integration: Fallback to tfidf_v2 for contextual food description', `got ${res.data.category} / ${res.data.categorySource}`);
+    assert(res.data.category === 'Food & Dining' && MODEL_SOURCES.category.includes(res.data.categorySource),
+      'Category Integration: Fallback to the ML model for contextual food description', `got ${res.data.category} / ${res.data.categorySource}`);
   }
 
   // Test 2: Type Integration & Confidence Policy
@@ -88,15 +92,16 @@ async function runTests() {
     assert(res.data.type === 'Need' && res.data.typeSource === 'merchant_rule' && res.data.needsReview === false,
       'Type Integration: Rule wins for Apollo Pharmacy', `got ${res.data.type} / ${res.data.typeSource}`);
 
-    // Contextual MiniLM invocation (High Confidence >= 0.75 -> typeConfidence >= 0.75)
+    // Contextual ML invocation (High Confidence >= 0.75 -> typeConfidence >= 0.75)
     res = await api('POST', '/classify', { text: 'funded an online portfolio for my long-term wealth building' });
-    assert(res.data.type === 'Investment' && res.data.typeSource === 'minilm',
-      'Type Integration: MiniLM handles Investment', `got ${res.data.type} / ${res.data.typeSource}`);
+    assert(res.data.type === 'Investment' && MODEL_SOURCES.type.includes(res.data.typeSource),
+      'Type Integration: ML model handles Investment', `got ${res.data.type} / ${res.data.typeSource}`);
     assert(res.data.typeConfidence >= 0.75, 'Type Integration: High confidence type prediction has typeConfidence >= 0.75', `got ${res.data.typeConfidence}`);
 
-    // Contextual MiniLM invocation (Low Confidence < 0.75 -> needsReview = true)
-    res = await api('POST', '/classify', { text: 'bought a fancy essential oil diffuser for relaxation' });
-    assert(res.data.typeSource === 'minilm' && res.data.needsReview === true,
+    // Low-confidence ML prediction -> needsReview = true. Gibberish stays uncertain on every model;
+    // a merely unusual phrase (the old 'essential oil diffuser' case) gets learned by newer models.
+    res = await api('POST', '/classify', { text: 'zxqv plorb 7731' });
+    assert(MODEL_SOURCES.type.includes(res.data.typeSource) && res.data.needsReview === true,
       'Type Integration: Low confidence type prediction triggers needsReview = true', `got ${res.data.typeSource} / needsReview=${res.data.needsReview}`);
   }
 
@@ -112,7 +117,7 @@ async function runTests() {
     createdTxId = tx?.id;
     assert(res.status === 201, 'Persistence: Transaction created via backend auto-inference');
     assert(['Investments', 'Education', 'Misc'].includes(tx?.category) && tx?.type === 'Investment', 'Persistence: Correctly inferred category and type', `got ${tx?.category}/${tx?.type}`);
-    assert(tx?.categorySource === 'tfidf_v2' && tx?.typeSource === 'minilm', 'Persistence: Correctly saved categorySource and typeSource metadata', `got ${tx?.categorySource}/${tx?.typeSource}`);
+    assert(MODEL_SOURCES.category.includes(tx?.categorySource) && MODEL_SOURCES.type.includes(tx?.typeSource), 'Persistence: Correctly saved categorySource and typeSource metadata', `got ${tx?.categorySource}/${tx?.typeSource}`);
     assert(tx?.categoryConfidence > 0 && tx?.typeConfidence >= 0.75, 'Persistence: Correctly saved categoryConfidence and typeConfidence', `cat: ${tx?.categoryConfidence}, type: ${tx?.typeConfidence}`);
   }
 

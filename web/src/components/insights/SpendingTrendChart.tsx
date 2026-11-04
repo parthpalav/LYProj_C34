@@ -9,13 +9,11 @@ import {
   Legend,
   CartesianGrid,
 } from 'recharts';
-import type { SpendingTrendPoint, SpendingRange } from '../../types';
+import type { SpendingTrendPoint } from '../../types';
 import { formatCurrencyINR } from '../../utils/formatters';
 
 export interface SpendingTrendChartProps {
   data: SpendingTrendPoint[];
-  range: SpendingRange;
-  onRangeChange: (range: SpendingRange) => void;
 }
 
 const CustomTooltip = ({ active, payload, label }: any) => {
@@ -56,16 +54,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 
 export const SpendingTrendChart: React.FC<SpendingTrendChartProps> = ({
   data,
-  range,
-  onRangeChange,
 }) => {
-  const ranges: Array<{ id: SpendingRange; label: string }> = [
-    { id: '30d', label: '30D' },
-    { id: '90d', label: '90D' },
-    { id: '6m', label: '6M' },
-    { id: '12m', label: '12M' },
-    { id: 'ytd', label: 'YTD' },
-  ];
 
   const hasData = data.some((d) => d.total > 0);
 
@@ -74,25 +63,10 @@ export const SpendingTrendChart: React.FC<SpendingTrendChartProps> = ({
       <div className="chart-header-row">
         <div>
           <span className="overview-context-badge">OUTFLOW TRAJECTORY</span>
-          <h3 className="card-title">Monthly Spending Trend</h3>
+          <h3 className="card-title">Spending Trend</h3>
           <p className="card-subtitle">
             Historical outflow patterns across Needs, Wants, and Investments
           </p>
-        </div>
-        <div className="chart-range-pills" role="group" aria-label="Spending Time Range">
-          {ranges.map((r) => {
-            const isMatch = range === r.id || (r.id === '90d' && range === '3m');
-            return (
-              <button
-                key={r.id}
-                type="button"
-                className={`range-pill-btn ${isMatch ? 'active' : ''}`}
-                onClick={() => onRangeChange(r.id)}
-              >
-                {r.label}
-              </button>
-            );
-          })}
         </div>
       </div>
 

@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { addDays, bucketLabel, buildSeries, indexAtX, rangeFor, spanLabel, yTicks } from './spending.ts';
+import { addDays, bucketLabel, buildSeries, inDayRange, indexAtX, periodRange, rangeFor, spanLabel, yTicks } from './spending.ts';
 import { formatCompact } from './format.ts';
 
 const now = new Date(2026, 9, 29, 15, 30); // 29 Oct 2026, afternoon
@@ -77,4 +77,16 @@ assert.equal(formatCompact(15000), '₹15k');
 assert.equal(formatCompact(120000), '₹1.2L');
 assert.equal(spanLabel(new Date(2026, 9, 14), new Date(2026, 9, 29)), '14 – 29 Oct');
 assert.ok(bucketLabel(month.buckets[0]).includes('14'));
+// Activity list periods
+const nowP = new Date(2026, 10, 4, 15, 0);
+assert.equal(periodRange('all', nowP), null);
+const m3 = periodRange('3m', nowP)!;
+assert.equal(m3.start.getTime(), new Date(2026, 8, 1).getTime());
+assert.equal(m3.end.getTime(), new Date(2026, 10, 4).getTime());
+assert.equal(periodRange('month', nowP)!.start.getTime(), new Date(2026, 10, 1).getTime());
+const cust = periodRange('custom', nowP, { start: new Date(2025, 11, 20), end: new Date(2027, 0, 1) })!;
+assert.equal(cust.end.getTime(), new Date(2026, 10, 4).getTime(), 'custom never runs past today');
+assert.ok(inDayRange(new Date(2025, 11, 20, 23, 59).toISOString(), cust));
+assert.ok(!inDayRange(new Date(2025, 11, 19, 23, 59).toISOString(), cust));
+assert.ok(inDayRange(new Date(2026, 10, 4, 22, 0).toISOString(), cust), 'end day is inclusive');
 console.log('spending ok');

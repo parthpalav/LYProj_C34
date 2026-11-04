@@ -254,6 +254,33 @@ export interface DashboardData {
     investments: { amount: number; pct: number };
     total: number;
   };
+  commitments?: MonthlyCommitments;
+}
+
+/** This month's auto-deduct liabilities against the current balance (GET /api/dashboard). Dates are YYYY-MM-DD in the user's timezone. */
+export interface MonthlyCommitments {
+  month: string;
+  monthEnd: string;
+  currentBalance: number;
+  committedTotal: number;
+  paidSoFar: number;
+  remaining: number;
+  freeBalance: number;
+  byType: Record<string, { committed: number; remaining: number }>;
+  items: Array<{
+    id: string;
+    name: string;
+    type: string;
+    category: string;
+    amount: number;
+    frequency: string;
+    paidDates: string[];
+    dueDates: string[];
+    paidCount: number;
+    paidAmount: number;
+    remainingAmount: number;
+    nextDueDate: string | null;
+  }>;
 }
 
 export interface Goal {
@@ -515,6 +542,26 @@ export interface EnvelopeData {
   targetSavings: number;
 }
 
+/** GET /api/predictions/purchases: Apriori association rules over the last 180 days. */
+export interface PurchasePredictions {
+  available: boolean;
+  reason?: 'NOT_ENOUGH_HISTORY' | 'SERVICE_UNAVAILABLE';
+  basketCount: number;
+  minBaskets?: number;
+  basis?: { date: string | null; isToday: boolean; items: string[] };
+  predictions?: Array<{
+    item: string;
+    label: string;
+    kind: 'category' | 'merchant';
+    confidence: number;
+    lift: number;
+    support: number;
+    because: string[];
+    typicalAmount: number | null;
+  }>;
+  rules?: Array<{ antecedent: string[]; consequent: string; support: number; confidence: number; lift: number }>;
+}
+
 export interface SubscriptionSuggestion {
   key: string;
   name: string;
@@ -630,7 +677,6 @@ export interface BehaviorResponse {
   analyzedCount: number;
 }
 
-export type SpendingRange = '30d' | '90d' | '3m' | '6m' | '12m' | 'ytd';
 
 export interface SpendingTrendPoint {
   monthKey: string;     // e.g. "2026-03"

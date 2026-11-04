@@ -37,6 +37,7 @@ import Liability   from '../models/Liability.js';
 import { calculateNextDueDate } from './liabilityController.js';
 import { SUPPORTED_TIMEZONES, resolveTimezone, zonedMonthStart, zonedDateKey } from '../utils/userTime.js';
 import { getUserTimezone } from '../services/userTimezone.js';
+import { getMonthlyCommitments } from '../services/CommitmentService.js';
 import { resolvePaymentMethodId, chargeSource, refundSource, PaymentMethodError } from '../services/PaymentMethodService.js';
 import FMIHistory  from '../models/FMIHistory.js';
 import Alert       from '../models/Alert.js';
@@ -1536,6 +1537,7 @@ router.get('/dashboard', async (req, res, next) => {
       categoryBreakdown,
       budgetMetrics,
       wantsNeedsBreakdown,
+      commitments: await getMonthlyCommitments(userId, { tz, currentBalance }),
     });
   } catch (error) { next(error); }
 });

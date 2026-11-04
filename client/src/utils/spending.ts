@@ -44,6 +44,25 @@ export function rangeFor(kind: RangeKind, now: Date, custom?: { start: Date; end
   }
 }
 
+/** Activity list date filter. 3 months = this calendar month and the two before it. */
+export type TxPeriod = 'all' | 'month' | '3m' | 'custom';
+
+/** Inclusive day range for a TxPeriod, or null for all time. */
+export function periodRange(period: TxPeriod, now: Date, custom?: { start: Date; end: Date }): { start: Date; end: Date } | null {
+  if (period === 'all') return null;
+  if (period === '3m') {
+    const today = startOfDay(now);
+    return { start: new Date(today.getFullYear(), today.getMonth() - 2, 1), end: today };
+  }
+  return rangeFor(period === 'month' ? 'month' : 'custom', now, custom);
+}
+
+/** True when the timestamp's local day falls inside the inclusive range. */
+export const inDayRange = (timestamp: string, r: { start: Date; end: Date }) => {
+  const d = startOfDay(new Date(timestamp));
+  return d >= r.start && d <= r.end;
+};
+
 /** Totals per day (or week) between start and end, beginning no earlier than the first transaction. */
 export function buildSeries(txs: Spend[], start: Date, end: Date): Series {
   const dated = txs

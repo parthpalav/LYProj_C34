@@ -6,6 +6,7 @@ import * as assetController from '../controllers/assetController.js';
 import * as reportController from '../controllers/reportController.js';
 import * as familyController from '../controllers/familyController.js';
 import * as subscriptionController from '../controllers/subscriptionController.js';
+import * as predictionController from '../controllers/predictionController.js';
 import * as paymentMethodController from '../controllers/paymentMethodController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 import { computeRateLimiter } from '../middleware/rateLimiter.js';
@@ -35,6 +36,9 @@ router.get('/reports/monthly', authMiddleware, reportController.getMonthlyReport
 
 // Recurring-charge suggestions (subscriptions not yet tracked as liabilities)
 router.get('/subscriptions/suggestions', authMiddleware, subscriptionController.getSubscriptionSuggestions);
+
+// Purchase predictions (Apriori association rules)
+router.get('/predictions/purchases', authMiddleware, predictionController.getPurchasePredictions);
 
 // Liability routes
 router.get('/liabilities', authMiddleware, liabilityController.getLiabilities);

@@ -38,6 +38,7 @@ import {
 
 import { createStyles, useTheme, Palette } from '../theme';
 import { ThemeToggle } from '../components/ui/ThemeToggle';
+import { FamilyMemberBreakdownCard } from '../components/family/FamilyMemberBreakdownCard';
 // ── Design Tokens ─────────────────────────────────────────────
 const tokens = (c: Palette) => ({ BLUE: c.primary, BLUE_LIGHT: c.primarySoft, GREEN: c.success, GREEN_LIGHT: c.successSoft, AMBER: c.warning, AMBER_LIGHT: c.warningSoft, RED: c.danger, RED_LIGHT: c.dangerSoft, PURPLE: c.purple, PURPLE_LIGHT: c.primarySoft, BG: c.bg, CARD_BG: c.surface, TEXT_PRIMARY: c.text, TEXT_SECONDARY: c.textMuted, TEXT_MUTED: c.textSubtle, BORDER: c.border });
 
@@ -728,6 +729,9 @@ export default function FamilyScreen(): React.ReactElement {
                 </View>
               </View>
             ) : null}
+
+            {/* ── Member Contributions (Shapley) ──────────────── */}
+            {fmi ? <FamilyMemberBreakdownCard breakdown={dashboard?.memberBreakdown} familyScore={Math.round(fmi.score)} /> : null}
 
             {/* ── Household Financial Summary ──────────────────── */}
             {dashboard ? (

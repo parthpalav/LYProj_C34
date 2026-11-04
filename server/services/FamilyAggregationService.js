@@ -105,6 +105,18 @@ export function normalizeCategory(category) {
  * @returns {Promise<Object|null>} Plain aggregate DTO, or null if user has no active family
  */
 export async function getHouseholdSummary(userId, referenceDate = new Date()) {
+  const data = await getHouseholdData(userId, referenceDate);
+  return data ? data.summary : null;
+}
+
+/**
+ * Same aggregate as getHouseholdSummary, plus the per-member figures it is summed from:
+ * { summary, members: [{ userId, name, role, declaredIncome, actualIncome, effectiveIncome,
+ *   need, want, investment, categories: { [category]: amount }, txs }] }.
+ * `members` holds attributable data; callers must apply the family visibility rules
+ * before returning any of it (see FamilyFMIService.buildMemberBreakdown).
+ */
+export async function getHouseholdData(userId, referenceDate = new Date()) {
   if (!userId) return null;
 
   // 1. Resolve active Family and validated member roster
@@ -156,6 +168,7 @@ export async function getHouseholdSummary(userId, referenceDate = new Date()) {
   let totalDeclaredIncome = 0;
   let totalActualIncome = 0;
   let totalEffectiveIncome = 0;
+  const memberMap = new Map();
 
   for (const m of activeFamily.members) {
     const uid = String(m.userId);
@@ -166,6 +179,19 @@ export async function getHouseholdSummary(userId, referenceDate = new Date()) {
     totalDeclaredIncome += declared;
     totalActualIncome += actual;
     totalEffectiveIncome += effective;
+    memberMap.set(uid, {
+      userId: m.userId,
+      name: m.name,
+      role: m.role,
+      declaredIncome: declared,
+      actualIncome: actual,
+      effectiveIncome: effective,
+      need: 0,
+      want: 0,
+      investment: 0,
+      categories: {},
+      txs: []
+    });
   }
 
   // 6. Fetch member Transaction records for current calendar month
@@ -181,20 +207,26 @@ export async function getHouseholdSummary(userId, referenceDate = new Date()) {
   const categoryAmountMap = new Map();
 
   for (const tx of transactionDocs) {
+    const member = memberMap.get(String(tx.userId));
+    member?.txs.push(tx);
     const amount = Number(tx.amount) || 0;
     if (amount <= 0) continue;
 
     // Type authority strictly determines spend bucket
     if (tx.type === 'Need') {
       need += amount;
+      if (member) member.need += amount;
     } else if (tx.type === 'Want') {
       want += amount;
+      if (member) member.want += amount;
     } else if (tx.type === 'Investment') {
       investment += amount;
+      if (member) member.investment += amount;
     }
 
     // Category is descriptive only and normalized
     const canonicalCategory = normalizeCategory(tx.category);
+    if (member) member.categories[canonicalCategory] = (member.categories[canonicalCategory] || 0) + amount;
     categoryAmountMap.set(
       canonicalCategory,
       (categoryAmountMap.get(canonicalCategory) || 0) + amount
@@ -262,7 +294,7 @@ export async function getHouseholdSummary(userId, referenceDate = new Date()) {
     .sort((a, b) => b.amount - a.amount);
 
   // 13. Return plain aggregate DTO (no Mongoose document wrappers, no raw data leakage)
-  return {
+  const summary = {
     period: {
       month: period.month,
       year: period.year,
@@ -310,6 +342,7 @@ export async function getHouseholdSummary(userId, referenceDate = new Date()) {
     typeBreakdown,
     categoryBreakdown
   };
+  return { summary, members: [...memberMap.values()] };
 }
 
 export default {
@@ -318,5 +351,6 @@ export default {
   getMonthPeriod,
   normalizeCategory,
   CATEGORY_NORMALIZATION_MAP,
-  getHouseholdSummary
+  getHouseholdSummary,
+  getHouseholdData
 };

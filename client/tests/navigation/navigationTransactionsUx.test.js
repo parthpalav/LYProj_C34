@@ -201,8 +201,9 @@ test('13. Type and category filters compose (AND between type & categories; OR w
   assert.ok(code.includes("tx.type === activeType"), 'Type filter compares tx.type');
   // Category filter: tx.category in selectedCategories
   assert.ok(code.includes("selectedCategories.includes"), 'Multi-category filter uses includes for OR matching');
-  // The type filter feeds the category/search memo, so both are dependencies
-  assert.ok(code.includes("[transactions, activeType]"), 'Type filter memo depends on activeType');
+  // The date range feeds the type filter, which feeds the category/search memo
+  assert.ok(code.includes("[transactions, range]"), 'Date range memo depends on the range');
+  assert.ok(code.includes("[dated, activeType]"), 'Type filter memo depends on activeType and the dated list');
   assert.ok(code.includes("[typed, selectedCategories"), 'Category filter memo builds on the typed list');
 });
 

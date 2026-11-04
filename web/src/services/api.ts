@@ -36,6 +36,7 @@ import type {
   ChatMessage,
   EnvelopeData,
   SubscriptionSuggestion,
+  PurchasePredictions,
   PaymentMethod,
   PaymentMethodPayload,
 } from '../types';
@@ -592,6 +593,13 @@ export async function getRoundupPreview(): Promise<{ amount: number; previewText
 export async function vaultRoundup(amount: number): Promise<{ message: string; savings: number }> {
   const { data } = await api.post('/api/envelopes/update', { amount });
   return data;
+}
+
+// ── Purchase predictions (Apriori) ───────────────────────────
+
+export async function getPurchasePredictions(): Promise<PurchasePredictions> {
+  const { data } = await api.get('/api/predictions/purchases');
+  return data?.data;
 }
 
 // ── Subscription suggestions ──────────────────────────────────

@@ -15,12 +15,14 @@ import { enterUp, exitFade, listLayout } from '../motion';
 import { useTabBarSpace } from '../components/navigation/TabBar';
 import { LargeTitle, ScreenHeader, useHeaderHeight, useScrollHeader } from '../components/ui/ScreenHeader';
 import { Card } from '../components/ui/Card';
-import { Badge, EmptyState, ErrorState, IconTile, MoneyText } from '../components/ui/Bits';
+import { Badge, Chip, EmptyState, ErrorState, IconTile, MoneyText } from '../components/ui/Bits';
 import { CategoryGrid } from '../components/ui/CategoryGrid';
 import { SegmentedControl } from '../components/ui/SegmentedControl';
 import { Button } from '../components/ui/Button';
 import { Field } from '../components/ui/Field';
 import { Sheet } from '../components/ui/Sheet';
+import { DateRangeSheet } from '../components/ui/DateRangeSheet';
+import { TxPeriod, inDayRange, periodRange, spanLabel, startOfDay } from '../utils/spending';
 import { SkeletonCard } from '../components/motion/Skeleton';
 
 // ── Category definitions ───────────────────────────────────────────────────
@@ -88,6 +90,14 @@ const TYPE_FILTERS = (c: Palette) => [
   { key: 'Investment' as const, label: 'Invest', dot: c.successStrong },
 ];
 const TYPES = ['Need', 'Want', 'Investment'] as const;
+
+// ── Date range filter (full history is kept; All time is the default) ──────
+const PERIODS: { key: TxPeriod; label: string }[] = [
+  { key: 'all', label: 'All time' },
+  { key: 'month', label: 'This month' },
+  { key: '3m', label: '3 months' },
+  { key: 'custom', label: 'Custom' },
+];
 
 // ── Grouping helpers ──────────────────────────────────────────────────────
 
@@ -249,6 +259,9 @@ export function TransactionsScreen(): React.ReactElement {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [query, setQuery] = useState('');
   const [reviewOnly, setReviewOnly] = useState(false);
+  const [period, setPeriod] = useState<TxPeriod>('all');
+  const [customRange, setCustomRange] = useState<{ start: Date; end: Date } | null>(null);
+  const [pickingRange, setPickingRange] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [loadFailed, setLoadFailed] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -287,10 +300,23 @@ export function TransactionsScreen(): React.ReactElement {
   // Refetch on every focus: QuickAdd is a sheet over this screen, so closing it refocuses here.
   useFocusEffect(useCallback(() => { fetchTransactions(); }, [fetchTransactions]));
 
+  // ── Date range: null = all time ──────────────────────────────────────
+  const firstTx = useMemo(
+    () => transactions.reduce<Date | null>((min, t) => {
+      const d = startOfDay(new Date(t.timestamp));
+      return Number.isFinite(d.getTime()) && (!min || d < min) ? d : min;
+    }, null),
+    [transactions],
+  );
+  const range = useMemo(() => periodRange(period, new Date(), customRange ?? undefined), [period, customRange]);
+
   // ── Monthly summary (current month) ────────────────────────────────────
   const monthlySummary = useMemo(() => {
     const cmk = currentMonthKey();
-    const thisMonth = transactions.filter((tx) => monthKey(tx.timestamp) === cmk);
+    // All time keeps the this-month summary; a chosen range sums that range instead
+    const thisMonth = range
+      ? transactions.filter((tx) => inDayRange(tx.timestamp, range))
+      : transactions.filter((tx) => monthKey(tx.timestamp) === cmk);
     // Spent = Need + Want amounts (exclude Investment)
     const spent = thisMonth
       .filter((tx) => tx.type !== 'Investment')
@@ -300,7 +326,7 @@ export function TransactionsScreen(): React.ReactElement {
       .filter((tx) => tx.type === 'Investment')
       .reduce((sum, tx) => sum + Math.abs(tx.amount), 0);
     return { spent, invested };
-  }, [transactions]);
+  }, [transactions, range]);
 
   const reviewCount = useMemo(() => transactions.filter((t) => t.needsReview).length, [transactions]);
 
@@ -400,9 +426,19 @@ export function TransactionsScreen(): React.ReactElement {
   const filterCount = selectedCategories.length + (reviewOnly ? 1 : 0);
   const hasActiveFilters = filterCount > 0;
 
+  const dated = useMemo(
+    () => (range ? transactions.filter((tx) => inDayRange(tx.timestamp, range)) : transactions),
+    [transactions, range],
+  );
+
+  const choosePeriod = (p: TxPeriod) => {
+    if (p === 'custom') setPickingRange(true);
+    else setPeriod(p);
+  };
+
   const typed = useMemo(
-    () => (activeType === 'all' ? transactions : transactions.filter((tx) => tx.type === activeType)),
-    [transactions, activeType],
+    () => (activeType === 'all' ? dated : dated.filter((tx) => tx.type === activeType)),
+    [dated, activeType],
   );
 
   // Per-category counts for the filter grid, within the chosen type
@@ -443,6 +479,7 @@ export function TransactionsScreen(): React.ReactElement {
       return 'Your transactions will appear here.';
     }
     if (query.trim()) return `Nothing matches "${query.trim()}".`;
+    if (range && dated.length === 0) return `No transactions between ${spanLabel(range.start, range.end)}.`;
     const typeLabel = TYPE_FILTERS(c).find((f) => f.key === activeType)?.label ?? '';
     const hasType = activeType !== 'all';
     const hasCat = selectedCategories.length > 0;
@@ -465,7 +502,7 @@ export function TransactionsScreen(): React.ReactElement {
       return `No ${typeLabel.toLowerCase()} transactions yet.`;
     }
     return 'No transactions match these filters.';
-  }, [transactions.length, activeType, selectedCategories, query, c]);
+  }, [transactions.length, activeType, selectedCategories, query, c, range, dated.length]);
 
   // ── Category toggling and clearing ─────────────────────────────────────
   const toggleCategory = (key: string) => {
@@ -504,12 +541,12 @@ export function TransactionsScreen(): React.ReactElement {
         {/* Monthly summary */}
         <Card variant="hero" style={styles.summary}>
           <View style={styles.summaryItem}>
-            <Text style={styles.summaryLabel}>Spent This Month</Text>
+            <Text style={styles.summaryLabel}>{range && period !== 'month' ? `Spent · ${spanLabel(range.start, range.end)}` : 'Spent This Month'}</Text>
             <MoneyText value={monthlySummary.spent} style={styles.summaryValue} />
           </View>
           <View style={styles.summaryDivider} />
           <View style={styles.summaryItem}>
-            <Text style={styles.summaryLabel}>Invested This Month</Text>
+            <Text style={styles.summaryLabel}>{range && period !== 'month' ? 'Invested in range' : 'Invested This Month'}</Text>
             <MoneyText value={monthlySummary.invested} style={styles.summaryValue} />
           </View>
         </Card>
@@ -531,6 +568,19 @@ export function TransactionsScreen(): React.ReactElement {
 
         {/* Type filter */}
         <SegmentedControl segments={TYPE_FILTERS(c)} value={activeType} onChange={setActiveType} accessibilityLabel="Filter by type" />
+
+        {/* Date range */}
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips} accessibilityLabel="Filter by date">
+          {PERIODS.map((p) => (
+            <Chip
+              key={p.key}
+              label={p.key === 'custom' && period === 'custom' && range ? spanLabel(range.start, range.end) : p.label}
+              icon={p.key === 'custom' ? 'calendar-outline' : undefined}
+              selected={period === p.key}
+              onPress={() => choosePeriod(p.key)}
+            />
+          ))}
+        </ScrollView>
 
         {/* Active filters: one removable pill each */}
         {hasActiveFilters && (
@@ -699,6 +749,19 @@ export function TransactionsScreen(): React.ReactElement {
       </Sheet>
 
       {/* Advanced filter sheet */}
+      <DateRangeSheet
+        visible={pickingRange}
+        onClose={() => setPickingRange(false)}
+        initial={customRange ?? { start: firstTx && firstTx > startOfDay(new Date()) ? startOfDay(new Date()) : (firstTx ?? startOfDay(new Date())), end: startOfDay(new Date()) }}
+        firstDate={firstTx}
+        applyLabel="Show transactions"
+        onApply={(r) => {
+          setCustomRange(r);
+          setPeriod('custom');
+          setPickingRange(false);
+        }}
+      />
+
       <Sheet visible={showFilterModal} onClose={() => setShowFilterModal(false)} title="Filters">
         <View style={styles.filterSheet}>
           <View style={styles.filterHeaderRow}>

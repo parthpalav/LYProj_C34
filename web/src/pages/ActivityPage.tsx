@@ -7,7 +7,8 @@ import { usePaymentMethods } from '../hooks/usePaymentMethods';
 import { CreditCardsSection } from '../components/activity/CreditCardsSection';
 import { transactionPaymentLabel } from '../utils/paymentMethods';
 import type { Transaction, IncomeRecord, Liability, TransactionPayload, IncomePayload, LiabilityPayload } from '../types';
-import { formatCurrencyINR } from '../utils/formatters';
+import { formatCurrencyINR, getTransactionDate } from '../utils/formatters';
+import { dateKey } from '../utils/timezone';
 import { getPacingReport } from '../services/api';
 import { ActivityNudges } from '../components/activity/ActivityNudges';
 
@@ -48,6 +49,15 @@ export const ActivityPage: React.FC = () => {
 
   // Domain Hooks
   const txState = useTransactions();
+  // History is kept in full; the custom range can reach back to the first transaction
+  const earliestTxKey = React.useMemo(() => {
+    let min = Infinity;
+    for (const tx of txState.transactions) {
+      const t = getTransactionDate(tx).getTime();
+      if (t < min) min = t;
+    }
+    return Number.isFinite(min) ? dateKey(new Date(min)) : null;
+  }, [txState.transactions]);
   const incState = useIncome();
   const liabState = useLiabilities();
   const payState = usePaymentMethods();
@@ -335,6 +345,7 @@ export const ActivityPage: React.FC = () => {
                 onResetFilters={txState.resetFilters}
                 onAddClick={handleOpenAddTx}
                 isFiltered={isTxFiltered}
+                minDate={earliestTxKey}
               />
 
               {/* Filter Summary Strip */}

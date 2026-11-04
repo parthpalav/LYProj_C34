@@ -10,14 +10,11 @@ import {
   CartesianGrid,
 } from 'recharts';
 import type { IncomeTrendPoint } from '../../types';
-import type { IncomeRange } from '../../hooks/useIncomeInsights';
 import { formatCurrencyINR } from '../../utils/formatters';
 
 export interface IncomeTrendChartProps {
   data: IncomeTrendPoint[];
   averageIncome: number;
-  range: IncomeRange;
-  onRangeChange: (range: IncomeRange) => void;
 }
 
 interface TooltipProps {
@@ -56,14 +53,7 @@ const CustomTooltip: React.FC<TooltipProps> = ({ active, payload, label }) => {
 export const IncomeTrendChart: React.FC<IncomeTrendChartProps> = ({
   data,
   averageIncome,
-  range,
-  onRangeChange,
 }) => {
-  const ranges: Array<{ id: IncomeRange; label: string }> = [
-    { id: '6m', label: '6M' },
-    { id: '12m', label: '12M' },
-    { id: 'all', label: 'All Time' },
-  ];
 
   const chartDataWithMean = React.useMemo(() => {
     return data.map((d) => ({ ...d, averageIncome }));
@@ -79,18 +69,6 @@ export const IncomeTrendChart: React.FC<IncomeTrendChartProps> = ({
           <p className="card-subtitle">
             Historical inflow trajectory with statistical mean baseline
           </p>
-        </div>
-        <div className="chart-range-pills" role="group" aria-label="Income Trend Range">
-          {ranges.map((r) => (
-            <button
-              key={r.id}
-              type="button"
-              className={`range-pill-btn ${range === r.id ? 'active' : ''}`}
-              onClick={() => onRangeChange(r.id)}
-            >
-              {r.label}
-            </button>
-          ))}
         </div>
       </div>
 

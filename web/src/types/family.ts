@@ -125,6 +125,43 @@ export interface FamilyDashboard {
   typeBreakdown: FamilyTypeBreakdown;
   categoryBreakdown: FamilyCategoryBreakdown[];
   fmi: FamilyFMI;
+  memberBreakdown?: FamilyMemberBreakdown;
+}
+
+/** Per-member share of the family score (Shapley points) and metrics. */
+export interface FamilyMemberContribution {
+  userId: string;
+  name: string;
+  role: 'owner' | 'member';
+  isYou: boolean;
+  score: {
+    points: number;
+    pctOfScore: number;
+    pillars: { D1: number; D2: number; D3: number };
+  };
+  shares: {
+    incomePct: number;
+    spendPct: number;
+    needPct: number;
+    wantPct: number;
+    investmentPct: number;
+  };
+  /** Only on your own row, or on every row when you are the owner. */
+  amounts?: {
+    effectiveIncome: number;
+    need: number;
+    want: number;
+    investment: number;
+    netCash: number;
+    topCategories: Array<{ category: string; amount: number }>;
+  };
+}
+
+export interface FamilyMemberBreakdown {
+  method: 'shapley';
+  rawScore: number;
+  viewerCanSeeAllAmounts: boolean;
+  members: FamilyMemberContribution[];
 }
 
 export interface FamilyDashboardResponse {

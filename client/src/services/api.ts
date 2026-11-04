@@ -8,7 +8,7 @@ import {
   Transaction, WeeklyReport, User, Liability, LiabilityPaymentSummary,
   LiabilityPaymentHistoryResponse, PredictabilitySnapshot, PredictabilityResponse,
   Asset, PredictabilityQueryOptions, FamilySummary, FamilyInvitation, FamilyDashboard, FamilyDashboardResponse,
-  SubscriptionSuggestion, MonthlyReport, ScenarioOverrides, PaymentMethod, PaymentMethodPayload,
+  SubscriptionSuggestion, PurchasePredictions, MonthlyReport, ScenarioOverrides, PaymentMethod, PaymentMethodPayload,
 } from '../types';
 
 export interface NewTransaction {
@@ -507,6 +507,12 @@ export async function runScenario(overrides: ScenarioOverrides): Promise<Predict
 /** Income, spending mix, top categories and health-score change for one calendar month (default: current). */
 export async function getMonthlyReport(year?: number, month?: number): Promise<MonthlyReport> {
   const { data } = await api.get('/api/reports/monthly', { params: { year, month } });
+  return data.data;
+}
+
+/** Likely next purchases from Apriori association rules over daily purchase baskets. */
+export async function getPurchasePredictions(): Promise<PurchasePredictions> {
+  const { data } = await api.get('/api/predictions/purchases');
   return data.data;
 }
 

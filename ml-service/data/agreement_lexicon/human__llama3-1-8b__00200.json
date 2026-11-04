@@ -1,0 +1,202 @@
+[
+ {
+  "i": 200,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 201,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 202,
+  "category": "Housing",
+  "type": "Want"
+ },
+ {
+  "i": 203,
+  "category": "Housing",
+  "type": "Want"
+ },
+ {
+  "i": 204,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 205,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 206,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 207,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 208,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 209,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 210,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 211,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 212,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 213,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 214,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 215,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 216,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 217,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 218,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 219,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 220,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 221,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 222,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 223,
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ {
+  "i": 224,
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ {
+  "i": 225,
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ {
+  "i": 226,
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ {
+  "i": 227,
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ {
+  "i": 228,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 229,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 230,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 231,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 232,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 233,
+  "category": "Investments",
+  "type": "Investment"
+ },
+ {
+  "i": 234,
+  "category": "Investments",
+  "type": "Investment"
+ },
+ {
+  "i": 235,
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ {
+  "i": 236,
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ {
+  "i": 237,
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ {
+  "i": 238,
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ {
+  "i": 239,
+  "category": "Transport & Travel",
+  "type": "Want"
+ }
+]

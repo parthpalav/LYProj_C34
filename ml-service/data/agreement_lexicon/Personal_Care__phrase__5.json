@@ -1,0 +1,234 @@
+[
+ {
+  "text": "haircut",
+  "type": "Want"
+ },
+ {
+  "text": "barber",
+  "type": "Want"
+ },
+ {
+  "text": "hair styling",
+  "type": "Want"
+ },
+ {
+  "text": "makeup",
+  "type": "Want"
+ },
+ {
+  "text": "makeup kit",
+  "type": "Want"
+ },
+ {
+  "text": "skincare set",
+  "type": "Want"
+ },
+ {
+  "text": "face cream",
+  "type": "Want"
+ },
+ {
+  "text": "lip balm",
+  "type": "Want"
+ },
+ {
+  "text": "moisturizer",
+  "type": "Want"
+ },
+ {
+  "text": "anti-aging cream",
+  "type": "Want"
+ },
+ {
+  "text": "foundation",
+  "type": "Want"
+ },
+ {
+  "text": "eyebrow wax",
+  "type": "Want"
+ },
+ {
+  "text": "manicure",
+  "type": "Want"
+ },
+ {
+  "text": "pedicure",
+  "type": "Want"
+ },
+ {
+  "text": "parfait",
+  "type": "Need"
+ },
+ {
+  "text": "gym membership",
+  "type": "Need"
+ },
+ {
+  "text": "gym fees",
+  "type": "Need"
+ },
+ {
+  "text": "gym kit",
+  "type": "Need"
+ },
+ {
+  "text": "shower gel",
+  "type": "Need"
+ },
+ {
+  "text": "shaving cream",
+  "type": "Need"
+ },
+ {
+  "text": "deodorant",
+  "type": "Need"
+ },
+ {
+  "text": "toothbrush",
+  "type": "Need"
+ },
+ {
+  "text": "floss",
+  "type": "Need"
+ },
+ {
+  "text": "mouthwash",
+  "type": "Need"
+ },
+ {
+  "text": "razor",
+  "type": "Need"
+ },
+ {
+  "text": "shampoo",
+  "type": "Need"
+ },
+ {
+  "text": "conditioner",
+  "type": "Need"
+ },
+ {
+  "text": "body lotion",
+  "type": "Need"
+ },
+ {
+  "text": "exfoliating scrub",
+  "type": "Want"
+ },
+ {
+  "text": "surgical blades",
+  "type": "Need"
+ },
+ {
+  "text": "sanitary pads",
+  "type": "Need"
+ },
+ {
+  "text": "tampons",
+  "type": "Need"
+ },
+ {
+  "text": "tampon applicator",
+  "type": "Need"
+ },
+ {
+  "text": "panty liner",
+  "type": "Need"
+ },
+ {
+  "text": "tampax",
+  "type": "Need"
+ },
+ {
+  "text": "towel",
+  "type": "Need"
+ },
+ {
+  "text": "hand sanitizer",
+  "type": "Need"
+ },
+ {
+  "text": "toothpaste",
+  "type": "Need"
+ },
+ {
+  "text": "face wash",
+  "type": "Need"
+ },
+ {
+  "text": "shaving foam",
+  "type": "Need"
+ },
+ {
+  "text": "shaving gel",
+  "type": "Need"
+ },
+ {
+  "text": "lip scrub",
+  "type": "Want"
+ },
+ {
+  "text": "hair mask",
+  "type": "Want"
+ },
+ {
+  "text": "hair oil",
+  "type": "Want"
+ },
+ {
+  "text": "lip balm",
+  "type": "Need"
+ },
+ {
+  "text": "toothpick",
+  "type": "Need"
+ },
+ {
+  "text": "razor blade",
+  "type": "Need"
+ },
+ {
+  "text": "deodorant stick",
+  "type": "Need"
+ },
+ {
+  "text": "shaving gel",
+  "type": "Need"
+ },
+ {
+  "text": "facial toner",
+  "type": "Want"
+ },
+ {
+  "text": "deodorant deo",
+  "type": "Need"
+ },
+ {
+  "text": "eyebrow pencil",
+  "type": "Want"
+ },
+ {
+  "text": "makeup remover",
+  "type": "Want"
+ },
+ {
+  "text": "lip balm",
+  "type": "Need"
+ },
+ {
+  "text": "exfoliating glove",
+  "type": "Want"
+ },
+ {
+  "text": "deodorant stick",
+  "type": "Need"
+ },
+ {
+  "text": "shaving gel",
+  "type": "Need"
+ },
+ {
+  "text": "shaving cream",
+  "type": "Need"
+ }
+]

@@ -1,0 +1,290 @@
+[
+ {
+  "text": "school fees",
+  "type": "Need"
+ },
+ {
+  "text": "exam fees",
+  "type": "Need"
+ },
+ {
+  "text": "tuition fees",
+  "type": "Need"
+ },
+ {
+  "text": "online courses",
+  "type": "Investment"
+ },
+ {
+  "text": "certifications",
+  "type": "Investment"
+ },
+ {
+  "text": "language classes",
+  "type": "Investment"
+ },
+ {
+  "text": "coaching classes",
+  "type": "Investment"
+ },
+ {
+  "text": "gmat prep",
+  "type": "Investment"
+ },
+ {
+  "text": "toefl courses",
+  "type": "Investment"
+ },
+ {
+  "text": "bar exam",
+  "type": "Investment"
+ },
+ {
+  "text": "cpa exam",
+  "type": "Investment"
+ },
+ {
+  "text": "law exams",
+  "type": "Investment"
+ },
+ {
+  "text": "medical courses",
+  "type": "Investment"
+ },
+ {
+  "text": "pharmacy exams",
+  "type": "Investment"
+ },
+ {
+  "text": "degree programs",
+  "type": "Investment"
+ },
+ {
+  "text": "masters degree",
+  "type": "Investment"
+ },
+ {
+  "text": "phd",
+  "type": "Investment"
+ },
+ {
+  "text": "coding bootcamp",
+  "type": "Investment"
+ },
+ {
+  "text": "online degrees",
+  "type": "Investment"
+ },
+ {
+  "text": "mba programs",
+  "type": "Investment"
+ },
+ {
+  "text": "software certifications",
+  "type": "Investment"
+ },
+ {
+  "text": "it courses",
+  "type": "Investment"
+ },
+ {
+  "text": "finance certifications",
+  "type": "Investment"
+ },
+ {
+  "text": "accounting courses",
+  "type": "Investment"
+ },
+ {
+  "text": "teacher training",
+  "type": "Investment"
+ },
+ {
+  "text": "law training",
+  "type": "Investment"
+ },
+ {
+  "text": "medical training",
+  "type": "Investment"
+ },
+ {
+  "text": "psychology courses",
+  "type": "Investment"
+ },
+ {
+  "text": "clinical training",
+  "type": "Investment"
+ },
+ {
+  "text": "dietician courses",
+  "type": "Investment"
+ },
+ {
+  "text": "nutritionist courses",
+  "type": "Investment"
+ },
+ {
+  "text": "counseling courses",
+  "type": "Investment"
+ },
+ {
+  "text": "career coaching",
+  "type": "Investment"
+ },
+ {
+  "text": "career guidance",
+  "type": "Investment"
+ },
+ {
+  "text": "job preparation",
+  "type": "Investment"
+ },
+ {
+  "text": "test preparation",
+  "type": "Investment"
+ },
+ {
+  "text": "aptitude courses",
+  "type": "Investment"
+ },
+ {
+  "text": "quantitative courses",
+  "type": "Investment"
+ },
+ {
+  "text": "quantum computing",
+  "type": "Investment"
+ },
+ {
+  "text": "cloud computing",
+  "type": "Investment"
+ },
+ {
+  "text": "machine learning",
+  "type": "Investment"
+ },
+ {
+  "text": "data science",
+  "type": "Investment"
+ },
+ {
+  "text": "ai courses",
+  "type": "Investment"
+ },
+ {
+  "text": "data analytics",
+  "type": "Investment"
+ },
+ {
+  "text": "statistics courses",
+  "type": "Investment"
+ },
+ {
+  "text": "it security courses",
+  "type": "Investment"
+ },
+ {
+  "text": "network security",
+  "type": "Investment"
+ },
+ {
+  "text": "cybersecurity courses",
+  "type": "Investment"
+ },
+ {
+  "text": "digital marketing",
+  "type": "Investment"
+ },
+ {
+  "text": "seo courses",
+  "type": "Investment"
+ },
+ {
+  "text": "content marketing",
+  "type": "Investment"
+ },
+ {
+  "text": "internet marketing",
+  "type": "Investment"
+ },
+ {
+  "text": "ecommerce courses",
+  "type": "Investment"
+ },
+ {
+  "text": "project management",
+  "type": "Investment"
+ },
+ {
+  "text": "agile methodologies",
+  "type": "Investment"
+ },
+ {
+  "text": "leadership courses",
+  "type": "Investment"
+ },
+ {
+  "text": "management courses",
+  "type": "Investment"
+ },
+ {
+  "text": "finance courses",
+  "type": "Investment"
+ },
+ {
+  "text": "hr courses",
+  "type": "Investment"
+ },
+ {
+  "text": "sales courses",
+  "type": "Investment"
+ },
+ {
+  "text": "customer service",
+  "type": "Investment"
+ },
+ {
+  "text": "customer relations",
+  "type": "Investment"
+ },
+ {
+  "text": "customer support",
+  "type": "Investment"
+ },
+ {
+  "text": "kids books",
+  "type": "Need"
+ },
+ {
+  "text": "textbooks",
+  "type": "Need"
+ },
+ {
+  "text": "textbook rentals",
+  "type": "Need"
+ },
+ {
+  "text": "stationery",
+  "type": "Need"
+ },
+ {
+  "text": "school van",
+  "type": "Need"
+ },
+ {
+  "text": "school bus",
+  "type": "Need"
+ },
+ {
+  "text": "school uniforms",
+  "type": "Need"
+ },
+ {
+  "text": "school supplies",
+  "type": "Need"
+ },
+ {
+  "text": "exam registration fees",
+  "type": "Need"
+ }
+]

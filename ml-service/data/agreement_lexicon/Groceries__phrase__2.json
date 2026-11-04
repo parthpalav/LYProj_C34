@@ -1,0 +1,350 @@
+[
+ {
+  "text": "aam chutney",
+  "type": "Need"
+ },
+ {
+  "text": "ghee",
+  "type": "Need"
+ },
+ {
+  "text": "coca cola",
+  "type": "Want"
+ },
+ {
+  "text": "chocolate",
+  "type": "Want"
+ },
+ {
+  "text": "dry fruits",
+  "type": "Want"
+ },
+ {
+  "text": "veg mix",
+  "type": "Need"
+ },
+ {
+  "text": "masala",
+  "type": "Need"
+ },
+ {
+  "text": "sabzi wala",
+  "type": "Need"
+ },
+ {
+  "text": "doodh",
+  "type": "Need"
+ },
+ {
+  "text": "milk",
+  "type": "Need"
+ },
+ {
+  "text": "fruits",
+  "type": "Need"
+ },
+ {
+  "text": "potatoes",
+  "type": "Need"
+ },
+ {
+  "text": "onions",
+  "type": "Need"
+ },
+ {
+  "text": "yogurt",
+  "type": "Need"
+ },
+ {
+  "text": "oil",
+  "type": "Need"
+ },
+ {
+  "text": "tea",
+  "type": "Need"
+ },
+ {
+  "text": "noodles",
+  "type": "Need"
+ },
+ {
+  "text": "rice",
+  "type": "Need"
+ },
+ {
+  "text": "biscuits",
+  "type": "Want"
+ },
+ {
+  "text": "crisps",
+  "type": "Want"
+ },
+ {
+  "text": "maggi",
+  "type": "Want"
+ },
+ {
+  "text": "baking soda",
+  "type": "Need"
+ },
+ {
+  "text": "sugar",
+  "type": "Need"
+ },
+ {
+  "text": "salt",
+  "type": "Need"
+ },
+ {
+  "text": "sauce",
+  "type": "Need"
+ },
+ {
+  "text": "flour",
+  "type": "Need"
+ },
+ {
+  "text": "cereal",
+  "type": "Need"
+ },
+ {
+  "text": "toothpaste",
+  "type": "Need"
+ },
+ {
+  "text": "shampoo",
+  "type": "Need"
+ },
+ {
+  "text": "soap",
+  "type": "Need"
+ },
+ {
+  "text": "razor",
+  "type": "Need"
+ },
+ {
+  "text": "sanitary pads",
+  "type": "Need"
+ },
+ {
+  "text": "chocolates",
+  "type": "Want"
+ },
+ {
+  "text": "instant noodles",
+  "type": "Need"
+ },
+ {
+  "text": "vanilla essence",
+  "type": "Want"
+ },
+ {
+  "text": "ghee",
+  "type": "Need"
+ },
+ {
+  "text": "curry leaves",
+  "type": "Need"
+ },
+ {
+  "text": "ginger",
+  "type": "Need"
+ },
+ {
+  "text": "garlic",
+  "type": "Need"
+ },
+ {
+  "text": "chips",
+  "type": "Want"
+ },
+ {
+  "text": "dairy",
+  "type": "Need"
+ },
+ {
+  "text": "baking powder",
+  "type": "Need"
+ },
+ {
+  "text": "baking mix",
+  "type": "Need"
+ },
+ {
+  "text": "candies",
+  "type": "Want"
+ },
+ {
+  "text": "pasta",
+  "type": "Need"
+ },
+ {
+  "text": "juice",
+  "type": "Want"
+ },
+ {
+  "text": "detergent",
+  "type": "Need"
+ },
+ {
+  "text": "cleaning spray",
+  "type": "Need"
+ },
+ {
+  "text": "handwash",
+  "type": "Need"
+ },
+ {
+  "text": "toilet paper",
+  "type": "Need"
+ },
+ {
+  "text": "paper towels",
+  "type": "Need"
+ },
+ {
+  "text": "handsoap",
+  "type": "Need"
+ },
+ {
+  "text": "toothbrush",
+  "type": "Need"
+ },
+ {
+  "text": "napkins",
+  "type": "Need"
+ },
+ {
+  "text": "dish soap",
+  "type": "Need"
+ },
+ {
+  "text": "syrup",
+  "type": "Want"
+ },
+ {
+  "text": "instant coffee",
+  "type": "Want"
+ },
+ {
+  "text": "instant tea",
+  "type": "Want"
+ },
+ {
+  "text": "cough syrup",
+  "type": "Need"
+ },
+ {
+  "text": "cough drops",
+  "type": "Need"
+ },
+ {
+  "text": "flu medicine",
+  "type": "Need"
+ },
+ {
+  "text": "pain relief",
+  "type": "Need"
+ },
+ {
+  "text": "multivitamins",
+  "type": "Want"
+ },
+ {
+  "text": "vitamin c",
+  "type": "Want"
+ },
+ {
+  "text": "flu jab",
+  "type": "Investment"
+ },
+ {
+  "text": "school shoes",
+  "type": "Need"
+ },
+ {
+  "text": "school bag",
+  "type": "Need"
+ },
+ {
+  "text": "spectacles",
+  "type": "Need"
+ },
+ {
+  "text": "raincoat",
+  "type": "Need"
+ },
+ {
+  "text": "work charger",
+  "type": "Need"
+ },
+ {
+  "text": "gym membership",
+  "type": "Want"
+ },
+ {
+  "text": "yoga mat",
+  "type": "Want"
+ },
+ {
+  "text": "protein shake",
+  "type": "Want"
+ },
+ {
+  "text": "health insurance",
+  "type": "Investment"
+ },
+ {
+  "text": "tuition fee",
+  "type": "Need"
+ },
+ {
+  "text": "textbooks",
+  "type": "Need"
+ },
+ {
+  "text": "stationery",
+  "type": "Need"
+ },
+ {
+  "text": "cosmetics",
+  "type": "Want"
+ },
+ {
+  "text": "lip balm",
+  "type": "Want"
+ },
+ {
+  "text": "nail polish",
+  "type": "Want"
+ },
+ {
+  "text": "toiletries",
+  "type": "Need"
+ },
+ {
+  "text": "perfume",
+  "type": "Want"
+ },
+ {
+  "text": "skincare",
+  "type": "Want"
+ },
+ {
+  "text": "grooming kit",
+  "type": "Want"
+ },
+ {
+  "text": "donation",
+  "type": "Need"
+ },
+ {
+  "text": "tips",
+  "type": "Need"
+ },
+ {
+  "text": "gift",
+  "type": "Want"
+ }
+]

@@ -33,6 +33,7 @@ Outputs:
 
 import os
 import re
+import copy
 import json
 import random
 import argparse
@@ -195,8 +196,34 @@ def build_lexicon(model: str, n: int) -> pd.DataFrame:
     return lex.reset_index(drop=True)
 
 
-def verify_lexicon(lex: pd.DataFrame, verifiers: list[str]) -> pd.DataFrame:
+def verify_prompt(chunk: pd.DataFrame) -> str:
+    """Blind labelling prompt for the numbered texts in chunk (index = item number); also used by agreement_study."""
     guide = "\n".join(f"- {c}: {g}" for c, g in CATEGORY_GUIDE.items())
+    items = "\n".join(f"{i}. {t}" for i, t in zip(chunk.index, chunk["text"]))
+    return (
+        "You label expenses for an Indian personal finance app. Categories:\n"
+        f"{guide}\n\nLabelling rules (these win over the list above):\n{RUBRIC}\n\n"
+        "For each numbered item below (a merchant name or a short expense note), give its "
+        "category and type (Need, Want or Investment) following the rules exactly. Reply as JSON with one "
+        f"label for every item, using the item number as i.\n\n{items}"
+    )
+
+
+def label_batch(chunk: pd.DataFrame, model: str) -> list:
+    """Greedy labels for chunk. A model can keep counting past the last item until num_predict cuts the JSON,
+    identically on every rerun; the retry pins the schema to exactly this chunk's item numbers."""
+    prompt = verify_prompt(chunk)
+    try:
+        return _ollama(prompt, model, VERIFY_SCHEMA, "labels", temperature=0.0)
+    except json.JSONDecodeError:
+        schema = copy.deepcopy(VERIFY_SCHEMA)
+        labels = schema["properties"]["labels"]
+        labels["maxItems"] = len(chunk)
+        labels["items"]["properties"]["i"] = {"type": "integer", "enum": [int(i) for i in chunk.index]}
+        return _ollama(prompt, model, schema, "labels", temperature=0.0)
+
+
+def verify_lexicon(lex: pd.DataFrame, verifiers: list[str]) -> pd.DataFrame:
     votes: dict[int, list[dict]] = {i: [{"category": r["category"], "type": r["type"]}] for i, r in lex.iterrows()}
     failed = 0
     for model in verifiers:  # one model at a time: Ollama keeps only one large model in 16 GB
@@ -207,17 +234,9 @@ def verify_lexicon(lex: pd.DataFrame, verifiers: list[str]) -> pd.DataFrame:
             if os.path.exists(path):
                 labels = json.load(open(path))
             else:
-                items = "\n".join(f"{i}. {t}" for i, t in zip(chunk.index, chunk["text"]))
-                prompt = (
-                    "You label expenses for an Indian personal finance app. Categories:\n"
-                    f"{guide}\n\nLabelling rules (these win over the list above):\n{RUBRIC}\n\n"
-                    "For each numbered item below (a merchant name or a short expense note), give its "
-                    "category and type (Need, Want or Investment) following the rules exactly. Reply as JSON with one "
-                    f"label for every item, using the item number as i.\n\n{items}"
-                )
                 print(f"[VERIFY {model}] items {start}-{start + len(chunk) - 1} of {len(lex)} ...", flush=True)
                 try:
-                    labels = _ollama(prompt, model, VERIFY_SCHEMA, "labels", temperature=0.0)
+                    labels = label_batch(chunk, model)
                 except Exception as e:  # rerun retries only the missing batches
                     print(f"   ! failed: {e}")
                     failed += 1

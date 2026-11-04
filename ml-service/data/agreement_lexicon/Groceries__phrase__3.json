@@ -1,0 +1,418 @@
+[
+ {
+  "text": "maize corn",
+  "type": "Need"
+ },
+ {
+  "text": "pasta",
+  "type": "Need"
+ },
+ {
+  "text": "whole wheat flour",
+  "type": "Need"
+ },
+ {
+  "text": "sugar",
+  "type": "Need"
+ },
+ {
+  "text": "oats",
+  "type": "Need"
+ },
+ {
+  "text": "tapioca",
+  "type": "Need"
+ },
+ {
+  "text": "poha",
+  "type": "Need"
+ },
+ {
+  "text": "dried beans",
+  "type": "Need"
+ },
+ {
+  "text": "salt",
+  "type": "Need"
+ },
+ {
+  "text": "tomato",
+  "type": "Need"
+ },
+ {
+  "text": "onion",
+  "type": "Need"
+ },
+ {
+  "text": "potato",
+  "type": "Need"
+ },
+ {
+  "text": "cucumber",
+  "type": "Need"
+ },
+ {
+  "text": "carrot",
+  "type": "Need"
+ },
+ {
+  "text": "ginger",
+  "type": "Need"
+ },
+ {
+  "text": "garlic",
+  "type": "Need"
+ },
+ {
+  "text": "chilli powder",
+  "type": "Need"
+ },
+ {
+  "text": "turmeric",
+  "type": "Need"
+ },
+ {
+  "text": "cumin",
+  "type": "Need"
+ },
+ {
+  "text": "coriander",
+  "type": "Need"
+ },
+ {
+  "text": "basmati rice",
+  "type": "Need"
+ },
+ {
+  "text": "sabut khichri",
+  "type": "Need"
+ },
+ {
+  "text": "atta",
+  "type": "Need"
+ },
+ {
+  "text": "milk",
+  "type": "Need"
+ },
+ {
+  "text": "yogurt",
+  "type": "Need"
+ },
+ {
+  "text": "cheese",
+  "type": "Need"
+ },
+ {
+  "text": "milk powder",
+  "type": "Need"
+ },
+ {
+  "text": "paneer",
+  "type": "Need"
+ },
+ {
+  "text": "ghee",
+  "type": "Need"
+ },
+ {
+  "text": "coconut oil",
+  "type": "Need"
+ },
+ {
+  "text": "mustard oil",
+  "type": "Need"
+ },
+ {
+  "text": "refrigerator salt",
+  "type": "Need"
+ },
+ {
+  "text": "cooking oil",
+  "type": "Need"
+ },
+ {
+  "text": "instant noodles",
+  "type": "Want"
+ },
+ {
+  "text": "chocolate bar",
+  "type": "Want"
+ },
+ {
+  "text": "candy",
+  "type": "Want"
+ },
+ {
+  "text": "chips",
+  "type": "Want"
+ },
+ {
+  "text": "biscuit",
+  "type": "Want"
+ },
+ {
+  "text": "cookies",
+  "type": "Want"
+ },
+ {
+  "text": "muesli",
+  "type": "Want"
+ },
+ {
+  "text": "nuts",
+  "type": "Want"
+ },
+ {
+  "text": "cashews",
+  "type": "Want"
+ },
+ {
+  "text": "almonds",
+  "type": "Want"
+ },
+ {
+  "text": "pistachios",
+  "type": "Want"
+ },
+ {
+  "text": "cashew butter",
+  "type": "Want"
+ },
+ {
+  "text": "peanuts",
+  "type": "Want"
+ },
+ {
+  "text": "vanilla pod",
+  "type": "Need"
+ },
+ {
+  "text": "cardamom",
+  "type": "Need"
+ },
+ {
+  "text": "saussage",
+  "type": "Need"
+ },
+ {
+  "text": "bacon",
+  "type": "Need"
+ },
+ {
+  "text": "ham",
+  "type": "Need"
+ },
+ {
+  "text": "turkey",
+  "type": "Need"
+ },
+ {
+  "text": "pepper",
+  "type": "Need"
+ },
+ {
+  "text": "black tea",
+  "type": "Need"
+ },
+ {
+  "text": "green tea",
+  "type": "Need"
+ },
+ {
+  "text": "chai tea",
+  "type": "Need"
+ },
+ {
+  "text": "coffee",
+  "type": "Need"
+ },
+ {
+  "text": "sugar-free syrup",
+  "type": "Need"
+ },
+ {
+  "text": "instant coffee",
+  "type": "Need"
+ },
+ {
+  "text": "syrup",
+  "type": "Need"
+ },
+ {
+  "text": "coconut water",
+  "type": "Need"
+ },
+ {
+  "text": "tapioca starch",
+  "type": "Need"
+ },
+ {
+  "text": "masala",
+  "type": "Need"
+ },
+ {
+  "text": "saffron",
+  "type": "Need"
+ },
+ {
+  "text": "flaxseed",
+  "type": "Need"
+ },
+ {
+  "text": "chia seeds",
+  "type": "Need"
+ },
+ {
+  "text": "turmeric powder",
+  "type": "Need"
+ },
+ {
+  "text": "poppy seeds",
+  "type": "Need"
+ },
+ {
+  "text": "mustard seeds",
+  "type": "Need"
+ },
+ {
+  "text": "soy sauce",
+  "type": "Need"
+ },
+ {
+  "text": "tomato sauce",
+  "type": "Need"
+ },
+ {
+  "text": "noodles",
+  "type": "Need"
+ },
+ {
+  "text": "vermicelli",
+  "type": "Need"
+ },
+ {
+  "text": "muesli bowl",
+  "type": "Want"
+ },
+ {
+  "text": "muesli bar",
+  "type": "Want"
+ },
+ {
+  "text": "trail mix",
+  "type": "Want"
+ },
+ {
+  "text": "butter",
+  "type": "Need"
+ },
+ {
+  "text": "baking powder",
+  "type": "Need"
+ },
+ {
+  "text": "baking soda",
+  "type": "Need"
+ },
+ {
+  "text": "baking chocolate",
+  "type": "Want"
+ },
+ {
+  "text": "brown sugar",
+  "type": "Need"
+ },
+ {
+  "text": "caster sugar",
+  "type": "Need"
+ },
+ {
+  "text": "saffron strands",
+  "type": "Need"
+ },
+ {
+  "text": "vanilla essence",
+  "type": "Need"
+ },
+ {
+  "text": "saffron threads",
+  "type": "Need"
+ },
+ {
+  "text": "vanilla extract",
+  "type": "Need"
+ },
+ {
+  "text": "soy sauce",
+  "type": "Need"
+ },
+ {
+  "text": "cornflakes",
+  "type": "Want"
+ },
+ {
+  "text": "sweets",
+  "type": "Want"
+ },
+ {
+  "text": "biscuit",
+  "type": "Want"
+ },
+ {
+  "text": "butter cookies",
+  "type": "Want"
+ },
+ {
+  "text": "crackers",
+  "type": "Want"
+ },
+ {
+  "text": "bread",
+  "type": "Need"
+ },
+ {
+  "text": "flour",
+  "type": "Need"
+ },
+ {
+  "text": "flour mix",
+  "type": "Need"
+ },
+ {
+  "text": "masala",
+  "type": "Need"
+ },
+ {
+  "text": "chocolate",
+  "type": "Want"
+ },
+ {
+  "text": "chocolate bar",
+  "type": "Want"
+ },
+ {
+  "text": "chocolate powder",
+  "type": "Want"
+ },
+ {
+  "text": "milk chocolate",
+  "type": "Want"
+ },
+ {
+  "text": "dark chocolate",
+  "type": "Want"
+ },
+ {
+  "text": "white chocolate",
+  "type": "Want"
+ },
+ {
+  "text": "chocolate spread",
+  "type": "Want"
+ },
+ {
+  "text": "chocolate chips",
+  "type": "Want"
+ }
+]

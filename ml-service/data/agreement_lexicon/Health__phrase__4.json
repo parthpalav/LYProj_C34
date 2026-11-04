@@ -1,0 +1,238 @@
+[
+ {
+  "text": "doctor visit for mom",
+  "type": "Need"
+ },
+ {
+  "text": "prescription for dad",
+  "type": "Need"
+ },
+ {
+  "text": "lab test for health checkup",
+  "type": "Need"
+ },
+ {
+  "text": "vitamins for mom",
+  "type": "Want"
+ },
+ {
+  "text": "gym membership for fitness",
+  "type": "Want"
+ },
+ {
+  "text": "protein powder for bodybuilding",
+  "type": "Want"
+ },
+ {
+  "text": "diabetes test for uncle",
+  "type": "Need"
+ },
+ {
+  "text": "cough syrup for kid",
+  "type": "Need"
+ },
+ {
+  "text": "orthodontic checkup for daughter",
+  "type": "Need"
+ },
+ {
+  "text": "emergency dental treatment",
+  "type": "Need"
+ },
+ {
+  "text": "physiotherapy for back pain",
+  "type": "Need"
+ },
+ {
+  "text": "medicine for allergy",
+  "type": "Need"
+ },
+ {
+  "text": "prescription eye drop for aunt",
+  "type": "Need"
+ },
+ {
+  "text": "first aid kit for camping",
+  "type": "Want"
+ },
+ {
+  "text": "mango vitamin tablet for mom",
+  "type": "Want"
+ },
+ {
+  "text": "arthritis pain relief for dad",
+  "type": "Need"
+ },
+ {
+  "text": "flu shot for the family",
+  "type": "Need"
+ },
+ {
+  "text": "pregnancy test for wife",
+  "type": "Need"
+ },
+ {
+  "text": "menstrual products for me",
+  "type": "Need"
+ },
+ {
+  "text": "cold medicine for self",
+  "type": "Need"
+ },
+ {
+  "text": "vitamin b for skin",
+  "type": "Want"
+ },
+ {
+  "text": "allergy medicine for son",
+  "type": "Need"
+ },
+ {
+  "text": "weight loss supplement for myself",
+  "type": "Want"
+ },
+ {
+  "text": "asthma inhaler for daughter",
+  "type": "Need"
+ },
+ {
+  "text": "antibiotic for cuts",
+  "type": "Need"
+ },
+ {
+  "text": "prescription for ear infection",
+  "type": "Need"
+ },
+ {
+  "text": "medicine for high blood pressure",
+  "type": "Need"
+ },
+ {
+  "text": "syrup for child",
+  "type": "Need"
+ },
+ {
+  "text": "medication for headache",
+  "type": "Need"
+ },
+ {
+  "text": "pain relief for headache",
+  "type": "Want"
+ },
+ {
+  "text": "gynae checkup for wife",
+  "type": "Need"
+ },
+ {
+  "text": "cough syrup for grandpa",
+  "type": "Need"
+ },
+ {
+  "text": "prescription for allergy",
+  "type": "Need"
+ },
+ {
+  "text": "vitamin d for kids",
+  "type": "Want"
+ },
+ {
+  "text": "prescription for cough",
+  "type": "Need"
+ },
+ {
+  "text": "prescription for joint pain",
+  "type": "Need"
+ },
+ {
+  "text": "allergy medicine for self",
+  "type": "Need"
+ },
+ {
+  "text": "medicine for cold",
+  "type": "Need"
+ },
+ {
+  "text": "painkiller for back pain",
+  "type": "Want"
+ },
+ {
+  "text": "antacid for acidity",
+  "type": "Need"
+ },
+ {
+  "text": "prescription for high cholesterol",
+  "type": "Need"
+ },
+ {
+  "text": "gynae checkup for daughter",
+  "type": "Need"
+ },
+ {
+  "text": "prescription for eye infection",
+  "type": "Need"
+ },
+ {
+  "text": "medicine for stomach ache",
+  "type": "Need"
+ },
+ {
+  "text": "prescription for ear infection",
+  "type": "Need"
+ },
+ {
+  "text": "prescription for skin infection",
+  "type": "Need"
+ },
+ {
+  "text": "prescription for throat infection",
+  "type": "Need"
+ },
+ {
+  "text": "allergy medicine for son",
+  "type": "Need"
+ },
+ {
+  "text": "vitamin c for immunity",
+  "type": "Want"
+ },
+ {
+  "text": "prescription for sinus infection",
+  "type": "Need"
+ },
+ {
+  "text": "medicine for fever",
+  "type": "Need"
+ },
+ {
+  "text": "prescription for sore throat",
+  "type": "Need"
+ },
+ {
+  "text": "allergy medicine for self",
+  "type": "Need"
+ },
+ {
+  "text": "prescription for headache",
+  "type": "Need"
+ },
+ {
+  "text": "prescription for ear wax",
+  "type": "Need"
+ },
+ {
+  "text": "medicine for diarrhea",
+  "type": "Need"
+ },
+ {
+  "text": "prescription for allergy",
+  "type": "Need"
+ },
+ {
+  "text": "prescription for acne",
+  "type": "Need"
+ },
+ {
+  "text": "allergy medicine for mom",
+  "type": "Need"
+ }
+]

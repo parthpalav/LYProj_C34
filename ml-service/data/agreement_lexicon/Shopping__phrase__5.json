@@ -1,0 +1,258 @@
+[
+ {
+  "text": "new shoes",
+  "type": "Want"
+ },
+ {
+  "text": "gym tshirt",
+  "type": "Want"
+ },
+ {
+  "text": "running shoes",
+  "type": "Want"
+ },
+ {
+  "text": "school uniform",
+  "type": "Need"
+ },
+ {
+  "text": "work laptop repair",
+  "type": "Need"
+ },
+ {
+  "text": "mobile cover",
+  "type": "Want"
+ },
+ {
+  "text": "smartwatch",
+  "type": "Want"
+ },
+ {
+  "text": "earphones",
+  "type": "Want"
+ },
+ {
+  "text": "speakers for home",
+  "type": "Want"
+ },
+ {
+  "text": "coffee machine",
+  "type": "Want"
+ },
+ {
+  "text": "sofa for living room",
+  "type": "Want"
+ },
+ {
+  "text": "bedside table",
+  "type": "Want"
+ },
+ {
+  "text": "curtains for living room",
+  "type": "Want"
+ },
+ {
+  "text": "shoe rack",
+  "type": "Want"
+ },
+ {
+  "text": "bedspread for bed",
+  "type": "Want"
+ },
+ {
+  "text": "jewellery box",
+  "type": "Want"
+ },
+ {
+  "text": "earrings for birthday",
+  "type": "Want"
+ },
+ {
+  "text": "watch for mom",
+  "type": "Want"
+ },
+ {
+  "text": "bangle set for sister",
+  "type": "Want"
+ },
+ {
+  "text": "scrapbook for vacation",
+  "type": "Want"
+ },
+ {
+  "text": "gifts for friends",
+  "type": "Want"
+ },
+ {
+  "text": "stationery for school",
+  "type": "Want"
+ },
+ {
+  "text": "academic books for kid",
+  "type": "Need"
+ },
+ {
+  "text": "gym membership",
+  "type": "Need"
+ },
+ {
+  "text": "fitness classes",
+  "type": "Need"
+ },
+ {
+  "text": "weight set for home",
+  "type": "Need"
+ },
+ {
+  "text": "yoga mat",
+  "type": "Need"
+ },
+ {
+  "text": "protein powder",
+  "type": "Need"
+ },
+ {
+  "text": "tutor for kid",
+  "type": "Need"
+ },
+ {
+  "text": "online courses for work",
+  "type": "Investment"
+ },
+ {
+  "text": "certification exams",
+  "type": "Investment"
+ },
+ {
+  "text": "makeup kit for event",
+  "type": "Want"
+ },
+ {
+  "text": "lip balm",
+  "type": "Want"
+ },
+ {
+  "text": "toothbrush",
+  "type": "Need"
+ },
+ {
+  "text": "razor for beard",
+  "type": "Need"
+ },
+ {
+  "text": "shaving cream",
+  "type": "Need"
+ },
+ {
+  "text": "deodorant",
+  "type": "Need"
+ },
+ {
+  "text": "sanitary pads",
+  "type": "Need"
+ },
+ {
+  "text": "donation for charity",
+  "type": "Want"
+ },
+ {
+  "text": "tip for cleaner",
+  "type": "Want"
+ },
+ {
+  "text": "tailor for suit",
+  "type": "Want"
+ },
+ {
+  "text": "cobbler for shoes",
+  "type": "Want"
+ },
+ {
+  "text": "repair watch",
+  "type": "Want"
+ },
+ {
+  "text": "locksmith for key",
+  "type": "Want"
+ },
+ {
+  "text": "cable for TV",
+  "type": "Want"
+ },
+ {
+  "text": "charger for phone",
+  "type": "Want"
+ },
+ {
+  "text": "gadgets for office",
+  "type": "Want"
+ },
+ {
+  "text": "monitor for work",
+  "type": "Want"
+ },
+ {
+  "text": "keyboard for laptop",
+  "type": "Want"
+ },
+ {
+  "text": "mouse for gaming",
+  "type": "Want"
+ },
+ {
+  "text": "smart home device",
+  "type": "Want"
+ },
+ {
+  "text": "home decor items",
+  "type": "Want"
+ },
+ {
+  "text": "baking ingredients",
+  "type": "Want"
+ },
+ {
+  "text": "gift for friend",
+  "type": "Want"
+ },
+ {
+  "text": "gadget for travel",
+  "type": "Want"
+ },
+ {
+  "text": "backpack for school",
+  "type": "Want"
+ },
+ {
+  "text": "pencil box for kid",
+  "type": "Want"
+ },
+ {
+  "text": "school bag",
+  "type": "Need"
+ },
+ {
+  "text": "sports shoes",
+  "type": "Want"
+ },
+ {
+  "text": "jewellery for self",
+  "type": "Want"
+ },
+ {
+  "text": "watch for spouse",
+  "type": "Want"
+ },
+ {
+  "text": "handbag for work",
+  "type": "Want"
+ },
+ {
+  "text": "wallet for weekend",
+  "type": "Want"
+ },
+ {
+  "text": "shoes for wedding",
+  "type": "Want"
+ }
+]

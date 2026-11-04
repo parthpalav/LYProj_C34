@@ -1,0 +1,242 @@
+[
+ {
+  "text": "Balaji Garage",
+  "type": "Need"
+ },
+ {
+  "text": "Sharma Auto",
+  "type": "Need"
+ },
+ {
+  "text": "New Krishna Garage",
+  "type": "Need"
+ },
+ {
+  "text": "Swaraj Oil",
+  "type": "Need"
+ },
+ {
+  "text": "Indian Oil",
+  "type": "Need"
+ },
+ {
+  "text": "BPCL",
+  "type": "Need"
+ },
+ {
+  "text": "Oil India",
+  "type": "Need"
+ },
+ {
+  "text": "FSS India",
+  "type": "Need"
+ },
+ {
+  "text": "Tata Power",
+  "type": "Need"
+ },
+ {
+  "text": "Parking Plus",
+  "type": "Need"
+ },
+ {
+  "text": "City Parking",
+  "type": "Need"
+ },
+ {
+  "text": "Metro Fast",
+  "type": "Need"
+ },
+ {
+  "text": "Local Transport",
+  "type": "Need"
+ },
+ {
+  "text": "Auto Rickshaw",
+  "type": "Need"
+ },
+ {
+  "text": "Taxi Plus",
+  "type": "Need"
+ },
+ {
+  "text": "Rajeshwari Car Service",
+  "type": "Need"
+ },
+ {
+  "text": "Kalyan Garage",
+  "type": "Need"
+ },
+ {
+  "text": "Sarita Auto",
+  "type": "Need"
+ },
+ {
+  "text": "Vikas Car Wash",
+  "type": "Need"
+ },
+ {
+  "text": "Sarita Car Wash",
+  "type": "Need"
+ },
+ {
+  "text": "City Car Wash",
+  "type": "Need"
+ },
+ {
+  "text": "Shivaji Car Wash",
+  "type": "Need"
+ },
+ {
+  "text": "Rajeshwari Car Wash",
+  "type": "Need"
+ },
+ {
+  "text": "Rashtriya Car Wash",
+  "type": "Need"
+ },
+ {
+  "text": "Shree Car Wash",
+  "type": "Need"
+ },
+ {
+  "text": "Mitra Car Wash",
+  "type": "Need"
+ },
+ {
+  "text": "Ganesh Car Wash",
+  "type": "Need"
+ },
+ {
+  "text": "Mitra Fastag",
+  "type": "Need"
+ },
+ {
+  "text": "City Fastag",
+  "type": "Need"
+ },
+ {
+  "text": "Sarita Fastag",
+  "type": "Need"
+ },
+ {
+  "text": "Metro Fastag",
+  "type": "Want"
+ },
+ {
+  "text": "Metro Parking",
+  "type": "Need"
+ },
+ {
+  "text": "Local Parking",
+  "type": "Need"
+ },
+ {
+  "text": "City Parking",
+  "type": "Need"
+ },
+ {
+  "text": "Rajeshwari Parking",
+  "type": "Need"
+ },
+ {
+  "text": "Sarita Parking",
+  "type": "Need"
+ },
+ {
+  "text": "Ganesh Parking",
+  "type": "Need"
+ },
+ {
+  "text": "Mitra Parking",
+  "type": "Need"
+ },
+ {
+  "text": "Balaji Parking",
+  "type": "Need"
+ },
+ {
+  "text": "City Fast",
+  "type": "Need"
+ },
+ {
+  "text": "Metro Fast",
+  "type": "Need"
+ },
+ {
+  "text": "Rajeshwari Fast",
+  "type": "Need"
+ },
+ {
+  "text": "Sarita Fast",
+  "type": "Need"
+ },
+ {
+  "text": "Ganesh Fast",
+  "type": "Need"
+ },
+ {
+  "text": "Mitra Fast",
+  "type": "Need"
+ },
+ {
+  "text": "Balaji Metro",
+  "type": "Want"
+ },
+ {
+  "text": "Local Bus",
+  "type": "Need"
+ },
+ {
+  "text": "Rajeshwari Bus",
+  "type": "Need"
+ },
+ {
+  "text": "Sarita Bus",
+  "type": "Need"
+ },
+ {
+  "text": "Ganesh Bus",
+  "type": "Need"
+ },
+ {
+  "text": "Mitra Bus",
+  "type": "Need"
+ },
+ {
+  "text": "Balaji Bus",
+  "type": "Need"
+ },
+ {
+  "text": "City Bus",
+  "type": "Need"
+ },
+ {
+  "text": "Balaji Metro Fast",
+  "type": "Need"
+ },
+ {
+  "text": "Local Metro",
+  "type": "Need"
+ },
+ {
+  "text": "Rajeshwari Metro",
+  "type": "Need"
+ },
+ {
+  "text": "Sarita Metro",
+  "type": "Need"
+ },
+ {
+  "text": "Ganesh Metro",
+  "type": "Need"
+ },
+ {
+  "text": "Mitra Metro",
+  "type": "Need"
+ },
+ {
+  "text": "Balaji Metro Parking",
+  "type": "Need"
+ }
+]

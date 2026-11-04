@@ -1,0 +1,402 @@
+[
+ {
+  "text": "gas filled",
+  "type": "Need"
+ },
+ {
+  "text": "petrol station",
+  "type": "Need"
+ },
+ {
+  "text": "petrol bought",
+  "type": "Need"
+ },
+ {
+  "text": "diesel added",
+  "type": "Need"
+ },
+ {
+  "text": "electricity for car",
+  "type": "Need"
+ },
+ {
+  "text": "fuel up",
+  "type": "Need"
+ },
+ {
+  "text": "toll booth",
+  "type": "Need"
+ },
+ {
+  "text": "fastag payment",
+  "type": "Need"
+ },
+ {
+  "text": "toll tax",
+  "type": "Need"
+ },
+ {
+  "text": "parking fee",
+  "type": "Need"
+ },
+ {
+  "text": "parking lot",
+  "type": "Need"
+ },
+ {
+  "text": "metered parking",
+  "type": "Need"
+ },
+ {
+  "text": "metro ticket",
+  "type": "Need"
+ },
+ {
+  "text": "local train fare",
+  "type": "Need"
+ },
+ {
+  "text": "bus fare",
+  "type": "Need"
+ },
+ {
+  "text": "auto rickshaw",
+  "type": "Need"
+ },
+ {
+  "text": "rider app cab",
+  "type": "Want"
+ },
+ {
+  "text": "flight booking",
+  "type": "Want"
+ },
+ {
+  "text": "airport taxi",
+  "type": "Want"
+ },
+ {
+  "text": "flight ticket",
+  "type": "Want"
+ },
+ {
+  "text": "flight lounge",
+  "type": "Want"
+ },
+ {
+  "text": "flight snacks",
+  "type": "Want"
+ },
+ {
+  "text": "train ticket",
+  "type": "Need"
+ },
+ {
+  "text": "flight insurance",
+  "type": "Investment"
+ },
+ {
+  "text": "hotel booking",
+  "type": "Want"
+ },
+ {
+  "text": "hotel check-in",
+  "type": "Want"
+ },
+ {
+  "text": "hotel room",
+  "type": "Want"
+ },
+ {
+  "text": "holiday trip",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage",
+  "type": "Want"
+ },
+ {
+  "text": "flight delay",
+  "type": "Want"
+ },
+ {
+  "text": "flight entertainment",
+  "type": "Want"
+ },
+ {
+  "text": "flight lounge access",
+  "type": "Want"
+ },
+ {
+  "text": "flight layover",
+  "type": "Want"
+ },
+ {
+  "text": "flight meals",
+  "type": "Want"
+ },
+ {
+  "text": "flight in-flight",
+  "type": "Want"
+ },
+ {
+  "text": "flight amenities",
+  "type": "Want"
+ },
+ {
+  "text": "flight upgrades",
+  "type": "Want"
+ },
+ {
+  "text": "flight tickets",
+  "type": "Want"
+ },
+ {
+  "text": "flight boarding",
+  "type": "Want"
+ },
+ {
+  "text": "flight boarding pass",
+  "type": "Want"
+ },
+ {
+  "text": "flight tickets online",
+  "type": "Want"
+ },
+ {
+  "text": "flight booking fees",
+  "type": "Want"
+ },
+ {
+  "text": "flight cancellation",
+  "type": "Want"
+ },
+ {
+  "text": "flight rescheduling",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage charges",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage allowance",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage storage",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage pickup",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage drop",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage handling",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage tag",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage weighing",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage storage fees",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage excess",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage insurance",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage overweight",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage lost",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage delay",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage tracking",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim form",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim center",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim desk",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim counter",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim process",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim procedure",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim policy",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim guidelines",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim instructions",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim tips",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim advice",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim information",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim details",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim status",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim update",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim notification",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim email",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim call",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim chat",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim message",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim SMS",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim online",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim mobile",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim web",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim app",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim website",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim portal",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim portal login",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim portal password",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim portal username",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim portal account",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim portal access",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim portal login details",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim portal login credentials",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim portal login info",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim portal login information",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim portal login details",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim portal login credentials",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim portal login info",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim portal login information",
+  "type": "Want"
+ }
+]

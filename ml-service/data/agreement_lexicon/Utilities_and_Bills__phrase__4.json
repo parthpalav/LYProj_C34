@@ -1,0 +1,234 @@
+[
+ {
+  "text": "electricity bill",
+  "type": "Need"
+ },
+ {
+  "text": "water bill",
+  "type": "Need"
+ },
+ {
+  "text": "gas cylinder refill",
+  "type": "Need"
+ },
+ {
+  "text": "piped gas connection",
+  "type": "Need"
+ },
+ {
+  "text": "broadband for office",
+  "type": "Need"
+ },
+ {
+  "text": "mobile recharge for mom",
+  "type": "Need"
+ },
+ {
+  "text": "DTH for family",
+  "type": "Need"
+ },
+ {
+  "text": "gift for dad birthday",
+  "type": "Want"
+ },
+ {
+  "text": "birthday cake delivery",
+  "type": "Want"
+ },
+ {
+  "text": "online movie tickets",
+  "type": "Want"
+ },
+ {
+  "text": "restaurant meal",
+  "type": "Want"
+ },
+ {
+  "text": "supermarket shopping",
+  "type": "Need"
+ },
+ {
+  "text": "fuel for car",
+  "type": "Need"
+ },
+ {
+  "text": "repair bike tire",
+  "type": "Need"
+ },
+ {
+  "text": "new pair shoes",
+  "type": "Want"
+ },
+ {
+  "text": "gym membership",
+  "type": "Need"
+ },
+ {
+  "text": "personal trainer session",
+  "type": "Want"
+ },
+ {
+  "text": "online course for career",
+  "type": "Investment"
+ },
+ {
+  "text": "books for kids",
+  "type": "Need"
+ },
+ {
+  "text": "school uniform",
+  "type": "Need"
+ },
+ {
+  "text": "health insurance",
+  "type": "Need"
+ },
+ {
+  "text": "doctors visit",
+  "type": "Need"
+ },
+ {
+  "text": "medicines for cold",
+  "type": "Need"
+ },
+ {
+  "text": "cosmetics for work",
+  "type": "Want"
+ },
+ {
+  "text": "spa voucher for mom",
+  "type": "Want"
+ },
+ {
+  "text": "tiffin service",
+  "type": "Need"
+ },
+ {
+  "text": "laundry service",
+  "type": "Need"
+ },
+ {
+  "text": "dry cleaning shirt",
+  "type": "Need"
+ },
+ {
+  "text": "repair watch",
+  "type": "Need"
+ },
+ {
+  "text": "new furniture",
+  "type": "Want"
+ },
+ {
+  "text": "cable TV bill",
+  "type": "Need"
+ },
+ {
+  "text": "new laptop",
+  "type": "Want"
+ },
+ {
+  "text": "new phone",
+  "type": "Want"
+ },
+ {
+  "text": "office supplies",
+  "type": "Need"
+ },
+ {
+  "text": "personal care kit",
+  "type": "Need"
+ },
+ {
+  "text": "babysitting service",
+  "type": "Need"
+ },
+ {
+  "text": "repair bike",
+  "type": "Need"
+ },
+ {
+  "text": "new pair spectacles",
+  "type": "Need"
+ },
+ {
+  "text": "new jacket",
+  "type": "Want"
+ },
+ {
+  "text": "repair shoes",
+  "type": "Need"
+ },
+ {
+  "text": "new shoes",
+  "type": "Want"
+ },
+ {
+  "text": "repair watch battery",
+  "type": "Need"
+ },
+ {
+  "text": "new watch",
+  "type": "Want"
+ },
+ {
+  "text": "repair bike handlebars",
+  "type": "Need"
+ },
+ {
+  "text": "repair bike chain",
+  "type": "Need"
+ },
+ {
+  "text": "repair bike brakes",
+  "type": "Need"
+ },
+ {
+  "text": "new bike",
+  "type": "Want"
+ },
+ {
+  "text": "repair bike tires",
+  "type": "Need"
+ },
+ {
+  "text": "new bike helmet",
+  "type": "Want"
+ },
+ {
+  "text": "repair bike seat",
+  "type": "Need"
+ },
+ {
+  "text": "repair bike lights",
+  "type": "Need"
+ },
+ {
+  "text": "new bike lights",
+  "type": "Want"
+ },
+ {
+  "text": "repair bike bell",
+  "type": "Need"
+ },
+ {
+  "text": "repair bike basket",
+  "type": "Need"
+ },
+ {
+  "text": "new bike basket",
+  "type": "Want"
+ },
+ {
+  "text": "repair bike frame",
+  "type": "Need"
+ },
+ {
+  "text": "repair bike pedal",
+  "type": "Need"
+ },
+ {
+  "text": "new bike pedal",
+  "type": "Want"
+ }
+]

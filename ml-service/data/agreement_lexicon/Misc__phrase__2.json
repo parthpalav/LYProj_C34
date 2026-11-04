@@ -1,0 +1,378 @@
+[
+ {
+  "text": "sabzi wala",
+  "type": "Need"
+ },
+ {
+  "text": "chai sutta",
+  "type": "Need"
+ },
+ {
+  "text": "doodh",
+  "type": "Need"
+ },
+ {
+  "text": "donut",
+  "type": "Want"
+ },
+ {
+  "text": "ice cream cone",
+  "type": "Want"
+ },
+ {
+  "text": "paani puri",
+  "type": "Want"
+ },
+ {
+  "text": "chhole bhature",
+  "type": "Want"
+ },
+ {
+  "text": "maggi",
+  "type": "Want"
+ },
+ {
+  "text": "pakora",
+  "type": "Want"
+ },
+ {
+  "text": "dosa",
+  "type": "Want"
+ },
+ {
+  "text": "vada pav",
+  "type": "Want"
+ },
+ {
+  "text": "sandwich",
+  "type": "Want"
+ },
+ {
+  "text": "pastry",
+  "type": "Want"
+ },
+ {
+  "text": "cutlet",
+  "type": "Want"
+ },
+ {
+  "text": "briyani",
+  "type": "Want"
+ },
+ {
+  "text": "noodles",
+  "type": "Want"
+ },
+ {
+  "text": "pasta",
+  "type": "Want"
+ },
+ {
+  "text": "pizza",
+  "type": "Want"
+ },
+ {
+  "text": "burger",
+  "type": "Want"
+ },
+ {
+  "text": "hot dog",
+  "type": "Want"
+ },
+ {
+  "text": "shawarma",
+  "type": "Want"
+ },
+ {
+  "text": "taco",
+  "type": "Want"
+ },
+ {
+  "text": "samosa",
+  "type": "Want"
+ },
+ {
+  "text": "paan",
+  "type": "Want"
+ },
+ {
+  "text": "lemonade",
+  "type": "Want"
+ },
+ {
+  "text": "chocolate bar",
+  "type": "Want"
+ },
+ {
+  "text": "candy",
+  "type": "Want"
+ },
+ {
+  "text": "chips",
+  "type": "Need"
+ },
+ {
+  "text": "biscuits",
+  "type": "Need"
+ },
+ {
+  "text": "chocolates",
+  "type": "Need"
+ },
+ {
+  "text": "sweets",
+  "type": "Need"
+ },
+ {
+  "text": "dry fruits",
+  "type": "Need"
+ },
+ {
+  "text": "instant noodles",
+  "type": "Need"
+ },
+ {
+  "text": "fuel",
+  "type": "Need"
+ },
+ {
+  "text": "EV charging",
+  "type": "Need"
+ },
+ {
+  "text": "toll",
+  "type": "Need"
+ },
+ {
+  "text": "FASTag",
+  "type": "Need"
+ },
+ {
+  "text": "parking",
+  "type": "Need"
+ },
+ {
+  "text": "metro",
+  "type": "Need"
+ },
+ {
+  "text": "local train",
+  "type": "Need"
+ },
+ {
+  "text": "bus",
+  "type": "Need"
+ },
+ {
+  "text": "auto rickshaw",
+  "type": "Need"
+ },
+ {
+  "text": "vehicle service",
+  "type": "Need"
+ },
+ {
+  "text": "repair",
+  "type": "Need"
+ },
+ {
+  "text": "cab fare",
+  "type": "Want"
+ },
+ {
+  "text": "flight ticket",
+  "type": "Want"
+ },
+ {
+  "text": "hotel stay",
+  "type": "Want"
+ },
+ {
+  "text": "holiday",
+  "type": "Want"
+ },
+ {
+  "text": "car wash",
+  "type": "Want"
+ },
+ {
+  "text": "car accessories",
+  "type": "Want"
+ },
+ {
+  "text": "loan repayment",
+  "type": "Investment"
+ },
+ {
+  "text": "credit card bill",
+  "type": "Investment"
+ },
+ {
+  "text": "EMI",
+  "type": "Investment"
+ },
+ {
+  "text": "brokerage",
+  "type": "Investment"
+ },
+ {
+  "text": "deposit",
+  "type": "Investment"
+ },
+ {
+  "text": "property tax",
+  "type": "Need"
+ },
+ {
+  "text": "society charges",
+  "type": "Need"
+ },
+ {
+  "text": "house tax",
+  "type": "Need"
+ },
+ {
+  "text": "garbage fee",
+  "type": "Need"
+ },
+ {
+  "text": "repair",
+  "type": "Need"
+ },
+ {
+  "text": "tiffin service",
+  "type": "Need"
+ },
+ {
+  "text": "garlic press",
+  "type": "Want"
+ },
+ {
+  "text": "blender",
+  "type": "Want"
+ },
+ {
+  "text": "microwave",
+  "type": "Want"
+ },
+ {
+  "text": "toaster",
+  "type": "Want"
+ },
+ {
+  "text": "refrigerator",
+  "type": "Want"
+ },
+ {
+  "text": "air purifier",
+  "type": "Want"
+ },
+ {
+  "text": "water purifier",
+  "type": "Want"
+ },
+ {
+  "text": "wifi router",
+  "type": "Want"
+ },
+ {
+  "text": "smartphone",
+  "type": "Want"
+ },
+ {
+  "text": "laptop",
+  "type": "Want"
+ },
+ {
+  "text": "gym membership",
+  "type": "Need"
+ },
+ {
+  "text": "yoga classes",
+  "type": "Need"
+ },
+ {
+  "text": "protein powder",
+  "type": "Need"
+ },
+ {
+  "text": "diet pills",
+  "type": "Need"
+ },
+ {
+  "text": "books",
+  "type": "Need"
+ },
+ {
+  "text": "school fees",
+  "type": "Need"
+ },
+ {
+  "text": "school books",
+  "type": "Need"
+ },
+ {
+  "text": "stationery",
+  "type": "Need"
+ },
+ {
+  "text": "tution fee",
+  "type": "Need"
+ },
+ {
+  "text": "course fee",
+  "type": "Investment"
+ },
+ {
+  "text": "exam fee",
+  "type": "Investment"
+ },
+ {
+  "text": "certification",
+  "type": "Investment"
+ },
+ {
+  "text": "language classes",
+  "type": "Investment"
+ },
+ {
+  "text": "gym clothes",
+  "type": "Want"
+ },
+ {
+  "text": "shoes",
+  "type": "Want"
+ },
+ {
+  "text": "jewelry",
+  "type": "Want"
+ },
+ {
+  "text": "watches",
+  "type": "Want"
+ },
+ {
+  "text": "toys",
+  "type": "Want"
+ },
+ {
+  "text": "grooming products",
+  "type": "Want"
+ },
+ {
+  "text": "toiletries",
+  "type": "Need"
+ },
+ {
+  "text": "donation",
+  "type": "Want"
+ },
+ {
+  "text": "tip",
+  "type": "Want"
+ },
+ {
+  "text": "gift",
+  "type": "Want"
+ }
+]

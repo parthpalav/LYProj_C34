@@ -1,0 +1,342 @@
+[
+ {
+  "text": "migraine tab",
+  "type": "Need"
+ },
+ {
+  "text": "diabetic kit",
+  "type": "Need"
+ },
+ {
+  "text": "first aid kit",
+  "type": "Need"
+ },
+ {
+  "text": "prescription renew",
+  "type": "Need"
+ },
+ {
+  "text": "joint pain gel",
+  "type": "Need"
+ },
+ {
+  "text": "asthma inhaler",
+  "type": "Need"
+ },
+ {
+  "text": "hearing aid batteries",
+  "type": "Need"
+ },
+ {
+  "text": "vision test",
+  "type": "Need"
+ },
+ {
+  "text": "physiotherapy session",
+  "type": "Need"
+ },
+ {
+  "text": "medicinal herbs",
+  "type": "Need"
+ },
+ {
+  "text": "bone density scan",
+  "type": "Need"
+ },
+ {
+  "text": "arthritis cream",
+  "type": "Need"
+ },
+ {
+  "text": "allergy shot",
+  "type": "Need"
+ },
+ {
+  "text": "eczema cream",
+  "type": "Need"
+ },
+ {
+  "text": "sleep apnea machine",
+  "type": "Need"
+ },
+ {
+  "text": "cortisone injection",
+  "type": "Need"
+ },
+ {
+  "text": "orthopedic brace",
+  "type": "Need"
+ },
+ {
+  "text": "neurologist appointment",
+  "type": "Need"
+ },
+ {
+  "text": "gastroenterologist visit",
+  "type": "Need"
+ },
+ {
+  "text": "dermatologist consultation",
+  "type": "Need"
+ },
+ {
+  "text": "optometrist checkup",
+  "type": "Need"
+ },
+ {
+  "text": "otolaryngologist visit",
+  "type": "Need"
+ },
+ {
+  "text": "podiatrist treatment",
+  "type": "Need"
+ },
+ {
+  "text": "oral health check",
+  "type": "Need"
+ },
+ {
+  "text": "gynecologist appointment",
+  "type": "Need"
+ },
+ {
+  "text": "dentist cleaning",
+  "type": "Need"
+ },
+ {
+  "text": "chiropractic care",
+  "type": "Need"
+ },
+ {
+  "text": "podiatry care",
+  "type": "Need"
+ },
+ {
+  "text": "allergy testing",
+  "type": "Need"
+ },
+ {
+  "text": "lung function test",
+  "type": "Need"
+ },
+ {
+  "text": "immunization shot",
+  "type": "Need"
+ },
+ {
+  "text": "flu vaccine",
+  "type": "Need"
+ },
+ {
+  "text": "hpv vaccination",
+  "type": "Need"
+ },
+ {
+  "text": "zika test",
+  "type": "Need"
+ },
+ {
+  "text": "meningitis test",
+  "type": "Need"
+ },
+ {
+  "text": "hepatitis test",
+  "type": "Need"
+ },
+ {
+  "text": "herpes test",
+  "type": "Need"
+ },
+ {
+  "text": "mononucleosis test",
+  "type": "Need"
+ },
+ {
+  "text": "rheumatoid arthritis test",
+  "type": "Need"
+ },
+ {
+  "text": "autoimmune disorder test",
+  "type": "Need"
+ },
+ {
+  "text": "stress test",
+  "type": "Need"
+ },
+ {
+  "text": "thyroid test",
+  "type": "Need"
+ },
+ {
+  "text": "blood sugar test",
+  "type": "Need"
+ },
+ {
+  "text": "cholesterol test",
+  "type": "Need"
+ },
+ {
+  "text": "thyroid function test",
+  "type": "Need"
+ },
+ {
+  "text": "genetic testing",
+  "type": "Need"
+ },
+ {
+  "text": "urinalysis test",
+  "type": "Need"
+ },
+ {
+  "text": "liver function test",
+  "type": "Need"
+ },
+ {
+  "text": "kidney function test",
+  "type": "Need"
+ },
+ {
+  "text": "bone density test",
+  "type": "Need"
+ },
+ {
+  "text": "heart health check",
+  "type": "Need"
+ },
+ {
+  "text": "mri scan",
+  "type": "Need"
+ },
+ {
+  "text": "ct scan",
+  "type": "Need"
+ },
+ {
+  "text": "ultrasound",
+  "type": "Need"
+ },
+ {
+  "text": "x-ray",
+  "type": "Need"
+ },
+ {
+  "text": "blood test",
+  "type": "Need"
+ },
+ {
+  "text": "stool test",
+  "type": "Need"
+ },
+ {
+  "text": "urine test",
+  "type": "Need"
+ },
+ {
+  "text": "nasal spray",
+  "type": "Need"
+ },
+ {
+  "text": "decongestant",
+  "type": "Need"
+ },
+ {
+  "text": "antihistamine",
+  "type": "Need"
+ },
+ {
+  "text": "sore throat lozenges",
+  "type": "Need"
+ },
+ {
+  "text": "fever reducer",
+  "type": "Need"
+ },
+ {
+  "text": "headache pills",
+  "type": "Need"
+ },
+ {
+  "text": "pain reliever",
+  "type": "Need"
+ },
+ {
+  "text": "vitamin d supplement",
+  "type": "Need"
+ },
+ {
+  "text": "calcium supplement",
+  "type": "Need"
+ },
+ {
+  "text": "iron supplement",
+  "type": "Need"
+ },
+ {
+  "text": "omega-3 supplement",
+  "type": "Need"
+ },
+ {
+  "text": "multivitamin",
+  "type": "Need"
+ },
+ {
+  "text": "protein powder",
+  "type": "Want"
+ },
+ {
+  "text": "fitness tracker",
+  "type": "Want"
+ },
+ {
+  "text": "yoga mat",
+  "type": "Want"
+ },
+ {
+  "text": "yoga classes",
+  "type": "Want"
+ },
+ {
+  "text": "gym membership",
+  "type": "Want"
+ },
+ {
+  "text": "personal trainer",
+  "type": "Want"
+ },
+ {
+  "text": "meditation app",
+  "type": "Want"
+ },
+ {
+  "text": "meditation sessions",
+  "type": "Want"
+ },
+ {
+  "text": "meditation retreat",
+  "type": "Want"
+ },
+ {
+  "text": "zumba classes",
+  "type": "Want"
+ },
+ {
+  "text": "aerobics classes",
+  "type": "Want"
+ },
+ {
+  "text": "zumba classes",
+  "type": "Want"
+ },
+ {
+  "text": "spinning classes",
+  "type": "Want"
+ },
+ {
+  "text": "pilates classes",
+  "type": "Want"
+ },
+ {
+  "text": "bootcamp classes",
+  "type": "Want"
+ }
+]

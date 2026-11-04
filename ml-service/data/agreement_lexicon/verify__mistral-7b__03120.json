@@ -1,0 +1,202 @@
+[
+ {
+  "i": 3120,
+  "category": "Shopping",
+  "type": "Need"
+ },
+ {
+  "i": 3121,
+  "category": "Education",
+  "type": "Need"
+ },
+ {
+  "i": 3122,
+  "category": "Shopping",
+  "type": "Need"
+ },
+ {
+  "i": 3123,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 3124,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 3125,
+  "category": "Shopping",
+  "type": "Want"
+ },
+ {
+  "i": 3126,
+  "category": "Shopping",
+  "type": "Need"
+ },
+ {
+  "i": 3127,
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ {
+  "i": 3128,
+  "category": "Shopping",
+  "type": "Want"
+ },
+ {
+  "i": 3129,
+  "category": "Shopping",
+  "type": "Want"
+ },
+ {
+  "i": 3130,
+  "category": "Shopping",
+  "type": "Want"
+ },
+ {
+  "i": 3131,
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ {
+  "i": 3132,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 3133,
+  "category": "Shopping",
+  "type": "Want"
+ },
+ {
+  "i": 3134,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 3135,
+  "category": "Health",
+  "type": "Want"
+ },
+ {
+  "i": 3136,
+  "category": "Investments",
+  "type": "Investment"
+ },
+ {
+  "i": 3137,
+  "category": "Education",
+  "type": "Investment"
+ },
+ {
+  "i": 3138,
+  "category": "Education",
+  "type": "Need"
+ },
+ {
+  "i": 3139,
+  "category": "Education",
+  "type": "Need"
+ },
+ {
+  "i": 3140,
+  "category": "Food & Dining",
+  "type": "Need"
+ },
+ {
+  "i": 3141,
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ {
+  "i": 3142,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 3143,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 3144,
+  "category": "Shopping",
+  "type": "Need"
+ },
+ {
+  "i": 3145,
+  "category": "Shopping",
+  "type": "Need"
+ },
+ {
+  "i": 3146,
+  "category": "Shopping",
+  "type": "Need"
+ },
+ {
+  "i": 3147,
+  "category": "Shopping",
+  "type": "Need"
+ },
+ {
+  "i": 3148,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 3149,
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ {
+  "i": 3150,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 3151,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 3152,
+  "category": "Shopping",
+  "type": "Want"
+ },
+ {
+  "i": 3153,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 3154,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 3155,
+  "category": "Shopping",
+  "type": "Want"
+ },
+ {
+  "i": 3156,
+  "category": "Shopping",
+  "type": "Want"
+ },
+ {
+  "i": 3157,
+  "category": "Shopping",
+  "type": "Want"
+ },
+ {
+  "i": 3158,
+  "category": "Shopping",
+  "type": "Want"
+ },
+ {
+  "i": 3159,
+  "category": "Shopping",
+  "type": "Want"
+ }
+]

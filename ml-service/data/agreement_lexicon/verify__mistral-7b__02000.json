@@ -1,0 +1,202 @@
+[
+ {
+  "i": 2000,
+  "category": "Shopping",
+  "type": "Investment"
+ },
+ {
+  "i": 2001,
+  "category": "Shopping",
+  "type": "Investment"
+ },
+ {
+  "i": 2002,
+  "category": "Shopping",
+  "type": "Investment"
+ },
+ {
+  "i": 2003,
+  "category": "Shopping",
+  "type": "Investment"
+ },
+ {
+  "i": 2004,
+  "category": "Shopping",
+  "type": "Investment"
+ },
+ {
+  "i": 2005,
+  "category": "Shopping",
+  "type": "Investment"
+ },
+ {
+  "i": 2006,
+  "category": "Shopping",
+  "type": "Investment"
+ },
+ {
+  "i": 7,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 8,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 9,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 10,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 11,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 12,
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ {
+  "i": 13,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 14,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 15,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 16,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 17,
+  "category": "Shopping",
+  "type": "Investment"
+ },
+ {
+  "i": 18,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 19,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 20,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 21,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 22,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 23,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 24,
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ {
+  "i": 25,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 26,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 27,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 28,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 29,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 30,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 31,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 32,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 33,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 34,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 35,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 36,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 37,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 38,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 39,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ }
+]

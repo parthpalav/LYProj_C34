@@ -1,0 +1,270 @@
+[
+ {
+  "text": "electricity bill",
+  "type": "Need"
+ },
+ {
+  "text": "water bill",
+  "type": "Need"
+ },
+ {
+  "text": "gas cylinder refill",
+  "type": "Need"
+ },
+ {
+  "text": "piped gas bill",
+  "type": "Need"
+ },
+ {
+  "text": "broadband connection",
+  "type": "Need"
+ },
+ {
+  "text": "mobile recharge",
+  "type": "Need"
+ },
+ {
+  "text": "dth recharge",
+  "type": "Need"
+ },
+ {
+  "text": "electricity",
+  "type": "Need"
+ },
+ {
+  "text": "water",
+  "type": "Need"
+ },
+ {
+  "text": "gas",
+  "type": "Need"
+ },
+ {
+  "text": "phone bill",
+  "type": "Need"
+ },
+ {
+  "text": "internet bill",
+  "type": "Need"
+ },
+ {
+  "text": "dth bill",
+  "type": "Need"
+ },
+ {
+  "text": "electricity bill paid",
+  "type": "Need"
+ },
+ {
+  "text": "water bill paid",
+  "type": "Need"
+ },
+ {
+  "text": "gas bill paid",
+  "type": "Need"
+ },
+ {
+  "text": "broadband bill",
+  "type": "Need"
+ },
+ {
+  "text": "mobile recharge paid",
+  "type": "Need"
+ },
+ {
+  "text": "dth bill paid",
+  "type": "Need"
+ },
+ {
+  "text": "electricity bill payment",
+  "type": "Need"
+ },
+ {
+  "text": "water bill payment",
+  "type": "Need"
+ },
+ {
+  "text": "gas bill payment",
+  "type": "Need"
+ },
+ {
+  "text": "broadband bill payment",
+  "type": "Need"
+ },
+ {
+  "text": "mobile recharge payment",
+  "type": "Need"
+ },
+ {
+  "text": "dth bill payment",
+  "type": "Need"
+ },
+ {
+  "text": "electricity paid",
+  "type": "Need"
+ },
+ {
+  "text": "water paid",
+  "type": "Need"
+ },
+ {
+  "text": "gas paid",
+  "type": "Need"
+ },
+ {
+  "text": "phone bill paid",
+  "type": "Need"
+ },
+ {
+  "text": "internet bill paid",
+  "type": "Need"
+ },
+ {
+  "text": "dth bill paid",
+  "type": "Need"
+ },
+ {
+  "text": "electricity bill need",
+  "type": "Need"
+ },
+ {
+  "text": "water bill need",
+  "type": "Need"
+ },
+ {
+  "text": "gas bill need",
+  "type": "Need"
+ },
+ {
+  "text": "broadband bill need",
+  "type": "Need"
+ },
+ {
+  "text": "mobile recharge need",
+  "type": "Need"
+ },
+ {
+  "text": "dth bill need",
+  "type": "Need"
+ },
+ {
+  "text": "electricity bill want",
+  "type": "Need"
+ },
+ {
+  "text": "water bill want",
+  "type": "Need"
+ },
+ {
+  "text": "gas bill want",
+  "type": "Need"
+ },
+ {
+  "text": "broadband bill want",
+  "type": "Need"
+ },
+ {
+  "text": "mobile recharge want",
+  "type": "Need"
+ },
+ {
+  "text": "dth bill want",
+  "type": "Need"
+ },
+ {
+  "text": "electricity bill always need",
+  "type": "Need"
+ },
+ {
+  "text": "water bill always need",
+  "type": "Need"
+ },
+ {
+  "text": "gas bill always need",
+  "type": "Need"
+ },
+ {
+  "text": "broadband bill always need",
+  "type": "Need"
+ },
+ {
+  "text": "mobile recharge always need",
+  "type": "Need"
+ },
+ {
+  "text": "dth bill always need",
+  "type": "Need"
+ },
+ {
+  "text": "electricity bill always want",
+  "type": "Need"
+ },
+ {
+  "text": "water bill always want",
+  "type": "Need"
+ },
+ {
+  "text": "gas bill always want",
+  "type": "Need"
+ },
+ {
+  "text": "broadband bill always want",
+  "type": "Need"
+ },
+ {
+  "text": "mobile recharge always want",
+  "type": "Need"
+ },
+ {
+  "text": "dth bill always want",
+  "type": "Need"
+ },
+ {
+  "text": "electricity need",
+  "type": "Need"
+ },
+ {
+  "text": "water need",
+  "type": "Need"
+ },
+ {
+  "text": "gas need",
+  "type": "Need"
+ },
+ {
+  "text": "broadband need",
+  "type": "Need"
+ },
+ {
+  "text": "mobile recharge need",
+  "type": "Need"
+ },
+ {
+  "text": "dth need",
+  "type": "Need"
+ },
+ {
+  "text": "electricity want",
+  "type": "Need"
+ },
+ {
+  "text": "water want",
+  "type": "Need"
+ },
+ {
+  "text": "gas want",
+  "type": "Need"
+ },
+ {
+  "text": "broadband want",
+  "type": "Need"
+ },
+ {
+  "text": "mobile recharge want",
+  "type": "Need"
+ },
+ {
+  "text": "dth want",
+  "type": "Need"
+ }
+]

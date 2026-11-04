@@ -1,0 +1,242 @@
+[
+ {
+  "text": "prescription medicine",
+  "type": "Need"
+ },
+ {
+  "text": "hospitals",
+  "type": "Need"
+ },
+ {
+  "text": "physiotherapy",
+  "type": "Need"
+ },
+ {
+  "text": "lab tests",
+  "type": "Need"
+ },
+ {
+  "text": "medicine shop",
+  "type": "Need"
+ },
+ {
+  "text": "doctor appointment",
+  "type": "Need"
+ },
+ {
+  "text": "lab reports",
+  "type": "Need"
+ },
+ {
+  "text": "dental checkup",
+  "type": "Need"
+ },
+ {
+  "text": "health insurance",
+  "type": "Need"
+ },
+ {
+  "text": "gym membership",
+  "type": "Want"
+ },
+ {
+  "text": "personal trainer",
+  "type": "Want"
+ },
+ {
+  "text": "protein powder",
+  "type": "Want"
+ },
+ {
+  "text": "vitamin supplements",
+  "type": "Want"
+ },
+ {
+  "text": "yoga classes",
+  "type": "Want"
+ },
+ {
+  "text": "fitness equipment",
+  "type": "Want"
+ },
+ {
+  "text": "medicines",
+  "type": "Need"
+ },
+ {
+  "text": "health checkup",
+  "type": "Need"
+ },
+ {
+  "text": "first aid kit",
+  "type": "Need"
+ },
+ {
+  "text": "emergency medicines",
+  "type": "Need"
+ },
+ {
+  "text": "OTC drugs",
+  "type": "Need"
+ },
+ {
+  "text": "medicine delivery",
+  "type": "Need"
+ },
+ {
+  "text": "physiotherapy sessions",
+  "type": "Need"
+ },
+ {
+  "text": "diet plan",
+  "type": "Want"
+ },
+ {
+  "text": "nutritionist consultation",
+  "type": "Want"
+ },
+ {
+  "text": "wellness retreat",
+  "type": "Want"
+ },
+ {
+  "text": "stress management",
+  "type": "Want"
+ },
+ {
+  "text": "mental health counseling",
+  "type": "Need"
+ },
+ {
+  "text": "sleep aid",
+  "type": "Want"
+ },
+ {
+  "text": "skin care products",
+  "type": "Want"
+ },
+ {
+  "text": "medicinal herbs",
+  "type": "Want"
+ },
+ {
+  "text": "acupuncture",
+  "type": "Need"
+ },
+ {
+  "text": "chiropractic care",
+  "type": "Need"
+ },
+ {
+  "text": "malaria tablets",
+  "type": "Need"
+ },
+ {
+  "text": "prescription glasses",
+  "type": "Need"
+ },
+ {
+  "text": "orthopedic consultation",
+  "type": "Need"
+ },
+ {
+  "text": "pediatrician",
+  "type": "Need"
+ },
+ {
+  "text": "speech therapist",
+  "type": "Need"
+ },
+ {
+  "text": "neurologist",
+  "type": "Need"
+ },
+ {
+  "text": "cardiologist",
+  "type": "Need"
+ },
+ {
+  "text": "allergy shots",
+  "type": "Need"
+ },
+ {
+  "text": "blood pressure monitor",
+  "type": "Want"
+ },
+ {
+  "text": "oxygen therapy",
+  "type": "Need"
+ },
+ {
+  "text": "asthma inhaler",
+  "type": "Need"
+ },
+ {
+  "text": "first aid training",
+  "type": "Want"
+ },
+ {
+  "text": "medical consultations",
+  "type": "Need"
+ },
+ {
+  "text": "cancer screening",
+  "type": "Need"
+ },
+ {
+  "text": "cancer support groups",
+  "type": "Need"
+ },
+ {
+  "text": "weight loss programs",
+  "type": "Want"
+ },
+ {
+  "text": "nutrition counseling",
+  "type": "Want"
+ },
+ {
+  "text": "homeopathy",
+  "type": "Want"
+ },
+ {
+  "text": "Ayurvedic treatments",
+  "type": "Want"
+ },
+ {
+  "text": "alternative medicine",
+  "type": "Want"
+ },
+ {
+  "text": "medical camps",
+  "type": "Need"
+ },
+ {
+  "text": "health camps",
+  "type": "Need"
+ },
+ {
+  "text": "online doctor",
+  "type": "Need"
+ },
+ {
+  "text": "telemedicine",
+  "type": "Need"
+ },
+ {
+  "text": "health app subscription",
+  "type": "Want"
+ },
+ {
+  "text": "health insurance premium",
+  "type": "Need"
+ },
+ {
+  "text": "health checkup package",
+  "type": "Need"
+ },
+ {
+  "text": "mental health days",
+  "type": "Want"
+ }
+]

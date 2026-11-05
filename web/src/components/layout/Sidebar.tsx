@@ -13,6 +13,7 @@ import {
   X,
   Sparkles,
   PiggyBank,
+  Landmark,
 } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { UserAvatar } from '../ui/UserAvatar';
@@ -80,6 +81,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen = false, onClose }) => 
           <NavLink to="/app/activity" className={getLinkClass} onClick={onClose}>
             <ReceiptText size={18} />
             <span>Activity</span>
+          </NavLink>
+          <NavLink to="/app/net-worth" className={getLinkClass} onClick={onClose}>
+            <Landmark size={18} />
+            <span>Net worth</span>
           </NavLink>
           <NavLink to="/app/roundups" className={getLinkClass} onClick={onClose}>
             <PiggyBank size={18} />

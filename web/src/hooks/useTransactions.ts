@@ -27,10 +27,9 @@ export interface UseTransactionsReturn {
   setCustomEndDate: (date: string) => void;
   sortBy: SortOption;
   setSortBy: (sort: SortOption) => void;
-  page: number;
-  setPage: (page: number) => void;
-  pageSize: number;
-  totalPages: number;
+  /** True while more filtered rows exist beyond the visible ones. */
+  hasMore: boolean;
+  showMore: () => void;
   summary: {
     count: number;
     totalSpend: number;
@@ -45,6 +44,8 @@ export interface UseTransactionsReturn {
   resetFilters: () => void;
 }
 
+const PAGE_SIZE = 60;
+
 export function useTransactions(): UseTransactionsReturn {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -58,42 +59,42 @@ export function useTransactions(): UseTransactionsReturn {
   const [customStartDate, _setCustomStartDate] = useState<string>('');
   const [customEndDate, _setCustomEndDate] = useState<string>('');
   const [sortBy, _setSortBy] = useState<SortOption>('newest');
-  const [page, setPage] = useState<number>(1);
-  const pageSize = 20;
+  // Rows render in month groups; "Show more" reveals the next batch instead of paging.
+  const [visibleCount, setVisibleCount] = useState<number>(PAGE_SIZE);
 
   const setSearchQuery = useCallback((q: string) => {
     _setSearchQuery(q);
-    setPage(1);
+    setVisibleCount(PAGE_SIZE);
   }, []);
 
   const setCategoryFilter = useCallback((cat: string) => {
     _setCategoryFilter(cat);
-    setPage(1);
+    setVisibleCount(PAGE_SIZE);
   }, []);
 
   const setTypeFilter = useCallback((type: string) => {
     _setTypeFilter(type);
-    setPage(1);
+    setVisibleCount(PAGE_SIZE);
   }, []);
 
   const setDateFilter = useCallback((opt: DateFilterOption) => {
     _setDateFilter(opt);
-    setPage(1);
+    setVisibleCount(PAGE_SIZE);
   }, []);
 
   const setCustomStartDate = useCallback((date: string) => {
     _setCustomStartDate(date);
-    setPage(1);
+    setVisibleCount(PAGE_SIZE);
   }, []);
 
   const setCustomEndDate = useCallback((date: string) => {
     _setCustomEndDate(date);
-    setPage(1);
+    setVisibleCount(PAGE_SIZE);
   }, []);
 
   const setSortBy = useCallback((sort: SortOption) => {
     _setSortBy(sort);
-    setPage(1);
+    setVisibleCount(PAGE_SIZE);
   }, []);
 
   const fetchTransactions = useCallback(async () => {
@@ -224,12 +225,12 @@ export function useTransactions(): UseTransactionsReturn {
     };
   }, [filteredTransactions]);
 
-  const totalPages = Math.max(1, Math.ceil(filteredTransactions.length / pageSize));
-
-  const paginatedTransactions = useMemo(() => {
-    const start = (page - 1) * pageSize;
-    return filteredTransactions.slice(start, start + pageSize);
-  }, [filteredTransactions, page, pageSize]);
+  const paginatedTransactions = useMemo(
+    () => filteredTransactions.slice(0, visibleCount),
+    [filteredTransactions, visibleCount],
+  );
+  const hasMore = visibleCount < filteredTransactions.length;
+  const showMore = useCallback(() => setVisibleCount((n) => n + PAGE_SIZE), []);
 
   const add = useCallback(async (payload: TransactionPayload): Promise<Transaction> => {
     const created = await createTransaction(payload);
@@ -256,7 +257,7 @@ export function useTransactions(): UseTransactionsReturn {
     _setCustomStartDate('');
     _setCustomEndDate('');
     _setSortBy('newest');
-    setPage(1);
+    setVisibleCount(PAGE_SIZE);
   }, []);
 
   return {
@@ -279,10 +280,8 @@ export function useTransactions(): UseTransactionsReturn {
     setCustomEndDate,
     sortBy,
     setSortBy,
-    page,
-    setPage,
-    pageSize,
-    totalPages,
+    hasMore,
+    showMore,
     summary,
     refetch: fetchTransactions,
     add,

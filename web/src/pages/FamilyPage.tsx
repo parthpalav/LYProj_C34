@@ -10,6 +10,7 @@ import { NoFamilyCard } from '../components/family/NoFamilyCard';
 import { FamilyInvitationsSection } from '../components/family/FamilyInvitationsSection';
 import { FamilyFmiHero } from '../components/family/FamilyFmiHero';
 import { FamilyPillarsGrid } from '../components/family/FamilyPillarsGrid';
+import { FamilyMemberBreakdown } from '../components/family/FamilyMemberBreakdown';
 import { HouseholdMetricsGrid } from '../components/family/HouseholdMetricsGrid';
 import { HouseholdCashFlowBreakdown } from '../components/family/HouseholdCashFlowBreakdown';
 import { HouseholdCategoryBreakdown } from '../components/family/HouseholdCategoryBreakdown';
@@ -157,6 +158,9 @@ export const FamilyPage: React.FC = () => {
 
           {/* Row 2: FMI Pillars (Saving Discipline, Spending Control, Behavioral Stability) */}
           {fmi && <FamilyPillarsGrid fmi={fmi} />}
+
+          {/* Row 2b: Per-member contribution to the score and metrics */}
+          {fmi && <FamilyMemberBreakdown breakdown={dashboard?.memberBreakdown} familyScore={fmi.score} />}
 
           {/* Row 3: Household Financial Snapshot (Effective Income, Spend, Invested, Rate, Net Cash) */}
           {dashboard && <HouseholdMetricsGrid dashboard={dashboard} />}

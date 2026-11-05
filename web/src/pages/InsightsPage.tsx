@@ -2,6 +2,10 @@ import React, { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { RefreshCw } from 'lucide-react';
 import { InsightsTabs, type InsightsTab } from '../components/insights/InsightsTabs';
+import { DateRangeFilter, type DateRangeValue } from '../components/insights/DateRangeFilter';
+import { PredictedPurchasesCard } from '../components/insights/PredictedPurchasesCard';
+import { isDateKey, isRangePreset, presetRange } from '../utils/dateRange';
+import { dateKey } from '../utils/timezone';
 
 // Spending Components
 import { SpendingTrendChart } from '../components/insights/SpendingTrendChart';
@@ -78,11 +82,47 @@ export const InsightsPage: React.FC = () => {
     });
   };
 
+  // History range from the URL (?range=6m, or ?range=custom&from=YYYY-MM-DD&to=YYYY-MM-DD)
+  const rangeValue = useMemo<DateRangeValue>(() => {
+    const preset = searchParams.get('range');
+    const from = searchParams.get('from');
+    const to = searchParams.get('to');
+    return {
+      preset: isRangePreset(preset) ? preset : '6m',
+      from: isDateKey(from) ? from : null,
+      to: isDateKey(to) ? to : null,
+    };
+  }, [searchParams]);
+  const range = useMemo(
+    () => presetRange(rangeValue.preset, new Date(), rangeValue),
+    [rangeValue],
+  );
+
+  const handleRangeChange = (next: DateRangeValue) => {
+    setSearchParams((prev) => {
+      const params = new URLSearchParams(prev);
+      params.set('range', next.preset);
+      for (const key of ['from', 'to'] as const) {
+        const v = next.preset === 'custom' ? next[key] : null;
+        if (v) params.set(key, v);
+        else params.delete(key);
+      }
+      return params;
+    }, { replace: true });
+  };
+
   // Independent Domain Hooks for Partial Failure Isolation
-  const spending = useSpendingInsights();
-  const fmi = useFmiInsights();
+  const spending = useSpendingInsights(range);
+  const fmi = useFmiInsights(range);
   const behavior = useBehaviorInsights();
-  const income = useIncomeInsights();
+  const income = useIncomeInsights(range);
+
+  // Earliest record across spending and income: lower bound of the history filter
+  const earliestKey = useMemo(() => {
+    const dates = [spending.earliest, income.earliest].filter((d): d is Date => Boolean(d));
+    if (dates.length === 0) return null;
+    return dateKey(new Date(Math.min(...dates.map((d) => d.getTime()))));
+  }, [spending.earliest, income.earliest]);
 
   // Supplemental Family Dashboard State for FMI tab integration
   const [familyDashboard, setFamilyDashboard] = React.useState<FamilyDashboard | null>(null);
@@ -162,6 +202,11 @@ export const InsightsPage: React.FC = () => {
       {/* Synchronized Tab Navigation */}
       <InsightsTabs activeTab={activeTab} onTabChange={handleTabChange} />
 
+      {/* One history range for every chart on the Spending, FMI and Income tabs */}
+      {activeTab !== 'behaviour' && (
+        <DateRangeFilter value={rangeValue} range={range} minDate={earliestKey} onChange={handleRangeChange} />
+      )}
+
       {/* TAB CONTENT: Spending */}
       {activeTab === 'spending' && (
         <div className="insights-tab-content animate-fade-in">
@@ -181,11 +226,7 @@ export const InsightsPage: React.FC = () => {
               <SpendingTypeCards analysis={spending.typeAnalysis} />
 
               {/* Monthly Spending Trend Grouped Bar Chart */}
-              <SpendingTrendChart
-                data={spending.trendData}
-                range={spending.range}
-                onRangeChange={spending.setRange}
-              />
+              <SpendingTrendChart data={spending.trendData} />
 
               {/* Comparable-Period MoM Comparison & Category Movement */}
               <div className="insights-two-col-grid">
@@ -229,11 +270,7 @@ export const InsightsPage: React.FC = () => {
               <FmiPillarsGrid fmi={fmi.currentFmi} />
 
               {/* FMI Historical Trajectory Chart */}
-              <FmiHistoryChart
-                data={fmi.chartData}
-                range={fmi.historyRange}
-                onRangeChange={fmi.setHistoryRange}
-              />
+              <FmiHistoryChart data={fmi.chartData} />
 
               {/* Delta Comparison Summary & Explanations Panel */}
               <div className="insights-two-col-grid">
@@ -281,6 +318,9 @@ export const InsightsPage: React.FC = () => {
 
               {/* Anomalous Transactions List */}
               <AnomalousTransactionsList transactions={behavior.anomalousTransactions} />
+
+              {/* Apriori association rules: likely next purchases */}
+              <PredictedPurchasesCard />
             </div>
           )}
         </div>
@@ -308,8 +348,6 @@ export const InsightsPage: React.FC = () => {
               <IncomeTrendChart
                 data={income.trendData}
                 averageIncome={income.averageMonthlyIncome}
-                range={income.range}
-                onRangeChange={income.setRange}
               />
 
               {/* Income Source Concentration Breakdown */}

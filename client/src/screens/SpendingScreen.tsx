@@ -1,7 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { RefreshControl, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import Animated from 'react-native-reanimated';
 import { ScrollView as GestureScrollView } from 'react-native-gesture-handler';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
@@ -17,8 +16,7 @@ import { SegmentedControl } from '../components/ui/SegmentedControl';
 import { SpendChart } from '../components/ui/SpendChart';
 import { Card } from '../components/ui/Card';
 import { EmptyState, ErrorState, MoneyText } from '../components/ui/Bits';
-import { Button } from '../components/ui/Button';
-import { Sheet } from '../components/ui/Sheet';
+import { DateRangeSheet } from '../components/ui/DateRangeSheet';
 
 const AnimatedScrollView = Animated.createAnimatedComponent(GestureScrollView);
 
@@ -39,7 +37,7 @@ const dayMonth = (d: Date) => d.toLocaleDateString('en-IN', { day: 'numeric', mo
 
 /** Full-page spending chart: scrub any day for its total and Need / Want / Investment split, over a chosen range. */
 export function SpendingScreen() {
-  const { c, isDark } = useTheme();
+  const { c } = useTheme();
   const styles = useStyles();
   const navigation = useNavigation<any>();
   const insets = useSafeAreaInsets();
@@ -56,7 +54,6 @@ export function SpendingScreen() {
   const [loadFailed, setLoadFailed] = useState(false);
   // Custom range picker: one calendar that edits whichever end is selected
   const [picking, setPicking] = useState(false);
-  const [edge, setEdge] = useState<'start' | 'end'>('start');
   const [draft, setDraft] = useState({ start: new Date(), end: new Date() });
 
   const load = useCallback(async () => {
@@ -93,7 +90,6 @@ export function SpendingScreen() {
     if (k === 'custom') {
       const today = startOfDay(new Date());
       setDraft(custom ?? { start: series.from > today ? today : series.from, end: today });
-      setEdge('start');
       setPicking(true);
       return;
     }
@@ -101,18 +97,8 @@ export function SpendingScreen() {
     setKind(k);
   };
 
-  const pickDate = (d: Date) => {
-    const day = startOfDay(d);
-    if (edge === 'start') {
-      setDraft((r) => ({ start: day, end: r.end < day ? day : r.end }));
-      setEdge('end'); // next tap sets the other end, like most range pickers
-    } else {
-      setDraft((r) => ({ start: r.start > day ? day : r.start, end: day }));
-    }
-  };
-
-  const applyCustom = () => {
-    setCustom(draft);
+  const applyCustom = (range: { start: Date; end: Date }) => {
+    setCustom(range);
     setActive(null);
     setKind('custom');
     setPicking(false);
@@ -227,31 +213,13 @@ export function SpendingScreen() {
       </AnimatedScrollView>
       <ScreenHeader title="Spending" y={y} onBack={() => navigation.goBack()} />
 
-      <Sheet visible={picking} onClose={() => setPicking(false)} title="Custom range">
-        <SegmentedControl
-          segments={[
-            { key: 'start', label: `From  ${draft.start.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}` },
-            { key: 'end', label: `To  ${draft.end.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}` },
-          ]}
-          value={edge}
-          onChange={setEdge}
-          accessibilityLabel="Range end to edit"
-        />
-        <DateTimePicker
-          value={draft[edge]}
-          mode="date"
-          display="inline"
-          themeVariant={isDark ? 'dark' : 'light'}
-          accentColor={c.primary}
-          maximumDate={new Date()}
-          onChange={(_, d) => d && pickDate(d)}
-        />
-        <Text style={styles.pickerHint}>
-          {spanLabel(draft.start, draft.end)}
-          {firstTx && draft.start < firstTx ? ` · data starts ${firstTx.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}` : ''}
-        </Text>
-        <Button label="Show this range" onPress={applyCustom} />
-      </Sheet>
+      <DateRangeSheet
+        visible={picking}
+        onClose={() => setPicking(false)}
+        initial={draft}
+        firstDate={firstTx}
+        onApply={applyCustom}
+      />
     </View>
   );
 }
@@ -283,5 +251,4 @@ const useStyles = createStyles((c) => ({
   statLabel: { ...typeScale.caption, color: c.textMuted },
   statValue: { ...typeScale.headline, ...tabular, color: c.text, marginTop: 6 },
   statSub: { ...typeScale.caption, color: c.textSubtle, marginTop: 2 },
-  pickerHint: { ...typeScale.label, color: c.textMuted, textAlign: 'center', marginBottom: 12 },
 }));

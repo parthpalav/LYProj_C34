@@ -1,16 +1,7 @@
 import React, { useState, useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { Navigate, useSearchParams } from 'react-router-dom';
 import { RefreshCw, AlertTriangle } from 'lucide-react';
 import { PlanTabs, type PlanTabKey } from '../components/plan/PlanTabs';
-
-// Net Worth Components
-import { NetWorthSummary } from '../components/plan/NetWorthSummary';
-import { NetWorthCompositionChart } from '../components/plan/NetWorthCompositionChart';
-import { NetWorthHistoryNotice } from '../components/plan/NetWorthHistoryNotice';
-
-// Assets Components
-import { AssetsTable } from '../components/plan/AssetsTable';
-import { AssetModal } from '../components/plan/AssetModal';
 
 // Goals Components
 import { GoalsGrid } from '../components/plan/GoalsGrid';
@@ -30,8 +21,6 @@ import { ScenarioControls } from '../components/plan/ScenarioControls';
 import { ScenarioComparisonView } from '../components/plan/ScenarioComparisonView';
 
 // Hooks
-import { useNetWorth } from '../hooks/useNetWorth';
-import { useAssets } from '../hooks/useAssets';
 import { useGoals } from '../hooks/useGoals';
 import { useFirePlan } from '../hooks/useFirePlan';
 import { useScenarioLab } from '../hooks/useScenarioLab';
@@ -39,7 +28,7 @@ import { useScenarioLab } from '../hooks/useScenarioLab';
 // UI
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { Button } from '../components/ui/Button';
-import type { Asset, Goal } from '../types';
+import type { Goal } from '../types';
 
 const TabLoadingSkeleton: React.FC<{ height?: string }> = ({ height = '260px' }) => (
   <div className="plan-skeleton" style={{ height }}>
@@ -53,74 +42,29 @@ const TabLoadingSkeleton: React.FC<{ height?: string }> = ({ height = '260px' })
 export const PlanPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // URL Tab state (default: net-worth)
-  const activeTab = useMemo<PlanTabKey>(() => {
-    const tab = searchParams.get('tab');
-    if (tab === 'assets' || tab === 'goals' || tab === 'fire' || tab === 'scenarios') {
-      return tab;
-    }
-    return 'net-worth';
-  }, [searchParams]);
+  // URL Tab state (default: goals). Net worth and assets moved to their own page.
+  const tabParam = searchParams.get('tab');
+  const activeTab = useMemo<PlanTabKey>(
+    () => (tabParam === 'fire' || tabParam === 'scenarios' ? tabParam : 'goals'),
+    [tabParam],
+  );
 
   const handleTabChange = (newTab: PlanTabKey) => {
     setSearchParams({ tab: newTab });
   };
 
   // Domain Hooks
-  const netWorth = useNetWorth();
-  const assetsDomain = useAssets();
   const goalsDomain = useGoals();
   const fireDomain = useFirePlan();
   const scenarioLab = useScenarioLab();
 
   // Modals state
-  const [assetModalOpen, setAssetModalOpen] = useState(false);
-  const [assetToEdit, setAssetToEdit] = useState<Asset | null>(null);
-
-  const [assetToDelete, setAssetToDelete] = useState<Asset | null>(null);
-  const [deletingAsset, setDeletingAsset] = useState(false);
-
   const [goalModalOpen, setGoalModalOpen] = useState(false);
   const [goalToEdit, setGoalToEdit] = useState<Goal | null>(null);
 
   const [goalToDelete, setGoalToDelete] = useState<Goal | null>(null);
   const [goalToFund, setGoalToFund] = useState<Goal | null>(null);
   const [deletingGoal, setDeletingGoal] = useState(false);
-
-  // Asset Actions
-  const handleOpenAddAsset = () => {
-    setAssetToEdit(null);
-    setAssetModalOpen(true);
-  };
-
-  const handleOpenEditAsset = (asset: Asset) => {
-    setAssetToEdit(asset);
-    setAssetModalOpen(true);
-  };
-
-  const handleSaveAsset = async (payload: any) => {
-    if (assetToEdit) {
-      await assetsDomain.editAsset(assetToEdit.id, payload);
-    } else {
-      await assetsDomain.addAsset(payload);
-    }
-    // Refresh predictability so Net Worth & FIRE update automatically
-    void netWorth.refresh(true);
-    void fireDomain.refresh(true);
-  };
-
-  const handleConfirmDeleteAsset = async () => {
-    if (!assetToDelete) return;
-    try {
-      setDeletingAsset(true);
-      await assetsDomain.removeAsset(assetToDelete.id);
-      setAssetToDelete(null);
-      void netWorth.refresh(true);
-      void fireDomain.refresh(true);
-    } finally {
-      setDeletingAsset(false);
-    }
-  };
 
   // Goal Actions
   const handleOpenAddGoal = () => {
@@ -154,11 +98,7 @@ export const PlanPage: React.FC = () => {
 
   // Global Refresh for current tab
   const handleGlobalRefresh = () => {
-    if (activeTab === 'net-worth') {
-      void netWorth.refresh(true);
-    } else if (activeTab === 'assets') {
-      void assetsDomain.refresh(true);
-    } else if (activeTab === 'goals') {
+    if (activeTab === 'goals') {
       void goalsDomain.refresh(true);
     } else if (activeTab === 'fire') {
       void fireDomain.refresh(true);
@@ -166,6 +106,9 @@ export const PlanPage: React.FC = () => {
       scenarioLab.resetToBaseline();
     }
   };
+
+  if (tabParam === 'assets') return <Navigate to="/app/net-worth?tab=assets" replace />;
+  if (tabParam === 'net-worth') return <Navigate to="/app/net-worth?tab=breakdown" replace />;
 
   return (
     <div className="plan-page">
@@ -196,65 +139,6 @@ export const PlanPage: React.FC = () => {
 
       {/* TAB CONTENT AREAS */}
       <div className="plan-tab-content">
-        {/* 1. NET WORTH TAB */}
-        {activeTab === 'net-worth' && (
-          <div className="plan-tab-pane plan-tab-pane--enter">
-            {netWorth.loading ? (
-              <TabLoadingSkeleton height="380px" />
-            ) : netWorth.error ? (
-              <div className="plan-surface-card plan-error-card">
-                <h4>Error loading Net Worth</h4>
-                <p>{netWorth.error}</p>
-                <Button variant="outline" size="sm" onClick={() => netWorth.refresh(true)}>
-                  Retry
-                </Button>
-              </div>
-            ) : (
-              <>
-                <NetWorthSummary
-                  knownNetWorth={netWorth.knownNetWorth}
-                  totalAssetValue={netWorth.totalAssetValue}
-                  totalLiabilities={netWorth.totalLiabilities}
-                  operationalCash={netWorth.operationalCash}
-                  liquidBuffer={netWorth.liquidBuffer}
-                  fireInvestableCorpus={netWorth.fireInvestableCorpus}
-                />
-                <NetWorthCompositionChart
-                  assets={netWorth.assets}
-                  liabilities={netWorth.liabilities}
-                  totalAssetValue={netWorth.totalAssetValue}
-                  totalLiabilities={netWorth.totalLiabilities}
-                />
-                <NetWorthHistoryNotice />
-              </>
-            )}
-          </div>
-        )}
-
-        {/* 2. ASSETS TAB */}
-        {activeTab === 'assets' && (
-          <div className="plan-tab-pane plan-tab-pane--enter">
-            {assetsDomain.loading ? (
-              <TabLoadingSkeleton height="380px" />
-            ) : assetsDomain.error ? (
-              <div className="plan-surface-card plan-error-card">
-                <h4>Error loading Assets</h4>
-                <p>{assetsDomain.error}</p>
-                <Button variant="outline" size="sm" onClick={() => assetsDomain.refresh(true)}>
-                  Retry
-                </Button>
-              </div>
-            ) : (
-              <AssetsTable
-                assets={assetsDomain.assets}
-                onAddAsset={handleOpenAddAsset}
-                onEditAsset={handleOpenEditAsset}
-                onDeleteAsset={(asset) => setAssetToDelete(asset)}
-              />
-            )}
-          </div>
-        )}
-
         {/* 3. GOALS TAB */}
         {activeTab === 'goals' && (
           <div className="plan-tab-pane plan-tab-pane--enter">
@@ -380,25 +264,6 @@ export const PlanPage: React.FC = () => {
           </div>
         )}
       </div>
-
-      {/* Asset Modals */}
-      <AssetModal
-        isOpen={assetModalOpen}
-        onClose={() => setAssetModalOpen(false)}
-        onSave={handleSaveAsset}
-        assetToEdit={assetToEdit}
-      />
-
-      <ConfirmDialog
-        isOpen={Boolean(assetToDelete)}
-        onClose={() => setAssetToDelete(null)}
-        onConfirm={handleConfirmDeleteAsset}
-        title="Delete Financial Asset"
-        message={`Are you sure you want to delete "${assetToDelete?.name}"?`}
-        warningNote="This asset will be permanently removed from your balance sheet and excluded from FIRE calculations."
-        confirmLabel="Delete Asset"
-        isLoading={deletingAsset}
-      />
 
       {/* Goal Modals */}
       <GoalModal

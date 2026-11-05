@@ -2,13 +2,11 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { getFMI } from '../services/api';
 import type { FMIResponse, FMIRecord } from '../types';
 import { getAppTimezone } from '../utils/timezone';
+import { inRange, type DateRange } from '../utils/dateRange';
 
-export type FmiHistoryRange = '30d' | '90d' | '6m' | '1y' | 'all';
-
-export function useFmiInsights() {
+export function useFmiInsights(range: DateRange) {
   const [currentFmi, setCurrentFmi] = useState<FMIResponse | null>(null);
   const [history, setHistory] = useState<FMIRecord[]>([]);
-  const [historyRange, setHistoryRange] = useState<FmiHistoryRange>('6m');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -38,23 +36,11 @@ export function useFmiInsights() {
     void loadData();
   }, [fetchFmiData]);
 
-  // Filter history points based on selected range
-  const filteredHistory = useMemo(() => {
-    if (history.length === 0) return [];
-    if (historyRange === 'all') return history;
-
-    const now = new Date();
-    let cutoffMs = 0;
-    if (historyRange === '30d') cutoffMs = 30 * 24 * 60 * 60 * 1000;
-    else if (historyRange === '90d') cutoffMs = 90 * 24 * 60 * 60 * 1000;
-    else if (historyRange === '6m') cutoffMs = 180 * 24 * 60 * 60 * 1000;
-    else if (historyRange === '1y') cutoffMs = 365 * 24 * 60 * 60 * 1000;
-
-    const cutoffDate = new Date(now.getTime() - cutoffMs);
-    const inRange = history.filter((h) => new Date(h.timestamp) >= cutoffDate);
-    // If filtered points are empty, return all available history to prevent blank charts
-    return inRange.length > 0 ? inRange : history;
-  }, [history, historyRange]);
+  // History points inside the selected range
+  const filteredHistory = useMemo(
+    () => history.filter((h) => inRange(new Date(h.timestamp), range)),
+    [history, range],
+  );
 
   // Format historical chart data
   const chartData = useMemo(() => {
@@ -144,8 +130,6 @@ export function useFmiInsights() {
   return {
     currentFmi,
     history,
-    historyRange,
-    setHistoryRange,
     loading,
     error,
     refresh: fetchFmiData,

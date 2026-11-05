@@ -3,8 +3,8 @@ import { Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native'
 import Animated from 'react-native-reanimated';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { getBehaviorPatterns, getDashboard, getHeatmap, getPacing, getTransactions } from '../services/api';
-import { BehaviorPattern, Transaction } from '../types';
+import { getBehaviorPatterns, getDashboard, getHeatmap, getPacing, getPurchasePredictions, getTransactions } from '../services/api';
+import { BehaviorPattern, PurchasePredictions, Transaction } from '../types';
 import { createStyles, tabular, typeScale, useTheme } from '../theme';
 import { enterUp } from '../motion';
 import { formatCurrency } from '../utils/format';
@@ -32,11 +32,13 @@ export function InsightsScreen() {
   const [heat, setHeat] = useState<Record<string, number>>({});
   const [patterns, setPatterns] = useState<{ patterns: BehaviorPattern[]; analyzedCount: number } | null>(null);
   const [outliers, setOutliers] = useState<Transaction[]>([]);
+  const [predicted, setPredicted] = useState<PurchasePredictions | null>(null);
   const [picked, setPicked] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
 
   const load = useCallback(async () => {
-    const [p, d, h, b, t] = await Promise.allSettled([getPacing(), getDashboard(), getHeatmap(), getBehaviorPatterns(), getTransactions()]);
+    const [p, d, h, b, t, a] = await Promise.allSettled([getPacing(), getDashboard(), getHeatmap(), getBehaviorPatterns(), getTransactions(), getPurchasePredictions()]);
+    if (a.status === 'fulfilled') setPredicted(a.value);
     if (p.status === 'fulfilled') setPacing(p.value);
     if (d.status === 'fulfilled') setCategories((d.value.categoryBreakdown ?? []).filter((x) => x.pct > 0).sort((a, z) => z.pct - a.pct));
     if (h.status === 'fulfilled') setHeat(Object.fromEntries((h.value ?? []).map((x) => [x.date.slice(0, 10), x.totalAmount])));
@@ -170,6 +172,41 @@ export function InsightsScreen() {
             ))
           ) : (
             <Card><Text style={s.muted}>No risky patterns in your last {patterns?.analyzedCount ?? 50} transactions. Nice.</Text></Card>
+          )}
+
+          <SectionHeader title="Likely next purchases" />
+          {predicted?.available ? (
+            <Card padded={false} style={s.list}>
+              <Text style={[s.outSub, { paddingTop: 10 }]}>
+                Apriori rules from {predicted.basketCount} days of purchases
+                {predicted.basis ? ` · based on today (${predicted.basis.weekday})${predicted.basis.items.length ? `: ${predicted.basis.items.join(', ')}` : ''}` : ''}
+              </Text>
+              {(predicted.predictions ?? []).length === 0 ? (
+                <Text style={[s.outSub, { paddingVertical: 12 }]}>No strong rule matches that day yet.</Text>
+              ) : (
+                (predicted.predictions ?? []).map((p, i) => (
+                  <View key={p.item} style={[s.outRow, i > 0 && s.divider]}>
+                    <IconTile icon="sparkles" tint={c.primary} size={36} />
+                    <View style={s.flex}>
+                      <Text style={s.outTitle} numberOfLines={1}>{p.label}</Text>
+                      <Text style={s.outSub} numberOfLines={2}>{p.reason}</Text>
+                    </View>
+                    <View style={{ alignItems: 'flex-end' }}>
+                      <Text style={s.outAmount}>{Math.round(p.confidence * 100)}%</Text>
+                      {p.typicalAmount !== null ? <Text style={s.outSub}>~{formatCurrency(p.typicalAmount)}</Text> : null}
+                    </View>
+                  </View>
+                ))
+              )}
+            </Card>
+          ) : (
+            <Card>
+              <Text style={s.muted}>
+                {predicted?.reason === 'NOT_ENOUGH_HISTORY'
+                  ? `Predictions start after ${predicted.minBaskets ?? 14} days with purchases (you have ${predicted.basketCount}).`
+                  : 'Purchase predictions are unavailable right now.'}
+              </Text>
+            </Card>
           )}
 
           <SectionHeader title="Unusually large spends" action={outliers.length ? 'Activity' : undefined} onAction={() => navigation.navigate('Transactions')} />

@@ -208,9 +208,9 @@ export async function processSingleLiability(liability, now = new Date(), staleT
   }
 }
 
-export async function processLiabilities() {
+// `now` is injectable so tests can pin the clock; the scheduler calls it without one (real time).
+export async function processLiabilities(now = new Date()) {
   try {
-    const now = new Date();
     const staleThreshold = new Date(now.getTime() - STALE_CLAIM_THRESHOLD_MS);
 
     // Find all active, autoDeduct liabilities where nextDueDate <= now

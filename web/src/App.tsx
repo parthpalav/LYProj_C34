@@ -18,6 +18,7 @@ const OverviewPage = React.lazy(() => import('./pages/OverviewPage').then((m) =>
 const ActivityPage = React.lazy(() => import('./pages/ActivityPage').then((m) => ({ default: m.ActivityPage })));
 const InsightsPage = React.lazy(() => import('./pages/InsightsPage').then((m) => ({ default: m.InsightsPage })));
 const PlanPage = React.lazy(() => import('./pages/PlanPage').then((m) => ({ default: m.PlanPage })));
+const NetWorthPage = React.lazy(() => import('./pages/NetWorthPage'));
 const ReportsPage = React.lazy(() => import('./pages/ReportsPage').then((m) => ({ default: m.ReportsPage })));
 const FamilyPage = React.lazy(() => import('./pages/FamilyPage').then((m) => ({ default: m.FamilyPage })));
 const AssistantPage = React.lazy(() => import('./pages/AssistantPage'));
@@ -150,6 +151,7 @@ export const App: React.FC = () => {
 
             {/* Future / Plan Workspace */}
             <Route path="plan" element={<PlanPage />} />
+            <Route path="net-worth" element={<NetWorthPage />} />
 
             {/* Documents / Reports Workspace */}
             <Route path="reports" element={<ReportsPage />} />

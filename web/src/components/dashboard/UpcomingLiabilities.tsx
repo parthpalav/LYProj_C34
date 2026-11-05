@@ -94,8 +94,8 @@ export const UpcomingLiabilities: React.FC<UpcomingLiabilitiesProps> = ({
       </div>
 
       <div className="liabilities-footer-link">
-        <Link to="/app/activity" className="liabilities-view-all-link">
-          Manage all obligations in Activity →
+        <Link to="/app/net-worth?tab=liabilities" className="liabilities-view-all-link">
+          Manage all liabilities in Net worth →
         </Link>
       </div>
     </div>

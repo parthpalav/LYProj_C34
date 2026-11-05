@@ -46,6 +46,7 @@ import { Ring, Sparkline, svgReady } from '../components/ui/Charts';
 import { ScreenHeader, useHeaderHeight, useScrollHeader } from '../components/ui/ScreenHeader';
 import { ThemeToggle } from '../components/ui/ThemeToggle';
 import { FamilyOverviewCard } from '../components/family/FamilyOverviewCard';
+import { CommitmentsSheet } from '../components/bills/CommitmentsSheet';
 import { UpdateBalanceScreen } from './UpdateBalanceScreen';
 
 type IconName = React.ComponentProps<typeof Ionicons>['name'];
@@ -118,6 +119,7 @@ export function DashboardScreen(): React.ReactElement {
   const [refreshing, setRefreshing] = useState(false);
   const [loadFailed, setLoadFailed] = useState(false);
   const [showUpdateBalance, setShowUpdateBalance] = useState(false);
+  const [showCommitments, setShowCommitments] = useState(false);
   const [feedPage, setFeedPage] = useState(0);
 
   // Subsystem data
@@ -236,6 +238,8 @@ export function DashboardScreen(): React.ReactElement {
   const fmiConfig = fmiStatusColor(fmiScore ?? 0, c);
 
   const balance = user?.currentBalance ?? dashboard?.balance ?? 0;
+  // Auto-deduct liabilities still to come out of the balance this month
+  const commitments = dashboard?.commitments;
   const incomeThisMonth = dashboard?.totalIncome ?? user?.monthlyIncome ?? predictability?.income?.meanMonthlyIncome ?? 0;
   const spendingThisMonth = dashboard?.wantsNeedsBreakdown?.total ?? fmiData?.totalSpent ?? 0;
   // Same daily series the Spending screen opens on, so the card and the full chart agree
@@ -455,6 +459,19 @@ export function DashboardScreen(): React.ReactElement {
                 <Text style={styles.heroValue} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6}>
                   {formatCurrency(balance)}
                 </Text>
+                {commitments && commitments.items.length > 0 ? (
+                  <Pressable
+                    onPress={() => setShowCommitments(true)}
+                    accessibilityRole="button"
+                    accessibilityLabel="Show auto-deduct bills committed this month"
+                    style={styles.committedLine}
+                  >
+                    <Text style={styles.heroCaption} numberOfLines={1}>
+                      {formatCurrency(commitments.remaining)} committed · {formatCurrency(balance - commitments.remaining)} free
+                    </Text>
+                    <Ionicons name="chevron-forward" size={12} color={c.onAuroraMuted} />
+                  </Pressable>
+                ) : null}
               </View>
               <Pressable
                 style={styles.updateBalanceBtn}
@@ -748,6 +765,14 @@ export function DashboardScreen(): React.ReactElement {
           }}
         />
       </Modal>
+      {commitments ? (
+        <CommitmentsSheet
+          visible={showCommitments}
+          onClose={() => setShowCommitments(false)}
+          commitments={commitments}
+          balance={balance}
+        />
+      ) : null}
     </View>
   );
 }
@@ -781,6 +806,7 @@ const useStyles = createStyles((c) => ({
   ringPct: { fontSize: 16, fontWeight: '800', color: c.onAurora, ...tabular },
   heroStats: { flex: 1, flexShrink: 1 },
   heroCaption: { ...typeScale.caption, color: c.onAuroraMuted },
+  committedLine: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 4 },
   heroChips: { flexDirection: 'row', gap: 8, marginTop: 10 },
   heroChip: { flex: 1, paddingHorizontal: 10, paddingVertical: 8, borderRadius: radius.md, backgroundColor: 'rgba(255,255,255,0.12)' },
   heroChipLabel: { fontSize: 11, color: c.onAuroraMuted },

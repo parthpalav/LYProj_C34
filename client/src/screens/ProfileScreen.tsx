@@ -270,7 +270,7 @@ export function ProfileScreen(): React.ReactElement {
     { icon: 'pie-chart', tint: c.info, title: 'Assets', subtitle: 'Investments, deposits and savings', route: 'Assets' },
     { icon: 'wallet', tint: c.purple, title: 'Income streams', subtitle: 'Salary and other receipts', route: 'IncomeFlow' },
     { icon: 'flag', tint: c.success, title: 'Savings goals', subtitle: 'What you are saving towards', route: 'Goals' },
-    { icon: 'calendar', tint: c.warning, title: 'Bills', subtitle: 'Recurring payments, loans and credit cards', route: 'Liabilities' },
+    { icon: 'calendar', tint: c.warning, title: 'Liabilities', subtitle: 'Loans, credit cards and recurring bills', route: 'Liabilities' },
     { icon: 'card', tint: c.primary, title: 'Payment methods', subtitle: 'UPI, debit and credit cards', route: 'PaymentMethods' },
     { icon: 'people-outline', tint: c.chart[3], title: 'Family & Household', subtitle: 'Combined finances, shared insights & invitations', route: 'Family' },
   ];

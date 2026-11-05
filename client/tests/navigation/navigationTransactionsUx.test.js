@@ -122,18 +122,18 @@ test('7. Transaction Need/Want/Investment type is visible in row metadata', () =
   assert.ok(code.includes('typeBadge.label'), 'Type label rendered in row');
 });
 
-// ── TEST 8: Monthly summary separates Spent and Invested ──────────────────
-test('8. Monthly summary: Spent excludes Investment, Invested includes Investment', () => {
+// ── TEST 8: Month sections separate Spent and Invested ────────────────────
+test('8. Month sections: Spent excludes Investment, Invested includes Investment', () => {
   const code = readScreen('TransactionsScreen.tsx');
-  
-  assert.ok(code.includes('Spent This Month'), 'Spent This Month label present');
-  assert.ok(code.includes('Invested This Month'), 'Invested This Month label present');
-  
-  // Verify Spent excludes Investment: filter should check tx.type !== 'Investment'
-  assert.ok(code.includes("tx.type !== 'Investment'"), 'Spent calculation excludes Investment type');
-  
-  // Verify Invested includes Investment: filter should check tx.type === 'Investment'
-  assert.ok(code.includes("tx.type === 'Investment'"), 'Invested calculation includes Investment type');
+  const helpers = fs.readFileSync(path.join(clientDir, 'src/utils/spending.ts'), 'utf8');
+
+  assert.ok(code.includes('groupByMonth(filtered)'), 'List is grouped into month sections');
+  assert.ok(code.includes('section.spent') && code.includes(' spent'), 'Month header shows the amount spent');
+  assert.ok(code.includes('section.invested') && code.includes(' invested'), 'Month header shows the amount invested');
+
+  // Spent excludes Investment, Invested counts only Investment
+  assert.ok(helpers.includes("tx.type !== 'Investment'"), 'Spent calculation excludes Investment type');
+  assert.ok(helpers.includes("tx.type === 'Investment'"), 'Invested calculation includes Investment type');
 });
 
 // ── TEST 9: Empty states exist for different scenarios ────────────────────
@@ -201,8 +201,9 @@ test('13. Type and category filters compose (AND between type & categories; OR w
   assert.ok(code.includes("tx.type === activeType"), 'Type filter compares tx.type');
   // Category filter: tx.category in selectedCategories
   assert.ok(code.includes("selectedCategories.includes"), 'Multi-category filter uses includes for OR matching');
-  // The type filter feeds the category/search memo, so both are dependencies
-  assert.ok(code.includes("[transactions, activeType]"), 'Type filter memo depends on activeType');
+  // The date range feeds the type filter, which feeds the category/search memo
+  assert.ok(code.includes("[transactions, range]"), 'Date range memo depends on the range');
+  assert.ok(code.includes("[dated, activeType]"), 'Type filter memo depends on activeType and the dated list');
   assert.ok(code.includes("[typed, selectedCategories"), 'Category filter memo builds on the typed list');
 });
 
@@ -256,11 +257,12 @@ test('18. Expense transactions render with minus sign (-₹X) and do not rely on
 
 // ── TEST 19: Monthly spend calculation sums positive amounts and excludes Investment ───
 test('19. Monthly spend calculation sums positive amounts and excludes Investment', () => {
-  const code = readScreen('TransactionsScreen.tsx');
+  // Month totals live in groupByMonth (src/utils/spending.ts)
+  const code = fs.readFileSync(path.join(clientDir, 'src/utils/spending.ts'), 'utf8');
 
   // Filter logic must NOT use tx.amount < 0
-  assert.ok(!code.includes("tx.amount < 0 && tx.type !== 'Investment'"), 'monthlySummary does not require tx.amount < 0');
-  assert.ok(code.includes(".filter((tx) => tx.type !== 'Investment')"), 'monthlySummary spent filters for non-Investment type');
+  assert.ok(!code.includes("tx.amount < 0 && tx.type !== 'Investment'"), 'month spend does not require tx.amount < 0');
+  assert.ok(code.includes("sum((tx) => tx.type !== 'Investment')"), 'month spent filters for non-Investment type');
 
   // Verify numerical behavior with test data
   const sampleTransactions = [

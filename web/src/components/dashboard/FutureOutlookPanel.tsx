@@ -44,14 +44,14 @@ export const FutureOutlookPanel: React.FC<FutureOutlookPanelProps> = ({
       <div className="future-metrics-grid">
         {/* Metric 1: Net Worth */}
         {typeof netWorth === 'number' && (
-          <div className="future-metric-card">
+          <Link to="/app/net-worth" className="future-metric-card" aria-label="Open Net worth">
             <div className="future-metric-head">
               <span className="future-metric-label">Known Net Worth</span>
               <TrendingUp size={16} className="future-metric-icon" aria-hidden="true" />
             </div>
             <div className="future-metric-value">{formatCurrencyINR(netWorth)}</div>
             <span className="future-metric-subtext">Total assets minus known liabilities</span>
-          </div>
+          </Link>
         )}
 
         {/* Metric 2: Estimated FIRE Target */}
@@ -64,7 +64,7 @@ export const FutureOutlookPanel: React.FC<FutureOutlookPanelProps> = ({
             <div className="future-metric-value">{formatCurrencyINR(fireCorpus)}</div>
             <span className="future-metric-subtext">
               {projectedFire?.reached
-                ? `Projected reached at age ${projectedFire.projectedAge ?? 'target'}`
+                ? `Projected reached at age ${projectedFire.projectedAge != null ? Math.round(projectedFire.projectedAge) : 'target'}`
                 : 'Based on inflation-adjusted baseline'}
             </span>
           </div>

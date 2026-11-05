@@ -8,7 +8,6 @@ import {
   Tooltip,
   CartesianGrid,
 } from 'recharts';
-import type { FmiHistoryRange } from '../../hooks/useFmiInsights';
 
 export interface FmiHistoryChartProps {
   data: Array<{
@@ -17,8 +16,6 @@ export interface FmiHistoryChartProps {
     fullDate: string;
     score: number;
   }>;
-  range: FmiHistoryRange;
-  onRangeChange: (range: FmiHistoryRange) => void;
 }
 
 const CustomTooltip = ({ active, payload }: any) => {
@@ -39,16 +36,7 @@ const CustomTooltip = ({ active, payload }: any) => {
 
 export const FmiHistoryChart: React.FC<FmiHistoryChartProps> = ({
   data,
-  range,
-  onRangeChange,
 }) => {
-  const ranges: Array<{ id: FmiHistoryRange; label: string }> = [
-    { id: '30d', label: '30D' },
-    { id: '90d', label: '90D' },
-    { id: '6m', label: '6M' },
-    { id: '1y', label: '1Y' },
-    { id: 'all', label: 'All' },
-  ];
 
   return (
     <div className="insights-chart-card">
@@ -59,18 +47,6 @@ export const FmiHistoryChart: React.FC<FmiHistoryChartProps> = ({
           <p className="card-subtitle">
             Historical progression of daily financial momentum snapshots
           </p>
-        </div>
-        <div className="chart-range-pills" role="group" aria-label="FMI History Range">
-          {ranges.map((r) => (
-            <button
-              key={r.id}
-              type="button"
-              className={`range-pill-btn ${range === r.id ? 'active' : ''}`}
-              onClick={() => onRangeChange(r.id)}
-            >
-              {r.label}
-            </button>
-          ))}
         </div>
       </div>
 

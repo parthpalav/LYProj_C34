@@ -15,12 +15,14 @@ import { enterUp, exitFade, listLayout } from '../motion';
 import { useTabBarSpace } from '../components/navigation/TabBar';
 import { LargeTitle, ScreenHeader, useHeaderHeight, useScrollHeader } from '../components/ui/ScreenHeader';
 import { Card } from '../components/ui/Card';
-import { Badge, EmptyState, ErrorState, IconTile, MoneyText } from '../components/ui/Bits';
+import { Badge, Chip, EmptyState, ErrorState, IconTile } from '../components/ui/Bits';
 import { CategoryGrid } from '../components/ui/CategoryGrid';
 import { SegmentedControl } from '../components/ui/SegmentedControl';
 import { Button } from '../components/ui/Button';
 import { Field } from '../components/ui/Field';
 import { Sheet } from '../components/ui/Sheet';
+import { DateRangeSheet } from '../components/ui/DateRangeSheet';
+import { MonthSection, TxPeriod, groupByMonth, inDayRange, periodRange, spanLabel, startOfDay } from '../utils/spending';
 import { SkeletonCard } from '../components/motion/Skeleton';
 
 // ── Category definitions ───────────────────────────────────────────────────
@@ -89,66 +91,36 @@ const TYPE_FILTERS = (c: Palette) => [
 ];
 const TYPES = ['Need', 'Want', 'Investment'] as const;
 
+// ── Date range filter (full history is kept; All time is the default) ──────
+const PERIODS: { key: TxPeriod; label: string }[] = [
+  { key: 'all', label: 'All time' },
+  { key: 'month', label: 'This month' },
+  { key: '3m', label: '3 months' },
+  { key: 'custom', label: 'Custom' },
+];
+
 // ── Grouping helpers ──────────────────────────────────────────────────────
 
 const pad = (n: number) => String(n).padStart(2, '0');
-
-/** Returns a sort key like "2026-08" (newest = lexicographically largest). */
-function monthKey(ts: string): string {
-  const d = new Date(ts);
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}`;
-}
-
-function currentMonthKey(): string {
-  const now = new Date();
-  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}`;
-}
 
 /** Local-calendar day key like "2026-10-26". */
 function dayKey(d: Date): string {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 }
 
-function dayLabel(key: string): string {
+/** Row date inside a month section: Today, Yesterday or "4 Nov". */
+function shortDay(ts: string): string {
+  const d = new Date(ts);
   const today = new Date();
   const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
-  if (key === dayKey(today)) return 'Today';
-  if (key === dayKey(yesterday)) return 'Yesterday';
-  const [y, m, d] = key.split('-').map(Number);
-  const date = new Date(y, m - 1, d);
-  return date.toLocaleDateString('en-IN', {
-    weekday: 'short', day: 'numeric', month: 'short', ...(y !== today.getFullYear() ? { year: 'numeric' } : {}),
-  });
+  if (dayKey(d) === dayKey(today)) return 'Today';
+  if (dayKey(d) === dayKey(yesterday)) return 'Yesterday';
+  return d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
 }
 
-interface DaySection {
-  title: string;
-  key: string;
-  totalAmount: number;
-  data: Transaction[];
-}
+type TxSection = MonthSection<Transaction>;
 
-/** Groups transactions into day sections, newest first. */
-function groupByDay(txs: Transaction[]): DaySection[] {
-  const map = new Map<string, Transaction[]>();
-  for (const tx of txs) {
-    const key = dayKey(new Date(tx.timestamp));
-    if (!map.has(key)) map.set(key, []);
-    map.get(key)!.push(tx);
-  }
-  return Array.from(map.entries())
-    .sort(([a], [b]) => b.localeCompare(a))
-    .map(([key, data]) => ({
-      title: dayLabel(key),
-      key,
-      totalAmount: data.reduce((sum, tx) => sum + Math.abs(tx.amount), 0),
-      data: [...data].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()),
-    }));
-}
-
-const timeOf = (ts: string) => new Date(ts).toLocaleTimeString('en-IN', { hour: 'numeric', minute: '2-digit' });
-
-const AnimatedSectionList = Animated.createAnimatedComponent(SectionList<Transaction, DaySection>);
+const AnimatedSectionList = Animated.createAnimatedComponent(SectionList<Transaction, TxSection>);
 
 // ── Row ────────────────────────────────────────────────────────────────────
 
@@ -210,7 +182,7 @@ function TxRow({ item, index, paidWith, onEdit, onDelete, onOptions }: {
                 </>
               )}
               <Text style={styles.metaDot}>·</Text>
-              <Text style={styles.dateText}>{timeOf(item.timestamp)}</Text>
+              <Text style={styles.dateText}>{shortDay(item.timestamp)}</Text>
             </View>
             {(item.needsReview || !!paidWith || (item.tags && item.tags.length > 0)) && (
               <View style={styles.tagsRow}>
@@ -249,6 +221,9 @@ export function TransactionsScreen(): React.ReactElement {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [query, setQuery] = useState('');
   const [reviewOnly, setReviewOnly] = useState(false);
+  const [period, setPeriod] = useState<TxPeriod>('all');
+  const [customRange, setCustomRange] = useState<{ start: Date; end: Date } | null>(null);
+  const [pickingRange, setPickingRange] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [loadFailed, setLoadFailed] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -287,20 +262,15 @@ export function TransactionsScreen(): React.ReactElement {
   // Refetch on every focus: QuickAdd is a sheet over this screen, so closing it refocuses here.
   useFocusEffect(useCallback(() => { fetchTransactions(); }, [fetchTransactions]));
 
-  // ── Monthly summary (current month) ────────────────────────────────────
-  const monthlySummary = useMemo(() => {
-    const cmk = currentMonthKey();
-    const thisMonth = transactions.filter((tx) => monthKey(tx.timestamp) === cmk);
-    // Spent = Need + Want amounts (exclude Investment)
-    const spent = thisMonth
-      .filter((tx) => tx.type !== 'Investment')
-      .reduce((sum, tx) => sum + Math.abs(tx.amount), 0);
-    // Invested = Investment amounts
-    const invested = thisMonth
-      .filter((tx) => tx.type === 'Investment')
-      .reduce((sum, tx) => sum + Math.abs(tx.amount), 0);
-    return { spent, invested };
-  }, [transactions]);
+  // ── Date range: null = all time ──────────────────────────────────────
+  const firstTx = useMemo(
+    () => transactions.reduce<Date | null>((min, t) => {
+      const d = startOfDay(new Date(t.timestamp));
+      return Number.isFinite(d.getTime()) && (!min || d < min) ? d : min;
+    }, null),
+    [transactions],
+  );
+  const range = useMemo(() => periodRange(period, new Date(), customRange ?? undefined), [period, customRange]);
 
   const reviewCount = useMemo(() => transactions.filter((t) => t.needsReview).length, [transactions]);
 
@@ -390,7 +360,7 @@ export function TransactionsScreen(): React.ReactElement {
         ...(s.frequency === 'monthly' ? { dayOfMonth: next.getDate() } : { dayOfWeek: next.getDay() }),
       });
       setSuggestions((list) => list.filter((x) => x.key !== s.key));
-      toast(`Tracking ${s.name} as a ${s.frequency} bill`, { subtitle: 'Find it under Plan › Bills.' });
+      toast(`Tracking ${s.name} as a ${s.frequency} bill`, { subtitle: 'Find it under Plan › Net worth › Liabilities.' });
     } catch {
       toast("Couldn't add that bill", { tone: 'error' });
     }
@@ -400,9 +370,19 @@ export function TransactionsScreen(): React.ReactElement {
   const filterCount = selectedCategories.length + (reviewOnly ? 1 : 0);
   const hasActiveFilters = filterCount > 0;
 
+  const dated = useMemo(
+    () => (range ? transactions.filter((tx) => inDayRange(tx.timestamp, range)) : transactions),
+    [transactions, range],
+  );
+
+  const choosePeriod = (p: TxPeriod) => {
+    if (p === 'custom') setPickingRange(true);
+    else setPeriod(p);
+  };
+
   const typed = useMemo(
-    () => (activeType === 'all' ? transactions : transactions.filter((tx) => tx.type === activeType)),
-    [transactions, activeType],
+    () => (activeType === 'all' ? dated : dated.filter((tx) => tx.type === activeType)),
+    [dated, activeType],
   );
 
   // Per-category counts for the filter grid, within the chosen type
@@ -415,7 +395,7 @@ export function TransactionsScreen(): React.ReactElement {
     return counts;
   }, [typed]);
 
-  const sections = useMemo<DaySection[]>(() => {
+  const sections = useMemo<TxSection[]>(() => {
     let filtered = typed;
 
     // Category filter: transaction category must match ANY of the selected categories (including legacy aliases)
@@ -432,7 +412,7 @@ export function TransactionsScreen(): React.ReactElement {
     const q = query.trim().toLowerCase();
     if (q) filtered = filtered.filter((tx) => `${tx.description} ${tx.category}`.toLowerCase().includes(q));
 
-    return groupByDay(filtered);
+    return groupByMonth(filtered);
   }, [typed, selectedCategories, reviewOnly, query]);
 
   const resultCount = sections.reduce((n, sec) => n + sec.data.length, 0);
@@ -443,6 +423,7 @@ export function TransactionsScreen(): React.ReactElement {
       return 'Your transactions will appear here.';
     }
     if (query.trim()) return `Nothing matches "${query.trim()}".`;
+    if (range && dated.length === 0) return `No transactions between ${spanLabel(range.start, range.end)}.`;
     const typeLabel = TYPE_FILTERS(c).find((f) => f.key === activeType)?.label ?? '';
     const hasType = activeType !== 'all';
     const hasCat = selectedCategories.length > 0;
@@ -465,7 +446,7 @@ export function TransactionsScreen(): React.ReactElement {
       return `No ${typeLabel.toLowerCase()} transactions yet.`;
     }
     return 'No transactions match these filters.';
-  }, [transactions.length, activeType, selectedCategories, query, c]);
+  }, [transactions.length, activeType, selectedCategories, query, c, range, dated.length]);
 
   // ── Category toggling and clearing ─────────────────────────────────────
   const toggleCategory = (key: string) => {
@@ -501,19 +482,6 @@ export function TransactionsScreen(): React.ReactElement {
       />
 
       <View style={styles.body}>
-        {/* Monthly summary */}
-        <Card variant="hero" style={styles.summary}>
-          <View style={styles.summaryItem}>
-            <Text style={styles.summaryLabel}>Spent This Month</Text>
-            <MoneyText value={monthlySummary.spent} style={styles.summaryValue} />
-          </View>
-          <View style={styles.summaryDivider} />
-          <View style={styles.summaryItem}>
-            <Text style={styles.summaryLabel}>Invested This Month</Text>
-            <MoneyText value={monthlySummary.invested} style={styles.summaryValue} />
-          </View>
-        </Card>
-
         {/* Search */}
         <View style={styles.search}>
           <Ionicons name="search" size={18} color={c.textSubtle} />
@@ -531,6 +499,19 @@ export function TransactionsScreen(): React.ReactElement {
 
         {/* Type filter */}
         <SegmentedControl segments={TYPE_FILTERS(c)} value={activeType} onChange={setActiveType} accessibilityLabel="Filter by type" />
+
+        {/* Date range */}
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips} accessibilityLabel="Filter by date">
+          {PERIODS.map((p) => (
+            <Chip
+              key={p.key}
+              label={p.key === 'custom' && period === 'custom' && range ? spanLabel(range.start, range.end) : p.label}
+              icon={p.key === 'custom' ? 'calendar-outline' : undefined}
+              selected={period === p.key}
+              onPress={() => choosePeriod(p.key)}
+            />
+          ))}
+        </ScrollView>
 
         {/* Active filters: one removable pill each */}
         {hasActiveFilters && (
@@ -620,9 +601,15 @@ export function TransactionsScreen(): React.ReactElement {
           <TxRow item={item} index={index} paidWith={transactionPaymentLabel(item.paymentMethodId, methods)} onEdit={handleEdit} onDelete={handleDelete} onOptions={setOverflowTx} />
         )}
         renderSectionHeader={({ section }) => (
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>{section.title}</Text>
-            <Text style={styles.sectionTotal}>{formatCurrency(section.totalAmount)}</Text>
+          <View style={styles.sectionHeader} accessibilityRole="header" accessibilityLabel={`${section.title}: ${formatCurrency(section.spent)} spent${section.invested ? `, ${formatCurrency(section.invested)} invested` : ''}, ${section.data.length} transactions`}>
+            <View style={styles.flex}>
+              <Text style={styles.sectionTitle}>{section.title}</Text>
+              <Text style={styles.sectionMeta}>{section.data.length} transaction{section.data.length === 1 ? '' : 's'}</Text>
+            </View>
+            <View style={styles.sectionRight}>
+              <Text style={styles.sectionTotal}>{formatCurrency(section.spent)}<Text style={styles.sectionMeta}> spent</Text></Text>
+              {section.invested > 0 && <Text style={styles.sectionInvested}>{formatCurrency(section.invested)} invested</Text>}
+            </View>
           </View>
         )}
         ListHeaderComponent={header}
@@ -632,9 +619,11 @@ export function TransactionsScreen(): React.ReactElement {
         scrollEventThrottle={16}
         keyboardShouldPersistTaps="handled"
         keyboardDismissMode="on-drag"
-        contentContainerStyle={{ paddingTop: headerHeight, paddingBottom: tabBarSpace }}
+        // Starts below the floating header (not under it) so sticky month headers stay visible.
+        style={{ marginTop: headerHeight }}
+        contentContainerStyle={{ paddingBottom: tabBarSpace }}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={() => fetchTransactions(true)} tintColor={c.primary} progressViewOffset={headerHeight} />
+          <RefreshControl refreshing={refreshing} onRefresh={() => fetchTransactions(true)} tintColor={c.primary} />
         }
       />
       <ScreenHeader title="Activity" y={y} />
@@ -699,6 +688,19 @@ export function TransactionsScreen(): React.ReactElement {
       </Sheet>
 
       {/* Advanced filter sheet */}
+      <DateRangeSheet
+        visible={pickingRange}
+        onClose={() => setPickingRange(false)}
+        initial={customRange ?? { start: firstTx && firstTx > startOfDay(new Date()) ? startOfDay(new Date()) : (firstTx ?? startOfDay(new Date())), end: startOfDay(new Date()) }}
+        firstDate={firstTx}
+        applyLabel="Show transactions"
+        onApply={(r) => {
+          setCustomRange(r);
+          setPeriod('custom');
+          setPickingRange(false);
+        }}
+      />
+
       <Sheet visible={showFilterModal} onClose={() => setShowFilterModal(false)} title="Filters">
         <View style={styles.filterSheet}>
           <View style={styles.filterHeaderRow}>
@@ -788,28 +790,6 @@ const useStyles = createStyles((c) => ({
     color: c.primary,
     backgroundColor: c.surface,
   },
-  summary: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  summaryItem: {
-    flex: 1,
-  },
-  summaryLabel: {
-    ...typeScale.caption,
-    color: c.onAuroraMuted,
-  },
-  summaryValue: {
-    ...typeScale.title,
-    color: c.onAurora,
-    marginTop: 4,
-  },
-  summaryDivider: {
-    width: 1,
-    alignSelf: 'stretch',
-    marginHorizontal: 16,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-  },
   search: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -878,21 +858,34 @@ const useStyles = createStyles((c) => ({
   },
   sectionHeader: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-end',
+    gap: 12,
     paddingHorizontal: 20,
     paddingTop: 18,
-    paddingBottom: 8,
+    paddingBottom: 10,
     backgroundColor: c.bg,
   },
   sectionTitle: {
-    ...typeScale.label,
-    color: c.textMuted,
+    ...typeScale.headline,
+    color: c.text,
+  },
+  sectionMeta: {
+    ...typeScale.caption,
+    color: c.textSubtle,
+    fontWeight: '500',
+  },
+  sectionRight: {
+    alignItems: 'flex-end',
   },
   sectionTotal: {
-    ...typeScale.label,
+    ...typeScale.headline,
     ...tabular,
-    color: c.textSubtle,
+    color: c.text,
+  },
+  sectionInvested: {
+    ...typeScale.caption,
+    ...tabular,
+    color: c.successStrong,
   },
   rowWrap: {
     paddingHorizontal: 16,

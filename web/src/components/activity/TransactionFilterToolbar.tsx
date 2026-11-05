@@ -3,6 +3,7 @@ import { Search, X, SlidersHorizontal } from 'lucide-react';
 import { CANONICAL_CATEGORIES, VALID_TRANSACTION_TYPES } from '../../types';
 import type { DateFilterOption, SortOption } from '../../hooks/useTransactions';
 import { Button } from '../ui/Button';
+import { todayKey } from '../../utils/timezone';
 
 export interface TransactionFilterToolbarProps {
   searchQuery: string;
@@ -22,6 +23,8 @@ export interface TransactionFilterToolbarProps {
   onResetFilters: () => void;
   onAddClick?: () => void;
   isFiltered: boolean;
+  /** Earliest transaction (YYYY-MM-DD): lower bound for the custom range. */
+  minDate?: string | null;
 }
 
 const DATE_LABELS: Record<DateFilterOption, string> = {
@@ -50,6 +53,7 @@ export const TransactionFilterToolbar: React.FC<TransactionFilterToolbarProps> =
   onResetFilters,
   onAddClick,
   isFiltered,
+  minDate,
 }) => {
   return (
     <div className="activity-toolbar-wrapper">
@@ -137,6 +141,8 @@ export const TransactionFilterToolbar: React.FC<TransactionFilterToolbarProps> =
                 type="date"
                 className="toolbar-date-input"
                 value={customStartDate}
+                min={minDate || undefined}
+                max={customEndDate || todayKey()}
                 onChange={(e) => onCustomStartDateChange(e.target.value)}
                 aria-label="Start date"
               />
@@ -145,6 +151,8 @@ export const TransactionFilterToolbar: React.FC<TransactionFilterToolbarProps> =
                 type="date"
                 className="toolbar-date-input"
                 value={customEndDate}
+                min={customStartDate || minDate || undefined}
+                max={todayKey()}
                 onChange={(e) => onCustomEndDateChange(e.target.value)}
                 aria-label="End date"
               />

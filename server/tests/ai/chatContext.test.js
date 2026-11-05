@@ -380,8 +380,9 @@ async function main() {
     assert.ok(promptSeed.includes('Operating Balance: ₹95,000'), 'Question A: Exact balance ₹95,000 present in prompt');
     // Question B: Monthly food spend
     assert.ok(promptSeed.includes('Food & Dining: ₹500'), 'Question B: Food & Dining spend present in prompt');
-    // Question C: FMI score & 3 pillars
-    assert.ok(promptSeed.includes('Financial Mood Index (FMI): 68/100'), 'Question C: Exact FMI 68/100 present');
+    // Question C: FMI score & 3 pillars. FMI paces month-to-date spend (spent / days passed * days in month),
+    // so the score for this fixture depends on the run date (45 on the 1st, 68 from about the 20th).
+    assert.ok(promptSeed.includes(`Financial Mood Index (FMI): ${ctx.fmi.score}/100`), `Question C: Exact FMI ${ctx.fmi.score}/100 present`);
     assert.ok(promptSeed.includes('Saving Discipline') && promptSeed.includes('Spending Control') && promptSeed.includes('Behavioral Risk'), 'Question C: 3 pillars present');
     // Question D: FIRE target & investable corpus
     assert.ok(promptSeed.includes('FIRE Investable Corpus: ₹2,00,000') || promptSeed.includes('Current Investable Corpus: ₹2,00,000'), 'Question D: Investable corpus present');

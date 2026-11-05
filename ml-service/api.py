@@ -9,6 +9,7 @@ Endpoints:
   POST /predict         → spending threshold alerts
   POST /classify        → TF-IDF + LogReg expense categorisation
   POST /simulate        → Monte Carlo probabilistic simulation & solvers (V1)
+  POST /association-rules → Apriori frequent itemsets + association rules (purchase prediction)
 
 NOTE: FMI is no longer a supervised ML prediction model. It is a transparent,
 mathematically-grounded financial wellness index computed from retirement readiness.
@@ -30,6 +31,7 @@ from fmi_engine import calculate_fmi
 from monte_carlo import run_simulation
 from contribution_solver import solve_required_contribution
 from funded_age_solver import solve_funded_ages
+from association_rules import apriori, generate_rules
 
 # ─── Configuration ────────────────────────────────────────────────────────────
 MODEL_BACKEND = os.getenv("MODEL_BACKEND", "legacy").lower()
@@ -340,6 +342,61 @@ def classify_expense():
     # Unified Hybrid Pipeline (Merchant Rules -> finaura-v4 joint model, legacy TF-IDF fallback)
     result = _hybrid_classifier.classify(raw)
     return jsonify(result)
+
+
+# ─── Association Rules (Apriori) ──────────────────────────────────────────────
+
+_MAX_BASKETS = 5000
+_MAX_BASKET_ITEMS = 50
+_MAX_ITEM_CHARS = 80
+_MAX_RULES = 1000  # response-size guard; the demo users mine 49-122 rules
+
+
+def _bounded_float(payload, key, default, lo, hi):
+    value = payload.get(key, default)
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise ValueError(f'{key} must be a number')
+    value = float(value)
+    if math.isnan(value) or math.isinf(value) or not (lo <= value <= hi):
+        raise ValueError(f'{key} must be between {lo} and {hi}')
+    return value
+
+
+@app.post('/association-rules')
+def association_rules_endpoint():
+    """Body: {baskets: string[][], min_support?: 0.05, min_confidence?: 0.4, max_len?: 3}.
+    Returns {basket_count, itemset_count, rules: [{antecedent, consequent, support, confidence, lift}]}.
+    Only rules with lift > 1 are returned (up to _MAX_RULES). The caller filters further, so a fixed
+    top-N cut here would let rules it discards crowd out the useful ones."""
+    payload = request.get_json(force=True, silent=True)
+    if not payload or not isinstance(payload, dict):
+        return jsonify({'error': 'Invalid JSON body'}), 400
+
+    baskets = payload.get('baskets')
+    if not isinstance(baskets, list) or not baskets or len(baskets) > _MAX_BASKETS:
+        return jsonify({'error': f'baskets must be a non-empty list of up to {_MAX_BASKETS} lists'}), 400
+    for basket in baskets:
+        if not isinstance(basket, list) or len(basket) > _MAX_BASKET_ITEMS:
+            return jsonify({'error': f'each basket must be a list of up to {_MAX_BASKET_ITEMS} items'}), 400
+        if not all(isinstance(i, str) and 0 < len(i) <= _MAX_ITEM_CHARS for i in basket):
+            return jsonify({'error': f'items must be non-empty strings of up to {_MAX_ITEM_CHARS} characters'}), 400
+
+    try:
+        min_support = _bounded_float(payload, 'min_support', 0.05, 0.01, 1.0)
+        min_confidence = _bounded_float(payload, 'min_confidence', 0.4, 0.0, 1.0)
+        max_len = payload.get('max_len', 3)
+        if isinstance(max_len, bool) or not isinstance(max_len, int) or not (1 <= max_len <= 4):
+            raise ValueError('max_len must be an integer between 1 and 4')
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+
+    itemsets = apriori(baskets, min_support=min_support, max_len=max_len)
+    rules = [r for r in generate_rules(itemsets, min_confidence=min_confidence) if r['lift'] > 1]
+    return jsonify(_sanitize_json({
+        'basket_count': sum(1 for b in baskets if b),
+        'itemset_count': len(itemsets),
+        'rules': rules[:_MAX_RULES],
+    }))
 
 
 # ─── Monte Carlo Simulation API ───────────────────────────────────────────────

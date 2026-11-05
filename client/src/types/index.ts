@@ -32,6 +32,33 @@ export interface DashboardData {
   categoryBreakdown?: Array<{ label: string; pct: number }>;
   budgetMetrics?: Array<{ label: string; val: number; color: string }>;
   wantsNeedsBreakdown?: WantsNeedsBreakdown;
+  commitments?: MonthlyCommitments;
+}
+
+/** This month's auto-deduct liabilities against the balance (GET /api/dashboard). Dates are YYYY-MM-DD in the user's timezone. */
+export interface MonthlyCommitments {
+  month: string;
+  monthEnd: string;
+  currentBalance: number;
+  committedTotal: number;
+  paidSoFar: number;
+  remaining: number;
+  freeBalance: number;
+  byType: Record<string, { committed: number; remaining: number }>;
+  items: Array<{
+    id: string;
+    name: string;
+    type: string;
+    category: string;
+    amount: number;
+    frequency: string;
+    paidDates: string[];
+    dueDates: string[];
+    paidCount: number;
+    paidAmount: number;
+    remainingAmount: number;
+    nextDueDate: string | null;
+  }>;
 }
 
 export interface Transaction {
@@ -736,6 +763,33 @@ export interface FamilyDashboard {
   typeBreakdown: FamilyTypeBreakdown;
   categoryBreakdown: FamilyCategoryBreakdown[];
   fmi: FamilyFMI;
+  memberBreakdown?: FamilyMemberBreakdown;
+}
+
+/** Per-member share of the family score (Shapley points) and metrics. */
+export interface FamilyMemberContribution {
+  userId: string;
+  name: string;
+  role: 'owner' | 'member';
+  isYou: boolean;
+  score: { points: number; pctOfScore: number; pillars: { D1: number; D2: number; D3: number } };
+  shares: { incomePct: number; spendPct: number; needPct: number; wantPct: number; investmentPct: number };
+  /** Only on your own row, or on every row when you are the owner. */
+  amounts?: {
+    effectiveIncome: number;
+    need: number;
+    want: number;
+    investment: number;
+    netCash: number;
+    topCategories: Array<{ category: string; amount: number }>;
+  };
+}
+
+export interface FamilyMemberBreakdown {
+  method: 'shapley';
+  rawScore: number;
+  viewerCanSeeAllAmounts: boolean;
+  members: FamilyMemberContribution[];
 }
 
 export interface FamilyDashboardResponse {
@@ -758,6 +812,30 @@ export interface FamilyDashboardResponse {
   fmi?: FamilyFMI;
   error?: string;
   message?: string;
+}
+
+/** GET /api/predictions/purchases: Apriori association rules over the last 180 days. */
+export interface PurchasePredictions {
+  available: boolean;
+  reason?: 'NOT_ENOUGH_HISTORY' | 'SERVICE_UNAVAILABLE';
+  basketCount: number;
+  minBaskets?: number;
+  /** Today's purchases plus today's weekday: what the rules are matched against. */
+  basis?: { date: string; weekday: string; items: string[] };
+  predictions?: Array<{
+    item: string;
+    label: string;
+    kind: 'category' | 'merchant';
+    /** 'rule' = an association rule fired; 'frequency' = filled from how often the user buys it. */
+    source: 'rule' | 'frequency';
+    confidence: number;
+    lift: number | null;
+    support: number;
+    because: string[];
+    reason: string;
+    typicalAmount: number | null;
+  }>;
+  rules?: Array<{ antecedent: string[]; consequent: string; support: number; confidence: number; lift: number }>;
 }
 
 export interface SubscriptionSuggestion {

@@ -2,7 +2,6 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { getTransactions } from '../services/api';
 import type {
   Transaction,
-  SpendingRange,
   SpendingTrendPoint,
   CategorySpendSummary,
   MonthOverMonthDelta,
@@ -10,9 +9,9 @@ import type {
 } from '../types';
 import { getTransactionDate } from '../utils/formatters';
 import { daysInMonth, getAppTimezone, zdate, zparts } from '../utils/timezone';
+import { bucketIndex, bucketsFor, chartStart, inRange, type DateRange } from '../utils/dateRange';
 
-export function useSpendingInsights() {
-  const [range, setRange] = useState<SpendingRange>('6m');
+export function useSpendingInsights(range: DateRange) {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -40,176 +39,47 @@ export function useSpendingInsights() {
     void loadData();
   }, [fetchSpendingData]);
 
-  const isRollingRange = range === '30d' || range === '90d';
-
-  // Determine months to include based on selected range (for legacy ranges)
-  const monthsInRange = useMemo(() => {
-    if (isRollingRange) return [];
-
-    const now = new Date();
-    const result: Array<{ key: string; label: string; year: number; month: number }> = [];
-
-    let count = 6;
-    if (range === '3m') count = 3;
-    else if (range === '6m') count = 6;
-    else if (range === '12m') count = 12;
-    else if (range === 'ytd') count = zparts(now).month + 1;
-
-    for (let i = count - 1; i >= 0; i--) {
-      const d = zdate(zparts(now).year, zparts(now).month - i, 1);
-      const year = zparts(d).year;
-      const month = zparts(d).month + 1;
-      const key = `${year}-${String(month).padStart(2, '0')}`;
-      const label = d.toLocaleDateString('en-IN', { timeZone: getAppTimezone(), month: 'short', year: 'numeric' });
-      result.push({ key, label, year, month });
+  // Earliest transaction: where "All" starts
+  const earliest = useMemo(() => {
+    let min: Date | null = null;
+    for (const tx of transactions) {
+      const d = getTransactionDate(tx);
+      if (!isNaN(d.getTime()) && (!min || d < min)) min = d;
     }
+    return min;
+  }, [transactions]);
 
-    return result;
-  }, [range, isRollingRange]);
-
-  // Rolling weekly/bi-weekly buckets for 30D (4 weekly) and 90D (6 bi-weekly)
-  const rollingBuckets = useMemo(() => {
-    if (!isRollingRange) return [];
-
-    const now = new Date();
-    const days = range === '30d' ? 30 : 90;
-    const bucketCount = range === '30d' ? 4 : 6;
-    const step = Math.floor(days / bucketCount);
-    const buckets: Array<{ key: string; label: string; start: Date; end: Date }> = [];
-
-    for (let i = 0; i < bucketCount; i++) {
-      const daysFromNowStart = days - (i * step);
-      const daysFromNowEnd = (i === bucketCount - 1) ? 0 : days - ((i + 1) * step - 1);
-      const bStart = zdate(zparts(now).year, zparts(now).month, zparts(now).day - daysFromNowStart, 0, 0, 0, 0);
-      const bEnd = zdate(zparts(now).year, zparts(now).month, zparts(now).day - daysFromNowEnd, 23, 59, 59, 999);
-      const sMonth = bStart.toLocaleDateString('en-IN', { timeZone: getAppTimezone(), month: 'short' });
-      const eMonth = bEnd.toLocaleDateString('en-IN', { timeZone: getAppTimezone(), month: 'short' });
-      const label = (sMonth === eMonth)
-        ? `${zparts(bStart).day}–${zparts(bEnd).day} ${sMonth}`
-        : `${zparts(bStart).day} ${sMonth} – ${zparts(bEnd).day} ${eMonth}`;
-      buckets.push({
-        key: `bucket-${i}`,
-        label,
-        start: bStart,
-        end: bEnd,
-      });
-    }
-
-    return buckets;
-  }, [range, isRollingRange]);
-
-  // Date boundaries for selected range
-  const { rangeStartDate, rangeEndDate } = useMemo(() => {
-    const now = new Date();
-    if (isRollingRange) {
-      const days = range === '30d' ? 30 : 90;
-      return {
-        rangeStartDate: zdate(zparts(now).year, zparts(now).month, zparts(now).day - days, 0, 0, 0, 0),
-        rangeEndDate: zdate(zparts(now).year, zparts(now).month, zparts(now).day, 23, 59, 59, 999),
-      };
-    }
-
-    if (monthsInRange.length === 0) {
-      return {
-        rangeStartDate: new Date(),
-        rangeEndDate: undefined,
-      };
-    }
-    const first = monthsInRange[0];
-    return {
-      rangeStartDate: zdate(first.year, first.month - 1, 1, 0, 0, 0, 0),
-      rangeEndDate: undefined,
-    };
-  }, [range, isRollingRange, monthsInRange]);
+  // Daily / weekly / monthly buckets depending on the span
+  const buckets = useMemo(() => bucketsFor(chartStart(range, earliest), range.end), [range, earliest]);
 
   // Transactions filtered to selected range
-  const rangeTransactions = useMemo(() => {
-    return transactions.filter((tx) => {
-      const d = getTransactionDate(tx);
-      if (rangeEndDate) {
-        return d >= rangeStartDate && d <= rangeEndDate;
-      }
-      return d >= rangeStartDate;
-    });
-  }, [transactions, rangeStartDate, rangeEndDate]);
+  const rangeTransactions = useMemo(
+    () => transactions.filter((tx) => inRange(getTransactionDate(tx), range)),
+    [transactions, range],
+  );
 
   // 1. Spending Trend
   const trendData = useMemo<SpendingTrendPoint[]>(() => {
-    if (isRollingRange) {
-      const bucketMap = new Map<
-        string,
-        { needs: number; wants: number; investments: number; total: number }
-      >();
-
-      rollingBuckets.forEach((b) => {
-        bucketMap.set(b.key, { needs: 0, wants: 0, investments: 0, total: 0 });
-      });
-
-      rangeTransactions.forEach((tx) => {
-        const d = getTransactionDate(tx);
-        const targetBucket = rollingBuckets.find((b) => d >= b.start && d <= b.end);
-        if (targetBucket) {
-          const entry = bucketMap.get(targetBucket.key);
-          if (entry) {
-            const amt = Math.abs(Number(tx.amount) || 0);
-            const type = tx.type || 'Need';
-            if (type === 'Need') entry.needs += amt;
-            else if (type === 'Want') entry.wants += amt;
-            else if (type === 'Investment') entry.investments += amt;
-            entry.total += amt;
-          }
-        }
-      });
-
-      return rollingBuckets.map((b) => {
-        const data = bucketMap.get(b.key) || { needs: 0, wants: 0, investments: 0, total: 0 };
-        return {
-          monthKey: b.key,
-          monthLabel: b.label,
-          needs: Math.round(data.needs),
-          wants: Math.round(data.wants),
-          investments: Math.round(data.investments),
-          total: Math.round(data.total),
-        };
-      });
-    }
-
-    // Legacy Monthly Spending Trend
-    const monthlyMap = new Map<
-      string,
-      { needs: number; wants: number; investments: number; total: number }
-    >();
-
-    monthsInRange.forEach((m) => {
-      monthlyMap.set(m.key, { needs: 0, wants: 0, investments: 0, total: 0 });
-    });
-
+    const totals = buckets.map(() => ({ needs: 0, wants: 0, investments: 0, total: 0 }));
     rangeTransactions.forEach((tx) => {
-      const d = getTransactionDate(tx);
-      const key = `${zparts(d).year}-${String(zparts(d).month + 1).padStart(2, '0')}`;
-      const entry = monthlyMap.get(key);
-      if (entry) {
-        const amt = Math.abs(Number(tx.amount) || 0);
-        const type = tx.type || 'Need';
-        if (type === 'Need') entry.needs += amt;
-        else if (type === 'Want') entry.wants += amt;
-        else if (type === 'Investment') entry.investments += amt;
-        entry.total += amt;
-      }
+      const i = bucketIndex(buckets, getTransactionDate(tx));
+      if (i < 0) return;
+      const amt = Math.abs(Number(tx.amount) || 0);
+      const type = tx.type || 'Need';
+      if (type === 'Need') totals[i].needs += amt;
+      else if (type === 'Want') totals[i].wants += amt;
+      else if (type === 'Investment') totals[i].investments += amt;
+      totals[i].total += amt;
     });
-
-    return monthsInRange.map((m) => {
-      const data = monthlyMap.get(m.key) || { needs: 0, wants: 0, investments: 0, total: 0 };
-      return {
-        monthKey: m.key,
-        monthLabel: m.label,
-        needs: Math.round(data.needs),
-        wants: Math.round(data.wants),
-        investments: Math.round(data.investments),
-        total: Math.round(data.total),
-      };
-    });
-  }, [isRollingRange, rollingBuckets, monthsInRange, rangeTransactions]);
+    return buckets.map((b, i) => ({
+      monthKey: b.key,
+      monthLabel: b.label,
+      needs: Math.round(totals[i].needs),
+      wants: Math.round(totals[i].wants),
+      investments: Math.round(totals[i].investments),
+      total: Math.round(totals[i].total),
+    }));
+  }, [buckets, rangeTransactions]);
 
   // 2. Needs / Wants / Investments Analysis for Selected Range
   const typeAnalysis = useMemo(() => {
@@ -401,9 +271,8 @@ export function useSpendingInsights() {
   }, [transactions]);
 
   return {
-    range,
-    setRange,
     transactions,
+    earliest,
     loading,
     error,
     refresh: fetchSpendingData,

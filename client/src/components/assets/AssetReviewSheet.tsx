@@ -45,7 +45,7 @@ export function AssetReviewSheet({ asset, onClose, onSaved }: { asset: Asset | n
 
   const last = asset?.lastReviewedAt || asset?.createdAt;
   return (
-    <Sheet visible={!!asset} onClose={onClose} title={`Monthly check-in: ${asset?.name ?? ''}`}>
+    <Sheet visible={!!asset} onClose={onClose} title={`Update value: ${asset?.name ?? ''}`}>
       <Text style={styles.intro}>
         {asset?.assetType}
         {last ? ` · last confirmed ${new Date(last).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}` : ''}

@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" width="1200" height="300" role="img" aria-label="Animated: a transaction description flows through merchant memory, rules and the v7 model, then a confidence gate">
+  <defs>
+    <style>
+      .t { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif; }
+      .box { fill: #F8FAFC; stroke: #CBD5E1; stroke-width: 1.5; }
+      .title { font-size: 15px; font-weight: 700; fill: #0F172A; }
+      .sub { font-size: 12px; fill: #64748B; }
+      .wire { fill: none; stroke: #CBD5E1; stroke-width: 2; stroke-dasharray: 6 6; animation: flow 1s linear infinite; }
+      .skip { fill: none; stroke: #A5B4FC; stroke-width: 2; stroke-dasharray: 4 6; animation: flow 1s linear infinite; }
+      @keyframes flow { to { stroke-dashoffset: -12; } }
+      .glow1 { animation: glow 6s ease-in-out infinite; }
+      .glow2 { animation: glow 6s ease-in-out 1.2s infinite; }
+      .glow3 { animation: glow 6s ease-in-out 2.4s infinite; }
+      .glow4 { animation: glow 6s ease-in-out 3.6s infinite; }
+      .glow5 { animation: glow 6s ease-in-out 4.6s infinite; }
+      @keyframes glow { 0%,100% { stroke: #CBD5E1; } 8%,22% { stroke: #4F46E5; } 30% { stroke: #CBD5E1; } }
+      @media (prefers-color-scheme: dark) {
+        .box { fill: #111827; stroke: #374151; } .title { fill: #F9FAFB; } .sub { fill: #9CA3AF; }
+        .wire { stroke: #374151; }
+        @keyframes glow { 0%,100% { stroke: #374151; } 8%,22% { stroke: #818CF8; } 30% { stroke: #374151; } }
+      }
+    </style>
+  </defs>
+  <g class="t">
+    <!-- input -->
+    <rect class="box glow1" x="10" y="100" width="190" height="90" rx="14"/>
+    <text class="title" x="105" y="135" text-anchor="middle">"UPI/DR/…/SWIGGY"</text>
+    <text class="sub" x="105" y="156" text-anchor="middle">typed text or bank</text>
+    <text class="sub" x="105" y="172" text-anchor="middle">narration + ₹ amount</text>
+
+    <rect class="box glow2" x="250" y="100" width="190" height="90" rx="14"/>
+    <text class="title" x="345" y="132" text-anchor="middle">① Merchant memory</text>
+    <text class="sub" x="345" y="154" text-anchor="middle">your past correction</text>
+    <text class="sub" x="345" y="170" text-anchor="middle">for this merchant wins</text>
+
+    <rect class="box glow3" x="490" y="100" width="190" height="90" rx="14"/>
+    <text class="title" x="585" y="132" text-anchor="middle">② Normalise + rules</text>
+    <text class="sub" x="585" y="154" text-anchor="middle">strip UPI/POS noise,</text>
+    <text class="sub" x="585" y="170" text-anchor="middle">known-merchant rules</text>
+
+    <rect class="box glow4" x="730" y="100" width="190" height="90" rx="14"/>
+    <text class="title" x="825" y="132" text-anchor="middle">③ FINAURA v7</text>
+    <text class="sub" x="825" y="154" text-anchor="middle">fine-tuned bge-base,</text>
+    <text class="sub" x="825" y="170" text-anchor="middle">21 joint labels</text>
+
+    <rect class="box glow5" x="970" y="100" width="220" height="90" rx="14"/>
+    <text class="title" x="1080" y="132" text-anchor="middle">④ Confidence gate</text>
+    <text class="sub" x="1080" y="154" text-anchor="middle">≥ 0.78 → auto-accept</text>
+    <text class="sub" x="1080" y="170" text-anchor="middle">&lt; 0.78 → "Check AI guesses"</text>
+
+    <path class="wire" d="M200 145 H250"/>
+    <path class="wire" d="M440 145 H490"/>
+    <path class="wire" d="M680 145 H730"/>
+    <path class="wire" d="M920 145 H970"/>
+    <path class="skip" d="M345 100 C 345 40, 1080 40, 1080 100"/>
+    <text class="sub" x="712" y="46" text-anchor="middle">hit → skip the model</text>
+    <path class="skip" d="M585 190 C 585 250, 1080 250, 1080 190"/>
+    <text class="sub" x="832" y="262" text-anchor="middle">rule match → confidence 0.95–1.0</text>
+
+    <!-- travelling token -->
+    <g>
+      <circle r="9" fill="#4F46E5">
+        <animateMotion dur="6s" repeatCount="indefinite" path="M200 145 H970" keyPoints="0.032;0.344;0.656;0.968;0.968" keyTimes="0;0.25;0.5;0.75;1" calcMode="linear"/>
+      </circle>
+      <circle r="9" fill="none" stroke="#4F46E5" stroke-width="2">
+        <animateMotion dur="6s" repeatCount="indefinite" path="M200 145 H970" keyPoints="0.032;0.344;0.656;0.968;0.968" keyTimes="0;0.25;0.5;0.75;1" calcMode="linear"/>
+        <animate attributeName="r" values="9;20;9" dur="1.2s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="0.8;0;0.8" dur="1.2s" repeatCount="indefinite"/>
+      </circle>
+    </g>
+    <g opacity="0">
+      <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.78;0.84;0.97;1" dur="6s" repeatCount="indefinite"/>
+      <rect x="985" y="248" width="190" height="30" rx="15" fill="#ECFDF5" stroke="#10B981"/>
+      <text x="1080" y="268" text-anchor="middle" font-size="13" font-weight="700" fill="#047857">Food &amp; Dining · Want · 0.97</text>
+    </g>
+  </g>
+</svg>

@@ -8,6 +8,8 @@ import {
   Tooltip,
   CartesianGrid,
 } from 'recharts';
+import { ChartDetail, DetailStat } from '../ui/ChartDetail';
+import { pickFromChart, useChartPick } from '../../utils/chartPick';
 
 export interface FmiHistoryChartProps {
   data: Array<{
@@ -37,6 +39,15 @@ const CustomTooltip = ({ active, payload }: any) => {
 export const FmiHistoryChart: React.FC<FmiHistoryChartProps> = ({
   data,
 }) => {
+  const pick = useChartPick();
+  const point = data[pick.shown];
+  const points = (from: number | undefined) => {
+    if (!point || from === undefined) return null;
+    const diff = point.score - from;
+    return { text: `${diff >= 0 ? '+' : ''}${diff} pts`, tone: diff >= 0 ? ('pos' as const) : ('neg' as const) };
+  };
+  const vsPrevious = points(pick.shown > 0 ? data[pick.shown - 1]?.score : undefined);
+  const vsStart = points(pick.shown > 0 ? data[0]?.score : undefined);
 
   return (
     <div className="insights-chart-card">
@@ -57,9 +68,9 @@ export const FmiHistoryChart: React.FC<FmiHistoryChartProps> = ({
           </p>
         </div>
       ) : (
-        <div className="chart-svg-container" style={{ height: '280px', width: '100%' }}>
+        <div className="chart-svg-container chart-pickable" style={{ height: '280px', width: '100%' }}>
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={data} margin={{ top: 16, right: 16, left: -16, bottom: 8 }}>
+            <LineChart data={data} margin={{ top: 16, right: 16, left: -16, bottom: 8 }} onClick={pickFromChart(pick.toggle)}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-subtle, #e2e8f0)" />
               <XAxis
                 dataKey="dateLabel"
@@ -83,13 +94,25 @@ export const FmiHistoryChart: React.FC<FmiHistoryChartProps> = ({
                 name="FMI Score"
                 stroke="#6366f1"
                 strokeWidth={3}
-                dot={{ r: 4, fill: '#6366f1', strokeWidth: 2, stroke: 'var(--bg-surface)' }}
+                dot={({ key, cx, cy, index }) => (
+                  <circle key={key} className="recharts-dot" cx={cx} cy={cy} r={pick.index === index ? 7 : 4} fill={pick.index === index ? '#4f46e5' : '#6366f1'} stroke="var(--bg-surface)" strokeWidth={2} />
+                )}
                 activeDot={{ r: 6, fill: '#4f46e5' }}
                 animationDuration={600}
               />
             </LineChart>
           </ResponsiveContainer>
         </div>
+      )}
+      {data.length > 0 && !pick.open && <p className="chart-hint">Select a point to see that day's score</p>}
+      {point && (
+        <ChartDetail open={pick.open} title={point.fullDate} accent="#6366f1" onClose={pick.close}>
+          <dl className="chart-detail-stats">
+            <DetailStat label="FMI score" value={`${point.score} / 100`} />
+            {vsPrevious && <DetailStat label="Vs previous snapshot" value={vsPrevious.text} tone={vsPrevious.tone} />}
+            {vsStart && <DetailStat label="Since start of range" value={vsStart.text} tone={vsStart.tone} />}
+          </dl>
+        </ChartDetail>
       )}
     </div>
   );

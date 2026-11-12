@@ -9,6 +9,7 @@ import { toast } from '../store/useCelebrationStore';
 import { enterUp, exitFade, listLayout } from '../motion';
 import { Palette, createStyles, radius, tabular, typeScale, useTheme } from '../theme';
 import { AnimatedSegment } from '../components/motion/AnimatedBar';
+import { ChartDetail, usePick } from '../components/ui/ChartDetail';
 import { SkeletonCard } from '../components/motion/Skeleton';
 import { Card } from '../components/ui/Card';
 import { Badge, Chip, EmptyState, ErrorState, IconTile, MoneyText, SectionHeader } from '../components/ui/Bits';
@@ -143,6 +144,7 @@ const ratePercent = (ast: Asset) =>
 export function AssetsPanel({ addKey, refreshKey, onTotal }: PanelProps) {
   const { c } = useTheme();
   const styles = useStyles();
+  const mix = usePick();
   const classes = ASSET_CLASS_MAP(c);
   const [assets, setAssets] = useState<Asset[]>([]);
   const [loading, setLoading] = useState(true);
@@ -382,17 +384,44 @@ export function AssetsPanel({ addKey, refreshKey, onTotal }: PanelProps) {
               <>
                 <View style={styles.track}>
                   {composition.map((x, i) => (
-                    <AnimatedSegment key={x.k} pct={(x.value / totalAssets) * 100} color={i === 0 ? '#34D399' : i === 1 ? '#7DD3FC' : 'rgba(255,255,255,0.55)'} delay={i * 150} style={styles.segment} />
+                    <AnimatedSegment key={x.k} pct={(x.value / totalAssets) * 100} color={i === 0 ? '#34D399' : i === 1 ? '#7DD3FC' : 'rgba(255,255,255,0.55)'} delay={i * 150} style={[styles.segment, mix.index !== null && mix.index !== i && { opacity: 0.35 }]} />
                   ))}
                 </View>
                 <View style={styles.legend}>
                   {composition.map((x, i) => (
-                    <View key={x.k} style={styles.legendItem}>
+                    <Pressable
+                      key={x.k}
+                      onPress={() => mix.toggle(i)}
+                      hitSlop={8}
+                      style={[styles.legendItem, mix.index !== null && mix.index !== i && { opacity: 0.5 }]}
+                      accessibilityRole="button"
+                      accessibilityState={{ expanded: mix.index === i }}
+                      accessibilityLabel={`${classes[x.k].label}, ${Math.round((x.value / totalAssets) * 100)}%. Show summary`}
+                    >
                       <View style={[styles.legendDot, { backgroundColor: i === 0 ? '#34D399' : i === 1 ? '#7DD3FC' : 'rgba(255,255,255,0.55)' }]} />
                       <Text style={styles.legendText}>{classes[x.k].label.split(' /')[0]} {Math.round((x.value / totalAssets) * 100)}%</Text>
-                    </View>
+                    </Pressable>
                   ))}
                 </View>
+                {(() => {
+                  const at = Math.min(mix.shown, composition.length - 1);
+                  const shown = composition[at];
+                  return (
+                    <ChartDetail
+                      onAurora
+                      open={mix.open}
+                      title={classes[shown.k].label}
+                      accent={at === 0 ? '#34D399' : at === 1 ? '#7DD3FC' : 'rgba(255,255,255,0.55)'}
+                      stats={[
+                        { label: 'Value', value: formatINR(shown.value) },
+                        { label: 'Share of assets', value: `${Math.round((shown.value / totalAssets) * 100)}%` },
+                        { label: 'Holdings', value: String(assets.filter((a) => a.assetClass === shown.k).length) },
+                      ]}
+                      note={classes[shown.k].sub}
+                      onClose={mix.close}
+                    />
+                  );
+                })()}
               </>
             )}
             <View style={styles.heroRow}>

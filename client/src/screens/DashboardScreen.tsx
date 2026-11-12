@@ -43,6 +43,7 @@ import { useTabBarSpace } from '../components/navigation/TabBar';
 import { Card } from '../components/ui/Card';
 import { Badge, ErrorState, IconTile, MoneyText, SectionHeader } from '../components/ui/Bits';
 import { Ring, Sparkline, svgReady } from '../components/ui/Charts';
+import { ChartDetail, usePick } from '../components/ui/ChartDetail';
 import { ScreenHeader, useHeaderHeight, useScrollHeader } from '../components/ui/ScreenHeader';
 import { ThemeToggle } from '../components/ui/ThemeToggle';
 import { FamilyOverviewCard } from '../components/family/FamilyOverviewCard';
@@ -112,6 +113,7 @@ type FeedItem = {
 export function DashboardScreen(): React.ReactElement {
   const { c } = useTheme();
   const styles = useStyles();
+  const split = usePick();
   const navigation = useNavigation<any>();
   const insets = useSafeAreaInsets();
   const tabBarSpace = useTabBarSpace();
@@ -612,28 +614,52 @@ export function DashboardScreen(): React.ReactElement {
             </View>
           </View>
           {svgReady && dailySpend.length > 1 && <Sparkline data={dailySpend} height={52} style={styles.spark} />}
-          {hasSpendingData ? (
-            <>
-              <View style={styles.track}>
-                {wantsNeeds!.needs.pct > 0 && <AnimatedSegment pct={wantsNeeds!.needs.pct} color={c.info} delay={0} />}
-                {wantsNeeds!.wants.pct > 0 && <AnimatedSegment pct={wantsNeeds!.wants.pct} color={c.warning} delay={150} />}
-                {wantsNeeds!.investments.pct > 0 && <AnimatedSegment pct={wantsNeeds!.investments.pct} color={c.success} delay={300} />}
-              </View>
-              <View style={styles.legend}>
-                {[
-                  { label: 'Needs', color: c.info, v: wantsNeeds!.needs },
-                  { label: 'Wants', color: c.warning, v: wantsNeeds!.wants },
-                  { label: 'Invest', color: c.success, v: wantsNeeds!.investments },
-                ].map((x) => (
-                  <View key={x.label} style={styles.legendItem}>
-                    <View style={[styles.legendDot, { backgroundColor: x.color }]} />
-                    <Text style={styles.legendLabel}>{x.label}</Text>
-                    <Text style={styles.legendValue} numberOfLines={1}>{formatCurrency(x.v.amount)}</Text>
-                  </View>
-                ))}
-              </View>
-            </>
-          ) : (
+          {hasSpendingData ? (() => {
+            const parts = [
+              { label: 'Needs', color: c.info, v: wantsNeeds!.needs, about: 'Essentials that are hard to skip, such as rent, groceries, bills and transport.' },
+              { label: 'Wants', color: c.warning, v: wantsNeeds!.wants, about: 'Spending you choose, such as eating out, shopping, entertainment and travel.' },
+              { label: 'Invest', color: c.success, v: wantsNeeds!.investments, about: 'Money put to work for later, such as SIPs, deposits and retirement contributions.' },
+            ];
+            const shown = parts[split.shown];
+            const fade = (i: number) => ({ opacity: split.index === null || split.index === i ? 1 : 0.35 });
+            return (
+              <>
+                <View style={styles.track}>
+                  {parts.map((x, i) => x.v.pct > 0 && <AnimatedSegment key={x.label} pct={x.v.pct} color={x.color} delay={i * 150} style={fade(i)} />)}
+                </View>
+                {/* Tap a part of the split to open its summary; the rest of the card still opens the chart. */}
+                <View style={styles.legend}>
+                  {parts.map((x, i) => (
+                    <Pressable
+                      key={x.label}
+                      onPress={() => split.toggle(i)}
+                      style={[styles.legendItem, fade(i)]}
+                      hitSlop={6}
+                      accessibilityRole="button"
+                      accessibilityState={{ expanded: split.index === i }}
+                      accessibilityLabel={`${x.label}, ${formatCurrency(x.v.amount)}. Show summary`}
+                    >
+                      <View style={[styles.legendDot, { backgroundColor: x.color }]} />
+                      <Text style={styles.legendLabel}>{x.label}</Text>
+                      <Text style={styles.legendValue} numberOfLines={1}>{formatCurrency(x.v.amount)}</Text>
+                    </Pressable>
+                  ))}
+                </View>
+                <ChartDetail
+                  open={split.open}
+                  title={`${shown.label === 'Invest' ? 'Investments' : shown.label} this month`}
+                  accent={shown.color}
+                  stats={[
+                    { label: 'Spent', value: formatCurrency(shown.v.amount) },
+                    { label: 'Share', value: `${shown.v.pct}%` },
+                    { label: 'Everything else', value: formatCurrency(Math.max(0, wantsNeeds!.total - shown.v.amount)) },
+                  ]}
+                  note={shown.about}
+                  onClose={split.close}
+                />
+              </>
+            );
+          })() : (
             <Text style={styles.muted}>No spending logged this month yet. Tap + to add your first.</Text>
           )}
         </Card>

@@ -12,6 +12,7 @@ import { AnimatedBar } from '../components/motion/AnimatedBar';
 import { Card } from '../components/ui/Card';
 import { EmptyState, IconTile, SectionHeader } from '../components/ui/Bits';
 import { Donut } from '../components/ui/Charts';
+import { ChartDetail, usePick } from '../components/ui/ChartDetail';
 import { LargeTitle, ScreenHeader, useHeaderHeight, useScrollHeader } from '../components/ui/ScreenHeader';
 
 type Pacing = Awaited<ReturnType<typeof getPacing>>;
@@ -23,6 +24,7 @@ const dayKey = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padSt
 export function InsightsScreen() {
   const { c } = useTheme();
   const s = useStyles();
+  const slice = usePick();
   const navigation = useNavigation<any>();
   const insets = useSafeAreaInsets();
   const headerHeight = useHeaderHeight();
@@ -106,21 +108,50 @@ export function InsightsScreen() {
             {slices.length === 0 ? (
               <Text style={s.muted}>Log a few expenses to see your category mix.</Text>
             ) : (
-              <View style={s.donutRow}>
-                <Donut segments={slices.map((x, i) => ({ value: x.pct, color: c.chart[i % c.chart.length] }))} size={136} stroke={18}>
-                  <Text style={s.donutTop}>{slices[0].pct}%</Text>
-                  <Text style={s.donutSub} numberOfLines={1}>{slices[0].label}</Text>
-                </Donut>
-                <View style={s.flex}>
-                  {slices.map((x, i) => (
-                    <View key={x.label} style={s.legendRow}>
-                      <View style={[s.dot, { backgroundColor: c.chart[i % c.chart.length] }]} />
-                      <Text style={s.legendLabel} numberOfLines={1}>{x.label}</Text>
-                      <Text style={s.legendPct}>{x.pct}%</Text>
+              (() => {
+                // The centre and the summary follow the tapped slice; the biggest slice shows until one is picked.
+                const shown = slices[Math.min(slice.shown, slices.length - 1)];
+                const centre = slice.index === null ? slices[0] : shown;
+                const rank = slices.indexOf(shown) + 1;
+                return (
+                  <>
+                    <View style={s.donutRow}>
+                      <Donut segments={slices.map((x, i) => ({ value: x.pct, color: c.chart[i % c.chart.length] }))} size={136} stroke={18} selected={slice.index} onSelect={slice.toggle}>
+                        <Text style={s.donutTop}>{centre.pct}%</Text>
+                        <Text style={s.donutSub} numberOfLines={1}>{centre.label}</Text>
+                      </Donut>
+                      <View style={s.flex}>
+                        {slices.map((x, i) => (
+                          <Pressable
+                            key={x.label}
+                            onPress={() => slice.toggle(i)}
+                            style={[s.legendRow, slice.index !== null && slice.index !== i && { opacity: 0.45 }]}
+                            accessibilityRole="button"
+                            accessibilityState={{ expanded: slice.index === i }}
+                            accessibilityLabel={`${x.label}, ${x.pct}%. Show summary`}
+                          >
+                            <View style={[s.dot, { backgroundColor: c.chart[i % c.chart.length] }]} />
+                            <Text style={s.legendLabel} numberOfLines={1}>{x.label}</Text>
+                            <Text style={s.legendPct}>{x.pct}%</Text>
+                          </Pressable>
+                        ))}
+                      </View>
                     </View>
-                  ))}
-                </View>
-              </View>
+                    <ChartDetail
+                      open={slice.open}
+                      title={shown.label}
+                      accent={c.chart[slices.indexOf(shown) % c.chart.length]}
+                      stats={[
+                        { label: 'Share of spending', value: `${shown.pct}%` },
+                        { label: 'Rank', value: `${rank} of ${slices.length}` },
+                        { label: 'Everything else', value: `${Math.max(0, 100 - shown.pct)}%` },
+                      ]}
+                      note={rank === 1 ? 'Your biggest category this month.' : `${slices[0].label} leads at ${slices[0].pct}%.`}
+                      onClose={slice.close}
+                    />
+                  </>
+                );
+              })()
             )}
           </Card>
 

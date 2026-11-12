@@ -1,7 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Check, Mic, Send, Square, X } from 'lucide-react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Activity, ArrowUp, CalendarClock, Check, Flame, Fuel, Mic, PieChart, ReceiptText, Sparkles, Square, Utensils, X } from 'lucide-react';
 import { PageHeader } from '../components/ui/PageHeader';
-import { Button } from '../components/ui/Button';
 import { useAuth } from '../hooks/useAuth';
 import { getChatHistory, sendMessageToAgent } from '../services/api';
 import { getUserFirstName } from '../utils/formatters';
@@ -11,13 +10,13 @@ import { useSpeechInput } from '../hooks/useSpeechInput';
 
 // Same grounded prompts as the mobile assistant.
 const QUICK_PROMPTS = [
-  'I spent ₹250 on chai and snacks',
-  'Aaj 500 ka petrol dalwaya',
-  'How is my spending this month?',
-  'Why is my FMI changing?',
-  'When could I reach FIRE?',
-  'What liabilities are due soon?',
-  'How much have I spent on Food & Dining?',
+  { text: 'I spent ₹250 on chai and snacks', icon: ReceiptText },
+  { text: 'Aaj 500 ka petrol dalwaya', icon: Fuel },
+  { text: 'How is my spending this month?', icon: PieChart },
+  { text: 'Why is my FMI changing?', icon: Activity },
+  { text: 'When could I reach FIRE?', icon: Flame },
+  { text: 'What liabilities are due soon?', icon: CalendarClock },
+  { text: 'How much have I spent on Food & Dining?', icon: Utensils },
 ];
 
 // Speech languages. Hindi mode also copes with mixed Hindi-English speech.
@@ -61,10 +60,72 @@ function RichText({ text }: { text: string }) {
   return <>{blocks}</>;
 }
 
+/** Reveals a fresh reply a few words at a time, as the mobile assistant does; instant under reduced motion. */
+function useTypewriter(text: string, active: boolean) {
+  const words = useMemo(() => text.split(/(\s+)/), [text]);
+  const animate = active && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const [count, setCount] = useState(animate ? 0 : words.length);
+  useEffect(() => {
+    if (!animate) return;
+    const timer = setInterval(() => setCount((n) => {
+      if (n >= words.length) { clearInterval(timer); return n; }
+      return n + 2;
+    }), 28);
+    return () => clearInterval(timer);
+  }, [animate, words.length]);
+  if (count >= words.length) return text;
+  const partial = words.slice(0, count).join('');
+  // Close a bold marker that is still being typed so the raw ** never shows.
+  return partial.split('**').length % 2 === 0 ? `${partial}**` : partial;
+}
+
 const time = (iso?: string) => {
   if (!iso) return '';
   const d = new Date(iso);
   return Number.isNaN(d.getTime()) ? '' : d.toLocaleTimeString([], { timeZone: getAppTimezone(), hour: '2-digit', minute: '2-digit' });
+};
+
+interface MessageProps {
+  message: ChatMessage;
+  /** arrived in this session, so it types out */
+  fresh: boolean;
+  failedText?: string;
+  onRetry: (text: string) => void;
+  onGrow: () => void;
+}
+
+const Message: React.FC<MessageProps> = ({ message: m, fresh, failedText, onRetry, onGrow }) => {
+  const isAssistant = m.role === 'assistant';
+  const text = useTypewriter(m.content, isAssistant && fresh);
+  useEffect(() => { if (fresh) onGrow(); }, [text, fresh, onGrow]);
+
+  return (
+    <div className={`chat-bubble-row ${m.role}`}>
+      {isAssistant && <span className="chat-orb chat-orb-sm" aria-hidden="true"><Sparkles size={12} /></span>}
+      <div className="chat-bubble-col">
+        {/* Screen readers get the whole reply once instead of every typed step. */}
+        <div className="chat-bubble" aria-hidden={isAssistant && fresh ? true : undefined}>
+          {isAssistant ? <RichText text={text} /> : m.content}
+        </div>
+        {isAssistant && fresh && <span className="sr-only">{m.content}</span>}
+        {m.actions && m.actions.length > 0 && (
+          <ul className="chat-actions" aria-label="Changes made">
+            {m.actions.map((a, i) => (
+              <li key={i} className={a.ok ? 'ok' : 'failed'} style={{ '--i': i } as React.CSSProperties}>
+                {a.ok ? <Check size={13} aria-hidden /> : <X size={13} aria-hidden />}
+                {a.label}
+              </li>
+            ))}
+          </ul>
+        )}
+        {failedText ? (
+          <button type="button" className="chat-retry" onClick={() => onRetry(failedText)}>Try again</button>
+        ) : (
+          time(m.timestamp) && <span className="chat-time">{time(m.timestamp)}</span>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export const AssistantPage: React.FC = () => {
@@ -74,7 +135,12 @@ export const AssistantPage: React.FC = () => {
   const [sending, setSending] = useState(false);
   const [loadingHistory, setLoadingHistory] = useState(true);
   const [failed, setFailed] = useState<{ id: string; text: string } | null>(null);
+  const [freshId, setFreshId] = useState<string | null>(null);
   const logRef = useRef<HTMLDivElement>(null);
+  const settled = useRef(false);
+  const stickToEnd = useCallback(() => {
+    logRef.current?.scrollTo({ top: logRef.current.scrollHeight, behavior: 'instant' });
+  }, []);
   const [voiceLang, setVoiceLang] = useState(savedLang);
   const sendRef = useRef<(text: string) => void>(() => {});
   // Speaking sends the message when the user stops talking, so adding a purchase is hands-free.
@@ -98,9 +164,11 @@ export const AssistantPage: React.FC = () => {
     return () => { mounted = false; };
   }, []);
 
+  // Saved history lands at the end at once; later messages glide into view.
   useEffect(() => {
-    logRef.current?.scrollTo({ top: logRef.current.scrollHeight });
-  }, [messages, sending]);
+    logRef.current?.scrollTo({ top: logRef.current.scrollHeight, behavior: settled.current ? 'smooth' : 'instant' });
+    if (!loadingHistory) settled.current = true;
+  }, [messages, sending, loadingHistory]);
 
   const greeting: ChatMessage = {
     id: 'greeting',
@@ -120,6 +188,7 @@ export const AssistantPage: React.FC = () => {
     setSending(true);
     try {
       const reply = await sendMessageToAgent(trimmed);
+      setFreshId(reply.id);
       setMessages((m) => [...m, reply]);
     } catch {
       const id = `e-${Date.now()}`;
@@ -136,83 +205,103 @@ export const AssistantPage: React.FC = () => {
     <div className="parity-page">
       <PageHeader title="Assistant" category="AI COPILOT" description="Ask about your money or tell it what you spent. It can add, edit and remove your records." />
       <section className="parity-card chat-shell" aria-label="Conversation with FINAURA">
+        <header className="chat-head">
+          <span className={`chat-orb${sending ? ' thinking' : ''}`} aria-hidden="true"><Sparkles size={16} /></span>
+          <div className="chat-head-text">
+            <strong>FINAURA AI</strong>
+            <span className={`chat-status${sending ? ' shimmer' : ''}`}>
+              {speech.listening ? 'Listening…' : sending ? 'Thinking…' : 'Answers from your own numbers'}
+            </span>
+          </div>
+          {speech.listening && <span className="chat-wave" aria-hidden="true"><i /><i /><i /><i /><i /></span>}
+        </header>
         <div className="chat-log" ref={logRef} aria-live="polite">
           {loadingHistory ? (
             <p className="parity-muted">Loading your conversation…</p>
           ) : (
-            shown.map((m) => (
-              <div key={m.id} className={`chat-bubble-row ${m.role}`}>
-                <div className="chat-bubble">{m.role === 'assistant' ? <RichText text={m.content} /> : m.content}</div>
-                {m.actions && m.actions.length > 0 && (
-                  <ul className="chat-actions" aria-label="Changes made">
-                    {m.actions.map((a, i) => (
-                      <li key={i} className={a.ok ? 'ok' : 'failed'}>
-                        {a.ok ? <Check size={13} aria-hidden /> : <X size={13} aria-hidden />}
-                        {a.label}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-                {failed?.id === m.id ? (
-                  <button type="button" className="chat-retry" onClick={() => send(failed.text)}>Try again</button>
-                ) : (
-                  time(m.timestamp) && <span className="chat-time">{time(m.timestamp)}</span>
-                )}
-              </div>
-            ))
+            <>
+              {messages.length === 0 && (
+                <div className="chat-hero">
+                  <span className="chat-orb chat-orb-lg" aria-hidden="true"><Sparkles size={26} /></span>
+                  <h2>Ask FINAURA about your finances</h2>
+                  <p>Grounded in your verified balance, spending habits, FMI pillars and FIRE milestones.</p>
+                </div>
+              )}
+              {shown.map((m) => (
+                <Message
+                  key={m.id}
+                  message={m}
+                  fresh={m.id === freshId}
+                  failedText={failed?.id === m.id ? failed.text : undefined}
+                  onRetry={send}
+                  onGrow={stickToEnd}
+                />
+              ))}
+            </>
           )}
           {sending && (
             <div className="chat-bubble-row assistant" aria-label="FINAURA is typing">
-              <div className="chat-bubble"><span className="chat-typing"><i /><i /><i /></span></div>
+              <span className="chat-orb chat-orb-sm thinking" aria-hidden="true"><Sparkles size={12} /></span>
+              <div className="chat-bubble chat-thinking">
+                <span className="chat-typing"><i /><i /><i /></span>
+                <span className="chat-thinking-text">Looking at your numbers…</span>
+              </div>
             </div>
           )}
         </div>
         {!loadingHistory && messages.length === 0 && (
           <div className="chat-prompts">
-            {QUICK_PROMPTS.map((p) => (
-              <button key={p} type="button" className="parity-chip" onClick={() => send(p)} disabled={sending}>{p}</button>
+            {QUICK_PROMPTS.map(({ text, icon: Icon }, i) => (
+              <button key={text} type="button" className="parity-chip" style={{ '--i': i } as React.CSSProperties} onClick={() => send(text)} disabled={sending}>
+                <Icon size={14} aria-hidden />
+                {text}
+              </button>
             ))}
           </div>
         )}
-        <form className="chat-composer" onSubmit={(e) => { e.preventDefault(); send(input); }}>
+        <form className={`chat-composer${speech.listening ? ' listening' : ''}`} onSubmit={(e) => { e.preventDefault(); send(input); }}>
           <label htmlFor="chat-input" className="sr-only">Message</label>
-          <textarea
-            id="chat-input"
-            className="form-input"
-            rows={1}
-            maxLength={2000}
-            placeholder={speech.listening ? 'Listening…' : 'Ask a question or say what you spent…'}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(input); }
-            }}
-          />
-          {speech.supported && (
-            <>
-              <button
-                type="button"
-                className="chat-lang"
-                onClick={switchLang}
-                disabled={speech.listening}
-                aria-label={`Voice language: ${currentLang.name}. Switch to ${nextLang.name}`}
-                title={`Voice language: ${currentLang.name}`}
-              >
-                {currentLang.label}
-              </button>
-              <button
-                type="button"
-                className={`chat-mic${speech.listening ? ' listening' : ''}`}
-                onClick={speech.listening ? speech.stop : speech.start}
-                disabled={sending}
-                aria-pressed={speech.listening}
-                aria-label={speech.listening ? 'Stop listening' : 'Speak your message'}
-              >
-                {speech.listening ? <Square size={15} /> : <Mic size={17} />}
-              </button>
-            </>
-          )}
-          <Button type="submit" disabled={!input.trim() || sending} leftIcon={<Send size={15} />}>Send</Button>
+          <div className="chat-field">
+            <textarea
+              id="chat-input"
+              className="chat-input"
+              rows={1}
+              maxLength={2000}
+              placeholder={speech.listening ? 'Listening…' : 'Ask a question or say what you spent…'}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(input); }
+              }}
+            />
+            {speech.supported && (
+              <>
+                <button
+                  type="button"
+                  className="chat-lang"
+                  onClick={switchLang}
+                  disabled={speech.listening}
+                  aria-label={`Voice language: ${currentLang.name}. Switch to ${nextLang.name}`}
+                  title={`Voice language: ${currentLang.name}`}
+                >
+                  {currentLang.label}
+                </button>
+                <button
+                  type="button"
+                  className={`chat-mic${speech.listening ? ' listening' : ''}`}
+                  onClick={speech.listening ? speech.stop : speech.start}
+                  disabled={sending}
+                  aria-pressed={speech.listening}
+                  aria-label={speech.listening ? 'Stop listening' : 'Speak your message'}
+                >
+                  {speech.listening ? <Square size={15} /> : <Mic size={17} />}
+                </button>
+              </>
+            )}
+            <button type="submit" className="chat-send" disabled={!input.trim() || sending} aria-label="Send">
+              <ArrowUp size={18} />
+            </button>
+          </div>
         </form>
         {speech.error && <p className="chat-voice-error" role="alert">{speech.error}</p>}
       </section>

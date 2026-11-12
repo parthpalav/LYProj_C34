@@ -3,6 +3,7 @@ import {
   ResponsiveContainer,
   BarChart,
   Bar,
+  Cell,
   XAxis,
   YAxis,
   Tooltip,
@@ -11,6 +12,8 @@ import {
 } from 'recharts';
 import type { IncomeTrendPoint } from '../../types';
 import { formatCurrencyINR } from '../../utils/formatters';
+import { ChartDetail, DetailStat } from '../ui/ChartDetail';
+import { changeFrom, pickFromChart, pickOpacity, useChartPick } from '../../utils/chartPick';
 
 export interface IncomeTrendChartProps {
   data: IncomeTrendPoint[];
@@ -60,6 +63,10 @@ export const IncomeTrendChart: React.FC<IncomeTrendChartProps> = ({
   }, [data, averageIncome]);
 
   const hasData = data.some((d) => d.amount > 0);
+  const pick = useChartPick();
+  const month = data[pick.shown];
+  const vsMean = month && averageIncome > 0 ? changeFrom(month.amount, averageIncome) : null;
+  const vsPrevious = month && pick.shown > 0 ? changeFrom(month.amount, data[pick.shown - 1].amount) : null;
 
   return (
     <div className="insights-chart-card" role="region" aria-label="Monthly Income History Chart">
@@ -79,9 +86,9 @@ export const IncomeTrendChart: React.FC<IncomeTrendChartProps> = ({
           </p>
         </div>
       ) : (
-        <div className="chart-svg-container" style={{ height: '300px', width: '100%' }}>
+        <div className="chart-svg-container chart-pickable" style={{ height: '300px', width: '100%' }}>
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={chartDataWithMean} margin={{ top: 16, right: 16, left: -8, bottom: 8 }}>
+            <BarChart data={chartDataWithMean} margin={{ top: 16, right: 16, left: -8, bottom: 8 }} onClick={pickFromChart(pick.toggle)}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(226, 232, 240, 0.6)" />
               <XAxis
                 dataKey="monthLabel"
@@ -97,7 +104,7 @@ export const IncomeTrendChart: React.FC<IncomeTrendChartProps> = ({
                 axisLine={false}
                 tickFormatter={(val) => `₹${val >= 1000 ? `${Math.round(val / 1000)}k` : val}`}
               />
-              <Tooltip content={<CustomTooltip />} />
+              <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgb(var(--glow-rgb) / 0.07)' }} />
               {averageIncome > 0 && (
                 <ReferenceLine
                   y={averageIncome}
@@ -119,10 +126,23 @@ export const IncomeTrendChart: React.FC<IncomeTrendChartProps> = ({
                 radius={[5, 5, 0, 0]}
                 maxBarSize={38}
                 animationDuration={600}
-              />
+              >
+                {data.map((_, i) => <Cell key={i} fillOpacity={pickOpacity(pick.index, i)} />)}
+              </Bar>
             </BarChart>
           </ResponsiveContainer>
         </div>
+      )}
+      {hasData && !pick.open && <p className="chart-hint">Select a month to see its summary</p>}
+      {hasData && month && (
+        <ChartDetail open={pick.open} title={month.monthLabel} accent="#10b981" onClose={pick.close}>
+          <dl className="chart-detail-stats">
+            <DetailStat label="Income received" value={formatCurrencyINR(month.amount)} />
+            <DetailStat label="Entries" value={String(month.eventCount)} />
+            {vsMean && <DetailStat label="Vs your average" value={vsMean.text} tone={vsMean.up ? 'pos' : 'neg'} />}
+            {vsPrevious && <DetailStat label="Vs previous month" value={vsPrevious.text} tone={vsPrevious.up ? 'pos' : 'neg'} />}
+          </dl>
+        </ChartDetail>
       )}
     </div>
   );

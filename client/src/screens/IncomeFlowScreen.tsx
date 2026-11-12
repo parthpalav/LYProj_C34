@@ -16,6 +16,7 @@ import { Card } from '../components/ui/Card';
 import { Badge, Chip, EmptyState, ErrorState, MoneyText, SectionHeader } from '../components/ui/Bits';
 import { Button } from '../components/ui/Button';
 import { Donut } from '../components/ui/Charts';
+import { ChartDetail, usePick } from '../components/ui/ChartDetail';
 import { Field } from '../components/ui/Field';
 import { DateField } from '../components/ui/DateField';
 import { Sheet } from '../components/ui/Sheet';
@@ -107,6 +108,7 @@ function IncomeEditor({ entry, visible, onClose, onSaved }: { entry: Entry | nul
 export function IncomeFlowScreen(): React.ReactElement {
   const { c } = useTheme();
   const s = useSStyles();
+  const part = usePick();
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const headerHeight = useHeaderHeight();
@@ -168,9 +170,9 @@ export function IncomeFlowScreen(): React.ReactElement {
   const sources = Object.entries(flow?.sources ?? {}).sort((a, b) => b[1] - a[1]);
   const split = flow
     ? [
-      { label: 'Essentials', pct: 50, value: flow.allocation.essentials, color: c.primary },
-      { label: 'Goals', pct: 30, value: flow.allocation.goals, color: c.success },
-      { label: 'Emergency', pct: 20, value: flow.allocation.emergency, color: c.warning },
+      { label: 'Essentials', pct: 50, value: flow.allocation.essentials, color: c.primary, about: 'Rent, groceries, bills and other costs you cannot easily skip.' },
+      { label: 'Goals', pct: 30, value: flow.allocation.goals, color: c.success, about: 'Savings goals and investments that build toward what you want.' },
+      { label: 'Emergency', pct: 20, value: flow.allocation.emergency, color: c.warning, about: 'A buffer for surprises, kept where you can reach it quickly.' },
     ]
     : [];
 
@@ -200,20 +202,40 @@ export function IncomeFlowScreen(): React.ReactElement {
         </Animated.View>
 
         <SectionHeader title="Suggested split" />
-        <Card style={s.split}>
-          <Donut segments={split.map((x) => ({ value: x.value, color: x.color }))} size={128} stroke={16}>
-            <Text style={s.donutLabel}>50/30/20</Text>
-          </Donut>
-          <View style={s.flex}>
-            {split.map((x) => (
-              <View key={x.label} style={s.splitRow}>
-                <View style={[s.dot, { backgroundColor: x.color }]} />
-                <Text style={s.splitLabel}>{x.label} <Text style={s.splitPct}>{x.pct}%</Text></Text>
-                <Text style={s.splitValue}>{formatCurrency(x.value)}</Text>
-              </View>
-            ))}
-            <Text style={s.splitNote}>A common guide applied to this month's income, not your actual spending.</Text>
+        <Card>
+          <View style={s.split}>
+            <Donut segments={split.map((x) => ({ value: x.value, color: x.color }))} size={128} stroke={16} selected={part.index} onSelect={part.toggle}>
+              <Text style={s.donutLabel}>{part.index === null ? '50/30/20' : `${split[part.index].pct}%`}</Text>
+            </Donut>
+            <View style={s.flex}>
+              {split.map((x, i) => (
+                <Pressable
+                  key={x.label}
+                  onPress={() => part.toggle(i)}
+                  style={[s.splitRow, part.index !== null && part.index !== i && { opacity: 0.45 }]}
+                  accessibilityRole="button"
+                  accessibilityState={{ expanded: part.index === i }}
+                  accessibilityLabel={`${x.label}, ${formatCurrency(x.value)}. Show summary`}
+                >
+                  <View style={[s.dot, { backgroundColor: x.color }]} />
+                  <Text style={s.splitLabel}>{x.label} <Text style={s.splitPct}>{x.pct}%</Text></Text>
+                  <Text style={s.splitValue}>{formatCurrency(x.value)}</Text>
+                </Pressable>
+              ))}
+              <Text style={s.splitNote}>A common guide applied to this month's income, not your actual spending.</Text>
+            </View>
           </View>
+          <ChartDetail
+            open={part.open}
+            title={`${split[part.shown].label}: ${split[part.shown].pct}% of income`}
+            accent={split[part.shown].color}
+            stats={[
+              { label: 'This month', value: formatCurrency(split[part.shown].value) },
+              { label: 'Per week', value: formatCurrency(Math.round((split[part.shown].value * 12) / 52)) },
+            ]}
+            note={split[part.shown].about}
+            onClose={part.close}
+          />
         </Card>
 
         <SectionHeader title="By source" />

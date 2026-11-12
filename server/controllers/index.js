@@ -26,7 +26,8 @@ import {
   loginSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
-  resendVerificationSchema
+  resendVerificationSchema,
+  changePasswordSchema
 } from '../validators/authValidator.js';
 import { logger } from '../utils/logger.js';
 import mongoose from 'mongoose';
@@ -418,6 +419,40 @@ router.get('/auth/me', async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+});
+
+router.post('/auth/change-password', passwordResetRateLimiter, validate(changePasswordSchema), async (req, res, next) => {
+  try {
+    const user = await User.findOne(userFilter(req.user.id || req.user._id)).select('+password +passwordHash');
+    if (!user) return res.status(404).json({ success: false, error: 'User not found', message: 'User not found' });
+    const { currentPassword, newPassword } = req.validatedBody || req.body;
+    await authService.changePassword(user, currentPassword, newPassword);
+    // Other devices are signed out; this one keeps working with fresh tokens.
+    const accessToken = authService.issueAccessToken(user);
+    const refreshToken = await authService.issueRefreshToken(user);
+    return res.json({ success: true, message: 'Password changed. Other devices have been signed out.', token: accessToken, accessToken, refreshToken });
+  } catch (error) {
+    if (error.status === 400) return res.status(400).json({ success: false, error: error.message, message: error.message });
+    next(error);
+  }
+});
+
+// Live health of the pieces behind the app, for the Settings page.
+router.get('/system/status', async (_req, res) => {
+  const started = Date.now();
+  const ml = await fetch(`${ML_SERVICE_URL}/health`, { signal: AbortSignal.timeout(3000) })
+    .then((r) => r.json())
+    .catch(() => null);
+  res.json({
+    success: true,
+    data: {
+      api: { ok: true, uptimeSeconds: Math.round(process.uptime()) },
+      database: { ok: mongoose.connection.readyState === 1 },
+      ml: { ok: Boolean(ml?.ok), classifierReady: Boolean(ml?.classifier_ready), latencyMs: Date.now() - started },
+      assistant: { ok: Boolean((process.env.GEMINI_API_KEY || '').trim()) },
+      checkedAt: new Date().toISOString(),
+    },
+  });
 });
 
 // Onboarding submission endpoint (supports both modal & full onboarding screen)

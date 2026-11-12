@@ -186,6 +186,14 @@ export async function forgotPasswordUser(email: string): Promise<{ success: bool
   return data;
 }
 
+export async function changePasswordUser(currentPassword: string, newPassword: string): Promise<{ message: string }> {
+  const { data } = await api.post('/api/auth/change-password', { currentPassword, newPassword });
+  // The server signs out every other device and hands this one fresh tokens.
+  await secureStorage.saveTokens(data.accessToken, data.refreshToken);
+  setAuthToken(data.accessToken);
+  return data;
+}
+
 export async function resetPasswordUser(payload: { token: string; password: string }): Promise<{ success: boolean; message: string }> {
   const { data } = await api.post('/api/auth/reset-password', payload);
   return data;

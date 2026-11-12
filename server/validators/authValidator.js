@@ -46,6 +46,11 @@ export const resetPasswordSchema = z.object({
     })
 });
 
+export const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1, { message: 'Current password is required' }),
+  newPassword: resetPasswordSchema.shape.password
+});
+
 export const resendVerificationSchema = z.object({
   email: z.string()
     .trim()

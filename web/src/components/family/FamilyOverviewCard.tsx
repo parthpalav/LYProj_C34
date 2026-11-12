@@ -92,7 +92,7 @@ export const FamilyOverviewCard: React.FC<FamilyOverviewCardProps> = ({ dashboar
           <span className="family-overview-metric-val success">{formatCurrencyINR(investedThisMonth)}</span>
           <span className="family-overview-metric-sub">
             {dashboard?.investments?.investmentRatePercent != null
-              ? `${dashboard.investments.investmentRatePercent}% of income`
+              ? `${Math.round(dashboard.investments.investmentRatePercent)}% of income`
               : 'Monthly flow'}
           </span>
         </div>

@@ -186,7 +186,7 @@ Your mission is to guide the user towards financial stability, disciplined wealt
 
 /**
  * Enhanced AgentService — Generative AI Contextual Financial Coaching
- * Uses Google Gemini 1.5 Flash to synthesize verified financial context
+ * Uses Google Gemini (Flash) to synthesize verified financial context
  * and multi-turn conversation history into an empathetic, grounded response.
  *
  * @param {string} userInput - User prompt / question
@@ -194,43 +194,59 @@ Your mission is to guide the user towards financial stability, disciplined wealt
  * @param {Array<Object>} [rawHistory=[]] - Recent message history from AgentMemory
  * @returns {Promise<string>} Grounded assistant response text
  */
+// Google retires model ids regularly (gemini-1.5-flash now 404s), so try a short list and remember the first that answers.
+const GEMINI_MODELS = [
+  ...(process.env.GEMINI_MODEL || '').split(',').map((m) => m.trim()).filter(Boolean),
+  // Aliases, not versioned ids: they keep pointing at a live model. Lite is the fallback when Flash is overloaded.
+  'gemini-flash-latest',
+  'gemini-flash-lite-latest',
+];
+let workingModel = null;
+
+/** Answer built only from verified context, used when no Gemini model can be reached. */
+export function buildOfflineSummary(context = {}) {
+  const lines = [];
+  const balance = context.balance?.current ?? context.profile?.currentBalance;
+  if (Number.isFinite(balance)) lines.push(`Balance: ${formatINR(balance)}`);
+  if (Number.isFinite(context.fmi?.score)) lines.push(`FMI: ${context.fmi.score}/100`);
+  const month = context.spending?.currentMonth;
+  if (month && Number.isFinite(month.totalSpending)) lines.push(`Spent this month: ${formatINR(month.totalSpending)}`);
+  const top = Object.entries(month?.byCategory || {}).sort((a, b) => b[1] - a[1])[0];
+  if (top && top[1] > 0) lines.push(`Biggest category: ${top[0]} (${formatINR(top[1])})`);
+  const snapshot = lines.length ? `\n\nHere is what your records show right now:\n- ${lines.join('\n- ')}` : '';
+  return `I can't reach the AI model right now, so I can't reason about that question.${snapshot}\n\nI can still answer direct questions such as "What is my balance?", "How is my spending this month?" or "What liabilities are due soon?".`;
+}
+
 export async function generateResponse(userInput, context = {}, rawHistory = []) {
-  try {
-    const apiKey = (process.env.GEMINI_API_KEY || '').trim();
-    if (!apiKey) {
-      console.warn("GEMINI_API_KEY is missing from environment.");
-      return "Hello! I am FINAURA, your AI financial digital twin. It seems my core Generative AI uplink (GEMINI_API_KEY) is currently missing or disconnected. Once it is configured in the environment, I can provide personalized financial coaching!";
-    }
-
-    const systemPrompt = buildSystemPrompt(context);
-    const normalizedHistory = normalizeConversationHistory(rawHistory);
-
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash",
-      systemInstruction: systemPrompt
-    });
-
-    let responseText = '';
-    if (normalizedHistory.length > 0) {
-      const chat = model.startChat({
-        history: normalizedHistory
-      });
-      const result = await chat.sendMessage(userInput || "Give me a quick financial health summary.");
-      responseText = result.response.text();
-    } else {
-      const result = await model.generateContent(userInput || "Give me a quick financial health summary.");
-      responseText = result.response.text();
-    }
-
-    if (!responseText || typeof responseText !== 'string' || !responseText.trim()) {
-      return "I've analyzed your financial data, but I couldn't generate a detailed response right now. How else can I assist you with your finances today?";
-    }
-
-    return responseText.trim();
-
-  } catch (error) {
-    console.error("AgentService Gemini Error:", error);
-    return "I am currently syncing with my global intelligence network. Let's focus on maintaining your core metrics today. Try asking me again in a moment.";
+  const apiKey = (process.env.GEMINI_API_KEY || '').trim();
+  if (!apiKey) {
+    console.warn("GEMINI_API_KEY is missing from environment.");
+    return buildOfflineSummary(context);
   }
+
+  const systemInstruction = buildSystemPrompt(context);
+  const history = normalizeConversationHistory(rawHistory);
+  const prompt = userInput || "Give me a quick financial health summary.";
+  const genAI = new GoogleGenerativeAI(apiKey);
+
+  for (const name of [...new Set([workingModel, ...GEMINI_MODELS].filter(Boolean))]) {
+    try {
+      // Without a timeout a stalled Gemini request holds the chat open forever.
+      const model = genAI.getGenerativeModel({ model: name, systemInstruction }, { timeout: 15000 });
+      const result = history.length > 0
+        ? await model.startChat({ history }).sendMessage(prompt)
+        : await model.generateContent(prompt);
+      const text = result.response.text();
+      workingModel = name;
+      if (!text || typeof text !== 'string' || !text.trim()) {
+        return "I've analyzed your financial data, but I couldn't generate a detailed response right now. How else can I assist you with your finances today?";
+      }
+      return text.trim();
+    } catch (error) {
+      console.error(`AgentService Gemini Error (${name}):`, error?.message || error);
+      // Retired (404), overloaded (503) or stalled (no status) models are worth another try; bad request, auth and quota errors will repeat.
+      if ([400, 401, 403, 429].includes(error?.status)) break;
+    }
+  }
+  return buildOfflineSummary(context);
 }

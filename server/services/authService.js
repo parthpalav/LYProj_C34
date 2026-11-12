@@ -252,6 +252,19 @@ export async function verifyAndConsumePasswordResetToken(rawToken, newPassword) 
   return user;
 }
 
+/** Signed-in password change. Ends every other session; the caller issues fresh tokens for this one. */
+export async function changePassword(user, currentPassword, newPassword) {
+  const fail = (message) => Object.assign(new Error(message), { status: 400 });
+  if (!(await comparePassword(currentPassword, user.password || user.passwordHash))) throw fail('Current password is incorrect');
+  if (currentPassword === newPassword) throw fail('New password must be different from the current one');
+
+  const hashedPassword = await hashPassword(newPassword);
+  user.password = hashedPassword;
+  user.passwordHash = hashedPassword;
+  await user.save();
+  await RefreshToken.updateMany({ userId: user.id || user._id?.toString() }, { isRevoked: true });
+}
+
 export async function createEmailVerificationToken(user) {
   const rawToken = generateRandomToken();
   const tokenHash = hashToken(rawToken);

@@ -75,6 +75,10 @@ export const ActivityPage: React.FC = () => {
 
   // Transaction modals & actions state
   const [isTxModalOpen, setIsTxModalOpen] = useState(searchParams.get('entry') === 'new');
+  // The top-bar palette can ask for a new entry while this page is already open.
+  useEffect(() => {
+    if (searchParams.get('entry') === 'new') setIsTxModalOpen(true);
+  }, [searchParams]);
   const closeTransaction = () => {
     setIsTxModalOpen(false);
     if (searchParams.has('entry')) {

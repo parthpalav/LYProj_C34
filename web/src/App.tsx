@@ -8,7 +8,6 @@ import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { ResetPasswordPage } from './pages/ResetPasswordPage';
-import { PlaceholderPage } from './pages/PlaceholderPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { CelebrationHost } from './components/ui/CelebrationHost';
 import { LoadingScreen } from './components/ui/LoadingScreen';
@@ -25,6 +24,7 @@ const AssistantPage = React.lazy(() => import('./pages/AssistantPage'));
 const RoundupsPage = React.lazy(() => import('./pages/RoundupsPage'));
 const ReviewPage = React.lazy(() => import('./pages/ReviewPage'));
 const ProfilePage = React.lazy(() => import('./pages/ProfilePage'));
+const SettingsPage = React.lazy(() => import('./pages/SettingsPage'));
 const OnboardingPage = React.lazy(() => import('./pages/OnboardingPage'));
 
 // Same rule as the mobile navigator: either flag marks setup as done.
@@ -167,30 +167,7 @@ export const App: React.FC = () => {
             {/* Profile & Financial Assumptions */}
             <Route path="profile" element={<ProfilePage />} />
 
-            {/* Settings Placeholder */}
-            <Route
-              path="settings"
-              element={
-                <PlaceholderPage
-                  title="Settings"
-                  description="Web portal preferences, session management, and system configuration."
-                  plannedFeatures={[
-                    {
-                      name: 'Session & Authentication',
-                      description: 'Current browser session state (sessionStorage interim policy), token validity, and logout.',
-                    },
-                    {
-                      name: 'Security & Verification',
-                      description: 'Email verification status and password management.',
-                    },
-                    {
-                      name: 'Platform Infrastructure',
-                      description: 'REST API backend connectivity and Python ML classification service status.',
-                    },
-                  ]}
-                />
-              }
-            />
+            <Route path="settings" element={<SettingsPage />} />
           </Route>
 
           {/* Canonical Convenience Redirect */}

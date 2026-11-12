@@ -56,6 +56,18 @@ const FEED_W = SCREEN_W - 48;
 // The Monte Carlo forecast is slow, so returning to Home only re-runs it once a minute.
 const HEAVY_REFRESH_MS = 60_000;
 
+// Home shortcuts. Order follows how often people reach for each one.
+const QUICK_LINKS: Array<{ label: string; route: string; icon: React.ComponentProps<typeof IconTile>['icon']; tint: 'info' | 'warning' | 'success' | 'purple' | 'primary' | 'danger' }> = [
+  { label: 'Net worth', route: 'Assets', icon: 'pie-chart', tint: 'info' },
+  { label: 'Bills', route: 'Liabilities', icon: 'calendar', tint: 'warning' },
+  { label: 'Goals', route: 'Goals', icon: 'flag', tint: 'success' },
+  { label: 'Family', route: 'Family', icon: 'people', tint: 'purple' },
+  { label: 'Insights', route: 'Insights', icon: 'analytics', tint: 'primary' },
+  { label: 'Outlook', route: 'FinancialOutlook', icon: 'telescope', tint: 'info' },
+  { label: 'Round-ups', route: 'Envelopes', icon: 'albums', tint: 'success' },
+  { label: 'Income', route: 'IncomeFlow', icon: 'wallet', tint: 'purple' },
+];
+
 // ── Formatting Helpers ─────────────────────────────────────
 function formatCurrency(n: number | null | undefined): string {
   if (n === null || n === undefined || isNaN(n)) return '₹0';
@@ -240,7 +252,15 @@ export function DashboardScreen(): React.ReactElement {
   const balance = user?.currentBalance ?? dashboard?.balance ?? 0;
   // Auto-deduct liabilities still to come out of the balance this month
   const commitments = dashboard?.commitments;
-  const incomeThisMonth = dashboard?.totalIncome ?? user?.monthlyIncome ?? predictability?.income?.meanMonthlyIncome ?? 0;
+  const incomeReceived = useMemo(() => {
+    if (!income) return null;
+    const now = new Date();
+    return income
+      .filter((r) => { const d = new Date(r.timestamp); return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear(); })
+      .reduce((s, r) => s + r.amount, 0);
+  }, [income]);
+  // dashboard.totalIncome is all-time, so it must not stand in for a month. Before payday, fall back to the declared income.
+  const incomeThisMonth = incomeReceived || user?.monthlyIncome || predictability?.income?.meanMonthlyIncome || 0;
   const spendingThisMonth = dashboard?.wantsNeedsBreakdown?.total ?? fmiData?.totalSpent ?? 0;
   // Same daily series the Spending screen opens on, so the card and the full chart agree
   const dailySpend = useMemo(() => {
@@ -284,14 +304,6 @@ export function DashboardScreen(): React.ReactElement {
       .sort((a, b) => (a.createdAt ? new Date(a.createdAt).getTime() : 0) - (b.createdAt ? new Date(b.createdAt).getTime() : 0))
       .slice(0, 2);
   }, [assets]);
-
-  const incomeReceived = useMemo(() => {
-    if (!income) return null;
-    const now = new Date();
-    return income
-      .filter((r) => { const d = new Date(r.timestamp); return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear(); })
-      .reduce((s, r) => s + r.amount, 0);
-  }, [income]);
 
   const nearestBill = upcomingBills[0] ?? null;
   const daysUntilLiability = nearestBill
@@ -506,6 +518,22 @@ export function DashboardScreen(): React.ReactElement {
             </View>
           </Card>
         </Animated.View>
+
+        {/* ── Quick access: every main feature one tap from Home ── */}
+        <View style={styles.quickGrid}>
+          {QUICK_LINKS.map((q) => (
+            <Pressable
+              key={q.route}
+              onPress={() => navigation.navigate(q.route)}
+              style={({ pressed }) => [styles.quickItem, pressed && { opacity: 0.6 }]}
+              accessibilityRole="button"
+              accessibilityLabel={`Open ${q.label}`}
+            >
+              <IconTile icon={q.icon} tint={c[q.tint]} size={46} />
+              <Text style={styles.quickLabel} numberOfLines={1}>{q.label}</Text>
+            </Pressable>
+          ))}
+        </View>
 
         {/* ── Today feed ───────────────────────────────── */}
         <SectionHeader title="Today" />
@@ -867,6 +895,10 @@ const useStyles = createStyles((c) => ({
   rowTitle: { fontSize: 15, fontWeight: '600', color: c.text },
   rowSub: { fontSize: 12, color: c.textMuted, marginTop: 2 },
   rowAmount: { fontSize: 15, fontWeight: '700', color: c.text, ...tabular },
+
+  quickGrid: { flexDirection: 'row', flexWrap: 'wrap', rowGap: 14, marginTop: 18 },
+  quickItem: { width: '25%', alignItems: 'center', gap: 6, minHeight: 44 },
+  quickLabel: { fontSize: 12, fontWeight: '600', color: c.textMuted },
 
   manageCard: { flexDirection: 'row', gap: 10 },
   tile: { flex: 1, padding: 14, minHeight: 150 },

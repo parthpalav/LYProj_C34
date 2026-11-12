@@ -218,6 +218,31 @@ export async function resetPasswordUser(payload: ResetPasswordPayload): Promise<
   return data;
 }
 
+export async function changePassword(currentPassword: string, newPassword: string): Promise<{ message: string }> {
+  const { data } = await api.post('/api/auth/change-password', { currentPassword, newPassword });
+  // The server signs out every other session and hands this one fresh tokens.
+  tokenStorage.setTokens(data.accessToken, data.refreshToken);
+  return data;
+}
+
+export async function resendVerification(email: string): Promise<{ message: string }> {
+  const { data } = await api.post('/api/auth/resend-verification', { email });
+  return data;
+}
+
+export interface SystemStatus {
+  api: { ok: boolean; uptimeSeconds: number };
+  database: { ok: boolean };
+  ml: { ok: boolean; classifierReady: boolean; latencyMs: number };
+  assistant: { ok: boolean };
+  checkedAt: string;
+}
+
+export async function getSystemStatus(): Promise<SystemStatus> {
+  const { data } = await api.get('/api/system/status');
+  return data.data;
+}
+
 export async function getCurrentUser(): Promise<{ success: boolean; user: User }> {
   const { data } = await api.get('/api/auth/me');
   return data;

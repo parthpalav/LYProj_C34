@@ -164,7 +164,7 @@ export function FamilyOverviewCard({
           </Text>
           <Text style={styles.metricCaption} numberOfLines={1}>
             {dashboard.investments?.investmentRatePercent != null
-              ? `${dashboard.investments.investmentRatePercent}% of income`
+              ? `${Math.round(dashboard.investments.investmentRatePercent)}% of income`
               : 'Monthly flow'}
           </Text>
         </View>

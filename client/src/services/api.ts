@@ -3,7 +3,7 @@ import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 import { secureStorage } from '../utils/secureStorage';
 import {
-  AlertItem, BehaviorPattern, ChatMessage, DashboardData, EnvelopeData,
+  AlertItem, BehaviorPattern, ChatMessage, ChatSession, DashboardData, EnvelopeData,
   FISData, FMIRecord, FMIResponse, Goal, IncomeFlowData, IncomeRecord,
   Transaction, WeeklyReport, User, Liability, LiabilityPaymentSummary,
   LiabilityPaymentHistoryResponse, PredictabilitySnapshot, PredictabilityResponse,
@@ -331,19 +331,36 @@ export async function getAlerts(): Promise<AlertItem[]> {
   return data;
 }
 
+// ── Service status ──────────────────────────────────────────────
+
+export interface SystemStatus {
+  api: { ok: boolean; uptimeSeconds: number };
+  database: { ok: boolean };
+  ml: { ok: boolean; classifierReady: boolean; latencyMs: number };
+  assistant: { ok: boolean };
+  checkedAt: string;
+}
+
+export async function getSystemStatus(): Promise<SystemStatus> {
+  const { data } = await api.get('/api/system/status');
+  return data.data;
+}
+
 // ── Chat (AI assistant) ─────────────────────────────────────────
 
-export async function sendMessageToAgent(
-  message: string,
-  context: Record<string, unknown>
-): Promise<ChatMessage> {
+export async function sendMessageToAgent(message: string, sessionId: string): Promise<ChatMessage> {
   // An agent turn can make several model and tool calls, well past the default 10 s.
-  const { data } = await api.post('/api/agent/chat', { message, context }, { timeout: 90000 });
+  const { data } = await api.post('/api/agent/chat', { message, sessionId }, { timeout: 90000 });
   return data;
 }
 
-export async function getChatHistory(): Promise<ChatMessage[]> {
-  const { data } = await api.get('/api/agent/history');
+export async function getChatHistory(sessionId: string): Promise<ChatMessage[]> {
+  const { data } = await api.get('/api/agent/history', { params: { sessionId } });
+  return data;
+}
+
+export async function getChatSessions(): Promise<ChatSession[]> {
+  const { data } = await api.get('/api/agent/sessions');
   return data;
 }
 

@@ -23,6 +23,7 @@ const FamilyPage = React.lazy(() => import('./pages/FamilyPage').then((m) => ({ 
 const AssistantPage = React.lazy(() => import('./pages/AssistantPage'));
 const RoundupsPage = React.lazy(() => import('./pages/RoundupsPage'));
 const ReviewPage = React.lazy(() => import('./pages/ReviewPage'));
+const RecapPage = React.lazy(() => import('./pages/RecapPage'));
 const ProfilePage = React.lazy(() => import('./pages/ProfilePage'));
 const SettingsPage = React.lazy(() => import('./pages/SettingsPage'));
 const OnboardingPage = React.lazy(() => import('./pages/OnboardingPage'));
@@ -163,6 +164,7 @@ export const App: React.FC = () => {
             <Route path="assistant" element={<AssistantPage />} />
             <Route path="roundups" element={<RoundupsPage />} />
             <Route path="review" element={<ReviewPage />} />
+            <Route path="recap" element={<RecapPage />} />
 
             {/* Profile & Financial Assumptions */}
             <Route path="profile" element={<ProfilePage />} />

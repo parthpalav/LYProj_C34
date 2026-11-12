@@ -22,6 +22,7 @@ export const DESTINATIONS: Destination[] = [
   { label: 'Net worth', hint: 'Assets, loans, cards and bills', to: '/app/net-worth', keywords: 'assets liabilities balance sheet' },
   { label: 'Liabilities', hint: 'Loans, credit cards, bills', to: '/app/net-worth?tab=liabilities', keywords: 'emi card bill due pay' },
   { label: 'Net worth breakdown', hint: 'Where your wealth sits', to: '/app/net-worth?tab=breakdown', keywords: 'allocation chart' },
+  { label: 'Play monthly recap', hint: 'Your month as a short story', to: '/app/recap', keywords: 'wrapped summary story month' },
   { label: 'Round-ups', hint: 'Save the loose change', to: '/app/roundups', keywords: 'vault savings envelope' },
   { label: 'Spending insights', hint: 'Trends, categories and calendar', to: '/app/insights', keywords: 'analytics chart heatmap' },
   { label: 'FMI health', hint: 'Your Financial Maturity Index and why', to: '/app/insights?tab=fmi', keywords: 'score pillars history' },

@@ -1,23 +1,38 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Activity, ArrowUp, CalendarClock, Check, Flame, Fuel, Mic, PieChart, ReceiptText, Sparkles, Square, Utensils, X } from 'lucide-react';
+import { ArrowUp, Check, History, Mic, Sparkles, Square, SquarePen, X } from 'lucide-react';
 import { PageHeader } from '../components/ui/PageHeader';
 import { useAuth } from '../hooks/useAuth';
-import { getChatHistory, sendMessageToAgent } from '../services/api';
+import { getChatHistory, getChatSessions, sendMessageToAgent } from '../services/api';
 import { getUserFirstName } from '../utils/formatters';
-import type { ChatMessage } from '../types';
+import type { ChatMessage, ChatSession } from '../types';
 import { getAppTimezone } from '../utils/timezone';
 import { useSpeechInput } from '../hooks/useSpeechInput';
 
-// Same grounded prompts as the mobile assistant.
+// Starters shown before the first message of a session. Same list as the mobile assistant.
 const QUICK_PROMPTS = [
-  { text: 'I spent ₹250 on chai and snacks', icon: ReceiptText },
-  { text: 'Aaj 500 ka petrol dalwaya', icon: Fuel },
-  { text: 'How is my spending this month?', icon: PieChart },
-  { text: 'Why is my FMI changing?', icon: Activity },
-  { text: 'When could I reach FIRE?', icon: Flame },
-  { text: 'What liabilities are due soon?', icon: CalendarClock },
-  { text: 'How much have I spent on Food & Dining?', icon: Utensils },
+  'How am I doing overall?',
+  'How is my spending this month?',
+  'Where did most of my money go this month?',
+  'Am I within my 50/30/20 budget?',
+  'What is my balance right now?',
+  'How much can I safely spend this week?',
+  'Why is my FMI changing?',
+  'What would raise my FMI the fastest?',
+  'What liabilities are due soon?',
+  'Which wants could I cut back on?',
+  'How much have I spent on Food & Dining?',
+  'How much did I invest this month?',
+  'How can I improve my savings rate?',
+  'When could I reach FIRE?',
+  'How much more should I invest each month for FIRE?',
+  'Are my goals on track?',
+  'What spending habits do you see?',
+  'I spent ₹250 on chai and snacks',
+  'Aaj 500 ka petrol dalwaya',
+  'Add ₹5,000 invested in a mutual fund SIP',
 ];
+
+const newSessionId = () => `s-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
 // Speech languages. Hindi mode also copes with mixed Hindi-English speech.
 const VOICE_LANGS = [
@@ -133,7 +148,7 @@ export const AssistantPage: React.FC = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
-  const [loadingHistory, setLoadingHistory] = useState(true);
+  const [loadingHistory, setLoadingHistory] = useState(false);
   const [failed, setFailed] = useState<{ id: string; text: string } | null>(null);
   const [freshId, setFreshId] = useState<string | null>(null);
   const logRef = useRef<HTMLDivElement>(null);
@@ -152,17 +167,34 @@ export const AssistantPage: React.FC = () => {
     try { localStorage.setItem('finaura.voiceLang', nextLang.code); } catch { /* preference just won't persist */ }
   };
 
-  useEffect(() => {
-    let mounted = true;
-    getChatHistory()
-      .then((history) => {
-        if (!mounted) return;
-        setMessages([...history].sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()));
-      })
+  // Sessions: opening the assistant starts a new chat; older ones stay saved and can be reopened from the header.
+  const sessionRef = useRef(newSessionId());
+  const [sessions, setSessions] = useState<ChatSession[] | null>(null); // null = list closed
+
+  const startNewChat = () => {
+    sessionRef.current = newSessionId();
+    setSessions(null);
+    setMessages([]);
+    setFailed(null);
+    setSending(false);
+  };
+
+  const toggleSessions = () => {
+    if (sessions) return setSessions(null);
+    setSessions([]);
+    getChatSessions().then((list) => setSessions((open) => open && list)).catch(() => {});
+  };
+
+  const openSession = (id: string) => {
+    startNewChat();
+    sessionRef.current = id;
+    settled.current = false;
+    setLoadingHistory(true);
+    getChatHistory(id)
+      .then((history) => { if (sessionRef.current === id) setMessages(history); })
       .catch(() => { /* empty history is fine; the greeting still shows */ })
-      .finally(() => mounted && setLoadingHistory(false));
-    return () => { mounted = false; };
-  }, []);
+      .finally(() => setLoadingHistory(false));
+  };
 
   // Saved history lands at the end at once; later messages glide into view.
   useEffect(() => {
@@ -186,16 +218,19 @@ export const AssistantPage: React.FC = () => {
     setInput('');
     setFailed(null);
     setSending(true);
+    const session = sessionRef.current;
     try {
-      const reply = await sendMessageToAgent(trimmed);
+      const reply = await sendMessageToAgent(trimmed, session);
+      if (sessionRef.current !== session) return; // the user moved to another chat; the reply is saved with its own session
       setFreshId(reply.id);
       setMessages((m) => [...m, reply]);
     } catch {
+      if (sessionRef.current !== session) return;
       const id = `e-${Date.now()}`;
       setFailed({ id, text: trimmed });
       setMessages((m) => [...m, { id, role: 'assistant', content: "I couldn't reach FINAURA's assistant right now. Please check your connection and try again.", timestamp: new Date().toISOString() }]);
     } finally {
-      setSending(false);
+      if (sessionRef.current === session) setSending(false);
     }
   };
 
@@ -214,7 +249,26 @@ export const AssistantPage: React.FC = () => {
             </span>
           </div>
           {speech.listening && <span className="chat-wave" aria-hidden="true"><i /><i /><i /><i /><i /></span>}
+          <div className="chat-head-actions">
+            <button type="button" className="chat-lang" onClick={toggleSessions} aria-expanded={Boolean(sessions)} aria-label="Past chats" title="Past chats">
+              <History size={16} />
+            </button>
+            <button type="button" className="chat-lang" onClick={startNewChat} aria-label="New chat" title="New chat">
+              <SquarePen size={16} />
+            </button>
+          </div>
         </header>
+        {sessions && (
+          <div className="chat-sessions" aria-label="Past chats">
+            {sessions.length === 0 && <p className="parity-muted">No saved chats yet.</p>}
+            {sessions.map((x) => (
+              <button key={x.id} type="button" onClick={() => openSession(x.id)}>
+                <strong>{x.title}</strong>
+                <span>{new Date(x.updatedAt).toLocaleDateString('en-IN', { timeZone: getAppTimezone(), day: 'numeric', month: 'short', year: 'numeric' })} · {x.messages} messages</span>
+              </button>
+            ))}
+          </div>
+        )}
         <div className="chat-log" ref={logRef} aria-live="polite">
           {loadingHistory ? (
             <p className="parity-muted">Loading your conversation…</p>
@@ -251,9 +305,8 @@ export const AssistantPage: React.FC = () => {
         </div>
         {!loadingHistory && messages.length === 0 && (
           <div className="chat-prompts">
-            {QUICK_PROMPTS.map(({ text, icon: Icon }, i) => (
+            {QUICK_PROMPTS.map((text, i) => (
               <button key={text} type="button" className="parity-chip" style={{ '--i': i } as React.CSSProperties} onClick={() => send(text)} disabled={sending}>
-                <Icon size={14} aria-hidden />
                 {text}
               </button>
             ))}

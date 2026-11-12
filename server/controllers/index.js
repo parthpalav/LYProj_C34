@@ -1582,10 +1582,38 @@ router.get('/dashboard', async (req, res, next) => {
 // AGENT CHAT
 // ═══════════════════════════════════════════════════════════
 
+// Chat sessions: the client names each conversation with an id. 'legacy' is the turns saved before sessions existed.
+// No sessionId at all (older clients) means the user's whole history, as before.
+const LEGACY_SESSION = 'legacy';
+function sessionFilter(userId, sessionId) {
+  if (sessionId === undefined || sessionId === null || sessionId === '') return { userId };
+  if (typeof sessionId !== 'string' || !/^[\w-]{1,64}$/.test(sessionId)) return null;
+  return { userId, sessionId: sessionId === LEGACY_SESSION ? null : sessionId };
+}
+
+router.get('/agent/sessions', async (req, res, next) => {
+  try {
+    const sessions = await AgentMemory.aggregate([
+      { $match: { userId: req.user.id } },
+      { $sort: { timestamp: 1 } },
+      { $group: { _id: '$sessionId', title: { $first: '$content' }, updatedAt: { $max: '$timestamp' }, messages: { $sum: 1 } } },
+      { $sort: { updatedAt: -1 } },
+      { $limit: 50 },
+    ]);
+    res.json(sessions.map((x) => ({
+      id:        x._id ?? LEGACY_SESSION,
+      title:     x.title.slice(0, 80),
+      updatedAt: x.updatedAt,
+      messages:  x.messages,
+    })));
+  } catch (error) { next(error); }
+});
+
 router.get('/agent/history', async (req, res, next) => {
   try {
-    const userId = req.user.id;
-    const historyDocs = await AgentMemory.find({ userId }).sort({ timestamp: -1 }).limit(100).lean();
+    const filter = sessionFilter(req.user.id, req.query.sessionId);
+    if (!filter) return res.status(400).json({ error: 'Invalid sessionId' });
+    const historyDocs = await AgentMemory.find(filter).sort({ timestamp: -1 }).limit(100).lean();
     const history = historyDocs.reverse();
     res.json(history.map((m) => ({
       id:        m._id.toString(),
@@ -1609,13 +1637,16 @@ router.post('/agent/chat', aiChatRateLimiter, async (req, res, next) => {
     if (message.length > 2000) {
       return res.status(400).json({ error: 'Message cannot exceed 2000 characters' });
     }
+    const filter = sessionFilter(userId, req.body.sessionId);
+    if (!filter) return res.status(400).json({ error: 'Invalid sessionId' });
+    const sessionId = filter.sessionId ?? undefined;
 
     // 1. Fetch prior conversation history before saving current user message (deduplication guarantee)
-    const priorHistoryDocs = await AgentMemory.find({ userId }).sort({ timestamp: -1 }).limit(10).lean();
+    const priorHistoryDocs = await AgentMemory.find(filter).sort({ timestamp: -1 }).limit(10).lean();
     const priorHistory = priorHistoryDocs.reverse();
 
     // 2. Persist current user message
-    await AgentMemory.create({ userId, role: 'user', content: message });
+    await AgentMemory.create({ userId, sessionId, role: 'user', content: message });
 
     // 3. Build verified deterministic financial context (fresh on every turn)
     const context = await buildChatContext(userId);
@@ -1653,7 +1684,7 @@ router.post('/agent/chat', aiChatRateLimiter, async (req, res, next) => {
     }
 
     // 5. Persist assistant response (shared persistence for both deterministic & Gemini paths)
-    const saved = await AgentMemory.create({ userId, role: 'assistant', content: response });
+    const saved = await AgentMemory.create({ userId, sessionId, role: 'assistant', content: response });
 
     res.json({
       id:        saved._id.toString(),

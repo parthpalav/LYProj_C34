@@ -8,15 +8,18 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
   cancelAnimation, Easing, FadeIn, FadeInLeft, FadeInRight, FadeOut, useAnimatedStyle, useReducedMotion, useSharedValue, withDelay, withRepeat, withSequence, withTiming,
 } from 'react-native-reanimated';
-import { getChatHistory, sendMessageToAgent } from '../services/api';
+import { useFocusEffect } from '@react-navigation/native';
+import { getChatHistory, getChatSessions, sendMessageToAgent } from '../services/api';
 import { useStore } from '../store/useStore';
-import { ChatMessage } from '../types';
+import { ChatMessage, ChatSession } from '../types';
 import { duration, easing, enterUp, popIn } from '../motion';
 import { PressableScale } from '../components/motion/PressableScale';
 import { createStyles, radius, shadow, typeScale, useTheme } from '../theme';
 import { useTabBarSpace } from '../components/navigation/TabBar';
 import { Chip } from '../components/ui/Bits';
 import { ThemeToggle } from '../components/ui/ThemeToggle';
+import { Sheet } from '../components/ui/Sheet';
+import { formatDay } from '../components/ui/DateField';
 import { useSpeechInput } from '../utils/useSpeechInput';
 
 const finauraLogo = require('../assets/finaura_logo.png');
@@ -54,15 +57,31 @@ const enterUser = FadeInRight.duration(duration.base).easing(easing.standard).wi
 const enterBot = FadeInLeft.duration(duration.base).easing(easing.standard).withInitialValues({ opacity: 0, transform: [{ translateX: -6 }] });
 
 // ── Grounded Quick Prompts ─────────────────────────────────
+// Starters shown before the first message of a session: a spread of what the assistant can read and do.
 const QUICK_PROMPTS = [
+  'How am I doing overall?',
+  'How is my spending this month?',
+  'Where did most of my money go this month?',
+  'Am I within my 50/30/20 budget?',
+  'What is my balance right now?',
+  'How much can I safely spend this week?',
+  'Why is my FMI changing?',
+  'What would raise my FMI the fastest?',
+  'What liabilities are due soon?',
+  'Which wants could I cut back on?',
+  'How much have I spent on Food & Dining?',
+  'How much did I invest this month?',
+  'How can I improve my savings rate?',
+  'When could I reach FIRE?',
+  'How much more should I invest each month for FIRE?',
+  'Are my goals on track?',
+  'What spending habits do you see?',
   'I spent ₹250 on chai and snacks',
   'Aaj 500 ka petrol dalwaya',
-  'How is my spending this month?',
-  'Why is my FMI changing?',
-  'When could I reach FIRE?',
-  'What liabilities are due soon?',
-  'How much have I spent on Food & Dining?',
+  'Add ₹5,000 invested in a mutual fund SIP',
 ];
+
+const newSessionId = () => `s-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
 // Speech languages. Hindi mode also copes with mixed Hindi-English speech.
 const VOICE_LANGS = [
@@ -217,7 +236,7 @@ export function ChatScreen(): React.ReactElement {
   const [input,           setInput]           = useState('');
   const [loading,         setLoading]         = useState(false);
   const [fetchingHistory, setFetchingHistory] = useState(false);
-  const [showPrompts,     setShowPrompts]     = useState(true);
+  const [showPrompts,     setShowPrompts]     = useState(false);
   // Replies that arrived in this session get the typewriter reveal; history renders instantly.
   const [freshId,         setFreshId]         = useState<string | null>(null);
   const [failed,          setFailed]          = useState<{ id: string; text: string } | null>(null);
@@ -226,34 +245,39 @@ export function ChatScreen(): React.ReactElement {
 
   const userName = user?.name?.split(' ')[0] ?? 'there';
 
-  // Hydrate chat history from backend on mount
-  useEffect(() => {
-    let isMounted = true;
-    async function loadHistory() {
-      try {
-        setFetchingHistory(true);
-        const history = await getChatHistory();
-        if (isMounted && Array.isArray(history) && history.length > 0) {
-          const sorted = [...history].sort(
-            (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
-          );
-          setChatHistory(sorted);
-          setShowPrompts(false);
-        }
-      } catch (err) {
-        console.warn('Failed to load chat history:', err);
-      } finally {
-        if (isMounted) {
-          setFetchingHistory(false);
-          setTimeout(() => listRef.current?.scrollToEnd({ animated: false }), 150);
-        }
-      }
-    }
-    loadHistory();
-    return () => {
-      isMounted = false;
-    };
+  // Sessions: opening the assistant starts a new chat; older ones stay saved and can be reopened from the header.
+  const sessionRef = useRef(newSessionId());
+  const [sessions,    setSessions]    = useState<ChatSession[]>([]);
+  const [historyOpen, setHistoryOpen] = useState(false);
+
+  const startNewChat = useCallback(() => {
+    sessionRef.current = newSessionId();
+    setChatHistory([]);
+    setShowPrompts(false);
+    setFailed(null);
+    setLoading(false);
   }, [setChatHistory]);
+  useFocusEffect(startNewChat);
+
+  const openHistory = () => {
+    setHistoryOpen(true);
+    getChatSessions().then(setSessions).catch(() => setSessions([]));
+  };
+
+  const openSession = async (id: string) => {
+    setHistoryOpen(false);
+    startNewChat();
+    sessionRef.current = id;
+    setFetchingHistory(true);
+    try {
+      const history = await getChatHistory(id);
+      if (sessionRef.current === id) setChatHistory(history);
+    } catch (err) {
+      console.warn('Failed to load chat session:', err);
+    } finally {
+      setFetchingHistory(false);
+    }
+  };
 
   const INITIAL_MESSAGES: ChatMessage[] = [
     {
@@ -284,11 +308,14 @@ export function ChatScreen(): React.ReactElement {
     setFailed(null);
     setLoading(true);
 
+    const session = sessionRef.current;
     try {
-      const aiMsg = await sendMessageToAgent(trimmed, {});
+      const aiMsg = await sendMessageToAgent(trimmed, session);
+      if (sessionRef.current !== session) return; // the user moved to another chat; the reply is saved with its own session
       setFreshId(aiMsg.id);
       addChatMessage(aiMsg);
     } catch {
+      if (sessionRef.current !== session) return;
       const errorId = `e-${Date.now()}`;
       setFailed({ id: errorId, text: trimmed });
       addChatMessage({
@@ -298,7 +325,7 @@ export function ChatScreen(): React.ReactElement {
         timestamp: new Date().toISOString(),
       });
     } finally {
-      setLoading(false);
+      if (sessionRef.current === session) setLoading(false);
       setTimeout(() => listRef.current?.scrollToEnd({ animated: true }), 100);
     }
   }, [loading, addChatMessage]);
@@ -336,6 +363,11 @@ export function ChatScreen(): React.ReactElement {
                 <Text style={s.emptySub}>
                   Grounded in your verified operating balance, spending habits, FMI pillars, and FIRE milestones.
                 </Text>
+                <View style={s.starters}>
+                  {QUICK_PROMPTS.map((p) => (
+                    <Chip key={p} label={p} onPress={() => sendMessage(p)} style={s.pill} />
+                  ))}
+                </View>
               </Animated.View>
             ) : undefined
           }
@@ -442,8 +474,26 @@ export function ChatScreen(): React.ReactElement {
           <Text style={s.headerTitle}>FINAURA AI</Text>
           <Text style={s.headerSub}>{fetchingHistory && storeHistory.length === 0 ? 'Loading your conversation…' : loading ? 'Thinking…' : 'Answers from your own numbers'}</Text>
         </View>
+        <Pressable onPress={openHistory} style={s.ideaBtn} accessibilityRole="button" accessibilityLabel="Past chats">
+          <Ionicons name="time-outline" size={18} color={c.textMuted} />
+        </Pressable>
+        <Pressable onPress={startNewChat} style={s.ideaBtn} accessibilityRole="button" accessibilityLabel="New chat">
+          <Ionicons name="create-outline" size={18} color={c.textMuted} />
+        </Pressable>
         <ThemeToggle />
       </View>
+
+      <Sheet visible={historyOpen} onClose={() => setHistoryOpen(false)} title="Past chats">
+        <ScrollView style={s.sessionList}>
+          {sessions.length === 0 ? <Text style={s.sessionMeta}>No saved chats yet.</Text> : null}
+          {sessions.map((x) => (
+            <Pressable key={x.id} onPress={() => openSession(x.id)} style={s.sessionRow} accessibilityRole="button">
+              <Text style={s.sessionTitle} numberOfLines={1}>{x.title}</Text>
+              <Text style={s.sessionMeta}>{formatDay(new Date(x.updatedAt))} · {x.messages} messages</Text>
+            </Pressable>
+          ))}
+        </ScrollView>
+      </Sheet>
     </View>
   );
 }
@@ -490,6 +540,12 @@ const useSStyles = createStyles((c) => ({
   },
   emptyTitle: { ...typeScale.headline, color: c.text, textAlign: 'center' },
   emptySub: { ...typeScale.body, fontSize: 14, color: c.textMuted, textAlign: 'center', marginTop: 6 },
+
+  starters: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: 8, marginTop: 16 },
+  sessionList: { maxHeight: 420 },
+  sessionRow: { paddingVertical: 12, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: c.border },
+  sessionTitle: { ...typeScale.body, fontSize: 15, fontWeight: '600', color: c.text },
+  sessionMeta: { ...typeScale.caption, color: c.textMuted, marginTop: 2 },
 
   list:          { padding: 16, paddingBottom: 12, gap: 14 },
   bubbleRow:     { flexDirection: 'row', alignItems: 'flex-end', gap: 8 },

@@ -528,6 +528,14 @@ export interface TransactionPayload {
   paymentMethodId?: string | null;
 }
 
+/** One saved assistant conversation, titled by its first message. */
+export interface ChatSession {
+  id: string;
+  title: string;
+  updatedAt: string;
+  messages: number;
+}
+
 export interface ChatMessage {
   id: string;
   role: 'user' | 'assistant';

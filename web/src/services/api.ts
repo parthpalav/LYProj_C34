@@ -34,6 +34,7 @@ import type {
   FamilyDashboard,
   FamilyDashboardResponse,
   ChatMessage,
+  ChatSession,
   EnvelopeData,
   SubscriptionSuggestion,
   PurchasePredictions,
@@ -593,13 +594,18 @@ export async function updateCurrentBalance(
 
 // ── AI Assistant ──────────────────────────────────────────────
 
-export async function sendMessageToAgent(message: string): Promise<ChatMessage> {
-  const { data } = await api.post('/api/agent/chat', { message, context: {} }, { timeout: 90000 });
+export async function sendMessageToAgent(message: string, sessionId: string): Promise<ChatMessage> {
+  const { data } = await api.post('/api/agent/chat', { message, sessionId }, { timeout: 90000 });
   return data;
 }
 
-export async function getChatHistory(): Promise<ChatMessage[]> {
-  const { data } = await api.get('/api/agent/history');
+export async function getChatHistory(sessionId: string): Promise<ChatMessage[]> {
+  const { data } = await api.get('/api/agent/history', { params: { sessionId } });
+  return Array.isArray(data) ? data : [];
+}
+
+export async function getChatSessions(): Promise<ChatSession[]> {
+  const { data } = await api.get('/api/agent/sessions');
   return Array.isArray(data) ? data : [];
 }
 

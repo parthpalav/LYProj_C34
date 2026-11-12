@@ -10,7 +10,7 @@ import { useStore } from '../store/useStore';
 import { useAuthStore } from '../store/useAuthStore';
 import { useThemeStore } from '../store/useThemeStore';
 import { toast } from '../store/useCelebrationStore';
-import { changePasswordUser, getUserProfile, updateUserProfileApi } from '../services/api';
+import { changePasswordUser, getSystemStatus, getUserProfile, updateUserProfileApi, type SystemStatus } from '../services/api';
 import { User } from '../types';
 import { createStyles, radius, typeScale, useTheme } from '../theme';
 import { enterUp } from '../motion';
@@ -105,6 +105,31 @@ export function ProfileScreen(): React.ReactElement {
 
   // Change password sheet
   const [pwOpen, setPwOpen] = useState(false);
+
+  // Service status (same checks as the web Settings page).
+  const [statusOpen, setStatusOpen] = useState(false);
+  const [status, setStatus] = useState<SystemStatus | null>(null);
+  const [statusFailed, setStatusFailed] = useState(false);
+  const [checking, setChecking] = useState(false);
+  const checkStatus = async () => {
+    setChecking(true);
+    try {
+      setStatus(await getSystemStatus());
+      setStatusFailed(false);
+    } catch {
+      setStatusFailed(true);
+    } finally {
+      setChecking(false);
+    }
+  };
+  const openStatus = () => { setStatusOpen(true); checkStatus(); };
+  const uptime = (sec: number) => (sec < 3600 ? `${Math.max(1, Math.round(sec / 60))} min` : sec < 86400 ? `${Math.round(sec / 3600)} h` : `${Math.round(sec / 86400)} d`);
+  const services: { name: string; detail: string; ok?: boolean }[] = [
+    { name: 'API server', detail: status ? `Running for ${uptime(status.api.uptimeSeconds)}` : 'Not reachable', ok: statusFailed ? false : status?.api.ok },
+    { name: 'Database', detail: status?.database.ok ? 'Connected' : 'Not connected', ok: status?.database.ok },
+    { name: 'Classifier (ML service)', detail: status?.ml.ok ? (status.ml.classifierReady ? `Model loaded, answered in ${status.ml.latencyMs} ms` : 'Running, model still loading') : 'Offline: new expenses use keyword rules', ok: status?.ml.ok },
+    { name: 'AI assistant', detail: status?.assistant.ok ? 'Connected' : 'No API key set: the assistant answers direct questions only', ok: status?.assistant.ok },
+  ];
   const [pw, setPw] = useState({ current: '', next: '', confirm: '' });
   const [pwError, setPwError] = useState<string | null>(null);
   const [pwBusy, setPwBusy] = useState(false);
@@ -415,6 +440,9 @@ export function ProfileScreen(): React.ReactElement {
               <View style={s.divider}>
                 <ListRow icon="lock-closed-outline" tint={c.textMuted} title="Change password" subtitle="Signs out your other devices" onPress={() => setPwOpen(true)} />
               </View>
+              <View style={s.divider}>
+                <ListRow icon="pulse-outline" tint={c.textMuted} title="Service status" subtitle="Server, database, classifier and assistant" onPress={openStatus} />
+              </View>
             </View>
           </Card>
 
@@ -431,6 +459,19 @@ export function ProfileScreen(): React.ReactElement {
         <Field label="Confirm new password" icon="key-outline" secureTextEntry={!showPassword} trailing={pwToggle} autoCapitalize="none" value={pw.confirm} onChangeText={(v) => setPw((p) => ({ ...p, confirm: v }))} />
         {pwError && <Text style={s.pwError} accessibilityRole="alert">{pwError}</Text>}
         <Button label="Change password" icon="checkmark-circle-outline" onPress={savePassword} loading={pwBusy} style={s.save} />
+      </Sheet>
+
+      <Sheet visible={statusOpen} onClose={() => setStatusOpen(false)} title="Service status">
+        {services.map((x) => (
+          <ListRow
+            key={x.name}
+            icon={x.ok ? 'checkmark-circle' : x.ok === false || statusFailed ? 'close-circle' : 'ellipse-outline'}
+            tint={x.ok ? c.success : x.ok === false || statusFailed ? c.danger : c.textMuted}
+            title={x.name}
+            subtitle={status || statusFailed ? x.detail : 'Checking…'}
+          />
+        ))}
+        <Button label="Check again" icon="refresh" variant="secondary" onPress={checkStatus} loading={checking} style={s.save} />
       </Sheet>
 
       <Sheet visible={tzOpen} onClose={() => setTzOpen(false)} title="Timezone">

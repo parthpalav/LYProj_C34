@@ -86,16 +86,18 @@ export function InsightsScreen() {
                 {([['Needs', c.info], ['Wants', c.warning], ['Investments', c.success]] as const).map(([key, color], i) => {
                   const row = pacing[key];
                   const over = row.limit > 0 && row.actual > row.limit;
+                  // Investing past the target is a win, so it stays green.
+                  const bad = over && key !== 'Investments';
                   return (
                     <View key={key} style={[s.paceRow, i > 0 && s.paceGap]}>
                       <View style={s.paceTop}>
                         <Text style={s.paceLabel}>{key}</Text>
-                        <Text style={[s.paceValue, over && { color: c.dangerStrong }]}>
+                        <Text style={[s.paceValue, over && { color: bad ? c.dangerStrong : c.successStrong }]}>
                           {formatCurrency(row.actual)} <Text style={s.paceLimit}>of {formatCurrency(row.limit)}</Text>
                         </Text>
                       </View>
-                      <AnimatedBar progress={row.limit > 0 ? row.actual / row.limit : 0} color={over ? c.danger : color} height={8} delay={i * 120} />
-                      {over && <Text style={s.over}>Over by {formatCurrency(row.actual - row.limit)}</Text>}
+                      <AnimatedBar progress={row.limit > 0 ? row.actual / row.limit : 0} color={bad ? c.danger : color} height={8} delay={i * 120} />
+                      {over && <Text style={[s.over, !bad && { color: c.successStrong }]}>{bad ? 'Over' : 'Ahead'} by {formatCurrency(row.actual - row.limit)}</Text>}
                     </View>
                   );
                 })}

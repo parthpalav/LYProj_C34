@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
+import { ArrowLeft } from 'lucide-react';
 import {
   ResponsiveContainer,
   BarChart,
@@ -17,6 +18,8 @@ import { changeFrom, pickFromChart, pickOpacity, useChartPick } from '../../util
 
 export interface SpendingTrendChartProps {
   data: SpendingTrendPoint[];
+  /** day-by-day points inside the bucket at this index; enables click-to-expand */
+  daysOf?: (index: number) => SpendingTrendPoint[];
 }
 
 const CustomTooltip = ({ active, payload, label }: any) => {
@@ -57,6 +60,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 
 export const SpendingTrendChart: React.FC<SpendingTrendChartProps> = ({
   data,
+  daysOf,
 }) => {
 
   const hasData = data.some((d) => d.total > 0);
@@ -66,14 +70,33 @@ export const SpendingTrendChart: React.FC<SpendingTrendChartProps> = ({
   const share = (part: number) => (month && month.total > 0 ? `${Math.round((part / month.total) * 100)}% of outflow` : '');
   const dim = data.map((_, i) => <Cell key={i} fillOpacity={pickOpacity(pick.index, i)} />);
 
+  // Picking a bucket swaps the chart to that bucket's days; a click outside the card or Esc swaps back.
+  const days = useMemo(() => (pick.open && daysOf ? daysOf(pick.shown) : []), [pick.open, pick.shown, daysOf]);
+  const drilled = days.length > 1;
+  const card = useRef<HTMLDivElement>(null);
+  const close = pick.close;
+  useEffect(() => {
+    if (!drilled) return;
+    const onDown = (e: MouseEvent) => { if (!card.current?.contains(e.target as Node)) close(); };
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') close(); };
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onDown);
+      document.removeEventListener('keydown', onKey);
+    };
+    // close is omitted from the deps: it only does a functional setState, and is a new function each render
+  }, [drilled]);
+  const bar = drilled ? { stackId: 'day', maxBarSize: 28 } : { radius: [4, 4, 0, 0] as [number, number, number, number], maxBarSize: 32 };
+
   return (
-    <div className="insights-chart-card">
+    <div className="insights-chart-card" ref={card}>
       <div className="chart-header-row">
         <div>
           <span className="overview-context-badge">OUTFLOW TRAJECTORY</span>
           <h3 className="card-title">Spending Trend</h3>
           <p className="card-subtitle">
-            Historical outflow patterns across Needs, Wants, and Investments
+            {drilled ? `Day-by-day outflow in ${month.monthLabel}` : 'Historical outflow patterns across Needs, Wants, and Investments'}
           </p>
         </div>
       </div>
@@ -85,9 +108,14 @@ export const SpendingTrendChart: React.FC<SpendingTrendChartProps> = ({
           </p>
         </div>
       ) : (
-        <div className="chart-svg-container chart-pickable" style={{ height: '320px', width: '100%' }}>
+        <div key={drilled ? month.monthKey : 'all'} className={`chart-svg-container ${drilled ? 'chart-drilled' : 'chart-pickable'}`} style={{ height: '320px', width: '100%' }}>
+          {drilled && (
+            <button type="button" className="chart-back" onClick={close}>
+              <ArrowLeft size={14} aria-hidden="true" /> Back
+            </button>
+          )}
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={data} margin={{ top: 16, right: 16, left: -8, bottom: 8 }} onClick={pickFromChart(pick.toggle)}>
+            <BarChart data={drilled ? days : data} margin={{ top: 16, right: 16, left: -8, bottom: 8 }} onClick={drilled ? undefined : pickFromChart(pick.toggle)}>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-subtle, #e2e8f0)" />
               <XAxis
                 dataKey="monthLabel"
@@ -110,14 +138,14 @@ export const SpendingTrendChart: React.FC<SpendingTrendChartProps> = ({
                 iconType="circle"
                 wrapperStyle={{ paddingBottom: '12px', fontSize: '12px' }}
               />
-              <Bar dataKey="needs" name="Needs" fill="#3b82f6" radius={[4, 4, 0, 0]} maxBarSize={32} animationDuration={600}>{dim}</Bar>
-              <Bar dataKey="wants" name="Wants" fill="#f59e0b" radius={[4, 4, 0, 0]} maxBarSize={32} animationDuration={600}>{dim}</Bar>
-              <Bar dataKey="investments" name="Investments" fill="#10b981" radius={[4, 4, 0, 0]} maxBarSize={32} animationDuration={600}>{dim}</Bar>
+              <Bar dataKey="needs" name="Needs" fill="#3b82f6" {...bar} animationDuration={600}>{!drilled && dim}</Bar>
+              <Bar dataKey="wants" name="Wants" fill="#f59e0b" {...bar} animationDuration={600}>{!drilled && dim}</Bar>
+              <Bar dataKey="investments" name="Investments" fill="#10b981" {...bar} animationDuration={600}>{!drilled && dim}</Bar>
             </BarChart>
           </ResponsiveContainer>
         </div>
       )}
-      {hasData && !pick.open && <p className="chart-hint">Select a month to see its summary</p>}
+      {hasData && !pick.open && <p className="chart-hint">Select a bar to expand it into days</p>}
       {hasData && month && (
         <ChartDetail open={pick.open} title={month.monthLabel} onClose={pick.close}>
           <dl className="chart-detail-stats">

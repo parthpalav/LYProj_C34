@@ -9,7 +9,30 @@ import type {
 } from '../types';
 import { getTransactionDate } from '../utils/formatters';
 import { daysInMonth, getAppTimezone, zdate, zparts } from '../utils/timezone';
-import { bucketIndex, bucketsFor, chartStart, inRange, type DateRange } from '../utils/dateRange';
+import { bucketIndex, bucketsFor, chartStart, inRange, type Bucket, type DateRange } from '../utils/dateRange';
+
+/** Needs / Wants / Investments outflow per bucket. */
+function trendPoints(buckets: Bucket[], txs: Transaction[]): SpendingTrendPoint[] {
+  const totals = buckets.map(() => ({ needs: 0, wants: 0, investments: 0, total: 0 }));
+  txs.forEach((tx) => {
+    const i = bucketIndex(buckets, getTransactionDate(tx));
+    if (i < 0) return;
+    const amt = Math.abs(Number(tx.amount) || 0);
+    const type = tx.type || 'Need';
+    if (type === 'Need') totals[i].needs += amt;
+    else if (type === 'Want') totals[i].wants += amt;
+    else if (type === 'Investment') totals[i].investments += amt;
+    totals[i].total += amt;
+  });
+  return buckets.map((b, i) => ({
+    monthKey: b.key,
+    monthLabel: b.label,
+    needs: Math.round(totals[i].needs),
+    wants: Math.round(totals[i].wants),
+    investments: Math.round(totals[i].investments),
+    total: Math.round(totals[i].total),
+  }));
+}
 
 export function useSpendingInsights(range: DateRange) {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -59,27 +82,13 @@ export function useSpendingInsights(range: DateRange) {
   );
 
   // 1. Spending Trend
-  const trendData = useMemo<SpendingTrendPoint[]>(() => {
-    const totals = buckets.map(() => ({ needs: 0, wants: 0, investments: 0, total: 0 }));
-    rangeTransactions.forEach((tx) => {
-      const i = bucketIndex(buckets, getTransactionDate(tx));
-      if (i < 0) return;
-      const amt = Math.abs(Number(tx.amount) || 0);
-      const type = tx.type || 'Need';
-      if (type === 'Need') totals[i].needs += amt;
-      else if (type === 'Want') totals[i].wants += amt;
-      else if (type === 'Investment') totals[i].investments += amt;
-      totals[i].total += amt;
-    });
-    return buckets.map((b, i) => ({
-      monthKey: b.key,
-      monthLabel: b.label,
-      needs: Math.round(totals[i].needs),
-      wants: Math.round(totals[i].wants),
-      investments: Math.round(totals[i].investments),
-      total: Math.round(totals[i].total),
-    }));
-  }, [buckets, rangeTransactions]);
+  const trendData = useMemo(() => trendPoints(buckets, rangeTransactions), [buckets, rangeTransactions]);
+
+  // Day-by-day points inside one trend bucket, for the chart's drill-down
+  const trendDays = useCallback(
+    (i: number) => (buckets[i] ? trendPoints(bucketsFor(buckets[i].start, buckets[i].end, { daily: true }), rangeTransactions) : []),
+    [buckets, rangeTransactions],
+  );
 
   // 2. Needs / Wants / Investments Analysis for Selected Range
   const typeAnalysis = useMemo(() => {
@@ -277,6 +286,7 @@ export function useSpendingInsights(range: DateRange) {
     error,
     refresh: fetchSpendingData,
     trendData,
+    trendDays,
     typeAnalysis,
     categoryRankings,
     momComparison,

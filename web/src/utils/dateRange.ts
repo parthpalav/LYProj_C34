@@ -67,16 +67,17 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 
 /**
  * Chart buckets covering start..end: daily up to 14 days, weekly up to 92 days,
- * calendar months beyond (or always, with monthly: true). Edge buckets are clipped to the range.
+ * calendar months beyond (or always, with monthly: true). daily: true forces one bucket per day.
+ * Edge buckets are clipped to the range.
  */
-export function bucketsFor(start: Date, end: Date, { monthly = false } = {}): Bucket[] {
+export function bucketsFor(start: Date, end: Date, { monthly = false, daily = false } = {}): Bucket[] {
   if (end < start) return [];
   const days = Math.round((end.getTime() - start.getTime()) / DAY_MS);
   const s = zparts(start);
   const out: Bucket[] = [];
 
-  if (!monthly && days <= 92) {
-    const step = days <= 14 ? 1 : 7;
+  if (daily || (!monthly && days <= 92)) {
+    const step = daily || days <= 14 ? 1 : 7;
     for (let i = 0; ; i += step) {
       const bStart = zdate(s.year, s.month, s.day + i);
       if (bStart > end) break;

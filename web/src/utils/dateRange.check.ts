@@ -28,6 +28,10 @@ const daily = bucketsFor(dateKeyToDate('2026-11-01'), dateKeyToDate('2026-11-04'
 assert.deepEqual(daily.map((b) => b.key), ['2026-11-01', '2026-11-02', '2026-11-03', '2026-11-04']);
 
 // Weekly up to 92 days, last bucket clipped
+const drilled = bucketsFor(dateKeyToDate('2026-10-01'), dateKeyToDate('2026-10-31', true), { daily: true });
+assert.equal(drilled.length, 31);
+assert.deepEqual([drilled[0].key, drilled[30].key], ['2026-10-01', '2026-10-31']);
+
 const weekly = bucketsFor(dateKeyToDate('2026-10-06'), dateKeyToDate('2026-11-04', true));
 assert.equal(weekly.length, 5);
 assert.equal(weekly[0].label, '6–12 Oct');

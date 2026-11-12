@@ -231,10 +231,10 @@ test('Test 4: Exhaustive search confirms all password fields in the app are cove
     }
   }
 
-  // Expect exactly LoginScreen.tsx, RegisterScreen.tsx, ResetPasswordScreen.tsx
+  // Expect exactly LoginScreen.tsx, RegisterScreen.tsx, ResetPasswordScreen.tsx and ProfileScreen.tsx (change password sheet)
   assert.deepEqual(
     screensWithPassword.sort(),
-    ['LoginScreen.tsx', 'RegisterScreen.tsx', 'ResetPasswordScreen.tsx'].sort(),
+    ['LoginScreen.tsx', 'ProfileScreen.tsx', 'RegisterScreen.tsx', 'ResetPasswordScreen.tsx'].sort(),
     'All screens with password fields are accurately identified and covered'
   );
 

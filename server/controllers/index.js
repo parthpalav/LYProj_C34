@@ -5,6 +5,7 @@ import { calculateFMI } from '../services/FMIService.js';
 import { predictOverspend, detectLowBalanceRisk } from '../services/PredictionService.js';
 import { applyRoundup, allocateToEnvelope, generateMicroActions } from '../services/MicroActionService.js';
 import { generateResponse } from '../services/AgentService.js';
+import { agentEnabled, loopbackApi, runAgent } from '../services/AssistantAgent.js';
 import { buildChatContext } from '../services/ChatContextService.js';
 import { routeDeterministicIntent } from '../services/ChatIntentRouter.js';
 import { analyzeSentiment, annotateTransactions } from '../services/SentimentService.js';
@@ -26,7 +27,8 @@ import {
   loginSchema,
   forgotPasswordSchema,
   resetPasswordSchema,
-  resendVerificationSchema
+  resendVerificationSchema,
+  changePasswordSchema
 } from '../validators/authValidator.js';
 import { logger } from '../utils/logger.js';
 import mongoose from 'mongoose';
@@ -418,6 +420,40 @@ router.get('/auth/me', async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+});
+
+router.post('/auth/change-password', passwordResetRateLimiter, validate(changePasswordSchema), async (req, res, next) => {
+  try {
+    const user = await User.findOne(userFilter(req.user.id || req.user._id)).select('+password +passwordHash');
+    if (!user) return res.status(404).json({ success: false, error: 'User not found', message: 'User not found' });
+    const { currentPassword, newPassword } = req.validatedBody || req.body;
+    await authService.changePassword(user, currentPassword, newPassword);
+    // Other devices are signed out; this one keeps working with fresh tokens.
+    const accessToken = authService.issueAccessToken(user);
+    const refreshToken = await authService.issueRefreshToken(user);
+    return res.json({ success: true, message: 'Password changed. Other devices have been signed out.', token: accessToken, accessToken, refreshToken });
+  } catch (error) {
+    if (error.status === 400) return res.status(400).json({ success: false, error: error.message, message: error.message });
+    next(error);
+  }
+});
+
+// Live health of the pieces behind the app, for the Settings page.
+router.get('/system/status', async (_req, res) => {
+  const started = Date.now();
+  const ml = await fetch(`${ML_SERVICE_URL}/health`, { signal: AbortSignal.timeout(3000) })
+    .then((r) => r.json())
+    .catch(() => null);
+  res.json({
+    success: true,
+    data: {
+      api: { ok: true, uptimeSeconds: Math.round(process.uptime()) },
+      database: { ok: mongoose.connection.readyState === 1 },
+      ml: { ok: Boolean(ml?.ok), classifierReady: Boolean(ml?.classifier_ready), latencyMs: Date.now() - started },
+      assistant: { ok: agentEnabled(), canAct: agentEnabled() },
+      checkedAt: new Date().toISOString(),
+    },
+  });
 });
 
 // Onboarding submission endpoint (supports both modal & full onboarding screen)
@@ -1546,10 +1582,38 @@ router.get('/dashboard', async (req, res, next) => {
 // AGENT CHAT
 // ═══════════════════════════════════════════════════════════
 
+// Chat sessions: the client names each conversation with an id. 'legacy' is the turns saved before sessions existed.
+// No sessionId at all (older clients) means the user's whole history, as before.
+const LEGACY_SESSION = 'legacy';
+function sessionFilter(userId, sessionId) {
+  if (sessionId === undefined || sessionId === null || sessionId === '') return { userId };
+  if (typeof sessionId !== 'string' || !/^[\w-]{1,64}$/.test(sessionId)) return null;
+  return { userId, sessionId: sessionId === LEGACY_SESSION ? null : sessionId };
+}
+
+router.get('/agent/sessions', async (req, res, next) => {
+  try {
+    const sessions = await AgentMemory.aggregate([
+      { $match: { userId: req.user.id } },
+      { $sort: { timestamp: 1 } },
+      { $group: { _id: '$sessionId', title: { $first: '$content' }, updatedAt: { $max: '$timestamp' }, messages: { $sum: 1 } } },
+      { $sort: { updatedAt: -1 } },
+      { $limit: 50 },
+    ]);
+    res.json(sessions.map((x) => ({
+      id:        x._id ?? LEGACY_SESSION,
+      title:     x.title.slice(0, 80),
+      updatedAt: x.updatedAt,
+      messages:  x.messages,
+    })));
+  } catch (error) { next(error); }
+});
+
 router.get('/agent/history', async (req, res, next) => {
   try {
-    const userId = req.user.id;
-    const historyDocs = await AgentMemory.find({ userId }).sort({ timestamp: -1 }).limit(100).lean();
+    const filter = sessionFilter(req.user.id, req.query.sessionId);
+    if (!filter) return res.status(400).json({ error: 'Invalid sessionId' });
+    const historyDocs = await AgentMemory.find(filter).sort({ timestamp: -1 }).limit(100).lean();
     const history = historyDocs.reverse();
     res.json(history.map((m) => ({
       id:        m._id.toString(),
@@ -1573,36 +1637,60 @@ router.post('/agent/chat', aiChatRateLimiter, async (req, res, next) => {
     if (message.length > 2000) {
       return res.status(400).json({ error: 'Message cannot exceed 2000 characters' });
     }
+    const filter = sessionFilter(userId, req.body.sessionId);
+    if (!filter) return res.status(400).json({ error: 'Invalid sessionId' });
+    const sessionId = filter.sessionId ?? undefined;
 
     // 1. Fetch prior conversation history before saving current user message (deduplication guarantee)
-    const priorHistoryDocs = await AgentMemory.find({ userId }).sort({ timestamp: -1 }).limit(10).lean();
+    const priorHistoryDocs = await AgentMemory.find(filter).sort({ timestamp: -1 }).limit(10).lean();
     const priorHistory = priorHistoryDocs.reverse();
 
     // 2. Persist current user message
-    await AgentMemory.create({ userId, role: 'user', content: message });
+    await AgentMemory.create({ userId, sessionId, role: 'user', content: message });
 
     // 3. Build verified deterministic financial context (fresh on every turn)
     const context = await buildChatContext(userId);
 
-    // 4. Check deterministic router before calling Gemini
-    const intentResult = routeDeterministicIntent(message, context, priorHistory);
-
+    // 4. With a Claude or Gemini key the agent handles every message: it can act (add, edit, delete) and reads Hindi/Hinglish.
+    //    Without one, or if the agent fails, the read-only path answers: deterministic router first, then Gemini.
     let response = '';
-    if (intentResult.handled && intentResult.response) {
-      logger.info(`[Chat] Deterministic intent resolved: ${intentResult.intent}`);
-      response = intentResult.response;
-    } else {
-      logger.info('[Chat] Escalated query to Gemini LLM');
-      response = await generateResponse(message, context, priorHistory);
+    let actions = [];
+    if (agentEnabled()) {
+      const startedAt = Date.now();
+      try {
+        const result = await runAgent({
+          userInput: message,
+          context,
+          rawHistory: priorHistory,
+          timezone: await getUserTimezone(userId),
+          api: loopbackApi(req.headers.authorization),
+        });
+        response = result.text;
+        actions = result.actions;
+        logger.info(`[Chat] Agent answered in ${Date.now() - startedAt} ms with ${actions.length} action(s)`);
+      } catch (err) {
+        logger.error(`[Chat] Agent failed: ${err?.status || ''} ${err?.message || err}`);
+      }
+    }
+    if (!response) {
+      const intentResult = routeDeterministicIntent(message, context, priorHistory);
+      if (intentResult.handled && intentResult.response) {
+        logger.info(`[Chat] Deterministic intent resolved: ${intentResult.intent}`);
+        response = intentResult.response;
+      } else {
+        logger.info('[Chat] Escalated query to Gemini LLM');
+        response = await generateResponse(message, context, priorHistory);
+      }
     }
 
     // 5. Persist assistant response (shared persistence for both deterministic & Gemini paths)
-    const saved = await AgentMemory.create({ userId, role: 'assistant', content: response });
+    const saved = await AgentMemory.create({ userId, sessionId, role: 'assistant', content: response });
 
     res.json({
       id:        saved._id.toString(),
       role:      'assistant',
       content:   response,
+      actions,
       timestamp: saved.timestamp.toISOString()
     });
   } catch (error) { next(error); }

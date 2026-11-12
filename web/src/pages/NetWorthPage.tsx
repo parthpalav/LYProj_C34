@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Landmark, CalendarClock, PieChart, Plus } from 'lucide-react';
 
@@ -58,6 +58,15 @@ export const NetWorthPage: React.FC = () => {
   // Liabilities
   const [liabModalOpen, setLiabModalOpen] = useState(false);
   const [editingLiab, setEditingLiab] = useState<Liability | null>(null);
+
+  // Deep link from quick actions: ?add=asset or ?add=liability opens the form, then the flag is dropped.
+  const addParam = searchParams.get('add');
+  useEffect(() => {
+    if (!addParam) return;
+    if (addParam === 'asset') { setAssetToEdit(null); setAssetModalOpen(true); }
+    if (addParam === 'liability') { setEditingLiab(null); setLiabModalOpen(true); }
+    setSearchParams((previous) => { const next = new URLSearchParams(previous); next.delete('add'); return next; }, { replace: true });
+  }, [addParam, setSearchParams]);
   const [deletingLiab, setDeletingLiab] = useState<Liability | null>(null);
   const [isDeletingLiab, setIsDeletingLiab] = useState(false);
   const [historyLiab, setHistoryLiab] = useState<Liability | null>(null);

@@ -1,3 +1,4 @@
+import { DESTINATIONS } from '../utils/destinations';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -172,6 +173,16 @@ export const OverviewPage: React.FC = () => {
           </Button>
         </div>
       </header>
+
+      {/* Quick actions: the things people come here to do, one click away */}
+      <nav className="quick-actions" aria-label="Quick actions">
+        {DESTINATIONS.filter((d) => d.quick).map((d) => (
+          <Link key={d.to} to={d.to} className="quick-action">
+            <strong>{d.label}</strong>
+            <span>{d.hint}</span>
+          </Link>
+        ))}
+      </nav>
 
       {/* Top 4 Summary Metric Cards — Balance is the Primary Hero Anchor */}
       <section className="overview-metrics-grid overview-section-hero" aria-label="Financial Summary Cards">

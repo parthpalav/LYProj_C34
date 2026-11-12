@@ -395,7 +395,7 @@ async function main() {
     const origKey = process.env.GEMINI_API_KEY;
     delete process.env.GEMINI_API_KEY;
     const offlineReply = await generateResponse('What is my balance?', boundedCtx, priorHistory);
-    assert.ok(offlineReply.includes('FINAURA'), 'Returns informative offline/missing-key message');
+    assert.ok(offlineReply.includes("can't reach the AI model") && offlineReply.includes('Balance:'), 'Returns honest offline message with a snapshot of verified figures');
     if (origKey) process.env.GEMINI_API_KEY = origKey;
     console.log('  ✓ AgentService fails gracefully when external AI uplink is unavailable');
 

@@ -1,4 +1,5 @@
-// Seeds the Mehta family demo (3 accounts, one family, 1 Nov 2025 – 3 Nov 2026 history, auto-deduct bills)
+// Seeds the Mehta family demo (3 accounts, one family, history from 1 Nov 2025 to yesterday, auto-deduct bills,
+// assets, payment methods and part-funded goals)
 // through the real HTTP API, so every transaction is classified by the live ML service.
 //
 // Needs: MongoDB, the server (:4000) and ml-service (:5001) running.
@@ -17,6 +18,12 @@ import FMIHistory from '../models/FMIHistory.js';
 import Liability from '../models/Liability.js';
 import RefreshToken from '../models/RefreshToken.js';
 import EmailVerificationToken from '../models/EmailVerificationToken.js';
+import Asset from '../models/Asset.js';
+import PaymentMethod from '../models/PaymentMethod.js';
+import AgentMemory from '../models/AgentMemory.js';
+import Alert from '../models/Alert.js';
+import Envelope from '../models/Envelope.js';
+import MerchantPreference from '../models/MerchantPreference.js';
 
 const API = process.env.DEMO_API_URL || 'http://localhost:4000';
 const ML = process.env.ML_SERVICE_URL || 'http://localhost:5001';
@@ -35,7 +42,11 @@ const days = (from, to) => {
   return out;
 };
 const dow = (date) => new Date(`${date}T00:00:00Z`).getUTCDay(); // 0 = Sunday
-const ALL_DAYS = days('2025-11-01', '2026-11-03');
+// History runs to yesterday (IST) so the weekly report and "today" predictions are never empty on demo day.
+// shortcut: monthly items (SIPs, salary) are only written up to November 2026, re-date FULL_MONTHS if demoing later.
+const YESTERDAY = new Date(Date.now() + 5.5 * 3600000 - 86400000).toISOString().slice(0, 10);
+const HANDWRITTEN_END = '2026-11-03';
+const ALL_DAYS = days('2025-11-01', YESTERDAY > HANDWRITTEN_END ? YESTERDAY : HANDWRITTEN_END);
 
 // Full calendar months of history, then the hand-written entries for 1-3 Nov 2026
 const FULL_MONTHS = [];
@@ -48,7 +59,7 @@ const monthName = (ym) => new Date(`${ym}-01T00:00:00Z`).toLocaleString('en-US',
 const pick = (list) => list[Math.floor(rand() * list.length)];
 const anyDay = (ym) => on(ym, 2 + Math.floor(rand() * 26));
 // Habit generators stop where the hand-written November entries take over
-const HABIT_DAYS = ALL_DAYS.filter((d) => d < '2026-11-01');
+const HABIT_DAYS = ALL_DAYS.filter((d) => d < '2026-11-01' || d > HANDWRITTEN_END);
 const monthlyIncome = (amount, source, label) =>
   [...FULL_MONTHS, '2026-11'].map((ym) => [on(ym, 1), amount, source, `${monthName(ym)} ${label}`]);
 
@@ -264,13 +275,32 @@ function aarav() {
 // Auto-deduct bills, created from today so the scheduler only charges future dues
 const bill = (name, amount, category, type, schedule, extra = {}) => ({ name, amount, category, type, autoDeduct: true, frequency: 'monthly', ...schedule, ...extra });
 
+// Market assets carry a value; FD/RD carry deposit details and the server works out the value
+const asset = (name, assetType, currentValue, ratePct, extra = {}) => ({ name, assetType, assetClass: 'FIRE_INVESTABLE', currentValue, annualReturnRate: ratePct, liquidity: 'liquid', includedInFireCorpus: true, ...extra });
+const fd = (name, principal, ratePct, startDate, tenureMonths) => ({ name, assetType: 'Fixed Deposit', assetClass: 'SEMI_LIQUID', principal, annualReturnRate: ratePct, startDate: `${startDate}T00:00:00+05:30`, tenureMonths, liquidity: 'locked', includedInFireCorpus: false });
+
 const PEOPLE = [
   {
     key: 'rajesh', name: 'Rajesh Mehta', email: 'rajesh.mehta@example.com',
     profile: { dateOfBirth: '1974-06-12', retirementAge: 60, monthlyIncome: 240000, currentBalance: 6200000, incomeType: 'salaried' },
     goals: [
-      { name: 'Retirement corpus', emoji: '🏖️', targetAmount: 15000000, targetDate: '2034-06-12', monthlyContribution: 50000 },
-      { name: 'Aarav\'s Masters abroad', emoji: '🎓', targetAmount: 4000000, targetDate: '2028-08-01', monthlyContribution: 40000 },
+      { name: 'Retirement corpus', emoji: '🏖️', targetAmount: 15000000, targetDate: '2034-06-12', monthlyContribution: 50000, savedAmount: 6150000 },
+      { name: 'Aarav\'s Masters abroad', emoji: '🎓', targetAmount: 4000000, targetDate: '2028-08-01', monthlyContribution: 40000, savedAmount: 1450000 },
+    ],
+    methods: [
+      { kind: 'upi', nickname: 'GPay - HDFC', upiId: 'rajesh.mehta@okhdfcbank' },
+      { kind: 'credit_card', nickname: 'HDFC Regalia', last4: '4821', creditLimit: 500000, statementDay: 18, dueDay: 5, used: 46800, billedUnpaid: 18250 },
+      { kind: 'debit_card', nickname: 'HDFC Debit', last4: '7730' },
+    ],
+    assets: [
+      asset('Parag Parikh Flexi Cap Fund', 'Mutual Fund', 2350000, 13, { monthlyContribution: 25000 }),
+      asset('HDFC Mid-Cap Opportunities Fund', 'Mutual Fund', 1420000, 14, { monthlyContribution: 15000 }),
+      asset('NPS Tier 1', 'Provident Fund / PPF', 1680000, 10, { monthlyContribution: 10000, liquidity: 'restricted' }),
+      asset('EPF - Sun Pharma', 'Provident Fund / PPF', 2900000, 8.25, { liquidity: 'restricted' }),
+      asset('Direct equity - Zerodha', 'Equity', 860000, 12),
+      fd('SBI Fixed Deposit', 800000, 7.1, '2025-08-10', 24),
+      asset('Emergency fund - HDFC savings', 'Cash & Bank', 900000, 3, { assetClass: 'SEMI_LIQUID', includedInFireCorpus: false }),
+      asset('Flat - Lokhandwala Heights', 'Real Estate', 21000000, 5, { assetClass: 'NON_INVESTABLE', liquidity: 'locked', includedInFireCorpus: false }),
     ],
     income: monthlyIncome(240000, 'salary', 'salary - Sun Pharma'),
     tx: rajesh,
@@ -286,8 +316,19 @@ const PEOPLE = [
     key: 'kavita', name: 'Kavita Mehta', email: 'kavita.mehta@example.com',
     profile: { dateOfBirth: '1978-03-22', retirementAge: 58, monthlyIncome: 130000, currentBalance: 3900000, incomeType: 'salaried' },
     goals: [
-      { name: 'Retirement fund', emoji: '🌴', targetAmount: 7500000, targetDate: '2036-03-22', monthlyContribution: 20000 },
-      { name: 'Family Kerala trip', emoji: '✈️', targetAmount: 250000, targetDate: '2027-05-01', monthlyContribution: 15000 },
+      { name: 'Retirement fund', emoji: '🌴', targetAmount: 7500000, targetDate: '2036-03-22', monthlyContribution: 20000, savedAmount: 2380000 },
+      { name: 'Family Kerala trip', emoji: '✈️', targetAmount: 250000, targetDate: '2027-05-01', monthlyContribution: 15000, savedAmount: 165000 },
+    ],
+    methods: [
+      { kind: 'upi', nickname: 'PhonePe - ICICI', upiId: 'kavita.mehta@icici' },
+      { kind: 'credit_card', nickname: 'ICICI Amazon Pay', last4: '9054', creditLimit: 200000, statementDay: 12, dueDay: 30, used: 14200, billedUnpaid: 0 },
+    ],
+    assets: [
+      asset('Mirae Asset Large Cap Fund', 'Mutual Fund', 1120000, 12, { monthlyContribution: 12000 }),
+      asset('PPF - SBI', 'Provident Fund / PPF', 1260000, 7.1, { liquidity: 'restricted' }),
+      asset('Gold jewellery and coins', 'Gold', 950000, 8, { assetClass: 'SEMI_LIQUID', includedInFireCorpus: false }),
+      { name: 'ICICI Recurring Deposit', assetType: 'Recurring Deposit', assetClass: 'SEMI_LIQUID', monthlyContribution: 10000, annualReturnRate: 6.8, startDate: '2026-01-05T00:00:00+05:30', tenureMonths: 24, liquidity: 'locked', includedInFireCorpus: false },
+      asset('Household buffer - ICICI savings', 'Cash & Bank', 450000, 3, { assetClass: 'SEMI_LIQUID', includedInFireCorpus: false }),
     ],
     income: monthlyIncome(130000, 'salary', 'salary - Infosys Powai'),
     tx: kavita,
@@ -302,7 +343,12 @@ const PEOPLE = [
     key: 'aarav', name: 'Aarav Mehta', email: 'aarav.mehta@example.com',
     profile: { dateOfBirth: '2005-08-14', retirementAge: 60, monthlyIncome: 18000, currentBalance: 42000, incomeType: 'student' },
     goals: [
-      { name: 'MacBook Air', emoji: '💻', targetAmount: 115000, targetDate: '2027-06-01', monthlyContribution: 3000 },
+      { name: 'MacBook Air', emoji: '💻', targetAmount: 115000, targetDate: '2027-06-01', monthlyContribution: 3000, savedAmount: 48000 },
+    ],
+    methods: [{ kind: 'upi', nickname: 'Paytm', upiId: 'aarav.mehta@paytm' }],
+    assets: [
+      asset('Nifty 50 index fund SIP', 'Mutual Fund', 14500, 12, { monthlyContribution: 1000 }),
+      asset('Savings account - Kotak 811', 'Cash & Bank', 22000, 3.5, { assetClass: 'SEMI_LIQUID', includedInFireCorpus: false }),
     ],
     income: monthlyIncome(18000, 'pocket money', 'pocket money from Papa'),
     tx: aarav,
@@ -350,6 +396,12 @@ async function reset() {
     FamilyInvitation.deleteMany({ $or: [{ inviterUserId: { $in: ids } }, { inviteeUserId: { $in: ids } }] }),
     RefreshToken.deleteMany({ userId: { $in: ids } }),
     EmailVerificationToken.deleteMany({ userId: { $in: ids } }),
+    Asset.deleteMany({ userId: { $in: ids } }),
+    PaymentMethod.deleteMany({ userId: { $in: ids } }),
+    AgentMemory.deleteMany({ userId: { $in: ids } }),
+    Alert.deleteMany({ userId: { $in: ids } }),
+    Envelope.deleteMany({ userId: { $in: ids } }),
+    MerchantPreference.deleteMany({ userId: { $in: ids } }),
   ]);
   await User.deleteMany({ id: { $in: ids } });
   console.log(`Reset: removed ${ids.length} demo accounts`);
@@ -367,7 +419,18 @@ async function seedAll() {
     await call('POST', '/api/user/onboarding', p.token, p.profile);
     // Demo accounts skip the email link
     await User.updateOne({ id: p.id }, { isEmailVerified: true });
-    for (const g of p.goals) { await call('POST', '/api/goals', p.token, g); await tick(); }
+    for (const { savedAmount, ...g } of p.goals) {
+      const goal = await call('POST', '/api/goals', p.token, g);
+      if (savedAmount) await call('PUT', `/api/goals/${goal.id || goal._id}`, p.token, { savedAmount });
+      await tick();
+    }
+    let upiId = 'cash';
+    for (const m of p.methods || []) {
+      const made = await call('POST', '/api/payment-methods', p.token, m);
+      if (m.kind === 'upi') upiId = made.data.id;
+      await tick();
+    }
+    for (const a of p.assets || []) { await call('POST', '/api/assets', p.token, a); await tick(); }
     for (const [date, amount, source, description] of p.income) {
       await call('POST', '/api/income', p.token, { amount, source, description, timestamp: at(date, '09:00') });
       await tick();
@@ -375,14 +438,15 @@ async function seedAll() {
     const txs = p.tx().sort((a, b) => (a[0] + a[1]).localeCompare(b[0] + b[1]));
     for (const [date, time, amount, description] of txs) {
       // No category sent: the live classifier labels every entry, as on the mobile app
-      await call('POST', '/api/transactions', p.token, { amount, description, timestamp: at(date, time), paymentMethodId: 'cash' });
+      // Older history is cash; entries after the hand-written block go through UPI so "Paid with" has something to show
+      await call('POST', '/api/transactions', p.token, { amount, description, timestamp: at(date, time), paymentMethodId: date > HANDWRITTEN_END ? upiId : 'cash' });
       await tick();
     }
     for (const b of p.bills) {
       await call('POST', '/api/liabilities', p.token, { ...b, startDate: new Date().toISOString() });
       await tick();
     }
-    console.log(`${p.name}: ${txs.length} transactions, ${p.income.length} incomes, ${p.goals.length} goals, ${p.bills.length} auto-deduct bills`);
+    console.log(`${p.name}: ${txs.length} transactions, ${p.income.length} incomes, ${p.goals.length} goals, ${p.bills.length} auto-deduct bills, ${(p.assets || []).length} assets, ${(p.methods || []).length} payment methods`);
   }
 
   // Rajesh creates the family by inviting the others; they accept

@@ -11,6 +11,8 @@ type Props = Omit<PressableProps, 'style'> & {
   /** how far the element shrinks while pressed */
   scaleTo?: number;
   haptic?: boolean;
+  /** layout entrance, passed straight to the animated pressable */
+  entering?: React.ComponentProps<typeof AnimatedPressable>['entering'];
 };
 
 export function PressableScale({ style, scaleTo = 0.97, haptic = true, onPressIn, onPressOut, onPress, children, ...rest }: Props) {

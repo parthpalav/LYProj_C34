@@ -43,6 +43,7 @@ import { useTabBarSpace } from '../components/navigation/TabBar';
 import { Card } from '../components/ui/Card';
 import { Badge, ErrorState, IconTile, MoneyText, SectionHeader } from '../components/ui/Bits';
 import { Ring, Sparkline, svgReady } from '../components/ui/Charts';
+import { ChartDetail, usePick } from '../components/ui/ChartDetail';
 import { ScreenHeader, useHeaderHeight, useScrollHeader } from '../components/ui/ScreenHeader';
 import { ThemeToggle } from '../components/ui/ThemeToggle';
 import { FamilyOverviewCard } from '../components/family/FamilyOverviewCard';
@@ -55,6 +56,18 @@ const { width: SCREEN_W } = Dimensions.get('window');
 const FEED_W = SCREEN_W - 48;
 // The Monte Carlo forecast is slow, so returning to Home only re-runs it once a minute.
 const HEAVY_REFRESH_MS = 60_000;
+
+// Home shortcuts. Order follows how often people reach for each one.
+const QUICK_LINKS: Array<{ label: string; route: string; icon: React.ComponentProps<typeof IconTile>['icon']; tint: 'info' | 'warning' | 'success' | 'purple' | 'primary' | 'danger' }> = [
+  { label: 'Net worth', route: 'Assets', icon: 'pie-chart', tint: 'info' },
+  { label: 'Bills', route: 'Liabilities', icon: 'calendar', tint: 'warning' },
+  { label: 'Goals', route: 'Goals', icon: 'flag', tint: 'success' },
+  { label: 'Family', route: 'Family', icon: 'people', tint: 'purple' },
+  { label: 'Insights', route: 'Insights', icon: 'analytics', tint: 'primary' },
+  { label: 'Outlook', route: 'FinancialOutlook', icon: 'telescope', tint: 'info' },
+  { label: 'Round-ups', route: 'Envelopes', icon: 'albums', tint: 'success' },
+  { label: 'Income', route: 'IncomeFlow', icon: 'wallet', tint: 'purple' },
+];
 
 // ── Formatting Helpers ─────────────────────────────────────
 function formatCurrency(n: number | null | undefined): string {
@@ -100,6 +113,7 @@ type FeedItem = {
 export function DashboardScreen(): React.ReactElement {
   const { c } = useTheme();
   const styles = useStyles();
+  const split = usePick();
   const navigation = useNavigation<any>();
   const insets = useSafeAreaInsets();
   const tabBarSpace = useTabBarSpace();
@@ -240,7 +254,15 @@ export function DashboardScreen(): React.ReactElement {
   const balance = user?.currentBalance ?? dashboard?.balance ?? 0;
   // Auto-deduct liabilities still to come out of the balance this month
   const commitments = dashboard?.commitments;
-  const incomeThisMonth = dashboard?.totalIncome ?? user?.monthlyIncome ?? predictability?.income?.meanMonthlyIncome ?? 0;
+  const incomeReceived = useMemo(() => {
+    if (!income) return null;
+    const now = new Date();
+    return income
+      .filter((r) => { const d = new Date(r.timestamp); return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear(); })
+      .reduce((s, r) => s + r.amount, 0);
+  }, [income]);
+  // dashboard.totalIncome is all-time, so it must not stand in for a month. Before payday, fall back to the declared income.
+  const incomeThisMonth = incomeReceived || user?.monthlyIncome || predictability?.income?.meanMonthlyIncome || 0;
   const spendingThisMonth = dashboard?.wantsNeedsBreakdown?.total ?? fmiData?.totalSpent ?? 0;
   // Same daily series the Spending screen opens on, so the card and the full chart agree
   const dailySpend = useMemo(() => {
@@ -284,14 +306,6 @@ export function DashboardScreen(): React.ReactElement {
       .sort((a, b) => (a.createdAt ? new Date(a.createdAt).getTime() : 0) - (b.createdAt ? new Date(b.createdAt).getTime() : 0))
       .slice(0, 2);
   }, [assets]);
-
-  const incomeReceived = useMemo(() => {
-    if (!income) return null;
-    const now = new Date();
-    return income
-      .filter((r) => { const d = new Date(r.timestamp); return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear(); })
-      .reduce((s, r) => s + r.amount, 0);
-  }, [income]);
 
   const nearestBill = upcomingBills[0] ?? null;
   const daysUntilLiability = nearestBill
@@ -507,6 +521,22 @@ export function DashboardScreen(): React.ReactElement {
           </Card>
         </Animated.View>
 
+        {/* ── Quick access: every main feature one tap from Home ── */}
+        <View style={styles.quickGrid}>
+          {QUICK_LINKS.map((q) => (
+            <Pressable
+              key={q.route}
+              onPress={() => navigation.navigate(q.route)}
+              style={({ pressed }) => [styles.quickItem, pressed && { opacity: 0.6 }]}
+              accessibilityRole="button"
+              accessibilityLabel={`Open ${q.label}`}
+            >
+              <IconTile icon={q.icon} tint={c[q.tint]} size={46} />
+              <Text style={styles.quickLabel} numberOfLines={1}>{q.label}</Text>
+            </Pressable>
+          ))}
+        </View>
+
         {/* ── Today feed ───────────────────────────────── */}
         <SectionHeader title="Today" />
         <ScrollView
@@ -584,28 +614,52 @@ export function DashboardScreen(): React.ReactElement {
             </View>
           </View>
           {svgReady && dailySpend.length > 1 && <Sparkline data={dailySpend} height={52} style={styles.spark} />}
-          {hasSpendingData ? (
-            <>
-              <View style={styles.track}>
-                {wantsNeeds!.needs.pct > 0 && <AnimatedSegment pct={wantsNeeds!.needs.pct} color={c.info} delay={0} />}
-                {wantsNeeds!.wants.pct > 0 && <AnimatedSegment pct={wantsNeeds!.wants.pct} color={c.warning} delay={150} />}
-                {wantsNeeds!.investments.pct > 0 && <AnimatedSegment pct={wantsNeeds!.investments.pct} color={c.success} delay={300} />}
-              </View>
-              <View style={styles.legend}>
-                {[
-                  { label: 'Needs', color: c.info, v: wantsNeeds!.needs },
-                  { label: 'Wants', color: c.warning, v: wantsNeeds!.wants },
-                  { label: 'Invest', color: c.success, v: wantsNeeds!.investments },
-                ].map((x) => (
-                  <View key={x.label} style={styles.legendItem}>
-                    <View style={[styles.legendDot, { backgroundColor: x.color }]} />
-                    <Text style={styles.legendLabel}>{x.label}</Text>
-                    <Text style={styles.legendValue} numberOfLines={1}>{formatCurrency(x.v.amount)}</Text>
-                  </View>
-                ))}
-              </View>
-            </>
-          ) : (
+          {hasSpendingData ? (() => {
+            const parts = [
+              { label: 'Needs', color: c.info, v: wantsNeeds!.needs, about: 'Essentials that are hard to skip, such as rent, groceries, bills and transport.' },
+              { label: 'Wants', color: c.warning, v: wantsNeeds!.wants, about: 'Spending you choose, such as eating out, shopping, entertainment and travel.' },
+              { label: 'Invest', color: c.success, v: wantsNeeds!.investments, about: 'Money put to work for later, such as SIPs, deposits and retirement contributions.' },
+            ];
+            const shown = parts[split.shown];
+            const fade = (i: number) => ({ opacity: split.index === null || split.index === i ? 1 : 0.35 });
+            return (
+              <>
+                <View style={styles.track}>
+                  {parts.map((x, i) => x.v.pct > 0 && <AnimatedSegment key={x.label} pct={x.v.pct} color={x.color} delay={i * 150} style={fade(i)} />)}
+                </View>
+                {/* Tap a part of the split to open its summary; the rest of the card still opens the chart. */}
+                <View style={styles.legend}>
+                  {parts.map((x, i) => (
+                    <Pressable
+                      key={x.label}
+                      onPress={() => split.toggle(i)}
+                      style={[styles.legendItem, fade(i)]}
+                      hitSlop={6}
+                      accessibilityRole="button"
+                      accessibilityState={{ expanded: split.index === i }}
+                      accessibilityLabel={`${x.label}, ${formatCurrency(x.v.amount)}. Show summary`}
+                    >
+                      <View style={[styles.legendDot, { backgroundColor: x.color }]} />
+                      <Text style={styles.legendLabel}>{x.label}</Text>
+                      <Text style={styles.legendValue} numberOfLines={1}>{formatCurrency(x.v.amount)}</Text>
+                    </Pressable>
+                  ))}
+                </View>
+                <ChartDetail
+                  open={split.open}
+                  title={`${shown.label === 'Invest' ? 'Investments' : shown.label} this month`}
+                  accent={shown.color}
+                  stats={[
+                    { label: 'Spent', value: formatCurrency(shown.v.amount) },
+                    { label: 'Share', value: `${shown.v.pct}%` },
+                    { label: 'Everything else', value: formatCurrency(Math.max(0, wantsNeeds!.total - shown.v.amount)) },
+                  ]}
+                  note={shown.about}
+                  onClose={split.close}
+                />
+              </>
+            );
+          })() : (
             <Text style={styles.muted}>No spending logged this month yet. Tap + to add your first.</Text>
           )}
         </Card>
@@ -867,6 +921,10 @@ const useStyles = createStyles((c) => ({
   rowTitle: { fontSize: 15, fontWeight: '600', color: c.text },
   rowSub: { fontSize: 12, color: c.textMuted, marginTop: 2 },
   rowAmount: { fontSize: 15, fontWeight: '700', color: c.text, ...tabular },
+
+  quickGrid: { flexDirection: 'row', flexWrap: 'wrap', rowGap: 14, marginTop: 18 },
+  quickItem: { width: '25%', alignItems: 'center', gap: 6, minHeight: 44 },
+  quickLabel: { fontSize: 12, fontWeight: '600', color: c.textMuted },
 
   manageCard: { flexDirection: 'row', gap: 10 },
   tile: { flex: 1, padding: 14, minHeight: 150 },

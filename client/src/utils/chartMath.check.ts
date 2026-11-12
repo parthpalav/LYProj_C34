@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { monotonePath, smoothPath } from './chartMath.ts';
+import { monotonePath, sliceAt, smoothPath } from './chartMath.ts';
 
 assert.equal(smoothPath([]), '');
 assert.equal(smoothPath([{ x: 1, y: 2 }]), 'M 1 2');
@@ -17,4 +17,11 @@ assert.ok(Math.min(...ys) >= 0 && Math.max(...ys) <= 100, `overshoot in ${mono}`
 assert.equal(mono.split(' C ').length, spiky.length, 'one curve per segment');
 assert.equal(monotonePath([{ x: 0, y: 5 }, { x: 4, y: 1 }]), 'M 0 5 L 4 1');
 assert.equal(monotonePath([]), '');
+// Donut hit-testing: slices run clockwise from 12 o'clock (dy is negative above the centre).
+const half = [{ value: 50 }, { value: 25 }, { value: 25 }];
+assert.equal(sliceAt(10, -1, half), 0, 'just right of 12 o\'clock');
+assert.equal(sliceAt(10, 10, half), 0, 'lower right is still the first half');
+assert.equal(sliceAt(-10, 10, half), 1, 'lower left quarter');
+assert.equal(sliceAt(-10, -10, half), 2, 'upper left quarter');
+assert.equal(sliceAt(1, 1, [{ value: 0 }]), -1, 'nothing to pick');
 console.log('chartMath ok');

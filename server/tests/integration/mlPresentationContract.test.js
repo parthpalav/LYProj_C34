@@ -10,7 +10,7 @@ import mongoose from 'mongoose';
 import assert from 'node:assert/strict';
 import jwt from 'jsonwebtoken';
 import User from '../../models/User.js';
-import Transaction from '../../models/Transaction.js';
+import Transaction, { VALID_CATEGORIES } from '../../models/Transaction.js';
 import Income from '../../models/Income.js';
 import { calculateFMI } from '../../services/FMIService.js';
 import { getPredictabilitySnapshot } from '../../services/PredictabilityService.js';

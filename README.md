@@ -16,7 +16,7 @@
 ![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose_8-47A248?logo=mongodb&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-Flask_3-3776AB?logo=python&logoColor=white)
 ![PyTorch](https://img.shields.io/badge/Model-bge--base_v7-EE4C2C?logo=pytorch&logoColor=white)
-![Gemini](https://img.shields.io/badge/AI-Gemini_1.5_Flash-8E75B2?logo=googlegemini&logoColor=white)
+![Gemini](https://img.shields.io/badge/AI-Gemini_Flash-8E75B2?logo=googlegemini&logoColor=white)
 
 [At a glance](#-at-a-glance) · [Tour](#-take-the-tour) · [Features](#-what-finaura-does) · [How it works](#-how-it-works) · [Run it](#-getting-started) · [Tests](#-testing)
 
@@ -261,6 +261,8 @@ Invite other FINAURA users into a household. Accounts are **never merged**.
 - 🔔 **Notifications** (web bell / mobile Notifications): bills and card dues coming up, family invites, AI guesses to check, and a monthly value check-in for mutual funds, equity, gold, commodities and crypto.
 - 🌗 **Light and dark themes** on both apps, plus a 4-step onboarding (about you, income, current balance, retirement target).
 - 🌍 **Timezone aware**: card cycles, due dates and reports use the user's timezone (default `Asia/Kolkata`).
+- ⚡ **Everything one step away**: the web top bar has a "Jump to…" search (`Ctrl/⌘ + K`) that reaches every page, tab and add-form; Overview opens with six quick actions; the mobile Home screen has an eight-icon shortcut grid under the balance card.
+- 🔐 **Settings** (web) and **Profile → Change password** (mobile): change your password while signed in (other devices are signed out), resend the verification email, and see live status of the API, database, classifier and AI assistant.
 - 📱 Mobile extras: **Recap** (a swipeable month story), floating glass tab bar, pull to refresh, haptic celebrations.
 
 ---
@@ -458,12 +460,14 @@ flowchart LR
     Q["Your question"] --> IR{"ChatIntentRouter<br/>is it a factual question?"}
     IR -->|"What's my balance? FMI?<br/>Spent on food? Bills due?"| DET["Answer straight from your data<br/>no LLM call"]
     IR -->|"Advice / why / how"| CTX["ChatContextService<br/>verified read-only figures"]
-    CTX --> GEM["Gemini 1.5 Flash<br/>told not to recompute numbers"]
+    CTX --> GEM["Gemini Flash<br/>told not to recompute numbers"]
     GEM --> A["Answer + saved chat history"]
     DET --> A
 ```
 
-Without `GEMINI_API_KEY`, factual questions still work. Advice questions return a clear "not configured" message.
+**Agent mode.** With `GEMINI_API_KEY` set, every message goes to a tool-using agent (`server/services/AssistantAgent.js`) instead. It runs on Gemini Flash by default, trying `GEMINI_MODEL`, then `gemini-3.5-flash-lite`, `gemini-3.6-flash`, `gemini-3.5-flash` and the `-latest` aliases; set `ANTHROPIC_API_KEY` to run the same agent on Claude Haiku 5.5. It has twelve tools that call this server's own REST API as the signed-in user, so it can search transactions and add, edit or delete expenses, income, goals, bills and assets with the same validation and classification as the apps. It adds purchases as soon as you mention them, asks before deleting, and shows a receipt for each change. It understands English, Hindi and Hinglish. Both apps have a mic button with an EN / हिं switch: the web app uses the browser's Web Speech API (Chrome, Edge, Safari) and the mobile app uses the device recogniser through `expo-speech-recognition`. If the agent's model fails before it has changed anything, the message falls through to the path above.
+
+Without `GEMINI_API_KEY`, or when Gemini cannot be reached, factual questions still work and advice questions get an honest "can't reach the AI model" reply with a snapshot of your verified figures. The model id is not pinned: the server tries `GEMINI_MODEL` (if set), then `gemini-flash-latest`, then `gemini-flash-lite-latest`, with a 15-second timeout on each, so a retired or overloaded model does not take the assistant down.
 
 ### Authentication
 
@@ -568,7 +572,7 @@ erDiagram
 | **API** | Node.js ≥ 18, Express 4.22, Mongoose 8.12, Zod 4, Helmet 8, express-rate-limit 8, jsonwebtoken 9, bcryptjs 3, Nodemailer |
 | **Database** | MongoDB 6+ or MongoDB Atlas |
 | **ML service** | Python 3.9+, Flask 3.1, PyTorch + Hugging Face Transformers (`BAAI/bge-base-en-v1.5` fine-tune), sentence-transformers, scikit-learn, NumPy, Pandas, gdown |
-| **AI** | `@google/generative-ai` (Gemini 1.5 Flash) behind a deterministic intent router |
+| **AI** | Tool-using agent on `@google/generative-ai` (Gemini Flash, model fallback list) or `@anthropic-ai/sdk` (Claude Haiku 5.5); deterministic intent router as the fallback |
 | **Tooling** | Oxlint, `tsc`, plain-Node and Python test scripts, shell orchestration in `scripts/` |
 
 ---
@@ -654,6 +658,10 @@ Copy each `.env.example` to `.env`.
 | `BCRYPT_ROUNDS` | No | `10` | Password hashing cost |
 | `ML_SERVICE_URL` | No | `http://localhost:5001` | ML service address |
 | `GEMINI_API_KEY` | No | none | Turns on advice answers in the assistant |
+| `GEMINI_MODEL` | No | `gemini-3.5-flash-lite`, `gemini-3.6-flash`, `gemini-3.5-flash`, then the `-latest` aliases | Model id(s) to try first, comma-separated |
+| `ANTHROPIC_API_KEY` | No | none | Runs the assistant's agent on Claude instead of Gemini. Key from platform.claude.com |
+| `ANTHROPIC_MODEL` | No | `claude-haiku-5-5` | Claude model for the agent |
+| `ANTHROPIC_EFFORT` | No | `low` | Reasoning effort for the agent |
 | `SMTP_HOST` / `SMTP_PORT` / `SMTP_USER` / `SMTP_PASS` / `SMTP_SECURE` | No | `smtp.mailtrap.io` / `587` / – / – / `false` | Email verification and password reset |
 | `EMAIL_FROM` | No | `"FINAURA Security <no-reply@finaura.app>"` | Sender address |
 | `APP_BASE_URL` | No | `http://localhost:4000` | Base URL used in email links |
@@ -696,7 +704,7 @@ cd client && npm start                         # i = iOS sim, a = Android, or sc
 
 ### Demo data
 
-Seed a three-person household with 12 months of history. Every entry goes through the live classifier, so the API and the ML service must be running.
+Seed a three-person household with history from 1 Nov 2025 up to yesterday, plus assets (mutual funds, FD, RD, PPF, gold, property), UPI and card payment methods (one card with a bill due) and part-funded goals. Every entry goes through the live classifier, so the API and the ML service must be running.
 
 ```bash
 cd server

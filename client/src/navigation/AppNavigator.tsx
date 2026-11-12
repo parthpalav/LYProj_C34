@@ -21,6 +21,7 @@ import AlertsScreen from '../screens/AlertsScreen';
 import { ReviewScreen } from '../screens/ReviewScreen';
 import { EnvelopesScreen } from '../screens/EnvelopesScreen';
 import { RecapScreen } from '../screens/RecapScreen';
+import { ReportsScreen } from '../screens/ReportsScreen';
 import { InsightsScreen } from '../screens/InsightsScreen';
 import { SpendingScreen } from '../screens/SpendingScreen';
 import { PaymentMethodsScreen } from '../screens/PaymentMethodsScreen';
@@ -54,6 +55,7 @@ export type RootStackParamList = {
   Review: undefined;
   Envelopes: undefined;
   Recap: undefined;
+  Reports: undefined;
   Insights: undefined;
   Spending: undefined;
   PaymentMethods: undefined;
@@ -134,6 +136,7 @@ export function AppNavigator(): React.ReactElement {
           <Stack.Screen name="Envelopes" component={EnvelopesScreen} />
           <Stack.Screen name="Insights" component={InsightsScreen} />
           <Stack.Screen name="Spending" component={SpendingScreen} />
+          <Stack.Screen name="Reports" component={ReportsScreen} />
           <Stack.Screen name="PaymentMethods" component={PaymentMethodsScreen} />
           <Stack.Screen name="Recap" component={RecapScreen} options={{ presentation: 'fullScreenModal', animation: 'fade' }} />
           <Stack.Screen

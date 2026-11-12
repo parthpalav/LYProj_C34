@@ -1,0 +1,142 @@
+/* Motion and hover polish layered over every page. Loaded last so it refines, never restyles.
+   The global prefers-reduced-motion rule in index.css already flattens every animation and transition here. */
+
+/* Registered so the hover spotlight can fade and the assistant's gradient ring can rotate. */
+@property --glow-a { syntax: '<number>'; inherits: false; initial-value: 0; }
+@property --spin { syntax: '<angle>'; inherits: false; initial-value: 0deg; }
+
+:root { --glow-rgb: 37 99 235; --ease-soft: cubic-bezier(0.2, 0, 0, 1); }
+:root[data-theme='dark'] { --glow-rgb: 96 165 250; }
+
+@keyframes spinVar { to { --spin: 360deg; } }
+@keyframes riseIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes popIn { from { opacity: 0; transform: scale(0.94); } to { opacity: 1; transform: none; } }
+@keyframes floaty { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes sheenPass { from { transform: translateX(-120%); } to { transform: translateX(120%); } }
+@keyframes shimmerText { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+@keyframes ringPulse { 0% { box-shadow: 0 0 0 0 rgb(var(--ring-rgb, var(--glow-rgb)) / 0.5); } 100% { box-shadow: 0 0 0 12px rgb(var(--ring-rgb, var(--glow-rgb)) / 0); } }
+
+/* ── Route change ─────────────────────────────────────────────────────────── */
+/* fill-mode backwards and "transform: none" at the end: a lingering transform would trap fixed-position children. */
+.route-view { animation: riseIn 340ms var(--ease-soft) backwards; }
+
+/* ── Cursor spotlight on cards (list mirrored in utils/spotlight.ts) ──────── */
+@media (hover: hover) {
+  :is(.dashboard-card, .metric-card, .insights-chart-card, .plan-surface-card, .goal-card, .parity-card:not(.chat-shell), .account-summary, .quick-action) {
+    background-image: radial-gradient(480px circle at var(--mx, 50%) var(--my, 0%), rgb(var(--glow-rgb) / calc(var(--glow-a) * 0.08)), transparent 65%);
+    transition: --glow-a 320ms ease, transform var(--transition-fast), box-shadow var(--transition-normal), border-color var(--transition-normal);
+  }
+  :is(.dashboard-card, .metric-card, .insights-chart-card, .plan-surface-card, .goal-card, .parity-card:not(.chat-shell), .account-summary, .quick-action):hover {
+    --glow-a: 1;
+    border-color: rgb(var(--glow-rgb) / 0.4);
+    box-shadow: var(--shadow-md), 0 16px 36px -24px rgb(var(--glow-rgb) / 0.75);
+  }
+}
+
+.metric-card-icon-wrap { transition: transform var(--transition-normal), box-shadow var(--transition-normal); }
+.metric-card:hover .metric-card-icon-wrap { transform: scale(1.08) rotate(-4deg); box-shadow: 0 0 0 4px rgb(var(--glow-rgb) / 0.12); }
+
+/* ── Buttons ──────────────────────────────────────────────────────────────── */
+.btn-primary { position: relative; overflow: hidden; }
+.btn-primary::after { content: ''; position: absolute; inset: 0; background: linear-gradient(105deg, transparent 35%, rgb(255 255 255 / 0.24) 50%, transparent 65%); transform: translateX(-120%); pointer-events: none; }
+.btn-primary:hover:not(:disabled)::after { animation: sheenPass 700ms var(--ease-soft); }
+.btn-primary:hover:not(:disabled), .next-step-action:hover { box-shadow: 0 10px 24px -10px rgb(var(--glow-rgb) / 0.8), 0 0 0 1px rgb(var(--glow-rgb) / 0.14); }
+.next-step-action { transition: background-color var(--transition-fast), box-shadow var(--transition-normal), transform var(--transition-fast); }
+.next-step-action:hover { transform: translateY(-1px); }
+.btn-icon { transition: transform var(--transition-fast); }
+.btn-base:hover:not(:disabled) .btn-icon { transform: scale(1.12); }
+.parity-chip { transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast), background-color var(--transition-fast); }
+.parity-chip:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 0 0 3px rgb(var(--glow-rgb) / 0.12), 0 8px 18px -12px rgb(var(--glow-rgb) / 0.7); }
+.profile-links a { transition: border-color var(--transition-fast), box-shadow var(--transition-normal), transform var(--transition-fast); }
+.profile-links a:hover { transform: translateY(-2px); box-shadow: 0 14px 28px -20px rgb(var(--glow-rgb) / 0.8); }
+.palette-trigger { transition: border-color var(--transition-fast), box-shadow var(--transition-fast), color var(--transition-fast); }
+.palette-trigger:hover { box-shadow: 0 0 0 3px rgb(var(--glow-rgb) / 0.12); }
+.palette-item { transition: background-color var(--transition-fast), padding-left var(--transition-fast); }
+.palette-item-active { padding-left: 16px; box-shadow: inset 3px 0 0 var(--accent-primary); }
+
+/* ── Sidebar ──────────────────────────────────────────────────────────────── */
+.sidebar-nav-item:hover svg { transform: translateX(2px) scale(1.06); }
+.sidebar-nav-active { box-shadow: inset 0 0 0 1px rgb(var(--glow-rgb) / 0.14), 0 6px 16px -12px rgb(var(--glow-rgb) / 0.8); }
+.sidebar-nav-active::before { animation: navMark 280ms var(--ease-soft) backwards; box-shadow: 0 0 10px rgb(var(--glow-rgb) / 0.8); }
+@keyframes navMark { from { opacity: 0; transform: scaleY(0.2); } }
+.sidebar-brand-icon { transition: transform var(--transition-normal), box-shadow var(--transition-normal); }
+.sidebar-brand-link:hover .sidebar-brand-icon { transform: rotate(-6deg) scale(1.06); box-shadow: 0 0 18px rgb(var(--glow-rgb) / 0.6); }
+.sidebar-nav-item[href$='/assistant'] svg { animation: twinkle 3.6s ease-in-out infinite; }
+@keyframes twinkle { 0%, 70%, 100% { transform: none; opacity: 1; } 82% { transform: scale(1.18) rotate(10deg); opacity: 0.75; } }
+
+/* ── Tabs ─────────────────────────────────────────────────────────────────── */
+:is(.premium-tab-btn, .activity-tab-btn, .plan-tab-button) { transition: color var(--transition-fast), background-color var(--transition-normal), border-color var(--transition-fast), box-shadow var(--transition-normal), transform var(--transition-fast); }
+:is(.premium-tab-btn, .activity-tab-btn, .plan-tab-button):active { transform: scale(0.97); }
+:is(.premium-tab-btn.tab-active, .premium-tab-btn.active) { box-shadow: 0 6px 18px -8px rgb(var(--glow-rgb) / 0.9); }
+:is(.activity-tab-content, .insights-tab-content, .plan-tab-content) { animation: riseIn 300ms var(--ease-soft) backwards; }
+
+/* ── Tables and lists ─────────────────────────────────────────────────────── */
+.route-view tbody tr { transition: background-color var(--transition-fast); }
+.route-view tbody td:first-child { transition: box-shadow var(--transition-fast); }
+.route-view tbody tr:hover td:first-child { box-shadow: inset 3px 0 0 var(--accent-primary); }
+.pm-item, .settings-status-list li, .profile-fact { transition: border-color var(--transition-fast), box-shadow var(--transition-normal), transform var(--transition-fast); }
+.pm-item:hover, .settings-status-list li:hover { border-color: rgb(var(--glow-rgb) / 0.4); box-shadow: 0 10px 24px -20px rgb(var(--glow-rgb) / 0.9); }
+
+/* ── Progress bars: one light pass after the fill grows ───────────────────── */
+:is(.progress-bar-fill, .goal-progress-bar-fill) { position: relative; overflow: hidden; }
+:is(.progress-bar-fill, .goal-progress-bar-fill)::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.45), transparent); transform: translateX(-120%); animation: sheenPass 1100ms 500ms var(--ease-soft) 1; }
+
+/* ── Small touches ────────────────────────────────────────────────────────── */
+.empty-state-icon-wrap { animation: floaty 4.5s ease-in-out infinite; }
+.heat-cell { transition: transform var(--transition-fast), box-shadow var(--transition-fast); }
+.heat-cell:not(:disabled):hover { transform: scale(1.3); box-shadow: 0 0 0 2px rgb(var(--glow-rgb) / 0.35); }
+.parity-nudge, .next-step { animation: riseIn 360ms var(--ease-soft) backwards; }
+.onboarding-card { animation: popIn 360ms var(--ease-soft) backwards; }
+.form-input { transition: border-color var(--transition-fast), box-shadow var(--transition-normal), background-color var(--transition-fast); }
+
+/* ── Charts ───────────────────────────────────────────────────────────────── */
+:is(.chart-tooltip, .custom-chart-tooltip, .custom-tooltip) { animation: popIn 140ms var(--ease-soft); box-shadow: var(--shadow-lg), 0 0 0 1px rgb(var(--glow-rgb) / 0.1); }
+.chart-pickable :is(.recharts-bar-rectangle, .recharts-sector, .recharts-dot) { cursor: pointer; }
+.chart-pickable :is(.recharts-bar-rectangle path, .recharts-sector) { transition: opacity 220ms ease, transform 260ms var(--ease-soft), filter 220ms ease; }
+.chart-pickable :is(.recharts-bar-rectangle, .recharts-sector):hover { filter: brightness(1.08) drop-shadow(0 4px 8px rgb(15 23 42 / 0.18)); }
+.chart-hint { margin: 8px 0 0; font-size: 12px; color: var(--text-tertiary); text-align: center; }
+
+/* Click-to-expand summary under a chart */
+.chart-detail { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 340ms var(--ease-soft), margin-top 340ms var(--ease-soft); }
+.chart-detail.open { grid-template-rows: 1fr; margin-top: 14px; }
+.chart-detail-clip { overflow: hidden; min-height: 0; }
+.chart-detail-body { padding: 14px 16px; border: 1px solid rgb(var(--glow-rgb) / 0.22); border-left: 3px solid var(--detail-accent, var(--accent-primary)); border-radius: var(--radius-lg); background: linear-gradient(120deg, rgb(var(--glow-rgb) / 0.07), transparent 70%), var(--bg-surface-subtle); opacity: 0; transform: translateY(-8px); transition: opacity 240ms ease, transform 340ms var(--ease-soft), border-left-color 240ms ease; }
+.chart-detail.open .chart-detail-body { opacity: 1; transform: none; }
+.chart-detail-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.chart-detail-head strong { font-size: 14px; color: var(--text-primary); }
+.chart-detail-close { display: grid; place-items: center; width: 26px; height: 26px; border: 0; border-radius: 50%; background: transparent; color: var(--text-secondary); cursor: pointer; transition: background-color var(--transition-fast), transform var(--transition-fast); }
+.chart-detail-close:hover { background: var(--border-default); transform: rotate(90deg); }
+.chart-detail-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); gap: 12px 16px; margin: 0; }
+.chart-detail-stats div { min-width: 0; }
+.chart-detail-stats dt { font-size: 11px; letter-spacing: 0.3px; color: var(--text-secondary); }
+.chart-detail-stats dd { margin: 2px 0 0; font-size: 16px; font-weight: 650; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.chart-detail-stats dd.pos { color: var(--success-text); }
+.chart-detail-stats dd.neg { color: var(--danger-text); }
+.chart-detail-note { margin: 10px 0 0; font-size: 13px; line-height: 1.55; color: var(--text-secondary); }
+.chart-detail-bars { display: grid; gap: 6px; margin-top: 12px; }
+.chart-detail-bar { display: grid; grid-template-columns: 92px 1fr 44px; align-items: center; gap: 10px; font-size: 12px; color: var(--text-secondary); }
+.chart-detail-bar i { display: block; height: 6px; border-radius: 3px; background: var(--border-default); overflow: hidden; }
+.chart-detail-bar i b { display: block; height: 100%; border-radius: 3px; transition: width 420ms var(--ease-soft); }
+.chart-detail-bar span:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Donut: centre readout and clickable legend */
+.donut-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; pointer-events: none; animation: popIn 220ms var(--ease-soft); }
+.donut-center-top { font-size: 17px; font-weight: 700; color: var(--text-primary); line-height: 1.2; }
+.donut-center-sub { font-size: 11px; color: var(--text-secondary); }
+button.spending-legend-row { width: 100%; border: 1px solid transparent; font: inherit; font-size: 13px; text-align: left; cursor: pointer; transition: border-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast), opacity var(--transition-fast); }
+button.spending-legend-row:hover { transform: translateX(2px); border-color: var(--border-strong); }
+button.spending-legend-row[aria-pressed='true'] { border-color: var(--row-accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--row-accent) 18%, transparent); }
+.spending-donut-legend.picking button.spending-legend-row[aria-pressed='false'] { opacity: 0.6; }
+
+/* ── Landing: sections ease in as they scroll into view (class added by useReveal) ── */
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity 600ms var(--ease-soft), transform 700ms var(--ease-soft); }
+.reveal.revealed { opacity: 1; transform: none; }
+
+/* ── Landing and auth ─────────────────────────────────────────────────────── */
+.landing-preview-card { animation: floaty 7s ease-in-out infinite; }
+:is(.landing-visual-card, .landing-arch-card) { transition: opacity 600ms var(--ease-soft), transform 500ms var(--ease-soft), box-shadow var(--transition-slow), border-color var(--transition-slow); }
+:is(.landing-visual-card, .landing-arch-card).revealed:hover { transform: translateY(-4px); box-shadow: 0 24px 48px -28px rgb(var(--glow-rgb) / 0.75); border-color: rgb(var(--glow-rgb) / 0.4); }
+.landing-conversion-ambient-glow, .auth-brand-panel-glow { animation: glowDrift 16s ease-in-out infinite alternate; }
+@keyframes glowDrift { from { transform: translate(0, 0) scale(1); } to { transform: translate(140px, 180px) scale(1.35); } }
+.auth-brand-motif-card { animation: riseIn 600ms 200ms var(--ease-soft) backwards, floaty 8s 900ms ease-in-out infinite; }
+.auth-form-panel > * { animation: riseIn 420ms var(--ease-soft) backwards; }

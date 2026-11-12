@@ -6,29 +6,50 @@ import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Animated, {
-  Easing, FadeIn, FadeInLeft, FadeInRight, FadeOut, useAnimatedStyle, useReducedMotion, useSharedValue, withDelay, withRepeat, withTiming,
+  cancelAnimation, Easing, FadeIn, FadeInLeft, FadeInRight, FadeOut, useAnimatedStyle, useReducedMotion, useSharedValue, withDelay, withRepeat, withSequence, withTiming,
 } from 'react-native-reanimated';
-import { getChatHistory, sendMessageToAgent } from '../services/api';
+import { useFocusEffect } from '@react-navigation/native';
+import { getChatHistory, getChatSessions, sendMessageToAgent } from '../services/api';
 import { useStore } from '../store/useStore';
-import { ChatMessage } from '../types';
-import { duration, easing } from '../motion';
+import { ChatMessage, ChatSession } from '../types';
+import { duration, easing, enterUp, popIn } from '../motion';
+import { PressableScale } from '../components/motion/PressableScale';
 import { createStyles, radius, shadow, typeScale, useTheme } from '../theme';
 import { useTabBarSpace } from '../components/navigation/TabBar';
 import { Chip } from '../components/ui/Bits';
 import { ThemeToggle } from '../components/ui/ThemeToggle';
+import { Sheet } from '../components/ui/Sheet';
+import { formatDay } from '../components/ui/DateField';
+import { useSpeechInput } from '../utils/useSpeechInput';
 
 const finauraLogo = require('../assets/finaura_logo.png');
 
-/** One dot of the "assistant is typing" indicator: a soft staggered opacity pulse. */
+/** One dot of the "assistant is typing" indicator: the three hop in a wave. */
 function TypingDot({ index, style }: { index: number; style: object }) {
   const reduced = useReducedMotion();
-  const opacity = useSharedValue(0.35);
+  const t = useSharedValue(0);
   useEffect(() => {
     if (reduced) return;
-    opacity.value = withDelay(index * 200, withRepeat(withTiming(1, { duration: 600, easing: Easing.inOut(Easing.sin) }), -1, true));
-  }, [index, reduced, opacity]);
-  const animatedStyle = useAnimatedStyle(() => ({ opacity: opacity.value }));
+    const hop = { duration: 280, easing: Easing.inOut(Easing.sin) };
+    t.value = withDelay(index * 150, withRepeat(withSequence(withTiming(1, hop), withTiming(0, hop), withTiming(0, { duration: 500 })), -1));
+    return () => cancelAnimation(t);
+  }, [index, reduced, t]);
+  const animatedStyle = useAnimatedStyle(() => ({ opacity: 0.35 + 0.65 * t.value, transform: [{ translateY: -4 * t.value }] }));
   return <Animated.View style={[style, animatedStyle]} />;
+}
+
+/** A soft ring that swells and fades behind its parent while `active` (thinking, listening). */
+function Pulse({ active, color, radius: r }: { active: boolean; color: string; radius: number }) {
+  const reduced = useReducedMotion();
+  const t = useSharedValue(0);
+  useEffect(() => {
+    cancelAnimation(t);
+    t.value = 0;
+    if (active && !reduced) t.value = withRepeat(withTiming(1, { duration: 1300, easing: Easing.out(Easing.quad) }), -1);
+    return () => cancelAnimation(t);
+  }, [active, reduced, t]);
+  const style = useAnimatedStyle(() => ({ opacity: active ? 0.45 * (1 - t.value) : 0, transform: [{ scale: 1 + 0.7 * t.value }] }));
+  return <Animated.View pointerEvents="none" style={[StyleSheet.absoluteFill, { borderRadius: r, backgroundColor: color }, style]} />;
 }
 
 // Bubbles fade in with a 6pt slide from the sender's side.
@@ -36,12 +57,36 @@ const enterUser = FadeInRight.duration(duration.base).easing(easing.standard).wi
 const enterBot = FadeInLeft.duration(duration.base).easing(easing.standard).withInitialValues({ opacity: 0, transform: [{ translateX: -6 }] });
 
 // ── Grounded Quick Prompts ─────────────────────────────────
+// Starters shown before the first message of a session: a spread of what the assistant can read and do.
 const QUICK_PROMPTS = [
+  'How am I doing overall?',
   'How is my spending this month?',
+  'Where did most of my money go this month?',
+  'Am I within my 50/30/20 budget?',
+  'What is my balance right now?',
+  'How much can I safely spend this week?',
   'Why is my FMI changing?',
-  'When could I reach FIRE?',
+  'What would raise my FMI the fastest?',
   'What liabilities are due soon?',
+  'Which wants could I cut back on?',
   'How much have I spent on Food & Dining?',
+  'How much did I invest this month?',
+  'How can I improve my savings rate?',
+  'When could I reach FIRE?',
+  'How much more should I invest each month for FIRE?',
+  'Are my goals on track?',
+  'What spending habits do you see?',
+  'I spent ₹250 on chai and snacks',
+  'Aaj 500 ka petrol dalwaya',
+  'Add ₹5,000 invested in a mutual fund SIP',
+];
+
+const newSessionId = () => `s-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+
+// Speech languages. Hindi mode also copes with mixed Hindi-English speech.
+const VOICE_LANGS = [
+  { code: 'en-IN', label: 'EN', name: 'English' },
+  { code: 'hi-IN', label: 'हिं', name: 'Hindi and Hinglish' },
 ];
 
 function formatTime(isoString?: string): string {
@@ -98,11 +143,28 @@ function useTypewriter(text: string, active: boolean) {
   return words.slice(0, count).join('');
 }
 
-function Avatar() {
-  const s = useSStyles();
+/** The assistant's mark: the logo inside a gradient ring that turns slowly, faster with a pulse while it works. */
+function Avatar({ size = 30, active = false }: { size?: number; active?: boolean }) {
+  const { c } = useTheme();
+  const reduced = useReducedMotion();
+  const turn = useSharedValue(0);
+  useEffect(() => {
+    if (reduced) return;
+    // Restart from the current angle so changing speed never makes the ring jump.
+    cancelAnimation(turn);
+    turn.value = turn.value % 1;
+    turn.value = withRepeat(withTiming(turn.value + 1, { duration: active ? 1600 : 9000, easing: Easing.linear }), -1);
+    return () => cancelAnimation(turn);
+  }, [active, reduced, turn]);
+  const ring = useAnimatedStyle(() => ({ transform: [{ rotate: `${turn.value * 360}deg` }] }));
+  const r = size / 2; // a circle, so the turning ring never shows corners
   return (
-    <View style={s.avatar}>
-      <Image source={finauraLogo} style={s.avatarImg} />
+    <View style={{ width: size, height: size }}>
+      <Pulse active={active} color={c.primary} radius={r} />
+      <Animated.View style={[StyleSheet.absoluteFill, { borderRadius: r, overflow: 'hidden' }, ring]}>
+        <LinearGradient colors={['#4F46E5', '#22D3EE', '#A855F7']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={StyleSheet.absoluteFill} />
+      </Animated.View>
+      <Image source={finauraLogo} style={{ position: 'absolute', top: 2, left: 2, width: size - 4, height: size - 4, borderRadius: r - 2 }} />
     </View>
   );
 }
@@ -132,6 +194,12 @@ const Bubble = React.memo(function Bubble({ item, fresh, failedText, onRetry }: 
             <RichText text={shown} style={s.bubbleBotTxt} boldStyle={s.bold} bulletColor={c.primary} />
           </View>
         )}
+        {item.actions?.map((a, i) => (
+          <Animated.View key={i} entering={fresh ? popIn(200 + i * 90) : undefined} style={s.receipt}>
+            <Ionicons name={a.ok ? 'checkmark-circle' : 'close-circle'} size={14} color={a.ok ? c.primary : c.textMuted} />
+            <Text style={s.receiptTxt}>{a.label}</Text>
+          </Animated.View>
+        ))}
         {failedText ? (
           <Pressable onPress={() => onRetry(failedText)} style={s.retry} accessibilityRole="button" accessibilityLabel="Retry message">
             <Ionicons name="refresh" size={13} color={c.primary} />
@@ -168,48 +236,54 @@ export function ChatScreen(): React.ReactElement {
   const [input,           setInput]           = useState('');
   const [loading,         setLoading]         = useState(false);
   const [fetchingHistory, setFetchingHistory] = useState(false);
-  const [showPrompts,     setShowPrompts]     = useState(true);
+  const [showPrompts,     setShowPrompts]     = useState(false);
   // Replies that arrived in this session get the typewriter reveal; history renders instantly.
   const [freshId,         setFreshId]         = useState<string | null>(null);
   const [failed,          setFailed]          = useState<{ id: string; text: string } | null>(null);
+  const [focused,         setFocused]         = useState(false);
   const listRef = useRef<FlatList<ChatMessage>>(null);
 
   const userName = user?.name?.split(' ')[0] ?? 'there';
 
-  // Hydrate chat history from backend on mount
-  useEffect(() => {
-    let isMounted = true;
-    async function loadHistory() {
-      try {
-        setFetchingHistory(true);
-        const history = await getChatHistory();
-        if (isMounted && Array.isArray(history) && history.length > 0) {
-          const sorted = [...history].sort(
-            (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
-          );
-          setChatHistory(sorted);
-          setShowPrompts(false);
-        }
-      } catch (err) {
-        console.warn('Failed to load chat history:', err);
-      } finally {
-        if (isMounted) {
-          setFetchingHistory(false);
-          setTimeout(() => listRef.current?.scrollToEnd({ animated: false }), 150);
-        }
-      }
-    }
-    loadHistory();
-    return () => {
-      isMounted = false;
-    };
+  // Sessions: opening the assistant starts a new chat; older ones stay saved and can be reopened from the header.
+  const sessionRef = useRef(newSessionId());
+  const [sessions,    setSessions]    = useState<ChatSession[]>([]);
+  const [historyOpen, setHistoryOpen] = useState(false);
+
+  const startNewChat = useCallback(() => {
+    sessionRef.current = newSessionId();
+    setChatHistory([]);
+    setShowPrompts(false);
+    setFailed(null);
+    setLoading(false);
   }, [setChatHistory]);
+  useFocusEffect(startNewChat);
+
+  const openHistory = () => {
+    setHistoryOpen(true);
+    getChatSessions().then(setSessions).catch(() => setSessions([]));
+  };
+
+  const openSession = async (id: string) => {
+    setHistoryOpen(false);
+    startNewChat();
+    sessionRef.current = id;
+    setFetchingHistory(true);
+    try {
+      const history = await getChatHistory(id);
+      if (sessionRef.current === id) setChatHistory(history);
+    } catch (err) {
+      console.warn('Failed to load chat session:', err);
+    } finally {
+      setFetchingHistory(false);
+    }
+  };
 
   const INITIAL_MESSAGES: ChatMessage[] = [
     {
       id: 'bot-0',
       role: 'assistant',
-      content: `Hi ${userName}! I'm FINAURA, your money copilot. Ask me about your balance, spending, **FMI score**, bills, or when you could reach FIRE.`,
+      content: `Hi ${userName}! I'm FINAURA, your money copilot. Ask me about your balance, spending, **FMI score**, bills or FIRE. You can also tell me what you bought, by typing or with the mic, in English, Hindi or Hinglish, and I'll record it.`,
       timestamp: new Date().toISOString(),
     },
   ];
@@ -234,11 +308,14 @@ export function ChatScreen(): React.ReactElement {
     setFailed(null);
     setLoading(true);
 
+    const session = sessionRef.current;
     try {
-      const aiMsg = await sendMessageToAgent(trimmed, {});
+      const aiMsg = await sendMessageToAgent(trimmed, session);
+      if (sessionRef.current !== session) return; // the user moved to another chat; the reply is saved with its own session
       setFreshId(aiMsg.id);
       addChatMessage(aiMsg);
     } catch {
+      if (sessionRef.current !== session) return;
       const errorId = `e-${Date.now()}`;
       setFailed({ id: errorId, text: trimmed });
       addChatMessage({
@@ -248,10 +325,15 @@ export function ChatScreen(): React.ReactElement {
         timestamp: new Date().toISOString(),
       });
     } finally {
-      setLoading(false);
+      if (sessionRef.current === session) setLoading(false);
       setTimeout(() => listRef.current?.scrollToEnd({ animated: true }), 100);
     }
   }, [loading, addChatMessage]);
+
+  // Speaking sends the message when the user stops talking, so adding a purchase is hands-free.
+  const [langIndex, setLangIndex] = useState(0);
+  const voiceLang = VOICE_LANGS[langIndex];
+  const speech = useSpeechInput(voiceLang.code, setInput, sendMessage);
 
   const headerHeight = insets.top + 64;
 
@@ -275,25 +357,30 @@ export function ChatScreen(): React.ReactElement {
             storeHistory.length === 0 ? (
               <Animated.View entering={FadeIn.duration(duration.slow)} style={s.emptyStateCard}>
                 <View style={s.emptyIcon}>
-                  <Ionicons name="sparkles" size={22} color={c.primary} />
+                  <Avatar size={52} />
                 </View>
                 <Text style={s.emptyTitle}>Ask FINAURA about your finances</Text>
                 <Text style={s.emptySub}>
                   Grounded in your verified operating balance, spending habits, FMI pillars, and FIRE milestones.
                 </Text>
+                <View style={s.starters}>
+                  {QUICK_PROMPTS.map((p) => (
+                    <Chip key={p} label={p} onPress={() => sendMessage(p)} style={s.pill} />
+                  ))}
+                </View>
               </Animated.View>
             ) : undefined
           }
           ListFooterComponent={
             loading ? (
-              <View style={s.bubbleRow}>
-                <Avatar />
+              <Animated.View entering={enterBot} style={s.bubbleRow}>
+                <Avatar active />
                 <View style={[s.bubble, s.bubbleBot]}>
                   <View style={s.typingDots}>
                     {[0, 1, 2].map((i) => <TypingDot key={i} index={i} style={s.dot} />)}
                   </View>
                 </View>
-              </View>
+              </Animated.View>
             ) : undefined
           }
         />
@@ -303,14 +390,17 @@ export function ChatScreen(): React.ReactElement {
           {showPrompts && !loading ? (
             <Animated.View entering={FadeIn} exiting={FadeOut}>
               <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={s.promptScroll} keyboardShouldPersistTaps="handled">
-                {QUICK_PROMPTS.map((p) => (
-                  <Chip key={p} label={p} onPress={() => sendMessage(p)} style={s.pill} />
+                {QUICK_PROMPTS.map((p, i) => (
+                  <Animated.View key={p} entering={enterUp(i, 55)}>
+                    <Chip label={p} onPress={() => sendMessage(p)} style={s.pill} />
+                  </Animated.View>
                 ))}
               </ScrollView>
             </Animated.View>
           ) : null}
 
-          <View style={s.inputBar}>
+          {speech.error ? <Text style={s.voiceError} accessibilityRole="alert">{speech.error}</Text> : null}
+          <View style={[s.inputBar, (focused || speech.listening) && s.inputBarOn, speech.listening && s.inputBarListening]}>
             <Pressable
               onPress={() => setShowPrompts((v) => !v)}
               style={s.ideaBtn}
@@ -323,15 +413,43 @@ export function ChatScreen(): React.ReactElement {
               style={s.input}
               value={input}
               onChangeText={setInput}
-              placeholder="Ask about spending, FMI, FIRE…"
+              placeholder={speech.listening ? 'Listening…' : 'Ask, or say what you spent…'}
               placeholderTextColor={c.textSubtle}
               keyboardAppearance={isDark ? 'dark' : 'light'}
+              onFocus={() => setFocused(true)}
+              onBlur={() => setFocused(false)}
               multiline
               accessibilityLabel="Message FINAURA"
             />
-            <Pressable
+            {speech.supported && !input.trim() ? (
+              <>
+                <Pressable
+                  onPress={() => setLangIndex((i) => (i + 1) % VOICE_LANGS.length)}
+                  disabled={speech.listening}
+                  style={s.ideaBtn}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Voice language: ${voiceLang.name}. Tap to change`}
+                >
+                  <Text style={s.langTxt}>{voiceLang.label}</Text>
+                </Pressable>
+                <Pressable
+                  onPress={speech.listening ? speech.stop : speech.start}
+                  disabled={loading}
+                  style={[s.ideaBtn, speech.listening && s.micOn]}
+                  accessibilityRole="button"
+                  accessibilityState={{ selected: speech.listening }}
+                  accessibilityLabel={speech.listening ? 'Stop listening' : 'Speak your message'}
+                >
+                  <Pulse active={speech.listening} color={c.danger} radius={19} />
+                  <Ionicons name={speech.listening ? 'stop' : 'mic'} size={18} color={speech.listening ? c.onPrimary : c.textMuted} />
+                </Pressable>
+              </>
+            ) : null}
+            <PressableScale
               onPress={() => sendMessage(input)}
               disabled={!input.trim() || loading}
+              scaleTo={0.88}
+              haptic={false}
               accessibilityRole="button"
               accessibilityLabel="Send"
             >
@@ -343,7 +461,7 @@ export function ChatScreen(): React.ReactElement {
               >
                 <Ionicons name="arrow-up" size={18} color={c.onPrimary} />
               </LinearGradient>
-            </Pressable>
+            </PressableScale>
           </View>
         </View>
       </KeyboardAvoidingView>
@@ -351,13 +469,31 @@ export function ChatScreen(): React.ReactElement {
       {/* Header */}
       <View style={[s.header, { height: headerHeight, paddingTop: insets.top }]}>
         <BlurView intensity={70} tint={isDark ? 'dark' : 'light'} style={[StyleSheet.absoluteFill, s.headerGlass]} />
-        <Avatar />
+        <Avatar size={34} active={loading} />
         <View style={s.flex}>
           <Text style={s.headerTitle}>FINAURA AI</Text>
           <Text style={s.headerSub}>{fetchingHistory && storeHistory.length === 0 ? 'Loading your conversation…' : loading ? 'Thinking…' : 'Answers from your own numbers'}</Text>
         </View>
+        <Pressable onPress={openHistory} style={s.ideaBtn} accessibilityRole="button" accessibilityLabel="Past chats">
+          <Ionicons name="time-outline" size={18} color={c.textMuted} />
+        </Pressable>
+        <Pressable onPress={startNewChat} style={s.ideaBtn} accessibilityRole="button" accessibilityLabel="New chat">
+          <Ionicons name="create-outline" size={18} color={c.textMuted} />
+        </Pressable>
         <ThemeToggle />
       </View>
+
+      <Sheet visible={historyOpen} onClose={() => setHistoryOpen(false)} title="Past chats">
+        <ScrollView style={s.sessionList}>
+          {sessions.length === 0 ? <Text style={s.sessionMeta}>No saved chats yet.</Text> : null}
+          {sessions.map((x) => (
+            <Pressable key={x.id} onPress={() => openSession(x.id)} style={s.sessionRow} accessibilityRole="button">
+              <Text style={s.sessionTitle} numberOfLines={1}>{x.title}</Text>
+              <Text style={s.sessionMeta}>{formatDay(new Date(x.updatedAt))} · {x.messages} messages</Text>
+            </Pressable>
+          ))}
+        </ScrollView>
+      </Sheet>
     </View>
   );
 }
@@ -396,30 +532,25 @@ const useSStyles = createStyles((c) => ({
     ...shadow(c, 1),
   },
   emptyIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 16,
+    width: 52,
+    height: 52,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: c.primarySoft,
     marginBottom: 12,
   },
   emptyTitle: { ...typeScale.headline, color: c.text, textAlign: 'center' },
   emptySub: { ...typeScale.body, fontSize: 14, color: c.textMuted, textAlign: 'center', marginTop: 6 },
 
+  starters: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: 8, marginTop: 16 },
+  sessionList: { maxHeight: 420 },
+  sessionRow: { paddingVertical: 12, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: c.border },
+  sessionTitle: { ...typeScale.body, fontSize: 15, fontWeight: '600', color: c.text },
+  sessionMeta: { ...typeScale.caption, color: c.textMuted, marginTop: 2 },
+
   list:          { padding: 16, paddingBottom: 12, gap: 14 },
   bubbleRow:     { flexDirection: 'row', alignItems: 'flex-end', gap: 8 },
   bubbleRowUser: { flexDirection: 'row-reverse' },
   bubbleRowBot:  {},
-  avatar: {
-    width: 30,
-    height: 30,
-    borderRadius: 10,
-    overflow: 'hidden',
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: c.border,
-  },
-  avatarImg: { width: '100%', height: '100%' },
 
   bubbleContainer:     { maxWidth: '80%' },
   bubbleContainerUser: { alignItems: 'flex-end' },
@@ -441,6 +572,11 @@ const useSStyles = createStyles((c) => ({
   timestampBot:  { textAlign: 'left' },
   retry: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 6, paddingHorizontal: 4 },
   retryTxt: { fontSize: 12, fontWeight: '700', color: c.primary },
+  receipt: { flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: 'flex-start', marginTop: 6, paddingHorizontal: 10, paddingVertical: 5, borderRadius: 999, backgroundColor: c.surfaceAlt },
+  receiptTxt: { fontSize: 12, color: c.textMuted, flexShrink: 1 },
+  langTxt: { fontSize: 13, fontWeight: '700', color: c.textMuted },
+  micOn: { backgroundColor: c.danger },
+  voiceError: { fontSize: 12, color: c.textMuted, paddingHorizontal: 20 },
 
   typingDots: { flexDirection: 'row', gap: 5, paddingVertical: 4 },
   dot: { width: 7, height: 7, borderRadius: 3.5, backgroundColor: c.textSubtle },
@@ -468,6 +604,9 @@ const useSStyles = createStyles((c) => ({
     borderColor: c.border,
     ...shadow(c, 2),
   },
+  // Focus and listening light the field's edge, like the web composer's ring.
+  inputBarOn: { borderColor: c.primary, boxShadow: `0px 6px 22px ${c.primary}55` },
+  inputBarListening: { borderColor: c.danger, boxShadow: `0px 6px 22px ${c.danger}55` },
   ideaBtn: {
     width: 38,
     height: 38,

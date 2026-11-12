@@ -25,7 +25,8 @@
     "src"
   ],
   "exclude": [
-    "src/**/*.check.ts"
+    "src/**/*.check.ts",
+    "src/**/* 2.*"
   ],
   "extends": "expo/tsconfig.base.json"
 }

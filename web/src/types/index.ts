@@ -528,11 +528,21 @@ export interface TransactionPayload {
   paymentMethodId?: string | null;
 }
 
+/** One saved assistant conversation, titled by its first message. */
+export interface ChatSession {
+  id: string;
+  title: string;
+  updatedAt: string;
+  messages: number;
+}
+
 export interface ChatMessage {
   id: string;
   role: 'user' | 'assistant';
   content: string;
   timestamp: string;
+  /** Changes the assistant made while answering (only on a fresh reply, not in history). */
+  actions?: { tool: string; ok: boolean; label: string }[];
 }
 
 export interface EnvelopeData {

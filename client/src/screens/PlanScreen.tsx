@@ -148,6 +148,17 @@ export function PlanScreen(): React.ReactElement {
             </Card>
           </Animated.View>
 
+          <Animated.View entering={enterUp(7)}>
+            <Card onPress={() => navigation.navigate('Reports')} style={styles.wide} accessibilityLabel="Open reports">
+              <IconTile icon="document-text" tint={c.info} />
+              <View style={styles.flex}>
+                <Text style={styles.wideTitle}>Reports</Text>
+                <Text style={styles.wideBody}>Weekly and monthly reviews, history and CSV export.</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={18} color={c.textSubtle} />
+            </Card>
+          </Animated.View>
+
           <Animated.View entering={enterUp(7)} style={styles.pair}>
             <Card onPress={() => navigation.navigate('Recap')} style={styles.half} accessibilityLabel="Play your monthly recap">
               <IconTile icon="albums" tint={c.chart[3]} size={36} />

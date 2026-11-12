@@ -3,7 +3,7 @@ import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 import { secureStorage } from '../utils/secureStorage';
 import {
-  AlertItem, BehaviorPattern, ChatMessage, DashboardData, EnvelopeData,
+  AlertItem, BehaviorPattern, ChatMessage, ChatSession, DashboardData, EnvelopeData,
   FISData, FMIRecord, FMIResponse, Goal, IncomeFlowData, IncomeRecord,
   Transaction, WeeklyReport, User, Liability, LiabilityPaymentSummary,
   LiabilityPaymentHistoryResponse, PredictabilitySnapshot, PredictabilityResponse,
@@ -186,6 +186,14 @@ export async function forgotPasswordUser(email: string): Promise<{ success: bool
   return data;
 }
 
+export async function changePasswordUser(currentPassword: string, newPassword: string): Promise<{ message: string }> {
+  const { data } = await api.post('/api/auth/change-password', { currentPassword, newPassword });
+  // The server signs out every other device and hands this one fresh tokens.
+  await secureStorage.saveTokens(data.accessToken, data.refreshToken);
+  setAuthToken(data.accessToken);
+  return data;
+}
+
 export async function resetPasswordUser(payload: { token: string; password: string }): Promise<{ success: boolean; message: string }> {
   const { data } = await api.post('/api/auth/reset-password', payload);
   return data;
@@ -323,18 +331,36 @@ export async function getAlerts(): Promise<AlertItem[]> {
   return data;
 }
 
-// ── Chat (Gemini AI) ─────────────────────────────────────────
+// ── Service status ──────────────────────────────────────────────
 
-export async function sendMessageToAgent(
-  message: string,
-  context: Record<string, unknown>
-): Promise<ChatMessage> {
-  const { data } = await api.post('/api/agent/chat', { message, context });
+export interface SystemStatus {
+  api: { ok: boolean; uptimeSeconds: number };
+  database: { ok: boolean };
+  ml: { ok: boolean; classifierReady: boolean; latencyMs: number };
+  assistant: { ok: boolean };
+  checkedAt: string;
+}
+
+export async function getSystemStatus(): Promise<SystemStatus> {
+  const { data } = await api.get('/api/system/status');
+  return data.data;
+}
+
+// ── Chat (AI assistant) ─────────────────────────────────────────
+
+export async function sendMessageToAgent(message: string, sessionId: string): Promise<ChatMessage> {
+  // An agent turn can make several model and tool calls, well past the default 10 s.
+  const { data } = await api.post('/api/agent/chat', { message, sessionId }, { timeout: 90000 });
   return data;
 }
 
-export async function getChatHistory(): Promise<ChatMessage[]> {
-  const { data } = await api.get('/api/agent/history');
+export async function getChatHistory(sessionId: string): Promise<ChatMessage[]> {
+  const { data } = await api.get('/api/agent/history', { params: { sessionId } });
+  return data;
+}
+
+export async function getChatSessions(): Promise<ChatSession[]> {
+  const { data } = await api.get('/api/agent/sessions');
   return data;
 }
 

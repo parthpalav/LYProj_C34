@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight,
@@ -15,8 +15,11 @@ import {
   PieChart,
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
+import { revealOnScroll } from '../utils/spotlight';
 
 export const LandingPage: React.FC = () => {
+  useEffect(() => revealOnScroll(document, '.landing-visual-card, .landing-narrative-copy, .landing-feature-text, .landing-arch-card, .landing-security-content, .landing-conversion-card'), []);
+
   return (
     <div className="landing-page-root">
       {/* Navigation Header */}

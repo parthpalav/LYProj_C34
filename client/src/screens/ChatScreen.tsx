@@ -16,6 +16,7 @@ import { createStyles, radius, shadow, typeScale, useTheme } from '../theme';
 import { useTabBarSpace } from '../components/navigation/TabBar';
 import { Chip } from '../components/ui/Bits';
 import { ThemeToggle } from '../components/ui/ThemeToggle';
+import { useSpeechInput } from '../utils/useSpeechInput';
 
 const finauraLogo = require('../assets/finaura_logo.png');
 
@@ -37,11 +38,19 @@ const enterBot = FadeInLeft.duration(duration.base).easing(easing.standard).with
 
 // ── Grounded Quick Prompts ─────────────────────────────────
 const QUICK_PROMPTS = [
+  'I spent ₹250 on chai and snacks',
+  'Aaj 500 ka petrol dalwaya',
   'How is my spending this month?',
   'Why is my FMI changing?',
   'When could I reach FIRE?',
   'What liabilities are due soon?',
   'How much have I spent on Food & Dining?',
+];
+
+// Speech languages. Hindi mode also copes with mixed Hindi-English speech.
+const VOICE_LANGS = [
+  { code: 'en-IN', label: 'EN', name: 'English' },
+  { code: 'hi-IN', label: 'हिं', name: 'Hindi and Hinglish' },
 ];
 
 function formatTime(isoString?: string): string {
@@ -132,6 +141,12 @@ const Bubble = React.memo(function Bubble({ item, fresh, failedText, onRetry }: 
             <RichText text={shown} style={s.bubbleBotTxt} boldStyle={s.bold} bulletColor={c.primary} />
           </View>
         )}
+        {item.actions?.map((a, i) => (
+          <View key={i} style={s.receipt}>
+            <Ionicons name={a.ok ? 'checkmark-circle' : 'close-circle'} size={14} color={a.ok ? c.primary : c.textMuted} />
+            <Text style={s.receiptTxt}>{a.label}</Text>
+          </View>
+        ))}
         {failedText ? (
           <Pressable onPress={() => onRetry(failedText)} style={s.retry} accessibilityRole="button" accessibilityLabel="Retry message">
             <Ionicons name="refresh" size={13} color={c.primary} />
@@ -209,7 +224,7 @@ export function ChatScreen(): React.ReactElement {
     {
       id: 'bot-0',
       role: 'assistant',
-      content: `Hi ${userName}! I'm FINAURA, your money copilot. Ask me about your balance, spending, **FMI score**, bills, or when you could reach FIRE.`,
+      content: `Hi ${userName}! I'm FINAURA, your money copilot. Ask me about your balance, spending, **FMI score**, bills or FIRE. You can also tell me what you bought, by typing or with the mic, in English, Hindi or Hinglish, and I'll record it.`,
       timestamp: new Date().toISOString(),
     },
   ];
@@ -252,6 +267,11 @@ export function ChatScreen(): React.ReactElement {
       setTimeout(() => listRef.current?.scrollToEnd({ animated: true }), 100);
     }
   }, [loading, addChatMessage]);
+
+  // Speaking sends the message when the user stops talking, so adding a purchase is hands-free.
+  const [langIndex, setLangIndex] = useState(0);
+  const voiceLang = VOICE_LANGS[langIndex];
+  const speech = useSpeechInput(voiceLang.code, setInput, sendMessage);
 
   const headerHeight = insets.top + 64;
 
@@ -310,6 +330,7 @@ export function ChatScreen(): React.ReactElement {
             </Animated.View>
           ) : null}
 
+          {speech.error ? <Text style={s.voiceError} accessibilityRole="alert">{speech.error}</Text> : null}
           <View style={s.inputBar}>
             <Pressable
               onPress={() => setShowPrompts((v) => !v)}
@@ -323,12 +344,35 @@ export function ChatScreen(): React.ReactElement {
               style={s.input}
               value={input}
               onChangeText={setInput}
-              placeholder="Ask about spending, FMI, FIRE…"
+              placeholder={speech.listening ? 'Listening…' : 'Ask, or say what you spent…'}
               placeholderTextColor={c.textSubtle}
               keyboardAppearance={isDark ? 'dark' : 'light'}
               multiline
               accessibilityLabel="Message FINAURA"
             />
+            {speech.supported && !input.trim() ? (
+              <>
+                <Pressable
+                  onPress={() => setLangIndex((i) => (i + 1) % VOICE_LANGS.length)}
+                  disabled={speech.listening}
+                  style={s.ideaBtn}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Voice language: ${voiceLang.name}. Tap to change`}
+                >
+                  <Text style={s.langTxt}>{voiceLang.label}</Text>
+                </Pressable>
+                <Pressable
+                  onPress={speech.listening ? speech.stop : speech.start}
+                  disabled={loading}
+                  style={[s.ideaBtn, speech.listening && s.micOn]}
+                  accessibilityRole="button"
+                  accessibilityState={{ selected: speech.listening }}
+                  accessibilityLabel={speech.listening ? 'Stop listening' : 'Speak your message'}
+                >
+                  <Ionicons name={speech.listening ? 'stop' : 'mic'} size={18} color={speech.listening ? c.onPrimary : c.textMuted} />
+                </Pressable>
+              </>
+            ) : null}
             <Pressable
               onPress={() => sendMessage(input)}
               disabled={!input.trim() || loading}
@@ -441,6 +485,11 @@ const useSStyles = createStyles((c) => ({
   timestampBot:  { textAlign: 'left' },
   retry: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 6, paddingHorizontal: 4 },
   retryTxt: { fontSize: 12, fontWeight: '700', color: c.primary },
+  receipt: { flexDirection: 'row', alignItems: 'center', gap: 6, alignSelf: 'flex-start', marginTop: 6, paddingHorizontal: 10, paddingVertical: 5, borderRadius: 999, backgroundColor: c.surfaceAlt },
+  receiptTxt: { fontSize: 12, color: c.textMuted, flexShrink: 1 },
+  langTxt: { fontSize: 13, fontWeight: '700', color: c.textMuted },
+  micOn: { backgroundColor: c.primary },
+  voiceError: { fontSize: 12, color: c.textMuted, paddingHorizontal: 20 },
 
   typingDots: { flexDirection: 'row', gap: 5, paddingVertical: 4 },
   dot: { width: 7, height: 7, borderRadius: 3.5, backgroundColor: c.textSubtle },

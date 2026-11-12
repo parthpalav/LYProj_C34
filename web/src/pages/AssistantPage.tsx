@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Send } from 'lucide-react';
+import { Check, Mic, Send, Square, X } from 'lucide-react';
 import { PageHeader } from '../components/ui/PageHeader';
 import { Button } from '../components/ui/Button';
 import { useAuth } from '../hooks/useAuth';
@@ -7,15 +7,27 @@ import { getChatHistory, sendMessageToAgent } from '../services/api';
 import { getUserFirstName } from '../utils/formatters';
 import type { ChatMessage } from '../types';
 import { getAppTimezone } from '../utils/timezone';
+import { useSpeechInput } from '../hooks/useSpeechInput';
 
 // Same grounded prompts as the mobile assistant.
 const QUICK_PROMPTS = [
+  'I spent ₹250 on chai and snacks',
+  'Aaj 500 ka petrol dalwaya',
   'How is my spending this month?',
   'Why is my FMI changing?',
   'When could I reach FIRE?',
   'What liabilities are due soon?',
   'How much have I spent on Food & Dining?',
 ];
+
+// Speech languages. Hindi mode also copes with mixed Hindi-English speech.
+const VOICE_LANGS = [
+  { code: 'en-IN', label: 'EN', name: 'English' },
+  { code: 'hi-IN', label: 'हिं', name: 'Hindi / Hinglish' },
+];
+const savedLang = () => {
+  try { return localStorage.getItem('finaura.voiceLang') || 'en-IN'; } catch { return 'en-IN'; }
+};
 
 /** Renders the assistant's light markdown: **bold**, "- " / "• " bullets and "1. " numbered lines. */
 function RichText({ text }: { text: string }) {
@@ -63,6 +75,16 @@ export const AssistantPage: React.FC = () => {
   const [loadingHistory, setLoadingHistory] = useState(true);
   const [failed, setFailed] = useState<{ id: string; text: string } | null>(null);
   const logRef = useRef<HTMLDivElement>(null);
+  const [voiceLang, setVoiceLang] = useState(savedLang);
+  const sendRef = useRef<(text: string) => void>(() => {});
+  // Speaking sends the message when the user stops talking, so adding a purchase is hands-free.
+  const speech = useSpeechInput(voiceLang, setInput, (text) => sendRef.current(text));
+  const nextLang = VOICE_LANGS[(VOICE_LANGS.findIndex((l) => l.code === voiceLang) + 1) % VOICE_LANGS.length];
+  const currentLang = VOICE_LANGS.find((l) => l.code === voiceLang) ?? VOICE_LANGS[0];
+  const switchLang = () => {
+    setVoiceLang(nextLang.code);
+    try { localStorage.setItem('finaura.voiceLang', nextLang.code); } catch { /* preference just won't persist */ }
+  };
 
   useEffect(() => {
     let mounted = true;
@@ -83,7 +105,7 @@ export const AssistantPage: React.FC = () => {
   const greeting: ChatMessage = {
     id: 'greeting',
     role: 'assistant',
-    content: `Hi ${getUserFirstName(user) || 'there'}! I'm FINAURA, your money copilot. Ask me about your balance, spending, **FMI score**, bills, or when you could reach FIRE.`,
+    content: `Hi ${getUserFirstName(user) || 'there'}! I'm FINAURA, your money copilot. Ask me about your balance, spending, **FMI score**, bills or FIRE. You can also tell me what you bought, by typing or with the mic, in English, Hindi or Hinglish, and I'll record it.`,
     timestamp: '',
   };
   const shown = messages.length ? messages : [greeting];
@@ -108,9 +130,11 @@ export const AssistantPage: React.FC = () => {
     }
   };
 
+  useEffect(() => { sendRef.current = send; });
+
   return (
     <div className="parity-page">
-      <PageHeader title="Assistant" category="AI COPILOT" description="Ask about your money. Answers use your own transactions, bills and forecasts." />
+      <PageHeader title="Assistant" category="AI COPILOT" description="Ask about your money or tell it what you spent. It can add, edit and remove your records." />
       <section className="parity-card chat-shell" aria-label="Conversation with FINAURA">
         <div className="chat-log" ref={logRef} aria-live="polite">
           {loadingHistory ? (
@@ -119,6 +143,16 @@ export const AssistantPage: React.FC = () => {
             shown.map((m) => (
               <div key={m.id} className={`chat-bubble-row ${m.role}`}>
                 <div className="chat-bubble">{m.role === 'assistant' ? <RichText text={m.content} /> : m.content}</div>
+                {m.actions && m.actions.length > 0 && (
+                  <ul className="chat-actions" aria-label="Changes made">
+                    {m.actions.map((a, i) => (
+                      <li key={i} className={a.ok ? 'ok' : 'failed'}>
+                        {a.ok ? <Check size={13} aria-hidden /> : <X size={13} aria-hidden />}
+                        {a.label}
+                      </li>
+                    ))}
+                  </ul>
+                )}
                 {failed?.id === m.id ? (
                   <button type="button" className="chat-retry" onClick={() => send(failed.text)}>Try again</button>
                 ) : (
@@ -147,15 +181,40 @@ export const AssistantPage: React.FC = () => {
             className="form-input"
             rows={1}
             maxLength={2000}
-            placeholder="Ask FINAURA anything about your money…"
+            placeholder={speech.listening ? 'Listening…' : 'Ask a question or say what you spent…'}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(input); }
             }}
           />
+          {speech.supported && (
+            <>
+              <button
+                type="button"
+                className="chat-lang"
+                onClick={switchLang}
+                disabled={speech.listening}
+                aria-label={`Voice language: ${currentLang.name}. Switch to ${nextLang.name}`}
+                title={`Voice language: ${currentLang.name}`}
+              >
+                {currentLang.label}
+              </button>
+              <button
+                type="button"
+                className={`chat-mic${speech.listening ? ' listening' : ''}`}
+                onClick={speech.listening ? speech.stop : speech.start}
+                disabled={sending}
+                aria-pressed={speech.listening}
+                aria-label={speech.listening ? 'Stop listening' : 'Speak your message'}
+              >
+                {speech.listening ? <Square size={15} /> : <Mic size={17} />}
+              </button>
+            </>
+          )}
           <Button type="submit" disabled={!input.trim() || sending} leftIcon={<Send size={15} />}>Send</Button>
         </form>
+        {speech.error && <p className="chat-voice-error" role="alert">{speech.error}</p>}
       </section>
     </div>
   );

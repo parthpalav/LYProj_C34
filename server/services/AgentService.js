@@ -194,12 +194,16 @@ Your mission is to guide the user towards financial stability, disciplined wealt
  * @param {Array<Object>} [rawHistory=[]] - Recent message history from AgentMemory
  * @returns {Promise<string>} Grounded assistant response text
  */
-// Google retires model ids regularly (gemini-1.5-flash now 404s), so try a short list and remember the first that answers.
-const GEMINI_MODELS = [
+// Google retires and overloads model ids regularly (gemini-1.5/2.5 now 404, the -latest aliases often 503 or take 15 s),
+// so try a short list and remember the first that answers. Order: fastest measured on 2026-11-12 first, aliases last.
+export const GEMINI_MODELS = [
   ...(process.env.GEMINI_MODEL || '').split(',').map((m) => m.trim()).filter(Boolean),
-  // Aliases, not versioned ids: they keep pointing at a live model. Lite is the fallback when Flash is overloaded.
-  'gemini-flash-latest',
+  'gemini-3.5-flash-lite',
+  'gemini-3.6-flash',
+  'gemini-3.5-flash',
+  // Aliases keep pointing at a live model when the ids above are retired.
   'gemini-flash-lite-latest',
+  'gemini-flash-latest',
 ];
 let workingModel = null;
 

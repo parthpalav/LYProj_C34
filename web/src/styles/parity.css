@@ -38,6 +38,21 @@
 .chat-prompts { display: flex; gap: 8px; flex-wrap: wrap; padding: 0 20px 12px; }
 .chat-composer { display: flex; gap: 10px; padding: 14px 20px; border-top: 1px solid var(--border-default); background: var(--bg-surface); }
 .chat-composer textarea { flex: 1; resize: none; min-height: 42px; max-height: 140px; font: inherit; }
+.chat-actions { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.chat-actions li { display: inline-flex; align-items: center; gap: 6px; width: fit-content; font-size: 12px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border-default); color: var(--text-secondary); background: var(--bg-surface); }
+.chat-actions li.ok svg { color: var(--success, #16a34a); }
+.chat-actions li.failed { color: var(--danger, #dc2626); }
+.chat-mic, .chat-lang { flex: none; width: 42px; height: 42px; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--radius-md); border: 1px solid var(--border-default); background: var(--bg-surface); color: var(--text-primary); cursor: pointer; font: inherit; font-size: 13px; font-weight: 600; }
+.chat-mic:disabled, .chat-lang:disabled { opacity: .5; cursor: not-allowed; }
+.chat-mic:focus-visible, .chat-lang:focus-visible { outline: 2px solid var(--accent-primary); outline-offset: 2px; }
+.chat-mic.listening { background: var(--danger, #dc2626); border-color: transparent; color: #fff; animation: chat-pulse 1.2s infinite ease-in-out; }
+.chat-voice-error { margin: 0; padding: 0 20px 12px; font-size: 12px; color: var(--danger, #dc2626); background: var(--bg-surface); }
+@media (prefers-reduced-motion: reduce) { .chat-mic.listening { animation: none; } }
+@media (max-width: 480px) {
+  .chat-composer { flex-wrap: wrap; }
+  .chat-composer textarea { flex-basis: 100%; }
+  .chat-composer .btn { flex: 1; }
+}
 .chat-typing { display: inline-flex; gap: 4px; }
 .chat-typing i { width: 7px; height: 7px; border-radius: 50%; background: var(--text-tertiary); animation: chat-pulse 1.2s infinite ease-in-out; }
 .chat-typing i:nth-child(2) { animation-delay: .2s; }

@@ -331,13 +331,14 @@ export async function getAlerts(): Promise<AlertItem[]> {
   return data;
 }
 
-// ── Chat (Gemini AI) ─────────────────────────────────────────
+// ── Chat (AI assistant) ─────────────────────────────────────────
 
 export async function sendMessageToAgent(
   message: string,
   context: Record<string, unknown>
 ): Promise<ChatMessage> {
-  const { data } = await api.post('/api/agent/chat', { message, context });
+  // An agent turn can make several model and tool calls, well past the default 10 s.
+  const { data } = await api.post('/api/agent/chat', { message, context }, { timeout: 90000 });
   return data;
 }
 

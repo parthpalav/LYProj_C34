@@ -465,6 +465,8 @@ flowchart LR
     DET --> A
 ```
 
+**Agent mode.** With `GEMINI_API_KEY` set, every message goes to a tool-using agent (`server/services/AssistantAgent.js`) instead. It runs on Gemini Flash by default, trying `GEMINI_MODEL`, then `gemini-3.5-flash-lite`, `gemini-3.6-flash`, `gemini-3.5-flash` and the `-latest` aliases; set `ANTHROPIC_API_KEY` to run the same agent on Claude Haiku 5.5. It has twelve tools that call this server's own REST API as the signed-in user, so it can search transactions and add, edit or delete expenses, income, goals, bills and assets with the same validation and classification as the apps. It adds purchases as soon as you mention them, asks before deleting, and shows a receipt for each change. It understands English, Hindi and Hinglish. Both apps have a mic button with an EN / हिं switch: the web app uses the browser's Web Speech API (Chrome, Edge, Safari) and the mobile app uses the device recogniser through `expo-speech-recognition`. If the agent's model fails before it has changed anything, the message falls through to the path above.
+
 Without `GEMINI_API_KEY`, or when Gemini cannot be reached, factual questions still work and advice questions get an honest "can't reach the AI model" reply with a snapshot of your verified figures. The model id is not pinned: the server tries `GEMINI_MODEL` (if set), then `gemini-flash-latest`, then `gemini-flash-lite-latest`, with a 15-second timeout on each, so a retired or overloaded model does not take the assistant down.
 
 ### Authentication
@@ -570,7 +572,7 @@ erDiagram
 | **API** | Node.js ≥ 18, Express 4.22, Mongoose 8.12, Zod 4, Helmet 8, express-rate-limit 8, jsonwebtoken 9, bcryptjs 3, Nodemailer |
 | **Database** | MongoDB 6+ or MongoDB Atlas |
 | **ML service** | Python 3.9+, Flask 3.1, PyTorch + Hugging Face Transformers (`BAAI/bge-base-en-v1.5` fine-tune), sentence-transformers, scikit-learn, NumPy, Pandas, gdown |
-| **AI** | `@google/generative-ai` (Gemini Flash, model fallback list) behind a deterministic intent router |
+| **AI** | Tool-using agent on `@google/generative-ai` (Gemini Flash, model fallback list) or `@anthropic-ai/sdk` (Claude Haiku 5.5); deterministic intent router as the fallback |
 | **Tooling** | Oxlint, `tsc`, plain-Node and Python test scripts, shell orchestration in `scripts/` |
 
 ---
@@ -656,7 +658,10 @@ Copy each `.env.example` to `.env`.
 | `BCRYPT_ROUNDS` | No | `10` | Password hashing cost |
 | `ML_SERVICE_URL` | No | `http://localhost:5001` | ML service address |
 | `GEMINI_API_KEY` | No | none | Turns on advice answers in the assistant |
-| `GEMINI_MODEL` | No | `gemini-flash-latest`, then `gemini-flash-lite-latest` | Model id(s) to try first, comma-separated |
+| `GEMINI_MODEL` | No | `gemini-3.5-flash-lite`, `gemini-3.6-flash`, `gemini-3.5-flash`, then the `-latest` aliases | Model id(s) to try first, comma-separated |
+| `ANTHROPIC_API_KEY` | No | none | Runs the assistant's agent on Claude instead of Gemini. Key from platform.claude.com |
+| `ANTHROPIC_MODEL` | No | `claude-haiku-5-5` | Claude model for the agent |
+| `ANTHROPIC_EFFORT` | No | `low` | Reasoning effort for the agent |
 | `SMTP_HOST` / `SMTP_PORT` / `SMTP_USER` / `SMTP_PASS` / `SMTP_SECURE` | No | `smtp.mailtrap.io` / `587` / – / – / `false` | Email verification and password reset |
 | `EMAIL_FROM` | No | `"FINAURA Security <no-reply@finaura.app>"` | Sender address |
 | `APP_BASE_URL` | No | `http://localhost:4000` | Base URL used in email links |

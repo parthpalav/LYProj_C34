@@ -533,6 +533,8 @@ export interface ChatMessage {
   role: 'user' | 'assistant';
   content: string;
   timestamp: string;
+  /** Changes the assistant made while answering (only on a fresh reply, not in history). */
+  actions?: { tool: string; ok: boolean; label: string }[];
 }
 
 export interface EnvelopeData {

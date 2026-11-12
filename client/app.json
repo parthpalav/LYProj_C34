@@ -22,7 +22,17 @@
       "expo-font",
       "expo-secure-store",
       "expo-splash-screen",
-      "expo-status-bar"
+      "expo-status-bar",
+      [
+        "expo-speech-recognition",
+        {
+          "microphonePermission": "FINAURA uses the microphone so you can speak to the assistant.",
+          "speechRecognitionPermission": "FINAURA turns what you say into text for the assistant.",
+          "androidSpeechServicePackages": [
+            "com.google.android.googlequicksearchbox"
+          ]
+        }
+      ]
     ],
     "userInterfaceStyle": "automatic"
   }

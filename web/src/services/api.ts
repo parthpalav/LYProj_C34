@@ -594,7 +594,7 @@ export async function updateCurrentBalance(
 // ── AI Assistant ──────────────────────────────────────────────
 
 export async function sendMessageToAgent(message: string): Promise<ChatMessage> {
-  const { data } = await api.post('/api/agent/chat', { message, context: {} }, { timeout: 30000 });
+  const { data } = await api.post('/api/agent/chat', { message, context: {} }, { timeout: 90000 });
   return data;
 }
 

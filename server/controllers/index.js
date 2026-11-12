@@ -5,6 +5,7 @@ import { calculateFMI } from '../services/FMIService.js';
 import { predictOverspend, detectLowBalanceRisk } from '../services/PredictionService.js';
 import { applyRoundup, allocateToEnvelope, generateMicroActions } from '../services/MicroActionService.js';
 import { generateResponse } from '../services/AgentService.js';
+import { agentEnabled, loopbackApi, runAgent } from '../services/AssistantAgent.js';
 import { buildChatContext } from '../services/ChatContextService.js';
 import { routeDeterministicIntent } from '../services/ChatIntentRouter.js';
 import { analyzeSentiment, annotateTransactions } from '../services/SentimentService.js';
@@ -449,7 +450,7 @@ router.get('/system/status', async (_req, res) => {
       api: { ok: true, uptimeSeconds: Math.round(process.uptime()) },
       database: { ok: mongoose.connection.readyState === 1 },
       ml: { ok: Boolean(ml?.ok), classifierReady: Boolean(ml?.classifier_ready), latencyMs: Date.now() - started },
-      assistant: { ok: Boolean((process.env.GEMINI_API_KEY || '').trim()) },
+      assistant: { ok: agentEnabled(), canAct: agentEnabled() },
       checkedAt: new Date().toISOString(),
     },
   });
@@ -1619,16 +1620,36 @@ router.post('/agent/chat', aiChatRateLimiter, async (req, res, next) => {
     // 3. Build verified deterministic financial context (fresh on every turn)
     const context = await buildChatContext(userId);
 
-    // 4. Check deterministic router before calling Gemini
-    const intentResult = routeDeterministicIntent(message, context, priorHistory);
-
+    // 4. With a Claude or Gemini key the agent handles every message: it can act (add, edit, delete) and reads Hindi/Hinglish.
+    //    Without one, or if the agent fails, the read-only path answers: deterministic router first, then Gemini.
     let response = '';
-    if (intentResult.handled && intentResult.response) {
-      logger.info(`[Chat] Deterministic intent resolved: ${intentResult.intent}`);
-      response = intentResult.response;
-    } else {
-      logger.info('[Chat] Escalated query to Gemini LLM');
-      response = await generateResponse(message, context, priorHistory);
+    let actions = [];
+    if (agentEnabled()) {
+      const startedAt = Date.now();
+      try {
+        const result = await runAgent({
+          userInput: message,
+          context,
+          rawHistory: priorHistory,
+          timezone: await getUserTimezone(userId),
+          api: loopbackApi(req.headers.authorization),
+        });
+        response = result.text;
+        actions = result.actions;
+        logger.info(`[Chat] Agent answered in ${Date.now() - startedAt} ms with ${actions.length} action(s)`);
+      } catch (err) {
+        logger.error(`[Chat] Agent failed: ${err?.status || ''} ${err?.message || err}`);
+      }
+    }
+    if (!response) {
+      const intentResult = routeDeterministicIntent(message, context, priorHistory);
+      if (intentResult.handled && intentResult.response) {
+        logger.info(`[Chat] Deterministic intent resolved: ${intentResult.intent}`);
+        response = intentResult.response;
+      } else {
+        logger.info('[Chat] Escalated query to Gemini LLM');
+        response = await generateResponse(message, context, priorHistory);
+      }
     }
 
     // 5. Persist assistant response (shared persistence for both deterministic & Gemini paths)
@@ -1638,6 +1659,7 @@ router.post('/agent/chat', aiChatRateLimiter, async (req, res, next) => {
       id:        saved._id.toString(),
       role:      'assistant',
       content:   response,
+      actions,
       timestamp: saved.timestamp.toISOString()
     });
   } catch (error) { next(error); }

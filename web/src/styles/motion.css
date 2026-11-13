@@ -94,6 +94,10 @@
 .chart-pickable :is(.recharts-bar-rectangle, .recharts-sector, .recharts-dot) { cursor: pointer; }
 .chart-pickable :is(.recharts-bar-rectangle path, .recharts-sector) { transition: opacity 220ms ease, transform 260ms var(--ease-soft), filter 220ms ease; }
 .chart-pickable :is(.recharts-bar-rectangle, .recharts-sector):hover { filter: brightness(1.08) drop-shadow(0 4px 8px rgb(15 23 42 / 0.18)); }
+.chart-drilled { animation: popIn 320ms var(--ease-soft); transform-origin: center bottom; }
+.chart-drilled { position: relative; }
+.chart-back { position: absolute; top: 0; left: 0; z-index: 1; display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; border: 1px solid var(--border-default); border-radius: 999px; background: var(--bg-surface-subtle); color: var(--text-secondary); font: inherit; font-size: 12px; cursor: pointer; transition: background-color var(--transition-fast), color var(--transition-fast); }
+.chart-back:hover { background: var(--border-default); color: var(--text-primary); }
 .chart-hint { margin: 8px 0 0; font-size: 12px; color: var(--text-tertiary); text-align: center; }
 
 /* Click-to-expand summary under a chart */

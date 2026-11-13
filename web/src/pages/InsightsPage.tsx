@@ -226,7 +226,7 @@ export const InsightsPage: React.FC = () => {
               <SpendingTypeCards analysis={spending.typeAnalysis} />
 
               {/* Monthly Spending Trend Grouped Bar Chart */}
-              <SpendingTrendChart data={spending.trendData} />
+              <SpendingTrendChart data={spending.trendData} daysOf={spending.trendDays} />
 
               {/* Comparable-Period MoM Comparison & Category Movement */}
               <div className="insights-two-col-grid">

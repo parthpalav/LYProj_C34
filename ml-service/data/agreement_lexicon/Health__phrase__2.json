@@ -1,0 +1,270 @@
+[
+ {
+  "text": "cough syrup",
+  "type": "Need"
+ },
+ {
+  "text": "panadol",
+  "type": "Need"
+ },
+ {
+  "text": "bandages",
+  "type": "Need"
+ },
+ {
+  "text": "syringe",
+  "type": "Need"
+ },
+ {
+  "text": "blood test",
+  "type": "Need"
+ },
+ {
+  "text": "lab report",
+  "type": "Need"
+ },
+ {
+  "text": "dental check",
+  "type": "Need"
+ },
+ {
+  "text": "tooth paste",
+  "type": "Need"
+ },
+ {
+  "text": "tooth brush",
+  "type": "Need"
+ },
+ {
+  "text": "mouth wash",
+  "type": "Need"
+ },
+ {
+  "text": "sunscreen",
+  "type": "Need"
+ },
+ {
+  "text": "band aid",
+  "type": "Need"
+ },
+ {
+  "text": "antiseptic",
+  "type": "Need"
+ },
+ {
+  "text": "medicines",
+  "type": "Need"
+ },
+ {
+  "text": "eye drops",
+  "type": "Need"
+ },
+ {
+  "text": "prescription",
+  "type": "Need"
+ },
+ {
+  "text": "pain killers",
+  "type": "Need"
+ },
+ {
+  "text": "insulin",
+  "type": "Need"
+ },
+ {
+  "text": "vaccines",
+  "type": "Need"
+ },
+ {
+  "text": "antibiotics",
+  "type": "Need"
+ },
+ {
+  "text": "allergy medicine",
+  "type": "Need"
+ },
+ {
+  "text": "vitamin tablets",
+  "type": "Need"
+ },
+ {
+  "text": "protein powder",
+  "type": "Need"
+ },
+ {
+  "text": "multivitamin",
+  "type": "Need"
+ },
+ {
+  "text": "gym membership",
+  "type": "Want"
+ },
+ {
+  "text": "fitness classes",
+  "type": "Want"
+ },
+ {
+  "text": "yoga classes",
+  "type": "Want"
+ },
+ {
+  "text": "weight loss pills",
+  "type": "Want"
+ },
+ {
+  "text": "supplements",
+  "type": "Want"
+ },
+ {
+  "text": "pre workout",
+  "type": "Want"
+ },
+ {
+  "text": "post workout",
+  "type": "Want"
+ },
+ {
+  "text": "protein shake",
+  "type": "Want"
+ },
+ {
+  "text": "gym kit",
+  "type": "Want"
+ },
+ {
+  "text": "personal trainer",
+  "type": "Want"
+ },
+ {
+  "text": "med check",
+  "type": "Need"
+ },
+ {
+  "text": "flu shot",
+  "type": "Need"
+ },
+ {
+  "text": "blood pressure med",
+  "type": "Need"
+ },
+ {
+  "text": "eczema cream",
+  "type": "Need"
+ },
+ {
+  "text": "asthma inhaler",
+  "type": "Need"
+ },
+ {
+  "text": "allergy shot",
+  "type": "Need"
+ },
+ {
+  "text": "decongestant",
+  "type": "Need"
+ },
+ {
+  "text": "anti-inflammatory",
+  "type": "Need"
+ },
+ {
+  "text": "hepatitis vaccine",
+  "type": "Need"
+ },
+ {
+  "text": "flu medicine",
+  "type": "Need"
+ },
+ {
+  "text": "malaria tablets",
+  "type": "Need"
+ },
+ {
+  "text": "insect repellent",
+  "type": "Need"
+ },
+ {
+  "text": "flu shot",
+  "type": "Need"
+ },
+ {
+  "text": "health check-up",
+  "type": "Need"
+ },
+ {
+  "text": "chiropractic",
+  "type": "Need"
+ },
+ {
+  "text": "physical therapy",
+  "type": "Need"
+ },
+ {
+  "text": "mental health",
+  "type": "Need"
+ },
+ {
+  "text": "nutritionist",
+  "type": "Need"
+ },
+ {
+  "text": "hypnotherapy",
+  "type": "Need"
+ },
+ {
+  "text": "physiotherapy",
+  "type": "Need"
+ },
+ {
+  "text": "med test",
+  "type": "Need"
+ },
+ {
+  "text": "lab test",
+  "type": "Need"
+ },
+ {
+  "text": "blood test",
+  "type": "Need"
+ },
+ {
+  "text": "bone density",
+  "type": "Need"
+ },
+ {
+  "text": "gynecological",
+  "type": "Need"
+ },
+ {
+  "text": "dentist visit",
+  "type": "Need"
+ },
+ {
+  "text": "root canal",
+  "type": "Need"
+ },
+ {
+  "text": "tooth extraction",
+  "type": "Need"
+ },
+ {
+  "text": "oral health",
+  "type": "Need"
+ },
+ {
+  "text": "med check",
+  "type": "Need"
+ },
+ {
+  "text": "eye check",
+  "type": "Need"
+ },
+ {
+  "text": "ear check",
+  "type": "Need"
+ },
+ {
+  "text": "throat check",
+  "type": "Need"
+ }
+]

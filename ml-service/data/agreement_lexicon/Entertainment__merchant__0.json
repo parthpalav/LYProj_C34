@@ -1,0 +1,326 @@
+[
+ {
+  "text": "Netflix",
+  "type": "Want"
+ },
+ {
+  "text": "Amazon Prime",
+  "type": "Want"
+ },
+ {
+  "text": "Disney+",
+  "type": "Want"
+ },
+ {
+  "text": "Hotstar",
+  "type": "Want"
+ },
+ {
+  "text": "SonyLIV",
+  "type": "Want"
+ },
+ {
+  "text": "Zee5",
+  "type": "Want"
+ },
+ {
+  "text": "YouTube Premium",
+  "type": "Want"
+ },
+ {
+  "text": "HBO Max",
+  "type": "Want"
+ },
+ {
+  "text": "Mx Player",
+  "type": "Want"
+ },
+ {
+  "text": "Voot",
+  "type": "Want"
+ },
+ {
+  "text": "Epic Games",
+  "type": "Want"
+ },
+ {
+  "text": "Warner Bros.",
+  "type": "Want"
+ },
+ {
+  "text": "Sony Pictures",
+  "type": "Want"
+ },
+ {
+  "text": "Disney",
+  "type": "Want"
+ },
+ {
+  "text": "Universal",
+  "type": "Want"
+ },
+ {
+  "text": "21st Century Fox",
+  "type": "Want"
+ },
+ {
+  "text": "Warner Brothers",
+  "type": "Want"
+ },
+ {
+  "text": "Paramount",
+  "type": "Want"
+ },
+ {
+  "text": "AT&T",
+  "type": "Want"
+ },
+ {
+  "text": "PVR",
+  "type": "Want"
+ },
+ {
+  "text": "Inox",
+  "type": "Want"
+ },
+ {
+  "text": "Multiplex",
+  "type": "Want"
+ },
+ {
+  "text": "Regal Cinemas",
+  "type": "Want"
+ },
+ {
+  "text": "IMAX",
+  "type": "Want"
+ },
+ {
+  "text": "Star Cinema",
+  "type": "Want"
+ },
+ {
+  "text": "Dineout",
+  "type": "Want"
+ },
+ {
+  "text": "Zomato",
+  "type": "Want"
+ },
+ {
+  "text": "Swiggy",
+  "type": "Want"
+ },
+ {
+  "text": "Uber Eats",
+  "type": "Want"
+ },
+ {
+  "text": "Foodpanda",
+  "type": "Want"
+ },
+ {
+  "text": "Burger King",
+  "type": "Want"
+ },
+ {
+  "text": "McDonald's",
+  "type": "Want"
+ },
+ {
+  "text": "KFC",
+  "type": "Want"
+ },
+ {
+  "text": "Domino's Pizza",
+  "type": "Want"
+ },
+ {
+  "text": "Pizza Hut",
+  "type": "Want"
+ },
+ {
+  "text": "Starbucks",
+  "type": "Want"
+ },
+ {
+  "text": "Café Coffee Day",
+  "type": "Want"
+ },
+ {
+  "text": "Subway",
+  "type": "Want"
+ },
+ {
+  "text": "Baskin Robbins",
+  "type": "Want"
+ },
+ {
+  "text": "Thelephant",
+  "type": "Want"
+ },
+ {
+  "text": "Havmor",
+  "type": "Want"
+ },
+ {
+  "text": "The Coffee Club",
+  "type": "Want"
+ },
+ {
+  "text": "Koffee With Karan",
+  "type": "Want"
+ },
+ {
+  "text": "Vivo",
+  "type": "Want"
+ },
+ {
+  "text": "PUBG",
+  "type": "Want"
+ },
+ {
+  "text": "Free Fire",
+  "type": "Want"
+ },
+ {
+  "text": "Call of Duty",
+  "type": "Want"
+ },
+ {
+  "text": "Fortnite",
+  "type": "Want"
+ },
+ {
+  "text": "League of Legends",
+  "type": "Want"
+ },
+ {
+  "text": "PUBG Mobile",
+  "type": "Want"
+ },
+ {
+  "text": "Twitch",
+  "type": "Want"
+ },
+ {
+  "text": "YouTube Gaming",
+  "type": "Want"
+ },
+ {
+  "text": "Garena Free Fire",
+  "type": "Want"
+ },
+ {
+  "text": "Riot Games",
+  "type": "Want"
+ },
+ {
+  "text": "Blizzard Entertainment",
+  "type": "Want"
+ },
+ {
+  "text": "EA Play",
+  "type": "Want"
+ },
+ {
+  "text": "Sony PlayStation",
+  "type": "Want"
+ },
+ {
+  "text": "Microsoft Xbox",
+  "type": "Want"
+ },
+ {
+  "text": "Nintendo Switch",
+  "type": "Want"
+ },
+ {
+  "text": "Cinepolis",
+  "type": "Want"
+ },
+ {
+  "text": "AMC",
+  "type": "Want"
+ },
+ {
+  "text": "MGM",
+  "type": "Want"
+ },
+ {
+  "text": "Cox & Kings",
+  "type": "Want"
+ },
+ {
+  "text": "Thomas Cook",
+  "type": "Want"
+ },
+ {
+  "text": "Havells",
+  "type": "Want"
+ },
+ {
+  "text": "Bajaj Allianz",
+  "type": "Want"
+ },
+ {
+  "text": "ICICI Prudential",
+  "type": "Want"
+ },
+ {
+  "text": "ICICI Lombard",
+  "type": "Want"
+ },
+ {
+  "text": "SBI Life",
+  "type": "Want"
+ },
+ {
+  "text": "SBI General",
+  "type": "Want"
+ },
+ {
+  "text": "Axa",
+  "type": "Want"
+ },
+ {
+  "text": "Reliance Jio",
+  "type": "Want"
+ },
+ {
+  "text": "Vodafone Idea",
+  "type": "Want"
+ },
+ {
+  "text": "Reliance Digital",
+  "type": "Want"
+ },
+ {
+  "text": "Amazon",
+  "type": "Want"
+ },
+ {
+  "text": "Flipkart",
+  "type": "Want"
+ },
+ {
+  "text": "Paytm Mall",
+  "type": "Want"
+ },
+ {
+  "text": "Myntra",
+  "type": "Want"
+ },
+ {
+  "text": "Snapdeal",
+  "type": "Want"
+ },
+ {
+  "text": "Nykaa",
+  "type": "Want"
+ },
+ {
+  "text": "BeautyPlus",
+  "type": "Want"
+ }
+]

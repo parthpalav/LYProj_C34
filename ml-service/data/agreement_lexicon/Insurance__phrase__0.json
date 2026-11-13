@@ -1,0 +1,226 @@
+[
+ {
+  "text": "health insurance premium",
+  "type": "Need"
+ },
+ {
+  "text": "life insurance premium",
+  "type": "Need"
+ },
+ {
+  "text": "term insurance premium",
+  "type": "Need"
+ },
+ {
+  "text": "motor insurance premium",
+  "type": "Need"
+ },
+ {
+  "text": "travel insurance premium",
+  "type": "Need"
+ },
+ {
+  "text": "health insurance payment",
+  "type": "Need"
+ },
+ {
+  "text": "life insurance payment",
+  "type": "Need"
+ },
+ {
+  "text": "term insurance payment",
+  "type": "Need"
+ },
+ {
+  "text": "motor insurance payment",
+  "type": "Need"
+ },
+ {
+  "text": "travel insurance payment",
+  "type": "Need"
+ },
+ {
+  "text": "health insurance renewal",
+  "type": "Need"
+ },
+ {
+  "text": "life insurance renewal",
+  "type": "Need"
+ },
+ {
+  "text": "term insurance renewal",
+  "type": "Need"
+ },
+ {
+  "text": "motor insurance renewal",
+  "type": "Need"
+ },
+ {
+  "text": "travel insurance renewal",
+  "type": "Need"
+ },
+ {
+  "text": "health insurance claim",
+  "type": "Need"
+ },
+ {
+  "text": "life insurance claim",
+  "type": "Need"
+ },
+ {
+  "text": "term insurance claim",
+  "type": "Need"
+ },
+ {
+  "text": "motor insurance claim",
+  "type": "Need"
+ },
+ {
+  "text": "travel insurance claim",
+  "type": "Need"
+ },
+ {
+  "text": "health insurance deductibles",
+  "type": "Need"
+ },
+ {
+  "text": "life insurance deductibles",
+  "type": "Need"
+ },
+ {
+  "text": "term insurance deductibles",
+  "type": "Need"
+ },
+ {
+  "text": "motor insurance deductibles",
+  "type": "Need"
+ },
+ {
+  "text": "travel insurance deductibles",
+  "type": "Need"
+ },
+ {
+  "text": "insurance policy purchase",
+  "type": "Need"
+ },
+ {
+  "text": "health insurance policy",
+  "type": "Need"
+ },
+ {
+  "text": "life insurance policy",
+  "type": "Need"
+ },
+ {
+  "text": "term insurance policy",
+  "type": "Need"
+ },
+ {
+  "text": "motor insurance policy",
+  "type": "Need"
+ },
+ {
+  "text": "travel insurance policy",
+  "type": "Need"
+ },
+ {
+  "text": "insurance renewal reminder",
+  "type": "Need"
+ },
+ {
+  "text": "health insurance claim form",
+  "type": "Need"
+ },
+ {
+  "text": "life insurance claim form",
+  "type": "Need"
+ },
+ {
+  "text": "term insurance claim form",
+  "type": "Need"
+ },
+ {
+  "text": "motor insurance claim form",
+  "type": "Need"
+ },
+ {
+  "text": "travel insurance claim form",
+  "type": "Need"
+ },
+ {
+  "text": "insurance agent consultation",
+  "type": "Need"
+ },
+ {
+  "text": "insurance policy review",
+  "type": "Need"
+ },
+ {
+  "text": "travel insurance coverage",
+  "type": "Need"
+ },
+ {
+  "text": "motor insurance coverage",
+  "type": "Need"
+ },
+ {
+  "text": "health insurance coverage",
+  "type": "Need"
+ },
+ {
+  "text": "life insurance coverage",
+  "type": "Need"
+ },
+ {
+  "text": "term insurance coverage",
+  "type": "Need"
+ },
+ {
+  "text": "hospitalization insurance",
+  "type": "Need"
+ },
+ {
+  "text": "critical illness insurance",
+  "type": "Need"
+ },
+ {
+  "text": "disability insurance",
+  "type": "Need"
+ },
+ {
+  "text": "life insurance benefits",
+  "type": "Need"
+ },
+ {
+  "text": "term insurance benefits",
+  "type": "Need"
+ },
+ {
+  "text": "motor insurance benefits",
+  "type": "Need"
+ },
+ {
+  "text": "travel insurance benefits",
+  "type": "Need"
+ },
+ {
+  "text": "health insurance benefits",
+  "type": "Need"
+ },
+ {
+  "text": "insurance policy terms",
+  "type": "Need"
+ },
+ {
+  "text": "insurance policy conditions",
+  "type": "Need"
+ },
+ {
+  "text": "insurance policy restrictions",
+  "type": "Need"
+ },
+ {
+  "text": "insurance policy limitations",
+  "type": "Need"
+ }
+]

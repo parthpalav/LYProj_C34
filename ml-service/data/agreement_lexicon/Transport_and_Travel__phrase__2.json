@@ -1,0 +1,246 @@
+[
+ {
+  "text": "fuel top up",
+  "type": "Need"
+ },
+ {
+  "text": "diesel filled",
+  "type": "Need"
+ },
+ {
+  "text": "petrol station",
+  "type": "Need"
+ },
+ {
+  "text": "toll booth",
+  "type": "Need"
+ },
+ {
+  "text": "toll paid",
+  "type": "Need"
+ },
+ {
+  "text": "parking fee",
+  "type": "Need"
+ },
+ {
+  "text": "auto ride",
+  "type": "Need"
+ },
+ {
+  "text": "shared cab",
+  "type": "Need"
+ },
+ {
+  "text": "local train fare",
+  "type": "Need"
+ },
+ {
+  "text": "metro ticket",
+  "type": "Need"
+ },
+ {
+  "text": "bus pass",
+  "type": "Need"
+ },
+ {
+  "text": "car wash",
+  "type": "Need"
+ },
+ {
+  "text": "vehicle oil change",
+  "type": "Need"
+ },
+ {
+  "text": "highway toll",
+  "type": "Need"
+ },
+ {
+  "text": "toll credit",
+  "type": "Need"
+ },
+ {
+  "text": "fuel up",
+  "type": "Need"
+ },
+ {
+  "text": "fuel station",
+  "type": "Need"
+ },
+ {
+  "text": "toll paid",
+  "type": "Need"
+ },
+ {
+  "text": "parked long",
+  "type": "Need"
+ },
+ {
+  "text": "city parking",
+  "type": "Need"
+ },
+ {
+  "text": "airport cab",
+  "type": "Want"
+ },
+ {
+  "text": "flight ticket",
+  "type": "Want"
+ },
+ {
+  "text": "airline fare",
+  "type": "Want"
+ },
+ {
+  "text": "hotel stay",
+  "type": "Want"
+ },
+ {
+  "text": "lodging cost",
+  "type": "Want"
+ },
+ {
+  "text": "flight refund",
+  "type": "Need"
+ },
+ {
+  "text": "flight ticket refund",
+  "type": "Need"
+ },
+ {
+  "text": "flight change fee",
+  "type": "Need"
+ },
+ {
+  "text": "air travel",
+  "type": "Want"
+ },
+ {
+  "text": "local train ticket",
+  "type": "Need"
+ },
+ {
+  "text": "bus fare",
+  "type": "Need"
+ },
+ {
+  "text": "bus ticket",
+  "type": "Need"
+ },
+ {
+  "text": "railway station",
+  "type": "Need"
+ },
+ {
+  "text": "station parking",
+  "type": "Need"
+ },
+ {
+  "text": "railway ticket",
+  "type": "Need"
+ },
+ {
+  "text": "flight baggage fee",
+  "type": "Need"
+ },
+ {
+  "text": "flight baggage charge",
+  "type": "Need"
+ },
+ {
+  "text": "train ticket refund",
+  "type": "Need"
+ },
+ {
+  "text": "railway refund",
+  "type": "Need"
+ },
+ {
+  "text": "flight ticket refund",
+  "type": "Need"
+ },
+ {
+  "text": "railway station fee",
+  "type": "Need"
+ },
+ {
+  "text": "metro station",
+  "type": "Need"
+ },
+ {
+  "text": "subway fare",
+  "type": "Need"
+ },
+ {
+  "text": "subway ticket",
+  "type": "Need"
+ },
+ {
+  "text": "parking garage",
+  "type": "Need"
+ },
+ {
+  "text": "parking lot",
+  "type": "Need"
+ },
+ {
+  "text": "city parking fee",
+  "type": "Need"
+ },
+ {
+  "text": "valet parking",
+  "type": "Need"
+ },
+ {
+  "text": "airport parking",
+  "type": "Need"
+ },
+ {
+  "text": "flight delay fee",
+  "type": "Need"
+ },
+ {
+  "text": "flight change cost",
+  "type": "Need"
+ },
+ {
+  "text": "train delay fee",
+  "type": "Need"
+ },
+ {
+  "text": "railway delay fee",
+  "type": "Need"
+ },
+ {
+  "text": "flight cancellation fee",
+  "type": "Need"
+ },
+ {
+  "text": "flight cancellation cost",
+  "type": "Need"
+ },
+ {
+  "text": "flight baggage allowance",
+  "type": "Need"
+ },
+ {
+  "text": "railway baggage fee",
+  "type": "Need"
+ },
+ {
+  "text": "flight baggage weight",
+  "type": "Need"
+ },
+ {
+  "text": "flight baggage size",
+  "type": "Need"
+ },
+ {
+  "text": "flight baggage limit",
+  "type": "Need"
+ },
+ {
+  "text": "railway baggage limit",
+  "type": "Need"
+ }
+]

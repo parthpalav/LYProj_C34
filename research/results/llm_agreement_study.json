@@ -1,0 +1,380 @@
+{
+  "lexicon": {
+    "n_items": 6458,
+    "generator": "qwen2.5:7b",
+    "verifiers": [
+      "llama3.1:8b",
+      "qwen2.5:7b",
+      "mistral:7b",
+      "gemma2:9b"
+    ],
+    "vs_generator": {
+      "llama3.1:8b": {
+        "n": 6458,
+        "category": 0.8781356457107463,
+        "type": 0.8505729327965315,
+        "joint": 0.7720656550015484,
+        "category_kappa": 0.8683515089615822
+      },
+      "qwen2.5:7b": {
+        "n": 6442,
+        "category": 0.8828003725551071,
+        "type": 0.834833902514747,
+        "joint": 0.7646693573424402,
+        "category_kappa": 0.8734615187687738
+      },
+      "mistral:7b": {
+        "n": 6363,
+        "category": 0.7747917648907748,
+        "type": 0.7920792079207921,
+        "joint": 0.6380638063806381,
+        "category_kappa": 0.7567417793714729
+      },
+      "gemma2:9b": {
+        "n": 6446,
+        "category": 0.8569655600372323,
+        "type": 0.8251628917157927,
+        "joint": 0.7333229910021719,
+        "category_kappa": 0.8455052227926023
+      }
+    },
+    "self_consistency": {
+      "generator_relabelling_itself": 0.8828003725551071,
+      "other_families_mean": 0.8366309902129179
+    },
+    "pairwise_category_kappa": {
+      "generator vs llama3.1:8b": 0.8683515089615822,
+      "generator vs qwen2.5:7b": 0.8734615187687738,
+      "generator vs mistral:7b": 0.7567417793714729,
+      "generator vs gemma2:9b": 0.8455052227926023,
+      "llama3.1:8b vs qwen2.5:7b": 0.9043943889191433,
+      "llama3.1:8b vs mistral:7b": 0.8273338474819147,
+      "llama3.1:8b vs gemma2:9b": 0.9170064585810148,
+      "qwen2.5:7b vs mistral:7b": 0.8090281563186128,
+      "qwen2.5:7b vs gemma2:9b": 0.8923304630019774,
+      "mistral:7b vs gemma2:9b": 0.8300399404114829
+    },
+    "fleiss_kappa_verifiers": 0.8635502881884378,
+    "fleiss_kappa_all_raters": 0.8523026427285437,
+    "n_items_labelled_by_all": 6338,
+    "keep_rate_by_verifiers": {
+      "llama3.1:8b": {
+        "kept": 0.8781356457107463,
+        "kept_but_relabelled": 0.0
+      },
+      "llama3.1:8b, qwen2.5:7b": {
+        "kept": 0.98467017652524,
+        "kept_but_relabelled": 0.0676680086714153
+      },
+      "llama3.1:8b, qwen2.5:7b, mistral:7b": {
+        "kept": 0.9321771446268194,
+        "kept_but_relabelled": 0.058377206565500155
+      },
+      "llama3.1:8b, qwen2.5:7b, mistral:7b, gemma2:9b": {
+        "kept": 0.97847630845463,
+        "kept_but_relabelled": 0.08857231340972438
+      }
+    },
+    "per_category": {
+      "Misc": {
+        "n": 351,
+        "unanimous": 0.22792022792022792,
+        "majority_agrees_with_generator": 0.35327635327635326,
+        "dropped_no_majority": 0.09401709401709402
+      },
+      "Utilities & Bills": {
+        "n": 346,
+        "unanimous": 0.5606936416184971,
+        "majority_agrees_with_generator": 0.8497109826589595,
+        "dropped_no_majority": 0.03757225433526012
+      },
+      "Shopping": {
+        "n": 481,
+        "unanimous": 0.5758835758835759,
+        "majority_agrees_with_generator": 0.9043659043659044,
+        "dropped_no_majority": 0.016632016632016633
+      },
+      "Debt & Loan Payments": {
+        "n": 494,
+        "unanimous": 0.5870445344129555,
+        "majority_agrees_with_generator": 0.9615384615384616,
+        "dropped_no_majority": 0.022267206477732792
+      },
+      "Groceries": {
+        "n": 493,
+        "unanimous": 0.6450304259634888,
+        "majority_agrees_with_generator": 0.922920892494929,
+        "dropped_no_majority": 0.02231237322515213
+      },
+      "Housing": {
+        "n": 485,
+        "unanimous": 0.6907216494845361,
+        "majority_agrees_with_generator": 0.8556701030927835,
+        "dropped_no_majority": 0.03711340206185567
+      },
+      "Entertainment": {
+        "n": 412,
+        "unanimous": 0.720873786407767,
+        "majority_agrees_with_generator": 0.8543689320388349,
+        "dropped_no_majority": 0.02912621359223301
+      },
+      "Insurance": {
+        "n": 419,
+        "unanimous": 0.7422434367541766,
+        "majority_agrees_with_generator": 0.8926014319809069,
+        "dropped_no_majority": 0.021479713603818614
+      },
+      "Transport & Travel": {
+        "n": 527,
+        "unanimous": 0.7609108159392789,
+        "majority_agrees_with_generator": 0.8633776091081594,
+        "dropped_no_majority": 0.028462998102466792
+      },
+      "Food & Dining": {
+        "n": 502,
+        "unanimous": 0.7868525896414342,
+        "majority_agrees_with_generator": 0.9083665338645418,
+        "dropped_no_majority": 0.00796812749003984
+      },
+      "Investments": {
+        "n": 358,
+        "unanimous": 0.8212290502793296,
+        "majority_agrees_with_generator": 0.9664804469273743,
+        "dropped_no_majority": 0.002793296089385475
+      },
+      "Personal Care": {
+        "n": 482,
+        "unanimous": 0.8713692946058091,
+        "majority_agrees_with_generator": 0.9730290456431535,
+        "dropped_no_majority": 0.006224066390041493
+      },
+      "Education": {
+        "n": 501,
+        "unanimous": 0.8842315369261478,
+        "majority_agrees_with_generator": 0.9920159680638723,
+        "dropped_no_majority": 0.0
+      },
+      "Health": {
+        "n": 607,
+        "unanimous": 0.8945634266886326,
+        "majority_agrees_with_generator": 0.9884678747940692,
+        "dropped_no_majority": 0.0016474464579901153
+      }
+    },
+    "top_confusions": [
+      {
+        "generator": "Misc",
+        "verifier": "Food & Dining",
+        "count": 242
+      },
+      {
+        "generator": "Food & Dining",
+        "verifier": "Groceries",
+        "count": 199
+      },
+      {
+        "generator": "Groceries",
+        "verifier": "Food & Dining",
+        "count": 187
+      },
+      {
+        "generator": "Misc",
+        "verifier": "Shopping",
+        "count": 138
+      },
+      {
+        "generator": "Entertainment",
+        "verifier": "Food & Dining",
+        "count": 131
+      },
+      {
+        "generator": "Misc",
+        "verifier": "Housing",
+        "count": 123
+      },
+      {
+        "generator": "Insurance",
+        "verifier": "Transport & Travel",
+        "count": 115
+      },
+      {
+        "generator": "Debt & Loan Payments",
+        "verifier": "Misc",
+        "count": 112
+      },
+      {
+        "generator": "Housing",
+        "verifier": "Utilities & Bills",
+        "count": 99
+      },
+      {
+        "generator": "Shopping",
+        "verifier": "Education",
+        "count": 97
+      },
+      {
+        "generator": "Insurance",
+        "verifier": "Health",
+        "count": 89
+      },
+      {
+        "generator": "Misc",
+        "verifier": "Transport & Travel",
+        "count": 87
+      },
+      {
+        "generator": "Entertainment",
+        "verifier": "Shopping",
+        "count": 78
+      },
+      {
+        "generator": "Misc",
+        "verifier": "Personal Care",
+        "count": 78
+      },
+      {
+        "generator": "Housing",
+        "verifier": "Shopping",
+        "count": 71
+      }
+    ]
+  },
+  "human": {
+    "n_rows": 697,
+    "models": {
+      "qwen2.5:7b": {
+        "labelled": 0.9885222381635581,
+        "category_accuracy": 0.9296987087517934,
+        "category_macro_f1": 0.938517803667764,
+        "type_accuracy": 0.8895265423242468,
+        "joint_accuracy": 0.860832137733142
+      },
+      "llama3.1:8b": {
+        "labelled": 1.0,
+        "category_accuracy": 0.9383070301291249,
+        "category_macro_f1": 0.9366189267235059,
+        "type_accuracy": 0.8852223816355811,
+        "joint_accuracy": 0.8579626972740315
+      },
+      "mistral:7b": {
+        "labelled": 0.9928263988522238,
+        "category_accuracy": 0.8866571018651362,
+        "category_macro_f1": 0.8889290438716861,
+        "type_accuracy": 0.8579626972740315,
+        "joint_accuracy": 0.8034433285509326
+      },
+      "gemma2:9b": {
+        "labelled": 0.9928263988522238,
+        "category_accuracy": 0.9827833572453372,
+        "category_macro_f1": 0.989560637824204,
+        "type_accuracy": 0.9340028694404591,
+        "joint_accuracy": 0.9340028694404591
+      }
+    },
+    "majority_vote": {
+      "coverage": 0.945480631276901,
+      "category_accuracy_when_decided": 0.9863429438543247,
+      "category_accuracy_overall": 0.9325681492109039
+    },
+    "per_category_accuracy": {
+      "Debt & Loan Payments": {
+        "n": 50,
+        "qwen2.5:7b": 0.84,
+        "llama3.1:8b": 0.96,
+        "mistral:7b": 0.74,
+        "gemma2:9b": 1.0
+      },
+      "Education": {
+        "n": 54,
+        "qwen2.5:7b": 0.9814814814814815,
+        "llama3.1:8b": 0.9074074074074074,
+        "mistral:7b": 0.6296296296296297,
+        "gemma2:9b": 0.9074074074074074
+      },
+      "Entertainment": {
+        "n": 53,
+        "qwen2.5:7b": 0.9811320754716981,
+        "llama3.1:8b": 0.9433962264150944,
+        "mistral:7b": 0.9622641509433962,
+        "gemma2:9b": 0.9811320754716981
+      },
+      "Food & Dining": {
+        "n": 49,
+        "qwen2.5:7b": 1.0,
+        "llama3.1:8b": 1.0,
+        "mistral:7b": 0.9795918367346939,
+        "gemma2:9b": 1.0
+      },
+      "Groceries": {
+        "n": 50,
+        "qwen2.5:7b": 1.0,
+        "llama3.1:8b": 1.0,
+        "mistral:7b": 0.98,
+        "gemma2:9b": 1.0
+      },
+      "Health": {
+        "n": 50,
+        "qwen2.5:7b": 1.0,
+        "llama3.1:8b": 1.0,
+        "mistral:7b": 1.0,
+        "gemma2:9b": 1.0
+      },
+      "Housing": {
+        "n": 54,
+        "qwen2.5:7b": 0.7777777777777778,
+        "llama3.1:8b": 0.8703703703703703,
+        "mistral:7b": 0.8888888888888888,
+        "gemma2:9b": 0.9814814814814815
+      },
+      "Insurance": {
+        "n": 50,
+        "qwen2.5:7b": 1.0,
+        "llama3.1:8b": 1.0,
+        "mistral:7b": 1.0,
+        "gemma2:9b": 0.96
+      },
+      "Investments": {
+        "n": 50,
+        "qwen2.5:7b": 1.0,
+        "llama3.1:8b": 1.0,
+        "mistral:7b": 0.98,
+        "gemma2:9b": 1.0
+      },
+      "Misc": {
+        "n": 35,
+        "qwen2.5:7b": 0.8857142857142857,
+        "llama3.1:8b": 0.9714285714285714,
+        "mistral:7b": 0.9428571428571428,
+        "gemma2:9b": 0.9428571428571428
+      },
+      "Personal Care": {
+        "n": 50,
+        "qwen2.5:7b": 0.8,
+        "llama3.1:8b": 0.96,
+        "mistral:7b": 0.9,
+        "gemma2:9b": 1.0
+      },
+      "Shopping": {
+        "n": 52,
+        "qwen2.5:7b": 0.9230769230769231,
+        "llama3.1:8b": 0.9615384615384616,
+        "mistral:7b": 0.9230769230769231,
+        "gemma2:9b": 0.9807692307692307
+      },
+      "Transport & Travel": {
+        "n": 51,
+        "qwen2.5:7b": 0.9803921568627451,
+        "llama3.1:8b": 1.0,
+        "mistral:7b": 0.9411764705882353,
+        "gemma2:9b": 1.0
+      },
+      "Utilities & Bills": {
+        "n": 49,
+        "qwen2.5:7b": 0.8367346938775511,
+        "llama3.1:8b": 0.5714285714285714,
+        "mistral:7b": 0.5714285714285714,
+        "gemma2:9b": 1.0
+      }
+    }
+  }
+}

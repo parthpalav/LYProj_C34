@@ -1,0 +1,290 @@
+[
+ {
+  "text": "Axis Bank",
+  "type": "Investment"
+ },
+ {
+  "text": "HDFC Mutual Funds",
+  "type": "Investment"
+ },
+ {
+  "text": "ICICI Prudential",
+  "type": "Investment"
+ },
+ {
+  "text": "Mirae Asset",
+  "type": "Investment"
+ },
+ {
+  "text": "SBI Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Franklin Templeton",
+  "type": "Investment"
+ },
+ {
+  "text": "IDFC Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Reliance Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "Bajaj Finance",
+  "type": "Investment"
+ },
+ {
+  "text": "ICICI Direct",
+  "type": "Investment"
+ },
+ {
+  "text": "Muthoot PPF",
+  "type": "Investment"
+ },
+ {
+  "text": "ICICI Direct SIP",
+  "type": "Investment"
+ },
+ {
+  "text": "HDFC SIP",
+  "type": "Investment"
+ },
+ {
+  "text": "Axis SIP",
+  "type": "Investment"
+ },
+ {
+  "text": "Kotak Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "SBI Mutual Fund SIP",
+  "type": "Investment"
+ },
+ {
+  "text": "IDFC SIP",
+  "type": "Investment"
+ },
+ {
+  "text": "Reliance SIP",
+  "type": "Investment"
+ },
+ {
+  "text": "Edelweiss SIP",
+  "type": "Investment"
+ },
+ {
+  "text": "UTI SIP",
+  "type": "Investment"
+ },
+ {
+  "text": "State Bank Mutual Fund",
+  "type": "Investment"
+ },
+ {
+  "text": "HDFC PPF",
+  "type": "Investment"
+ },
+ {
+  "text": "SBI PPF",
+  "type": "Investment"
+ },
+ {
+  "text": "ICICI PPF",
+  "type": "Investment"
+ },
+ {
+  "text": "Bank of Baroda PPF",
+  "type": "Investment"
+ },
+ {
+  "text": "HDFC NPS",
+  "type": "Investment"
+ },
+ {
+  "text": "ICICI NPS",
+  "type": "Investment"
+ },
+ {
+  "text": "AXA NPS",
+  "type": "Investment"
+ },
+ {
+  "text": "Aviva NPS",
+  "type": "Investment"
+ },
+ {
+  "text": "Aditya Birla Sun Life NPS",
+  "type": "Investment"
+ },
+ {
+  "text": "Max Life NPS",
+  "type": "Investment"
+ },
+ {
+  "text": "Reliance NPS",
+  "type": "Investment"
+ },
+ {
+  "text": "LIC",
+  "type": "Investment"
+ },
+ {
+  "text": "Bajaj Allianz",
+  "type": "Investment"
+ },
+ {
+  "text": "ICICI Lombard",
+  "type": "Investment"
+ },
+ {
+  "text": "SBI General Insurance",
+  "type": "Investment"
+ },
+ {
+  "text": " HDFC Life",
+  "type": "Investment"
+ },
+ {
+  "text": "Reliance General Insurance",
+  "type": "Investment"
+ },
+ {
+  "text": "New India Assurance",
+  "type": "Investment"
+ },
+ {
+  "text": "Max Life",
+  "type": "Investment"
+ },
+ {
+  "text": "State Bank General Insurance",
+  "type": "Investment"
+ },
+ {
+  "text": "ICICI Prudential Life",
+  "type": "Investment"
+ },
+ {
+  "text": "SBI Life Insurance",
+  "type": "Investment"
+ },
+ {
+  "text": "Bajaj Allianz Life",
+  "type": "Investment"
+ },
+ {
+  "text": "AXA Life Insurance",
+  "type": "Investment"
+ },
+ {
+  "text": "Aviva Life Insurance",
+  "type": "Investment"
+ },
+ {
+  "text": "Aditya Birla Sun Life Life Insurance",
+  "type": "Investment"
+ },
+ {
+  "text": "Kotak Mahindra Life Insurance",
+  "type": "Investment"
+ },
+ {
+  "text": "ICICI Prudential AMC",
+  "type": "Investment"
+ },
+ {
+  "text": "Edelweiss AMC",
+  "type": "Investment"
+ },
+ {
+  "text": "HDFC AMC",
+  "type": "Investment"
+ },
+ {
+  "text": "IDFC AMC",
+  "type": "Investment"
+ },
+ {
+  "text": "Reliance AMC",
+  "type": "Investment"
+ },
+ {
+  "text": "Barclays Wealth",
+  "type": "Investment"
+ },
+ {
+  "text": "Wealth Solutions",
+  "type": "Investment"
+ },
+ {
+  "text": "HDFC Securities",
+  "type": "Investment"
+ },
+ {
+  "text": "ICICI Securities",
+  "type": "Investment"
+ },
+ {
+  "text": "Reliance Securities",
+  "type": "Investment"
+ },
+ {
+  "text": "Kotak Securities",
+  "type": "Investment"
+ },
+ {
+  "text": "Bajaj Finserv",
+  "type": "Investment"
+ },
+ {
+  "text": "Edelweiss Securities",
+  "type": "Investment"
+ },
+ {
+  "text": "Bajaj Capital",
+  "type": "Investment"
+ },
+ {
+  "text": "IDFC Capital",
+  "type": "Investment"
+ },
+ {
+  "text": "Reliance Capital",
+  "type": "Investment"
+ },
+ {
+  "text": "SBI Capital Markets",
+  "type": "Investment"
+ },
+ {
+  "text": "HDFC Capital",
+  "type": "Investment"
+ },
+ {
+  "text": "Axis Capital",
+  "type": "Investment"
+ },
+ {
+  "text": "ICICI Capital Markets",
+  "type": "Investment"
+ },
+ {
+  "text": "Kotak Capital Markets",
+  "type": "Investment"
+ },
+ {
+  "text": "Edelweiss Capital Markets",
+  "type": "Investment"
+ },
+ {
+  "text": "Bajaj Finserv",
+  "type": "Investment"
+ },
+ {
+  "text": "HDFC Bank",
+  "type": "Investment"
+ }
+]

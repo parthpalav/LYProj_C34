@@ -1,0 +1,92 @@
+[
+ {
+  "i": 6440,
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ {
+  "i": 6441,
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ {
+  "i": 6442,
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ {
+  "i": 6443,
+  "category": "Food & Dining",
+  "type": "Need"
+ },
+ {
+  "i": 6444,
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ {
+  "i": 6445,
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ {
+  "i": 6446,
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ {
+  "i": 6447,
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ {
+  "i": 6448,
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ {
+  "i": 6449,
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ {
+  "i": 6450,
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ {
+  "i": 6451,
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ {
+  "i": 6452,
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ {
+  "i": 6453,
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ {
+  "i": 6454,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 6455,
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ {
+  "i": 6456,
+  "category": "Education",
+  "type": "Need"
+ },
+ {
+  "i": 6457,
+  "category": "Education",
+  "type": "Investment"
+ }
+]

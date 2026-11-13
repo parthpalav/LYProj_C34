@@ -1,0 +1,202 @@
+[
+ {
+  "i": 6280,
+  "category": "Education",
+  "type": "Investment"
+ },
+ {
+  "i": 6281,
+  "category": "Health",
+  "type": "Want"
+ },
+ {
+  "i": 6282,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 6283,
+  "category": "Education",
+  "type": "Need"
+ },
+ {
+  "i": 6284,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 6285,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 6286,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 6287,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 6288,
+  "category": "Shopping",
+  "type": "Need"
+ },
+ {
+  "i": 6289,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 6290,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 6291,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 6292,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 6293,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 6294,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 6295,
+  "category": "Shopping",
+  "type": "Need"
+ },
+ {
+  "i": 6296,
+  "category": "Shopping",
+  "type": "Need"
+ },
+ {
+  "i": 6297,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 6298,
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ {
+  "i": 6299,
+  "category": "Shopping",
+  "type": "Need"
+ },
+ {
+  "i": 6300,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 6301,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 6302,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 6303,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 6304,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 6305,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 6306,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 6307,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 6308,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 6309,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 6310,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 6311,
+  "category": "Shopping",
+  "type": "Need"
+ },
+ {
+  "i": 6312,
+  "category": "Misc",
+  "type": "Want"
+ },
+ {
+  "i": 6313,
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ {
+  "i": 6314,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 6315,
+  "category": "Personal Care",
+  "type": "Want"
+ },
+ {
+  "i": 6316,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 6317,
+  "category": "Shopping",
+  "type": "Want"
+ },
+ {
+  "i": 6318,
+  "category": "Shopping",
+  "type": "Want"
+ },
+ {
+  "i": 6319,
+  "category": "Education",
+  "type": "Need"
+ }
+]

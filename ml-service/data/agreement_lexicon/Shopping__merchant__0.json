@@ -1,0 +1,318 @@
+[
+ {
+  "text": "Flipkart",
+  "type": "Want"
+ },
+ {
+  "text": "Amazon",
+  "type": "Want"
+ },
+ {
+  "text": "Snapdeal",
+  "type": "Want"
+ },
+ {
+  "text": "Myntra",
+  "type": "Want"
+ },
+ {
+  "text": "Paytm Mall",
+  "type": "Want"
+ },
+ {
+  "text": "BigBasket",
+  "type": "Need"
+ },
+ {
+  "text": "Ola Cabs",
+  "type": "Want"
+ },
+ {
+  "text": "Uber",
+  "type": "Want"
+ },
+ {
+  "text": "Swiggy",
+  "type": "Want"
+ },
+ {
+  "text": "Zomato",
+  "type": "Want"
+ },
+ {
+  "text": "MyFatoorah",
+  "type": "Need"
+ },
+ {
+  "text": "Reliance Digital",
+  "type": "Want"
+ },
+ {
+  "text": "Dmart",
+  "type": "Need"
+ },
+ {
+  "text": "InMobi",
+  "type": "Investment"
+ },
+ {
+  "text": "Adobe",
+  "type": "Investment"
+ },
+ {
+  "text": "Tata Capital",
+  "type": "Investment"
+ },
+ {
+  "text": "HDFC",
+  "type": "Investment"
+ },
+ {
+  "text": "ICICI",
+  "type": "Investment"
+ },
+ {
+  "text": "Axis Bank",
+  "type": "Investment"
+ },
+ {
+  "text": "Paytm",
+  "type": "Want"
+ },
+ {
+  "text": "PhonePe",
+  "type": "Want"
+ },
+ {
+  "text": "Google Play",
+  "type": "Want"
+ },
+ {
+  "text": "Apple Store",
+  "type": "Want"
+ },
+ {
+  "text": "Samsung Store",
+  "type": "Want"
+ },
+ {
+  "text": "LG Store",
+  "type": "Want"
+ },
+ {
+  "text": "Dell",
+  "type": "Want"
+ },
+ {
+  "text": "Lenovo",
+  "type": "Want"
+ },
+ {
+  "text": "Dyson",
+  "type": "Want"
+ },
+ {
+  "text": "Philips",
+  "type": "Want"
+ },
+ {
+  "text": "IKEA",
+  "type": "Want"
+ },
+ {
+  "text": "Havells",
+  "type": "Want"
+ },
+ {
+  "text": "HDFC Home",
+  "type": "Need"
+ },
+ {
+  "text": "Reliance Jio",
+  "type": "Need"
+ },
+ {
+  "text": "MTNL",
+  "type": "Need"
+ },
+ {
+  "text": "Bharti Airtel",
+  "type": "Need"
+ },
+ {
+  "text": "Vodafone Idea",
+  "type": "Need"
+ },
+ {
+  "text": "Samsung",
+  "type": "Want"
+ },
+ {
+  "text": "Sony",
+  "type": "Want"
+ },
+ {
+  "text": "Huawei",
+  "type": "Want"
+ },
+ {
+  "text": "OnePlus",
+  "type": "Want"
+ },
+ {
+  "text": "Nokia",
+  "type": "Want"
+ },
+ {
+  "text": "Tata",
+  "type": "Need"
+ },
+ {
+  "text": "Reliance",
+  "type": "Need"
+ },
+ {
+  "text": "Vivo",
+  "type": "Want"
+ },
+ {
+  "text": "OPPO",
+  "type": "Want"
+ },
+ {
+  "text": "Motorola",
+  "type": "Want"
+ },
+ {
+  "text": "Realme",
+  "type": "Want"
+ },
+ {
+  "text": "Microsoft",
+  "type": "Need"
+ },
+ {
+  "text": "Dell",
+  "type": "Want"
+ },
+ {
+  "text": "Lenovo",
+  "type": "Want"
+ },
+ {
+  "text": "HP",
+  "type": "Want"
+ },
+ {
+  "text": "Apple",
+  "type": "Want"
+ },
+ {
+  "text": "ASUS",
+  "type": "Want"
+ },
+ {
+  "text": "Bose",
+  "type": "Want"
+ },
+ {
+  "text": "Sony",
+  "type": "Want"
+ },
+ {
+  "text": "Philips",
+  "type": "Want"
+ },
+ {
+  "text": "Panasonic",
+  "type": "Want"
+ },
+ {
+  "text": "LG",
+  "type": "Want"
+ },
+ {
+  "text": "Bajaj",
+  "type": "Need"
+ },
+ {
+  "text": "Reliance Home",
+  "type": "Need"
+ },
+ {
+  "text": "IKEA",
+  "type": "Want"
+ },
+ {
+  "text": "Havells",
+  "type": "Want"
+ },
+ {
+  "text": "Croma",
+  "type": "Want"
+ },
+ {
+  "text": "Cub",
+  "type": "Want"
+ },
+ {
+  "text": "Walmart",
+  "type": "Want"
+ },
+ {
+  "text": "D-Mart",
+  "type": "Need"
+ },
+ {
+  "text": "Dell",
+  "type": "Want"
+ },
+ {
+  "text": "Sony",
+  "type": "Want"
+ },
+ {
+  "text": "Philips",
+  "type": "Want"
+ },
+ {
+  "text": "Bose",
+  "type": "Want"
+ },
+ {
+  "text": "Nokia",
+  "type": "Want"
+ },
+ {
+  "text": "OnePlus",
+  "type": "Want"
+ },
+ {
+  "text": "Motorola",
+  "type": "Want"
+ },
+ {
+  "text": "Realme",
+  "type": "Want"
+ },
+ {
+  "text": "Apple",
+  "type": "Want"
+ },
+ {
+  "text": "LG",
+  "type": "Want"
+ },
+ {
+  "text": "Panasonic",
+  "type": "Want"
+ },
+ {
+  "text": "Bajaj",
+  "type": "Need"
+ },
+ {
+  "text": "Reliance Home",
+  "type": "Need"
+ }
+]

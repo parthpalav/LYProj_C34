@@ -1,0 +1,250 @@
+[
+ {
+  "text": "fuel up",
+  "type": "Need"
+ },
+ {
+  "text": "metro fare",
+  "type": "Need"
+ },
+ {
+  "text": "bus ticket",
+  "type": "Need"
+ },
+ {
+  "text": "local train",
+  "type": "Need"
+ },
+ {
+  "text": "parking lot",
+  "type": "Need"
+ },
+ {
+  "text": "toll booth",
+  "type": "Need"
+ },
+ {
+  "text": "auto rickshaw",
+  "type": "Want"
+ },
+ {
+  "text": "vehicle service",
+  "type": "Need"
+ },
+ {
+  "text": "app cab",
+  "type": "Want"
+ },
+ {
+  "text": "flight ticket",
+  "type": "Want"
+ },
+ {
+  "text": "hotel stay",
+  "type": "Want"
+ },
+ {
+  "text": "flight tax",
+  "type": "Want"
+ },
+ {
+  "text": "airport fee",
+  "type": "Want"
+ },
+ {
+  "text": "fuel card",
+  "type": "Need"
+ },
+ {
+  "text": "ev charge",
+  "type": "Need"
+ },
+ {
+  "text": "toll tag",
+  "type": "Need"
+ },
+ {
+  "text": "parking meter",
+  "type": "Need"
+ },
+ {
+  "text": "metro recharge",
+  "type": "Need"
+ },
+ {
+  "text": "bus route",
+  "type": "Need"
+ },
+ {
+  "text": "train pass",
+  "type": "Need"
+ },
+ {
+  "text": "cabs for work",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage",
+  "type": "Want"
+ },
+ {
+  "text": "hotel booking",
+  "type": "Want"
+ },
+ {
+  "text": "flight refund",
+  "type": "Want"
+ },
+ {
+  "text": "hotel cancel",
+  "type": "Want"
+ },
+ {
+  "text": "taxi to airport",
+  "type": "Want"
+ },
+ {
+  "text": "flight layover",
+  "type": "Want"
+ },
+ {
+  "text": "hotel pickup",
+  "type": "Want"
+ },
+ {
+  "text": "flight delay",
+  "type": "Want"
+ },
+ {
+  "text": "metro upgrade",
+  "type": "Need"
+ },
+ {
+  "text": "bus pass",
+  "type": "Need"
+ },
+ {
+  "text": "train season ticket",
+  "type": "Need"
+ },
+ {
+  "text": "auto ride",
+  "type": "Want"
+ },
+ {
+  "text": "toll waiver",
+  "type": "Need"
+ },
+ {
+  "text": "parking valet",
+  "type": "Need"
+ },
+ {
+  "text": "flight lounge",
+  "type": "Want"
+ },
+ {
+  "text": "hotel service",
+  "type": "Want"
+ },
+ {
+  "text": "flight meal",
+  "type": "Want"
+ },
+ {
+  "text": "hotel amenities",
+  "type": "Want"
+ },
+ {
+  "text": "flight entertainment",
+  "type": "Want"
+ },
+ {
+  "text": "train buffet",
+  "type": "Want"
+ },
+ {
+  "text": "bus station",
+  "type": "Need"
+ },
+ {
+  "text": "flight wifi",
+  "type": "Want"
+ },
+ {
+  "text": "hotel room",
+  "type": "Want"
+ },
+ {
+  "text": "flight seat",
+  "type": "Want"
+ },
+ {
+  "text": "train berth",
+  "type": "Need"
+ },
+ {
+  "text": "flight gate",
+  "type": "Want"
+ },
+ {
+  "text": "hotel shuttle",
+  "type": "Want"
+ },
+ {
+  "text": "flight refund fee",
+  "type": "Want"
+ },
+ {
+  "text": "hotel cancel fee",
+  "type": "Want"
+ },
+ {
+  "text": "flight change",
+  "type": "Want"
+ },
+ {
+  "text": "hotel change",
+  "type": "Want"
+ },
+ {
+  "text": "flight insurance",
+  "type": "Want"
+ },
+ {
+  "text": "hotel insurance",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage fee",
+  "type": "Want"
+ },
+ {
+  "text": "hotel baggage fee",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage allowance",
+  "type": "Want"
+ },
+ {
+  "text": "hotel baggage storage",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage claim",
+  "type": "Want"
+ },
+ {
+  "text": "hotel baggage claim",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage check",
+  "type": "Want"
+ },
+ {
+  "text": "hotel baggage check",
+  "type": "Want"
+ }
+]

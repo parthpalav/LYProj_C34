@@ -1,0 +1,354 @@
+[
+ {
+  "text": "A1 Groceries",
+  "type": "Need"
+ },
+ {
+  "text": "B1 Fruits",
+  "type": "Want"
+ },
+ {
+  "text": "C1 Delicacies",
+  "type": "Want"
+ },
+ {
+  "text": "DairyLand",
+  "type": "Need"
+ },
+ {
+  "text": "E1 Essentials",
+  "type": "Need"
+ },
+ {
+  "text": "FreshMall",
+  "type": "Want"
+ },
+ {
+  "text": "GreenGarden",
+  "type": "Need"
+ },
+ {
+  "text": "HealthyFare",
+  "type": "Want"
+ },
+ {
+  "text": "IndiaMart",
+  "type": "Need"
+ },
+ {
+  "text": "K1 Kitchen",
+  "type": "Need"
+ },
+ {
+  "text": "K2 Kitchen",
+  "type": "Want"
+ },
+ {
+  "text": "K3 Kitchen",
+  "type": "Need"
+ },
+ {
+  "text": "K4 Kitchen",
+  "type": "Want"
+ },
+ {
+  "text": "M1 Market",
+  "type": "Need"
+ },
+ {
+  "text": "M2 Market",
+  "type": "Want"
+ },
+ {
+  "text": "M3 Market",
+  "type": "Need"
+ },
+ {
+  "text": "MilkMitra",
+  "type": "Need"
+ },
+ {
+  "text": "OrganicOasis",
+  "type": "Need"
+ },
+ {
+  "text": "P1 Pantry",
+  "type": "Need"
+ },
+ {
+  "text": "P2 Pantry",
+  "type": "Want"
+ },
+ {
+  "text": "P3 Pantry",
+  "type": "Need"
+ },
+ {
+  "text": "P4 Pantry",
+  "type": "Want"
+ },
+ {
+  "text": "Q1 Quickmart",
+  "type": "Want"
+ },
+ {
+  "text": "R1 Retails",
+  "type": "Need"
+ },
+ {
+  "text": "S1 Super",
+  "type": "Want"
+ },
+ {
+  "text": "S2 Super",
+  "type": "Need"
+ },
+ {
+  "text": "T1 Toppers",
+  "type": "Want"
+ },
+ {
+  "text": "U1 Unicorns",
+  "type": "Need"
+ },
+ {
+  "text": "V1 Veggie",
+  "type": "Need"
+ },
+ {
+  "text": "W1 WeMart",
+  "type": "Want"
+ },
+ {
+  "text": "X1 Xylo",
+  "type": "Need"
+ },
+ {
+  "text": "Y1 Yummy",
+  "type": "Want"
+ },
+ {
+  "text": "Z1 Zesty",
+  "type": "Need"
+ },
+ {
+  "text": "BakeryBox",
+  "type": "Want"
+ },
+ {
+  "text": "BreadBite",
+  "type": "Want"
+ },
+ {
+  "text": "ChocoLand",
+  "type": "Want"
+ },
+ {
+  "text": "DryDry",
+  "type": "Want"
+ },
+ {
+  "text": "FreshMint",
+  "type": "Need"
+ },
+ {
+  "text": "FruitFusion",
+  "type": "Want"
+ },
+ {
+  "text": "GourmetGalore",
+  "type": "Want"
+ },
+ {
+  "text": "HealthyDelights",
+  "type": "Want"
+ },
+ {
+  "text": "HerbalHarvest",
+  "type": "Need"
+ },
+ {
+  "text": "IceCool",
+  "type": "Want"
+ },
+ {
+  "text": "J1 Jamboree",
+  "type": "Want"
+ },
+ {
+  "text": "JoyfulBites",
+  "type": "Want"
+ },
+ {
+  "text": "K1 Kitchen",
+  "type": "Want"
+ },
+ {
+  "text": "L1 Lifestyle",
+  "type": "Want"
+ },
+ {
+  "text": "M1 Market",
+  "type": "Want"
+ },
+ {
+  "text": "N1 Nourish",
+  "type": "Need"
+ },
+ {
+  "text": "O1 Oasis",
+  "type": "Need"
+ },
+ {
+  "text": "P1 Pantry",
+  "type": "Want"
+ },
+ {
+  "text": "Q1 Quick",
+  "type": "Want"
+ },
+ {
+  "text": "R1 Retail",
+  "type": "Need"
+ },
+ {
+  "text": "S1 Super",
+  "type": "Want"
+ },
+ {
+  "text": "T1 Taste",
+  "type": "Want"
+ },
+ {
+  "text": "U1 Uniquely",
+  "type": "Want"
+ },
+ {
+  "text": "VeggieVilla",
+  "type": "Need"
+ },
+ {
+  "text": "W1 World",
+  "type": "Want"
+ },
+ {
+  "text": "X1 Xtra",
+  "type": "Need"
+ },
+ {
+  "text": "YummyYarn",
+  "type": "Want"
+ },
+ {
+  "text": "Zestful",
+  "type": "Need"
+ },
+ {
+  "text": "BakeryBite",
+  "type": "Want"
+ },
+ {
+  "text": "BreadBasket",
+  "type": "Want"
+ },
+ {
+  "text": "ChocoDelight",
+  "type": "Want"
+ },
+ {
+  "text": "DryFruitsDelight",
+  "type": "Want"
+ },
+ {
+  "text": "FreshFare",
+  "type": "Need"
+ },
+ {
+  "text": "FruitFusion",
+  "type": "Want"
+ },
+ {
+  "text": "GourmetGalaxy",
+  "type": "Want"
+ },
+ {
+  "text": "HeartyHaven",
+  "type": "Need"
+ },
+ {
+  "text": "IceCool",
+  "type": "Want"
+ },
+ {
+  "text": "JamboreeJoy",
+  "type": "Want"
+ },
+ {
+  "text": "JoyfulJubilation",
+  "type": "Want"
+ },
+ {
+  "text": "K1 Kitchen",
+  "type": "Want"
+ },
+ {
+  "text": "L1 Lifestyle",
+  "type": "Want"
+ },
+ {
+  "text": "M1 Market",
+  "type": "Need"
+ },
+ {
+  "text": "N1 Nourish",
+  "type": "Need"
+ },
+ {
+  "text": "O1 Oasis",
+  "type": "Need"
+ },
+ {
+  "text": "P1 Pantry",
+  "type": "Want"
+ },
+ {
+  "text": "Q1 Quick",
+  "type": "Want"
+ },
+ {
+  "text": "R1 Retail",
+  "type": "Need"
+ },
+ {
+  "text": "S1 Super",
+  "type": "Want"
+ },
+ {
+  "text": "T1 Taste",
+  "type": "Want"
+ },
+ {
+  "text": "UniquelyYou",
+  "type": "Want"
+ },
+ {
+  "text": "VeggieVista",
+  "type": "Need"
+ },
+ {
+  "text": "WorldWonders",
+  "type": "Want"
+ },
+ {
+  "text": "XtraValue",
+  "type": "Need"
+ },
+ {
+  "text": "YummyYield",
+  "type": "Want"
+ },
+ {
+  "text": "ZestfulZen",
+  "type": "Need"
+ }
+]

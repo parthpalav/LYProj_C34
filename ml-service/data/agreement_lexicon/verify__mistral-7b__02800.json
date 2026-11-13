@@ -1,0 +1,202 @@
+[
+ {
+  "i": 2800,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 2801,
+  "category": "Education",
+  "type": "Need"
+ },
+ {
+  "i": 2802,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 2803,
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ {
+  "i": 2804,
+  "category": "Shopping",
+  "type": "Need"
+ },
+ {
+  "i": 2805,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 2806,
+  "category": "Shopping",
+  "type": "Need"
+ },
+ {
+  "i": 2807,
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ {
+  "i": 2808,
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ {
+  "i": 2809,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 2810,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 2811,
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ {
+  "i": 2812,
+  "category": "Health",
+  "type": "Want"
+ },
+ {
+  "i": 2813,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 2814,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 2815,
+  "category": "Shopping",
+  "type": "Need"
+ },
+ {
+  "i": 2816,
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ {
+  "i": 2817,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 2818,
+  "category": "Groceries",
+  "type": "Need"
+ },
+ {
+  "i": 2819,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 2820,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 2821,
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ {
+  "i": 2822,
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ {
+  "i": 2823,
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ {
+  "i": 2824,
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ {
+  "i": 2825,
+  "category": "Investments",
+  "type": "Investment"
+ },
+ {
+  "i": 2826,
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ {
+  "i": 2827,
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ {
+  "i": 2828,
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ {
+  "i": 2829,
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ {
+  "i": 2830,
+  "category": "Insurance",
+  "type": "Need"
+ },
+ {
+  "i": 2831,
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ {
+  "i": 2832,
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ {
+  "i": 2833,
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ {
+  "i": 2834,
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ {
+  "i": 2835,
+  "category": "Groceries",
+  "type": "Need"
+ },
+ {
+  "i": 2836,
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ {
+  "i": 2837,
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ {
+  "i": 2838,
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ {
+  "i": 2839,
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ }
+]

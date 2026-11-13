@@ -1,0 +1,202 @@
+[
+ {
+  "i": 2000,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 2001,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 2002,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 2003,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 2004,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 2005,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 2006,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 2007,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 2008,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 2009,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 2010,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 2011,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 2012,
+  "category": "Investments",
+  "type": "Investment"
+ },
+ {
+  "i": 2013,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 2014,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 2015,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 2016,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 2017,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 2018,
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ {
+  "i": 2019,
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ {
+  "i": 2020,
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ {
+  "i": 2021,
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ {
+  "i": 2022,
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ {
+  "i": 2023,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 2024,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 2025,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 2026,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 2027,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 2028,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 2029,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 2030,
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ {
+  "i": 2031,
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ {
+  "i": 2032,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 2033,
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ {
+  "i": 2034,
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ {
+  "i": 2035,
+  "category": "Transport & Travel",
+  "type": "Want"
+ },
+ {
+  "i": 2036,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 2037,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 2038,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ },
+ {
+  "i": 2039,
+  "category": "Utilities & Bills",
+  "type": "Need"
+ }
+]

@@ -1,0 +1,226 @@
+[
+ {
+  "text": "school fees",
+  "type": "Need"
+ },
+ {
+  "text": "exam fees",
+  "type": "Need"
+ },
+ {
+  "text": "tuition fees",
+  "type": "Need"
+ },
+ {
+  "text": "certification course",
+  "type": "Investment"
+ },
+ {
+  "text": "coaching classes",
+  "type": "Need"
+ },
+ {
+  "text": "online course",
+  "type": "Need"
+ },
+ {
+  "text": "study materials",
+  "type": "Need"
+ },
+ {
+  "text": "textbooks",
+  "type": "Need"
+ },
+ {
+  "text": "language lessons",
+  "type": "Need"
+ },
+ {
+  "text": "dance classes",
+  "type": "Need"
+ },
+ {
+  "text": "music lessons",
+  "type": "Need"
+ },
+ {
+  "text": "online test prep",
+  "type": "Need"
+ },
+ {
+  "text": "gmat coaching",
+  "type": "Investment"
+ },
+ {
+  "text": "mcat prep",
+  "type": "Investment"
+ },
+ {
+  "text": "bar exam courses",
+  "type": "Investment"
+ },
+ {
+  "text": "certification exam",
+  "type": "Need"
+ },
+ {
+  "text": "medical training",
+  "type": "Investment"
+ },
+ {
+  "text": "law course",
+  "type": "Investment"
+ },
+ {
+  "text": "coding bootcamp",
+  "type": "Investment"
+ },
+ {
+  "text": "data science course",
+  "type": "Investment"
+ },
+ {
+  "text": "phd tuition",
+  "type": "Investment"
+ },
+ {
+  "text": "masters degree",
+  "type": "Investment"
+ },
+ {
+  "text": "mba fees",
+  "type": "Investment"
+ },
+ {
+  "text": "cfa exam",
+  "type": "Investment"
+ },
+ {
+  "text": "ca course",
+  "type": "Investment"
+ },
+ {
+  "text": "upsc preparation",
+  "type": "Investment"
+ },
+ {
+  "text": "ssc coaching",
+  "type": "Need"
+ },
+ {
+  "text": "civil service exams",
+  "type": "Investment"
+ },
+ {
+  "text": "civil service training",
+  "type": "Investment"
+ },
+ {
+  "text": "iit jee coaching",
+  "type": "Need"
+ },
+ {
+  "text": "neet coaching",
+  "type": "Need"
+ },
+ {
+  "text": "toefl test prep",
+  "type": "Need"
+ },
+ {
+  "text": "ielts coaching",
+  "type": "Need"
+ },
+ {
+  "text": "gre preparation",
+  "type": "Need"
+ },
+ {
+  "text": "ielts exam",
+  "type": "Need"
+ },
+ {
+  "text": "cfa level 1",
+  "type": "Investment"
+ },
+ {
+  "text": "cfa level 2",
+  "type": "Investment"
+ },
+ {
+  "text": "cfa level 3",
+  "type": "Investment"
+ },
+ {
+  "text": "aca course",
+  "type": "Investment"
+ },
+ {
+  "text": "cpa exam",
+  "type": "Investment"
+ },
+ {
+  "text": "usmc prep",
+  "type": "Investment"
+ },
+ {
+  "text": "usmc training",
+  "type": "Investment"
+ },
+ {
+  "text": "bar preparation",
+  "type": "Investment"
+ },
+ {
+  "text": "llm courses",
+  "type": "Investment"
+ },
+ {
+  "text": "bar exam course",
+  "type": "Investment"
+ },
+ {
+  "text": "lrb course",
+  "type": "Investment"
+ },
+ {
+  "text": "lrb coaching",
+  "type": "Investment"
+ },
+ {
+  "text": "law classes",
+  "type": "Need"
+ },
+ {
+  "text": "law training",
+  "type": "Need"
+ },
+ {
+  "text": "phd fees",
+  "type": "Investment"
+ },
+ {
+  "text": "doctoral studies",
+  "type": "Investment"
+ },
+ {
+  "text": "phd course",
+  "type": "Investment"
+ },
+ {
+  "text": "phd coaching",
+  "type": "Investment"
+ },
+ {
+  "text": "mba prep",
+  "type": "Investment"
+ },
+ {
+  "text": "mba coaching",
+  "type": "Investment"
+ },
+ {
+  "text": "mba test prep",
+  "type": "Investment"
+ }
+]

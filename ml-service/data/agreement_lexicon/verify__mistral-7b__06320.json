@@ -1,0 +1,202 @@
+[
+ {
+  "i": 6320,
+  "category": "Debt & Loan Payments",
+  "type": "Need"
+ },
+ {
+  "i": 6321,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 6322,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 6323,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 6324,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 6325,
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ {
+  "i": 6326,
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ {
+  "i": 6327,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 6328,
+  "category": "Education",
+  "type": "Need"
+ },
+ {
+  "i": 6329,
+  "category": "Personal Care",
+  "type": "Need"
+ },
+ {
+  "i": 6330,
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ {
+  "i": 6331,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 6332,
+  "category": "Transport & Travel",
+  "type": "Need"
+ },
+ {
+  "i": 6333,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 6334,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 6335,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 6336,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 6337,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 6338,
+  "category": "Entertainment",
+  "type": "Want"
+ },
+ {
+  "i": 6339,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 6340,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 6341,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 6342,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 6343,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 6344,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 6345,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 6346,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 6347,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 6348,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 6349,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 6350,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 6351,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 6352,
+  "category": "Misc",
+  "type": "Need"
+ },
+ {
+  "i": 6353,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 6354,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 6355,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 6356,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 6357,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 6358,
+  "category": "Housing",
+  "type": "Need"
+ },
+ {
+  "i": 6359,
+  "category": "Misc",
+  "type": "Want"
+ }
+]

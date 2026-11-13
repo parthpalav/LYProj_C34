@@ -1,0 +1,258 @@
+[
+ {
+  "text": "Fine",
+  "type": "Need"
+ },
+ {
+  "text": "Challan",
+  "type": "Need"
+ },
+ {
+  "text": "Bank Charge",
+  "type": "Need"
+ },
+ {
+  "text": "Donation",
+  "type": "Want"
+ },
+ {
+  "text": "Tip",
+  "type": "Want"
+ },
+ {
+  "text": "EMI",
+  "type": "Need"
+ },
+ {
+  "text": "Loan Repayment",
+  "type": "Need"
+ },
+ {
+  "text": "Utility Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Water Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Electricity Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Gas Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Internet Bill",
+  "type": "Need"
+ },
+ {
+  "text": "DTH Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Mobile Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Landline Bill",
+  "type": "Need"
+ },
+ {
+  "text": "Toll Charge",
+  "type": "Need"
+ },
+ {
+  "text": "Fuel",
+  "type": "Need"
+ },
+ {
+  "text": "Vehicle Service",
+  "type": "Need"
+ },
+ {
+  "text": "Tiffin",
+  "type": "Need"
+ },
+ {
+  "text": "Delivery Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Cable TV",
+  "type": "Need"
+ },
+ {
+  "text": "Internet Data",
+  "type": "Need"
+ },
+ {
+  "text": "ISP Charge",
+  "type": "Need"
+ },
+ {
+  "text": "Courier Charge",
+  "type": "Need"
+ },
+ {
+  "text": "Bank Deposit",
+  "type": "Need"
+ },
+ {
+  "text": "Bank Withdrawal",
+  "type": "Need"
+ },
+ {
+  "text": "Bank Transfer",
+  "type": "Need"
+ },
+ {
+  "text": "Rent",
+  "type": "Need"
+ },
+ {
+  "text": "House Tax",
+  "type": "Need"
+ },
+ {
+  "text": "Water Tax",
+  "type": "Need"
+ },
+ {
+  "text": "Garbage Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Garage Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Repairs",
+  "type": "Need"
+ },
+ {
+  "text": "Warranty",
+  "type": "Need"
+ },
+ {
+  "text": "Tailor",
+  "type": "Need"
+ },
+ {
+  "text": "Cobbler",
+  "type": "Need"
+ },
+ {
+  "text": "Watch Repair",
+  "type": "Need"
+ },
+ {
+  "text": "Key Replication",
+  "type": "Need"
+ },
+ {
+  "text": "Personal Item Repair",
+  "type": "Need"
+ },
+ {
+  "text": "Donation",
+  "type": "Want"
+ },
+ {
+  "text": "Tip",
+  "type": "Want"
+ },
+ {
+  "text": "Tax",
+  "type": "Need"
+ },
+ {
+  "text": "Fines",
+  "type": "Need"
+ },
+ {
+  "text": "Legal Fee",
+  "type": "Need"
+ },
+ {
+  "text": "Donation",
+  "type": "Want"
+ },
+ {
+  "text": "Tip",
+  "type": "Want"
+ },
+ {
+  "text": "Donation",
+  "type": "Want"
+ },
+ {
+  "text": "Tip",
+  "type": "Want"
+ },
+ {
+  "text": "Donation",
+  "type": "Want"
+ },
+ {
+  "text": "Tip",
+  "type": "Want"
+ },
+ {
+  "text": "Donation",
+  "type": "Want"
+ },
+ {
+  "text": "Tip",
+  "type": "Want"
+ },
+ {
+  "text": "Donation",
+  "type": "Want"
+ },
+ {
+  "text": "Tip",
+  "type": "Want"
+ },
+ {
+  "text": "Donation",
+  "type": "Want"
+ },
+ {
+  "text": "Tip",
+  "type": "Want"
+ },
+ {
+  "text": "Donation",
+  "type": "Want"
+ },
+ {
+  "text": "Tip",
+  "type": "Want"
+ },
+ {
+  "text": "Donation",
+  "type": "Want"
+ },
+ {
+  "text": "Tip",
+  "type": "Want"
+ },
+ {
+  "text": "Donation",
+  "type": "Want"
+ },
+ {
+  "text": "Tip",
+  "type": "Want"
+ },
+ {
+  "text": "Donation",
+  "type": "Want"
+ },
+ {
+  "text": "Tip",
+  "type": "Want"
+ }
+]

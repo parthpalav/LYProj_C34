@@ -1,0 +1,202 @@
+[
+ {
+  "i": 3920,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 3921,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 3922,
+  "category": "Groceries",
+  "type": "Need"
+ },
+ {
+  "i": 3923,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 3924,
+  "category": "Groceries",
+  "type": "Need"
+ },
+ {
+  "i": 3925,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 3926,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 3927,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 3928,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 3929,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 3930,
+  "category": "Groceries",
+  "type": "Need"
+ },
+ {
+  "i": 3931,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 3932,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 3933,
+  "category": "Groceries",
+  "type": "Need"
+ },
+ {
+  "i": 3934,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 3935,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 3936,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 3937,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 3938,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 3939,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 3940,
+  "category": "Groceries",
+  "type": "Need"
+ },
+ {
+  "i": 3941,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 3942,
+  "category": "Education",
+  "type": "Investment"
+ },
+ {
+  "i": 3943,
+  "category": "Education",
+  "type": "Investment"
+ },
+ {
+  "i": 3944,
+  "category": "Food & Dining",
+  "type": "Want"
+ },
+ {
+  "i": 3945,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 3946,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 3947,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 3948,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 3949,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 3950,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 3951,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 3952,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 3953,
+  "category": "Groceries",
+  "type": "Need"
+ },
+ {
+  "i": 3954,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 3955,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 3956,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 3957,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 3958,
+  "category": "Health",
+  "type": "Need"
+ },
+ {
+  "i": 3959,
+  "category": "Groceries",
+  "type": "Need"
+ }
+]

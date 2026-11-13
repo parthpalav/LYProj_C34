@@ -1,0 +1,310 @@
+[
+ {
+  "text": "sabzi wala",
+  "type": "Need"
+ },
+ {
+  "text": "chai sutta",
+  "type": "Need"
+ },
+ {
+  "text": "doodh",
+  "type": "Need"
+ },
+ {
+  "text": "vegetables",
+  "type": "Need"
+ },
+ {
+  "text": "fruits",
+  "type": "Need"
+ },
+ {
+  "text": "milk",
+  "type": "Need"
+ },
+ {
+  "text": "rice",
+  "type": "Need"
+ },
+ {
+  "text": "atta",
+  "type": "Need"
+ },
+ {
+  "text": "pulse",
+  "type": "Need"
+ },
+ {
+  "text": "toothpaste",
+  "type": "Need"
+ },
+ {
+  "text": "soap",
+  "type": "Need"
+ },
+ {
+  "text": "sanitary pad",
+  "type": "Need"
+ },
+ {
+  "text": "chocolates",
+  "type": "Want"
+ },
+ {
+  "text": "sweets",
+  "type": "Want"
+ },
+ {
+  "text": "dry fruits",
+  "type": "Want"
+ },
+ {
+  "text": "chips",
+  "type": "Want"
+ },
+ {
+  "text": "biscuits",
+  "type": "Want"
+ },
+ {
+  "text": "instant noodles",
+  "type": "Want"
+ },
+ {
+  "text": "toilet paper",
+  "type": "Need"
+ },
+ {
+  "text": "tissue",
+  "type": "Need"
+ },
+ {
+  "text": "paper towels",
+  "type": "Need"
+ },
+ {
+  "text": "dishwashing liquid",
+  "type": "Need"
+ },
+ {
+  "text": "cleaning powder",
+  "type": "Need"
+ },
+ {
+  "text": "laundry detergent",
+  "type": "Need"
+ },
+ {
+  "text": "detergent pods",
+  "type": "Need"
+ },
+ {
+  "text": "fabric softener",
+  "type": "Need"
+ },
+ {
+  "text": "hair oil",
+  "type": "Want"
+ },
+ {
+  "text": "shampoo",
+  "type": "Need"
+ },
+ {
+  "text": "conditioner",
+  "type": "Need"
+ },
+ {
+  "text": "body lotion",
+  "type": "Want"
+ },
+ {
+  "text": "hand sanitizer",
+  "type": "Need"
+ },
+ {
+  "text": "razor",
+  "type": "Need"
+ },
+ {
+  "text": "razor blades",
+  "type": "Need"
+ },
+ {
+  "text": "shaving cream",
+  "type": "Want"
+ },
+ {
+  "text": "deodorant",
+  "type": "Need"
+ },
+ {
+  "text": "perfume",
+  "type": "Want"
+ },
+ {
+  "text": "lip balm",
+  "type": "Want"
+ },
+ {
+  "text": "lipstick",
+  "type": "Want"
+ },
+ {
+  "text": "makeup",
+  "type": "Want"
+ },
+ {
+  "text": "nail polish",
+  "type": "Want"
+ },
+ {
+  "text": "talcum powder",
+  "type": "Want"
+ },
+ {
+  "text": "baby oil",
+  "type": "Want"
+ },
+ {
+  "text": "talcum powder",
+  "type": "Want"
+ },
+ {
+  "text": "kitchen cleaner",
+  "type": "Need"
+ },
+ {
+  "text": "disinfectant",
+  "type": "Need"
+ },
+ {
+  "text": "pest control",
+  "type": "Need"
+ },
+ {
+  "text": "insect repellent",
+  "type": "Need"
+ },
+ {
+  "text": "light bulbs",
+  "type": "Need"
+ },
+ {
+  "text": "furniture polish",
+  "type": "Want"
+ },
+ {
+  "text": "mop",
+  "type": "Need"
+ },
+ {
+  "text": "broom",
+  "type": "Need"
+ },
+ {
+  "text": "duster",
+  "type": "Need"
+ },
+ {
+  "text": "vacuum cleaner bags",
+  "type": "Need"
+ },
+ {
+  "text": "vacuum cleaner pads",
+  "type": "Need"
+ },
+ {
+  "text": "floor cleaner",
+  "type": "Need"
+ },
+ {
+  "text": "cleaning brushes",
+  "type": "Need"
+ },
+ {
+  "text": "microwave cleaner",
+  "type": "Need"
+ },
+ {
+  "text": "refrigerator cleaner",
+  "type": "Need"
+ },
+ {
+  "text": "dishwasher cleaner",
+  "type": "Need"
+ },
+ {
+  "text": "window cleaner",
+  "type": "Need"
+ },
+ {
+  "text": "glass cleaner",
+  "type": "Need"
+ },
+ {
+  "text": "laundry stain remover",
+  "type": "Need"
+ },
+ {
+  "text": "all purpose cleaner",
+  "type": "Need"
+ },
+ {
+  "text": "garbage bags",
+  "type": "Need"
+ },
+ {
+  "text": "cat food",
+  "type": "Need"
+ },
+ {
+  "text": "dog food",
+  "type": "Need"
+ },
+ {
+  "text": "pet treats",
+  "type": "Want"
+ },
+ {
+  "text": "pet shampoo",
+  "type": "Need"
+ },
+ {
+  "text": "pet brush",
+  "type": "Need"
+ },
+ {
+  "text": "pet toys",
+  "type": "Want"
+ },
+ {
+  "text": "pet bed",
+  "type": "Want"
+ },
+ {
+  "text": "pet collar",
+  "type": "Need"
+ },
+ {
+  "text": "pet leashes",
+  "type": "Need"
+ },
+ {
+  "text": "pet ID tags",
+  "type": "Need"
+ },
+ {
+  "text": "pet first aid kit",
+  "type": "Need"
+ },
+ {
+  "text": "pet flea treatment",
+  "type": "Need"
+ },
+ {
+  "text": "pet flea shampoo",
+  "type": "Need"
+ }
+]

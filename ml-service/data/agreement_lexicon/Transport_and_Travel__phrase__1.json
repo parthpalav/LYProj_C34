@@ -1,0 +1,278 @@
+[
+ {
+  "text": "morning commute metro",
+  "type": "Need"
+ },
+ {
+  "text": "evening bus fare",
+  "type": "Need"
+ },
+ {
+  "text": "parking slot fees",
+  "type": "Need"
+ },
+ {
+  "text": "toll booth charges",
+  "type": "Need"
+ },
+ {
+  "text": "fuel station stop",
+  "type": "Need"
+ },
+ {
+  "text": "auto rickshaw ride",
+  "type": "Need"
+ },
+ {
+  "text": "sabzi wala stall",
+  "type": "Need"
+ },
+ {
+  "text": "chai sutta shop",
+  "type": "Need"
+ },
+ {
+  "text": "doodh dahi vendor",
+  "type": "Need"
+ },
+ {
+  "text": "local train pass",
+  "type": "Need"
+ },
+ {
+  "text": "railway station ticket",
+  "type": "Need"
+ },
+ {
+  "text": "vehicle service center",
+  "type": "Need"
+ },
+ {
+  "text": "battery charging station",
+  "type": "Need"
+ },
+ {
+  "text": "vehicle repair parts",
+  "type": "Need"
+ },
+ {
+  "text": "night train journey",
+  "type": "Want"
+ },
+ {
+  "text": "intercity flight ticket",
+  "type": "Want"
+ },
+ {
+  "text": "hotel room booking",
+  "type": "Want"
+ },
+ {
+  "text": "airport taxi service",
+  "type": "Want"
+ },
+ {
+  "text": "flight layover hotel",
+  "type": "Want"
+ },
+ {
+  "text": "flight baggage fee",
+  "type": "Want"
+ },
+ {
+  "text": "travel insurance premium",
+  "type": "Investment"
+ },
+ {
+  "text": "medical emergency kit",
+  "type": "Need"
+ },
+ {
+  "text": "gym membership plan",
+  "type": "Want"
+ },
+ {
+  "text": "fitness class subscription",
+  "type": "Want"
+ },
+ {
+  "text": "online fitness course",
+  "type": "Investment"
+ },
+ {
+  "text": "cycling helmet",
+  "type": "Need"
+ },
+ {
+  "text": "walking shoes",
+  "type": "Need"
+ },
+ {
+  "text": "foot massage oil",
+  "type": "Want"
+ },
+ {
+  "text": "essential oils for aromatherapy",
+  "type": "Want"
+ },
+ {
+  "text": "home gym equipment",
+  "type": "Want"
+ },
+ {
+  "text": "online yoga classes",
+  "type": "Investment"
+ },
+ {
+  "text": "protein powder for workout",
+  "type": "Want"
+ },
+ {
+  "text": "kid's school uniform",
+  "type": "Need"
+ },
+ {
+  "text": "school stationery set",
+  "type": "Need"
+ },
+ {
+  "text": "school van rental",
+  "type": "Need"
+ },
+ {
+  "text": "tuition fees for child",
+  "type": "Need"
+ },
+ {
+  "text": "college admission fee",
+  "type": "Investment"
+ },
+ {
+  "text": "degree course fees",
+  "type": "Investment"
+ },
+ {
+  "text": "certification training",
+  "type": "Investment"
+ },
+ {
+  "text": "coaching for skill",
+  "type": "Investment"
+ },
+ {
+  "text": "online course purchase",
+  "type": "Investment"
+ },
+ {
+  "text": "language learning app",
+  "type": "Investment"
+ },
+ {
+  "text": "exam preparation kit",
+  "type": "Need"
+ },
+ {
+  "text": "grooming scissors",
+  "type": "Want"
+ },
+ {
+  "text": "shaving cream for men",
+  "type": "Want"
+ },
+ {
+  "text": "scented candles for home",
+  "type": "Want"
+ },
+ {
+  "text": "toothbrush and toothpaste",
+  "type": "Need"
+ },
+ {
+  "text": "deodorant stick",
+  "type": "Want"
+ },
+ {
+  "text": "safety razor",
+  "type": "Want"
+ },
+ {
+  "text": "family medical check-up",
+  "type": "Need"
+ },
+ {
+  "text": "dental cleaning appointment",
+  "type": "Need"
+ },
+ {
+  "text": "child's school van fee",
+  "type": "Need"
+ },
+ {
+  "text": "school book fees",
+  "type": "Need"
+ },
+ {
+  "text": "kid's stationery pack",
+  "type": "Need"
+ },
+ {
+  "text": "medical first aid kit",
+  "type": "Need"
+ },
+ {
+  "text": "gym membership renewal",
+  "type": "Want"
+ },
+ {
+  "text": "online course subscription",
+  "type": "Investment"
+ },
+ {
+  "text": "language learning program",
+  "type": "Investment"
+ },
+ {
+  "text": "personal trainer session",
+  "type": "Want"
+ },
+ {
+  "text": "health supplement pack",
+  "type": "Want"
+ },
+ {
+  "text": "medical emergency service",
+  "type": "Need"
+ },
+ {
+  "text": "kid's educational toy",
+  "type": "Want"
+ },
+ {
+  "text": "family fun game night",
+  "type": "Want"
+ },
+ {
+  "text": "online fitness app",
+  "type": "Investment"
+ },
+ {
+  "text": "healthcare insurance premium",
+  "type": "Investment"
+ },
+ {
+  "text": "school field trip fund",
+  "type": "Need"
+ },
+ {
+  "text": "gym class passes",
+  "type": "Want"
+ },
+ {
+  "text": "online fitness challenge",
+  "type": "Investment"
+ },
+ {
+  "text": "fitness equipment online",
+  "type": "Investment"
+ }
+]

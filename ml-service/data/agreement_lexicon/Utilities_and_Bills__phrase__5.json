@@ -1,0 +1,330 @@
+[
+ {
+  "text": "electric bill",
+  "type": "Need"
+ },
+ {
+  "text": "water bill",
+  "type": "Need"
+ },
+ {
+  "text": "gas cylinder refill",
+  "type": "Need"
+ },
+ {
+  "text": "pip gas",
+  "type": "Need"
+ },
+ {
+  "text": "broadband",
+  "type": "Need"
+ },
+ {
+  "text": "mobile recharge",
+  "type": "Need"
+ },
+ {
+  "text": "dth recharge",
+  "type": "Need"
+ },
+ {
+  "text": "electricity",
+  "type": "Need"
+ },
+ {
+  "text": "water",
+  "type": "Need"
+ },
+ {
+  "text": "sewage",
+  "type": "Need"
+ },
+ {
+  "text": "phone",
+  "type": "Need"
+ },
+ {
+  "text": "internet",
+  "type": "Need"
+ },
+ {
+  "text": "newspapers",
+  "type": "Need"
+ },
+ {
+  "text": "cloud storage",
+  "type": "Need"
+ },
+ {
+  "text": "software subscription",
+  "type": "Need"
+ },
+ {
+  "text": "ai tool",
+  "type": "Need"
+ },
+ {
+  "text": "emr bill",
+  "type": "Need"
+ },
+ {
+  "text": "loan repayment",
+  "type": "Investment"
+ },
+ {
+  "text": "credit card bill",
+  "type": "Investment"
+ },
+ {
+  "text": "bank charges",
+  "type": "Need"
+ },
+ {
+  "text": "government fees",
+  "type": "Need"
+ },
+ {
+  "text": "property tax",
+  "type": "Need"
+ },
+ {
+  "text": "garbage fee",
+  "type": "Need"
+ },
+ {
+  "text": "domestic help",
+  "type": "Need"
+ },
+ {
+  "text": "rent",
+  "type": "Need"
+ },
+ {
+  "text": "society charges",
+  "type": "Need"
+ },
+ {
+  "text": "hvac service",
+  "type": "Need"
+ },
+ {
+  "text": "water filter",
+  "type": "Need"
+ },
+ {
+  "text": "light bulb",
+  "type": "Need"
+ },
+ {
+  "text": "wifi extender",
+  "type": "Need"
+ },
+ {
+  "text": "electrician",
+  "type": "Need"
+ },
+ {
+  "text": "plumber",
+  "type": "Need"
+ },
+ {
+  "text": "landline",
+  "type": "Need"
+ },
+ {
+  "text": "fuel",
+  "type": "Need"
+ },
+ {
+  "text": "ev charging",
+  "type": "Need"
+ },
+ {
+  "text": "toll fee",
+  "type": "Need"
+ },
+ {
+  "text": "parking",
+  "type": "Need"
+ },
+ {
+  "text": "cable service",
+  "type": "Need"
+ },
+ {
+  "text": "water filter",
+  "type": "Need"
+ },
+ {
+  "text": "internet modem",
+  "type": "Need"
+ },
+ {
+  "text": "dth",
+  "type": "Need"
+ },
+ {
+  "text": "newspaper",
+  "type": "Need"
+ },
+ {
+  "text": "gym",
+  "type": "Need"
+ },
+ {
+  "text": "fitness",
+  "type": "Need"
+ },
+ {
+  "text": "yoga",
+  "type": "Need"
+ },
+ {
+  "text": "protein powder",
+  "type": "Need"
+ },
+ {
+  "text": "school fees",
+  "type": "Need"
+ },
+ {
+  "text": "school books",
+  "type": "Need"
+ },
+ {
+  "text": "tiffin service",
+  "type": "Need"
+ },
+ {
+  "text": "school van",
+  "type": "Need"
+ },
+ {
+  "text": "home tuition",
+  "type": "Need"
+ },
+ {
+  "text": "college fee",
+  "type": "Investment"
+ },
+ {
+  "text": "degree",
+  "type": "Investment"
+ },
+ {
+  "text": "tuition",
+  "type": "Need"
+ },
+ {
+  "text": "course fee",
+  "type": "Investment"
+ },
+ {
+  "text": "exam fees",
+  "type": "Investment"
+ },
+ {
+  "text": "certification",
+  "type": "Investment"
+ },
+ {
+  "text": "coaching",
+  "type": "Investment"
+ },
+ {
+  "text": "gym membership",
+  "type": "Need"
+ },
+ {
+  "text": "spa",
+  "type": "Want"
+ },
+ {
+  "text": "cosmetics",
+  "type": "Want"
+ },
+ {
+  "text": "skincare",
+  "type": "Want"
+ },
+ {
+  "text": "toiletries",
+  "type": "Need"
+ },
+ {
+  "text": "watch",
+  "type": "Want"
+ },
+ {
+  "text": "tailor",
+  "type": "Need"
+ },
+ {
+  "text": "cobbler",
+  "type": "Need"
+ },
+ {
+  "text": "digital gold",
+  "type": "Investment"
+ },
+ {
+  "text": "stocks",
+  "type": "Investment"
+ },
+ {
+  "text": "mutual funds",
+  "type": "Investment"
+ },
+ {
+  "text": "sip",
+  "type": "Investment"
+ },
+ {
+  "text": "etf",
+  "type": "Investment"
+ },
+ {
+  "text": "bonds",
+  "type": "Investment"
+ },
+ {
+  "text": "fd",
+  "type": "Investment"
+ },
+ {
+  "text": "rd",
+  "type": "Investment"
+ },
+ {
+  "text": "ppf",
+  "type": "Investment"
+ },
+ {
+  "text": "nps",
+  "type": "Investment"
+ },
+ {
+  "text": "epf/vpf",
+  "type": "Investment"
+ },
+ {
+  "text": "gold bond",
+  "type": "Investment"
+ },
+ {
+  "text": "demat charges",
+  "type": "Investment"
+ },
+ {
+  "text": "donation",
+  "type": "Need"
+ },
+ {
+  "text": "tip",
+  "type": "Need"
+ },
+ {
+  "text": "gift",
+  "type": "Want"
+ }
+]

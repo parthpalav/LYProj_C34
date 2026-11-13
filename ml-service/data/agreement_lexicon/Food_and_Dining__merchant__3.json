@@ -1,0 +1,278 @@
+[
+ {
+  "text": "Zomato",
+  "type": "Want"
+ },
+ {
+  "text": "Swiggy",
+  "type": "Want"
+ },
+ {
+  "text": "Uber Eats",
+  "type": "Want"
+ },
+ {
+  "text": "Foodpanda",
+  "type": "Want"
+ },
+ {
+  "text": "Grubhub",
+  "type": "Want"
+ },
+ {
+  "text": "Dunkin' Donuts",
+  "type": "Want"
+ },
+ {
+  "text": "Starbucks",
+  "type": "Want"
+ },
+ {
+  "text": "Nestlé",
+  "type": "Want"
+ },
+ {
+  "text": "Tata Salt",
+  "type": "Need"
+ },
+ {
+  "text": "Haldiram's",
+  "type": "Need"
+ },
+ {
+  "text": "Aashirvaad",
+  "type": "Need"
+ },
+ {
+  "text": "Amul",
+  "type": "Need"
+ },
+ {
+  "text": "MTR Foods",
+  "type": "Need"
+ },
+ {
+  "text": "Pepsico",
+  "type": "Need"
+ },
+ {
+  "text": "Nestlé Quaker",
+  "type": "Need"
+ },
+ {
+  "text": "Britannia",
+  "type": "Need"
+ },
+ {
+  "text": "Parle",
+  "type": "Need"
+ },
+ {
+  "text": "Mondelez",
+  "type": "Need"
+ },
+ {
+  "text": "Kwality Walls",
+  "type": "Need"
+ },
+ {
+  "text": "Parle Biscuits",
+  "type": "Need"
+ },
+ {
+  "text": "Aashirvaad Masalas",
+  "type": "Need"
+ },
+ {
+  "text": "Parle-G",
+  "type": "Need"
+ },
+ {
+  "text": "Saffola",
+  "type": "Need"
+ },
+ {
+  "text": "Nirma",
+  "type": "Need"
+ },
+ {
+  "text": "Mother Dairy",
+  "type": "Need"
+ },
+ {
+  "text": "Pepsico Beverages",
+  "type": "Need"
+ },
+ {
+  "text": "Coca-Cola",
+  "type": "Need"
+ },
+ {
+  "text": "Frooti",
+  "type": "Need"
+ },
+ {
+  "text": "Sprite",
+  "type": "Need"
+ },
+ {
+  "text": "Thums Up",
+  "type": "Need"
+ },
+ {
+  "text": "Lipton",
+  "type": "Need"
+ },
+ {
+  "text": "Milo",
+  "type": "Need"
+ },
+ {
+  "text": "Snickers",
+  "type": "Want"
+ },
+ {
+  "text": "Kit Kat",
+  "type": "Want"
+ },
+ {
+  "text": "M&M's",
+  "type": "Want"
+ },
+ {
+  "text": "Five Star",
+  "type": "Need"
+ },
+ {
+  "text": "Kulfi",
+  "type": "Want"
+ },
+ {
+  "text": "Halo",
+  "type": "Want"
+ },
+ {
+  "text": "Gulab Jamun",
+  "type": "Need"
+ },
+ {
+  "text": "Gulab Cafe",
+  "type": "Need"
+ },
+ {
+  "text": "Munch",
+  "type": "Need"
+ },
+ {
+  "text": "EatStreet",
+  "type": "Want"
+ },
+ {
+  "text": "EatFit",
+  "type": "Want"
+ },
+ {
+  "text": "Yum! Brands",
+  "type": "Want"
+ },
+ {
+  "text": "Sodexo",
+  "type": "Need"
+ },
+ {
+  "text": "Munchos",
+  "type": "Need"
+ },
+ {
+  "text": "GoFood",
+  "type": "Want"
+ },
+ {
+  "text": "FreshMenu",
+  "type": "Want"
+ },
+ {
+  "text": "Ola Food",
+  "type": "Want"
+ },
+ {
+  "text": "JustEat",
+  "type": "Want"
+ },
+ {
+  "text": "Baskin Robbins",
+  "type": "Want"
+ },
+ {
+  "text": "McDonald's",
+  "type": "Want"
+ },
+ {
+  "text": "Subway",
+  "type": "Want"
+ },
+ {
+  "text": "KFC",
+  "type": "Want"
+ },
+ {
+  "text": "Pizza Hut",
+  "type": "Want"
+ },
+ {
+  "text": "Tata Coffee",
+  "type": "Need"
+ },
+ {
+  "text": "Café Coffee Day",
+  "type": "Want"
+ },
+ {
+  "text": "Dairy Farmers",
+  "type": "Need"
+ },
+ {
+  "text": "Red Rose",
+  "type": "Need"
+ },
+ {
+  "text": "Amul Cheese",
+  "type": "Need"
+ },
+ {
+  "text": "Milkos",
+  "type": "Need"
+ },
+ {
+  "text": "Mother Dairy",
+  "type": "Need"
+ },
+ {
+  "text": "Lipton Iced Tea",
+  "type": "Need"
+ },
+ {
+  "text": "Lipton Lemon Ice Tea",
+  "type": "Need"
+ },
+ {
+  "text": "Horlicks",
+  "type": "Need"
+ },
+ {
+  "text": "Horlicks Plus",
+  "type": "Need"
+ },
+ {
+  "text": "Complan",
+  "type": "Need"
+ },
+ {
+  "text": "Boost",
+  "type": "Need"
+ },
+ {
+  "text": "Nutroff",
+  "type": "Need"
+ }
+]

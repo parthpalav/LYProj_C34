@@ -1,0 +1,362 @@
+[
+ {
+  "text": "sabzi wala",
+  "type": "Need"
+ },
+ {
+  "text": "chai sutta",
+  "type": "Need"
+ },
+ {
+  "text": "doodh",
+  "type": "Need"
+ },
+ {
+  "text": "samosa walla",
+  "type": "Need"
+ },
+ {
+  "text": "dahi pani",
+  "type": "Need"
+ },
+ {
+  "text": "vada pav walla",
+  "type": "Need"
+ },
+ {
+  "text": "paani puri",
+  "type": "Need"
+ },
+ {
+  "text": "tiffin stand",
+  "type": "Need"
+ },
+ {
+  "text": "bakery shop",
+  "type": "Need"
+ },
+ {
+  "text": "sweet shop",
+  "type": "Need"
+ },
+ {
+  "text": "ice cream parlor",
+  "type": "Need"
+ },
+ {
+  "text": "dosa walla",
+  "type": "Need"
+ },
+ {
+  "text": "biryani",
+  "type": "Need"
+ },
+ {
+  "text": "chicken tandoori",
+  "type": "Need"
+ },
+ {
+  "text": "veg thali",
+  "type": "Need"
+ },
+ {
+  "text": "non veg thali",
+  "type": "Need"
+ },
+ {
+  "text": "fast food",
+  "type": "Need"
+ },
+ {
+  "text": "snacks",
+  "type": "Want"
+ },
+ {
+  "text": "chips",
+  "type": "Want"
+ },
+ {
+  "text": "biscuits",
+  "type": "Want"
+ },
+ {
+  "text": "chocolates",
+  "type": "Want"
+ },
+ {
+  "text": "dry fruits",
+  "type": "Want"
+ },
+ {
+  "text": "instant noodles",
+  "type": "Want"
+ },
+ {
+  "text": "fuel",
+  "type": "Need"
+ },
+ {
+  "text": "petrol",
+  "type": "Need"
+ },
+ {
+  "text": "diesel",
+  "type": "Need"
+ },
+ {
+  "text": "EV charging",
+  "type": "Need"
+ },
+ {
+  "text": "toll charges",
+  "type": "Need"
+ },
+ {
+  "text": "parking fee",
+  "type": "Need"
+ },
+ {
+  "text": "fastag",
+  "type": "Need"
+ },
+ {
+  "text": "parking ticket",
+  "type": "Need"
+ },
+ {
+  "text": "metro fare",
+  "type": "Need"
+ },
+ {
+  "text": "local train",
+  "type": "Need"
+ },
+ {
+  "text": "bus fare",
+  "type": "Need"
+ },
+ {
+  "text": "auto rickshaw",
+  "type": "Need"
+ },
+ {
+  "text": "vehicle service",
+  "type": "Need"
+ },
+ {
+  "text": "vehicle repair",
+  "type": "Need"
+ },
+ {
+  "text": "cabs",
+  "type": "Want"
+ },
+ {
+  "text": "intercity ticket",
+  "type": "Want"
+ },
+ {
+  "text": "flight",
+  "type": "Want"
+ },
+ {
+  "text": "hotel",
+  "type": "Want"
+ },
+ {
+  "text": "holiday",
+  "type": "Want"
+ },
+ {
+  "text": "car wash",
+  "type": "Want"
+ },
+ {
+  "text": "car accessories",
+  "type": "Want"
+ },
+ {
+  "text": "electricity bill",
+  "type": "Need"
+ },
+ {
+  "text": "water bill",
+  "type": "Need"
+ },
+ {
+  "text": "sewage bill",
+  "type": "Need"
+ },
+ {
+  "text": "phone bill",
+  "type": "Need"
+ },
+ {
+  "text": "internet bill",
+  "type": "Need"
+ },
+ {
+  "text": "dth",
+  "type": "Need"
+ },
+ {
+  "text": "newspaper",
+  "type": "Need"
+ },
+ {
+  "text": "cloud storage",
+  "type": "Need"
+ },
+ {
+  "text": "SaaS subscription",
+  "type": "Need"
+ },
+ {
+  "text": "AI tool",
+  "type": "Need"
+ },
+ {
+  "text": "EMI",
+  "type": "Need"
+ },
+ {
+  "text": "loan repayment",
+  "type": "Need"
+ },
+ {
+  "text": "credit card bill",
+  "type": "Need"
+ },
+ {
+  "text": "BNPL dues",
+  "type": "Need"
+ },
+ {
+  "text": "school fees",
+  "type": "Need"
+ },
+ {
+  "text": "school books",
+  "type": "Need"
+ },
+ {
+  "text": "stationery",
+  "type": "Need"
+ },
+ {
+  "text": "school van",
+  "type": "Need"
+ },
+ {
+  "text": "tution fees",
+  "type": "Need"
+ },
+ {
+  "text": "college fees",
+  "type": "Need"
+ },
+ {
+  "text": "degree course",
+  "type": "Need"
+ },
+ {
+  "text": "coaching classes",
+  "type": "Need"
+ },
+ {
+  "text": "certifications",
+  "type": "Need"
+ },
+ {
+  "text": "language lessons",
+  "type": "Need"
+ },
+ {
+  "text": "gym membership",
+  "type": "Want"
+ },
+ {
+  "text": "fitness classes",
+  "type": "Want"
+ },
+ {
+  "text": "yoga classes",
+  "type": "Want"
+ },
+ {
+  "text": "protein powder",
+  "type": "Want"
+ },
+ {
+  "text": "medical insurance",
+  "type": "Need"
+ },
+ {
+  "text": "LIC premium",
+  "type": "Need"
+ },
+ {
+  "text": "ULIP plan",
+  "type": "Need"
+ },
+ {
+  "text": "endowment plan",
+  "type": "Need"
+ },
+ {
+  "text": "annuity plan",
+  "type": "Need"
+ },
+ {
+  "text": "stocks",
+  "type": "Investment"
+ },
+ {
+  "text": "mutual funds",
+  "type": "Investment"
+ },
+ {
+  "text": "SIPs",
+  "type": "Investment"
+ },
+ {
+  "text": "ETFs",
+  "type": "Investment"
+ },
+ {
+  "text": "bonds",
+  "type": "Investment"
+ },
+ {
+  "text": "FD",
+  "type": "Investment"
+ },
+ {
+  "text": "RD",
+  "type": "Investment"
+ },
+ {
+  "text": "PPF",
+  "type": "Investment"
+ },
+ {
+  "text": "NPS",
+  "type": "Investment"
+ },
+ {
+  "text": "EPF/VPF",
+  "type": "Investment"
+ },
+ {
+  "text": "gold bonds",
+  "type": "Investment"
+ },
+ {
+  "text": "digital gold",
+  "type": "Investment"
+ },
+ {
+  "text": "demat charges",
+  "type": "Investment"
+ }
+]

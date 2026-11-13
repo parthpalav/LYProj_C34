@@ -1,9 +1,8 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { ActivityIndicator, Alert, KeyboardAvoidingView, Modal, Platform, Pressable, RefreshControl, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { ActivityIndicator, Alert, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Switch, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Animated from 'react-native-reanimated';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useFocusEffect } from '@react-navigation/native';
 import { getLiabilities, createLiability, updateLiability, deleteLiability, getLiabilitiesPaymentsSummary, getLiabilityTransactions, getPaymentMethods } from '../services/api';
 import { toast } from '../store/useCelebrationStore';
 import { enterUp, exitFade, listLayout } from '../motion';
@@ -17,7 +16,7 @@ import { Badge, Chip, EmptyState, ErrorState, IconTile, MoneyText, SectionHeader
 import { Button } from '../components/ui/Button';
 import { Field } from '../components/ui/Field';
 import { DateField } from '../components/ui/DateField';
-import { LargeTitle, ScreenHeader, useHeaderHeight, useScrollHeader } from '../components/ui/ScreenHeader';
+import type { PanelProps } from './AssetsScreen';
 import { SkeletonCard } from '../components/motion/Skeleton';
 
 const VALID_CATEGORIES = [
@@ -44,18 +43,17 @@ function relativeDue(d: Date): string {
   return `Due ${shortDate(d)}`;
 }
 
-export function LiabilitiesScreen() {
+/** A loan carries a balance; everything else recurring is a bill. */
+const isLoan = (l: Liability) => l.outstandingBalance != null || l.category === 'Debt & Loan Payments';
+
+/** Liabilities half of the Net worth screen: loans first, then cards, the due strip and bills. */
+export function LiabilitiesPanel({ addKey, refreshKey, onTotal }: PanelProps) {
   const { c } = useTheme();
   const styles = useStyles();
-  const navigation = useNavigation();
-  const insets = useSafeAreaInsets();
-  const headerHeight = useHeaderHeight();
-  const { y, onScroll } = useScrollHeader();
   const [liabilities, setLiabilities] = useState<Liability[]>([]);
   const [paymentSummaries, setPaymentSummaries] = useState<Record<string, LiabilityPaymentSummary>>({});
   const [loading, setLoading] = useState(true);
   const [loadFailed, setLoadFailed] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
   const [selectedDay, setSelectedDay] = useState<Date | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -108,6 +106,7 @@ export function LiabilitiesScreen() {
   }, []);
 
   useFocusEffect(useCallback(() => { fetchData(); }, [fetchData]));
+  useEffect(() => { if (refreshKey) fetchData(); }, [refreshKey, fetchData]);
 
   const openAddModal = () => {
     setEditingId(null);
@@ -127,6 +126,9 @@ export function LiabilitiesScreen() {
     setFormError('');
     setModalVisible(true);
   };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { if (addKey) openAddModal(); }, [addKey]);
 
   const openEditModal = (liability: Liability) => {
     setEditingId(liability.id);
@@ -264,7 +266,64 @@ export function LiabilitiesScreen() {
     d.setDate(d.getDate() + i);
     return { date: d, items: upcoming.filter((u) => sameDay(u.date, d)) };
   }), [upcoming]);
+  const loans = activeLiabilities.filter(isLoan);
+  const bills = activeLiabilities.filter((l) => !isLoan(l));
+  // Owed = loan balances + card outstanding, the same sum the server uses for net worth.
+  const owed = loans.reduce((s, l) => s + (l.outstandingBalance || 0), 0)
+    + cards.reduce((s, m) => s + Math.max(0, m.credit?.outstanding || 0), 0);
+  useEffect(() => { onTotal?.(owed); }, [onTotal, owed]);
   const listed = selectedDay ? upcoming.filter((u) => sameDay(u.date, selectedDay)) : upcoming.slice(0, 5);
+
+  const billCard = (item: Liability, idx: number) => {
+    const summary = paymentSummaries[item.id];
+    const hasPayments = summary && summary.paymentCount > 0;
+    const due = nextDue(item);
+    return (
+      <Animated.View key={item.id} entering={enterUp(idx)} exiting={exitFade} layout={listLayout}>
+        <Card style={styles.billCard}>
+          <View style={styles.billTop}>
+            <IconTile icon={item.autoDeduct ? 'flash' : 'calendar'} tint={item.autoDeduct ? c.success : c.warning} />
+            <View style={styles.flex}>
+              <Text style={styles.rowTitle} numberOfLines={1}>{item.name}</Text>
+              <Text style={styles.rowSub}>{cap(item.frequency)} · {item.category}</Text>
+            </View>
+            <View style={styles.billRight}>
+              <Text style={styles.rowAmount}>{formatCurrency(item.amount)}</Text>
+              <Text style={styles.rowSub}>{relativeDue(due)}</Text>
+            </View>
+          </View>
+
+          <View style={styles.badges}>
+            <Badge label={item.autoDeduct ? 'Auto deduct on' : 'Pay manually'} tone={item.autoDeduct ? 'success' : 'neutral'} />
+            <Badge label={item.type} tone="primary" />
+            {item.outstandingBalance != null && (
+              <Badge label={`${formatCurrency(item.outstandingBalance)} left${item.interestRate != null ? ` · ${Math.round(item.interestRate * 10000) / 100}%` : ''}${item.remainingTermMonths != null ? ` · ${item.remainingTermMonths} mo` : ''}`} tone="warning" />
+            )}
+            {hasPayments ? (
+              <Badge label={`Last paid ${shortDate(new Date(summary.lastPaymentDate!))}`} />
+            ) : (
+              <Badge label="No payments yet" />
+            )}
+          </View>
+
+          <View style={styles.actions}>
+            <Pressable style={styles.action} onPress={() => openHistoryModal(item)} accessibilityRole="button" accessibilityLabel={`Payment history for ${item.name}`}>
+              <Ionicons name="receipt-outline" size={16} color={c.primary} />
+              <Text style={styles.actionText}>History</Text>
+            </Pressable>
+            <Pressable style={styles.action} onPress={() => openEditModal(item)} accessibilityRole="button" accessibilityLabel={`Edit ${item.name}`}>
+              <Ionicons name="create-outline" size={16} color={c.textMuted} />
+              <Text style={[styles.actionText, { color: c.textMuted }]}>Edit</Text>
+            </Pressable>
+            <Pressable style={styles.action} onPress={() => handleDelete(item)} accessibilityRole="button" accessibilityLabel={`Remove ${item.name}`}>
+              <Ionicons name="trash-outline" size={16} color={c.danger} />
+              <Text style={[styles.actionText, { color: c.danger }]}>Remove</Text>
+            </Pressable>
+          </View>
+        </Card>
+      </Animated.View>
+    );
+  };
 
   const body = () => {
     if (loading) return <View style={styles.body}>{[0, 1].map((i) => <SkeletonCard key={i} style={styles.skeleton} />)}</View>;
@@ -302,6 +361,9 @@ export function LiabilitiesScreen() {
             </View>
           </Card>
         </Animated.View>
+
+        {loans.length > 0 && <SectionHeader title="Loans & EMIs" />}
+        {loans.map(billCard)}
 
         <CreditCardsSection cards={cards} onChanged={fetchData} />
 
@@ -348,83 +410,15 @@ export function LiabilitiesScreen() {
           )}
         </Card>
 
-        {/* All bills */}
-        <SectionHeader title="All bills" />
-        {activeLiabilities.map((item, idx) => {
-          const summary = paymentSummaries[item.id];
-          const hasPayments = summary && summary.paymentCount > 0;
-          const due = nextDue(item);
-          return (
-            <Animated.View key={item.id} entering={enterUp(idx)} exiting={exitFade} layout={listLayout}>
-              <Card style={styles.billCard}>
-                <View style={styles.billTop}>
-                  <IconTile icon={item.autoDeduct ? 'flash' : 'calendar'} tint={item.autoDeduct ? c.success : c.warning} />
-                  <View style={styles.flex}>
-                    <Text style={styles.rowTitle} numberOfLines={1}>{item.name}</Text>
-                    <Text style={styles.rowSub}>{cap(item.frequency)} · {item.category}</Text>
-                  </View>
-                  <View style={styles.billRight}>
-                    <Text style={styles.rowAmount}>{formatCurrency(item.amount)}</Text>
-                    <Text style={styles.rowSub}>{relativeDue(due)}</Text>
-                  </View>
-                </View>
-
-                <View style={styles.badges}>
-                  <Badge label={item.autoDeduct ? 'Auto deduct on' : 'Pay manually'} tone={item.autoDeduct ? 'success' : 'neutral'} />
-                  <Badge label={item.type} tone="primary" />
-                  {item.outstandingBalance != null && (
-                    <Badge label={`${formatCurrency(item.outstandingBalance)} left${item.interestRate != null ? ` · ${Math.round(item.interestRate * 10000) / 100}%` : ''}${item.remainingTermMonths != null ? ` · ${item.remainingTermMonths} mo` : ''}`} tone="warning" />
-                  )}
-                  {hasPayments ? (
-                    <Badge label={`Last paid ${shortDate(new Date(summary.lastPaymentDate!))}`} />
-                  ) : (
-                    <Badge label="No payments yet" />
-                  )}
-                </View>
-
-                <View style={styles.actions}>
-                  <Pressable style={styles.action} onPress={() => openHistoryModal(item)} accessibilityRole="button" accessibilityLabel={`Payment history for ${item.name}`}>
-                    <Ionicons name="receipt-outline" size={16} color={c.primary} />
-                    <Text style={styles.actionText}>History</Text>
-                  </Pressable>
-                  <Pressable style={styles.action} onPress={() => openEditModal(item)} accessibilityRole="button" accessibilityLabel={`Edit ${item.name}`}>
-                    <Ionicons name="create-outline" size={16} color={c.textMuted} />
-                    <Text style={[styles.actionText, { color: c.textMuted }]}>Edit</Text>
-                  </Pressable>
-                  <Pressable style={styles.action} onPress={() => handleDelete(item)} accessibilityRole="button" accessibilityLabel={`Remove ${item.name}`}>
-                    <Ionicons name="trash-outline" size={16} color={c.danger} />
-                    <Text style={[styles.actionText, { color: c.danger }]}>Remove</Text>
-                  </Pressable>
-                </View>
-              </Card>
-            </Animated.View>
-          );
-        })}
+        {bills.length > 0 && <SectionHeader title="Bills & subscriptions" />}
+        {bills.map(billCard)}
       </View>
     );
   };
 
   return (
-    <View style={styles.screen}>
-      <Animated.ScrollView
-        onScroll={onScroll}
-        scrollEventThrottle={16}
-        contentContainerStyle={{ paddingTop: headerHeight, paddingBottom: insets.bottom + 40 }}
-        showsVerticalScrollIndicator={false}
-        refreshControl={<RefreshControl refreshing={refreshing} progressViewOffset={headerHeight} onRefresh={async () => { setRefreshing(true); await fetchData(); setRefreshing(false); }} />}
-      >
-        <LargeTitle
-          title="Bills"
-          subtitle="Recurring payments and auto-deductions"
-          right={
-            <Pressable style={styles.addBtn} onPress={openAddModal} accessibilityRole="button" accessibilityLabel="Add Liability">
-              <Ionicons name="add" size={22} color={c.onPrimary} />
-            </Pressable>
-          }
-        />
-        {body()}
-      </Animated.ScrollView>
-      <ScreenHeader title="Bills" y={y} onBack={() => navigation.goBack()} />
+    <>
+      {body()}
 
       {/* Add / edit */}
       <Modal visible={modalVisible} animationType="slide" presentationStyle="pageSheet" onRequestClose={() => setModalVisible(false)}>
@@ -433,7 +427,7 @@ export function LiabilitiesScreen() {
             <Pressable onPress={() => setModalVisible(false)} hitSlop={10} accessibilityRole="button">
               <Text style={styles.sheetCancel}>Cancel</Text>
             </Pressable>
-            <Text style={styles.sheetTitle}>{editingId ? 'Edit bill' : 'New bill'}</Text>
+            <Text style={styles.sheetTitle}>{editingId ? 'Edit liability' : 'New liability'}</Text>
             <View style={styles.sheetSpacer} />
           </View>
           <ScrollView contentContainerStyle={styles.sheetBody} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}>
@@ -554,19 +548,17 @@ export function LiabilitiesScreen() {
           ) : null}
         </View>
       </Modal>
-    </View>
+    </>
   );
 }
 
 const useStyles = createStyles((c) => ({
-  screen: { flex: 1, backgroundColor: c.bg },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   flex: { flex: 1 },
   flexCenter: { flex: 1, alignItems: 'center' },
   right: { textAlign: 'right' },
   body: { paddingHorizontal: 16 },
   skeleton: { marginBottom: 12 },
-  addBtn: { width: 42, height: 42, borderRadius: 21, alignItems: 'center', justifyContent: 'center', backgroundColor: c.primary, marginBottom: 4 },
   heroLabel: { ...typeScale.caption, color: c.onAuroraMuted },
   heroValue: { ...typeScale.display, color: c.onAurora, marginTop: 2 },
   heroRow: { flexDirection: 'row', gap: 12, marginTop: 16 },

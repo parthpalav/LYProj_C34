@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleProp, StyleSheet, View, ViewProps, ViewStyle } from 'react-native';
 import { BlurView } from 'expo-blur';
+import Animated from 'react-native-reanimated';
 import { createStyles, radius, shadow, useTheme } from '../../theme';
+import { fadeIn, rise } from '../../motion';
 import { PressableScale } from '../motion/PressableScale';
 import { AuroraBackground } from './AuroraBackground';
 
@@ -14,9 +16,21 @@ type Props = Omit<ViewProps, 'style'> & {
   children?: React.ReactNode;
 };
 
+// Cards that mount together rise in one after another; a pause in mounting starts a new run.
+let run = 0;
+let lastMount = 0;
+function nextDelay() {
+  const now = Date.now();
+  if (now - lastMount > 120) run = 0;
+  lastMount = now;
+  return Math.min(run++, 6) * 45;
+}
+
 export function Card({ variant = 'plain', padded = true, onPress, style, children, ...rest }: Props) {
   const styles = useStyles();
   const { isDark } = useTheme();
+  // Pressable cards only fade: their press scale owns the transform.
+  const [entering] = useState(() => { const delay = nextDelay(); return onPress ? fadeIn(delay) : rise(delay, 6); });
   const body = (
     <>
       {variant === 'hero' && <AuroraBackground blur={40} />}
@@ -28,12 +42,12 @@ export function Card({ variant = 'plain', padded = true, onPress, style, childre
 
   if (onPress) {
     return (
-      <PressableScale onPress={onPress} scaleTo={0.98} style={cardStyle} accessibilityRole="button" {...rest}>
+      <PressableScale entering={entering} onPress={onPress} scaleTo={0.98} style={cardStyle} accessibilityRole="button" {...rest}>
         {body}
       </PressableScale>
     );
   }
-  return <View style={cardStyle} {...rest}>{body}</View>;
+  return <Animated.View entering={entering} style={cardStyle} {...rest}>{body}</Animated.View>;
 }
 
 const useStyles = createStyles((c) => ({

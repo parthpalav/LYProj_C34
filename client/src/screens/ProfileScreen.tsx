@@ -10,7 +10,7 @@ import { useStore } from '../store/useStore';
 import { useAuthStore } from '../store/useAuthStore';
 import { useThemeStore } from '../store/useThemeStore';
 import { toast } from '../store/useCelebrationStore';
-import { getUserProfile, updateUserProfileApi } from '../services/api';
+import { changePasswordUser, getSystemStatus, getUserProfile, updateUserProfileApi, type SystemStatus } from '../services/api';
 import { User } from '../types';
 import { createStyles, radius, typeScale, useTheme } from '../theme';
 import { enterUp } from '../motion';
@@ -102,6 +102,64 @@ export function ProfileScreen(): React.ReactElement {
   const [form, setForm] = useState<Record<string, string>>({});
   const [editDOB, setEditDOB] = useState<Date>(new Date(2000, 0, 1));
   const [tzOpen, setTzOpen] = useState(false);
+
+  // Change password sheet
+  const [pwOpen, setPwOpen] = useState(false);
+
+  // Service status (same checks as the web Settings page).
+  const [statusOpen, setStatusOpen] = useState(false);
+  const [status, setStatus] = useState<SystemStatus | null>(null);
+  const [statusFailed, setStatusFailed] = useState(false);
+  const [checking, setChecking] = useState(false);
+  const checkStatus = async () => {
+    setChecking(true);
+    try {
+      setStatus(await getSystemStatus());
+      setStatusFailed(false);
+    } catch {
+      setStatusFailed(true);
+    } finally {
+      setChecking(false);
+    }
+  };
+  const openStatus = () => { setStatusOpen(true); checkStatus(); };
+  const uptime = (sec: number) => (sec < 3600 ? `${Math.max(1, Math.round(sec / 60))} min` : sec < 86400 ? `${Math.round(sec / 3600)} h` : `${Math.round(sec / 86400)} d`);
+  const services: { name: string; detail: string; ok?: boolean }[] = [
+    { name: 'API server', detail: status ? `Running for ${uptime(status.api.uptimeSeconds)}` : 'Not reachable', ok: statusFailed ? false : status?.api.ok },
+    { name: 'Database', detail: status?.database.ok ? 'Connected' : 'Not connected', ok: status?.database.ok },
+    { name: 'Classifier (ML service)', detail: status?.ml.ok ? (status.ml.classifierReady ? `Model loaded, answered in ${status.ml.latencyMs} ms` : 'Running, model still loading') : 'Offline: new expenses use keyword rules', ok: status?.ml.ok },
+    { name: 'AI assistant', detail: status?.assistant.ok ? 'Connected' : 'No API key set: the assistant answers direct questions only', ok: status?.assistant.ok },
+  ];
+  const [pw, setPw] = useState({ current: '', next: '', confirm: '' });
+  const [pwError, setPwError] = useState<string | null>(null);
+  const [pwBusy, setPwBusy] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  // One eye button shows or hides all three fields
+  const pwToggle = (
+    <Pressable onPress={() => setShowPassword((v) => !v)} accessibilityRole="button" accessibilityLabel={showPassword ? 'Hide password' : 'Show password'} hitSlop={12}>
+      <Ionicons name={showPassword ? 'eye-off-outline' : 'eye-outline'} size={20} color={c.textSubtle} />
+    </Pressable>
+  );
+  const closePw = () => { setPwOpen(false); setShowPassword(false); setPw({ current: '', next: '', confirm: '' }); setPwError(null); };
+  const savePassword = async () => {
+    if (!pw.current) return setPwError('Enter your current password.');
+    // Same rule the server enforces
+    if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d\s])\S{8,128}$/.test(pw.next)) {
+      return setPwError('New password needs 8 or more characters with an uppercase letter, a lowercase letter, a number and a symbol.');
+    }
+    if (pw.next !== pw.confirm) return setPwError('The new passwords do not match.');
+    setPwError(null);
+    setPwBusy(true);
+    try {
+      await changePasswordUser(pw.current, pw.next);
+      closePw();
+      toast('Password changed', { subtitle: 'Other devices have been signed out.' });
+    } catch (e: any) {
+      setPwError(e?.response?.data?.message || 'Could not change your password. Try again.');
+    } finally {
+      setPwBusy(false);
+    }
+  };
   const [tzBusy, setTzBusy] = useState(false);
   const timezone = user?.timezone ?? DEFAULT_TIMEZONE;
   const set = (key: string) => (v: string) => { setForm((f) => ({ ...f, [key]: v })); setEditError(''); };
@@ -270,7 +328,7 @@ export function ProfileScreen(): React.ReactElement {
     { icon: 'pie-chart', tint: c.info, title: 'Assets', subtitle: 'Investments, deposits and savings', route: 'Assets' },
     { icon: 'wallet', tint: c.purple, title: 'Income streams', subtitle: 'Salary and other receipts', route: 'IncomeFlow' },
     { icon: 'flag', tint: c.success, title: 'Savings goals', subtitle: 'What you are saving towards', route: 'Goals' },
-    { icon: 'calendar', tint: c.warning, title: 'Bills', subtitle: 'Recurring payments, loans and credit cards', route: 'Liabilities' },
+    { icon: 'calendar', tint: c.warning, title: 'Liabilities', subtitle: 'Loans, credit cards and recurring bills', route: 'Liabilities' },
     { icon: 'card', tint: c.primary, title: 'Payment methods', subtitle: 'UPI, debit and credit cards', route: 'PaymentMethods' },
     { icon: 'people-outline', tint: c.chart[3], title: 'Family & Household', subtitle: 'Combined finances, shared insights & invitations', route: 'Family' },
   ];
@@ -379,6 +437,12 @@ export function ProfileScreen(): React.ReactElement {
                   accessibilityLabel="Timezone. Sets when days and months start for bills, card statements and reports."
                 />
               </View>
+              <View style={s.divider}>
+                <ListRow icon="lock-closed-outline" tint={c.textMuted} title="Change password" subtitle="Signs out your other devices" onPress={() => setPwOpen(true)} />
+              </View>
+              <View style={s.divider}>
+                <ListRow icon="pulse-outline" tint={c.textMuted} title="Service status" subtitle="Server, database, classifier and assistant" onPress={openStatus} />
+              </View>
             </View>
           </Card>
 
@@ -388,6 +452,27 @@ export function ProfileScreen(): React.ReactElement {
       </Animated.ScrollView>
 
       <ScreenHeader title="You" y={y} onBack={() => navigation.goBack()} />
+
+      <Sheet visible={pwOpen} onClose={closePw} title="Change password">
+        <Field label="Current password" icon="lock-closed-outline" secureTextEntry={!showPassword} trailing={pwToggle} autoCapitalize="none" value={pw.current} onChangeText={(v) => setPw((p) => ({ ...p, current: v }))} />
+        <Field label="New password" icon="key-outline" secureTextEntry={!showPassword} trailing={pwToggle} autoCapitalize="none" value={pw.next} onChangeText={(v) => setPw((p) => ({ ...p, next: v }))} />
+        <Field label="Confirm new password" icon="key-outline" secureTextEntry={!showPassword} trailing={pwToggle} autoCapitalize="none" value={pw.confirm} onChangeText={(v) => setPw((p) => ({ ...p, confirm: v }))} />
+        {pwError && <Text style={s.pwError} accessibilityRole="alert">{pwError}</Text>}
+        <Button label="Change password" icon="checkmark-circle-outline" onPress={savePassword} loading={pwBusy} style={s.save} />
+      </Sheet>
+
+      <Sheet visible={statusOpen} onClose={() => setStatusOpen(false)} title="Service status">
+        {services.map((x) => (
+          <ListRow
+            key={x.name}
+            icon={x.ok ? 'checkmark-circle' : x.ok === false || statusFailed ? 'close-circle' : 'ellipse-outline'}
+            tint={x.ok ? c.success : x.ok === false || statusFailed ? c.danger : c.textMuted}
+            title={x.name}
+            subtitle={status || statusFailed ? x.detail : 'Checking…'}
+          />
+        ))}
+        <Button label="Check again" icon="refresh" variant="secondary" onPress={checkStatus} loading={checking} style={s.save} />
+      </Sheet>
 
       <Sheet visible={tzOpen} onClose={() => setTzOpen(false)} title="Timezone">
         <Text style={s.tzIntro}>Sets when days and months start for your reports, bill due dates and card statements.</Text>
@@ -521,6 +606,7 @@ const useSStyles = createStyles((c) => ({
   save: { marginTop: 16 },
   tzIntro: { ...typeScale.caption, color: c.textMuted, marginBottom: 8 },
   tzList: { maxHeight: 420 },
+  pwError: { ...typeScale.caption, color: c.danger, marginTop: 4 },
   tzRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 14, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: c.border },
   tzLabel: { fontSize: 15, color: c.text },
 }));

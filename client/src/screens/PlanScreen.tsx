@@ -3,11 +3,11 @@ import { RefreshControl, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
-import { getAssets, getCurrentFamily, getGoals, getIncomeFlow, getLiabilities } from '../services/api';
-import { Asset, FamilySummary, Goal, IncomeFlowData, Liability } from '../types';
+import { getAssets, getCurrentFamily, getGoals, getIncomeFlow, getLiabilities, getPaymentMethods } from '../services/api';
+import { Asset, FamilySummary, Goal, IncomeFlowData, Liability, PaymentMethod } from '../types';
 import { createStyles, typeScale, useTheme } from '../theme';
 import { enterUp } from '../motion';
-import { formatCurrency, monthlyEquivalent } from '../utils/format';
+import { formatCurrency } from '../utils/format';
 import { Card } from '../components/ui/Card';
 import { IconTile } from '../components/ui/Bits';
 import { LargeTitle, ScreenHeader, useHeaderHeight, useScrollHeader } from '../components/ui/ScreenHeader';
@@ -22,6 +22,7 @@ type PlanData = {
   assets?: Asset[];
   income?: IncomeFlowData;
   family?: FamilySummary | null;
+  methods?: PaymentMethod[];
 };
 
 const settled = <T,>(r: PromiseSettledResult<T>) => (r.status === 'fulfilled' ? r.value : undefined);
@@ -38,10 +39,10 @@ export function PlanScreen(): React.ReactElement {
   const [refreshing, setRefreshing] = useState(false);
 
   const load = useCallback(async () => {
-    const [goals, liabilities, assets, income, family] = await Promise.allSettled([
-      getGoals(), getLiabilities(), getAssets(), getIncomeFlow(), getCurrentFamily(),
+    const [goals, liabilities, assets, income, family, methods] = await Promise.allSettled([
+      getGoals(), getLiabilities(), getAssets(), getIncomeFlow(), getCurrentFamily(), getPaymentMethods(),
     ]);
-    setData({ goals: settled(goals), liabilities: settled(liabilities), assets: settled(assets), income: settled(income), family: settled(family) });
+    setData({ goals: settled(goals), liabilities: settled(liabilities), assets: settled(assets), income: settled(income), family: settled(family), methods: settled(methods) });
   }, []);
 
   useFocusEffect(useCallback(() => { load(); }, [load]));
@@ -50,8 +51,10 @@ export function PlanScreen(): React.ReactElement {
   const saved = goals?.reduce((s, g) => s + (g.savedAmount || 0), 0) ?? 0;
   const target = goals?.reduce((s, g) => s + (g.targetAmount || 0), 0) ?? 0;
   const bills = data.liabilities?.filter((l) => l.status !== 'deleted');
-  const monthlyBills = bills?.reduce((s, l) => s + monthlyEquivalent(l.amount, l.frequency), 0) ?? 0;
   const netAssets = data.assets?.reduce((s, a) => s + (a.currentValue || 0), 0);
+  // Same sum as the Net worth screen: loan balances + active card outstanding.
+  const owed = bills && (bills.reduce((s, l) => s + (l.outstandingBalance || 0), 0)
+    + (data.methods ?? []).filter((m) => m.status === 'active').reduce((s, m) => s + Math.max(0, m.credit?.outstanding || 0), 0));
   const memberCount = data.family?.members?.length ?? 0;
 
   const tiles: { key: string; route: string; icon: IconName; tint: string; title: string; value: string; caption: string; progress?: number }[] = [
@@ -60,16 +63,6 @@ export function PlanScreen(): React.ReactElement {
       value: goals ? (goals.length ? `${Math.round(target ? (saved / target) * 100 : 0)}%` : 'Start one') : '—',
       caption: goals ? (goals.length ? `${formatCurrency(saved)} of ${formatCurrency(target)}` : 'Save for something') : 'Loading…',
       progress: target ? saved / target : undefined,
-    },
-    {
-      key: 'bills', route: 'Liabilities', icon: 'calendar', tint: c.warning, title: 'Bills',
-      value: bills ? formatCurrency(monthlyBills) : '—',
-      caption: bills ? `${bills.length} active · per month` : 'Loading…',
-    },
-    {
-      key: 'assets', route: 'Assets', icon: 'pie-chart', tint: c.info, title: 'Assets',
-      value: netAssets !== undefined ? formatCurrency(netAssets) : '—',
-      caption: data.assets ? `${data.assets.length} holdings` : 'Loading…',
     },
     {
       key: 'income', route: 'IncomeFlow', icon: 'wallet', tint: c.purple, title: 'Income',
@@ -104,9 +97,24 @@ export function PlanScreen(): React.ReactElement {
             </Card>
           </Animated.View>
 
+          <Animated.View entering={enterUp(1)}>
+            <Card onPress={() => navigation.navigate('Assets')} style={styles.wide} accessibilityLabel="Open Net worth: assets and liabilities">
+              <IconTile icon="pie-chart" tint={c.info} />
+              <View style={styles.flex}>
+                <Text style={styles.wideTitle}>Net worth{netAssets !== undefined && owed !== undefined ? ` · ${formatCurrency(netAssets - owed)}` : ''}</Text>
+                <Text style={styles.wideBody}>
+                  {netAssets !== undefined && owed !== undefined
+                    ? `Assets ${formatCurrency(netAssets)} · Liabilities ${formatCurrency(owed)}`
+                    : 'FDs, investments, loans, cards and bills'}
+                </Text>
+              </View>
+              <Ionicons name="chevron-forward" size={18} color={c.textSubtle} />
+            </Card>
+          </Animated.View>
+
           <View style={styles.grid}>
             {tiles.map((t, i) => (
-              <Animated.View key={t.key} entering={enterUp(i + 1)} style={styles.cell}>
+              <Animated.View key={t.key} entering={enterUp(i + 2)} style={styles.cell}>
                 <Card onPress={() => navigation.navigate(t.route)} style={styles.tile} accessibilityLabel={`${t.title}: ${t.value}, ${t.caption}`}>
                   <IconTile icon={t.icon} tint={t.tint} size={36} />
                   <Text style={styles.tileTitle}>{t.title}</Text>
@@ -135,6 +143,17 @@ export function PlanScreen(): React.ReactElement {
               <View style={styles.flex}>
                 <Text style={styles.wideTitle}>Financial Maturity Index</Text>
                 <Text style={styles.wideBody}>What's driving your score and how to lift it.</Text>
+              </View>
+              <Ionicons name="chevron-forward" size={18} color={c.textSubtle} />
+            </Card>
+          </Animated.View>
+
+          <Animated.View entering={enterUp(7)}>
+            <Card onPress={() => navigation.navigate('Reports')} style={styles.wide} accessibilityLabel="Open reports">
+              <IconTile icon="document-text" tint={c.info} />
+              <View style={styles.flex}>
+                <Text style={styles.wideTitle}>Reports</Text>
+                <Text style={styles.wideBody}>Weekly and monthly reviews, history and CSV export.</Text>
               </View>
               <Ionicons name="chevron-forward" size={18} color={c.textSubtle} />
             </Card>

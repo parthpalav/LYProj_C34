@@ -1,7 +1,7 @@
 import React from 'react';
-import { Wallet, Landmark, Target, Flame, FlaskConical } from 'lucide-react';
+import { Target, Flame, FlaskConical } from 'lucide-react';
 
-export type PlanTabKey = 'net-worth' | 'assets' | 'goals' | 'fire' | 'scenarios';
+export type PlanTabKey = 'goals' | 'fire' | 'scenarios';
 
 interface PlanTabsProps {
   activeTab: PlanTabKey;
@@ -9,8 +9,6 @@ interface PlanTabsProps {
 }
 
 const TABS: Array<{ key: PlanTabKey; label: string; Icon: React.FC<any> }> = [
-  { key: 'net-worth', label: 'Net Worth', Icon: Wallet },
-  { key: 'assets', label: 'Assets', Icon: Landmark },
   { key: 'goals', label: 'Goals', Icon: Target },
   { key: 'fire', label: 'FIRE', Icon: Flame },
   { key: 'scenarios', label: 'Scenario Lab', Icon: FlaskConical },

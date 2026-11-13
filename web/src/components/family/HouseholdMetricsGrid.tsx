@@ -50,7 +50,7 @@ export const HouseholdMetricsGrid: React.FC<HouseholdMetricsGridProps> = ({ dash
     {
       id: 'rate',
       label: 'Investment Rate',
-      value: `${investmentRate}%`,
+      value: `${Math.round(investmentRate)}%`,
       subtext: 'Of effective household income',
       icon: Percent,
       color: 'var(--accent-primary, #2563eb)',

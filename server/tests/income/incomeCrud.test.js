@@ -108,6 +108,10 @@ async function runSuite() {
       const flow = smoothIncomeFlow(incomes);
 
       assert.equal(flow.total, 70000);
+      // A year of monthly pay must smooth to about a month's pay per 30 days, not the whole year per 30 days.
+      const year = Array.from({ length: 12 }, (_, m) => ({ amount: 60000, timestamp: new Date(Date.UTC(2026, m, 1)).toISOString() }));
+      const daily = smoothIncomeFlow(year).dailySmoothed;
+      assert.ok(daily > 1900 && daily < 2100, `expected about 2000 per day, got ${daily}`);
       assert.equal(flow.allocation.essentials, 35000); // 50%
       assert.equal(flow.allocation.goals, 21000);      // 30%
       assert.equal(flow.allocation.emergency, 14000);  // 20%

@@ -209,8 +209,8 @@ export async function removeFamilyMember(req, res, next) {
 export async function getFamilyDashboard(req, res, next) {
   try {
     const userId = getUserId(req);
-    const summary = await FamilyAggregationService.getHouseholdSummary(userId);
-    if (!summary) {
+    const household = await FamilyAggregationService.getHouseholdData(userId);
+    if (!household) {
       return res.json({
         success: true,
         family: null,
@@ -218,12 +218,17 @@ export async function getFamilyDashboard(req, res, next) {
       });
     }
 
-    const fmi = await FamilyFMIService.getFamilyFMI(userId, summary);
+    const { summary } = household;
+    const [fmi, memberBreakdown] = await Promise.all([
+      FamilyFMIService.getFamilyFMI(userId, summary),
+      FamilyFMIService.buildMemberBreakdown(userId, household)
+    ]);
 
     return res.json({
       success: true,
       ...summary,
-      fmi
+      fmi,
+      memberBreakdown
     });
   } catch (error) {
     if (error.status) {

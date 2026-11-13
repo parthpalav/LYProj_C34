@@ -109,7 +109,7 @@ export const NotificationBell: React.FC = () => {
                   <button
                     type="button"
                     className="notif-item"
-                    onClick={() => { setOpen(false); navigate('/app/activity'); }}
+                    onClick={() => { setOpen(false); navigate('/app/net-worth?tab=liabilities'); }}
                   >
                     <span className="notif-title">{a.title}</span>
                     <span className="notif-amount">{formatCurrencyINR(a.amount)}</span>

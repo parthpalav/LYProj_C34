@@ -45,3 +45,16 @@ export function monotonePath(points: Point[]): string {
   }
   return d;
 }
+
+/** Index of the slice under a touch at (dx, dy) from the donut's centre; angles run clockwise from 12 o'clock. */
+export function sliceAt(dx: number, dy: number, segments: { value: number }[]): number {
+  const total = segments.reduce((s, x) => s + Math.max(0, x.value), 0);
+  if (total <= 0) return -1;
+  const turn = ((Math.atan2(dx, -dy) / (2 * Math.PI)) + 1) % 1;
+  let acc = 0;
+  for (let i = 0; i < segments.length; i++) {
+    acc += Math.max(0, segments[i].value) / total;
+    if (turn < acc) return i;
+  }
+  return segments.length - 1;
+}

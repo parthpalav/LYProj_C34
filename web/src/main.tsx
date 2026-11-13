@@ -13,7 +13,11 @@ import './styles/usability.css'
 import './styles/parity.css'
 import './styles/theme.css'
 import './styles/celebrate.css'
+import './styles/motion.css'
 import App from './App.tsx'
+import { initSpotlight } from './utils/spotlight'
+
+initSpotlight()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { Sidebar } from '../components/layout/Sidebar';
 import { TopBar } from '../components/layout/TopBar';
 
 export const AppLayout: React.FC = () => {
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
+  // One key per top-level page: tabs live in the query string, so switching them never replays the entrance.
+  const routeKey = useLocation().pathname.split('/').slice(0, 3).join('/');
 
   // Handle ESC key to close mobile drawer
   useEffect(() => {
@@ -51,7 +53,9 @@ export const AppLayout: React.FC = () => {
             overflowY: 'auto',
           }}
         >
-          <Outlet />
+          <div key={routeKey} className="route-view">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>

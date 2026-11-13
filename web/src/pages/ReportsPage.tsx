@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { ReportTabs, type ReportTabId } from '../components/reports/ReportTabs';
 import { WeeklyReportView } from '../components/reports/WeeklyReportView';
 import { MonthlyReportView } from '../components/reports/MonthlyReportView';
@@ -61,6 +61,7 @@ export const ReportsPage: React.FC = () => {
           <p className="activity-sub-heading">
             Review how your financial activity changes over time. Weekly, monthly, and historical views built from your recorded activity.
           </p>
+          <Link className="next-step-action" to="/app/recap">Play your monthly recap</Link>
         </div>
       </div>
 

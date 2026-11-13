@@ -5,6 +5,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { UserAvatar } from '../ui/UserAvatar';
 import { ThemeToggle } from '../ui/ThemeToggle';
 import { NotificationBell } from '../ui/NotificationBell';
+import { CommandPalette } from './CommandPalette';
 
 export interface TopBarProps {
   onToggleSidebar?: () => void;
@@ -15,6 +16,7 @@ const ROUTE_TITLES: Record<string, string> = {
   '/app/activity': 'Activity',
   '/app/insights': 'Insights',
   '/app/plan': 'Plan',
+  '/app/net-worth': 'Net worth',
   '/app/reports': 'Reports',
   '/app/family': 'Family',
   '/app/profile': 'Profile',
@@ -57,6 +59,7 @@ export const TopBar: React.FC<TopBarProps> = ({ onToggleSidebar }) => {
 
       {/* Right: Authenticated User Display */}
       <div className="topbar-right">
+        <CommandPalette />
         <NotificationBell />
         <ThemeToggle />
         <span className="topbar-user-name">

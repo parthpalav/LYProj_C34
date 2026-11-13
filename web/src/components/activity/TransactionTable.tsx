@@ -21,16 +21,35 @@ import {
 import type { Transaction, PaymentMethod } from '../../types';
 import { transactionPaymentLabel } from '../../utils/paymentMethods';
 import { formatCurrencyINR, formatDateFull, getTransactionDate } from '../../utils/formatters';
+import { groupRuns, monthTotals, type MonthTotal } from '../../utils/monthGroups';
 import { EmptyState } from '../dashboard/EmptyState';
 import { Button } from '../ui/Button';
 
+const MonthHeader: React.FC<{ total?: MonthTotal }> = ({ total }) =>
+  total ? (
+    <div className="ledger-month-head">
+      <div className="ledger-month-name">
+        <span className="ledger-month-title">{total.label}</span>
+        <span className="ledger-month-count">{total.count} transaction{total.count === 1 ? '' : 's'}</span>
+      </div>
+      <div className="ledger-month-totals tabular-nums">
+        <span className="ledger-month-spent">{formatCurrencyINR(total.spent)} <small>spent</small></span>
+        {total.invested > 0 && <span className="ledger-month-invested">{formatCurrencyINR(total.invested)} invested</span>}
+      </div>
+    </div>
+  ) : null;
+
 export interface TransactionTableProps {
+  /** Visible rows, already filtered and sorted. */
   transactions: Transaction[];
+  /** Every filtered row, so month totals cover the whole month. */
+  allTransactions: Transaction[];
+  /** Group rows under month headers (date sorts only). */
+  groupByMonth: boolean;
   /** Saved payment methods, archived included, to label each row. */
   paymentMethods?: PaymentMethod[];
-  page: number;
-  totalPages: number;
-  onPageChange: (newPage: number) => void;
+  hasMore: boolean;
+  onShowMore: () => void;
   onEdit: (tx: Transaction) => void;
   onDelete: (tx: Transaction) => void;
   onAddClick: () => void;
@@ -41,10 +60,11 @@ export interface TransactionTableProps {
 
 export const TransactionTable: React.FC<TransactionTableProps> = ({
   transactions,
+  allTransactions,
+  groupByMonth,
   paymentMethods = [],
-  page,
-  totalPages,
-  onPageChange,
+  hasMore,
+  onShowMore,
   onEdit,
   onDelete,
   onAddClick,
@@ -109,7 +129,7 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({
       case 'Want':
         return 'badge-type-want';
       case 'Investment':
-        return 'badge-type-inv';
+        return 'badge-type-investment';
       default:
         return 'badge-type-neutral';
     }
@@ -151,8 +171,8 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({
     );
   };
 
-  const startRecord = (page - 1) * 20 + 1;
-  const endRecord = Math.min(page * 20, totalFilteredCount);
+  const totals = monthTotals(allTransactions);
+  const groups = groupRuns(transactions, groupByMonth);
 
   return (
     <div className="activity-card-container" role="region" aria-label="Transactions Ledger">
@@ -170,8 +190,14 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({
               <th scope="col" className="text-center" style={{ width: '90px' }}>Actions</th>
             </tr>
           </thead>
-          <tbody>
-            {transactions.map((tx) => {
+          {groups.map((group) => (
+          <tbody key={group.key ?? 'all'}>
+            {group.key && (
+              <tr className="ledger-month-row">
+                <th colSpan={7} scope="colgroup"><MonthHeader total={totals.get(group.key)} /></th>
+              </tr>
+            )}
+            {group.rows.map((tx) => {
               const dateObj = getTransactionDate(tx);
               const CategoryIcon = getCategoryIcon(tx.category);
               const isInvestment = tx.type === 'Investment';
@@ -209,7 +235,7 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({
                     <span className="category-tag">{tx.category}</span>
                   </td>
                   <td className="ledger-type-cell">
-                    <span className={`type-tag ${getTypeBadgeClass(tx.type)}`}>
+                    <span className={`badge-type ${getTypeBadgeClass(tx.type)}`}>
                       {tx.type || 'Need'}
                     </span>
                   </td>
@@ -247,12 +273,16 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({
               );
             })}
           </tbody>
+          ))}
         </table>
       </div>
 
       {/* Mobile Stacked Card View */}
       <div className="mobile-ledger-cards mobile-only-view">
-        {transactions.map((tx) => {
+        {groups.map((group) => (
+        <React.Fragment key={group.key ?? 'all'}>
+        {group.key && <div className="ledger-month-row"><MonthHeader total={totals.get(group.key)} /></div>}
+        {group.rows.map((tx) => {
           const dateObj = getTransactionDate(tx);
           const CategoryIcon = getCategoryIcon(tx.category);
           const isInvestment = tx.type === 'Investment';
@@ -280,7 +310,7 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({
               <div className="ledger-card-body">
                 <div className="ledger-card-tags">
                   <span className="category-tag">{tx.category}</span>
-                  <span className={`type-tag ${getTypeBadgeClass(tx.type)}`}>
+                  <span className={`badge-type ${getTypeBadgeClass(tx.type)}`}>
                     {tx.type || 'Need'}
                   </span>
                   {getSourceBadge(tx)}
@@ -321,39 +351,19 @@ export const TransactionTable: React.FC<TransactionTableProps> = ({
             </div>
           );
         })}
+        </React.Fragment>
+        ))}
       </div>
 
-      {/* Pagination Footer */}
-      {totalPages > 1 && (
+      {/* Show more */}
+      {hasMore && (
         <div className="table-pagination">
           <span className="pagination-info tabular-nums">
-            Showing {startRecord}–{endRecord} of {totalFilteredCount}
+            Showing {transactions.length} of {totalFilteredCount}
           </span>
-          <div className="pagination-controls">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              disabled={page <= 1}
-              onClick={() => onPageChange(page - 1)}
-              aria-label="Previous page"
-            >
-              Previous
-            </Button>
-            <span className="pagination-page-indicator tabular-nums">
-              Page {page} of {totalPages}
-            </span>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              disabled={page >= totalPages}
-              onClick={() => onPageChange(page + 1)}
-              aria-label="Next page"
-            >
-              Next
-            </Button>
-          </div>
+          <Button type="button" variant="outline" size="sm" onClick={onShowMore}>
+            Show more
+          </Button>
         </div>
       )}
     </div>

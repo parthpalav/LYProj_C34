@@ -3,6 +3,7 @@ import {
   ResponsiveContainer,
   BarChart,
   Bar,
+  Cell,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -13,6 +14,8 @@ import type { CashFlowMonth } from '../../types';
 import { formatCurrencyINR } from '../../utils/formatters';
 import { EmptyState } from './EmptyState';
 import { TrendingUp } from 'lucide-react';
+import { ChartDetail, DetailStat } from '../ui/ChartDetail';
+import { changeFrom, pickFromChart, pickOpacity, useChartPick } from '../../utils/chartPick';
 
 interface CashFlowChartProps {
   data: CashFlowMonth[];
@@ -53,6 +56,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload, label })
 };
 
 export const CashFlowChart: React.FC<CashFlowChartProps> = ({ data }) => {
+  const pick = useChartPick();
   // Check if there is any financial activity across all months
   const hasData = data.some(
     (m) => m.income > 0 || m.expenses > 0 || m.netFlow !== 0
@@ -73,14 +77,18 @@ export const CashFlowChart: React.FC<CashFlowChartProps> = ({ data }) => {
     ...d,
     shortLabel: d.monthLabel.split(' ')[0],
   }));
+  const month = data[pick.shown];
+  const netChange = month && pick.shown > 0 ? changeFrom(month.netFlow, data[pick.shown - 1].netFlow) : null;
+  const dim = formattedData.map((_, i) => <Cell key={i} fillOpacity={pickOpacity(pick.index, i)} />);
 
   return (
-    <div className="cash-flow-chart-wrap">
+    <div className="cash-flow-chart-wrap chart-pickable">
       <div style={{ width: '100%', height: 280 }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={formattedData}
             margin={{ top: 12, right: 12, left: -16, bottom: 0 }}
+            onClick={pickFromChart(pick.toggle)}
           >
             <CartesianGrid
               strokeDasharray="2 3"
@@ -99,7 +107,7 @@ export const CashFlowChart: React.FC<CashFlowChartProps> = ({ data }) => {
               tick={{ fill: 'var(--text-secondary)', fontSize: 11 }}
               tickFormatter={(val) => formatCurrencyINR(val, { compact: true })}
             />
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgb(var(--glow-rgb) / 0.07)' }} />
             <Legend
               verticalAlign="top"
               align="right"
@@ -113,7 +121,9 @@ export const CashFlowChart: React.FC<CashFlowChartProps> = ({ data }) => {
               radius={[5, 5, 0, 0]}
               maxBarSize={26}
               animationDuration={500}
-            />
+            >
+              {dim}
+            </Bar>
             <Bar
               name="Expenses"
               dataKey="expenses"
@@ -121,7 +131,9 @@ export const CashFlowChart: React.FC<CashFlowChartProps> = ({ data }) => {
               radius={[5, 5, 0, 0]}
               maxBarSize={26}
               animationDuration={500}
-            />
+            >
+              {dim}
+            </Bar>
             <Bar
               name="Net Flow"
               dataKey="netFlow"
@@ -129,10 +141,24 @@ export const CashFlowChart: React.FC<CashFlowChartProps> = ({ data }) => {
               radius={[5, 5, 0, 0]}
               maxBarSize={26}
               animationDuration={500}
-            />
+            >
+              {dim}
+            </Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
+      {!pick.open && <p className="chart-hint">Select a month to see its summary</p>}
+      {month && (
+        <ChartDetail open={pick.open} title={month.monthLabel} accent={month.netFlow >= 0 ? '#10b981' : '#ef4444'} onClose={pick.close}>
+          <dl className="chart-detail-stats">
+            <DetailStat label="Income" value={formatCurrencyINR(month.income)} />
+            <DetailStat label="Expenses" value={formatCurrencyINR(month.expenses)} />
+            <DetailStat label="Net flow" value={formatCurrencyINR(month.netFlow, { showSign: true })} tone={month.netFlow >= 0 ? 'pos' : 'neg'} />
+            {month.income > 0 && <DetailStat label="Kept from income" value={`${Math.round((month.netFlow / month.income) * 100)}%`} />}
+            {netChange && <DetailStat label="Net vs previous month" value={netChange.text} tone={netChange.up ? 'pos' : 'neg'} />}
+          </dl>
+        </ChartDetail>
+      )}
     </div>
   );
 };

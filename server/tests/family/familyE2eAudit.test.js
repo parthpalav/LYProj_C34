@@ -334,9 +334,13 @@ async function runAudit() {
       assert.equal(curFmiA.score, baselineA.score, 'User A individual FMI unchanged by joining family');
       assert.equal(curFmiB.score, baselineB.score, 'User B individual FMI unchanged by joining family');
 
-      // Neither user's personal FMI was overwritten by Family FMI
-      assert.notEqual(curFmiA.score, familyFmiA.score, 'A personal FMI is distinct from Family FMI');
-      assert.notEqual(curFmiB.score, familyFmiB.score, 'B personal FMI is distinct from Family FMI');
+      // Neither user's personal FMI was overwritten by Family FMI: the equalities above use baselines taken
+      // before the family existed. The scores themselves can coincide (early in the month the paced spend puts
+      // both on the same Spending Control floor), so check what each score is built from instead.
+      const householdSaved = familyFmiA.householdGoalDetail.householdTotalSaved;
+      assert.equal(householdSaved, curFmiA.totalSaved + curFmiB.totalSaved, 'Family FMI uses household savings (A + B)');
+      assert.notEqual(curFmiA.totalSaved, householdSaved, 'A personal FMI uses only A savings');
+      assert.notEqual(curFmiB.totalSaved, householdSaved, 'B personal FMI uses only B savings');
     })();
 
     // ── STEP 8: Raw Transaction Privacy Boundary ──────────────

@@ -3,8 +3,8 @@ import { Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native'
 import Animated from 'react-native-reanimated';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { getBehaviorPatterns, getDashboard, getHeatmap, getPacing, getTransactions } from '../services/api';
-import { BehaviorPattern, Transaction } from '../types';
+import { getBehaviorPatterns, getDashboard, getHeatmap, getPacing, getPurchasePredictions, getTransactions } from '../services/api';
+import { BehaviorPattern, PurchasePredictions, Transaction } from '../types';
 import { createStyles, tabular, typeScale, useTheme } from '../theme';
 import { enterUp } from '../motion';
 import { formatCurrency } from '../utils/format';
@@ -12,6 +12,7 @@ import { AnimatedBar } from '../components/motion/AnimatedBar';
 import { Card } from '../components/ui/Card';
 import { EmptyState, IconTile, SectionHeader } from '../components/ui/Bits';
 import { Donut } from '../components/ui/Charts';
+import { ChartDetail, usePick } from '../components/ui/ChartDetail';
 import { LargeTitle, ScreenHeader, useHeaderHeight, useScrollHeader } from '../components/ui/ScreenHeader';
 
 type Pacing = Awaited<ReturnType<typeof getPacing>>;
@@ -23,6 +24,7 @@ const dayKey = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padSt
 export function InsightsScreen() {
   const { c } = useTheme();
   const s = useStyles();
+  const slice = usePick();
   const navigation = useNavigation<any>();
   const insets = useSafeAreaInsets();
   const headerHeight = useHeaderHeight();
@@ -32,11 +34,13 @@ export function InsightsScreen() {
   const [heat, setHeat] = useState<Record<string, number>>({});
   const [patterns, setPatterns] = useState<{ patterns: BehaviorPattern[]; analyzedCount: number } | null>(null);
   const [outliers, setOutliers] = useState<Transaction[]>([]);
+  const [predicted, setPredicted] = useState<PurchasePredictions | null>(null);
   const [picked, setPicked] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
 
   const load = useCallback(async () => {
-    const [p, d, h, b, t] = await Promise.allSettled([getPacing(), getDashboard(), getHeatmap(), getBehaviorPatterns(), getTransactions()]);
+    const [p, d, h, b, t, a] = await Promise.allSettled([getPacing(), getDashboard(), getHeatmap(), getBehaviorPatterns(), getTransactions(), getPurchasePredictions()]);
+    if (a.status === 'fulfilled') setPredicted(a.value);
     if (p.status === 'fulfilled') setPacing(p.value);
     if (d.status === 'fulfilled') setCategories((d.value.categoryBreakdown ?? []).filter((x) => x.pct > 0).sort((a, z) => z.pct - a.pct));
     if (h.status === 'fulfilled') setHeat(Object.fromEntries((h.value ?? []).map((x) => [x.date.slice(0, 10), x.totalAmount])));
@@ -82,16 +86,18 @@ export function InsightsScreen() {
                 {([['Needs', c.info], ['Wants', c.warning], ['Investments', c.success]] as const).map(([key, color], i) => {
                   const row = pacing[key];
                   const over = row.limit > 0 && row.actual > row.limit;
+                  // Investing past the target is a win, so it stays green.
+                  const bad = over && key !== 'Investments';
                   return (
                     <View key={key} style={[s.paceRow, i > 0 && s.paceGap]}>
                       <View style={s.paceTop}>
                         <Text style={s.paceLabel}>{key}</Text>
-                        <Text style={[s.paceValue, over && { color: c.dangerStrong }]}>
+                        <Text style={[s.paceValue, over && { color: bad ? c.dangerStrong : c.successStrong }]}>
                           {formatCurrency(row.actual)} <Text style={s.paceLimit}>of {formatCurrency(row.limit)}</Text>
                         </Text>
                       </View>
-                      <AnimatedBar progress={row.limit > 0 ? row.actual / row.limit : 0} color={over ? c.danger : color} height={8} delay={i * 120} />
-                      {over && <Text style={s.over}>Over by {formatCurrency(row.actual - row.limit)}</Text>}
+                      <AnimatedBar progress={row.limit > 0 ? row.actual / row.limit : 0} color={bad ? c.danger : color} height={8} delay={i * 120} />
+                      {over && <Text style={[s.over, !bad && { color: c.successStrong }]}>{bad ? 'Over' : 'Ahead'} by {formatCurrency(row.actual - row.limit)}</Text>}
                     </View>
                   );
                 })}
@@ -104,21 +110,50 @@ export function InsightsScreen() {
             {slices.length === 0 ? (
               <Text style={s.muted}>Log a few expenses to see your category mix.</Text>
             ) : (
-              <View style={s.donutRow}>
-                <Donut segments={slices.map((x, i) => ({ value: x.pct, color: c.chart[i % c.chart.length] }))} size={136} stroke={18}>
-                  <Text style={s.donutTop}>{slices[0].pct}%</Text>
-                  <Text style={s.donutSub} numberOfLines={1}>{slices[0].label}</Text>
-                </Donut>
-                <View style={s.flex}>
-                  {slices.map((x, i) => (
-                    <View key={x.label} style={s.legendRow}>
-                      <View style={[s.dot, { backgroundColor: c.chart[i % c.chart.length] }]} />
-                      <Text style={s.legendLabel} numberOfLines={1}>{x.label}</Text>
-                      <Text style={s.legendPct}>{x.pct}%</Text>
+              (() => {
+                // The centre and the summary follow the tapped slice; the biggest slice shows until one is picked.
+                const shown = slices[Math.min(slice.shown, slices.length - 1)];
+                const centre = slice.index === null ? slices[0] : shown;
+                const rank = slices.indexOf(shown) + 1;
+                return (
+                  <>
+                    <View style={s.donutRow}>
+                      <Donut segments={slices.map((x, i) => ({ value: x.pct, color: c.chart[i % c.chart.length] }))} size={136} stroke={18} selected={slice.index} onSelect={slice.toggle}>
+                        <Text style={s.donutTop}>{centre.pct}%</Text>
+                        <Text style={s.donutSub} numberOfLines={1}>{centre.label}</Text>
+                      </Donut>
+                      <View style={s.flex}>
+                        {slices.map((x, i) => (
+                          <Pressable
+                            key={x.label}
+                            onPress={() => slice.toggle(i)}
+                            style={[s.legendRow, slice.index !== null && slice.index !== i && { opacity: 0.45 }]}
+                            accessibilityRole="button"
+                            accessibilityState={{ expanded: slice.index === i }}
+                            accessibilityLabel={`${x.label}, ${x.pct}%. Show summary`}
+                          >
+                            <View style={[s.dot, { backgroundColor: c.chart[i % c.chart.length] }]} />
+                            <Text style={s.legendLabel} numberOfLines={1}>{x.label}</Text>
+                            <Text style={s.legendPct}>{x.pct}%</Text>
+                          </Pressable>
+                        ))}
+                      </View>
                     </View>
-                  ))}
-                </View>
-              </View>
+                    <ChartDetail
+                      open={slice.open}
+                      title={shown.label}
+                      accent={c.chart[slices.indexOf(shown) % c.chart.length]}
+                      stats={[
+                        { label: 'Share of spending', value: `${shown.pct}%` },
+                        { label: 'Rank', value: `${rank} of ${slices.length}` },
+                        { label: 'Everything else', value: `${Math.max(0, 100 - shown.pct)}%` },
+                      ]}
+                      note={rank === 1 ? 'Your biggest category this month.' : `${slices[0].label} leads at ${slices[0].pct}%.`}
+                      onClose={slice.close}
+                    />
+                  </>
+                );
+              })()
             )}
           </Card>
 
@@ -170,6 +205,41 @@ export function InsightsScreen() {
             ))
           ) : (
             <Card><Text style={s.muted}>No risky patterns in your last {patterns?.analyzedCount ?? 50} transactions. Nice.</Text></Card>
+          )}
+
+          <SectionHeader title="Likely next purchases" />
+          {predicted?.available ? (
+            <Card padded={false} style={s.list}>
+              <Text style={[s.outSub, { paddingTop: 10 }]}>
+                Apriori rules from {predicted.basketCount} days of purchases
+                {predicted.basis ? ` · based on today (${predicted.basis.weekday})${predicted.basis.items.length ? `: ${predicted.basis.items.join(', ')}` : ''}` : ''}
+              </Text>
+              {(predicted.predictions ?? []).length === 0 ? (
+                <Text style={[s.outSub, { paddingVertical: 12 }]}>No strong rule matches that day yet.</Text>
+              ) : (
+                (predicted.predictions ?? []).map((p, i) => (
+                  <View key={p.item} style={[s.outRow, i > 0 && s.divider]}>
+                    <IconTile icon="sparkles" tint={c.primary} size={36} />
+                    <View style={s.flex}>
+                      <Text style={s.outTitle} numberOfLines={1}>{p.label}</Text>
+                      <Text style={s.outSub} numberOfLines={2}>{p.reason}</Text>
+                    </View>
+                    <View style={{ alignItems: 'flex-end' }}>
+                      <Text style={s.outAmount}>{Math.round(p.confidence * 100)}%</Text>
+                      {p.typicalAmount !== null ? <Text style={s.outSub}>~{formatCurrency(p.typicalAmount)}</Text> : null}
+                    </View>
+                  </View>
+                ))
+              )}
+            </Card>
+          ) : (
+            <Card>
+              <Text style={s.muted}>
+                {predicted?.reason === 'NOT_ENOUGH_HISTORY'
+                  ? `Predictions start after ${predicted.minBaskets ?? 14} days with purchases (you have ${predicted.basketCount}).`
+                  : 'Purchase predictions are unavailable right now.'}
+              </Text>
+            </Card>
           )}
 
           <SectionHeader title="Unusually large spends" action={outliers.length ? 'Activity' : undefined} onAction={() => navigation.navigate('Transactions')} />

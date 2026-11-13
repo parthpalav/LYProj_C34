@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { addDays, bucketLabel, buildSeries, indexAtX, rangeFor, spanLabel, yTicks } from './spending.ts';
+import { addDays, bucketLabel, buildSeries, groupByMonth, inDayRange, indexAtX, periodRange, rangeFor, spanLabel, yTicks } from './spending.ts';
 import { formatCompact } from './format.ts';
 
 const now = new Date(2026, 9, 29, 15, 30); // 29 Oct 2026, afternoon
@@ -77,4 +77,31 @@ assert.equal(formatCompact(15000), '₹15k');
 assert.equal(formatCompact(120000), '₹1.2L');
 assert.equal(spanLabel(new Date(2026, 9, 14), new Date(2026, 9, 29)), '14 – 29 Oct');
 assert.ok(bucketLabel(month.buckets[0]).includes('14'));
+// Activity list periods
+const nowP = new Date(2026, 10, 4, 15, 0);
+assert.equal(periodRange('all', nowP), null);
+const m3 = periodRange('3m', nowP)!;
+assert.equal(m3.start.getTime(), new Date(2026, 8, 1).getTime());
+assert.equal(m3.end.getTime(), new Date(2026, 10, 4).getTime());
+assert.equal(periodRange('month', nowP)!.start.getTime(), new Date(2026, 10, 1).getTime());
+const cust = periodRange('custom', nowP, { start: new Date(2025, 11, 20), end: new Date(2027, 0, 1) })!;
+assert.equal(cust.end.getTime(), new Date(2026, 10, 4).getTime(), 'custom never runs past today');
+assert.ok(inDayRange(new Date(2025, 11, 20, 23, 59).toISOString(), cust));
+assert.ok(!inDayRange(new Date(2025, 11, 19, 23, 59).toISOString(), cust));
+assert.ok(inDayRange(new Date(2026, 10, 4, 22, 0).toISOString(), cust), 'end day is inclusive');
 console.log('spending ok');
+
+// Month sections for the Activity list
+{
+  const rows = [
+    { amount: 500, timestamp: at(10, 3), type: 'Need' as const },
+    { amount: 1000, timestamp: at(10, 1), type: 'Investment' as const },
+    { amount: 200, timestamp: at(9, 31), type: 'Want' as const },
+    { amount: 300, timestamp: at(10, 2), type: 'Want' as const },
+  ];
+  const months = groupByMonth(rows);
+  assert.deepEqual(months.map((m) => [m.key, m.data.length, m.spent, m.invested]), [['2026-11', 3, 800, 1000], ['2026-10', 1, 200, 0]]);
+  assert.deepEqual(months[0].data.map((t) => t.amount), [500, 300, 1000], 'newest first within the month');
+  assert.match(months[0].title, /November 2026/);
+  assert.deepEqual(groupByMonth([]), []);
+}

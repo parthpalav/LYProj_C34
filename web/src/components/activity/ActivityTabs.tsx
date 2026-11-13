@@ -1,6 +1,6 @@
-import { ReceiptText, ArrowDownLeft, CalendarClock } from 'lucide-react';
+import { ReceiptText, ArrowDownLeft } from 'lucide-react';
 
-export type ActivityTabKey = 'transactions' | 'income' | 'liabilities';
+export type ActivityTabKey = 'transactions' | 'income';
 
 export interface ActivityTabsProps {
   activeTab: ActivityTabKey;
@@ -8,7 +8,6 @@ export interface ActivityTabsProps {
   counts?: {
     transactions?: number;
     income?: number;
-    liabilities?: number;
   };
 }
 
@@ -16,7 +15,6 @@ export const ActivityTabs: React.FC<ActivityTabsProps> = ({ activeTab, onTabChan
   const tabs: Array<{ key: ActivityTabKey; label: string; icon: React.ComponentType<{ size?: number; className?: string }>; count?: number }> = [
     { key: 'transactions', label: 'Transactions', icon: ReceiptText, count: counts?.transactions },
     { key: 'income', label: 'Income', icon: ArrowDownLeft, count: counts?.income },
-    { key: 'liabilities', label: 'Liabilities', icon: CalendarClock, count: counts?.liabilities },
   ];
 
   return (

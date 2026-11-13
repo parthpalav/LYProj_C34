@@ -1,3 +1,4 @@
+import { DESTINATIONS } from '../utils/destinations';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -22,6 +23,7 @@ import { SpendingDonutChart } from '../components/dashboard/SpendingDonutChart';
 import { FmiPillarsView } from '../components/dashboard/FmiPillarsView';
 import { AlertsPanel } from '../components/dashboard/AlertsPanel';
 import { UpcomingLiabilities } from '../components/dashboard/UpcomingLiabilities';
+import { CommittedBalanceCard } from '../components/dashboard/CommittedBalanceCard';
 import { RecentActivityTable } from '../components/dashboard/RecentActivityTable';
 import { FutureOutlookPanel } from '../components/dashboard/FutureOutlookPanel';
 import { getFamilyDashboard, getReceivedFamilyInvitations } from '../services/api';
@@ -172,6 +174,16 @@ export const OverviewPage: React.FC = () => {
         </div>
       </header>
 
+      {/* Quick actions: the things people come here to do, one click away */}
+      <nav className="quick-actions" aria-label="Quick actions">
+        {DESTINATIONS.filter((d) => d.quick).map((d) => (
+          <Link key={d.to} to={d.to} className="quick-action">
+            <strong>{d.label}</strong>
+            <span>{d.hint}</span>
+          </Link>
+        ))}
+      </nav>
+
       {/* Top 4 Summary Metric Cards — Balance is the Primary Hero Anchor */}
       <section className="overview-metrics-grid overview-section-hero" aria-label="Financial Summary Cards">
         {isLoading ? (
@@ -188,7 +200,11 @@ export const OverviewPage: React.FC = () => {
               variant="hero"
               label="Current Balance"
               value={formatCurrencyINR(animBalance ?? currentBalance)}
-              subtext="Liquid operating balance across active accounts"
+              subtext={
+                dashboard?.commitments && dashboard.commitments.remaining > 0
+                  ? `${formatCurrencyINR(dashboard.commitments.remaining)} set aside for auto-deduct bills · ${formatCurrencyINR(dashboard.commitments.freeBalance)} free`
+                  : 'Liquid operating balance across active accounts'
+              }
               icon={Wallet}
             />
 
@@ -345,6 +361,18 @@ export const OverviewPage: React.FC = () => {
           )}
         </SectionCard>
       </section>
+
+      {/* Balance committed to this month's auto-deduct liabilities */}
+      {!isLoading && dashboard?.commitments && (
+        <section className="overview-full-width overview-section-commitments">
+          <SectionCard
+            title="Committed this month"
+            subtitle="Auto-deduct liabilities (needs and wants) that will be taken from your balance before month end"
+          >
+            <CommittedBalanceCard commitments={dashboard.commitments} />
+          </SectionCard>
+        </section>
+      )}
 
       {/* Obligations & Activity Row */}
       <section className="overview-two-col-grid overview-section-3">

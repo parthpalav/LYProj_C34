@@ -19,7 +19,10 @@ function smoothIncomeFlow(incomes = []) {
   }
 
   const total = incomes.reduce((s, i) => s + i.amount, 0);
-  const dailySmoothed = Math.round(total / 30);
+  // Spread over the period the receipts cover (first to last, plus the month the last one pays for), never less than 30 days.
+  const times = incomes.map((i) => new Date(i.timestamp).getTime()).filter(Number.isFinite);
+  const spanDays = times.length ? (Math.max(...times) - Math.min(...times)) / 86400000 + 30 : 30;
+  const dailySmoothed = Math.round(total / Math.max(30, spanDays));
 
   // 50-30-20 allocation
   const essentials = Math.round(total * 0.50);

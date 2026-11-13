@@ -13,6 +13,16 @@ export interface LiabilityTableProps {
   onAddClick: () => void;
 }
 
+/** "₹4,20,000 left · 8.5% · 36 mo" for loans; the Need/Want type otherwise. */
+const loanLine = (l: Liability) =>
+  l.outstandingBalance != null
+    ? [
+        `${formatCurrencyINR(l.outstandingBalance)} left`,
+        l.interestRate != null ? `${Math.round(l.interestRate * 10000) / 100}%` : null,
+        l.remainingTermMonths != null ? `${l.remainingTermMonths} mo` : null,
+      ].filter(Boolean).join(' · ')
+    : null;
+
 export const LiabilityTable: React.FC<LiabilityTableProps> = ({
   liabilities,
   onEdit,
@@ -92,7 +102,7 @@ export const LiabilityTable: React.FC<LiabilityTableProps> = ({
                       </div>
                       <div className="desc-text-group">
                         <span className="desc-title font-semibold">{l.name}</span>
-                        <span className="text-tertiary text-xs">{l.type || 'Need'}</span>
+                        <span className="text-tertiary text-xs">{loanLine(l) ?? (l.type || 'Need')}</span>
                       </div>
                     </div>
                   </td>
@@ -186,6 +196,7 @@ export const LiabilityTable: React.FC<LiabilityTableProps> = ({
                   </div>
                   <div className="ledger-card-info">
                     <span className="ledger-card-desc">{l.name}</span>
+                    {loanLine(l) && <span className="text-tertiary text-xs">{loanLine(l)}</span>}
                     <div className="ledger-card-due-row">
                       {l.nextDueDate ? (
                         <>

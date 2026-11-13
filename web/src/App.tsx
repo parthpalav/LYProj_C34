@@ -8,7 +8,6 @@ import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
 import { ResetPasswordPage } from './pages/ResetPasswordPage';
-import { PlaceholderPage } from './pages/PlaceholderPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { CelebrationHost } from './components/ui/CelebrationHost';
 import { LoadingScreen } from './components/ui/LoadingScreen';
@@ -18,12 +17,15 @@ const OverviewPage = React.lazy(() => import('./pages/OverviewPage').then((m) =>
 const ActivityPage = React.lazy(() => import('./pages/ActivityPage').then((m) => ({ default: m.ActivityPage })));
 const InsightsPage = React.lazy(() => import('./pages/InsightsPage').then((m) => ({ default: m.InsightsPage })));
 const PlanPage = React.lazy(() => import('./pages/PlanPage').then((m) => ({ default: m.PlanPage })));
+const NetWorthPage = React.lazy(() => import('./pages/NetWorthPage'));
 const ReportsPage = React.lazy(() => import('./pages/ReportsPage').then((m) => ({ default: m.ReportsPage })));
 const FamilyPage = React.lazy(() => import('./pages/FamilyPage').then((m) => ({ default: m.FamilyPage })));
 const AssistantPage = React.lazy(() => import('./pages/AssistantPage'));
 const RoundupsPage = React.lazy(() => import('./pages/RoundupsPage'));
 const ReviewPage = React.lazy(() => import('./pages/ReviewPage'));
+const RecapPage = React.lazy(() => import('./pages/RecapPage'));
 const ProfilePage = React.lazy(() => import('./pages/ProfilePage'));
+const SettingsPage = React.lazy(() => import('./pages/SettingsPage'));
 const OnboardingPage = React.lazy(() => import('./pages/OnboardingPage'));
 
 // Same rule as the mobile navigator: either flag marks setup as done.
@@ -150,6 +152,7 @@ export const App: React.FC = () => {
 
             {/* Future / Plan Workspace */}
             <Route path="plan" element={<PlanPage />} />
+            <Route path="net-worth" element={<NetWorthPage />} />
 
             {/* Documents / Reports Workspace */}
             <Route path="reports" element={<ReportsPage />} />
@@ -161,34 +164,12 @@ export const App: React.FC = () => {
             <Route path="assistant" element={<AssistantPage />} />
             <Route path="roundups" element={<RoundupsPage />} />
             <Route path="review" element={<ReviewPage />} />
+            <Route path="recap" element={<RecapPage />} />
 
             {/* Profile & Financial Assumptions */}
             <Route path="profile" element={<ProfilePage />} />
 
-            {/* Settings Placeholder */}
-            <Route
-              path="settings"
-              element={
-                <PlaceholderPage
-                  title="Settings"
-                  description="Web portal preferences, session management, and system configuration."
-                  plannedFeatures={[
-                    {
-                      name: 'Session & Authentication',
-                      description: 'Current browser session state (sessionStorage interim policy), token validity, and logout.',
-                    },
-                    {
-                      name: 'Security & Verification',
-                      description: 'Email verification status and password management.',
-                    },
-                    {
-                      name: 'Platform Infrastructure',
-                      description: 'REST API backend connectivity and Python ML classification service status.',
-                    },
-                  ]}
-                />
-              }
-            />
+            <Route path="settings" element={<SettingsPage />} />
           </Route>
 
           {/* Canonical Convenience Redirect */}

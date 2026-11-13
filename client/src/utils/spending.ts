@@ -44,6 +44,25 @@ export function rangeFor(kind: RangeKind, now: Date, custom?: { start: Date; end
   }
 }
 
+/** Activity list date filter. 3 months = this calendar month and the two before it. */
+export type TxPeriod = 'all' | 'month' | '3m' | 'custom';
+
+/** Inclusive day range for a TxPeriod, or null for all time. */
+export function periodRange(period: TxPeriod, now: Date, custom?: { start: Date; end: Date }): { start: Date; end: Date } | null {
+  if (period === 'all') return null;
+  if (period === '3m') {
+    const today = startOfDay(now);
+    return { start: new Date(today.getFullYear(), today.getMonth() - 2, 1), end: today };
+  }
+  return rangeFor(period === 'month' ? 'month' : 'custom', now, custom);
+}
+
+/** True when the timestamp's local day falls inside the inclusive range. */
+export const inDayRange = (timestamp: string, r: { start: Date; end: Date }) => {
+  const d = startOfDay(new Date(timestamp));
+  return d >= r.start && d <= r.end;
+};
+
 /** Totals per day (or week) between start and end, beginning no earlier than the first transaction. */
 export function buildSeries(txs: Spend[], start: Date, end: Date): Series {
   const dated = txs
@@ -110,4 +129,31 @@ export function spanLabel(a: Date, b: Date): string {
   }
   if (a.getMonth() === b.getMonth()) return `${a.getDate()} – ${dayMonth(b)}`;
   return `${dayMonth(a)} – ${dayMonth(b)}`;
+}
+
+export type MonthSection<T> = { key: string; title: string; spent: number; invested: number; data: T[] };
+
+/** Device-calendar month sections, newest first; spent is Need + Want, invested is Investment. */
+export function groupByMonth<T extends Spend>(txs: T[]): MonthSection<T>[] {
+  const map = new Map<string, T[]>();
+  for (const tx of txs) {
+    const d = new Date(tx.timestamp);
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+    if (!map.has(key)) map.set(key, []);
+    map.get(key)!.push(tx);
+  }
+  return [...map.entries()]
+    .sort(([a], [b]) => b.localeCompare(a))
+    .map(([key, rows]) => {
+      const [y, m] = key.split('-').map(Number);
+      const data = [...rows].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+      const sum = (pick: (tx: T) => boolean) => data.filter(pick).reduce((s, tx) => s + Math.abs(tx.amount), 0);
+      return {
+        key,
+        title: new Date(y, m - 1, 1).toLocaleDateString('en-IN', { month: 'long', year: 'numeric' }),
+        spent: sum((tx) => tx.type !== 'Investment'),
+        invested: sum((tx) => tx.type === 'Investment'),
+        data,
+      };
+    });
 }

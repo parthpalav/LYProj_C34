@@ -34,8 +34,10 @@ import type {
   FamilyDashboard,
   FamilyDashboardResponse,
   ChatMessage,
+  ChatSession,
   EnvelopeData,
   SubscriptionSuggestion,
+  PurchasePredictions,
   PaymentMethod,
   PaymentMethodPayload,
 } from '../types';
@@ -215,6 +217,31 @@ export async function forgotPasswordUser(payload: ForgotPasswordPayload): Promis
 export async function resetPasswordUser(payload: ResetPasswordPayload): Promise<{ success: boolean; message: string }> {
   const { data } = await api.post('/api/auth/reset-password', payload);
   return data;
+}
+
+export async function changePassword(currentPassword: string, newPassword: string): Promise<{ message: string }> {
+  const { data } = await api.post('/api/auth/change-password', { currentPassword, newPassword });
+  // The server signs out every other session and hands this one fresh tokens.
+  tokenStorage.setTokens(data.accessToken, data.refreshToken);
+  return data;
+}
+
+export async function resendVerification(email: string): Promise<{ message: string }> {
+  const { data } = await api.post('/api/auth/resend-verification', { email });
+  return data;
+}
+
+export interface SystemStatus {
+  api: { ok: boolean; uptimeSeconds: number };
+  database: { ok: boolean };
+  ml: { ok: boolean; classifierReady: boolean; latencyMs: number };
+  assistant: { ok: boolean };
+  checkedAt: string;
+}
+
+export async function getSystemStatus(): Promise<SystemStatus> {
+  const { data } = await api.get('/api/system/status');
+  return data.data;
 }
 
 export async function getCurrentUser(): Promise<{ success: boolean; user: User }> {
@@ -567,13 +594,18 @@ export async function updateCurrentBalance(
 
 // ── AI Assistant ──────────────────────────────────────────────
 
-export async function sendMessageToAgent(message: string): Promise<ChatMessage> {
-  const { data } = await api.post('/api/agent/chat', { message, context: {} }, { timeout: 30000 });
+export async function sendMessageToAgent(message: string, sessionId: string): Promise<ChatMessage> {
+  const { data } = await api.post('/api/agent/chat', { message, sessionId }, { timeout: 90000 });
   return data;
 }
 
-export async function getChatHistory(): Promise<ChatMessage[]> {
-  const { data } = await api.get('/api/agent/history');
+export async function getChatHistory(sessionId: string): Promise<ChatMessage[]> {
+  const { data } = await api.get('/api/agent/history', { params: { sessionId } });
+  return Array.isArray(data) ? data : [];
+}
+
+export async function getChatSessions(): Promise<ChatSession[]> {
+  const { data } = await api.get('/api/agent/sessions');
   return Array.isArray(data) ? data : [];
 }
 
@@ -592,6 +624,13 @@ export async function getRoundupPreview(): Promise<{ amount: number; previewText
 export async function vaultRoundup(amount: number): Promise<{ message: string; savings: number }> {
   const { data } = await api.post('/api/envelopes/update', { amount });
   return data;
+}
+
+// ── Purchase predictions (Apriori) ───────────────────────────
+
+export async function getPurchasePredictions(): Promise<PurchasePredictions> {
+  const { data } = await api.get('/api/predictions/purchases');
+  return data?.data;
 }
 
 // ── Subscription suggestions ──────────────────────────────────

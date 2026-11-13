@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" width="1200" height="360" role="img" aria-label="FINAURA: adaptive financial intelligence">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0B0F2A"/>
+      <stop offset="0.55" stop-color="#1A1F6B"/>
+      <stop offset="1" stop-color="#3B2BB8"/>
+    </linearGradient>
+    <radialGradient id="orbA"><stop offset="0" stop-color="#6D5BFF" stop-opacity="0.75"/><stop offset="1" stop-color="#6D5BFF" stop-opacity="0"/></radialGradient>
+    <radialGradient id="orbB"><stop offset="0" stop-color="#22D3EE" stop-opacity="0.45"/><stop offset="1" stop-color="#22D3EE" stop-opacity="0"/></radialGradient>
+    <linearGradient id="line" x1="0" x2="1"><stop offset="0" stop-color="#22D3EE"/><stop offset="1" stop-color="#A78BFA"/></linearGradient>
+    <linearGradient id="area" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#A78BFA" stop-opacity="0.35"/><stop offset="1" stop-color="#A78BFA" stop-opacity="0"/></linearGradient>
+    <style>
+      .t { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif; }
+      .orbA { animation: drift 14s ease-in-out infinite alternate; }
+      .orbB { animation: drift 18s ease-in-out infinite alternate-reverse; }
+      @keyframes drift { from { transform: translate(0,0); } to { transform: translate(-80px,40px); } }
+      .draw { stroke-dasharray: 900; animation: draw 3.2s ease-out backwards; }
+      @keyframes draw { from { stroke-dashoffset: 900; } }
+      .fadeArea { animation: fade 1.2s ease-out 2.4s backwards; }
+      .rise { animation: rise .8s ease-out backwards; }
+      .d1 { animation-delay: .2s; } .d2 { animation-delay: .5s; } .d3 { animation-delay: .9s; }
+      .d4 { animation-delay: 1.3s; } .d5 { animation-delay: 1.7s; } .d6 { animation-delay: 2.1s; }
+      @keyframes rise { from { opacity: 0; transform: translateY(12px); } }
+      @keyframes fade { from { opacity: 0; } }
+      .chip { animation: float 5s ease-in-out infinite alternate; }
+      .chip2 { animation: float 6s ease-in-out 1s infinite alternate; }
+      .chip3 { animation: float 7s ease-in-out .5s infinite alternate; }
+      @keyframes float { from { transform: translateY(0); } to { transform: translateY(-8px); } }
+      .pulse { animation: pulse 2s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+      @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+    </style>
+  </defs>
+  <rect width="1200" height="360" rx="24" fill="url(#bg)"/>
+  <circle class="orbA" cx="980" cy="60" r="260" fill="url(#orbA)"/>
+  <circle class="orbB" cx="160" cy="330" r="220" fill="url(#orbB)"/>
+
+  <g class="t">
+    <g class="rise d1">
+      <rect x="64" y="64" width="56" height="56" rx="14" fill="#4F46E5"/>
+      <text x="92" y="102" text-anchor="middle" font-size="30" font-weight="800" fill="#fff">F</text>
+      <text x="136" y="102" font-size="34" font-weight="800" fill="#fff" letter-spacing="2">FINAURA</text>
+    </g>
+    <text class="rise d2" x="64" y="168" font-size="40" font-weight="800" fill="#fff">Your money, understood.</text>
+    <text class="rise d3" x="64" y="208" font-size="19" fill="#C7D2FE">Adaptive financial intelligence: auto-classified spending, an explainable</text>
+    <text class="rise d3" x="64" y="234" font-size="19" fill="#C7D2FE">health score, household insights and Monte Carlo retirement planning.</text>
+    <g class="rise d4" font-size="14" font-weight="600">
+      <rect x="64" y="268" width="128" height="34" rx="17" fill="#ffffff" fill-opacity="0.1" stroke="#ffffff" stroke-opacity="0.25"/>
+      <text x="128" y="290" text-anchor="middle" fill="#E0E7FF">📱 Mobile app</text>
+      <rect x="204" y="268" width="112" height="34" rx="17" fill="#ffffff" fill-opacity="0.1" stroke="#ffffff" stroke-opacity="0.25"/>
+      <text x="260" y="290" text-anchor="middle" fill="#E0E7FF">🖥️ Web app</text>
+      <rect x="328" y="268" width="128" height="34" rx="17" fill="#ffffff" fill-opacity="0.1" stroke="#ffffff" stroke-opacity="0.25"/>
+      <text x="392" y="290" text-anchor="middle" fill="#E0E7FF">🧠 ML service</text>
+      <rect x="468" y="268" width="128" height="34" rx="17" fill="#ffffff" fill-opacity="0.1" stroke="#ffffff" stroke-opacity="0.25"/>
+      <text x="532" y="290" text-anchor="middle" fill="#E0E7FF">🔒 Private API</text>
+    </g>
+  </g>
+
+  <!-- growth chart -->
+  <g transform="translate(700,80)">
+    <rect width="440" height="230" rx="18" fill="#0B0F2A" fill-opacity="0.45" stroke="#ffffff" stroke-opacity="0.12"/>
+    <text class="t" x="22" y="34" font-size="13" font-weight="700" fill="#A5B4FC" letter-spacing="1.5">PROJECTED CORPUS · P50</text>
+    <circle class="pulse" cx="414" cy="30" r="5" fill="#34D399"/>
+    <path class="fadeArea" d="M20 200 C 80 190, 120 182, 170 168 S 260 140, 300 112 S 380 64, 420 46 L 420 210 L 20 210 Z" fill="url(#area)"/>
+    <path class="draw" d="M20 200 C 80 190, 120 182, 170 168 S 260 140, 300 112 S 380 64, 420 46" fill="none" stroke="url(#line)" stroke-width="4" stroke-linecap="round"/>
+  </g>
+  <g class="t" font-weight="700">
+    <g class="rise d5"><g class="chip"><rect x="730" y="150" width="150" height="44" rx="12" fill="#fff"/><text x="746" y="170" font-size="11" fill="#64748B">FMI</text><text x="746" y="187" font-size="16" fill="#0F172A">78 / 100 · Good</text></g></g>
+    <g class="rise d6"><g class="chip2"><rect x="900" y="214" width="196" height="44" rx="12" fill="#fff"/><text x="916" y="234" font-size="11" fill="#64748B">swiggy dinner ₹450</text><text x="916" y="251" font-size="15" fill="#4F46E5">Food &amp; Dining · Want ✓</text></g></g>
+    <g class="rise d6"><g class="chip3"><rect x="900" y="114" width="124" height="44" rx="12" fill="#fff"/><text x="916" y="134" font-size="11" fill="#64748B">Monte Carlo</text><text x="916" y="151" font-size="15" fill="#059669">10,000 paths</text></g></g>
+  </g>
+</svg>

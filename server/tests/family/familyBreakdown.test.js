@@ -13,7 +13,7 @@ import express from 'express';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import routes from '../../routes/index.js';
-import { connectDB } from '../../config/db.js';
+import { connectTestDB } from '../testDb.js';
 import User from '../../models/User.js';
 import Family from '../../models/Family.js';
 import Transaction from '../../models/Transaction.js';
@@ -41,7 +41,7 @@ async function run() {
     assert.deepEqual(pair.map((x) => x.v), [0.5, 0.5]);
   });
 
-  await connectDB();
+  await connectTestDB();
   const app = express();
   app.use(express.json());
   app.use('/api', routes);

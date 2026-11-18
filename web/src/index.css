@@ -1428,6 +1428,11 @@ a:focus-visible {
   border-color: transparent;
 }
 
+.committed-date-overdue {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
 .committed-item-amount {
   font-weight: 600;
   color: var(--text-primary, #0f172a);

@@ -23,7 +23,7 @@ import Liability from '../models/Liability.js';
 import Goal from '../models/Goal.js';
 import Alert from '../models/Alert.js';
 import FMIHistory from '../models/FMIHistory.js';
-import { calculateFMI } from './FMIService.js';
+import { calculateFMI, buildFmiUser } from './FMIService.js';
 import { annotateTransactions } from './SentimentService.js';
 import {
   calculateInvestableCorpus,
@@ -38,6 +38,7 @@ import {
 } from '../config/financialRules.js';
 import { resolveTimezone, zonedMonthStart, zonedDateKey } from '../utils/userTime.js';
 import { zoneForecastInput } from './userTimezone.js';
+import { normalizeLiabilityFrequency } from '../utils/forecastResolver.js';
 
 /**
  * Builds a comprehensive, grounded financial context snapshot for the given user.
@@ -120,7 +121,6 @@ export async function buildChatContext(userId) {
   const now = new Date();
   const tz = resolveTimezone(user.timezone);
   const currentMonthStart = zonedMonthStart(now, tz);
-  const currentMonthEnd = new Date(zonedMonthStart(now, tz, 1).getTime() - 1);
 
   const prevMonthStart = zonedMonthStart(now, tz, -1);
   const prevMonthEnd = new Date(currentMonthStart.getTime() - 1);
@@ -157,7 +157,7 @@ export async function buildChatContext(userId) {
   const currentMonthTxs = txDocs.filter(t => {
     if (!t.timestamp) return false;
     const d = new Date(t.timestamp);
-    return d >= currentMonthStart && d <= currentMonthEnd;
+    return d >= currentMonthStart && d <= now; // this month so far: future-dated entries have not happened
   });
 
   const prevMonthTxs = txDocs.filter(t => {
@@ -189,7 +189,7 @@ export async function buildChatContext(userId) {
   const currentMonthIncomes = incomeDocs.filter(i => {
     if (!i.timestamp) return false;
     const d = new Date(i.timestamp);
-    return d >= currentMonthStart && d <= currentMonthEnd;
+    return d >= currentMonthStart && d <= now; // this month so far: future-dated entries have not happened
   });
   const recordedCurrentMonthIncome = currentMonthIncomes.reduce((s, i) => s + (Number(i.amount) || 0), 0);
   const totalRecordedIncome = incomeDocs.reduce((s, i) => s + (Number(i.amount) || 0), 0);
@@ -253,13 +253,16 @@ export async function buildChatContext(userId) {
 
   // 7. Liability Context
   const activeLiabilities = liabilityDocs.filter(l => l.status !== 'paid_off' && l.status !== 'deleted');
-  const totalMonthlyLiabilityService = activeLiabilities.reduce((sum, l) => sum + (Number(l.amount) || 0), 0);
+  // Monthly equivalent: an annual premium is 1/12 per month, a weekly bill 52/12 times its amount.
+  const monthlyEquivalent = (l) => normalizeLiabilityFrequency(l.amount, l.frequency || l.recurrence || 'monthly');
+  const totalMonthlyLiabilityService = activeLiabilities.reduce((sum, l) => sum + monthlyEquivalent(l), 0);
   const knownOutstandingPrincipal = activeLiabilities.reduce((sum, l) => sum + (Number(l.outstandingBalance ?? l.outstandingPrincipal) || 0), 0);
 
   const formattedLiabilities = activeLiabilities.map(l => ({
     id: l.id || l._id?.toString(),
     name: l.name,
     amount: Number(l.amount) || 0,
+    monthlyEquivalent: Math.round(monthlyEquivalent(l) * 100) / 100,
     category: l.category,
     type: l.type,
     frequency: l.frequency || l.recurrence || 'monthly',
@@ -281,18 +284,8 @@ export async function buildChatContext(userId) {
   let fmiData;
   try {
     const annotatedMonthly = annotateTransactions(currentMonthTxs, tz);
-    const retirementGoalObj = goalDocs.find(g => /retire/i.test(g.name)) || null;
-    const retirementGoal = retirementGoalObj?.targetAmount || Math.round(profile.monthlyIncome * 12 * 20);
-
-    const fmiUser = {
-      currentBalance: balance.current,
-      monthlyIncome: profile.monthlyIncome,
-      currentAge: profile.age,
-      retirementAge: profile.retirementAge,
-      retirementGoal,
-      previousShortfall: 0,
-      timezone: tz
-    };
+    // Same inputs as GET /api/fmi (income resolver, retirement target, age).
+    const fmiUser = buildFmiUser(user, goalDocs, incomeDocs, now);
 
     const computed = calculateFMI(fmiUser, annotatedMonthly);
     fmiData = {
@@ -361,31 +354,27 @@ export async function buildChatContext(userId) {
     const predSnapshot = buildPredictabilitySnapshot(...zoneForecastInput(predData));
 
     if (predSnapshot && predSnapshot.forecastStatus?.available) {
+      // Every field comes from the forecast's retirement contract
+      // (PredictabilityService.runProjection), the same shape for each scenario.
+      const retirement = predSnapshot.retirement;
+      const scenario = (sc, fallbackLabel) => ({
+        label: sc?.label || fallbackLabel,
+        projectedCorpus: sc?.projectedCorpusAtRetirement ?? null,
+        projectedFireAge: sc?.projectedFire?.projectedAge ?? null
+      });
       fireData = {
         available: true,
-        fireTarget: predSnapshot.retirement?.estimatedFireCorpus ?? 0,
+        fireTarget: retirement?.estimatedFireCorpus ?? 0,
         currentInvestableCorpus: predSnapshot.assets?.fireInvestableCorpus ?? fireInvestableCorpus,
-        fundedAge: predSnapshot.retirement?.projectedFireAge ?? null,
-        monthsUntilRetirement: predSnapshot.monthsUntilRetirement ?? null,
-        monthsToTarget: predSnapshot.retirement?.projectedFire?.months ?? null,
+        fundedAge: retirement?.projectedFire?.projectedAge ?? null,
+        monthsUntilRetirement: retirement?.monthsUntilRetirement ?? null,
+        monthsToTarget: retirement?.projectedFire?.months ?? null,
         monthlyContributionUsed: predSnapshot.currentState?.observedAverageMonthlyInvestment ?? 0,
-        projectedCorpusAtRetirement: predSnapshot.retirement?.projectedCorpus ?? null,
+        projectedCorpusAtRetirement: retirement?.projectedCorpusAtRetirement ?? null,
         scenarios: {
-          base: {
-            label: predSnapshot.scenarios?.base?.label || 'Base',
-            projectedCorpus: predSnapshot.scenarios?.base?.projectedCorpus,
-            projectedFireAge: predSnapshot.scenarios?.base?.projectedFireAge
-          },
-          conservative: {
-            label: predSnapshot.scenarios?.conservative?.label || 'Conservative',
-            projectedCorpus: predSnapshot.scenarios?.conservative?.projectedCorpus,
-            projectedFireAge: predSnapshot.scenarios?.conservative?.projectedFireAge
-          },
-          optimistic: {
-            label: predSnapshot.scenarios?.optimistic?.label || 'Optimistic',
-            projectedCorpus: predSnapshot.scenarios?.optimistic?.projectedCorpus,
-            projectedFireAge: predSnapshot.scenarios?.optimistic?.projectedFireAge
-          }
+          base: scenario(predSnapshot.scenarios?.base, 'Base'),
+          conservative: scenario(predSnapshot.scenarios?.conservative, 'Conservative'),
+          optimistic: scenario(predSnapshot.scenarios?.optimistic, 'Optimistic')
         }
       };
     }

@@ -8,6 +8,7 @@ import Income from '../models/Income.js';
 import Goal from '../models/Goal.js';
 
 const DEMO_USER_ID = 'u1';
+const DEMO_EMAIL = 'parth@example.com';
 
 const MOCK_TRANSACTIONS = [
   { id: 't-1', userId: DEMO_USER_ID, amount: 450, category: 'Food & Dining', type: 'Want', sentiment: 'neutral', description: 'Zomato order lunch', timestamp: new Date('2025-03-24T12:30:00') },
@@ -52,42 +53,45 @@ export async function seedDatabase() {
   const seedPassword = configuredPassword || crypto.randomBytes(12).toString('hex');
   if (!configuredPassword) {
     console.warn('⚠️  SEED_USER_PASSWORD not set. Generated a one-time demo password.');
-    console.warn(`    Demo user email: parth@example.com, password: ${seedPassword}`);
+    console.warn(`    Demo user email: ${DEMO_EMAIL}, password: ${seedPassword}`);
   }
 
+  // Only the demo user's rows are replaced; every other account is left alone.
+  const demoOnly = { userId: DEMO_USER_ID };
+
   // User
-  await User.deleteMany({});
+  await User.deleteMany({ $or: [{ id: DEMO_USER_ID }, { email: DEMO_EMAIL }] });
   await User.create({
     id: DEMO_USER_ID,
     name: 'Parth Palav',
-    email: 'parth@example.com',
+    email: DEMO_EMAIL,
     password: seedPassword,
     incomeType: 'salaried',
     goals: ['retirement', 'emergency']
   });
 
   // Transactions
-  await Transaction.deleteMany({});
+  await Transaction.deleteMany(demoOnly);
   await Transaction.insertMany(MOCK_TRANSACTIONS);
 
   // FMI History
-  await FMIHistory.deleteMany({});
+  await FMIHistory.deleteMany(demoOnly);
   await FMIHistory.insertMany(MOCK_FMI_HISTORY);
 
   // Income
-  await Income.deleteMany({});
+  await Income.deleteMany(demoOnly);
   await Income.insertMany(MOCK_INCOME);
 
   // Goals
-  await Goal.deleteMany({});
+  await Goal.deleteMany(demoOnly);
   await Goal.insertMany(MOCK_GOALS);
 
   // Alert
-  await Alert.deleteMany({});
+  await Alert.deleteMany(demoOnly);
   await Alert.create({ id: 'al-1', userId: DEMO_USER_ID, message: 'Your food spending is 35% above last week.', type: 'nudge', severity: 'medium' });
 
   // Envelope
-  await Envelope.deleteMany({});
+  await Envelope.deleteMany(demoOnly);
   await Envelope.create({ userId: DEMO_USER_ID, rent: 12000, food: 6000, savings: 18500, targetSavings: 50000 });
 
   console.log('✅ Database seeded successfully!');

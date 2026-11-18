@@ -27,13 +27,26 @@ import { CommittedBalanceCard } from '../components/dashboard/CommittedBalanceCa
 import { RecentActivityTable } from '../components/dashboard/RecentActivityTable';
 import { FutureOutlookPanel } from '../components/dashboard/FutureOutlookPanel';
 import { getFamilyDashboard, getReceivedFamilyInvitations } from '../services/api';
-import type { FamilyDashboard } from '../types';
+import type { FamilyDashboard, MonthlyCommitments } from '../types';
 import { FamilyOverviewCard } from '../components/family/FamilyOverviewCard';
 import { NextStep } from '../components/ui/NextStep';
 import { FMI_NAME } from '../utils/presentation';
 import { AdjustBalanceModal } from '../components/dashboard/AdjustBalanceModal';
 import { Toast } from '../components/ui/Toast';
 import { getAppTimezone, zparts } from '../utils/timezone';
+
+/** Balance card caption: this month's auto-deduct dues, with missed earlier dues named separately. */
+function commitmentsCaption(c?: MonthlyCommitments | null): string {
+  const overdue = c?.overdue ?? 0;
+  if (!c || (c.remaining <= 0 && overdue <= 0)) return 'Liquid operating balance across active accounts';
+  const dues = [
+    c.remaining > 0 ? `${formatCurrencyINR(c.remaining)} due this month` : '',
+    overdue > 0 ? `${formatCurrencyINR(overdue)} overdue` : '',
+  ].filter(Boolean).join(' + ');
+  return c.freeBalance < 0
+    ? `⚠ ${dues} · ${formatCurrencyINR(-c.freeBalance)} short`
+    : `${dues} set aside for auto-deduct bills · ${formatCurrencyINR(c.freeBalance)} free`;
+}
 
 export const OverviewPage: React.FC = () => {
   const { user } = useAuth();
@@ -73,6 +86,7 @@ export const OverviewPage: React.FC = () => {
 
   // Smooth numeric counter animation on initial successful data load
   const animBalance = useAnimatedNumber(isLoading ? null : currentBalance);
+  const monthFiguresFailed = currentMonthIncome === null || currentMonthSpending === null;
   const animNetFlow = useAnimatedNumber(isLoading ? null : currentMonthNetFlow);
   const animFmi = useAnimatedNumber(isLoading || fmiScore === null ? null : fmiScore);
   const animSavings = useAnimatedNumber(isLoading || savingsRate === null ? null : savingsRate);
@@ -137,6 +151,7 @@ export const OverviewPage: React.FC = () => {
     <div className="overview-page">
       <Toast message={toastMessage} type="success" onClose={() => setToastMessage(null)} />
       <AdjustBalanceModal
+        key={adjustingBalance ? 'open' : 'closed'}
         isOpen={adjustingBalance}
         onClose={() => setAdjustingBalance(false)}
         currentBalance={currentBalance}
@@ -200,14 +215,8 @@ export const OverviewPage: React.FC = () => {
               variant="hero"
               label="Current Balance"
               value={formatCurrencyINR(animBalance ?? currentBalance)}
-              subtext={
-                dashboard?.commitments && dashboard.commitments.remaining > 0
-                  ? dashboard.commitments.freeBalance < 0
-                    ? `⚠ ${formatCurrencyINR(dashboard.commitments.remaining)} due for bills · ${formatCurrencyINR(-dashboard.commitments.freeBalance)} short`
-                    : `${formatCurrencyINR(dashboard.commitments.remaining)} set aside for auto-deduct bills · ${formatCurrencyINR(dashboard.commitments.freeBalance)} free`
-                  : 'Liquid operating balance across active accounts'
-              }
-              className={dashboard?.commitments && dashboard.commitments.remaining > 0 && dashboard.commitments.freeBalance < 0 ? 'metric-bills-short' : ''}
+              subtext={commitmentsCaption(dashboard?.commitments)}
+              className={dashboard?.commitments && dashboard.commitments.freeBalance < 0 && (dashboard.commitments.remaining > 0 || (dashboard.commitments.overdue ?? 0) > 0) ? 'metric-bills-short' : ''}
               icon={Wallet}
             />
 
@@ -234,15 +243,15 @@ export const OverviewPage: React.FC = () => {
               icon={Activity}
             />
 
-            {/* Card 3: Monthly Net Flow */}
+            {/* Card 3: Monthly Net Flow (unavailable, not ₹0, when a list failed to load) */}
             <MetricCard
               label="Monthly Net Flow"
-              value={formatCurrencyINR(animNetFlow ?? currentMonthNetFlow, { showSign: true })}
-              trend={{
+              value={currentMonthNetFlow === null ? 'Unavailable' : formatCurrencyINR(animNetFlow ?? currentMonthNetFlow, { showSign: true })}
+              trend={currentMonthNetFlow === null ? undefined : {
                 text: currentMonthNetFlow >= 0 ? 'Surplus' : 'Deficit',
                 positive: currentMonthNetFlow >= 0,
               }}
-              subtext={`Inflow: ${formatCurrencyINR(currentMonthIncome)} · Outflow: ${formatCurrencyINR(currentMonthSpending)}`}
+              subtext={`Inflow: ${currentMonthIncome === null ? 'couldn’t load' : formatCurrencyINR(currentMonthIncome)} · Outflow: ${currentMonthSpending === null ? 'couldn’t load' : formatCurrencyINR(currentMonthSpending)}`}
               icon={TrendingUp}
             />
 
@@ -250,14 +259,18 @@ export const OverviewPage: React.FC = () => {
             <MetricCard
               label="Savings Rate"
               value={
-                savingsRate !== null
-                  ? `${animSavings ?? savingsRate}%`
-                  : 'Not enough data yet'
+                monthFiguresFailed
+                  ? 'Unavailable'
+                  : savingsRate !== null
+                    ? `${animSavings ?? savingsRate}%`
+                    : 'Not enough data yet'
               }
               subtext={
-                savingsRate !== null
-                  ? 'of current month income retained'
-                  : 'Record income to calculate rate'
+                monthFiguresFailed
+                  ? `Couldn’t load your ${[currentMonthIncome === null && 'income', currentMonthSpending === null && 'expenses'].filter(Boolean).join(' and ')}. Refresh to try again.`
+                  : savingsRate !== null
+                    ? 'of current month income retained'
+                    : 'Record income to calculate rate'
               }
               icon={Percent}
             />
@@ -315,8 +328,8 @@ export const OverviewPage: React.FC = () => {
         >
           {isLoading ? (
             <SkeletonCard height={280} />
-          ) : sectionErrors.transactions && sectionErrors.income ? (
-            <SectionError message="Cash flow history is temporarily unavailable." onRetry={refetch} />
+          ) : sectionErrors.transactions || sectionErrors.income ? (
+            <SectionError message={`Cash flow history is temporarily unavailable: ${[sectionErrors.income && 'income', sectionErrors.transactions && 'expenses'].filter(Boolean).join(' and ')} couldn’t load.`} onRetry={refetch} />
           ) : (
             <CashFlowChart data={cashFlowHistory} />
           )}

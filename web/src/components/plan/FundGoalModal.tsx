@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
 import { formatCurrencyINR } from '../../utils/formatters';
@@ -18,10 +18,6 @@ export const FundGoalModal: React.FC<FundGoalModalProps> = ({ goal, onClose, onS
   const [withdraw, setWithdraw] = useState(false);
   const [error, setError] = useState('');
   const [saving, setSaving] = useState(false);
-
-  useEffect(() => {
-    if (goal) { setAmount(''); setWithdraw(false); setError(''); }
-  }, [goal]);
 
   if (!goal) return null;
   const saved = Number(goal.savedAmount) || 0;

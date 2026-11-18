@@ -6,7 +6,7 @@ import Income from '../../models/Income.js';
 import Transaction from '../../models/Transaction.js';
 import Liability from '../../models/Liability.js';
 import Asset from '../../models/Asset.js';
-import { connectDB } from '../../config/db.js';
+import { connectTestDB } from '../testDb.js';
 import {
   isConsumption,
   isInvestment,
@@ -51,7 +51,7 @@ async function runTests() {
   console.log('  FINAURA PREDICTABILITY FOUNDATION TEST SUITE');
   console.log('============================================================\n');
 
-  await connectDB();
+  await connectTestDB();
 
   const testUserId = 'TEST_ACCT_FOUNDATION_USER';
   const testEmail = 'test_acct_foundation@finaura.test';

@@ -13,6 +13,7 @@ import Transaction from '../../models/Transaction.js';
 import Income from '../../models/Income.js';
 import Alert from '../../models/Alert.js';
 import { predictOverspend, detectLowBalanceRisk } from '../../services/PredictionService.js';
+import { connectTestDB } from '../testDb.js';
 
 console.log('='.repeat(64));
 console.log('  FINAURA ALERTS BALANCE SOURCING TEST SUITE');
@@ -76,7 +77,7 @@ async function evaluateAlerts(userId) {
 }
 
 async function runSuite() {
-  await mongoose.connect('mongodb://127.0.0.1:27017/lyproj');
+  await connectTestDB();
 
   const userA = 'u-test-alert-a';
   const userB = 'u-test-alert-b';

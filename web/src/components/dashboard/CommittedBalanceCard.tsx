@@ -10,7 +10,9 @@ export const CommittedBalanceCard: React.FC<{ commitments: MonthlyCommitments }>
   if (c.items.length === 0) {
     return <p className="committed-empty">No auto-deduct liabilities this month. Turn on auto-deduct for a bill to see it here.</p>;
   }
-  const usedPct = c.currentBalance > 0 ? Math.min(100, (c.remaining / c.currentBalance) * 100) : 100;
+  const overdue = c.overdue ?? 0;
+  const reserved = c.remaining + overdue;
+  const usedPct = c.currentBalance > 0 ? Math.min(100, (reserved / c.currentBalance) * 100) : 100;
 
   return (
     <div className="committed-card">
@@ -19,8 +21,14 @@ export const CommittedBalanceCard: React.FC<{ commitments: MonthlyCommitments }>
           <span className="committed-label">Still to be deducted by {day(c.monthEnd)}</span>
           <strong className="committed-value">{formatCurrencyINR(c.remaining)}</strong>
         </div>
+        {overdue > 0 && (
+          <div>
+            <span className="committed-label">Overdue from earlier months</span>
+            <strong className="committed-value committed-negative">{formatCurrencyINR(overdue)}</strong>
+          </div>
+        )}
         <div>
-          <span className="committed-label">Free to use after bills</span>
+          <span className="committed-label">{overdue > 0 ? 'Free after this month’s and overdue bills' : 'Free to use after bills'}</span>
           <strong className={`committed-value ${c.freeBalance < 0 ? 'committed-negative' : ''}`}>{formatCurrencyINR(c.freeBalance)}</strong>
         </div>
         <div>
@@ -52,6 +60,9 @@ export const CommittedBalanceCard: React.FC<{ commitments: MonthlyCommitments }>
               <span className={`committed-tag committed-tag-${it.type.toLowerCase()}`}>{it.type}</span>
             </div>
             <div className="committed-item-dates">
+              {(it.overdueDates ?? []).map((d) => (
+                <span key={`o${d}`} className="committed-date committed-date-overdue" title="Overdue">! {day(d)}</span>
+              ))}
               {it.paidDates.map((d) => (
                 <span key={`p${d}`} className="committed-date committed-date-paid">✓ {day(d)}</span>
               ))}
@@ -60,7 +71,7 @@ export const CommittedBalanceCard: React.FC<{ commitments: MonthlyCommitments }>
               ))}
             </div>
             <span className="committed-item-amount">
-              {it.remainingAmount > 0 ? formatCurrencyINR(it.remainingAmount) : 'Paid'}
+              {it.remainingAmount + (it.overdueAmount ?? 0) > 0 ? formatCurrencyINR(it.remainingAmount + (it.overdueAmount ?? 0)) : 'Paid'}
             </span>
           </li>
         ))}

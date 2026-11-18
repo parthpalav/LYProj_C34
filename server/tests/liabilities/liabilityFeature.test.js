@@ -6,7 +6,7 @@ import Transaction from '../../models/Transaction.js';
 import User from '../../models/User.js';
 import { calculateNextDueDate } from '../../controllers/liabilityController.js';
 import { processLiabilities, processSingleLiability, STALE_CLAIM_THRESHOLD_MS } from '../../services/LiabilityScheduler.js';
-import { connectDB } from '../../config/db.js';
+import { connectTestDB } from '../testDb.js';
 import 'dotenv/config';
 
 let passed = 0;
@@ -29,7 +29,7 @@ async function runTests() {
   console.log('='.repeat(64));
   console.log('  FINAURA LIABILITY SCHEDULER & AUTO-DEDUCT TEST SUITE');
   console.log('='.repeat(64));
-  await connectDB();
+  await connectTestDB();
 
   // ═══════════════════════════════════════════════════════════
   // Section 1: Next Due Date Calculation Pure Math Tests

@@ -6,7 +6,8 @@ const refreshTokenSchema = new mongoose.Schema(
     tokenHash: { type: String, required: true },
     expiresAt: { type: Date, required: true },
     isRevoked: { type: Boolean, default: false },
-    replacedByTokenHash: { type: String, default: null }
+    replacedByTokenHash: { type: String, default: null },
+    rotatedAt: { type: Date, default: null }
   },
   { timestamps: true }
 );

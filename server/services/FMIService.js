@@ -17,7 +17,7 @@
  */
 
 import { detectBehavioralPatterns } from './BehaviorService.js';
-import { DEFAULT_TIMEZONE, toZoned } from '../utils/userTime.js';
+import { DEFAULT_TIMEZONE, toZoned, resolveTimezone } from '../utils/userTime.js';
 
 // ── Helpers ──────────────────────────────────────────────────
 
@@ -171,6 +171,50 @@ export function resolveMonthlyIncome(user = {}, recentIncome = 0, hasAnyIncome =
 }
 
 /**
+ * The one retirement-target rule for onboarding, profile and FMI: a goal named
+ * "retirement" wins, then the corpus target saved on the profile, then an
+ * estimate of 20 years of declared income.
+ */
+export function resolveRetirementGoal(user = {}, goals = []) {
+  const goal = goals.find((g) => /retire/i.test(g.name));
+  if (Number(goal?.targetAmount) > 0) return Number(goal.targetAmount);
+  if (Number(user.retirementCorpusGoal) > 0) return Number(user.retirementCorpusGoal);
+  return Math.round(Number(user.monthlyIncome ?? user.income ?? 0) * 12 * 20);
+}
+
+/**
+ * FMI inputs for one user, shared by the FMI screen and the assistant so both
+ * score the same profile the same way.
+ *
+ * @param {Object} user - User document
+ * @param {Array} goals - the user's Goal documents
+ * @param {Array} incomes - the user's Income documents (only read for variable earners)
+ * @param {Date} now
+ */
+export function buildFmiUser(user = {}, goals = [], incomes = [], now = new Date()) {
+  let monthlyIncome = Number(user.monthlyIncome ?? 0);
+  if (VARIABLE_INCOME_TYPES.includes(user.incomeType)) {
+    const since = now.getTime() - VARIABLE_INCOME_WINDOW_DAYS * 86400000;
+    const earned = incomes.filter((i) => !NON_EARNED_INCOME_SOURCES.includes(i.source));
+    const recentIncome = earned
+      .filter((i) => { const t = new Date(i.timestamp).getTime(); return t >= since && t <= now.getTime(); })
+      .reduce((sum, i) => sum + (Number(i.amount) || 0), 0);
+    monthlyIncome = resolveMonthlyIncome(user, recentIncome, earned.length > 0);
+  }
+  return {
+    currentBalance: Number(user.currentBalance ?? 0),
+    monthlyIncome,
+    currentAge: user.dateOfBirth
+      ? Math.max(18, now.getFullYear() - new Date(user.dateOfBirth).getFullYear())
+      : (Number(user.age) || 25),
+    retirementAge: Number(user.retirementAge ?? 60),
+    retirementGoal: resolveRetirementGoal(user, goals),
+    previousShortfall: 0, // no historical shortfall tracking yet
+    timezone: resolveTimezone(user.timezone)
+  };
+}
+
+/**
  * Computes an individual member's retirement goal obligation without side effects.
  *
  * @param {Object} user
@@ -190,13 +234,7 @@ export function calculateMemberGoalDetail(user = {}, goals = []) {
 
   const retirementAge = Number(user.retirementAge ?? 60);
 
-  const retirementGoalObj = goals.find((g) => /retire/i.test(g.name)) || null;
-  const retirementGoal = Number(
-    user.retirementGoal ||
-    retirementGoalObj?.targetAmount ||
-    (user.retirementCorpusGoal > 0 ? user.retirementCorpusGoal : 0) ||
-    Math.round(monthlyIncome * 12 * 20)
-  );
+  const retirementGoal = Number(user.retirementGoal) || resolveRetirementGoal({ ...user, monthlyIncome }, goals);
 
   const previousShortfall = Number(user.previousShortfall ?? 0);
 

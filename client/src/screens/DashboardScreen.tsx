@@ -33,7 +33,7 @@ import {
 } from '../types';
 import { createStyles, Palette, radius, tabular, typeScale, useTheme } from '../theme';
 import { enterUp } from '../motion';
-import { dueDatesWithin } from '../utils/bills';
+import { accountDay, dueDatesWithin } from '../utils/bills';
 import { buildDueAlerts, buildReviewAlerts } from '../utils/dueAlerts';
 import { monthlyEquivalent } from '../utils/format';
 import { buildSeries, rangeFor } from '../utils/spending';
@@ -110,8 +110,8 @@ type FeedItem = {
 // ═══════════════════════════════════════════════════════════
 // HOME
 // ═══════════════════════════════════════════════════════════
-/** Bills still due this month under the balance; flashes red when they exceed it. */
-function CommittedCaption({ remaining, free, style }: { remaining: number; free: number; style: object }) {
+/** Bills still due this month (and any overdue ones, named apart) under the balance; flashes red when they exceed it. */
+function CommittedCaption({ remaining, overdue, free, style }: { remaining: number; overdue: number; free: number; style: object }) {
   const { c } = useTheme();
   const reduced = useReducedMotion();
   const pulse = useSharedValue(1);
@@ -120,11 +120,15 @@ function CommittedCaption({ remaining, free, style }: { remaining: number; free:
     pulse.value = short && !reduced ? withRepeat(withTiming(0.35, { duration: 500 }), -1, true) : 1;
   }, [short, reduced, pulse]);
   const flash = useAnimatedStyle(() => ({ opacity: pulse.value }));
+  const dues = [
+    remaining > 0 ? `${formatCurrency(remaining)} due` : '',
+    overdue > 0 ? `${formatCurrency(overdue)} overdue` : '',
+  ].filter(Boolean).join(' + ');
   return (
     <Animated.Text style={[style, short && { color: c.danger, fontWeight: '600' }, flash]} numberOfLines={1}>
       {short
-        ? `⚠ ${formatCurrency(remaining)} due for bills · ${formatCurrency(-free)} short`
-        : `${formatCurrency(remaining)} committed · ${formatCurrency(free)} free`}
+        ? `⚠ ${dues} · ${formatCurrency(-free)} short`
+        : `${dues} committed · ${formatCurrency(free)} free`}
     </Animated.Text>
   );
 }
@@ -164,7 +168,7 @@ export function DashboardScreen(): React.ReactElement {
   const [income, setIncome] = useState<IncomeRecord[] | null>(null);
   const [serverAttention, setAttention] = useState(0);
   // Bell badge also counts bills due this week, card bills and monthly asset check-ins (same as the Notifications screen).
-  const attention = serverAttention + buildDueAlerts(liabilities, cards).length + buildReviewAlerts(assets ?? []).length;
+  const attention = serverAttention + buildDueAlerts(liabilities, cards, new Date(), undefined, user?.timezone).length + buildReviewAlerts(assets ?? []).length;
   const loadedRef = useRef(false);
   const lastHeavyRef = useRef(0);
 
@@ -306,9 +310,9 @@ export function DashboardScreen(): React.ReactElement {
   // Bills falling due in the next 30 days, derived from each schedule (not only server nextDueDate).
   const upcomingBills = useMemo(
     () => activeLiabilities
-      .flatMap((l) => dueDatesWithin(l, 30).slice(0, 1).map((date) => ({ l, date })))
+      .flatMap((l) => dueDatesWithin(l, 30, new Date(), user?.timezone).slice(0, 1).map((date) => ({ l, date })))
       .sort((a, b) => a.date.getTime() - b.date.getTime()),
-    [activeLiabilities],
+    [activeLiabilities, user?.timezone],
   );
 
   // Asset summary (simple presentation aggregate only from direct Assets API)
@@ -328,7 +332,7 @@ export function DashboardScreen(): React.ReactElement {
 
   const nearestBill = upcomingBills[0] ?? null;
   const daysUntilLiability = nearestBill
-    ? Math.round((new Date(nearestBill.date).setHours(0, 0, 0, 0) - new Date().setHours(0, 0, 0, 0)) / 86400000)
+    ? Math.round((nearestBill.date.getTime() - accountDay(new Date(), user?.timezone).getTime()) / 86400000)
     : null;
 
   // Predictability metrics
@@ -499,7 +503,7 @@ export function DashboardScreen(): React.ReactElement {
                     accessibilityLabel="Show auto-deduct bills committed this month"
                     style={styles.committedLine}
                   >
-                    <CommittedCaption remaining={commitments.remaining} free={balance - commitments.remaining} style={styles.heroCaption} />
+                    <CommittedCaption remaining={commitments.remaining} overdue={commitments.overdue ?? 0} free={balance - commitments.remaining - (commitments.overdue ?? 0)} style={styles.heroCaption} />
                     <Ionicons name="chevron-forward" size={12} color={c.onAuroraMuted} />
                   </Pressable>
                 ) : null}

@@ -98,7 +98,9 @@ def health():
         'ok': True,
         'service': 'ml-service',
         'model_backend': MODEL_BACKEND,
-        'classifier_ready': classifier_ready
+        'classifier_ready': classifier_ready,
+        # What /classify is actually using: the fine-tuned joint encoder or the packaged fallback
+        'classifier': _hybrid_classifier.active_backend()
     })
 
 
@@ -523,11 +525,31 @@ def simulate_endpoint():
 
 
 # ─── Run ──────────────────────────────────────────────────────────────────────
+def prepare_classifier(classifier=None):
+    """Fetch the fine-tuned weights if missing, then load the best backend available.
+    Never raises: offline, a Drive outage or a missing gdown falls back to the packaged
+    legacy models, so classification, sentiment and simulation still start."""
+    classifier = classifier or _hybrid_classifier
+    try:
+        from model_fetch import ensure_models
+        ensure_models(classifier.base_dir)
+    except Exception as e:
+        log.warning("⚠️ Model download unavailable (%s); starting with the packaged fallback", e)
+    if not classifier.load_v4():
+        classifier.load_category()   # legacy fallback models
+        classifier.load_type()
+    backend = classifier.active_backend()
+    log.info("Classifier backend: %s", backend)
+    return backend
+
+
 if __name__ == '__main__':
-    from model_fetch import ensure_models
-    ensure_models(BASE_DIR)
-    if not _hybrid_classifier.load_v4():     # pre-load on startup
-        _hybrid_classifier.load_category()   # legacy fallback models
-        _hybrid_classifier.load_type()
-    app.run(host='0.0.0.0', port=5001, debug=True)
+    # Local development server: loopback only, debugger off unless FLASK_DEBUG=1.
+    # A shared or hosted deployment runs wsgi.py under gunicorn instead.
+    prepare_classifier()
+    app.run(
+        host=os.getenv('ML_HOST', '127.0.0.1'),
+        port=int(os.getenv('ML_PORT', '5001')),
+        debug=os.getenv('FLASK_DEBUG') == '1',
+    )
 

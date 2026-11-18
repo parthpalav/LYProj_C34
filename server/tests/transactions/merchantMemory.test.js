@@ -1,13 +1,13 @@
 /**
  * Per-user merchant memory: a manual correction is reused for the same merchant
  * on later transactions and classify previews, and never leaks across users.
- * Needs local MongoDB (MONGO_URI). ML service may be offline (keyword fallback is used).
+ * Needs local MongoDB (TEST_MONGO_URI, default lyproj_test). ML service may be offline (keyword fallback is used).
  */
 
 import assert from 'node:assert/strict';
 import mongoose from 'mongoose';
 import 'dotenv/config';
-import { connectDB } from '../../config/db.js';
+import { connectTestDB } from '../testDb.js';
 import controllerRouter from '../../controllers/index.js';
 import Transaction from '../../models/Transaction.js';
 import User from '../../models/User.js';
@@ -50,7 +50,7 @@ async function run() {
   assert.equal(merchantKey('   '), '');
   console.log('  ✅ merchantKey normalisation');
 
-  await connectDB();
+  await connectTestDB();
   const users = ['MEM_USER_A', 'MEM_USER_B'];
   await Promise.all([
     Transaction.deleteMany({ userId: { $in: users } }),

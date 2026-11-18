@@ -10,6 +10,7 @@ import { createStyles, typeScale, useTheme } from '../theme';
 import { enterUp, exitFade, listLayout } from '../motion';
 import { DUE_WINDOW_DAYS, DueAlert, buildDueAlerts, buildReviewAlerts, dueLabel } from '../utils/dueAlerts';
 import { AssetReviewSheet } from '../components/assets/AssetReviewSheet';
+import { useStore } from '../store/useStore';
 import { formatCurrency } from '../utils/format';
 import { Card } from '../components/ui/Card';
 import { EmptyState, IconTile, ListRow, SectionHeader } from '../components/ui/Bits';
@@ -24,6 +25,7 @@ export default function AlertsScreen() {
   const insets = useSafeAreaInsets();
   const headerHeight = useHeaderHeight();
   const { y, onScroll } = useScrollHeader();
+  const tz = useStore((st) => st.user?.timezone);
   const [alerts, setAlerts] = useState<AlertItem[]>([]);
   const [invites, setInvites] = useState<FamilyInvitation[]>([]);
   const [reviewCount, setReviewCount] = useState(0);
@@ -40,11 +42,11 @@ export default function AlertsScreen() {
     if (inv.status === 'fulfilled') setInvites((inv.value ?? []).filter((i) => i.status === 'pending'));
     if (tx.status === 'fulfilled') setReviewCount(tx.value.filter((t) => t.needsReview).length);
     if (liab.status === 'fulfilled' || pm.status === 'fulfilled') {
-      setBills(buildDueAlerts(liab.status === 'fulfilled' ? liab.value : [], pm.status === 'fulfilled' ? pm.value : []));
+      setBills(buildDueAlerts(liab.status === 'fulfilled' ? liab.value : [], pm.status === 'fulfilled' ? pm.value : [], new Date(), undefined, tz));
     }
     if (assets.status === 'fulfilled') setReviews(buildReviewAlerts(assets.value));
     setLoaded(true);
-  }, []);
+  }, [tz]);
 
   useFocusEffect(useCallback(() => { load(); }, [load]));
 
@@ -133,7 +135,7 @@ export default function AlertsScreen() {
                       icon={b.kind === 'credit_card' ? 'card' : 'calendar'}
                       tint={b.overdue ? c.danger : c.warning}
                       title={b.title}
-                      subtitle={`${dueLabel(b)} · ${new Date(b.dueDate).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' })}${b.autoDeduct ? ' · auto deduct' : ''}`}
+                      subtitle={`${dueLabel(b)} · ${new Date(b.dueDate).toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', timeZone: tz || undefined })}${b.autoDeduct ? ' · auto deduct' : ''}`}
                       value={formatCurrency(b.amount)}
                       onPress={() => navigation.navigate('Liabilities')}
                       chevron={false}

@@ -11,6 +11,7 @@ import User from '../../models/User.js';
 import Income from '../../models/Income.js';
 import { smoothIncomeFlow } from '../../services/IncomeFlowService.js';
 import { aggregateMonthlyIncome, analyzeIncomeResilience } from '../../utils/incomeAnalytics.js';
+import { connectTestDB } from '../testDb.js';
 
 console.log('='.repeat(64));
 console.log('  FINAURA INCOME CRUD & MULTI-SOURCE INTEGRATION TEST SUITE');
@@ -34,7 +35,7 @@ async function test(name, fn) {
 }
 
 async function runSuite() {
-  await mongoose.connect('mongodb://127.0.0.1:27017/lyproj');
+  await connectTestDB();
 
   const userA = 'u-test-income-a';
   const userB = 'u-test-income-b';
@@ -231,10 +232,17 @@ async function runSuite() {
     await mongoose.disconnect();
   }
 
+  if (failed > 0) {
+    console.log(`\n  ${failed} FAILED, ${passed} passed`);
+    process.exit(1);
+  }
   console.log();
   console.log('='.repeat(64));
   console.log(`  ALL ${passed} INCOME CRUD & INTEGRATION TESTS PASSED! 🚀`);
   console.log('='.repeat(64));
 }
 
-runSuite().catch(console.error);
+runSuite().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

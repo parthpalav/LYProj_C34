@@ -14,7 +14,8 @@ Contract:
 - confidence: float (0.0 to 1.0)
 - confidenceScore: float (0.0 to 1.0)
 - all_probs: dict[str, float]
-- classificationSource: 'merchant_rule' | 'finaura_v4' | 'tfidf' | 'fallback'
+- classificationSource: 'merchant_rule' | 'finaura_vN' (the loaded model family, e.g. finaura_v7) | 'tfidf_v2' | 'tfidf' | 'fallback'
+- modelVersion: the model directory (or ensemble members) that produced the label, null for rules
 - needsReview: bool
 - flagged_for_review: bool
 - sentiment: 'positive' | 'neutral' | 'negative'
@@ -89,6 +90,21 @@ def clean_tfidf_text(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
 
+# Words that say money moved but not what for. A description made only of these
+# ("transfer", "upi payment", "online purchase") cannot be labelled with confidence,
+# however sure the model is, so it always goes to review.
+_GENERIC_WORDS = {
+    "transfer", "transferred", "payment", "pay", "paid", "upi", "neft", "imps", "rtgs", "online",
+    "purchase", "misc", "miscellaneous", "money", "txn", "transaction", "debit", "credit", "sent",
+    "send", "bank", "amount", "fund", "funds", "to", "for", "the", "a", "of",
+}
+
+
+def is_vague(text: str) -> bool:
+    words = re.findall(r"[a-z]+", (text or "").lower())
+    return bool(words) and all(w in _GENERIC_WORDS for w in words)
+
+
 class HybridClassifier:
     def __init__(self, base_dir: str):
         self.base_dir = base_dir
@@ -100,6 +116,8 @@ class HybridClassifier:
         self._type_loaded = False
         self.minilm_type_available = False
         self.v4_model = None
+        self.v4_member_names = []
+        self.v4_source = "finaura_v4"
         self._v4_checked = False
 
     def load_v4(self, members: Optional[list] = None) -> bool:
@@ -127,6 +145,10 @@ class HybridClassifier:
             assert all(m["labels"] == self.v4_meta["labels"] for _, _, m in self.v4_members), "members disagree on labels"
             self.v4_threshold = active.get("review_threshold", self.v4_meta["review_threshold"])
             self.v4_model = self.v4_members[0][1]
+            self.v4_member_names = list(members)
+            # Report the family of the weights actually loaded (finaura-v7-bge-... -> finaura_v7).
+            family = re.match(r"finaura-(v\d+[a-z]?)", members[0])
+            self.v4_source = f"finaura_{family.group(1)}" if family else members[0]
             self._torch = torch
             log.info(f"✅ joint classifier loaded in HybridPipeline: {members}")
             return True
@@ -134,6 +156,14 @@ class HybridClassifier:
             log.warning(f"⚠️ Failed to load {members} ({e}) — using legacy TF-IDF + MiniLM type head")
             self.v4_model = None
             return False
+
+    def active_backend(self) -> Dict[str, Any]:
+        """Which classifier answers /classify right now (no loading side effects)."""
+        if self.v4_model is not None:
+            return {"backend": "joint_encoder", "models": list(self.v4_member_names)}
+        if self._category_loaded:
+            return {"backend": self.category_source_name, "models": []}
+        return {"backend": "not_loaded", "models": []}
 
     def _classify_v4_probs(self, cleaned: str) -> np.ndarray:
         """Mean of the members' temperature-calibrated joint-label probabilities."""
@@ -252,13 +282,15 @@ class HybridClassifier:
             category_conf = confidence
             type_conf = confidence
             needs_review = False
+            model_version = None
             log.info(f"HybridClassifier [merchant_rule]: '{raw}' -> {category} ({spend_type}, {confidence*100:.0f}%)")
 
         # ── Step 2: Fine-tuned v4 joint classifier ────────────────────────────
         elif self.load_v4():
             category, spend_type, category_conf, type_conf, all_probs, needs_review = self._classify_v4(cleaned or raw.lower())
-            category_source = type_source = "finaura_v4"
-            log.info(f"HybridClassifier [finaura_v4]: '{raw}' -> {category} ({category_conf*100:.1f}%) | {spend_type} ({type_conf*100:.1f}%) | needsReview={needs_review}")
+            category_source = type_source = self.v4_source
+            model_version = "+".join(self.v4_member_names)
+            log.info(f"HybridClassifier [{self.v4_source}]: '{raw}' -> {category} ({category_conf*100:.1f}%) | {spend_type} ({type_conf*100:.1f}%) | needsReview={needs_review}")
 
         # ── Step 3: Legacy fallback: TF-IDF for Category and MiniLM for Type ──
         else:
@@ -290,6 +322,7 @@ class HybridClassifier:
             category_conf = float(probs.max())
             all_probs = {cls: round(float(p), 4) for cls, p in zip(self.category_model.classes_, probs)}
             category_source = self.category_source_name
+            model_version = self.category_source_name
 
             sorted_probs = sorted(probs, reverse=True)
             margin = (sorted_probs[0] - sorted_probs[1]) if len(sorted_probs) > 1 else 1.0
@@ -325,6 +358,9 @@ class HybridClassifier:
             needs_review = category_needs_review or type_needs_review
             log.info(f"HybridClassifier [ML Fallback]: '{raw}' -> {category} (Conf: {category_conf*100:.1f}%, Source: {category_source}) | Type: {spend_type} (Conf: {type_conf*100:.1f}%, Source: {type_source}) | needsReview={needs_review}")
 
+        if is_vague(cleaned or raw):
+            needs_review = True
+
         # ── Step 4: Build Sentiment & Metadata ─────────────────────────────────
         sentiment = CATEGORY_SENTIMENT.get(category, "neutral")
         meta = SENTIMENT_META[sentiment]
@@ -340,6 +376,7 @@ class HybridClassifier:
             "classificationSource": category_source,
             "categorySource":       category_source,
             "typeSource":           type_source,
+            "modelVersion":         model_version,
             "needsReview":          needs_review,
             "flagged_for_review":   needs_review,
             "sentiment":            sentiment,

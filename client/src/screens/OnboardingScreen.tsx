@@ -113,7 +113,7 @@ export function OnboardingScreen(): React.ReactElement {
     <Field label="Current liquid balance (₹)" icon="wallet-outline" value={currentBalance} onChangeText={(v) => { setCurrentBalance(v.replace(/[^0-9.]/g, '')); setError(''); }} keyboardType="numeric" placeholder="e.g. 120000" hint="Savings and current accounts. Investments come later, under Assets." autoFocus />,
     <>
       <Field label="Target retirement age" icon="hourglass-outline" value={retirementAge} onChangeText={(v) => { setRetirementAge(v.replace(/[^0-9]/g, '')); setError(''); }} keyboardType="number-pad" />
-      <Field label="Retirement corpus goal (₹)" icon="trophy-outline" value={retirementCorpusGoal} onChangeText={(v) => { setRetirementCorpusGoal(v.replace(/[^0-9.]/g, '')); setError(''); }} keyboardType="numeric" placeholder="Optional" hint="Leave blank and FINAURA will estimate one from your spending." />
+      <Field label="Retirement corpus goal (₹)" icon="trophy-outline" value={retirementCorpusGoal} onChangeText={(v) => { setRetirementCorpusGoal(v.replace(/[^0-9.]/g, '')); setError(''); }} keyboardType="numeric" placeholder="Optional" hint={'Leave blank and FINAURA will estimate one. A goal named "Retirement" takes priority.'} />
     </>,
   ];
 

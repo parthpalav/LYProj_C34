@@ -25,7 +25,48 @@ function userFilter(userId) {
   return { $or: conditions };
 }
 
-async function releaseClaim(liabilityId, scheduledFor, processingToken) {
+export function occurrenceKeyFor(liabilityId, scheduledFor) {
+  return `${liabilityId}:${new Date(scheduledFor).toISOString()}`;
+}
+
+// One claim per occurrence, shared by the scheduler and manual "mark as paid".
+// A stale claim (its holder crashed or could not finalize) can be taken over.
+// Returns the processing token, or null when someone else holds the occurrence.
+export async function claimOccurrence(liabilityId, scheduledFor, now = new Date(), threshold = new Date(now.getTime() - STALE_CLAIM_THRESHOLD_MS)) {
+  const processingToken = crypto.randomUUID();
+  const claimed = await Liability.findOneAndUpdate(
+    {
+      id: liabilityId,
+      nextDueDate: scheduledFor,
+      status: 'active',
+      autoDeduct: true,
+      $or: [
+        { processingScheduledFor: null },
+        { processingScheduledFor: { $exists: false } },
+        { processingScheduledFor: scheduledFor, processingStartedAt: { $lte: threshold } }
+      ]
+    },
+    { $set: { processingScheduledFor: scheduledFor, processingStartedAt: now, processingToken } },
+    { new: true }
+  );
+  return claimed ? processingToken : null;
+}
+
+// Advance nextDueDate past this occurrence and drop the claim. Only the token holder can.
+export async function finalizeOccurrence(liability, scheduledFor, processingToken) {
+  const nextDate = calculateNextDueDate(liability, scheduledFor, await getUserTimezone(liability.userId));
+  const finalized = await Liability.findOneAndUpdate(
+    { id: liability.id, nextDueDate: scheduledFor, processingToken },
+    {
+      $set: { nextDueDate: nextDate },
+      $unset: { processingScheduledFor: 1, processingStartedAt: 1, processingToken: 1 }
+    },
+    { new: true }
+  );
+  return finalized ? nextDate : null;
+}
+
+export async function releaseClaim(liabilityId, scheduledFor, processingToken) {
   try {
     await Liability.findOneAndUpdate(
       {
@@ -51,8 +92,7 @@ export async function processSingleLiability(liability, now = new Date(), staleT
   if (!scheduledFor) return;
 
   const threshold = staleThreshold || new Date(now.getTime() - STALE_CLAIM_THRESHOLD_MS);
-  const processingToken = crypto.randomUUID();
-  const occurrenceKey = `${liability.id}:${new Date(scheduledFor).toISOString()}`;
+  const occurrenceKey = occurrenceKeyFor(liability.id, scheduledFor);
 
   // Step 1: Verify User exists BEFORE acquiring claim or creating transaction
   const user = await User.findOne(userFilter(liability.userId));
@@ -61,33 +101,9 @@ export async function processSingleLiability(liability, now = new Date(), staleT
     return;
   }
 
-  // Step 2: Atomic Occurrence Claim
-  // Match either fresh claim (processingScheduledFor null/absent)
-  // OR stale claim where processingStartedAt <= staleThreshold AND processingScheduledFor == scheduledFor
-  const claimed = await Liability.findOneAndUpdate(
-    {
-      id: liability.id,
-      nextDueDate: scheduledFor,
-      status: 'active',
-      autoDeduct: true,
-      $or: [
-        { processingScheduledFor: null },
-        { processingScheduledFor: { $exists: false } },
-        {
-          processingScheduledFor: scheduledFor,
-          processingStartedAt: { $lte: threshold }
-        }
-      ]
-    },
-    {
-      $set: {
-        processingScheduledFor: scheduledFor,
-        processingStartedAt: now,
-        processingToken: processingToken
-      }
-    },
-    { new: true }
-  );
+  // Step 2: Atomic Occurrence Claim (fresh, or stale and for this same occurrence)
+  const processingToken = await claimOccurrence(liability.id, scheduledFor, now, threshold);
+  const claimed = Boolean(processingToken);
 
   if (!claimed) {
     // Another worker actively claimed or processed this occurrence
@@ -144,15 +160,18 @@ export async function processSingleLiability(liability, now = new Date(), staleT
       }
     }
 
-    // Step 3B: Ensure Balance is debited atomically with occurrence marker on User document
+    // Step 3B: Ensure Balance is debited atomically with occurrence marker on User document.
+    // A transaction the scheduler did not create is a manual payment that already
+    // charged its own source (bank or card), so it only gets the marker.
     if (!hasMarker) {
+      const paidManually = tx.classificationSource !== 'liability';
       const userUpdate = await User.findOneAndUpdate(
         {
           ...userFilter(liability.userId),
           processedLiabilityOccurrences: { $ne: occurrenceKey }
         },
         {
-          $inc: { currentBalance: -liability.amount },
+          ...(paidManually ? {} : { $inc: { currentBalance: -liability.amount } }),
           $push: {
             processedLiabilityOccurrences: {
               $each: [occurrenceKey],
@@ -180,25 +199,8 @@ export async function processSingleLiability(liability, now = new Date(), staleT
     // Step 4: Finalize the Liability (Advance nextDueDate and clear processing state)
     // Only workers holding the current processingToken may finalize!
     // Derive nextDate from scheduledFor (the occurrence being processed) to preserve recurrence cadence
-    const nextDate = calculateNextDueDate(liability, scheduledFor, await getUserTimezone(liability.userId));
-    const finalized = await Liability.findOneAndUpdate(
-      {
-        id: liability.id,
-        nextDueDate: scheduledFor,
-        processingToken: processingToken
-      },
-      {
-        $set: {
-          nextDueDate: nextDate
-        },
-        $unset: {
-          processingScheduledFor: 1,
-          processingStartedAt: 1,
-          processingToken: 1
-        }
-      },
-      { new: true }
-    );
+    const nextDate = await finalizeOccurrence(liability, scheduledFor, processingToken);
+    const finalized = Boolean(nextDate);
 
     if (finalized) {
       logger.info(`Auto-deducted liability ${liability.id} (${liability.name}): ₹${liability.amount} processed, next due date advanced to ${nextDate}`);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
 import { useAuth } from '../../hooks/useAuth';
@@ -12,17 +12,13 @@ interface AdjustBalanceModalProps {
   onUpdated: (message: string) => void;
 }
 
-/** Credit or debit the bank balance directly (mobile "Adjust Bank Balance"). */
+/** Credit or debit the bank balance directly (mobile "Adjust Bank Balance"). The parent remounts it per opening, so the form starts clean. */
 export const AdjustBalanceModal: React.FC<AdjustBalanceModalProps> = ({ isOpen, onClose, currentBalance, onUpdated }) => {
   const { user, setUser } = useAuth();
   const [operation, setOperation] = useState<'credit' | 'debit'>('credit');
   const [amount, setAmount] = useState('');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
-
-  useEffect(() => {
-    if (isOpen) { setOperation('credit'); setAmount(''); setError(''); }
-  }, [isOpen]);
 
   const parsed = parseFloat(amount) || 0;
   const projected = operation === 'credit' ? currentBalance + parsed : currentBalance - parsed;

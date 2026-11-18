@@ -78,6 +78,53 @@ export function calculateCurrentMonthSavingsRate(
   return Math.max(0, Math.min(100, Math.round(rawRate)));
 }
 
+export interface CurrentMonthSummary {
+  /** null when the income request failed */
+  currentMonthIncome: number | null;
+  /** null when the transactions request failed */
+  currentMonthSpending: number | null;
+  /** null when either request failed */
+  currentMonthNetFlow: number | null;
+  /** null when either request failed, or when there is no income this month */
+  savingsRate: number | null;
+}
+
+/**
+ * This month's income, spending, net flow and savings rate. Pass null for a list
+ * whose request failed: anything derived from it is reported unavailable (null)
+ * instead of being computed from an empty list.
+ */
+export function summarizeCurrentMonth(
+  transactions: Transaction[] | null,
+  incomes: IncomeRecord[] | null,
+  now: Date = new Date()
+): CurrentMonthSummary {
+  const start = zdate(zparts(now).year, zparts(now).month, 1, 0, 0, 0, 0);
+  const end = zdate(zparts(now).year, zparts(now).month + 1, 0, 23, 59, 59, 999);
+
+  const currentMonthIncome = incomes === null ? null : incomes
+    .filter((inc) => {
+      const d = inc.timestamp ? new Date(inc.timestamp) : null;
+      return d && !isNaN(d.getTime()) && d >= start && d <= end;
+    })
+    .reduce((sum, inc) => sum + Math.abs(Number(inc.amount) || 0), 0);
+
+  const currentMonthSpending = transactions === null ? null : transactions
+    .filter((tx) => {
+      const d = getTransactionDate(tx);
+      return d >= start && d <= end;
+    })
+    .reduce((sum, tx) => sum + Math.abs(Number(tx.amount) || 0), 0);
+
+  const known = currentMonthIncome !== null && currentMonthSpending !== null;
+  return {
+    currentMonthIncome,
+    currentMonthSpending,
+    currentMonthNetFlow: known ? currentMonthIncome - currentMonthSpending : null,
+    savingsRate: known ? calculateCurrentMonthSavingsRate(currentMonthIncome, currentMonthSpending) : null,
+  };
+}
+
 /**
  * Filters and sorts active liabilities by nearest upcoming due date.
  */

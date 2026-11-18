@@ -74,7 +74,8 @@ export async function refundSource(userId, paymentMethodId, amount) {
 // Tracked purchases on a card since `zonedFrom`, with zoned timestamps.
 async function zonedChargesSince(userId, cardId, zonedFrom, tz) {
   const charges = await Transaction.find(
-    { userId: String(userId), paymentMethodId: cardId, timestamp: { $gte: fromZoned(zonedFrom, tz) } },
+    // Statement imports are history only: they never moved `outstanding`, so they must not count as unbilled.
+    { userId: String(userId), paymentMethodId: cardId, timestamp: { $gte: fromZoned(zonedFrom, tz) }, importBatchId: null },
     { amount: 1, timestamp: 1, _id: 0 }
   ).lean();
   return charges.map((c) => ({ amount: c.amount, timestamp: toZoned(c.timestamp, tz) }));

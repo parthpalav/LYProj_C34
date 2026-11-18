@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Navigate, useSearchParams } from 'react-router-dom';
+import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { useTransactions } from '../hooks/useTransactions';
 import { useIncome } from '../hooks/useIncome';
 import { usePaymentMethods } from '../hooks/usePaymentMethods';
 import { transactionPaymentLabel } from '../utils/paymentMethods';
 import type { Transaction, IncomeRecord, TransactionPayload, IncomePayload } from '../types';
 import { formatCurrencyINR, getTransactionDate } from '../utils/formatters';
-import { dateKey } from '../utils/timezone';
-import { getPacingReport } from '../services/api';
+import { dateKey, getAppTimezone } from '../utils/timezone';
+import { getPacingReport, getCaptured, dismissCaptured } from '../services/api';
+import type { CapturedItem, EntryDraft } from '../services/api';
 import { ActivityNudges } from '../components/activity/ActivityNudges';
 
 import { ActivityTabs, type ActivityTabKey } from '../components/activity/ActivityTabs';
@@ -26,11 +27,12 @@ import { Toast } from '../components/ui/Toast';
 import { Button } from '../components/ui/Button';
 import { SkeletonCard } from '../components/ui/SkeletonCard';
 import { SectionError } from '../components/dashboard/SectionError';
-import { Plus } from 'lucide-react';
+import { Plus, FileUp } from 'lucide-react';
 import { celebrate } from '../utils/celebrate';
 
 export const ActivityPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   // Tab State preserved in URL (?tab=transactions | income)
   const tabParam = searchParams.get('tab');
@@ -73,6 +75,13 @@ export const ActivityPage: React.FC = () => {
     }
   }, [toast]);
 
+  // Bank SMS sent in by the iOS Shortcut, waiting for a one-tap confirm
+  const [captured, setCaptured] = useState<CapturedItem[]>([]);
+  const loadCaptured = React.useCallback(() => { getCaptured().then(setCaptured).catch(() => setCaptured([])); }, []);
+  useEffect(() => { loadCaptured(); }, [loadCaptured]);
+  const [txDraft, setTxDraft] = useState<(EntryDraft & { capturedId?: string }) | null>(null);
+  const [incDraft, setIncDraft] = useState<(EntryDraft & { capturedId?: string }) | null>(null);
+
   // Transaction modals & actions state
   const [isTxModalOpen, setIsTxModalOpen] = useState(searchParams.get('entry') === 'new');
   // The top-bar palette can ask for a new entry while this page is already open.
@@ -81,6 +90,7 @@ export const ActivityPage: React.FC = () => {
   }, [searchParams]);
   const closeTransaction = () => {
     setIsTxModalOpen(false);
+    setTxDraft(null);
     if (searchParams.has('entry')) {
       setSearchParams((previous) => { const next = new URLSearchParams(previous); next.delete('entry'); return next; }, { replace: true });
     }
@@ -102,7 +112,36 @@ export const ActivityPage: React.FC = () => {
 
   const handleOpenAddTx = () => {
     setEditingTx(null);
+    setTxDraft(null);
     setIsTxModalOpen(true);
+  };
+
+  const openCaptured = (item: CapturedItem) => {
+    const draft = { ...item, capturedId: item.id };
+    if (item.direction === 'credit') {
+      setEditingInc(null);
+      setIncDraft(draft);
+      setIsIncModalOpen(true);
+      setSearchParams({ tab: 'income' }); // the income form lives on the Income tab
+    } else {
+      setEditingTx(null);
+      setTxDraft(draft);
+      setIsTxModalOpen(true);
+    }
+  };
+
+  const handleDismissCaptured = async (item: CapturedItem) => {
+    setCaptured((list) => list.filter((c) => c.id !== item.id));
+    try { await dismissCaptured(item.id); } catch { loadCaptured(); }
+  };
+
+  // A pasted SMS was money received: move it to the income form.
+  const switchToIncome = (draft: EntryDraft) => {
+    closeTransaction();
+    setEditingInc(null);
+    setIncDraft(draft);
+    setIsIncModalOpen(true);
+    if (activeTab !== 'income') setSearchParams({ tab: 'income' });
   };
 
   const handleOpenEditTx = (tx: Transaction) => {
@@ -118,6 +157,7 @@ export const ActivityPage: React.FC = () => {
     } else {
       await txState.add(payload);
       payState.refetch();
+      if (payload.capturedId) loadCaptured();
       if (payload.type === 'Investment') {
         celebrate({ kind: 'fireworks', title: `${formatCurrencyINR(payload.amount)} invested`, subtitle: 'Your future self says thanks. Investments this month just went up.' });
       } else {
@@ -158,6 +198,7 @@ export const ActivityPage: React.FC = () => {
 
   const handleOpenAddInc = () => {
     setEditingInc(null);
+    setIncDraft(null);
     setIsIncModalOpen(true);
   };
 
@@ -172,6 +213,7 @@ export const ActivityPage: React.FC = () => {
       showToast('Income entry updated successfully.');
     } else {
       await incState.add(payload);
+      if (payload.capturedId) loadCaptured();
       const src = payload.source || 'salary';
       celebrate({ kind: 'coins', title: `${formatCurrencyINR(payload.amount)} income added`, subtitle: `Logged as ${src.charAt(0).toUpperCase()}${src.slice(1)}. Balance credited.` });
     }
@@ -222,6 +264,9 @@ export const ActivityPage: React.FC = () => {
         </div>
 
         <div className="overview-header-right">
+          <Button type="button" variant="outline" onClick={() => navigate('/app/import')} leftIcon={<FileUp size={16} />}>
+            Import statement
+          </Button>
           {activeTab === 'transactions' && (
             <Button
               type="button"
@@ -268,6 +313,28 @@ export const ActivityPage: React.FC = () => {
             <SkeletonCard height={280} />
           ) : (
             <>
+              {captured.length > 0 && (
+                <div className="parity-nudge" role="region" aria-label="Captured from bank SMS">
+                  <div style={{ flex: '1 1 100%' }}>
+                    <strong>{captured.length} captured from bank SMS</strong>
+                    <span>Check and save each one. Nothing is recorded until you do.</span>
+                    <div className="captured-list">
+                      {captured.map((c) => (
+                        <div key={c.id} className="captured-item">
+                          <div>
+                            <strong>{c.direction === 'credit' ? '+' : ''}{formatCurrencyINR(c.amount)}</strong>{' '}
+                            <span>{c.description} · {new Date(c.date).toLocaleDateString('en-IN', { timeZone: getAppTimezone(), day: 'numeric', month: 'short' })}</span>
+                          </div>
+                          <div className="parity-row">
+                            <Button size="sm" onClick={() => openCaptured(c)}>Review & save</Button>
+                            <Button size="sm" variant="ghost" onClick={() => handleDismissCaptured(c)}>Dismiss</Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
               <ActivityNudges transactions={txState.transactions} notify={showToast} />
 
               {/* Filter Toolbar */}
@@ -327,6 +394,8 @@ export const ActivityPage: React.FC = () => {
             onSubmit={handleSaveTx}
             initialTransaction={editingTx}
             paymentMethods={payState.methods}
+            draft={txDraft}
+            onIncomeDraft={switchToIncome}
           />
 
           {/* Delete Transaction Confirmation Dialog */}
@@ -390,9 +459,10 @@ export const ActivityPage: React.FC = () => {
           {/* Add / Edit Income Modal */}
           <IncomeModal
             isOpen={isIncModalOpen}
-            onClose={() => setIsIncModalOpen(false)}
+            onClose={() => { setIsIncModalOpen(false); setIncDraft(null); }}
             onSubmit={handleSaveInc}
             initialIncome={editingInc}
+            draft={incDraft}
           />
 
           {/* Delete Income Confirmation Dialog */}

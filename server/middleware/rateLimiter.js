@@ -80,3 +80,21 @@ export const computeRateLimiter = createRateLimiter({
   envOverrideKey: 'RATE_LIMIT_MAX_COMPUTE',
   message: 'Too many compute-intensive simulation requests from this IP, please try again after 15 minutes.'
 });
+
+// 6. Statement import / receipt scan (Gemini + file parsing): 20 requests per 15 min
+export const importRateLimiter = createRateLimiter({
+  windowMs: 15 * 60 * 1000,
+  defaultMax: 20,
+  testMax: 1000,
+  envOverrideKey: 'RATE_LIMIT_MAX_IMPORT',
+  message: 'Too many import or scan requests, please try again after 15 minutes.'
+});
+
+// 7. iOS Shortcut SMS ingest (token auth, no JWT): 60 per hour
+export const smsIngestRateLimiter = createRateLimiter({
+  windowMs: 60 * 60 * 1000,
+  defaultMax: 60,
+  testMax: 1000,
+  envOverrideKey: 'RATE_LIMIT_MAX_SMS_INGEST',
+  message: 'Too many SMS captures, please try again later.'
+});

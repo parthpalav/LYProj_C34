@@ -4,7 +4,8 @@ import { Ionicons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { popIn } from '../motion';
-import { addTransaction, classifyExpense, ClassifyResult, getLiabilities, getPacing, getPaymentMethods } from '../services/api';
+import * as ImagePicker from 'expo-image-picker';
+import { addIncome, addTransaction, apiErrorCode, classifyExpense, ClassifyResult, EntryDraft, getLiabilities, getPacing, getPaymentMethods, parseBankSms, scanReceipt } from '../services/api';
 import { celebrate, toast } from '../store/useCelebrationStore';
 import { formatCurrency } from '../utils/format';
 import { useStore } from '../store/useStore';
@@ -45,9 +46,14 @@ const sameDay = (a: Date, b: Date) => startOfDay(a).getTime() === startOfDay(b).
 
 interface Props {
   onClose?: () => void;
+  /** Pre-fill, e.g. a captured bank SMS */
+  draft?: EntryDraft & { capturedId?: string };
 }
 
-export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
+const incomeSourceFor = (text: string) =>
+  /salary|payroll/i.test(text) ? 'salary' : /refund|reversal|cashback/i.test(text) ? 'reimbursement' : 'other';
+
+export function TransactionEntryScreen({ onClose, draft }: Props): React.ReactElement {
   const { c, isDark } = useTheme();
   const styles = useStyles();
   const [amount, setAmount] = useState('');
@@ -57,7 +63,13 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
   const [selectedType, setSelectedType] = useState<SpendType>('Want');
   const [date, setDate] = useState(new Date());
   // One picker sheet at a time: iOS can't stack modal presentations.
-  const [picker, setPicker] = useState<'category' | 'liability' | 'date' | 'method' | null>(null);
+  const [picker, setPicker] = useState<'category' | 'liability' | 'date' | 'method' | 'sms' | 'receipt' | null>(null);
+  // Quick fill from a bank SMS or a receipt photo
+  const [smsText, setSmsText] = useState('');
+  const [smsError, setSmsError] = useState('');
+  const [reading, setReading] = useState<'sms' | 'receipt' | null>(null);
+  const [incomeDraft, setIncomeDraft] = useState<EntryDraft | null>(null);
+  const [fillNote, setFillNote] = useState(draft ? 'Captured from your bank SMS. Check it, then log.' : '');
   const [formError, setFormError] = useState('');
   const [liabilities, setLiabilities] = useState<Liability[]>([]);
   const [selectedLiability, setSelectedLiability] = useState<Liability | null>(null);
@@ -83,8 +95,9 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
     getPaymentMethods()
       .then((data) => { if (mounted) setMethods(data.filter((m) => m.status === 'active')); })
       .catch(() => {});
-    // Open with the keypad up: amount is always the first thing to type.
-    const focus = setTimeout(() => amountInputRef.current?.focus(), 450);
+    if (draft) applyDraft(draft);
+    // Open with the keypad up: amount is always the first thing to type (unless it came pre-filled).
+    const focus = draft ? undefined : setTimeout(() => amountInputRef.current?.focus(), 450);
     return () => { mounted = false; clearTimeout(focus); };
   }, []);
 
@@ -162,6 +175,71 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
     }, 600);
     return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
   }, [description, amount]);
+
+  function applyDraft(d: EntryDraft) {
+    setAmount(String(d.amount));
+    setDescription(d.description || '');
+    if (d.date) setDate(new Date(d.date));
+    if (d.paymentMethodId) setPaymentMethodId(d.paymentMethodId);
+    // The live classifier labels the new description.
+    userOverrodeCategoryRef.current = false;
+    userOverrodeTypeRef.current = false;
+    setFormError('');
+  }
+
+  const readSms = async () => {
+    if (!smsText.trim()) return;
+    setReading('sms');
+    setSmsError('');
+    setIncomeDraft(null);
+    try {
+      const d = await parseBankSms(smsText);
+      if (d.direction === 'credit') { setIncomeDraft(d); return; }
+      applyDraft(d);
+      setSmsText('');
+      setPicker(null);
+      setFillNote('Filled from your bank SMS. Check it, then log.');
+    } catch (err: any) {
+      setSmsError(apiErrorCode(err) === 'NOT_TRANSACTION'
+        ? 'That SMS is not a completed payment (OTP, reminder or offer).'
+        : err?.response?.data?.error || "Couldn't read that SMS.");
+    } finally {
+      setReading(null);
+    }
+  };
+
+  const saveIncome = async (d: EntryDraft, capturedId?: string) => {
+    try {
+      await addIncome({ amount: d.amount, source: incomeSourceFor(d.description), description: d.description, timestamp: d.date ?? undefined, capturedId });
+      onClose?.();
+      celebrate({ kind: 'coins', title: `${formatCurrency(d.amount)} income added`, subtitle: 'Balance credited.' });
+    } catch (err: any) {
+      setSmsError(err?.response?.data?.error || "Couldn't save the income.");
+    }
+  };
+
+  const readReceipt = async (source: 'camera' | 'library') => {
+    const perm = source === 'camera' ? await ImagePicker.requestCameraPermissionsAsync() : await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!perm.granted) {
+      toast(source === 'camera' ? 'Camera access is off' : 'Photo access is off', { tone: 'warning', subtitle: 'Allow it in Settings to scan receipts.' });
+      return;
+    }
+    const opts: ImagePicker.ImagePickerOptions = { mediaTypes: ['images'], quality: 0.5, base64: true };
+    const res = source === 'camera' ? await ImagePicker.launchCameraAsync(opts) : await ImagePicker.launchImageLibraryAsync(opts);
+    const asset = res.canceled ? null : res.assets?.[0];
+    if (!asset?.base64) return;
+    setPicker(null);
+    setReading('receipt');
+    try {
+      const d = await scanReceipt({ data: asset.base64, mimeType: asset.mimeType === 'image/png' ? 'image/png' : 'image/jpeg' });
+      applyDraft(d);
+      setFillNote('Filled from your receipt. Check it, then log.');
+    } catch (err: any) {
+      setFormError(err?.response?.data?.error || "Couldn't read that receipt.");
+    } finally {
+      setReading(null);
+    }
+  };
 
   const parsedAmount = parseFloat(amount.replace(/[^0-9.]/g, '')) || 0;
   const aiUnsure = !!aiResult?.needsReview && !userOverrodeCategoryRef.current;
@@ -247,6 +325,7 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
         expectedScheduledFor: selectedLiability && selectedLiability.autoDeduct && markAsPaid && selectedLiability.nextDueDate ? selectedLiability.nextDueDate.toString() : undefined,
         timestamp: when.toISOString(),
         paymentMethodId: paymentMethodId || null,
+        capturedId: draft?.capturedId,
       });
       addToStore(newTx);
       onClose?.();
@@ -307,6 +386,13 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
         automaticallyAdjustKeyboardInsets
         showsVerticalScrollIndicator={false}
       >
+        {/* Quick fill */}
+        <View style={styles.quickFill}>
+          <Chip label="Paste bank SMS" icon="chatbox-ellipses-outline" onPress={() => { setSmsError(''); setIncomeDraft(null); setPicker('sms'); }} />
+          <Chip label={reading === 'receipt' ? 'Reading receipt…' : 'Scan receipt'} icon="camera-outline" onPress={() => reading !== 'receipt' && setPicker('receipt')} />
+        </View>
+        {!!fillNote && <Text style={styles.fillNote}>{fillNote}</Text>}
+
         {/* Amount */}
         <Text style={styles.fieldLabel}>Amount</Text>
         <Pressable
@@ -485,6 +571,38 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
         </View>
       </ScrollView>
 
+      {/* Paste bank SMS */}
+      <Sheet visible={picker === 'sms'} onClose={() => setPicker(null)} title="Paste bank SMS">
+        <TextInput
+          style={styles.smsInput}
+          value={smsText}
+          onChangeText={(t) => { setSmsText(t); setSmsError(''); setIncomeDraft(null); }}
+          placeholder="e.g. Sent Rs.250.00 From HDFC Bank A/C *1234 To SWIGGY On 12/11/26"
+          placeholderTextColor={c.textSubtle}
+          keyboardAppearance={isDark ? 'dark' : 'light'}
+          multiline
+          maxLength={1000}
+          autoFocus
+          accessibilityLabel="Bank SMS text"
+        />
+        {!!smsError && <Text style={styles.formError} accessibilityRole="alert">{smsError}</Text>}
+        {incomeDraft ? (
+          <>
+            <Text style={styles.linkSub}>This is money received: {formatCurrency(incomeDraft.amount)} · {incomeDraft.description}</Text>
+            <Button label={`Save ${formatCurrency(incomeDraft.amount)} as income`} onPress={() => saveIncome(incomeDraft)} style={styles.logButton} />
+          </>
+        ) : (
+          <Button label="Read SMS" onPress={readSms} loading={reading === 'sms'} disabled={!smsText.trim()} style={styles.logButton} />
+        )}
+      </Sheet>
+
+      {/* Receipt source */}
+      <Sheet visible={picker === 'receipt'} onClose={() => setPicker(null)} title="Scan a receipt">
+        <Text style={styles.linkSub}>FINAURA reads the total, shop and date. You check them before logging.</Text>
+        <Button label="Take a photo" icon="camera-outline" onPress={() => readReceipt('camera')} style={styles.logButton} />
+        <Button label="Choose from photos" icon="images-outline" variant="secondary" onPress={() => readReceipt('library')} style={styles.sheetGap} />
+      </Sheet>
+
       {/* Category picker */}
       <Sheet visible={picker === 'category'} onClose={() => setPicker(null)} title="Category">
         <ScrollView style={styles.sheetScroll} showsVerticalScrollIndicator={false}>
@@ -579,6 +697,10 @@ export function TransactionEntryScreen({ onClose }: Props): React.ReactElement {
 }
 
 const useStyles = createStyles((c) => ({
+  quickFill: { flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: 6 },
+  fillNote: { ...typeScale.caption, color: c.primary, marginBottom: 8 },
+  smsInput: { minHeight: 110, maxHeight: 200, padding: 12, borderRadius: radius.md, borderWidth: 1, borderColor: c.border, backgroundColor: c.surfaceAlt, color: c.text, fontSize: 15, textAlignVertical: 'top' },
+  sheetGap: { marginTop: 10 },
   safe: {
     flex: 1,
     backgroundColor: c.surface,

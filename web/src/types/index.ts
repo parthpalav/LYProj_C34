@@ -526,6 +526,8 @@ export interface TransactionPayload {
   liabilityId?: string;
   expectedScheduledFor?: string;
   paymentMethodId?: string | null;
+  /** Set when saving a bank SMS capture; the server marks it confirmed. */
+  capturedId?: string;
 }
 
 /** One saved assistant conversation, titled by its first message. */
@@ -608,6 +610,7 @@ export interface IncomePayload {
   source: string;
   description?: string;
   timestamp?: string;
+  capturedId?: string;
 }
 
 export interface IncomeFlowResponse {

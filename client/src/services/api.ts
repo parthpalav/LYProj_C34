@@ -28,6 +28,8 @@ export interface NewTransaction {
   expectedScheduledFor?: string;
   /** null = bank balance, 'cash', or a saved payment method id */
   paymentMethodId?: string | null;
+  /** Set when saving a bank SMS capture; the server marks it confirmed. */
+  capturedId?: string;
 }
 
 export interface NewGoalPayload {
@@ -44,6 +46,7 @@ export interface NewIncomePayload {
   description?: string;
   timestamp?:   string | Date;
   date?:        string;
+  capturedId?:  string;
 }
 
 // ── Base URL ─────────────────────────────────────────────────
@@ -466,6 +469,124 @@ export async function classifyExpense(text: string): Promise<ClassifyResult> {
   const { data } = await api.post('/api/classify', { text });
   return data;
 }
+
+// ── Automated input: statement import, bank SMS, receipt scan ─
+
+export interface StatementRow {
+  rowId: string;
+  date: string;
+  description: string;
+  amount: number;
+  direction: 'debit' | 'credit';
+  balance: number | null;
+  /** 'imported' = already imported; 'possible' = a manual entry with the same amount within a day */
+  duplicate: 'imported' | 'possible' | null;
+  category?: string;
+  type?: 'Need' | 'Want' | 'Investment';
+  confidence?: number;
+  needsReview?: boolean;
+  classificationSource?: string;
+  /** Income source for credits */
+  source?: string;
+  userEdited?: boolean;
+}
+
+export interface StatementPreview {
+  parser: 'csv' | 'gemini' | 'local';
+  fallbackReason?: string;
+  rows: StatementRow[];
+  summary: {
+    count: number; debits: number; credits: number; duplicates: number;
+    openingBalance: number | null; closingBalance: number | null;
+    periodStart: string | null; periodEnd: string | null; last4: string | null;
+  };
+  suggestedPaymentMethodId?: string;
+}
+
+export interface StatementCommitResult {
+  batchId: string;
+  insertedTransactions: number;
+  insertedIncome: number;
+  skipped: number;
+  balanceSetTo?: number;
+}
+
+/** Draft entry read from a bank SMS or a receipt photo. Nothing is saved yet. */
+export interface EntryDraft {
+  amount: number;
+  direction?: 'debit' | 'credit';
+  description: string;
+  merchant?: string | null;
+  date: string | null;
+  paymentMethodId?: string | null;
+  category?: string;
+  type?: 'Need' | 'Want' | 'Investment';
+  confidence?: number;
+}
+
+export interface CapturedItem extends EntryDraft {
+  id: string;
+  direction: 'debit' | 'credit';
+  date: string;
+  createdAt: string;
+}
+
+/** Error code from the import/SMS/receipt endpoints, e.g. PASSWORD_REQUIRED. */
+export function apiErrorCode(err: unknown): string | undefined {
+  return (err as { response?: { data?: { code?: string } } })?.response?.data?.code;
+}
+
+export async function previewStatement(payload: { fileName: string; mimeType: string; data: string; password?: string }): Promise<StatementPreview> {
+  // PDF parsing can wait on Gemini before falling back, so allow longer than the default 10 s.
+  const { data } = await api.post('/api/import/statement/preview', payload, { timeout: 90000 });
+  return data;
+}
+
+export async function commitStatement(payload: { rows: StatementRow[]; paymentMethodId: string | null; setClosingBalance?: boolean; closingBalance?: number | null }): Promise<StatementCommitResult> {
+  const { data } = await api.post('/api/import/statement/commit', payload, { timeout: 60000 });
+  return data;
+}
+
+export async function undoImport(batchId: string): Promise<void> {
+  await api.delete(`/api/import/${batchId}`);
+}
+
+export async function parseBankSms(text: string): Promise<EntryDraft> {
+  const { data } = await api.post('/api/sms/parse', { text }, { timeout: 30000 });
+  return data;
+}
+
+export async function scanReceipt(payload: { data: string; mimeType: string }): Promise<EntryDraft> {
+  const { data } = await api.post('/api/receipt/scan', payload, { timeout: 45000 });
+  return data;
+}
+
+export async function getCaptured(): Promise<CapturedItem[]> {
+  const { data } = await api.get('/api/captured');
+  return Array.isArray(data) ? data : [];
+}
+
+export async function dismissCaptured(id: string): Promise<void> {
+  await api.post(`/api/captured/${id}/dismiss`);
+}
+
+export async function getSmsCaptureStatus(): Promise<{ enabled: boolean; createdAt: string | null }> {
+  const { data } = await api.get('/api/sms/token');
+  return data;
+}
+
+/** New personal token for the iOS Shortcut. Shown once; replaces the old one. */
+export async function createSmsCaptureToken(): Promise<{ token: string; createdAt: string }> {
+  const { data } = await api.post('/api/sms/token');
+  return data;
+}
+
+export async function revokeSmsCaptureToken(): Promise<void> {
+  await api.delete('/api/sms/token');
+}
+
+/** Full URL of the SMS capture endpoint, for the iOS Shortcut. */
+export const SMS_INGEST_URL = `${BASE_URL}/api/sms/ingest`;
 
 // ── Payment methods (UPI, debit and credit cards) ────────────
 

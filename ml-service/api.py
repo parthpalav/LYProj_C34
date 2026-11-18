@@ -344,6 +344,29 @@ def classify_expense():
     return jsonify(result)
 
 
+_MAX_BATCH_TEXTS = 500
+
+
+@app.post('/classify-batch')
+def classify_expense_batch():
+    """
+    POST /classify-batch
+    Body: { "texts": ["UPI/swiggy/...", "NEFT salary"] }
+    Response: { "results": [<same fields as /classify>, ...] } in input order.
+    Used by statement import so a 300-row statement is one request, not 300.
+    """
+    payload = request.get_json(force=True, silent=True)
+    texts = payload.get('texts') if isinstance(payload, dict) else None
+    if not isinstance(texts, list) or not texts:
+        return jsonify({'error': 'texts must be a non-empty list'}), 400
+    if len(texts) > _MAX_BATCH_TEXTS:
+        return jsonify({'error': f'At most {_MAX_BATCH_TEXTS} texts per request'}), 400
+    if not all(isinstance(t, str) and 0 < len(t.strip()) <= 1000 for t in texts):
+        return jsonify({'error': 'Each text must be a non-empty string of at most 1000 characters'}), 400
+
+    return jsonify({'results': [_hybrid_classifier.classify(t.strip()) for t in texts]})
+
+
 # ─── Association Rules (Apriori) ──────────────────────────────────────────────
 
 _MAX_BASKETS = 5000

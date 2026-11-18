@@ -63,7 +63,10 @@ const transactionSchema = new mongoose.Schema(
     liabilityId: { type: String },
     scheduledFor: { type: Date },
     // null = unspecified (bank balance), 'cash', or a PaymentMethod id
-    paymentMethodId: { type: String, default: null }
+    paymentMethodId: { type: String, default: null },
+    // Set only on rows created by a bank statement import (history only, never touched balances)
+    importBatchId: { type: String, default: null },
+    importHash: { type: String, default: null }
   },
   { timestamps: true, versionKey: false }
 );
@@ -91,6 +94,13 @@ transactionSchema.index({ userId: 1, timestamp: -1 });
 
 // Supports credit card statement queries (purchases on a card since a date)
 transactionSchema.index({ userId: 1, paymentMethodId: 1, timestamp: -1 });
+
+// One row per statement line per user, so re-importing the same statement adds nothing
+transactionSchema.index(
+  { userId: 1, importHash: 1 },
+  { unique: true, partialFilterExpression: { importHash: { $type: 'string' } } }
+);
+transactionSchema.index({ userId: 1, importBatchId: 1 }, { partialFilterExpression: { importBatchId: { $type: 'string' } } });
 
 // Export schema constants for use in controllers/validators
 export { CANONICAL_V3_CATEGORIES, VALID_CATEGORIES, VALID_TYPES };

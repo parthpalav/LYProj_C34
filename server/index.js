@@ -52,6 +52,8 @@ app.use(cors({
 // express.json skips it.
 // 4.5MB comfortably accommodates 4,000,000 char base64 avatars + JSON structure.
 app.put('/api/user/profile', express.json({ limit: '4.5mb' }));
+// Statement files and receipt photos arrive as base64 (6 MB file ≈ 8 MB encoded).
+app.post(['/api/import/statement/preview', '/api/receipt/scan'], express.json({ limit: '8.5mb' }));
 
 // Global JSON parser for all standard financial API payloads (1MB maximum)
 app.use(express.json({ limit: '1mb' }));

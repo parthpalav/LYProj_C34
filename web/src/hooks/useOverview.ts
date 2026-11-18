@@ -10,7 +10,7 @@ import {
 } from '../services/api';
 import {
   buildCashFlowHistory,
-  calculateCurrentMonthSavingsRate,
+  summarizeCurrentMonth,
 } from '../services/dashboard';
 import type {
   DashboardData,
@@ -23,8 +23,6 @@ import type {
   PredictabilitySnapshot,
   CashFlowMonth,
 } from '../types';
-import { getTransactionDate } from '../utils/formatters';
-import { zdate, zparts } from '../utils/timezone';
 
 export interface OverviewState {
   dashboard: DashboardData | null;
@@ -37,9 +35,13 @@ export interface OverviewState {
   incomes: IncomeRecord[];
   predictability: PredictabilitySnapshot | null;
   cashFlowHistory: CashFlowMonth[];
-  currentMonthIncome: number;
-  currentMonthSpending: number;
-  currentMonthNetFlow: number;
+  /** null = the income request failed */
+  currentMonthIncome: number | null;
+  /** null = the transactions request failed */
+  currentMonthSpending: number | null;
+  /** null = income or transactions failed */
+  currentMonthNetFlow: number | null;
+  /** null = income or transactions failed, or no income this month */
   savingsRate: number | null;
 }
 
@@ -173,29 +175,11 @@ export function useOverview() {
     // Cash Flow 6-month history
     const cashFlowHistory = buildCashFlowHistory(txData, incomeData, 6);
 
-    // Current month income & expenses
-    const now = new Date();
-    const startOfCurrentMonth = zdate(zparts(now).year, zparts(now).month, 1, 0, 0, 0, 0);
-    const endOfCurrentMonth = zdate(zparts(now).year, zparts(now).month + 1, 0, 23, 59, 59, 999);
-
-    const currentMonthIncome = incomeData
-      .filter((inc) => {
-        const d = inc.timestamp ? new Date(inc.timestamp) : null;
-        return d && !isNaN(d.getTime()) && d >= startOfCurrentMonth && d <= endOfCurrentMonth;
-      })
-      .reduce((sum, inc) => sum + Math.abs(Number(inc.amount) || 0), 0);
-
-    const currentMonthSpending = txData
-      .filter((tx) => {
-        const d = getTransactionDate(tx);
-        return d >= startOfCurrentMonth && d <= endOfCurrentMonth;
-      })
-      .reduce((sum, tx) => sum + Math.abs(Number(tx.amount) || 0), 0);
-
-    const currentMonthNetFlow = currentMonthIncome - currentMonthSpending;
-
-    // Current month savings rate
-    const savingsRate = calculateCurrentMonthSavingsRate(currentMonthIncome, currentMonthSpending);
+    // Current month figures. A failed request makes everything derived from it unavailable.
+    const { currentMonthIncome, currentMonthSpending, currentMonthNetFlow, savingsRate } = summarizeCurrentMonth(
+      errors.transactions ? null : txData,
+      errors.income ? null : incomeData,
+    );
 
     setData({
       dashboard: dashboardData,

@@ -86,6 +86,7 @@ export const OverviewPage: React.FC = () => {
 
   // Smooth numeric counter animation on initial successful data load
   const animBalance = useAnimatedNumber(isLoading ? null : currentBalance);
+  const monthFiguresFailed = currentMonthIncome === null || currentMonthSpending === null;
   const animNetFlow = useAnimatedNumber(isLoading ? null : currentMonthNetFlow);
   const animFmi = useAnimatedNumber(isLoading || fmiScore === null ? null : fmiScore);
   const animSavings = useAnimatedNumber(isLoading || savingsRate === null ? null : savingsRate);
@@ -241,15 +242,15 @@ export const OverviewPage: React.FC = () => {
               icon={Activity}
             />
 
-            {/* Card 3: Monthly Net Flow */}
+            {/* Card 3: Monthly Net Flow (unavailable, not ₹0, when a list failed to load) */}
             <MetricCard
               label="Monthly Net Flow"
-              value={formatCurrencyINR(animNetFlow ?? currentMonthNetFlow, { showSign: true })}
-              trend={{
+              value={currentMonthNetFlow === null ? 'Unavailable' : formatCurrencyINR(animNetFlow ?? currentMonthNetFlow, { showSign: true })}
+              trend={currentMonthNetFlow === null ? undefined : {
                 text: currentMonthNetFlow >= 0 ? 'Surplus' : 'Deficit',
                 positive: currentMonthNetFlow >= 0,
               }}
-              subtext={`Inflow: ${formatCurrencyINR(currentMonthIncome)} · Outflow: ${formatCurrencyINR(currentMonthSpending)}`}
+              subtext={`Inflow: ${currentMonthIncome === null ? 'couldn’t load' : formatCurrencyINR(currentMonthIncome)} · Outflow: ${currentMonthSpending === null ? 'couldn’t load' : formatCurrencyINR(currentMonthSpending)}`}
               icon={TrendingUp}
             />
 
@@ -257,14 +258,18 @@ export const OverviewPage: React.FC = () => {
             <MetricCard
               label="Savings Rate"
               value={
-                savingsRate !== null
-                  ? `${animSavings ?? savingsRate}%`
-                  : 'Not enough data yet'
+                monthFiguresFailed
+                  ? 'Unavailable'
+                  : savingsRate !== null
+                    ? `${animSavings ?? savingsRate}%`
+                    : 'Not enough data yet'
               }
               subtext={
-                savingsRate !== null
-                  ? 'of current month income retained'
-                  : 'Record income to calculate rate'
+                monthFiguresFailed
+                  ? `Couldn’t load your ${[currentMonthIncome === null && 'income', currentMonthSpending === null && 'expenses'].filter(Boolean).join(' and ')}. Refresh to try again.`
+                  : savingsRate !== null
+                    ? 'of current month income retained'
+                    : 'Record income to calculate rate'
               }
               icon={Percent}
             />
@@ -322,8 +327,8 @@ export const OverviewPage: React.FC = () => {
         >
           {isLoading ? (
             <SkeletonCard height={280} />
-          ) : sectionErrors.transactions && sectionErrors.income ? (
-            <SectionError message="Cash flow history is temporarily unavailable." onRetry={refetch} />
+          ) : sectionErrors.transactions || sectionErrors.income ? (
+            <SectionError message={`Cash flow history is temporarily unavailable: ${[sectionErrors.income && 'income', sectionErrors.transactions && 'expenses'].filter(Boolean).join(' and ')} couldn’t load.`} onRetry={refetch} />
           ) : (
             <CashFlowChart data={cashFlowHistory} />
           )}

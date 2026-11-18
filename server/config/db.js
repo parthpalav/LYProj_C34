@@ -1,6 +1,4 @@
 import mongoose from 'mongoose';
-import { seedDatabase } from '../utils/seedDatabase.js';
-import User from '../models/User.js';
 import Transaction from '../models/Transaction.js';
 import { config } from './env.js';
 
@@ -15,14 +13,8 @@ async function connectDB() {
       console.warn('Index sync warning:', err.message);
     });
   }
-  
-  // Conditional seeding: only seed if database is empty
-  const userCount = await User.countDocuments();
-  if (userCount === 0) {
-    await seedDatabase();
-  } else {
-    console.log('✅ Database already seeded. Skipping seed operation.');
-  }
+  // Demo seeding is explicit (`npm run seed`). An empty users collection is not
+  // a safe signal: a partial restore would still hold transactions worth keeping.
 }
 
 export { connectDB };

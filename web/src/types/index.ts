@@ -167,6 +167,8 @@ export interface Asset {
   liquidity: AssetLiquidity;
   notes?: string;
   /** SIP amount, or the installment of a Recurring Deposit. */
+  sipFirstDue?: string | null;
+  sipPayee?: string | null;
   monthlyContribution?: number | null;
   /** FD deposit amount. */
   principal?: number | null;
@@ -257,8 +259,14 @@ export interface DashboardData {
   commitments?: MonthlyCommitments;
 }
 
-/** This month's auto-deduct liabilities against the current balance (GET /api/dashboard). Dates are YYYY-MM-DD in the user's timezone. */
+export interface SipSchedule {
+  items: Array<{ id: string; name: string; amount: number; dueDate: string; status: 'Scheduled' | 'Awaiting debit' | 'Recorded' | 'Check matches' }>;
+  remaining: number;
+}
+
+/** Monthly cash forecast, using the user's local calendar. */
 export interface MonthlyCommitments {
+  sipSchedule?: SipSchedule;
   month: string;
   monthEnd: string;
   currentBalance: number;
@@ -267,7 +275,7 @@ export interface MonthlyCommitments {
   remaining: number;
   /** Unpaid dues from earlier months the scheduler will still take; not part of `remaining`. */
   overdue: number;
-  /** Balance minus this month's remaining dues and overdue ones. */
+  /** Balance after pending bills, overdue bills and this month's pending SIPs. */
   freeBalance: number;
   byType: Record<string, { committed: number; remaining: number }>;
   items: Array<{

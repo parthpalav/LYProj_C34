@@ -38,14 +38,16 @@ import { getAppTimezone, zparts } from '../utils/timezone';
 /** Balance card caption: this month's auto-deduct dues, with missed earlier dues named separately. */
 function commitmentsCaption(c?: MonthlyCommitments | null): string {
   const overdue = c?.overdue ?? 0;
-  if (!c || (c.remaining <= 0 && overdue <= 0)) return 'Liquid operating balance across active accounts';
+  const sips = c?.sipSchedule?.remaining ?? 0;
+  if (!c || (c.remaining <= 0 && overdue <= 0 && sips <= 0)) return 'Liquid operating balance across active accounts';
   const dues = [
     c.remaining > 0 ? `${formatCurrencyINR(c.remaining)} due this month` : '',
+    sips > 0 ? `${formatCurrencyINR(sips)} in planned SIPs` : '',
     overdue > 0 ? `${formatCurrencyINR(overdue)} overdue` : '',
   ].filter(Boolean).join(' + ');
   return c.freeBalance < 0
     ? `⚠ ${dues} · ${formatCurrencyINR(-c.freeBalance)} short`
-    : `${dues} set aside for auto-deduct bills · ${formatCurrencyINR(c.freeBalance)} free`;
+    : `${dues} · ${formatCurrencyINR(c.freeBalance)} free`;
 }
 
 export const OverviewPage: React.FC = () => {
@@ -216,7 +218,7 @@ export const OverviewPage: React.FC = () => {
               label="Current Balance"
               value={formatCurrencyINR(animBalance ?? currentBalance)}
               subtext={commitmentsCaption(dashboard?.commitments)}
-              className={dashboard?.commitments && dashboard.commitments.freeBalance < 0 && (dashboard.commitments.remaining > 0 || (dashboard.commitments.overdue ?? 0) > 0) ? 'metric-bills-short' : ''}
+              className={dashboard?.commitments && dashboard.commitments.freeBalance < 0 && (dashboard.commitments.remaining > 0 || (dashboard.commitments.overdue ?? 0) > 0 || (dashboard.commitments.sipSchedule?.remaining ?? 0) > 0) ? 'metric-bills-short' : ''}
               icon={Wallet}
             />
 
@@ -383,7 +385,7 @@ export const OverviewPage: React.FC = () => {
         <section className="overview-full-width overview-section-commitments">
           <SectionCard
             title="Committed this month"
-            subtitle="Auto-deduct liabilities (needs and wants) that will be taken from your balance before month end"
+            subtitle="Scheduled bills and investment contributions through month end"
           >
             <CommittedBalanceCard commitments={dashboard.commitments} />
           </SectionCard>

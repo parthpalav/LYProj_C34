@@ -17,23 +17,25 @@ export function CommitmentsSheet({ visible, onClose, commitments: c, balance }: 
 }) {
   const styles = useStyles();
   const overdue = c.overdue ?? 0;
-  const free = balance - c.remaining - overdue;
+  const sips = c.sipSchedule?.remaining ?? 0;
+  const free = balance - c.remaining - overdue - sips;
   return (
     <Sheet visible={visible} onClose={onClose} title="Committed this month">
       <ScrollView style={{ maxHeight: 460 }}>
         <View style={styles.summary}>
           <View style={styles.stat}>
-            <Text style={styles.muted}>Still to deduct by {day(c.monthEnd)}</Text>
+            <Text style={styles.muted}>Bills due by {day(c.monthEnd)}</Text>
             <Text style={styles.value}>{formatCurrency(c.remaining)}</Text>
           </View>
           <View style={styles.stat}>
-            <Text style={styles.muted}>Free after bills</Text>
+            <Text style={styles.muted}>Free after scheduled outflows</Text>
             <Text style={[styles.value, free < 0 && styles.negative]}>{formatCurrency(free)}</Text>
           </View>
         </View>
+        {sips > 0 && <Text style={styles.muted}>Planned SIPs this month: {formatCurrency(sips)}</Text>}
         {overdue > 0 ? (
           <Text style={[styles.muted, styles.negative]}>
-            Also {formatCurrency(overdue)} overdue from earlier months, set aside in "Free after bills".
+            Also {formatCurrency(overdue)} overdue from earlier months, set aside in "Free after scheduled outflows".
           </Text>
         ) : null}
         <Text style={styles.muted}>

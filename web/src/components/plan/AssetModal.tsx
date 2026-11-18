@@ -42,6 +42,8 @@ export const AssetModal: React.FC<AssetModalProps> = ({
   const [includedInFireCorpus, setIncludedInFireCorpus] = useState(true);
   const [notes, setNotes] = useState('');
   const [monthlyContribution, setMonthlyContribution] = useState<string>('');
+  const [sipFirstDue, setSipFirstDue] = useState('');
+  const [sipPayee, setSipPayee] = useState('');
   const [principal, setPrincipal] = useState<string>('');
   const [startDate, setStartDate] = useState<string>('');
   const [tenureMonths, setTenureMonths] = useState<string>('');
@@ -51,6 +53,8 @@ export const AssetModal: React.FC<AssetModalProps> = ({
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    setSipFirstDue(assetToEdit?.sipFirstDue ?? '');
+    setSipPayee(assetToEdit?.sipPayee ?? '');
     if (assetToEdit) {
       setName(assetToEdit.name || '');
       setAssetType(assetToEdit.assetType || 'Mutual Fund');
@@ -160,6 +164,8 @@ export const AssetModal: React.FC<AssetModalProps> = ({
             }
           : { currentValue: numVal, principal: null, startDate: null, tenureMonths: null }),
         monthlyContribution: sip,
+        sipFirstDue: !isFixed && sip && sip > 0 ? sipFirstDue || null : null,
+        sipPayee: !isFixed && sipFirstDue ? sipPayee.trim() || null : null,
         annualReturnRate: parsedReturnRate,
         liquidity,
         includedInFireCorpus: assetClass === 'NON_INVESTABLE' ? false : includedInFireCorpus,
@@ -383,6 +389,22 @@ export const AssetModal: React.FC<AssetModalProps> = ({
                 onChange={(e) => setMonthlyContribution(e.target.value)}
               />
             </div>
+          </div>
+        )}
+
+        {!isFixed && Number(monthlyContribution) > 0 && (
+          <div className="form-row">
+            <div className="form-group flex-1">
+              <label className="form-label" htmlFor="sip-first-due">First scheduled SIP debit</label>
+              <input id="sip-first-due" className="form-input" type="date" value={sipFirstDue}
+                onChange={(e) => setSipFirstDue(e.target.value)} />
+              <span className="input-hint">Repeats monthly. Clear the date to stop tracking.</span>
+            </div>
+            {sipFirstDue && <div className="form-group flex-1">
+              <label className="form-label" htmlFor="sip-payee">Payee as shown on bank statement</label>
+              <input id="sip-payee" className="form-input" maxLength={120} value={sipPayee}
+                placeholder={name} onChange={(e) => setSipPayee(e.target.value)} />
+            </div>}
           </div>
         )}
 

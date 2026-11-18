@@ -37,6 +37,7 @@ export interface DashboardData {
 
 /** This month's auto-deduct liabilities against the balance (GET /api/dashboard). Dates are YYYY-MM-DD in the user's timezone. */
 export interface MonthlyCommitments {
+  sipSchedule?: { remaining: number };
   month: string;
   monthEnd: string;
   currentBalance: number;
@@ -45,7 +46,7 @@ export interface MonthlyCommitments {
   remaining: number;
   /** Unpaid dues from earlier months the scheduler will still take; not part of `remaining`. */
   overdue: number;
-  /** Balance minus this month's remaining dues and overdue ones. */
+  /** Balance after pending bills, overdue bills and this month's pending SIPs. */
   freeBalance: number;
   byType: Record<string, { committed: number; remaining: number }>;
   items: Array<{

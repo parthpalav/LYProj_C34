@@ -7,20 +7,25 @@ const day = (key: string) => formatDateShort(dateKeyToDate(key));
 
 /** How much of the current balance this month's auto-deduct liabilities will take. */
 export const CommittedBalanceCard: React.FC<{ commitments: MonthlyCommitments }> = ({ commitments: c }) => {
-  if (c.items.length === 0) {
-    return <p className="committed-empty">No auto-deduct liabilities this month. Turn on auto-deduct for a bill to see it here.</p>;
+  const sips = c.sipSchedule?.remaining ?? 0;
+  if (c.items.length === 0 && !sips) {
+    return <p className="committed-empty">No upcoming deductions for this month.</p>;
   }
   const overdue = c.overdue ?? 0;
-  const reserved = c.remaining + overdue;
+  const reserved = c.remaining + overdue + sips;
   const usedPct = c.currentBalance > 0 ? Math.min(100, (reserved / c.currentBalance) * 100) : 100;
 
   return (
     <div className="committed-card">
       <div className="committed-summary">
         <div>
-          <span className="committed-label">Still to be deducted by {day(c.monthEnd)}</span>
+          <span className="committed-label">Bills due by {day(c.monthEnd)}</span>
           <strong className="committed-value">{formatCurrencyINR(c.remaining)}</strong>
         </div>
+        {sips > 0 && <div>
+          <span className="committed-label">Planned SIPs</span>
+          <strong className="committed-value">{formatCurrencyINR(sips)}</strong>
+        </div>}
         {overdue > 0 && (
           <div>
             <span className="committed-label">Overdue from earlier months</span>
@@ -28,11 +33,11 @@ export const CommittedBalanceCard: React.FC<{ commitments: MonthlyCommitments }>
           </div>
         )}
         <div>
-          <span className="committed-label">{overdue > 0 ? 'Free after this month’s and overdue bills' : 'Free to use after bills'}</span>
+          <span className="committed-label">Free after scheduled outflows</span>
           <strong className={`committed-value ${c.freeBalance < 0 ? 'committed-negative' : ''}`}>{formatCurrencyINR(c.freeBalance)}</strong>
         </div>
         <div>
-          <span className="committed-label">Already deducted</span>
+          <span className="committed-label">Bills already deducted</span>
           <strong className="committed-value committed-muted">{formatCurrencyINR(c.paidSoFar)}</strong>
         </div>
       </div>
@@ -43,7 +48,7 @@ export const CommittedBalanceCard: React.FC<{ commitments: MonthlyCommitments }>
         aria-valuenow={Math.round(usedPct)}
         aria-valuemin={0}
         aria-valuemax={100}
-        aria-label={`${Math.round(usedPct)}% of current balance committed to bills`}
+        aria-label={`${Math.round(usedPct)}% of current balance reserved`}
       >
         <div className="committed-bar-fill" style={{ width: `${usedPct}%` }} />
       </div>

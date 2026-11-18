@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { Navigate, useSearchParams } from 'react-router-dom';
 import { RefreshCw, AlertTriangle } from 'lucide-react';
+import { SipSchedulePanel } from '../components/plan/SipSchedulePanel';
 import { PlanTabs, type PlanTabKey } from '../components/plan/PlanTabs';
 
 // Goals Components
@@ -59,6 +60,7 @@ export const PlanPage: React.FC = () => {
   const scenarioLab = useScenarioLab();
 
   // Modals state
+  const [scheduleRefresh, setScheduleRefresh] = useState(0);
   const [goalModalOpen, setGoalModalOpen] = useState(false);
   const [goalToEdit, setGoalToEdit] = useState<Goal | null>(null);
 
@@ -99,6 +101,7 @@ export const PlanPage: React.FC = () => {
   // Global Refresh for current tab
   const handleGlobalRefresh = () => {
     if (activeTab === 'goals') {
+      setScheduleRefresh(n => n + 1);
       void goalsDomain.refresh(true);
     } else if (activeTab === 'fire') {
       void fireDomain.refresh(true);
@@ -142,6 +145,7 @@ export const PlanPage: React.FC = () => {
         {/* 3. GOALS TAB */}
         {activeTab === 'goals' && (
           <div className="plan-tab-pane plan-tab-pane--enter">
+            <SipSchedulePanel refresh={scheduleRefresh} />
             {goalsDomain.loading ? (
               <TabLoadingSkeleton height="380px" />
             ) : goalsDomain.error ? (

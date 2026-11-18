@@ -31,6 +31,8 @@ const assetSchema = new mongoose.Schema(
       type: Boolean,
       default: false
     },
+    sipFirstDue: { type: String, default: null }, // local YYYY-MM-DD; recurs on this day monthly
+    sipPayee: { type: String, trim: true, maxlength: 120, default: null },
     // SIP amount for market assets; installment for a Recurring Deposit.
     monthlyContribution: {
       type: Number,

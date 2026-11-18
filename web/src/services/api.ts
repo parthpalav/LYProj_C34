@@ -8,6 +8,7 @@ import type {
   ResetPasswordPayload,
   User,
   DashboardData,
+  SipSchedule,
   FMIResponse,
   FMIRecord,
   Transaction,
@@ -269,6 +270,11 @@ export async function getTransactions(): Promise<Transaction[]> {
 export async function getLiabilities(): Promise<Liability[]> {
   const { data } = await api.get('/api/liabilities');
   return Array.isArray(data) ? data : data?.data || [];
+}
+
+export async function getSipSchedule(): Promise<SipSchedule> {
+  const { data } = await api.get('/api/assets/sip-schedule');
+  return data.data;
 }
 
 export async function getAssets(): Promise<Asset[]> {

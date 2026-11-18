@@ -1,7 +1,7 @@
 import type { Asset, Liability, PaymentMethod } from '../types';
 
-// Port of web/src/utils/dueAlerts.ts.
-// shortcut: days are counted in the device timezone, not user.timezone; matches the rest of the app's display, revisit if the app goes timezone-aware.
+// Port of web/src/utils/dueAlerts.ts. Days are counted in the account timezone (`tz`),
+// falling back to the device timezone when none is given.
 
 /** Bills show up as alerts this many days before they fall due. */
 export const DUE_WINDOW_DAYS = 7;
@@ -18,11 +18,20 @@ export interface DueAlert {
   autoDeduct?: boolean;
 }
 
-const dayNumber = (d: Date) => Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 86_400_000;
+function dayNumber(d: Date, tz?: string | null): number {
+  if (tz) {
+    try {
+      const parts = new Intl.DateTimeFormat('en-US', { timeZone: tz, year: 'numeric', month: 'numeric', day: 'numeric' }).formatToParts(d);
+      const n = (type: string) => Number(parts.find((p) => p.type === type)?.value);
+      return Date.UTC(n('year'), n('month') - 1, n('day')) / 86_400_000;
+    } catch { /* unknown zone id: use the device day */ }
+  }
+  return Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 86_400_000;
+}
 
-/** Whole calendar days from today to `due`. */
-export function daysUntil(due: string | Date, now: Date = new Date()): number {
-  return dayNumber(new Date(due)) - dayNumber(now);
+/** Whole calendar days from today to `due`, in the account timezone when `tz` is given. */
+export function daysUntil(due: string | Date, now: Date = new Date(), tz?: string | null): number {
+  return dayNumber(new Date(due), tz) - dayNumber(now, tz);
 }
 
 /** Liabilities and credit-card bills due within `windowDays`, overdue first, then soonest. */
@@ -31,12 +40,13 @@ export function buildDueAlerts(
   cards: PaymentMethod[],
   now: Date = new Date(),
   windowDays: number = DUE_WINDOW_DAYS,
+  tz?: string | null,
 ): DueAlert[] {
   const out: DueAlert[] = [];
 
   for (const l of liabilities) {
     if ((l.status && l.status !== 'active') || !l.nextDueDate || isNaN(new Date(l.nextDueDate).getTime())) continue;
-    const d = daysUntil(l.nextDueDate, now);
+    const d = daysUntil(l.nextDueDate, now, tz);
     // A past nextDueDate on an active liability is the scheduler's job to roll forward; don't call it overdue.
     if (d < 0 || d > windowDays) continue;
     out.push({ id: `l-${l.id}`, kind: 'liability', title: l.name, amount: Number(l.amount) || 0, daysUntil: d, dueDate: l.nextDueDate, overdue: false, autoDeduct: l.autoDeduct });
@@ -47,7 +57,7 @@ export function buildDueAlerts(
     const { amountDue, overdueAmount, dueDate } = c.credit;
     const overdue = overdueAmount > 0;
     if (!overdue && !(amountDue > 0)) continue;
-    const d = daysUntil(dueDate, now);
+    const d = daysUntil(dueDate, now, tz);
     if (!overdue && d > windowDays) continue;
     out.push({
       id: `c-${c.id}`, kind: 'credit_card', title: `${c.nickname} bill`,

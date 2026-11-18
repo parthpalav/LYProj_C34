@@ -33,7 +33,7 @@ import {
 } from '../types';
 import { createStyles, Palette, radius, tabular, typeScale, useTheme } from '../theme';
 import { enterUp } from '../motion';
-import { dueDatesWithin } from '../utils/bills';
+import { accountDay, dueDatesWithin } from '../utils/bills';
 import { buildDueAlerts, buildReviewAlerts } from '../utils/dueAlerts';
 import { monthlyEquivalent } from '../utils/format';
 import { buildSeries, rangeFor } from '../utils/spending';
@@ -168,7 +168,7 @@ export function DashboardScreen(): React.ReactElement {
   const [income, setIncome] = useState<IncomeRecord[] | null>(null);
   const [serverAttention, setAttention] = useState(0);
   // Bell badge also counts bills due this week, card bills and monthly asset check-ins (same as the Notifications screen).
-  const attention = serverAttention + buildDueAlerts(liabilities, cards).length + buildReviewAlerts(assets ?? []).length;
+  const attention = serverAttention + buildDueAlerts(liabilities, cards, new Date(), undefined, user?.timezone).length + buildReviewAlerts(assets ?? []).length;
   const loadedRef = useRef(false);
   const lastHeavyRef = useRef(0);
 
@@ -310,9 +310,9 @@ export function DashboardScreen(): React.ReactElement {
   // Bills falling due in the next 30 days, derived from each schedule (not only server nextDueDate).
   const upcomingBills = useMemo(
     () => activeLiabilities
-      .flatMap((l) => dueDatesWithin(l, 30).slice(0, 1).map((date) => ({ l, date })))
+      .flatMap((l) => dueDatesWithin(l, 30, new Date(), user?.timezone).slice(0, 1).map((date) => ({ l, date })))
       .sort((a, b) => a.date.getTime() - b.date.getTime()),
-    [activeLiabilities],
+    [activeLiabilities, user?.timezone],
   );
 
   // Asset summary (simple presentation aggregate only from direct Assets API)
@@ -332,7 +332,7 @@ export function DashboardScreen(): React.ReactElement {
 
   const nearestBill = upcomingBills[0] ?? null;
   const daysUntilLiability = nearestBill
-    ? Math.round((new Date(nearestBill.date).setHours(0, 0, 0, 0) - new Date().setHours(0, 0, 0, 0)) / 86400000)
+    ? Math.round((nearestBill.date.getTime() - accountDay(new Date(), user?.timezone).getTime()) / 86400000)
     : null;
 
   // Predictability metrics

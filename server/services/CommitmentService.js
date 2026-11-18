@@ -1,9 +1,8 @@
 /**
- * Money this month's auto-deduct liabilities will take from the bank balance.
- *
- * Only active liabilities with autoDeduct: true count (Need or Want). Manual bills,
- * card dues and SIP/RD installments are left out: the scheduler never debits them.
+ * Scheduled cash outflows for the current month. Bill totals cover active auto-deduct
+ * liabilities. Planned SIPs reserve cash separately until a matching investment posts.
  */
+import { getSipSchedule } from './SipSchedule.js';
 import Liability from '../models/Liability.js';
 import Transaction from '../models/Transaction.js';
 import User from '../models/User.js';
@@ -107,7 +106,7 @@ export async function getMonthlyCommitments(userId, { now = new Date(), tz, curr
   const zone = tz || await getUserTimezone(uid);
   const liabilities = await Liability.find({ userId: uid, status: 'active', autoDeduct: true }).lean();
   const ids = liabilities.map((l) => l.id);
-  const [paidTxs, user] = await Promise.all([
+  const [paidTxs, user, sipSchedule] = await Promise.all([
     ids.length
       ? Transaction.find({
           userId: uid,
@@ -116,7 +115,9 @@ export async function getMonthlyCommitments(userId, { now = new Date(), tz, curr
         }).select('liabilityId scheduledFor amount').lean()
       : [],
     currentBalance === undefined ? User.findOne({ id: uid }).select('currentBalance').lean() : null,
+    getSipSchedule(uid, now, zone),
   ]);
   const balance = currentBalance === undefined ? user?.currentBalance : currentBalance;
-  return buildCommitments({ liabilities, paidTxs, currentBalance: balance, now, tz: zone });
+  const bills = buildCommitments({ liabilities, paidTxs, currentBalance: balance, now, tz: zone });
+  return { ...bills, sipSchedule, freeBalance: bills.freeBalance - sipSchedule.remaining };
 }

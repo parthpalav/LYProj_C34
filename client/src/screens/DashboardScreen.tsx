@@ -112,7 +112,7 @@ type FeedItem = {
 // HOME
 // ═══════════════════════════════════════════════════════════
 /** Bills still due this month (and any overdue ones, named apart) under the balance; flashes red when they exceed it. */
-function CommittedCaption({ remaining, overdue, free, style }: { remaining: number; overdue: number; free: number; style: object }) {
+function CommittedCaption({ remaining, overdue, sips, free, style }: { remaining: number; sips: number; overdue: number; free: number; style: object }) {
   const { c } = useTheme();
   const reduced = useReducedMotion();
   const pulse = useSharedValue(1);
@@ -124,6 +124,7 @@ function CommittedCaption({ remaining, overdue, free, style }: { remaining: numb
   const dues = [
     remaining > 0 ? `${formatCurrency(remaining)} due` : '',
     overdue > 0 ? `${formatCurrency(overdue)} overdue` : '',
+    sips > 0 ? `${formatCurrency(sips)} in SIPs` : '',
   ].filter(Boolean).join(' + ');
   return (
     <Animated.Text style={[style, short && { color: c.danger, fontWeight: '600' }, flash]} numberOfLines={1}>
@@ -497,14 +498,14 @@ export function DashboardScreen(): React.ReactElement {
                 <Text style={styles.heroValue} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.6}>
                   {formatCurrency(balance)}
                 </Text>
-                {commitments && commitments.items.length > 0 ? (
+                {commitments && (commitments.items.length > 0 || (commitments.sipSchedule?.remaining ?? 0) > 0) ? (
                   <Pressable
                     onPress={() => setShowCommitments(true)}
                     accessibilityRole="button"
-                    accessibilityLabel="Show auto-deduct bills committed this month"
+                    accessibilityLabel="Show scheduled outflows this month"
                     style={styles.committedLine}
                   >
-                    <CommittedCaption remaining={commitments.remaining} overdue={commitments.overdue ?? 0} free={balance - commitments.remaining - (commitments.overdue ?? 0)} style={styles.heroCaption} />
+                    <CommittedCaption remaining={commitments.remaining} overdue={commitments.overdue ?? 0} sips={commitments.sipSchedule?.remaining ?? 0} free={balance - commitments.remaining - (commitments.overdue ?? 0) - (commitments.sipSchedule?.remaining ?? 0)} style={styles.heroCaption} />
                     <Ionicons name="chevron-forward" size={12} color={c.onAuroraMuted} />
                   </Pressable>
                 ) : null}

@@ -9,6 +9,7 @@ export interface ModalProps {
   subtitle?: string;
   children: React.ReactNode;
   maxWidth?: string;
+  explicitCloseOnly?: boolean;
 }
 
 export const Modal: React.FC<ModalProps> = ({
@@ -18,6 +19,7 @@ export const Modal: React.FC<ModalProps> = ({
   subtitle,
   children,
   maxWidth = '540px',
+  explicitCloseOnly = false,
 }) => {
   const modalRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef(onClose);
@@ -36,7 +38,7 @@ export const Modal: React.FC<ModalProps> = ({
       (preferred ?? focusable()[0] ?? modalRef.current)?.focus();
     });
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === 'Escape' && !explicitCloseOnly) {
         e.preventDefault();
         closeRef.current();
       }
@@ -61,7 +63,7 @@ export const Modal: React.FC<ModalProps> = ({
       window.removeEventListener('keydown', handleKeyDown);
       if (opener?.isConnected) opener.focus();
     };
-  }, [isOpen]);
+  }, [isOpen, explicitCloseOnly]);
 
   if (!isOpen) return null;
 
@@ -70,7 +72,7 @@ export const Modal: React.FC<ModalProps> = ({
     <div
       className="modal-backdrop"
       onClick={(e) => {
-        if (e.target === e.currentTarget) {
+        if (!explicitCloseOnly && e.target === e.currentTarget) {
           onClose();
         }
       }}

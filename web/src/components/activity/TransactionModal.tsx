@@ -305,6 +305,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
 
   return (
     <Modal
+      explicitCloseOnly
       isOpen={isOpen}
       onClose={onClose}
       title={isEditing ? 'Edit Transaction' : 'Record an expense'}
@@ -537,14 +538,6 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
 
         {/* Form Actions */}
         <div className="modal-footer">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={onClose}
-            disabled={isLoading}
-          >
-            Cancel
-          </Button>
           <Button
             type="submit"
             variant="primary"

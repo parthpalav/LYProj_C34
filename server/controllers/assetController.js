@@ -1,8 +1,18 @@
+import { getSipSchedule } from '../services/SipSchedule.js';
+import { getUserTimezone } from '../services/userTimezone.js';
 import crypto from 'node:crypto';
 import Asset from '../models/Asset.js';
 import { logger } from '../utils/logger.js';
 import { fixedIncomeSnapshot, isFixedIncomeType } from '../utils/fixedIncome.js';
 import { refreshFixedIncomeValues } from '../services/AssetValuationService.js';
+
+export async function listSipSchedule(req, res, next) {
+  try {
+    const userId = String(req.user.id || req.user._id);
+    const tz = await getUserTimezone(userId);
+    res.json({ success: true, data: await getSipSchedule(userId, new Date(), tz) });
+  } catch (error) { next(error); }
+}
 
 const VALID_ASSET_CLASSES = ['FIRE_INVESTABLE', 'SEMI_LIQUID', 'NON_INVESTABLE'];
 const VALID_LIQUIDITIES = ['liquid', 'locked', 'restricted'];
@@ -19,6 +29,21 @@ function parsePlanFields(body, now = new Date()) {
   const blank = (v) => v === null || v === '';
   const { monthlyContribution, principal, tenureMonths, startDate } = body;
 
+  if (body.sipFirstDue !== undefined) {
+    const date = body.sipFirstDue;
+    if (!blank(date) && (typeof date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(date)
+      || !Number.isFinite(Date.parse(date)) || new Date(date).toISOString().slice(0, 10) !== date)) {
+      return { error: 'Choose a valid first SIP debit date', code: 'INVALID_SIP_DATE' };
+    }
+    fields.sipFirstDue = date || null;
+  }
+  if (body.sipPayee !== undefined) {
+    const payee = body.sipPayee;
+    if (payee !== null && (typeof payee !== 'string' || payee.trim().length > 120)) {
+      return { error: 'Bank statement payee must be at most 120 characters', code: 'INVALID_SIP_PAYEE' };
+    }
+    fields.sipPayee = payee?.trim() || null;
+  }
   if (monthlyContribution !== undefined) {
     const v = blank(monthlyContribution) ? null : Number(monthlyContribution);
     if (v !== null && !(Number.isFinite(v) && v >= 0)) {
@@ -55,6 +80,8 @@ function parsePlanFields(body, now = new Date()) {
  * Returns an error object when an FD/RD was given some deposit details but not enough to value it.
  */
 function applyFixedIncome(asset, now = new Date()) {
+  if (isFixedIncomeType(asset.assetType) || !(asset.monthlyContribution > 0)) asset.sipFirstDue = null;
+  if (!asset.sipFirstDue) asset.sipPayee = null;
   if (!isFixedIncomeType(asset.assetType)) {
     asset.principal = null;
     asset.startDate = null;

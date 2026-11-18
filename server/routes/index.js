@@ -74,6 +74,7 @@ router.post('/payment-methods/:id/pay', authMiddleware, paymentMethodController.
 router.put('/payment-methods/:id/balance', authMiddleware, paymentMethodController.setCreditCardBalance);
 
 // Asset routes
+router.get('/assets/sip-schedule', authMiddleware, assetController.listSipSchedule);
 router.get('/assets', authMiddleware, assetController.getAssets);
 router.post('/assets', authMiddleware, assetController.createAsset);
 router.put('/assets/:id', authMiddleware, assetController.updateAsset);

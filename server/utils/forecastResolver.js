@@ -17,14 +17,24 @@ export function normalizeLiabilityFrequency(amount, frequency) {
   return amt; // defaults to monthly
 }
 
+// A missing rate (null, undefined, blank) is unknown; an explicit 0 is an interest-free loan.
+function knownRate(rate) {
+  if (rate === null || rate === undefined || rate === '') return null;
+  const r = Number(rate);
+  return Number.isFinite(r) && r >= 0 ? r : null;
+}
+
 export function deriveLiabilityRemainingTerm(outstandingBalance, annualInterestRate, monthlyPayment) {
   const P = Number(outstandingBalance);
-  const rAnnual = Number(annualInterestRate);
+  const rAnnual = knownRate(annualInterestRate);
   const PMT = Number(monthlyPayment);
 
-  if (!Number.isFinite(P) || !Number.isFinite(rAnnual) || !Number.isFinite(PMT) || P <= 0 || PMT <= 0 || rAnnual <= 0) {
+  if (rAnnual === null || !Number.isFinite(P) || !Number.isFinite(PMT) || P <= 0 || PMT <= 0) {
     return null;
   }
+
+  // Interest-free: straight-line principal repayment
+  if (rAnnual === 0) return Math.ceil(P / PMT);
 
   const r = rAnnual / 12;
   // If payment doesn't cover interest, it never amortizes
@@ -57,18 +67,20 @@ export function calculateLiabilityOverhang(liabilities, monthsUntilRetirement) {
 
     const P = Number(l.outstandingBalance);
     const PMT = Number(l.monthlyAmount);
-    const rAnnual = Number(l.interestRate);
+    const rAnnual = knownRate(l.interestRate);
 
-    if (!Number.isFinite(P) || !Number.isFinite(rAnnual) || rAnnual <= 0) {
+    if (!Number.isFinite(P) || rAnnual === null) {
       unknownCount++;
       continue;
     }
 
-    const r = rAnnual / 12;
-    // Remaining balance formula after T payments:
-    // Balance(T) = P * (1+r)^T - PMT * [ (1+r)^T - 1 ] / r
     const T = monthsUntilRetirement;
-    const futureBalance = P * Math.pow(1 + r, T) - PMT * (Math.pow(1 + r, T) - 1) / r;
+    const r = rAnnual / 12;
+    // Remaining balance after T payments. Interest-free: P − PMT·T.
+    // Otherwise: Balance(T) = P * (1+r)^T - PMT * [ (1+r)^T - 1 ] / r
+    const futureBalance = r === 0
+      ? P - PMT * T
+      : P * Math.pow(1 + r, T) - PMT * (Math.pow(1 + r, T) - 1) / r;
     
     if (futureBalance > 0) {
       overhang += futureBalance;

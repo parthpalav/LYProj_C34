@@ -125,10 +125,11 @@ export function resolveForecastInputs(data, options = {}) {
     1
   ));
 
+  // Only what has happened by the reference date counts, before any window or fallback.
   const validTxs = transactions.filter(t => {
     if (!t || !t.timestamp) return false;
     const d = new Date(t.timestamp);
-    return !isNaN(d.getTime()) && Number.isFinite(Number(t.amount)) && Number(t.amount) > 0;
+    return !isNaN(d.getTime()) && d <= referenceDate && Number.isFinite(Number(t.amount)) && Number(t.amount) > 0;
   });
 
   const recentTxs = validTxs.filter(t => new Date(t.timestamp) >= spendingCutoff);

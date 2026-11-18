@@ -12,7 +12,9 @@ import mongoose from 'mongoose';
 import User from '../../models/User.js';
 import Income from '../../models/Income.js';
 import Transaction from '../../models/Transaction.js';
+import Liability from '../../models/Liability.js';
 import controllerRouter from '../../controllers/index.js';
+import { processSingleLiability } from '../../services/LiabilityScheduler.js';
 import { connectTestDB, plantSentinel } from '../testDb.js';
 
 const USER = 'u-test-ledger-concurrency';
@@ -38,7 +40,7 @@ function call(method, path, { params = {}, body = {} } = {}) {
 const balance = async () => (await User.findOne({ id: USER }).lean()).currentBalance;
 
 async function reset(startBalance) {
-  await Promise.all([User.deleteMany({ id: USER }), Income.deleteMany(own), Transaction.deleteMany(own)]);
+  await Promise.all([User.deleteMany({ id: USER }), Income.deleteMany(own), Transaction.deleteMany(own), Liability.deleteMany(own)]);
   await User.create({ id: USER, name: 'Ledger Test', email: `${USER}@finaura.test`, currentBalance: startBalance, processedLiabilityOccurrences: [] });
 }
 
@@ -125,6 +127,52 @@ async function run() {
     assert.equal(await balance(), 1000, 'deleted expense must be fully refunded');
   }
   console.log('  ✅ edits racing deletes leave the balance consistent');
+
+  // 6. Manual bill payment, due-date write fails, scheduler recovers: one tx, one debit, one advance.
+  await reset(5000);
+  const due = new Date('2026-11-01T00:00:00+05:30'); // 1st of the month, account timezone (Kolkata)
+  await Liability.create({ id: 'L-ledger-bill', userId: USER, name: 'Electricity', amount: 1000, category: 'Utilities & Bills', type: 'Need', autoDeduct: true, frequency: 'monthly', dayOfMonth: 1, startDate: due, nextDueDate: due, status: 'active' });
+
+  const realUpdate = Liability.findOneAndUpdate;
+  let failAdvance = true;
+  Liability.findOneAndUpdate = function (filter, update, ...rest) {
+    if (failAdvance && update?.$set?.nextDueDate) {
+      failAdvance = false;
+      throw new Error('simulated due-date write failure');
+    }
+    return realUpdate.call(this, filter, update, ...rest);
+  };
+  try {
+    r = await call('post', '/transactions', { body: { amount: 1000, description: 'Electricity', category: 'Utilities & Bills', type: 'Need', liabilityId: 'L-ledger-bill', expectedScheduledFor: due.toISOString() } });
+  } finally {
+    Liability.findOneAndUpdate = realUpdate;
+  }
+  assert.equal(r.status, 201, 'manual payment still succeeds');
+  assert.equal(failAdvance, false, 'the due-date write was attempted and failed');
+  assert.equal(await balance(), 4000);
+  assert.equal((await Liability.findOne({ id: 'L-ledger-bill' }).lean()).nextDueDate.getTime(), due.getTime(), 'date not advanced yet');
+
+  // Scheduler recovery runs after the manual claim has gone stale (11 minutes later).
+  const later = new Date(Date.now() + 11 * 60 * 1000);
+  // Second run uses the same pre-recovery snapshot: a repeat of that occurrence must be a no-op.
+  const snapshot = await Liability.findOne({ id: 'L-ledger-bill' });
+  await processSingleLiability(snapshot, later);
+  await processSingleLiability(snapshot, later);
+  const txs = await Transaction.find({ ...own, liabilityId: 'L-ledger-bill' }).lean();
+  assert.equal(txs.length, 1, 'exactly one transaction for the occurrence');
+  assert.equal(await balance(), 4000, 'exactly one debit for the occurrence');
+  const bill = await Liability.findOne({ id: 'L-ledger-bill' }).lean();
+  assert.equal(bill.nextDueDate.toISOString(), new Date('2026-12-01T00:00:00+05:30').toISOString(), 'advanced exactly one month');
+  assert.equal(bill.processingToken, undefined, 'claim released');
+  console.log('  ✅ manual bill payment stays single-debit through a failed date write and scheduler recovery');
+
+  // 7. A manual payment while the scheduler holds the occurrence is refused, not doubled.
+  await reset(5000);
+  await Liability.create({ id: 'L-ledger-bill', userId: USER, name: 'Electricity', amount: 1000, category: 'Utilities & Bills', type: 'Need', autoDeduct: true, frequency: 'monthly', dayOfMonth: 1, startDate: due, nextDueDate: due, status: 'active', processingScheduledFor: due, processingStartedAt: new Date(), processingToken: 'scheduler-run' });
+  r = await call('post', '/transactions', { body: { amount: 1000, description: 'Electricity', category: 'Utilities & Bills', type: 'Need', liabilityId: 'L-ledger-bill', expectedScheduledFor: due.toISOString() } });
+  assert.equal(r.status, 409);
+  assert.equal(await balance(), 5000);
+  console.log('  ✅ manual payment cannot overlap a scheduler run');
 
   await reset(0);
   await User.deleteMany({ id: USER });

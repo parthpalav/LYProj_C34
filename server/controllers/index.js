@@ -36,10 +36,10 @@ import User        from '../models/User.js';
 
 import Transaction, { VALID_CATEGORIES, VALID_TYPES } from '../models/Transaction.js';
 import Liability   from '../models/Liability.js';
-import { calculateNextDueDate } from './liabilityController.js';
 import { SUPPORTED_TIMEZONES, resolveTimezone, zonedMonthStart, zonedDateKey } from '../utils/userTime.js';
 import { getUserTimezone } from '../services/userTimezone.js';
 import { getMonthlyCommitments } from '../services/CommitmentService.js';
+import { claimOccurrence, finalizeOccurrence, releaseClaim, occurrenceKeyFor, MAX_USER_OCCURRENCE_HISTORY } from '../services/LiabilityScheduler.js';
 import { resolvePaymentMethodId, chargeSource, refundSource, PaymentMethodError } from '../services/PaymentMethodService.js';
 import FMIHistory  from '../models/FMIHistory.js';
 import Alert       from '../models/Alert.js';
@@ -987,8 +987,8 @@ router.post('/transactions', async (req, res, next) => {
 
     // Validate optional liabilityId if supplied by user
     let validatedLiabilityId = null;
+    let linkedLiability = null;
     let scheduledFor = null;
-    let expectedNextDueDate = null;
 
     if (req.body.liabilityId) {
       const liability = await Liability.findOne({
@@ -1000,6 +1000,7 @@ router.post('/transactions', async (req, res, next) => {
         return res.status(400).json({ error: 'Invalid or inactive liability' });
       }
       validatedLiabilityId = liability.id;
+      linkedLiability = liability;
 
       if (req.body.expectedScheduledFor) {
         if (!liability.autoDeduct || !liability.nextDueDate) {
@@ -1014,14 +1015,39 @@ router.post('/transactions', async (req, res, next) => {
         }
 
         scheduledFor = liability.nextDueDate;
-        expectedNextDueDate = liability.nextDueDate;
       }
+    }
+
+    // Paying a scheduled occurrence uses the scheduler's own claim and marker, so
+    // whatever happens after the charge, the scheduler never debits it again.
+    let occurrence = null;
+    const undoOccurrence = async () => {
+      if (!occurrence) return;
+      await User.updateOne({ id: userId }, { $pull: { processedLiabilityOccurrences: occurrence.key } });
+      await releaseClaim(validatedLiabilityId, scheduledFor, occurrence.token);
+    };
+    if (scheduledFor) {
+      const token = await claimOccurrence(validatedLiabilityId, scheduledFor);
+      if (!token) {
+        return res.status(409).json({ error: 'This scheduled payment is being processed. Please refresh and try again.' });
+      }
+      const key = occurrenceKeyFor(validatedLiabilityId, scheduledFor);
+      const marked = await User.findOneAndUpdate(
+        { id: userId, processedLiabilityOccurrences: { $ne: key } },
+        { $push: { processedLiabilityOccurrences: { $each: [key], $slice: -MAX_USER_OCCURRENCE_HISTORY } } }
+      );
+      if (!marked) {
+        await releaseClaim(validatedLiabilityId, scheduledFor, token);
+        return res.status(409).json({ error: 'The scheduled payment was just fulfilled by another transaction. Please try again.' });
+      }
+      occurrence = { token, key };
     }
 
     // Deduct from the bank balance or the credit card only after all validations pass
     try {
       await chargeSource(userId, paymentMethodId, debitAmount);
     } catch (err) {
+      await undoOccurrence();
       if (err instanceof PaymentMethodError) return res.status(err.status).json({ error: err.message });
       throw err;
     }
@@ -1050,36 +1076,27 @@ router.post('/transactions', async (req, res, next) => {
         description:         req.body.description || 'manual input',
         timestamp:           req.body.timestamp ? new Date(req.body.timestamp) : new Date()
       });
-
-      // Advance the liability's nextDueDate if this transaction fulfilled an occurrence
-      if (scheduledFor && expectedNextDueDate) {
-        try {
-          const liability = await Liability.findOne({ id: validatedLiabilityId });
-          if (liability) {
-            const nextDate = calculateNextDueDate(liability, expectedNextDueDate, await getUserTimezone(userId));
-            const updated = await Liability.findOneAndUpdate(
-              { id: validatedLiabilityId, nextDueDate: expectedNextDueDate },
-              { $set: { nextDueDate: nextDate } },
-              { new: true }
-            );
-            if (!updated) {
-              logger.warn(`Liability nextDueDate was modified concurrently for ${validatedLiabilityId}. Idempotent transaction with scheduledFor=${scheduledFor} protects against duplicate auto-deduction.`);
-            }
-          }
-        } catch (schedErr) {
-          logger.error(`Failed to advance nextDueDate for liability ${validatedLiabilityId}:`, schedErr);
-        }
-      }
     } catch (createError) {
-      if (createError.code === 11000 && createError.keyPattern && createError.keyPattern.liabilityId && createError.keyPattern.scheduledFor) {
-         // Revert the charge on concurrency failure
-         await refundSource(userId, paymentMethodId, debitAmount);
-         return res.status(409).json({ error: 'The scheduled payment was just fulfilled by another transaction. Please try again.' });
-      }
-
-      // revert the charge on create failure
+      // revert the charge and give the occurrence back on create failure
       await refundSource(userId, paymentMethodId, debitAmount);
+      await undoOccurrence();
+      if (createError.code === 11000 && createError.keyPattern && createError.keyPattern.liabilityId && createError.keyPattern.scheduledFor) {
+        return res.status(409).json({ error: 'The scheduled payment was just fulfilled by another transaction. Please try again.' });
+      }
       throw createError;
+    }
+
+    // Advance the liability's nextDueDate past the occurrence this payment settled.
+    if (occurrence) {
+      try {
+        if (!await finalizeOccurrence(linkedLiability, scheduledFor, occurrence.token)) {
+          logger.warn(`Liability ${validatedLiabilityId} changed before its due date could advance; the scheduler will finish it.`);
+        }
+      } catch (schedErr) {
+        // The claim and the paid marker stay. Once the claim is stale the scheduler
+        // finds this transaction and the marker, and only advances the date.
+        logger.error(`Failed to advance nextDueDate for liability ${validatedLiabilityId}:`, schedErr);
+      }
     }
 
     if (categorySource === 'manual' || typeSource === 'manual') {

@@ -26,7 +26,7 @@
 
 ## ⚡ At a glance
 
-> **One sentence:** you record a payment (or paste a bank SMS line), FINAURA labels it automatically, scores how healthy your month is, shows what your family is doing together without exposing anyone's private data, and simulates 10,000 possible futures to tell you whether you'll retire on time.
+> **One sentence:** you record a payment, paste a bank SMS or upload a whole bank statement, FINAURA labels every entry automatically, scores how healthy your month is, shows what your family is doing together without exposing anyone's private data, and simulates 10,000 possible futures to tell you whether you'll retire on time.
 
 <table>
 <tr>
@@ -35,6 +35,7 @@
 ### What it is
 - 📱 **Mobile app** (iOS / Android, Expo) and 🖥️ **web app** (React) with the same features
 - 🧠 **ML service** that labels any payment text into **14 categories × Need / Want / Investment**
+- 📥 **Automatic input**: import a bank statement (CSV or PDF), paste a bank SMS, or scan a receipt
 - 📊 **FMI**: one 0–100 score of your financial health, fully explainable
 - 👨‍👩‍👧 **Family mode**: pooled household score, fair per-member split (Shapley values), private by design
 - 🔮 **Future**: goals, FIRE target, Monte Carlo retirement odds, what-if lab
@@ -50,7 +51,7 @@
  Web app ────┘         │
                        ├─► ML service :5001
                        │     classifier · Monte Carlo · Apriori
-                       └─► Gemini (advice only, optional)
+                       └─► Gemini (optional: advice, PDF statements, receipts)
 ```
 ### Run it in three commands
 ```bash
@@ -66,6 +67,7 @@ open http://localhost:5173
 | You do… | FINAURA does… | You see… |
 | :--- | :--- | :--- |
 | Type `swiggy dinner 450` or paste `UPI/DR/…/SWIGGY` | Merchant memory → rules → fine-tuned v7 model → confidence gate | `Food & Dining · Want`, or a "Check AI guesses" card if unsure |
+| Upload last month's bank statement (CSV or PDF) | Reads every row, labels all expenses in one batch, flags duplicates | A full-screen progress ring, then a review table you can edit before saving |
 | Spend through the month | Compares your saving and spending against what your goals need | **FMI 0–100** with three pillar scores and the reasons behind them |
 | Join a family | Pools income and spending, re-scores the household with and without each member | **Household FMI** and "who contributes what" points |
 | Add loans, cards, FDs, SIPs | Auto-deducts bills on their due date, compounds FDs/RDs, tracks card cycles | **Net worth**, upcoming bills, "free to use after bills" |
@@ -79,6 +81,7 @@ open http://localhost:5173
 - [Take the tour](#-take-the-tour)
 - [What FINAURA does](#-what-finaura-does)
   - [Money: activity, payment methods, net worth](#1-money-activity-payment-methods-and-net-worth)
+  - [Automatic input: statements, SMS, receipts](#automatic-input-bank-statements-sms-and-receipts)
   - [Understand: FMI, insights, predictions](#2-understand-fmi-insights-and-predictions)
   - [Family & household](#3-family-and-household)
   - [Future: goals, FIRE, Monte Carlo](#4-future-goals-fire-and-monte-carlo)
@@ -86,6 +89,7 @@ open http://localhost:5173
 - [How it works](#-how-it-works)
   - [System architecture](#system-architecture)
   - [Life of a transaction](#life-of-a-transaction)
+  - [Life of a statement import](#life-of-a-statement-import)
   - [The classifier](#the-classifier)
   - [Financial Maturity Index](#financial-maturity-index-fmi)
   - [Family FMI and the Shapley breakdown](#family-fmi-and-the-shapley-breakdown)
@@ -112,12 +116,12 @@ open http://localhost:5173
 
 <table>
 <tr>
-<td width="72%" align="center"><img src="docs/readme/web-tour.gif" alt="Web app tour: overview, activity, net worth, FMI, family, scenario lab, assistant, dark mode"/><br/><sub><b>Web app</b>: Overview → Activity → Net worth → FMI → Family → Scenario lab → Assistant → Dark mode</sub></td>
-<td width="28%" align="center"><img src="docs/readme/mobile-tour.gif" alt="Mobile app tour" /><br/><sub><b>Mobile app</b>: Home → Activity → New expense → FMI → Outlook → What-if → Family → AI</sub></td>
+<td width="72%" align="center"><img src="docs/readme/web-tour.gif" alt="Web app tour: overview, activity, statement import, net worth, FMI, family, scenario lab, assistant, dark mode"/><br/><sub><b>Web app</b>: Overview → Activity → Import statement (progress → done → review) → Net worth → FMI → Family → Scenario lab → Assistant → Dark mode</sub></td>
+<td width="28%" align="center"><img src="docs/readme/mobile-tour.gif" alt="Mobile app tour" /><br/><sub><b>Mobile app</b>: Home → Activity → Import statement (progress → done → review) → New expense → FMI → Outlook → What-if → Family → AI → Dark mode</sub></td>
 </tr>
 </table>
 
-> All screenshots are captured from the running apps. Web shots use the seeded **Mehta family** demo household (and a test account for Net worth). Mobile shots come from the iOS simulator capture in [`docs/ux-overhaul/after`](docs/ux-overhaul/after).
+> All screenshots are captured from the running apps, signed in as **Rajesh Mehta**, the owner of the seeded **Mehta family** demo household (see [Demo data](#demo-data)). Mobile shots come from the iOS simulator (iPhone 17 Pro). The tour GIFs are rebuilt from these shots with `python3 docs/readme/tools/make_tour.py`.
 
 ---
 
@@ -174,6 +178,46 @@ The web sidebar and the mobile tab bar group everything the same way: **Money**,
 <td><img src="docs/readme/web/networth-liabilities.png" alt="Liabilities tab"/><br/><sub>Liabilities: loans, cards, bills</sub></td>
 <td><img src="docs/readme/web/committed.png" alt="Committed balance card"/><br/><sub>Overview: "free to use after bills" and upcoming obligations</sub></td>
 <td><img src="docs/readme/web/roundups.png" alt="Round-ups"/><br/><sub>Round-ups: spare change into a vault</sub></td>
+</tr>
+</table>
+
+### Automatic input: bank statements, SMS and receipts
+
+Typing every payment is the main reason people stop using a budgeting app, so FINAURA can fill the ledger for you. Everything below is on both the web app and the mobile app.
+
+<table>
+<tr>
+<td width="50%"><img src="docs/readme/web/import-progress.png" alt="Statement import: full-screen progress ring over a blurred app"/><br/><sub>1. Reading and classifying: the app is blurred and a progress ring fills. <b>Cancel</b> sits bottom right</sub></td>
+<td width="50%"><img src="docs/readme/web/import-review.png" alt="Statement import: review table"/><br/><sub>2. Review: every row already has a category and type. Untick, relabel, then import</sub></td>
+</tr>
+</table>
+
+**Bank statement import** (web: Activity › **Import statement**, `/app/import`; mobile: the *Import a bank statement* card on Activity, or Profile › *Import bank statement*)
+
+1. **Choose a file**: a CSV from net banking (best) or a PDF statement, up to 6 MB. Password-protected PDFs work: the app asks for the password (banks usually use your customer ID or date of birth).
+2. **Wait screen**: the whole app blurs and a large progress ring shows the stage (*Reading the statement → Classifying transactions → Checking for duplicates*). When the server answers, the ring completes, turns green with a tick and shows, for example, *21 entries read · 18 expenses classified*. Then the review opens. A **Cancel** button in the bottom-right corner (or `Esc` on the web, the back gesture on Android) stops the wait at any time. Nothing has been saved at this point, so cancelling is always safe.
+3. **Review**: each expense row is labelled by the same classifier as manual entry (merchant memory → rules → v7 model). Rows that look already recorded start unticked. Low-confidence labels are marked *Check label*. Any edit you make is remembered for that merchant.
+4. **Import**: only ticked rows are saved. Imports add **history only**: they never change your bank balance or card dues. The one exception is an opt-in tick box that sets the bank balance to the statement's closing balance.
+5. **Undo** removes the whole import in one step. Re-importing the same statement adds nothing, because each row carries a stable hash.
+
+How each file is read:
+
+| File | Reader | Notes |
+| :--- | :--- | :--- |
+| CSV | FINAURA's own parser | Skips bank header lines; handles separate withdrawal/deposit columns or one amount column with Dr/Cr; Indian dates and amounts (`1,23,456.78`). About 0.1 s |
+| PDF | pdf.js text, then Gemini | Long digit runs (account numbers) are masked before the text leaves the server. Gemini gets 35 s |
+| PDF (fallback) | Offline line parser | Used if Gemini is unavailable, slow or its rows don't add up. Uses the running balance to tell debits from credits. A badge shows which reader ran |
+
+**Bank SMS**: paste an SMS such as `Rs.450 debited from A/c XX1234 to SWIGGY via UPI` into the expense form (*Paste bank SMS*). The amount, merchant, date and card or UPI ID are filled in and the category is classified. On iPhone, an optional Shortcut can forward bank SMS to `POST /api/sms/ingest` with a personal `fsms_` token. Captures wait in a list until you confirm each one.
+
+**Receipt scan**: take a photo of a bill (*Scan receipt*). Gemini reads the total, shop, date and main items, and the classifier labels it. You confirm before anything is saved.
+
+<table>
+<tr>
+<td><img src="docs/readme/mobile/import-progress.png" alt="Mobile import progress"/><br/><sub>Mobile: reading</sub></td>
+<td><img src="docs/readme/mobile/import-done.png" alt="Mobile import done"/><br/><sub>Mobile: done</sub></td>
+<td><img src="docs/readme/mobile/import-review.png" alt="Mobile import review"/><br/><sub>Mobile: review</sub></td>
+<td><img src="docs/readme/web/import-done.png" alt="Web import done"/><br/><sub>Web: ring complete</sub></td>
 </tr>
 </table>
 
@@ -281,7 +325,7 @@ flowchart LR
     subgraph API["Express API :4000"]
         direction TB
         SEC["Helmet · CORS · rate limits<br/>JWT auth middleware"]
-        CTRL["Controllers<br/>transactions · assets · liabilities<br/>family · reports · predictions"]
+        CTRL["Controllers<br/>transactions · assets · liabilities<br/>family · reports · predictions<br/>statement import · SMS · receipts"]
         SVC["Services<br/>FMI · FamilyFMI · Shapley<br/>Commitments · Subscriptions<br/>MerchantMemory · ChatIntentRouter"]
         SCH["⏱️ LiabilityScheduler<br/>hourly: auto-deduct bills,<br/>refresh FD / RD values"]
         SEC --> CTRL --> SVC
@@ -289,14 +333,14 @@ flowchart LR
 
     subgraph ML["ML service :5001 (Flask)"]
         direction TB
-        CLS["/classify<br/>rules → v7 bge-base"]
+        CLS["/classify · /classify-batch<br/>rules → v7 bge-base"]
         MC["/simulate<br/>Monte Carlo GBM + solvers"]
         AR["/association-rules<br/>Apriori"]
         FMIE["/fmi-score · /sentiment"]
     end
 
     DB[("MongoDB :27017<br/>users · transactions · assets<br/>liabilities · families · FMI history")]
-    G["✨ Google Gemini<br/>advice only"]
+    G["✨ Google Gemini<br/>advice · PDF statements · receipts"]
     GD["☁️ Google Drive<br/>model weights on first start"]
 
     M -- "REST + Bearer JWT" --> SEC
@@ -338,6 +382,40 @@ sequenceDiagram
     API-->>App: 201 + label + confidence
     App-->>U: Shows in Activity. FMI, insights and family totals refresh
     Note over App,API: needsReview=true sends it to "Check AI guesses"
+```
+
+### Life of a statement import
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor U as You
+    participant App as Mobile / Web
+    participant API as Express API
+    participant G as Gemini (PDF only)
+    participant ML as ML service
+    participant DB as MongoDB
+
+    U->>App: Choose statement.csv / .pdf
+    App->>App: Blur the app, show progress ring + Cancel
+    App->>API: POST /api/import/statement/preview (file as base64)
+    alt CSV
+        API->>API: Parse rows locally
+    else PDF
+        API->>API: Decrypt (password) and extract text, mask account numbers
+        API->>G: Extract rows (35 s budget)
+        G-->>API: Rows, or failure: offline line parser takes over
+    end
+    API->>DB: Merchant memory lookup + duplicate check (nothing written)
+    API->>ML: POST /classify-batch (all expense rows in one call)
+    ML-->>API: Category · Type · confidence per row
+    API-->>App: Preview rows + summary
+    App->>App: Ring completes (tick), review table opens
+    Note over U,App: Cancel at any point drops the request. Nothing was saved
+    U->>App: Untick / relabel, then Import
+    App->>API: POST /api/import/statement/commit
+    API->>DB: Insert ticked rows with importBatchId + importHash (balances untouched)
+    API-->>App: Inserted / skipped counts, Undo available
 ```
 
 ### The classifier
@@ -403,9 +481,9 @@ The FMI uses only month-to-date data, so it moves day by day. Each snapshot is s
 ```mermaid
 flowchart TB
     R["Rajesh"] & K["Kavita"] & A["Aarav"] --> POOL["Pool income, spending,<br/>saving and requirement"]
-    POOL --> HF["Household FMI = 60"]
+    POOL --> HF["Household FMI = 75"]
     HF --> SH["Shapley: score every subset<br/>{}, {R}, {K}, {A}, {R,K} … {R,K,A}<br/>and average each member's marginal gain"]
-    SH --> OUT["R +9.9 · K +38.1 · A +11.7<br/>adds up to 60"]
+    SH --> OUT["R +30.1 · K +38.7 · A +6.3<br/>adds up to 75"]
     OUT --> RED{"Viewer is owner?"}
     RED -->|yes| ALL["Sees all members' ₹ amounts"]
     RED -->|no| OWN["Sees own ₹ amounts,<br/>others as points and % only"]
@@ -544,6 +622,7 @@ erDiagram
 | <img src="docs/readme/web/overview-dark.png" alt="Overview dark"/><br/><sub>Overview, dark</sub> | <img src="docs/readme/web/activity-income.png" alt="Income"/><br/><sub>Income streams</sub> | <img src="docs/readme/web/networth-breakdown.png" alt="Net worth breakdown"/><br/><sub>Net worth breakdown</sub> |
 | <img src="docs/readme/web/insights-behaviour.png" alt="Behaviour"/><br/><sub>Behaviour patterns</sub> | <img src="docs/readme/web/family.png" alt="Family"/><br/><sub>Family & household</sub> | <img src="docs/readme/web/plan-goals.png" alt="Goals"/><br/><sub>Goals</sub> |
 | <img src="docs/readme/web/plan-fire.png" alt="FIRE"/><br/><sub>FIRE projection</sub> | <img src="docs/readme/web/profile.png" alt="Profile"/><br/><sub>Profile & payment methods</sub> | <img src="docs/readme/web/review.png" alt="Review"/><br/><sub>Check AI guesses</sub> |
+| <img src="docs/readme/web/import-progress.png" alt="Import progress"/><br/><sub>Statement import: reading</sub> | <img src="docs/readme/web/import-done.png" alt="Import done"/><br/><sub>Statement import: done</sub> | <img src="docs/readme/web/import-review.png" alt="Import review"/><br/><sub>Statement import: review</sub> |
 
 </details>
 
@@ -557,6 +636,7 @@ erDiagram
 | <img src="docs/readme/mobile/activity.png" alt="Activity"/><br/><sub>Activity</sub> | <img src="docs/readme/mobile/review.png" alt="Review"/><br/><sub>Check AI guesses</sub> | <img src="docs/readme/mobile/fmi.png" alt="FMI"/><br/><sub>Financial Maturity</sub> | <img src="docs/readme/mobile/fmi-detail.png" alt="FMI detail"/><br/><sub>FMI explained</sub> | <img src="docs/readme/mobile/insights.png" alt="Insights"/><br/><sub>Insights</sub> |
 | <img src="docs/readme/mobile/plan.png" alt="Plan"/><br/><sub>Plan</sub> | <img src="docs/readme/mobile/outlook.png" alt="Outlook"/><br/><sub>Future outlook</sub> | <img src="docs/readme/mobile/whatif.png" alt="What-if"/><br/><sub>What-if lab</sub> | <img src="docs/readme/mobile/goals.png" alt="Goals"/><br/><sub>Goals</sub> | <img src="docs/readme/mobile/income.png" alt="Income"/><br/><sub>Income & 50/30/20</sub> |
 | <img src="docs/readme/mobile/bills.png" alt="Bills"/><br/><sub>Bills</sub> | <img src="docs/readme/mobile/assets.png" alt="Assets"/><br/><sub>Assets</sub> | <img src="docs/readme/mobile/family.png" alt="Family"/><br/><sub>Family</sub> | <img src="docs/readme/mobile/chat.png" alt="AI chat"/><br/><sub>FINAURA AI</sub> | <img src="docs/readme/mobile/notifications.png" alt="Notifications"/><br/><sub>Notifications</sub> |
+| <img src="docs/readme/mobile/import-progress.png" alt="Import progress"/><br/><sub>Import: reading</sub> | <img src="docs/readme/mobile/import-done.png" alt="Import done"/><br/><sub>Import: done</sub> | <img src="docs/readme/mobile/import-review.png" alt="Import review"/><br/><sub>Import: review</sub> | | |
 | <img src="docs/readme/mobile/roundups.png" alt="Round-ups"/><br/><sub>Round-ups</sub> | <img src="docs/readme/mobile/recap.png" alt="Recap"/><br/><sub>Month recap</sub> | <img src="docs/readme/mobile/profile.png" alt="Profile"/><br/><sub>You</sub> | <img src="docs/readme/mobile/home-dark.png" alt="Home dark"/><br/><sub>Home, dark</sub> | <img src="docs/readme/mobile/fmi-dark.png" alt="FMI dark"/><br/><sub>FMI, dark</sub> |
 
 </details>
@@ -595,19 +675,20 @@ LYProj_C34/
 ├── server/                 # 🔌 Express API
 │   ├── controllers/        #   route handlers
 │   ├── services/           #   FMI, FamilyFMI, Commitment, PurchasePrediction, Subscription,
-│   │                       #   MerchantMemory, ChatIntentRouter, LiabilityScheduler, …
+│   │                       #   MerchantMemory, ChatIntentRouter, LiabilityScheduler,
+│   │                       #   StatementImport, SmsParser, SmsCapture, GeminiJson, …
 │   ├── utils/              #   shapley.js, creditCycle.js, fixedIncome.js, financialMath.js, userTime.js
 │   ├── models/             #   Mongoose schemas
 │   └── scripts/            #   seedDemoFamily.js, migrate_indexes.js
 ├── ml-service/             # 🧠 Flask ML service
-│   ├── api.py              #   /classify /simulate /association-rules /fmi-score /sentiment /health
+│   ├── api.py              #   /classify /classify-batch /simulate /association-rules /fmi-score /sentiment /health
 │   ├── classifier/         #   hybrid_pipeline.py, normalize.py, rules.py, training scripts
 │   ├── models/             #   finaura-v7-bge-base-en-v1.5 (downloaded), active_model.json
 │   ├── monte_carlo.py      #   GBM engine · contribution_solver.py · funded_age_solver.py
 │   ├── association_rules.py#   Apriori
 │   └── evaluation/ benchmarks/ tests/
 ├── research/               # 📑 benchmark scripts, results, figures
-├── docs/                   # 📸 README assets, UX before/after
+├── docs/                   # 📸 README assets (+ tools/make_tour.py for the GIFs), UX before/after
 ├── scripts/                # 🛠️ dev-check.sh, dev-start.sh, dev-stop.sh
 ├── SECURITY.md
 └── README.md
@@ -724,16 +805,19 @@ node scripts/seedDemoFamily.js --reset   # delete the demo accounts, then seed a
 
 This creates `rajesh.mehta@example.com` (household owner), `kavita.mehta@example.com` and `aarav.mehta@example.com`, all with the password `Demo#2026`, in the "Mehta Family". Use these accounts only on a local database.
 
+To demo statement import, upload [`docs/demo/sample-hdfc-statement.csv`](docs/demo/sample-hdfc-statement.csv) (21 rows in HDFC's net-banking format: salary, UPI, POS, EMI, SIP, ATM, refund, interest) or the PDF fixture `server/tests/import/fixtures/statement.pdf`. The CSV needs no internet; the PDF uses Gemini when it is reachable.
+
 ---
 
 ## 🧪 Testing
 
 ```bash
 npm run test:core          # client + web + ML (fast, no services needed)
-npm run test:client        # 17 mobile UX / navigation suites
-npm run test:web           # 5 web suites (due alerts, date ranges, month groups, family, CSV)
-npm run test:ml            # 9 ML suites (classifier, normalisation, Monte Carlo, solvers, Apriori, security)
-npm run test:server        # 30 API suites (FMI, family, Shapley, liabilities, cards, assets, predictions, auth)
+npm run test:client        # 19 mobile UX / navigation suites
+npm run test:web           # 6 web suites (overview figures, due alerts, date ranges, month groups, family, CSV)
+npm run test:ml            # 11 ML suites (classifier, batch classify, normalisation, Monte Carlo, solvers, Apriori, security)
+npm run test:server        # 42 API suites (FMI, family, Shapley, liabilities, cards, assets, SIPs, predictions, auth,
+                           #   statement import, SMS parsing and confirmation)
 npm run test:integration   # API ↔ ML contracts (needs MongoDB + ML service running)
 npm run test:research      # research acceptance audit
 ```
@@ -784,7 +868,9 @@ Full details are in [SECURITY.md](SECURITY.md).
 
 ## ⚠️ Current limitations
 
-- **No live bank feeds**: transactions are entered by hand, pasted, or created by scheduled bills. There is no Account Aggregator or Plaid connection.
+- **No live bank feeds**: transactions are entered by hand, pasted from a bank SMS, imported from a statement file, or created by scheduled bills. There is no Account Aggregator or Plaid connection.
+- **Statement import shows estimated progress**: the server answers in one response, so the ring eases toward 92% while waiting and completes when the answer arrives. Stage labels follow elapsed time. PDF reading depends on Gemini (up to 35 s before the offline reader takes over); CSV is instant and works offline.
+- **SMS auto-capture is iPhone-only** (through a Shortcut) and needs MongoDB Atlas or a replica set to confirm captures. Android SMS reading and XLSX statements are not supported.
 - **Training data is mostly synthetic or LLM-labelled**, based on real Indian merchant and UPI patterns. Accuracy on a real personal bank statement has not been measured yet.
 - **Rate limits are in memory**: running several API instances would need a shared store such as Redis.
 - **The web app keeps tokens in `sessionStorage`**, not HttpOnly cookies.

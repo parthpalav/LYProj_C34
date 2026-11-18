@@ -13,7 +13,8 @@ export const LiabilitySummaryStrip: React.FC<LiabilitySummaryStripProps> = ({
   nearestDueDate,
 }) => {
   const nearestDateFormatted = nearestDueDate
-    ? `${formatRelativeDate(nearestDueDate)} (${formatDateFull(nearestDueDate)})`
+    // formatRelativeDate falls back to the short date, which would repeat the full date.
+    ? (formatRelativeDate(nearestDueDate) === 'Today' ? `Today (${formatDateFull(nearestDueDate)})` : formatDateFull(nearestDueDate))
     : 'None scheduled';
 
   return (

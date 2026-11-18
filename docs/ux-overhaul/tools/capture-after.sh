@@ -1,13 +1,13 @@
 #!/bin/zsh
 # Re-captures every "after" screenshot into ../after and rebuilds the before/after docx.
 # Needs: server (4000), ML service (5001), Metro (npx expo start --dev-client) and the app open
-# on the booted simulator, signed in as the test account. Takes about four minutes.
+# on the booted simulator, signed in as the Mehta demo owner (Rajesh). Takes about four minutes.
 #
 #   ./capture-after.sh [email] [password]
 D=${0:A:h}
 S=$D/sim.sh
-EMAIL=${1:-claude.uitest@example.com}
-PASS=${2:-'Uitest#2026'}
+EMAIL=${1:-rajesh.mehta@example.com}
+PASS=${2:-'Demo#2026'}
 
 shot() { sleep ${2:-2}; $S shot $1 >/dev/null && echo "  $1"; }
 store() { # store <file regex> <js using s>

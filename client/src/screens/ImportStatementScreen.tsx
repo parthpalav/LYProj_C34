@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { FlatList, Pressable, ScrollView, Switch, Text, View } from 'react-native';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { FlatList, LayoutChangeEvent, Pressable, ScrollView, Switch, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -25,11 +25,17 @@ import { Sheet } from '../components/ui/Sheet';
 import { CategoryGrid } from '../components/ui/CategoryGrid';
 import { SegmentedControl } from '../components/ui/SegmentedControl';
 import { ScreenHeader, useHeaderHeight } from '../components/ui/ScreenHeader';
+import { ImportProgressOverlay } from '../components/ui/ImportProgressOverlay';
 
 const MAX_BYTES = 6 * 1024 * 1024;
+const MIN_WAIT_MS = 1200;
 const TYPES = ['Need', 'Want', 'Investment'] as const;
 const PARSER_LABEL: Record<StatementPreview['parser'], string> = { csv: 'Read from CSV', gemini: 'Read by Gemini AI', local: 'Offline parser' };
 const emojiFor = (cat?: string) => CATEGORY_ITEMS.find((i) => i.key === cat)?.emoji ?? '📦';
+const doneLabelFor = (p: StatementPreview) => {
+  const expenses = p.rows.filter((r) => r.direction === 'debit').length;
+  return `${p.rows.length} ${p.rows.length === 1 ? 'entry' : 'entries'} read · ${expenses} expense${expenses === 1 ? '' : 's'} classified`;
+};
 const INCOME_SOURCES = ['salary', 'freelance', 'investments', 'bonus', 'business', 'rental', 'consulting', 'gift', 'reimbursement', 'other'];
 
 type PickedFile = { name: string; uri: string; mimeType: string; size: number };
@@ -56,6 +62,12 @@ export function ImportStatementScreen(): React.ReactElement {
   const [needsPassword, setNeedsPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [reading, setReading] = useState(false);
+  // Preview that has arrived but waits for the ring to finish before the review shows.
+  const [arrived, setArrived] = useState<StatementPreview | null>(null);
+  const readAbort = useRef<AbortController | null>(null);
+  const listRef = useRef<FlatList<StatementRow>>(null);
+  const scrollToReview = useRef(false);
+  const [notice, setNotice] = useState('');
   const [error, setError] = useState('');
   const [preview, setPreview] = useState<StatementPreview | null>(null);
   const [rows, setRows] = useState<StatementRow[]>([]);
@@ -66,12 +78,13 @@ export function ImportStatementScreen(): React.ReactElement {
   const [result, setResult] = useState<StatementCommitResult | null>(null);
   const [undone, setUndone] = useState(false);
 
+  useEffect(() => () => readAbort.current?.abort(), []);
   useEffect(() => {
     getPaymentMethods().then((m) => setMethods(m.filter((x) => x.status === 'active'))).catch(() => {});
   }, []);
 
   const reset = () => {
-    setFile(null); setPassword(''); setNeedsPassword(false); setShowPassword(false); setMethodId(''); setError('');
+    setFile(null); setPassword(''); setNeedsPassword(false); setShowPassword(false); setMethodId(''); setError(''); setNotice('');
     setResult(null); setUndone(false);
     setPreview(null); setRows([]); setSelected(new Set()); setSetBalance(false);
   };
@@ -105,19 +118,26 @@ export function ImportStatementScreen(): React.ReactElement {
 
   const read = async () => {
     if (!file || reading || (needsPassword && !password)) return;
+    const controller = new AbortController();
+    readAbort.current = controller;
     setReading(true);
     setError('');
+    setNotice('');
     try {
+      const startedAt = Date.now();
       const data = await uriToBase64(file.uri);
-      const p = await previewStatement({ fileName: file.name, mimeType: file.mimeType, data, password: password || undefined });
+      if (controller.signal.aborted) return;
+      const p = await previewStatement({ fileName: file.name, mimeType: file.mimeType, data, password: password || undefined }, controller.signal);
+      // A CSV answers in ~0.1 s: keep the wait screen up briefly so it reads as progress, not a flash.
+      await new Promise((resolve) => { setTimeout(resolve, Math.max(0, MIN_WAIT_MS - (Date.now() - startedAt))); });
+      if (controller.signal.aborted) return;
       setNeedsPassword(false);
       setPassword('');
       setShowPassword(false);
-      setPreview(p);
-      setRows(p.rows);
-      setSelected(new Set(p.rows.filter((r) => !r.duplicate).map((r) => r.rowId)));
-      if (p.suggestedPaymentMethodId && methods.some((m) => m.id === p.suggestedPaymentMethodId)) setMethodId(p.suggestedPaymentMethodId);
+      setArrived(p); // the overlay plays its finish, then showPreview() reveals the rows
     } catch (err: any) {
+      setReading(false);
+      if (controller.signal.aborted || err?.code === 'ERR_CANCELED') return;
       const code = apiErrorCode(err);
       if (code === 'PASSWORD_REQUIRED' || code === 'PASSWORD_INCORRECT') {
         setNeedsPassword(true);
@@ -126,8 +146,35 @@ export function ImportStatementScreen(): React.ReactElement {
         setError(err?.response?.data?.error || (err?.code === 'ECONNABORTED' ? 'Reading took too long. Try again, or use the CSV.' : 'Could not read this statement.'));
       }
     } finally {
-      setReading(false);
+      if (readAbort.current === controller) readAbort.current = null;
     }
+  };
+
+  // Stops waiting. The server only reads the file (nothing is saved), so dropping the request is safe.
+  const cancelRead = () => {
+    if (arrived) return;
+    readAbort.current?.abort();
+    readAbort.current = null;
+    setReading(false);
+    setNotice('Import cancelled. Nothing was saved.');
+  };
+
+  const showPreview = () => {
+    const p = arrived;
+    setArrived(null);
+    setReading(false);
+    if (!p) return;
+    setPreview(p);
+    setRows(p.rows);
+    setSelected(new Set(p.rows.filter((r) => !r.duplicate).map((r) => r.rowId)));
+    if (p.suggestedPaymentMethodId && methods.some((m) => m.id === p.suggestedPaymentMethodId)) setMethodId(p.suggestedPaymentMethodId);
+    scrollToReview.current = true;
+  };
+  // The review sits under the file card: bring it into view once it has laid out.
+  const onReviewLayout = (e: LayoutChangeEvent) => {
+    if (!scrollToReview.current) return;
+    scrollToReview.current = false;
+    listRef.current?.scrollToOffset({ offset: Math.max(0, e.nativeEvent.layout.y - 8), animated: true });
   };
 
   const toggle = (rowId: string) => setSelected((cur) => {
@@ -241,12 +288,13 @@ export function ImportStatementScreen(): React.ReactElement {
           />
         )}
         {!preview && !!error && <Text style={s.error} accessibilityRole="alert">{error}</Text>}
+        {!preview && !error && !!notice && <Text style={s.notice} accessibilityLiveRegion="polite">{notice}</Text>}
         <Text style={s.mutedSmall}>The file is read once and not stored. FINAURA can send PDF text to Google Gemini. Long digit sequences are partially masked, but names and transaction details may remain. If Gemini is unavailable, the server reads the PDF locally.</Text>
         <Button label={reading ? 'Reading statement…' : 'Read statement'} onPress={read} loading={reading} disabled={!file || (needsPassword && !password)} style={s.cta} />
       </Card>
 
       {preview && (
-        <View style={s.reviewHead}>
+        <View style={s.reviewHead} onLayout={onReviewLayout}>
           <View style={s.rowBetween}>
             <Text style={s.title}>Review {rows.length} {rows.length === 1 ? 'entry' : 'entries'}</Text>
             <Badge label={PARSER_LABEL[preview.parser]} tone={preview.parser === 'local' ? 'warning' : 'primary'} />
@@ -279,6 +327,7 @@ export function ImportStatementScreen(): React.ReactElement {
   return (
     <View style={s.screen}>
       <FlatList
+        ref={listRef}
         data={preview ? rows : []}
         keyExtractor={(r) => r.rowId}
         ListHeaderComponent={header}
@@ -336,6 +385,16 @@ export function ImportStatementScreen(): React.ReactElement {
       </Sheet>
 
       <ScreenHeader title="Import statement" onBack={() => navigation.goBack()} />
+      {reading && (
+        <ImportProgressOverlay
+          done={!!arrived}
+          fileName={file?.name ?? ''}
+          slow={!!file && /\.pdf$/i.test(file.name)}
+          doneLabel={arrived ? doneLabelFor(arrived) : ''}
+          onCancel={cancelRead}
+          onFinished={showPreview}
+        />
+      )}
     </View>
   );
 }
@@ -352,6 +411,7 @@ const useStyles = createStyles((c) => ({
   dropTitle: { ...typeScale.label, color: c.text, maxWidth: '100%' },
   chips: { gap: 8, paddingRight: 8 },
   error: { ...typeScale.label, color: c.dangerStrong, marginTop: 12 },
+  notice: { ...typeScale.label, color: c.textMuted, marginTop: 12 },
   cta: { marginTop: 16 },
   reviewHead: { marginBottom: 8, paddingHorizontal: 4 },
   rowBetween: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 },

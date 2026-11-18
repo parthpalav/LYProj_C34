@@ -7,6 +7,9 @@ const CANONICAL_V3_CATEGORIES = [
   'Health', 'Education', 'Personal Care', 'Insurance', 'Investments', 'Misc'
 ];
 
+// Allowed classificationSource values; statement import validates against the same list.
+const CLASSIFICATION_SOURCE_RE = /^(ml|merchant_rule|tfidf|tfidf_v2|minilm|finaura_v\d+[a-z]?|user_memory|fallback|manual|liability|unknown)$/;
+
 // Legacy categories accepted for backward-compatibility with unmigrated historical records
 const LEGACY_CATEGORIES = ['Food', 'Travel', 'Bills', 'Party'];
 
@@ -53,7 +56,7 @@ const transactionSchema = new mongoose.Schema(
     classificationSource: {
       type: String,
       // finaura_vN is the fine-tuned model family the ML service actually loaded (finaura_v4, finaura_v7, ...)
-      match: [/^(ml|merchant_rule|tfidf|tfidf_v2|minilm|finaura_v\d+[a-z]?|user_memory|fallback|manual|liability|unknown)$/, 'Unknown classificationSource "{VALUE}"'],
+      match: [CLASSIFICATION_SOURCE_RE, 'Unknown classificationSource "{VALUE}"'],
       default: 'unknown'
     },
     categorySource: { type: String, default: 'unknown' },
@@ -104,5 +107,5 @@ transactionSchema.index(
 transactionSchema.index({ userId: 1, importBatchId: 1 }, { partialFilterExpression: { importBatchId: { $type: 'string' } } });
 
 // Export schema constants for use in controllers/validators
-export { CANONICAL_V3_CATEGORIES, VALID_CATEGORIES, VALID_TYPES };
+export { CANONICAL_V3_CATEGORIES, VALID_CATEGORIES, VALID_TYPES, CLASSIFICATION_SOURCE_RE };
 export default mongoose.model('Transaction', transactionSchema);

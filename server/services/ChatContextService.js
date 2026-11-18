@@ -38,6 +38,7 @@ import {
 } from '../config/financialRules.js';
 import { resolveTimezone, zonedMonthStart, zonedDateKey } from '../utils/userTime.js';
 import { zoneForecastInput } from './userTimezone.js';
+import { normalizeLiabilityFrequency } from '../utils/forecastResolver.js';
 
 /**
  * Builds a comprehensive, grounded financial context snapshot for the given user.
@@ -252,13 +253,16 @@ export async function buildChatContext(userId) {
 
   // 7. Liability Context
   const activeLiabilities = liabilityDocs.filter(l => l.status !== 'paid_off' && l.status !== 'deleted');
-  const totalMonthlyLiabilityService = activeLiabilities.reduce((sum, l) => sum + (Number(l.amount) || 0), 0);
+  // Monthly equivalent: an annual premium is 1/12 per month, a weekly bill 52/12 times its amount.
+  const monthlyEquivalent = (l) => normalizeLiabilityFrequency(l.amount, l.frequency || l.recurrence || 'monthly');
+  const totalMonthlyLiabilityService = activeLiabilities.reduce((sum, l) => sum + monthlyEquivalent(l), 0);
   const knownOutstandingPrincipal = activeLiabilities.reduce((sum, l) => sum + (Number(l.outstandingBalance ?? l.outstandingPrincipal) || 0), 0);
 
   const formattedLiabilities = activeLiabilities.map(l => ({
     id: l.id || l._id?.toString(),
     name: l.name,
     amount: Number(l.amount) || 0,
+    monthlyEquivalent: Math.round(monthlyEquivalent(l) * 100) / 100,
     category: l.category,
     type: l.type,
     frequency: l.frequency || l.recurrence || 'monthly',

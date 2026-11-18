@@ -435,8 +435,25 @@ async function main() {
     assert.ok(savedAssistant.timestamp);
     console.log('  ✓ End-to-end chat flow deduplication and persistence verified');
 
-    // ── TEST 19: FIRE FIELDS MATCH THE FORECAST CONTRACT ─────────
-    console.log('Running Test 19: FIRE fields match the forecast for a profile that reaches its target...');
+    // ── TEST 19: LIABILITY FREQUENCY → MONTHLY EQUIVALENT ────────
+    console.log('Running Test 19: Weekly and annual liabilities as monthly equivalents...');
+    await Liability.create([
+      { id: `lia-annual-${Date.now()}`, userId: emptyUserId, name: 'Term insurance premium', amount: 12000, category: 'Insurance', type: 'Need', frequency: 'yearly', monthOfYear: 4, dayOfMonth: 1, startDate: new Date('2026-04-01'), nextDueDate: new Date('2027-04-01'), autoDeduct: false, status: 'active' },
+      { id: `lia-weekly-${Date.now()}`, userId: emptyUserId, name: 'Weekly cleaner', amount: 600, category: 'Utilities & Bills', type: 'Need', frequency: 'weekly', dayOfWeek: 1, startDate: new Date('2026-01-05'), nextDueDate: new Date(Date.now() + 3 * 86400000), autoDeduct: false, status: 'active' }
+    ]);
+    const freqCtx = await buildChatContext(emptyUserId);
+    const annual = freqCtx.liabilities.active.find((l) => l.frequency === 'yearly');
+    const weekly = freqCtx.liabilities.active.find((l) => l.frequency === 'weekly');
+    assert.strictEqual(annual.amount, 12000, 'detail row keeps the actual annual installment');
+    assert.strictEqual(annual.monthlyEquivalent, 1000, '₹12,000 a year is ₹1,000 a month');
+    assert.strictEqual(weekly.amount, 600, 'detail row keeps the actual weekly installment');
+    assert.strictEqual(weekly.monthlyEquivalent, 2600, '₹600 a week is ₹2,600 a month');
+    assert.strictEqual(freqCtx.liabilities.monthlyLiabilityService, 3600, 'monthly obligation uses monthly equivalents');
+    await Liability.deleteMany({ userId: emptyUserId });
+    console.log('  ✓ Annual and weekly bills reported as monthly equivalents, installments kept');
+
+    // ── TEST 20: FIRE FIELDS MATCH THE FORECAST CONTRACT ─────────
+    console.log('Running Test 20: FIRE fields match the forecast for a profile that reaches its target...');
     const fireUser = await User.create({
       id: fireUserId, name: 'Fire Saver', email: `fire-${Date.now()}@test.com`, password: 'hashedpassword000',
       dateOfBirth: new Date(Date.UTC(now.getUTCFullYear() - 25, 0, 1)), retirementAge: 60,
@@ -497,7 +514,7 @@ async function main() {
   }
 
   console.log('\n================================================================');
-  console.log('  ALL 19 CHAT CONTEXT & MULTI-TURN TESTS PASSED (100% GREEN) 🚀');
+  console.log('  ALL 20 CHAT CONTEXT & MULTI-TURN TESTS PASSED (100% GREEN) 🚀');
   console.log('================================================================\n');
 }
 

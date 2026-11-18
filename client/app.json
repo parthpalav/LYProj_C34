@@ -15,7 +15,8 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "FINAURA needs access to your photos so you can set a profile picture."
+          "photosPermission": "FINAURA needs access to your photos to set a profile picture and to scan receipts.",
+          "cameraPermission": "FINAURA uses the camera to scan receipts so you do not have to type the amount."
         }
       ],
       "expo-asset",

@@ -1,10 +1,14 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Alert, KeyboardAvoidingView, Modal, Platform, Pressable, RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { useNavigation, useFocusEffect, useRoute } from '@react-navigation/native';
+import type { RouteProp } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../navigation/AppNavigator';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import Animated from 'react-native-reanimated';
 import { addIncome, getIncomeFlow, updateIncome, deleteIncome } from '../services/api';
+import type { CapturedItem } from '../services/api';
 import { IncomeFlowData } from '../types';
 import { formatCurrency } from '../utils/format';
 import { celebrate, toast } from '../store/useCelebrationStore';
@@ -39,7 +43,7 @@ const SOURCE_KEYS = ['salary', 'gig', 'freelance', 'business', 'rental', 'consul
 type Entry = IncomeFlowData['timeline'][number];
 
 /** Add or edit one income receipt in a page sheet. */
-function IncomeEditor({ entry, visible, onClose, onSaved }: { entry: Entry | null; visible: boolean; onClose: () => void; onSaved: () => void }) {
+function IncomeEditor({ entry, capture, visible, onClose, onSaved }: { entry: Entry | null; capture?: CapturedItem; visible: boolean; onClose: () => void; onSaved: () => void }) {
   const s = useSStyles();
   const [amount, setAmount] = useState('');
   const [source, setSource] = useState<string>('salary');
@@ -49,14 +53,19 @@ function IncomeEditor({ entry, visible, onClose, onSaved }: { entry: Entry | nul
 
   // Reset the form each time the sheet opens.
   const [openedFor, setOpenedFor] = useState<string | null | undefined>(undefined);
-  const key = visible ? entry?.id ?? null : undefined;
+  const key = visible ? entry?.id ?? capture?.id ?? null : undefined;
   if (key !== openedFor) {
     setOpenedFor(key);
     if (visible) {
-      setAmount(entry ? String(entry.amount) : '');
-      setSource(entry?.source ?? 'salary');
-      setDescription(entry?.description ?? '');
-      setDate(entry ? new Date(entry.timestamp) : new Date());
+      const detail = capture?.description ?? '';
+      const suggestedSource = /salary|payroll/i.test(detail) ? 'salary'
+        : /refund|reversal|cashback/i.test(detail) ? 'reimbursement' : 'other';
+      const initialAmount = entry?.amount ?? capture?.amount;
+      const initialDate = entry?.timestamp ?? capture?.date;
+      setAmount(initialAmount === undefined ? '' : String(initialAmount));
+      setSource(entry?.source ?? (capture ? suggestedSource : 'salary'));
+      setDescription(entry?.description ?? detail);
+      setDate(initialDate ? new Date(initialDate) : new Date());
       setError('');
     }
   }
@@ -72,13 +81,15 @@ function IncomeEditor({ entry, visible, onClose, onSaved }: { entry: Entry | nul
     };
     try {
       if (entry) await updateIncome(entry.id, payload);
+      else if (capture) await addIncome({ ...payload, timestamp: date.toISOString(), capturedId: capture.id });
       else await addIncome(payload);
       onClose();
       onSaved();
       if (entry) toast('Income updated');
       else celebrate({ kind: 'coins', title: `${formatCurrency(amt)} income added`, subtitle: `Logged as ${SOURCE_LABELS[source] || source}.` });
-    } catch {
-      setError("Couldn't save. Check your connection and try again.");
+    } catch (err) {
+      const responseError = (err as { response?: { data?: { error?: string } } })?.response?.data?.error;
+      setError(responseError || "Couldn't save. Check your connection and try again.");
     }
   };
 
@@ -87,11 +98,12 @@ function IncomeEditor({ entry, visible, onClose, onSaved }: { entry: Entry | nul
       <KeyboardAvoidingView style={s.sheet} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
         <View style={s.sheetHeader}>
           <Pressable onPress={onClose} hitSlop={10} accessibilityRole="button"><Text style={s.sheetCancel}>Cancel</Text></Pressable>
-          <Text style={s.sheetTitle}>{entry ? 'Edit income' : 'Add Income'}</Text>
+          <Text style={s.sheetTitle}>{entry ? 'Edit income' : capture ? 'Review income' : 'Add Income'}</Text>
           <View style={s.sheetSpacer} />
         </View>
         <ScrollView contentContainerStyle={s.sheetBody} keyboardShouldPersistTaps="handled">
-          <Field label="Amount (₹)" icon="cash-outline" value={amount} onChangeText={(v) => { setAmount(v.replace(/[^0-9.]/g, '')); setError(''); }} keyboardType="numeric" placeholder="e.g. 25000" autoFocus={!entry} />
+          {capture && <Text style={s.sheetSub}>Check the details from your bank SMS before saving.</Text>}
+          <Field label="Amount (₹)" icon="cash-outline" value={amount} onChangeText={(v) => { setAmount(v.replace(/[^0-9.]/g, '')); setError(''); }} keyboardType="numeric" placeholder="e.g. 25000" autoFocus={!entry && !capture} />
           <Text style={s.label}>Source</Text>
           <View style={s.chips}>
             {SOURCE_KEYS.map((k) => <Chip key={k} label={SOURCE_LABELS[k]} selected={source === k} onPress={() => setSource(k)} />)}
@@ -110,7 +122,8 @@ export function IncomeFlowScreen(): React.ReactElement {
   const { c } = useTheme();
   const s = useSStyles();
   const part = usePick();
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList, 'IncomeFlow'>>();
+  const capture = useRoute<RouteProp<RootStackParamList, 'IncomeFlow'>>().params?.capture;
   const insets = useSafeAreaInsets();
   const headerHeight = useHeaderHeight();
   const { y, onScroll } = useScrollHeader();
@@ -122,6 +135,18 @@ export function IncomeFlowScreen(): React.ReactElement {
   const [editing, setEditing] = useState<Entry | null>(null);
   const [selected, setSelected] = useState<Entry | null>(null);
   const editAfterClose = useRef(false);
+
+  useEffect(() => {
+    if (capture) {
+      setEditing(null);
+      setEditorOpen(true);
+    }
+  }, [capture]);
+
+  const closeEditor = () => {
+    setEditorOpen(false);
+    if (capture) navigation.setParams({ capture: undefined });
+  };
 
   const fetchFlow = useCallback(async (isRefresh = false) => {
     try {
@@ -320,7 +345,7 @@ export function IncomeFlowScreen(): React.ReactElement {
         </Pressable>
       </Sheet>
 
-      <IncomeEditor entry={editing} visible={editorOpen} onClose={() => setEditorOpen(false)} onSaved={() => fetchFlow(true)} />
+      <IncomeEditor entry={editing} capture={capture} visible={editorOpen} onClose={closeEditor} onSaved={() => fetchFlow(true)} />
     </View>
   );
 }

@@ -234,7 +234,7 @@ export function useTransactions(): UseTransactionsReturn {
 
   const add = useCallback(async (payload: TransactionPayload): Promise<Transaction> => {
     const created = await createTransaction(payload);
-    setTransactions((prev) => [created, ...prev]);
+    setTransactions((prev) => prev.some((entry) => entry.id === created.id) ? prev : [created, ...prev]);
     return created;
   }, []);
 

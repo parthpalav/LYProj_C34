@@ -1,6 +1,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useNavigation } from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import type { NavigatorScreenParams } from '@react-navigation/native';
 import React from 'react';
 import { ChatScreen } from '../screens/ChatScreen';
 import { DashboardScreen } from '../screens/DashboardScreen';
@@ -25,6 +26,9 @@ import { ReportsScreen } from '../screens/ReportsScreen';
 import { InsightsScreen } from '../screens/InsightsScreen';
 import { SpendingScreen } from '../screens/SpendingScreen';
 import { PaymentMethodsScreen } from '../screens/PaymentMethodsScreen';
+import { ImportStatementScreen } from '../screens/ImportStatementScreen';
+import { SmsCaptureScreen } from '../screens/SmsCaptureScreen';
+import type { CapturedItem, EntryDraft } from '../services/api';
 import { TabBar } from '../components/navigation/TabBar';
 import { withFocusFade } from '../components/navigation/FocusFade';
 import { useAuthStore } from '../store/useAuthStore';
@@ -41,11 +45,12 @@ export type RootStackParamList = {
   Auth: undefined;
   Onboarding: undefined;
   Welcome: undefined;
-  MainTabs: undefined;
-  QuickAdd: undefined;
+  MainTabs: NavigatorScreenParams<RootTabParamList> | undefined;
+  /** Optional pre-fill, e.g. a bank SMS capture */
+  QuickAdd: { draft?: EntryDraft & { capturedId?: string } } | undefined;
   FinancialOutlook: undefined;
   FMI: undefined;
-  IncomeFlow: undefined;
+  IncomeFlow: { capture?: CapturedItem } | undefined;
   Assets: undefined;
   Family: undefined;
   Goals: undefined;
@@ -59,6 +64,8 @@ export type RootStackParamList = {
   Insights: undefined;
   Spending: undefined;
   PaymentMethods: undefined;
+  ImportStatement: undefined;
+  SmsCapture: undefined;
 };
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
@@ -93,7 +100,8 @@ function MainTabNavigator(): React.ReactElement {
 
 function QuickAddRoute(): React.ReactElement {
   const navigation = useNavigation();
-  return <TransactionEntryScreen onClose={() => navigation.goBack()} />;
+  const route = useRoute<RouteProp<RootStackParamList, 'QuickAdd'>>();
+  return <TransactionEntryScreen onClose={() => navigation.goBack()} draft={route.params?.draft} />;
 }
 
 function WelcomeRoute(): React.ReactElement {
@@ -138,6 +146,8 @@ export function AppNavigator(): React.ReactElement {
           <Stack.Screen name="Spending" component={SpendingScreen} />
           <Stack.Screen name="Reports" component={ReportsScreen} />
           <Stack.Screen name="PaymentMethods" component={PaymentMethodsScreen} />
+          <Stack.Screen name="ImportStatement" component={ImportStatementScreen} />
+          <Stack.Screen name="SmsCapture" component={SmsCaptureScreen} />
           <Stack.Screen name="Recap" component={RecapScreen} options={{ presentation: 'fullScreenModal', animation: 'fade' }} />
           <Stack.Screen
             name="QuickAdd"

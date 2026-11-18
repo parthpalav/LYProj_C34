@@ -330,6 +330,8 @@ export function ProfileScreen(): React.ReactElement {
     { icon: 'flag', tint: c.success, title: 'Savings goals', subtitle: 'What you are saving towards', route: 'Goals' },
     { icon: 'calendar', tint: c.warning, title: 'Liabilities', subtitle: 'Loans, credit cards and recurring bills', route: 'Liabilities' },
     { icon: 'card', tint: c.primary, title: 'Payment methods', subtitle: 'UPI, debit and credit cards', route: 'PaymentMethods' },
+    { icon: 'document-attach', tint: c.info, title: 'Import bank statement', subtitle: 'Add months of history from a CSV or PDF', route: 'ImportStatement' },
+    { icon: 'chatbox-ellipses', tint: c.success, title: 'Auto-capture bank SMS', subtitle: 'iPhone Shortcut sends bank SMS to FINAURA', route: 'SmsCapture' },
     { icon: 'people-outline', tint: c.chart[3], title: 'Family & Household', subtitle: 'Combined finances, shared insights & invitations', route: 'Family' },
   ];
 

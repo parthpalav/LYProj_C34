@@ -18,6 +18,7 @@ export const DESTINATIONS: Destination[] = [
   { label: 'Try a what-if', hint: 'Scenario lab: 10,000 simulated futures', to: '/app/plan?tab=scenarios', keywords: 'monte carlo simulate retirement scenario', quick: true },
   { label: 'Overview', hint: 'Balance, score and what needs attention', to: '/app', keywords: 'home dashboard' },
   { label: 'Activity', hint: 'All transactions, search and filters', to: '/app/activity', keywords: 'ledger history transactions' },
+  { label: 'Import bank statement', hint: 'Bulk add history from a CSV or PDF', to: '/app/import', keywords: 'upload csv pdf statement bulk bank history' },
   { label: 'Check AI guesses', hint: 'Confirm labels FINAURA was unsure about', to: '/app/review', keywords: 'review classify correct' },
   { label: 'Net worth', hint: 'Assets, loans, cards and bills', to: '/app/net-worth', keywords: 'assets liabilities balance sheet' },
   { label: 'Liabilities', hint: 'Loans, credit cards, bills', to: '/app/net-worth?tab=liabilities', keywords: 'emi card bill due pay' },

@@ -49,6 +49,7 @@ import { ThemeToggle } from '../components/ui/ThemeToggle';
 import { FamilyOverviewCard } from '../components/family/FamilyOverviewCard';
 import { CommitmentsSheet } from '../components/bills/CommitmentsSheet';
 import { UpdateBalanceScreen } from './UpdateBalanceScreen';
+import { CapturedSmsCard } from '../components/capture/CapturedSmsCard';
 
 type IconName = React.ComponentProps<typeof Ionicons>['name'];
 
@@ -557,6 +558,8 @@ export function DashboardScreen(): React.ReactElement {
             </Pressable>
           ))}
         </View>
+
+        <CapturedSmsCard />
 
         {/* ── Today feed ───────────────────────────────── */}
         <SectionHeader title="Today" />

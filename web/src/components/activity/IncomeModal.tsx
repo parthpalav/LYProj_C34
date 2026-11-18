@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { IncomeRecord, IncomePayload } from '../../types';
+import type { EntryDraft } from '../../services/api';
+import { COMMON_INCOME_SOURCES } from '../../utils/incomeSources';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
 import { dateInputToISO, dateKey, todayKey } from '../../utils/timezone';
@@ -9,26 +11,17 @@ export interface IncomeModalProps {
   onClose: () => void;
   onSubmit: (payload: IncomePayload) => Promise<void>;
   initialIncome?: IncomeRecord | null;
+  /** Pre-fill a new entry, e.g. from a bank SMS. */
+  draft?: (EntryDraft & { capturedId?: string }) | null;
 }
 
-const COMMON_INCOME_SOURCES = [
-  'salary',
-  'freelance',
-  'investments',
-  'bonus',
-  'business',
-  'rental',
-  'consulting',
-  'gift',
-  'reimbursement',
-  'other',
-];
 
 export const IncomeModal: React.FC<IncomeModalProps> = ({
   isOpen,
   onClose,
   onSubmit,
   initialIncome,
+  draft,
 }) => {
   const isEditing = Boolean(initialIncome);
 
@@ -49,6 +42,11 @@ export const IncomeModal: React.FC<IncomeModalProps> = ({
           setDescription(initialIncome.description || '');
           const d = initialIncome.timestamp ? new Date(initialIncome.timestamp) : new Date();
           setDate(dateKey(d));
+        } else if (draft) {
+          setAmount(String(draft.amount));
+          setSource(/salary|payroll/i.test(draft.description) ? 'salary' : /refund|reversal|cashback/i.test(draft.description) ? 'reimbursement' : 'other');
+          setDescription(draft.description || '');
+          setDate(draft.date ? dateKey(new Date(draft.date)) : todayKey());
         } else {
           setAmount('');
           setSource('salary');
@@ -63,7 +61,7 @@ export const IncomeModal: React.FC<IncomeModalProps> = ({
     return () => {
       mounted = false;
     };
-  }, [isOpen, initialIncome]);
+  }, [isOpen, initialIncome, draft]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,6 +81,7 @@ export const IncomeModal: React.FC<IncomeModalProps> = ({
         description: description.trim() || 'Income',
         timestamp: dateInputToISO(date),
       };
+      if (!isEditing && draft?.capturedId) payload.capturedId = draft.capturedId;
 
       await onSubmit(payload);
       onClose();

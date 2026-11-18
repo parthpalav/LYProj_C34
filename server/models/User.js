@@ -30,6 +30,9 @@ const userSchema = new mongoose.Schema(
     incomeType: { type: String, default: 'salaried' },
     retirementCorpusGoal: { type: Number, default: 0 },
     currentBalance: { type: Number, default: 0 },
+    // iOS Shortcut SMS capture: only a sha256 of the personal token is stored
+    smsIngestTokenHash: { type: String, default: null, select: false },
+    smsIngestTokenCreatedAt: { type: Date, default: null },
     expectedReturnRate: {
       type: Number,
       default: DEFAULT_RETURN_RATE,
@@ -107,5 +110,10 @@ userSchema.methods.comparePassword = async function(plainPassword) {
   if (!hash) return false;
   return bcryptjs.compare(plainPassword, hash);
 };
+
+userSchema.index(
+  { smsIngestTokenHash: 1 },
+  { unique: true, partialFilterExpression: { smsIngestTokenHash: { $type: 'string' } } }
+);
 
 export default mongoose.model('User', userSchema);

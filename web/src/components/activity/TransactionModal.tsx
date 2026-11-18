@@ -2,11 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import type { Transaction, TransactionPayload, TransactionType, ClassifierSuggestion, Liability, PaymentMethod } from '../../types';
 import { CANONICAL_CATEGORIES, VALID_TRANSACTION_TYPES, CASH_METHOD_ID } from '../../types';
 import { PAYMENT_KIND_LABEL, paymentMethodLabel } from '../../utils/paymentMethods';
-import { classifyExpense, getLiabilities } from '../../services/api';
+import { classifyExpense, getLiabilities, parseBankSms, scanReceipt, apiErrorCode } from '../../services/api';
+import type { EntryDraft } from '../../services/api';
+import { imageToJpegBase64 } from '../../utils/fileData';
 import { formatCurrencyINR } from '../../utils/formatters';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, MessageSquareText, Camera } from 'lucide-react';
 import { dateInputToISO, dateKey, getAppTimezone, todayKey } from '../../utils/timezone';
 
 export interface TransactionModalProps {
@@ -16,6 +18,10 @@ export interface TransactionModalProps {
   initialTransaction?: Transaction | null;
   /** Saved payment methods (archived included, so an old transaction's method still shows). */
   paymentMethods?: PaymentMethod[];
+  /** Pre-fill a new entry, e.g. from a captured bank SMS. */
+  draft?: (EntryDraft & { capturedId?: string }) | null;
+  /** A pasted SMS turned out to be money received: open the income form with it instead. */
+  onIncomeDraft?: (draft: EntryDraft) => void;
 }
 
 export const TransactionModal: React.FC<TransactionModalProps> = ({
@@ -24,6 +30,8 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
   onSubmit,
   initialTransaction,
   paymentMethods = [],
+  draft,
+  onIncomeDraft,
 }) => {
   const isEditing = Boolean(initialTransaction);
 
@@ -57,6 +65,64 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [formError, setFormError] = useState<string | null>(null);
+
+  // Quick fill from a bank SMS or a receipt photo
+  const [capturedId, setCapturedId] = useState<string | undefined>(undefined);
+  const [smsOpen, setSmsOpen] = useState(false);
+  const [smsText, setSmsText] = useState('');
+  const [isReading, setIsReading] = useState<'sms' | 'receipt' | null>(null);
+  const [fillNote, setFillNote] = useState<string | null>(null);
+  const receiptInputRef = useRef<HTMLInputElement>(null);
+
+  const applyDraft = (d: EntryDraft) => {
+    setAmount(String(d.amount));
+    setDescription(d.description || '');
+    if (d.date) setDate(dateKey(new Date(d.date)));
+    if (d.paymentMethodId && paymentMethods.some((m) => m.id === d.paymentMethodId && m.status === 'active')) setPaymentMethodId(d.paymentMethodId);
+    // The live classifier labels the new description; a manual pick still wins.
+    setUserTouchedCategory(false);
+  };
+
+  const readSms = async () => {
+    if (!smsText.trim()) return;
+    setIsReading('sms');
+    setFormError(null);
+    try {
+      const d = await parseBankSms(smsText);
+      if (d.direction === 'credit') {
+        if (onIncomeDraft) { onIncomeDraft(d); return; }
+        setFormError('This SMS is money received. Record it under Income.');
+        return;
+      }
+      applyDraft(d);
+      setSmsOpen(false);
+      setSmsText('');
+      setFillNote('Filled from your bank SMS. Check the details, then save.');
+    } catch (err) {
+      const code = apiErrorCode(err);
+      setFormError(code === 'NOT_TRANSACTION'
+        ? 'That SMS is not a completed payment (OTP, reminder or offer).'
+        : (err as any)?.response?.data?.error || 'Could not read that SMS.');
+    } finally {
+      setIsReading(null);
+    }
+  };
+
+  const readReceipt = async (file: File | undefined) => {
+    if (!file) return;
+    setIsReading('receipt');
+    setFormError(null);
+    try {
+      const d = await scanReceipt({ data: await imageToJpegBase64(file), mimeType: 'image/jpeg' });
+      applyDraft(d);
+      setFillNote('Filled from your receipt. Check the details, then save.');
+    } catch (err) {
+      setFormError((err as any)?.response?.data?.error || 'Could not read that receipt.');
+    } finally {
+      setIsReading(null);
+      if (receiptInputRef.current) receiptInputRef.current.value = '';
+    }
+  };
   const amountError = amount !== '' && (!Number.isFinite(Number(amount)) || Number(amount) <= 0)
     ? 'Enter an amount greater than ₹0.' : null;
 
@@ -87,13 +153,24 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
         setLiabilityId('');
         setMarkAsPaid(true);
         setPaymentMethodId(initialTransaction?.paymentMethodId ?? '');
+        setSmsOpen(false);
+        setSmsText('');
+        setFillNote(null);
+        setCapturedId(undefined);
+        if (!initialTransaction && draft) {
+          applyDraft(draft);
+          setCapturedId(draft.capturedId);
+          setFillNote('Captured from your bank SMS. Check the details, then save.');
+        }
       }
     };
     init();
     return () => {
       mounted = false;
     };
-  }, [isOpen, initialTransaction]);
+    // applyDraft only reads props; re-running on its identity would wipe edits.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, initialTransaction, draft]);
 
   // Active bills for the optional link; only offered when adding.
   useEffect(() => {
@@ -189,6 +266,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
         timestamp: dateInputToISO(date),
         classificationSource: isEditing ? 'manual' : (userTouchedCategory ? 'manual' : (suggestion?.classificationSource || 'manual')),
       };
+      if (!isEditing && capturedId) payload.capturedId = capturedId;
       // On edit, only send it when changed: a removed card can't be re-selected, only kept.
       if (!isEditing || paymentMethodId !== originalMethodId) payload.paymentMethodId = paymentMethodId || null;
       // Tell the server where the label came from: only a real user pick is learned as a merchant correction.
@@ -245,6 +323,38 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
             <span>{formError}</span>
           </div>
         )}
+
+        {!isEditing && !capturedId && (
+          <div className="quick-fill">
+            <div className="quick-fill-actions">
+              <Button type="button" variant="outline" size="sm" leftIcon={<MessageSquareText size={14} />} onClick={() => setSmsOpen((v) => !v)} aria-expanded={smsOpen}>
+                Paste bank SMS
+              </Button>
+              <Button type="button" variant="outline" size="sm" leftIcon={<Camera size={14} />} onClick={() => receiptInputRef.current?.click()} isLoading={isReading === 'receipt'}>
+                Scan receipt
+              </Button>
+              <input ref={receiptInputRef} type="file" accept="image/*" capture="environment" hidden onChange={(e) => readReceipt(e.target.files?.[0])} />
+            </div>
+            <p className="parity-hint">Receipt photos are sent to Google Gemini to read the total, shop and date.</p>
+            {smsOpen && (
+              <div className="quick-fill-sms animate-fade-in">
+                <label htmlFor="tx-sms" className="form-label">Bank SMS</label>
+                <textarea
+                  id="tx-sms"
+                  className="form-input"
+                  rows={4}
+                  maxLength={1000}
+                  placeholder="e.g. Sent Rs.250.00 From HDFC Bank A/C *1234 To SWIGGY On 12/11/26"
+                  value={smsText}
+                  onChange={(e) => setSmsText(e.target.value)}
+                />
+                <p className="parity-hint">Unrecognized message formats may be sent to Google Gemini.</p>
+                <Button type="button" size="sm" onClick={readSms} isLoading={isReading === 'sms'} disabled={!smsText.trim()}>Read SMS</Button>
+              </div>
+            )}
+          </div>
+        )}
+        {fillNote && <p className="form-help-text" role="status">{fillNote}</p>}
 
         {/* Amount Input */}
         <div className="form-group">

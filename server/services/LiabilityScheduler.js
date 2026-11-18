@@ -32,7 +32,11 @@ export function occurrenceKeyFor(liabilityId, scheduledFor) {
 // One claim per occurrence, shared by the scheduler and manual "mark as paid".
 // A stale claim (its holder crashed or could not finalize) can be taken over.
 // Returns the processing token, or null when someone else holds the occurrence.
-export async function claimOccurrence(liabilityId, scheduledFor, now = new Date(), threshold = new Date(now.getTime() - STALE_CLAIM_THRESHOLD_MS)) {
+export async function claimOccurrence(liabilityId, scheduledFor, {
+  now = new Date(),
+  threshold = new Date(now.getTime() - STALE_CLAIM_THRESHOLD_MS),
+  session,
+} = {}) {
   const processingToken = crypto.randomUUID();
   const claimed = await Liability.findOneAndUpdate(
     {
@@ -47,21 +51,21 @@ export async function claimOccurrence(liabilityId, scheduledFor, now = new Date(
       ]
     },
     { $set: { processingScheduledFor: scheduledFor, processingStartedAt: now, processingToken } },
-    { new: true }
+    { new: true, session }
   );
   return claimed ? processingToken : null;
 }
 
 // Advance nextDueDate past this occurrence and drop the claim. Only the token holder can.
-export async function finalizeOccurrence(liability, scheduledFor, processingToken) {
-  const nextDate = calculateNextDueDate(liability, scheduledFor, await getUserTimezone(liability.userId));
+export async function finalizeOccurrence(liability, scheduledFor, processingToken, { session, timezone } = {}) {
+  const nextDate = calculateNextDueDate(liability, scheduledFor, timezone ?? await getUserTimezone(liability.userId));
   const finalized = await Liability.findOneAndUpdate(
     { id: liability.id, nextDueDate: scheduledFor, processingToken },
     {
       $set: { nextDueDate: nextDate },
       $unset: { processingScheduledFor: 1, processingStartedAt: 1, processingToken: 1 }
     },
-    { new: true }
+    { new: true, session }
   );
   return finalized ? nextDate : null;
 }
@@ -102,7 +106,7 @@ export async function processSingleLiability(liability, now = new Date(), staleT
   }
 
   // Step 2: Atomic Occurrence Claim (fresh, or stale and for this same occurrence)
-  const processingToken = await claimOccurrence(liability.id, scheduledFor, now, threshold);
+  const processingToken = await claimOccurrence(liability.id, scheduledFor, { now, threshold });
   const claimed = Boolean(processingToken);
 
   if (!claimed) {

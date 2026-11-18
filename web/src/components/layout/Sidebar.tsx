@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard,
   ReceiptText,
@@ -26,6 +26,7 @@ export interface SidebarProps {
 export const Sidebar: React.FC<SidebarProps> = ({ isOpen = false, onClose }) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const onImport = useLocation().pathname === '/app/import';
 
   const handleLogout = async () => {
     await logout();
@@ -78,7 +79,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen = false, onClose }) => 
           </NavLink>
 
           <div className="sidebar-section-label">Money</div>
-          <NavLink to="/app/activity" className={getLinkClass} onClick={onClose}>
+          <NavLink to="/app/activity" className={({ isActive }) => getLinkClass({ isActive: isActive || onImport })} onClick={onClose}>
             <ReceiptText size={18} />
             <span>Activity</span>
           </NavLink>

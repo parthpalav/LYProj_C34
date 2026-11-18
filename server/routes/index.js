@@ -8,12 +8,29 @@ import * as familyController from '../controllers/familyController.js';
 import * as subscriptionController from '../controllers/subscriptionController.js';
 import * as predictionController from '../controllers/predictionController.js';
 import * as paymentMethodController from '../controllers/paymentMethodController.js';
+import * as autoInputController from '../controllers/autoInputController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
-import { computeRateLimiter } from '../middleware/rateLimiter.js';
+import { computeRateLimiter, importRateLimiter, smsIngestRateLimiter, classifyRateLimiter } from '../middleware/rateLimiter.js';
 
 const router = Router();
 
+// iOS Shortcut SMS capture uses its own token, so it must be mounted before the
+// controller router (which applies JWT auth to everything that reaches it).
+router.post('/sms/ingest', smsIngestRateLimiter, autoInputController.ingestSms);
+
 router.use(controllerRouter);
+
+// Automated input: statement import, bank SMS, receipt scan
+router.post('/import/statement/preview', authMiddleware, importRateLimiter, autoInputController.previewStatement);
+router.post('/import/statement/commit', authMiddleware, autoInputController.commitStatement);
+router.delete('/import/:batchId', authMiddleware, autoInputController.undoImport);
+router.post('/sms/parse', authMiddleware, classifyRateLimiter, autoInputController.parseSms);
+router.get('/sms/token', authMiddleware, autoInputController.getSmsToken);
+router.post('/sms/token', authMiddleware, autoInputController.createSmsToken);
+router.delete('/sms/token', authMiddleware, autoInputController.revokeSmsToken);
+router.get('/captured', authMiddleware, autoInputController.listCaptured);
+router.post('/captured/:id/dismiss', authMiddleware, autoInputController.dismissCaptured);
+router.post('/receipt/scan', authMiddleware, importRateLimiter, autoInputController.scanReceipt);
 
 // Family routes
 router.get('/family/current', authMiddleware, familyController.getCurrentFamily);

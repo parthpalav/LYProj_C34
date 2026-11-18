@@ -1,5 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import type {
+  TransactionType,
   AuthResponse,
   LoginPayload,
   RegisterPayload,
@@ -332,6 +333,113 @@ export async function deleteTransaction(id: string): Promise<{ success: boolean;
 export async function classifyExpense(text: string): Promise<ClassifierSuggestion> {
   const { data } = await api.post<ClassifierSuggestion>('/api/classify', { text });
   return data;
+}
+
+// ── Automated input: statement import, bank SMS, receipt scan ───────────────
+
+export interface StatementRow {
+  rowId: string;
+  date: string;
+  description: string;
+  amount: number;
+  direction: 'debit' | 'credit';
+  balance: number | null;
+  /** 'imported' = already imported; 'possible' = a manual entry with the same amount within a day */
+  duplicate: 'imported' | 'possible' | null;
+  category?: string;
+  type?: TransactionType;
+  confidence?: number;
+  needsReview?: boolean;
+  classificationSource?: string;
+  /** Income source for credits */
+  source?: string;
+  userEdited?: boolean;
+}
+
+export interface StatementPreview {
+  parser: 'csv' | 'gemini' | 'local';
+  fallbackReason?: string;
+  rows: StatementRow[];
+  summary: {
+    count: number;
+    debits: number;
+    credits: number;
+    duplicates: number;
+    openingBalance: number | null;
+    closingBalance: number | null;
+    periodStart: string | null;
+    periodEnd: string | null;
+    last4: string | null;
+  };
+  suggestedPaymentMethodId?: string;
+}
+
+export interface StatementCommitResult {
+  batchId: string;
+  insertedTransactions: number;
+  insertedIncome: number;
+  skipped: number;
+  balanceSetTo?: number;
+}
+
+/** Draft entry read from a bank SMS or a receipt photo. Nothing is saved yet. */
+export interface EntryDraft {
+  amount: number;
+  direction?: 'debit' | 'credit';
+  description: string;
+  merchant?: string | null;
+  date: string | null;
+  paymentMethodId?: string | null;
+  category?: string;
+  type?: TransactionType;
+  confidence?: number;
+}
+
+export interface CapturedItem extends EntryDraft {
+  id: string;
+  direction: 'debit' | 'credit';
+  date: string;
+  createdAt: string;
+}
+
+/** Error code from the import/SMS/receipt endpoints, e.g. PASSWORD_REQUIRED. */
+export function apiErrorCode(err: unknown): string | undefined {
+  return (err as { response?: { data?: { code?: string } } })?.response?.data?.code;
+}
+
+export async function previewStatement(payload: { fileName: string; mimeType: string; data: string; password?: string }): Promise<StatementPreview> {
+  // PDF parsing can wait on Gemini before falling back, so allow longer than the default 10 s.
+  const { data } = await api.post<StatementPreview>('/api/import/statement/preview', payload, { timeout: 90000 });
+  return data;
+}
+
+export async function commitStatement(payload: { rows: StatementRow[]; paymentMethodId: string | null; setClosingBalance?: boolean; closingBalance?: number | null }): Promise<StatementCommitResult> {
+  const { data } = await api.post<StatementCommitResult>('/api/import/statement/commit', payload, { timeout: 60000 });
+  return data;
+}
+
+export async function undoImport(batchId: string): Promise<{ deletedTransactions: number; deletedIncome: number }> {
+  const { data } = await api.delete(`/api/import/${batchId}`);
+  return data;
+}
+
+export async function parseBankSms(text: string): Promise<EntryDraft> {
+  const { data } = await api.post<EntryDraft>('/api/sms/parse', { text }, { timeout: 30000 });
+  return data;
+}
+
+export async function scanReceipt(payload: { data: string; mimeType: string }): Promise<EntryDraft> {
+  const { data } = await api.post<EntryDraft>('/api/receipt/scan', payload, { timeout: 45000 });
+  return data;
+}
+
+export async function getCaptured(): Promise<CapturedItem[]> {
+  const { data } = await api.get<CapturedItem[]>('/api/captured');
+  return Array.isArray(data) ? data : [];
+}
+
+export async function dismissCaptured(id: string): Promise<void> {
+  await api.post(`/api/captured/${id}/dismiss`);
 }
 
 // ── Income ───────────────────────────────────────────────────────────────────

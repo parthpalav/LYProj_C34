@@ -540,6 +540,15 @@ export function TransactionsScreen(): React.ReactElement {
           </Animated.View>
         )}
 
+        <Card onPress={() => navigation.navigate('ImportStatement')} style={styles.suggestion} accessibilityLabel="Import a bank statement">
+          <IconTile icon="document-attach-outline" tint={c.info} />
+          <View style={styles.flex}>
+            <Text style={styles.suggestionKicker}>Skip the typing</Text>
+            <Text style={styles.suggestionTitle}>Import a bank statement</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={18} color={c.textSubtle} />
+        </Card>
+
         {reviewCount > 0 && (
           <Card onPress={() => navigation.navigate('Review')} style={styles.suggestion} accessibilityLabel={`Check ${reviewCount} AI guesses`}>
             <IconTile icon="sparkles" tint={c.primary} />

@@ -30,10 +30,11 @@ const SOURCE_LABELS: Record<string, string> = {
   rental: '🏠 Rental',
   consulting: '🤝 Consulting',
   bonus: '🎁 Bonus',
+  reimbursement: '↩️ Paid back',
   other: '💰 Other',
 };
 
-const SOURCE_KEYS = ['salary', 'gig', 'freelance', 'business', 'rental', 'consulting', 'bonus', 'other'] as const;
+const SOURCE_KEYS = ['salary', 'gig', 'freelance', 'business', 'rental', 'consulting', 'bonus', 'reimbursement', 'other'] as const;
 
 type Entry = IncomeFlowData['timeline'][number];
 

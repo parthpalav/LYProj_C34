@@ -1,7 +1,7 @@
 import express, { Router } from 'express';
 import jwt from 'jsonwebtoken';
 import { detectAnomaly } from '../services/TransactionService.js';
-import { calculateFMI } from '../services/FMIService.js';
+import { calculateFMI, resolveMonthlyIncome, VARIABLE_INCOME_TYPES, VARIABLE_INCOME_WINDOW_DAYS, NON_EARNED_INCOME_SOURCES } from '../services/FMIService.js';
 import { predictOverspend, detectLowBalanceRisk } from '../services/PredictionService.js';
 import { applyRoundup, allocateToEnvelope, generateMicroActions } from '../services/MicroActionService.js';
 import { generateResponse } from '../services/AgentService.js';
@@ -1310,9 +1310,19 @@ router.get('/fmi', async (req, res, next) => {
 
     // Find retirement goal (or use fallback: monthlyIncome * 12 * 20)
     const retirementGoalObj = goals.find(g => /retire/i.test(g.name)) || null;
-    const monthlyIncome = Number(user?.monthlyIncome ?? 0);
+    const declaredIncome = Number(user?.monthlyIncome ?? 0);
+    // Retirement fallback stays on the declared figure: a 30-day window would swing a 20-year target
     const retirementGoal = retirementGoalObj?.targetAmount
-      || Math.round(monthlyIncome * 12 * 20);
+      || Math.round(declaredIncome * 12 * 20);
+
+    let monthlyIncome = declaredIncome;
+    if (VARIABLE_INCOME_TYPES.includes(user?.incomeType)) {
+      const since = new Date(Date.now() - VARIABLE_INCOME_WINDOW_DAYS * 86400000);
+      const earned = { userId, source: { $nin: NON_EARNED_INCOME_SOURCES } };
+      const recent = await Income.find({ ...earned, timestamp: { $gte: since, $lte: new Date() } }).lean();
+      const recentIncome = recent.reduce((s, i) => s + (Number(i.amount) || 0), 0);
+      monthlyIncome = resolveMonthlyIncome(user, recentIncome, recent.length > 0 || !!(await Income.exists(earned)));
+    }
 
     // Build the user profile for FMI calculation
     const fmiUser = {

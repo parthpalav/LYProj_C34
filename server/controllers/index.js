@@ -1,7 +1,7 @@
 import express, { Router } from 'express';
 import jwt from 'jsonwebtoken';
 import { detectAnomaly } from '../services/TransactionService.js';
-import { calculateFMI, resolveMonthlyIncome, VARIABLE_INCOME_TYPES, VARIABLE_INCOME_WINDOW_DAYS, NON_EARNED_INCOME_SOURCES } from '../services/FMIService.js';
+import { calculateFMI, buildFmiUser, VARIABLE_INCOME_TYPES } from '../services/FMIService.js';
 import { predictOverspend, detectLowBalanceRisk } from '../services/PredictionService.js';
 import { applyRoundup, allocateToEnvelope, generateMicroActions } from '../services/MicroActionService.js';
 import { generateResponse } from '../services/AgentService.js';
@@ -38,10 +38,10 @@ import User        from '../models/User.js';
 
 import Transaction, { VALID_CATEGORIES, VALID_TYPES } from '../models/Transaction.js';
 import Liability   from '../models/Liability.js';
-import { calculateNextDueDate } from './liabilityController.js';
 import { SUPPORTED_TIMEZONES, resolveTimezone, zonedMonthStart, zonedDateKey } from '../utils/userTime.js';
 import { getUserTimezone } from '../services/userTimezone.js';
 import { getMonthlyCommitments } from '../services/CommitmentService.js';
+import { claimOccurrence, finalizeOccurrence, releaseClaim, occurrenceKeyFor, MAX_USER_OCCURRENCE_HISTORY } from '../services/LiabilityScheduler.js';
 import { resolvePaymentMethodId, chargeSource, refundSource, PaymentMethodError } from '../services/PaymentMethodService.js';
 import FMIHistory  from '../models/FMIHistory.js';
 import Alert       from '../models/Alert.js';
@@ -791,19 +791,34 @@ router.put('/user/:id/onboarding-complete', async (req, res, next) => {
 router.put('/user/:id/current-balance', async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { operation, amount, currentBalance } = req.body;
-    let nextBalance;
+    const { operation, amount, currentBalance, expectedBalance } = req.body;
 
     if (id !== req.user.id) {
       return res.status(403).json({ error: 'Forbidden' });
     }
 
+    let updated;
     if (currentBalance !== undefined && currentBalance !== null) {
+      // Replacing the balance must name the balance being replaced, so a stale
+      // screen cannot erase a credit, debit or ledger write that landed since.
       const absoluteBalance = Number(currentBalance);
+      const expected = Number(expectedBalance);
       if (!Number.isFinite(absoluteBalance)) {
         return res.status(400).json({ error: 'Current balance must be a valid number' });
       }
-      nextBalance = absoluteBalance;
+      if (expectedBalance === undefined || expectedBalance === null || !Number.isFinite(expected)) {
+        return res.status(400).json({ error: 'expectedBalance is required when replacing the balance' });
+      }
+      updated = await User.findOneAndUpdate(
+        { id, currentBalance: expected },
+        { $set: { currentBalance: absoluteBalance } },
+        { new: true }
+      ).lean();
+      if (!updated) {
+        const user = await User.findOne({ id }, { currentBalance: 1 }).lean();
+        if (!user) return res.status(404).json({ error: 'User not found' });
+        return res.status(409).json({ error: 'Balance changed since it was loaded. Reload and try again.', currentBalance: user.currentBalance });
+      }
     } else {
       if (!operation || amount === undefined || amount === null) {
         return res.status(400).json({ error: 'Operation and amount are required' });
@@ -818,27 +833,17 @@ router.put('/user/:id/current-balance', async (req, res, next) => {
         return res.status(400).json({ error: 'Amount must be a positive number' });
       }
 
-      const user = await User.findOne({ id }).lean();
-      if (!user) {
+      // Signed increment in one write: concurrent adjustments all land.
+      updated = await User.findOneAndUpdate(
+        { id },
+        { $inc: { currentBalance: operation === 'credit' ? parsedAmount : -parsedAmount } },
+        { new: true }
+      ).lean();
+      if (!updated) {
         return res.status(404).json({ error: 'User not found' });
       }
-
-      const existingBalance = parseFloat(user.currentBalance || 0);
-      nextBalance = operation === 'credit'
-        ? existingBalance + parsedAmount
-        : existingBalance - parsedAmount;
     }
 
-    const updated = await User.findOneAndUpdate(
-      { id },
-      { currentBalance: nextBalance },
-      { new: true }
-    ).lean();
-    
-    if (!updated) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-    
     res.json({ success: true, currentBalance: updated.currentBalance });
   } catch (error) { next(error); }
 });
@@ -1028,33 +1033,56 @@ router.post('/transactions', async (req, res, next) => {
       const method = session
         ? await resolvePaymentMethodId(userId, req.body.paymentMethodId, { session })
         : paymentMethodId;
-      await chargeSource(userId, method, debitAmount, { session });
 
+      // Share the scheduler's claim and paid marker for manual and SMS payments.
+      const occurrenceToken = scheduledFor ? await claimOccurrence(liability.id, scheduledFor, { session }) : null;
+      if (scheduledFor && !occurrenceToken) {
+        throw new ExpenseInputError(409, 'This scheduled payment is being processed. Please refresh and try again.');
+      }
+      const occurrenceKey = scheduledFor ? occurrenceKeyFor(liability.id, scheduledFor) : null;
       const fields = { ...entryFields, id, paymentMethodId: method, liabilityId: liability?.id ?? null, scheduledFor };
+      let marked = false;
+      let charged = false;
       let entry;
       try {
+        if (occurrenceKey) {
+          const user = await User.findOneAndUpdate(
+            { id: userId, processedLiabilityOccurrences: { $ne: occurrenceKey } },
+            { $push: { processedLiabilityOccurrences: { $each: [occurrenceKey], $slice: -MAX_USER_OCCURRENCE_HISTORY } } },
+            { session },
+          );
+          if (!user) {
+            throw new ExpenseInputError(409, 'The scheduled payment was just fulfilled by another transaction. Please try again.');
+          }
+          marked = true;
+        }
+        await chargeSource(userId, method, debitAmount, { session });
+        charged = true;
         entry = session
           ? (await Transaction.create([fields], { session }))[0]
           : await Transaction.create(fields);
       } catch (error) {
-        if (!session) await refundSource(userId, method, debitAmount);
+        // A failed SMS transaction rolls these writes back together.
+        if (!session) {
+          if (charged) await refundSource(userId, method, debitAmount);
+          if (marked) await User.updateOne({ id: userId }, { $pull: { processedLiabilityOccurrences: occurrenceKey } });
+          if (occurrenceToken) await releaseClaim(liability.id, scheduledFor, occurrenceToken);
+        }
         throw error;
       }
 
-      if (scheduledFor) {
+      if (occurrenceToken) {
         try {
-          const nextDate = calculateNextDueDate(liability, scheduledFor, resolveTimezone(userExists.timezone));
-          const updated = await Liability.findOneAndUpdate(
-            { id: liability.id, nextDueDate: scheduledFor },
-            { $set: { nextDueDate: nextDate } },
-            { new: true, session },
-          );
-          if (!updated && session) {
-            throw new ExpenseInputError(409, 'The scheduled payment date has changed. Please refresh and try again.');
+          const timezone = resolveTimezone(userExists.timezone);
+          if (!await finalizeOccurrence(liability, scheduledFor, occurrenceToken, { session, timezone })) {
+            if (session) {
+              throw new ExpenseInputError(409, 'The scheduled payment date has changed. Please refresh and try again.');
+            }
+            logger.warn(`Liability ${liability.id} changed before its due date could advance; the scheduler will finish it.`);
           }
-          if (!updated) logger.warn(`Liability nextDueDate changed concurrently for ${liability.id}`);
         } catch (error) {
           if (session) throw error;
+          // The paid marker lets the scheduler advance the date without another debit.
           logger.error(`Failed to advance nextDueDate for liability ${liability.id}:`, error);
         }
       }
@@ -1189,45 +1217,49 @@ router.put('/transactions/:id', async (req, res, next) => {
 
     let updated;
     if (sanitized.amount !== undefined || sanitized.paymentMethodId !== undefined) {
-      const oldTx = await Transaction.findOne({ id: req.params.id, userId }).lean();
-      if (!oldTx) return res.status(404).json({ error: 'Transaction not found' });
+      // The record update is conditional on the amount and source the money move
+      // was computed from. If another edit or a delete got there first, the move
+      // is undone and the edit retries against the fresh record.
+      for (let attempt = 0; attempt < 5 && !updated; attempt++) {
+        const oldTx = await Transaction.findOne({ id: req.params.id, userId }).lean();
+        if (!oldTx) return res.status(404).json({ error: 'Transaction not found' });
 
-      // Move the money: give the old amount back to the old source, then take the
-      // new amount from the new source (bank balance or credit card).
-      const oldSource = oldTx.paymentMethodId ?? null;
-      const newSource = sanitized.paymentMethodId !== undefined ? sanitized.paymentMethodId : oldSource;
-      const newAmount = sanitized.amount !== undefined ? sanitized.amount : oldTx.amount;
-      const moved = !oldTx.importBatchId && (oldSource !== newSource || oldTx.amount !== newAmount);
-      const undoMove = async () => {
-        await refundSource(userId, newSource, newAmount);
-        await chargeSource(userId, oldSource, oldTx.amount, { force: true });
-      };
-
-      if (moved) {
-        await refundSource(userId, oldSource, oldTx.amount);
-        try {
-          await chargeSource(userId, newSource, newAmount);
-        } catch (err) {
+        // Move the money: give the old amount back to the old source, then take the
+        // new amount from the new source (bank balance or credit card).
+        const oldSource = oldTx.paymentMethodId ?? null;
+        const newSource = sanitized.paymentMethodId !== undefined ? sanitized.paymentMethodId : oldSource;
+        const newAmount = sanitized.amount !== undefined ? sanitized.amount : oldTx.amount;
+        const moved = !oldTx.importBatchId && (oldSource !== newSource || oldTx.amount !== newAmount);
+        const undoMove = async () => {
+          await refundSource(userId, newSource, newAmount);
           await chargeSource(userId, oldSource, oldTx.amount, { force: true });
-          if (err instanceof PaymentMethodError) return res.status(err.status).json({ error: err.message });
-          throw err;
+        };
+
+        if (moved) {
+          await refundSource(userId, oldSource, oldTx.amount);
+          try {
+            await chargeSource(userId, newSource, newAmount);
+          } catch (err) {
+            await chargeSource(userId, oldSource, oldTx.amount, { force: true });
+            if (err instanceof PaymentMethodError) return res.status(err.status).json({ error: err.message });
+            throw err;
+          }
         }
-      }
 
-      try {
-        updated = await Transaction.findOneAndUpdate(
-          { id: req.params.id, userId },
-          { $set: sanitized },
-          { new: true, runValidators: true }
-        ).lean();
-
-        if (!updated) {
+        try {
+          updated = await Transaction.findOneAndUpdate(
+            { id: req.params.id, userId, amount: oldTx.amount, paymentMethodId: oldSource },
+            { $set: sanitized },
+            { new: true, runValidators: true }
+          ).lean();
+        } catch (updateErr) {
           if (moved) await undoMove();
-          return res.status(404).json({ error: 'Transaction not found' });
+          throw updateErr;
         }
-      } catch (updateErr) {
-        if (moved) await undoMove();
-        throw updateErr;
+        if (!updated && moved) await undoMove();
+      }
+      if (!updated) {
+        return res.status(409).json({ error: 'This expense is being changed elsewhere. Reload and try again.' });
       }
     } else {
       updated = await Transaction.findOneAndUpdate(
@@ -1250,26 +1282,17 @@ router.put('/transactions/:id', async (req, res, next) => {
 router.delete('/transactions/:id', async (req, res, next) => {
   try {
     const userId = req.user.id;
-    const oldTx = await Transaction.findOne({ id: req.params.id, userId }).lean();
-    if (!oldTx) return res.status(404).json({ error: 'Transaction not found' });
+    // Delete first: the removed document carries the amount and source that were
+    // actually on record, even if an edit landed a moment earlier.
+    const deleted = await Transaction.findOneAndDelete({ id: req.params.id, userId }).lean();
+    if (!deleted) return res.status(404).json({ error: 'Transaction not found' });
 
-    const refundAmount = oldTx.amount;
-
-    const source = oldTx.paymentMethodId ?? null;
-
-    const affectsBalance = !oldTx.importBatchId;
-    if (affectsBalance) await refundSource(userId, source, refundAmount);
-
+    // Refund the bank balance or credit card for the deleted expense
     try {
-      const deleted = await Transaction.findOneAndDelete({ id: req.params.id, userId }).lean();
-      if (!deleted) {
-        // Rollback refund if delete fails
-        if (affectsBalance) await chargeSource(userId, source, refundAmount, { force: true });
-        return res.status(404).json({ error: 'Transaction not found' });
-      }
-    } catch (deleteErr) {
-      if (affectsBalance) await chargeSource(userId, source, refundAmount, { force: true });
-      throw deleteErr;
+      if (!deleted.importBatchId) await refundSource(userId, deleted.paymentMethodId ?? null, deleted.amount);
+    } catch (refundErr) {
+      await Transaction.create(deleted);
+      throw refundErr;
     }
 
     res.json({ success: true, id: req.params.id });
@@ -1288,54 +1311,25 @@ router.get('/fmi', async (req, res, next) => {
     const user = await User.findOne({ id: userId }).lean();
     const goals = await Goal.find({ userId }).lean();
 
-    // Get current month's transactions (month boundaries in the user's timezone)
+    // This month so far, in the user's timezone. Future-dated entries have not happened yet.
+    const now = new Date();
     const tz = resolveTimezone(user?.timezone);
-    const monthStart = zonedMonthStart(new Date(), tz);
     const monthlyExpenses = await Transaction.find({
       userId,
-      timestamp: { $gte: monthStart }
+      timestamp: { $gte: zonedMonthStart(now, tz), $lte: now }
     }).sort({ timestamp: -1 }).lean();
 
     // Annotate transactions for behavioral analysis
     const annotated = annotateTransactions(monthlyExpenses, tz);
 
-    // Derive user age from dateOfBirth
-    const currentAge = user?.dateOfBirth
-      ? Math.max(18, new Date().getFullYear() - new Date(user.dateOfBirth).getFullYear())
-      : 25;
-
-    // Find retirement goal (or use fallback: monthlyIncome * 12 * 20)
-    const retirementGoalObj = goals.find(g => /retire/i.test(g.name)) || null;
-    const declaredIncome = Number(user?.monthlyIncome ?? 0);
-    // Retirement fallback stays on the declared figure: a 30-day window would swing a 20-year target
-    const retirementGoal = retirementGoalObj?.targetAmount
-      || Math.round(declaredIncome * 12 * 20);
-
-    let monthlyIncome = declaredIncome;
-    if (VARIABLE_INCOME_TYPES.includes(user?.incomeType)) {
-      const since = new Date(Date.now() - VARIABLE_INCOME_WINDOW_DAYS * 86400000);
-      const earned = { userId, source: { $nin: NON_EARNED_INCOME_SOURCES } };
-      const recent = await Income.find({ ...earned, timestamp: { $gte: since, $lte: new Date() } }).lean();
-      const recentIncome = recent.reduce((s, i) => s + (Number(i.amount) || 0), 0);
-      monthlyIncome = resolveMonthlyIncome(user, recentIncome, recent.length > 0 || !!(await Income.exists(earned)));
-    }
-
-    // Build the user profile for FMI calculation
-    const fmiUser = {
-      currentBalance:    Number(user?.currentBalance ?? 0),
-      monthlyIncome,
-      currentAge,
-      retirementAge:     Number(user?.retirementAge ?? 60),
-      retirementGoal,
-      previousShortfall: 0, // no historical shortfall tracking yet
-      timezone:          tz
-    };
+    // Same inputs as the assistant: retirement target rule, recent earned income for variable earners
+    const incomes = VARIABLE_INCOME_TYPES.includes(user?.incomeType) ? await Income.find({ userId }).lean() : [];
+    const fmiUser = buildFmiUser(user || {}, goals, incomes, now);
 
     // Calculate FMI (fully deterministic, no external service)
     const computed = calculateFMI(fmiUser, annotated);
 
     // Persist or update today's FMI snapshot (at most 1 per user per calendar day)
-    const now = new Date();
     const snapshotDate = zonedDateKey(now, tz); // "YYYY-MM-DD" in the user's timezone
 
     try {
@@ -1861,28 +1855,26 @@ router.put('/income/:id', async (req, res, next) => {
       if (isNaN(numericAmount) || !Number.isFinite(numericAmount) || numericAmount <= 0) {
         return res.status(400).json({ error: 'Income amount must be a finite positive number' });
       }
-
-      const oldIncome = await Income.findOne({ id: req.params.id, userId }).lean();
-      if (!oldIncome) return res.status(404).json({ message: 'Income not found' });
-
-      const delta = oldIncome.importBatchId ? 0 : numericAmount - oldIncome.amount;
       update.amount = numericAmount;
 
-      // Adjust user balance
-      if (delta) await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: delta } });
+      // The record update is conditional on the amount the balance delta came
+      // from; a concurrent edit or delete makes it miss, the delta is undone and
+      // the edit retries against the fresh record.
+      for (let attempt = 0; attempt < 5 && !income; attempt++) {
+        const oldIncome = await Income.findOne({ id: req.params.id, userId }).lean();
+        if (!oldIncome) return res.status(404).json({ message: 'Income not found' });
 
-      try {
-        income = await Income.findOneAndUpdate({ id: req.params.id, userId }, update, { new: true }).lean();
-        if (!income) {
-          // Revert balance adjustment if update fails
+        const delta = oldIncome.importBatchId ? 0 : numericAmount - oldIncome.amount;
+        if (delta) await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: delta } });
+        try {
+          income = await Income.findOneAndUpdate({ id: req.params.id, userId, amount: oldIncome.amount }, update, { new: true }).lean();
+        } catch (err) {
           if (delta) await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: -delta } });
-          return res.status(404).json({ message: 'Income not found' });
+          throw err;
         }
-      } catch (err) {
-        // Revert balance adjustment
-        if (delta) await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: -delta } });
-        throw err;
+        if (!income && delta) await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: -delta } });
       }
+      if (!income) return res.status(409).json({ message: 'This income is being changed elsewhere. Reload and try again.' });
     } else {
       income = await Income.findOneAndUpdate({ id: req.params.id, userId }, update, { new: true }).lean();
       if (!income) return res.status(404).json({ message: 'Income not found' });
@@ -1895,22 +1887,16 @@ router.put('/income/:id', async (req, res, next) => {
 router.delete('/income/:id', async (req, res, next) => {
   try {
     const userId = req.user.id;
-    const oldIncome = await Income.findOne({ id: req.params.id, userId }).lean();
-    if (!oldIncome) return res.status(404).json({ message: 'Income not found' });
-
-    const affectsBalance = !oldIncome.importBatchId;
-    if (affectsBalance) await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: -oldIncome.amount } });
+    // Delete first so the balance moves by the amount that was actually on record.
+    const deleted = await Income.findOneAndDelete({ id: req.params.id, userId }).lean();
+    if (!deleted) return res.status(404).json({ message: 'Income not found' });
 
     try {
-      const deleted = await Income.findOneAndDelete({ id: req.params.id, userId }).lean();
-      if (!deleted) {
-        // Revert balance deduction if delete fails
-        if (affectsBalance) await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: oldIncome.amount } });
-        return res.status(404).json({ message: 'Income not found' });
+      if (!deleted.importBatchId) {
+        await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: -deleted.amount } });
       }
     } catch (err) {
-      // Revert balance deduction
-      if (affectsBalance) await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: oldIncome.amount } });
+      await Income.create(deleted);
       throw err;
     }
 

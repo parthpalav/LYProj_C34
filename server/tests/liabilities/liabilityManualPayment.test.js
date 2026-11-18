@@ -6,7 +6,7 @@ import User from '../../models/User.js';
 import controllerRouter from '../../controllers/index.js';
 import { processLiabilities } from '../../services/LiabilityScheduler.js';
 import { calculateFMI } from '../../services/FMIService.js';
-import { connectDB } from '../../config/db.js';
+import { connectTestDB } from '../testDb.js';
 import 'dotenv/config';
 
 // Helper to simulate Express route calls
@@ -41,7 +41,7 @@ async function runTests() {
   console.log('  MARK UPCOMING PAYMENT AS PAID TEST SUITE');
   console.log('============================================================\n');
 
-  await connectDB();
+  await connectTestDB();
   const testUserIds = ['USER_C', 'USER_D'];
   await Liability.deleteMany({ userId: { $in: testUserIds } });
   await Transaction.deleteMany({ userId: { $in: testUserIds } });

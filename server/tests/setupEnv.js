@@ -6,7 +6,12 @@
  * BEFORE any application modules or routes are imported and evaluated.
  */
 
-import 'dotenv/config';
+import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+
+// server/.env whichever directory the suite is started from (repo root or server/),
+// so HTTP suites sign tokens with the same secret as the running API.
+dotenv.config({ path: fileURLToPath(new URL('../.env', import.meta.url)) });
 
 export const TEST_JWT_SECRET = 'test-only-jwt-secret-at-least-32-chars-long-for-finaura-phase9';
 

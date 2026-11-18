@@ -52,7 +52,8 @@ const transactionSchema = new mongoose.Schema(
     isAnomaly: { type: Boolean, default: false },
     classificationSource: {
       type: String,
-      enum: ['ml', 'merchant_rule', 'tfidf', 'tfidf_v2', 'minilm', 'finaura_v4', 'user_memory', 'fallback', 'manual', 'liability', 'unknown'],
+      // finaura_vN is the fine-tuned model family the ML service actually loaded (finaura_v4, finaura_v7, ...)
+      match: [/^(ml|merchant_rule|tfidf|tfidf_v2|minilm|finaura_v\d+[a-z]?|user_memory|fallback|manual|liability|unknown)$/, 'Unknown classificationSource "{VALUE}"'],
       default: 'unknown'
     },
     categorySource: { type: String, default: 'unknown' },

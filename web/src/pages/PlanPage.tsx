@@ -274,6 +274,7 @@ export const PlanPage: React.FC = () => {
       />
 
       <FundGoalModal
+        key={goalToFund?.id ?? 'none'}
         goal={goalToFund}
         onClose={() => setGoalToFund(null)}
         onSave={async (goal, newSaved) => { await goalsDomain.editGoal(goal.id, { savedAmount: newSaved }); }}

@@ -148,6 +148,12 @@ function formatINR(amount) {
   return `₹${Math.round(amount).toLocaleString('en-IN')}`;
 }
 
+// " a year" / " a week" after a non-monthly installment, so ₹12,000 a year is not read as monthly.
+const PER = { yearly: ' a year', weekly: ' a week', daily: ' a day' };
+function perInstallment(l) {
+  return PER[l.frequency] || '';
+}
+
 /**
  * Resolves a text string to a canonical V3 category name using alias map
  * 
@@ -516,14 +522,14 @@ export function routeDeterministicIntent(rawMessage, context = {}, history = [])
       return {
         handled: true,
         intent: 'UPCOMING_LIABILITIES',
-        response: `Your next recorded liability is ${l.name} of ${formatINR(l.amount)}${dateStr}${autoStr}.`
+        response: `Your next recorded liability is ${l.name} of ${formatINR(l.amount)}${perInstallment(l)}${dateStr}${autoStr}.`
       };
     }
     const list = active.map(l => {
       const dateStr = l.nextDueDate
         ? ` (Due: ${new Date(l.nextDueDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })})`
         : '';
-      return `• ${l.name}: ${formatINR(l.amount)}${dateStr}`;
+      return `• ${l.name}: ${formatINR(l.amount)}${perInstallment(l)}${dateStr}`;
     }).join('\n');
 
     return {

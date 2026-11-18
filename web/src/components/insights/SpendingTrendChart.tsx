@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { useEffect, useEffectEvent, useMemo, useRef } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -75,17 +75,18 @@ export const SpendingTrendChart: React.FC<SpendingTrendChartProps> = ({
   const drilled = days.length > 1;
   const card = useRef<HTMLDivElement>(null);
   const close = pick.close;
+  // Latest pick.close for the listeners, without re-subscribing them on every render.
+  const closeFromOutside = useEffectEvent(() => pick.close());
   useEffect(() => {
     if (!drilled) return;
-    const onDown = (e: MouseEvent) => { if (!card.current?.contains(e.target as Node)) close(); };
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') close(); };
+    const onDown = (e: MouseEvent) => { if (!card.current?.contains(e.target as Node)) closeFromOutside(); };
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') closeFromOutside(); };
     document.addEventListener('mousedown', onDown);
     document.addEventListener('keydown', onKey);
     return () => {
       document.removeEventListener('mousedown', onDown);
       document.removeEventListener('keydown', onKey);
     };
-    // close is omitted from the deps: it only does a functional setState, and is a new function each render
   }, [drilled]);
   const bar = drilled ? { stackId: 'day', maxBarSize: 28 } : { radius: [4, 4, 0, 0] as [number, number, number, number], maxBarSize: 32 };
 

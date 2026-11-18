@@ -10,7 +10,8 @@ import { Liability, LiabilityPaymentSummary, LiabilityPaymentHistoryResponse, Pa
 import { CreditCardsSection } from '../components/bills/CreditCardsSection';
 import { createStyles, radius, tabular, typeScale, useTheme } from '../theme';
 import { formatCurrency, monthlyEquivalent } from '../utils/format';
-import { dueDatesWithin, nextDue } from '../utils/bills';
+import { accountDay, dueDatesWithin, nextDue } from '../utils/bills';
+import { useStore } from '../store/useStore';
 import { Card } from '../components/ui/Card';
 import { Badge, Chip, EmptyState, ErrorState, IconTile, MoneyText, SectionHeader } from '../components/ui/Bits';
 import { Button } from '../components/ui/Button';
@@ -34,9 +35,9 @@ const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 const shortDate = (d: Date) => d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
 const sameDay = (a: Date, b: Date) => a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
 
-function relativeDue(d: Date): string {
-  const today = new Date();
-  const diff = Math.round((new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime() - new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime()) / 86400000);
+// `d` is an account-timezone day (see utils/bills); compare it with today in that same zone.
+function relativeDue(d: Date, tz?: string | null): string {
+  const diff = Math.round((d.getTime() - accountDay(new Date(), tz).getTime()) / 86400000);
   if (diff === 0) return 'Due today';
   if (diff === 1) return 'Due tomorrow';
   if (diff < 7) return `Due in ${diff} days`;
@@ -49,6 +50,7 @@ const isLoan = (l: Liability) => l.outstandingBalance != null || l.category === 
 /** Liabilities half of the Net worth screen: loans first, then cards, the due strip and bills. */
 export function LiabilitiesPanel({ addKey, refreshKey, onTotal }: PanelProps) {
   const { c } = useTheme();
+  const tz = useStore((st) => st.user?.timezone);
   const styles = useStyles();
   const [liabilities, setLiabilities] = useState<Liability[]>([]);
   const [paymentSummaries, setPaymentSummaries] = useState<Record<string, LiabilityPaymentSummary>>({});
@@ -255,17 +257,16 @@ export function LiabilitiesPanel({ addKey, refreshKey, onTotal }: PanelProps) {
   // Every bill falling in the next 30 days, soonest first.
   const upcoming = useMemo(
     () => activeLiabilities
-      .flatMap((l) => dueDatesWithin(l, 30).map((date) => ({ l, date })))
+      .flatMap((l) => dueDatesWithin(l, 30, new Date(), tz).map((date) => ({ l, date })))
       .sort((a, b) => a.date.getTime() - b.date.getTime()),
-    [activeLiabilities],
+    [activeLiabilities, tz],
   );
   const dueNext30 = upcoming.reduce((s, u) => s + u.l.amount, 0);
   const strip = useMemo(() => Array.from({ length: STRIP_DAYS }, (_, i) => {
-    const d = new Date();
-    d.setHours(0, 0, 0, 0);
+    const d = accountDay(new Date(), tz);
     d.setDate(d.getDate() + i);
     return { date: d, items: upcoming.filter((u) => sameDay(u.date, d)) };
-  }), [upcoming]);
+  }), [upcoming, tz]);
   const loans = activeLiabilities.filter(isLoan);
   const bills = activeLiabilities.filter((l) => !isLoan(l));
   // Owed = loan balances + card outstanding, the same sum the server uses for net worth.
@@ -277,7 +278,7 @@ export function LiabilitiesPanel({ addKey, refreshKey, onTotal }: PanelProps) {
   const billCard = (item: Liability, idx: number) => {
     const summary = paymentSummaries[item.id];
     const hasPayments = summary && summary.paymentCount > 0;
-    const due = nextDue(item);
+    const due = nextDue(item, new Date(), tz);
     return (
       <Animated.View key={item.id} entering={enterUp(idx)} exiting={exitFade} layout={listLayout}>
         <Card style={styles.billCard}>
@@ -289,7 +290,7 @@ export function LiabilitiesPanel({ addKey, refreshKey, onTotal }: PanelProps) {
             </View>
             <View style={styles.billRight}>
               <Text style={styles.rowAmount}>{formatCurrency(item.amount)}</Text>
-              <Text style={styles.rowSub}>{relativeDue(due)}</Text>
+              <Text style={styles.rowSub}>{relativeDue(due, tz)}</Text>
             </View>
           </View>
 
@@ -402,7 +403,7 @@ export function LiabilitiesPanel({ addKey, refreshKey, onTotal }: PanelProps) {
                 </View>
                 <View style={styles.flex}>
                   <Text style={styles.rowTitle} numberOfLines={1}>{l.name}</Text>
-                  <Text style={styles.rowSub}>{relativeDue(date)}{l.autoDeduct ? ' · auto-deducts' : ''}</Text>
+                  <Text style={styles.rowSub}>{relativeDue(date, tz)}{l.autoDeduct ? ' · auto-deducts' : ''}</Text>
                 </View>
                 <Text style={styles.rowAmount}>{formatCurrency(l.amount)}</Text>
               </View>

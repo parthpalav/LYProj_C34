@@ -16,6 +16,8 @@ export function CommitmentsSheet({ visible, onClose, commitments: c, balance }: 
   balance: number;
 }) {
   const styles = useStyles();
+  const overdue = c.overdue ?? 0;
+  const free = balance - c.remaining - overdue;
   return (
     <Sheet visible={visible} onClose={onClose} title="Committed this month">
       <ScrollView style={{ maxHeight: 460 }}>
@@ -26,9 +28,14 @@ export function CommitmentsSheet({ visible, onClose, commitments: c, balance }: 
           </View>
           <View style={styles.stat}>
             <Text style={styles.muted}>Free after bills</Text>
-            <Text style={[styles.value, balance - c.remaining < 0 && styles.negative]}>{formatCurrency(balance - c.remaining)}</Text>
+            <Text style={[styles.value, free < 0 && styles.negative]}>{formatCurrency(free)}</Text>
           </View>
         </View>
+        {overdue > 0 ? (
+          <Text style={[styles.muted, styles.negative]}>
+            Also {formatCurrency(overdue)} overdue from earlier months, set aside in "Free after bills".
+          </Text>
+        ) : null}
         <Text style={styles.muted}>
           Already deducted {formatCurrency(c.paidSoFar)}
           {Object.entries(c.byType).map(([type, t]) => ` · ${type} ${formatCurrency(t.remaining)} left`).join('')}
@@ -42,10 +49,10 @@ export function CommitmentsSheet({ visible, onClose, commitments: c, balance }: 
               <View style={{ flex: 1 }}>
                 <Text style={styles.name}>{it.name} <Text style={styles.muted}>· {it.type}</Text></Text>
                 <Text style={styles.muted}>
-                  {[...it.paidDates.map((d) => `✓ ${day(d)}`), ...it.dueDates.map(day)].join('  ')}
+                  {[...(it.overdueDates ?? []).map((d) => `! ${day(d)} overdue`), ...it.paidDates.map((d) => `✓ ${day(d)}`), ...it.dueDates.map(day)].join('  ')}
                 </Text>
               </View>
-              <Text style={styles.amount}>{it.remainingAmount > 0 ? formatCurrency(it.remainingAmount) : 'Paid'}</Text>
+              <Text style={styles.amount}>{it.remainingAmount + (it.overdueAmount ?? 0) > 0 ? formatCurrency(it.remainingAmount + (it.overdueAmount ?? 0)) : 'Paid'}</Text>
             </View>
           ))
         )}

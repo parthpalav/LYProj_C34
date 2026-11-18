@@ -41,6 +41,7 @@ assert.equal(r.monthEnd, '2026-07-31');
 assert.equal(r.remaining, 2000 + 1500 + 21 * 60);
 assert.equal(r.paidSoFar, 500 + 20000 + 600);
 assert.equal(r.committedTotal, r.paidSoFar + r.remaining);
+assert.equal(r.overdue, 0);
 assert.equal(r.freeBalance, 100000 - r.remaining);
 assert.deepEqual(r.byType.Want, { committed: 1500, remaining: 1500 });
 assert.equal(r.items[0].id, 'weekly', 'sorted by next due date');
@@ -55,5 +56,27 @@ const ist = buildCommitments({
 });
 assert.equal(ist.month, '2026-08');
 assert.deepEqual(ist.items[0].dueDates, ['2026-08-01']);
+
+// Missed month: November view with an unpaid October 5 occurrence (scheduler behind).
+const bill = { ...base, id: 'missed', name: 'Broadband', amount: 1000, frequency: 'monthly', dayOfMonth: 5 };
+const nov = new Date('2026-11-18T12:00:00Z');
+const behind = buildCommitments({ liabilities: [{ ...bill, nextDueDate: d('2026-10-05') }], paidTxs: [], currentBalance: 1500, now: nov, tz });
+assert.equal(behind.remaining, 1000, 'November total holds only November dues');
+assert.equal(behind.overdue, 1000, 'October arrears reported separately');
+assert.deepEqual(behind.items[0].dueDates, ['2026-11-05']);
+assert.deepEqual(behind.items[0].overdueDates, ['2026-10-05']);
+assert.equal(behind.committedTotal, 1000);
+assert.equal(behind.freeBalance, -500, 'arrears are still reserved, and labelled as overdue by the UI');
+
+// After the scheduler catches up (debits Oct 5 and Nov 5, pointer moves to Dec 5).
+const caughtUp = buildCommitments({
+  liabilities: [{ ...bill, nextDueDate: d('2026-12-05') }],
+  paidTxs: [{ liabilityId: 'missed', scheduledFor: d('2026-10-05'), amount: 1000 }, { liabilityId: 'missed', scheduledFor: d('2026-11-05'), amount: 1000 }],
+  currentBalance: -500, now: nov, tz,
+});
+assert.equal(caughtUp.overdue, 0);
+assert.equal(caughtUp.remaining, 0);
+assert.equal(caughtUp.paidSoFar, 1000, 'only the November debit belongs to November');
+assert.deepEqual(caughtUp.items[0].paidDates, ['2026-11-05']);
 
 console.log('commitments: all checks passed');

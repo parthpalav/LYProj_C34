@@ -43,6 +43,9 @@ export interface MonthlyCommitments {
   committedTotal: number;
   paidSoFar: number;
   remaining: number;
+  /** Unpaid dues from earlier months the scheduler will still take; not part of `remaining`. */
+  overdue: number;
+  /** Balance minus this month's remaining dues and overdue ones. */
   freeBalance: number;
   byType: Record<string, { committed: number; remaining: number }>;
   items: Array<{
@@ -54,9 +57,11 @@ export interface MonthlyCommitments {
     frequency: string;
     paidDates: string[];
     dueDates: string[];
+    overdueDates: string[];
     paidCount: number;
     paidAmount: number;
     remainingAmount: number;
+    overdueAmount: number;
     nextDueDate: string | null;
   }>;
 }

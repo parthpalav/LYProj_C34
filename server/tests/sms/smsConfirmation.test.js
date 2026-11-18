@@ -31,6 +31,7 @@ const initialState = {
   transactions: [],
   incomes: [],
   balance: 5000,
+  paidOccurrences: [],
   card: { id: creditCardId, userId, kind: 'credit_card', status: 'active', outstanding: 40, creditLimit: 1000 },
 };
 const matching = (doc, filter) => Object.entries(filter).every(([key, value]) => key.startsWith('$') || doc[key] === value);
@@ -68,8 +69,14 @@ CapturedTransaction.updateOne = async (filter, update, { session }) => {
   return { modifiedCount: 1 };
 };
 User.findOne = async ({ id }) => [userId, otherId].includes(id) ? { id } : null;
-User.findOneAndUpdate = async (_filter, update, { session }) => {
-  session.state.balance += update.$inc.currentBalance;
+User.findOneAndUpdate = async (filter, update, { session }) => {
+  if (update.$push) {
+    const key = filter.processedLiabilityOccurrences.$ne;
+    if (session.state.paidOccurrences.includes(key)) return null;
+    session.state.paidOccurrences.push(...update.$push.processedLiabilityOccurrences.$each);
+  } else {
+    session.state.balance += update.$inc.currentBalance;
+  }
   return { id: userId };
 };
 PaymentMethod.findOne = (filter, _fields, { session }) =>
@@ -86,7 +93,9 @@ Liability.findOne = async (filter, _fields, { session }) =>
 Liability.findOneAndUpdate = async (filter, update, { session }) => {
   const liability = session.state.liability;
   if (!matching(liability, filter)) return null;
+  if (filter.$or && liability.processingToken && liability.processingStartedAt > filter.$or[2].processingStartedAt.$lte) return null;
   Object.assign(liability, update.$set);
+  for (const key of Object.keys(update.$unset ?? {})) delete liability[key];
   return liability;
 };
 
@@ -160,10 +169,28 @@ assert.equal(state.balance, 6750);
 assert.equal(state.transactions.length, 2);
 
 const rent = { ...expense, liabilityId: initialState.liability.id, expectedScheduledFor: due.toISOString() };
+state.liability.processingToken = 'scheduler-claim';
+state.liability.processingScheduledFor = due;
+state.liability.processingStartedAt = new Date();
+const beforeRent = structuredClone(state);
+assert.equal((await confirm('cap-liability', rent)).statusCode, 409);
+assert.deepEqual(state, beforeRent, 'an SMS cannot debit an occurrence claimed by the scheduler');
+delete state.liability.processingToken;
+delete state.liability.processingScheduledFor;
+delete state.liability.processingStartedAt;
+
+rejectWrite = true;
+const beforeFailure = structuredClone(state);
+await assert.rejects(confirm('cap-liability', rent), /Injected ledger write failure/);
+assert.deepEqual(state, beforeFailure, 'the capture, payment marker, claim and debit all roll back');
+rejectWrite = false;
+
 const firstRent = await confirm('cap-liability', rent);
 const nextDueDate = state.liability.nextDueDate.getTime();
 assert.equal(firstRent.statusCode, 201);
 assert.ok(nextDueDate > due.getTime());
+assert.deepEqual(state.paidOccurrences, [`${rent.liabilityId}:${due.toISOString()}`]);
+assert.equal(state.liability.processingToken, undefined);
 const repeatedRent = await confirm('cap-liability', rent);
 assert.equal(repeatedRent.statusCode, 200);
 assert.equal(firstRent.data.id, repeatedRent.data.id);

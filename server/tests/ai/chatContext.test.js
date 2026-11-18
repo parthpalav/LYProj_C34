@@ -22,24 +22,28 @@ import {
   generateResponse,
   normalizeConversationHistory
 } from '../../services/AgentService.js';
+import { connectTestDB } from '../testDb.js';
+import { routeDeterministicIntent } from '../../services/ChatIntentRouter.js';
+import { buildPredictabilitySnapshot } from '../../services/PredictabilityService.js';
+import { zoneForecastInput } from '../../services/userTimezone.js';
 
 console.log('================================================================');
 console.log('  FINAURA CHAT CONTEXT & MULTI-TURN MEMORY TEST SUITE');
 console.log('================================================================\n');
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/lyproj';
 
 async function main() {
-  await mongoose.connect(MONGO_URI);
+  await connectTestDB();
   console.log('Connected to MongoDB');
 
   const testUserId = 'test-chat-user-' + Date.now();
   const otherUserId = 'other-chat-user-' + Date.now();
   const emptyUserId = 'empty-chat-user-' + Date.now();
+  const fireUserId = 'fire-chat-user-' + Date.now();
 
   try {
     // Cleanup prior test artifacts
-    const allUserIds = [testUserId, otherUserId, emptyUserId];
+    const allUserIds = [testUserId, otherUserId, emptyUserId, fireUserId];
     await User.deleteMany({ id: { $in: allUserIds } });
     await Transaction.deleteMany({ userId: { $in: allUserIds } });
     await Income.deleteMany({ userId: { $in: allUserIds } });
@@ -431,9 +435,71 @@ async function main() {
     assert.ok(savedAssistant.timestamp);
     console.log('  ✓ End-to-end chat flow deduplication and persistence verified');
 
+    // ── TEST 19: LIABILITY FREQUENCY → MONTHLY EQUIVALENT ────────
+    console.log('Running Test 19: Weekly and annual liabilities as monthly equivalents...');
+    await Liability.create([
+      { id: `lia-annual-${Date.now()}`, userId: emptyUserId, name: 'Term insurance premium', amount: 12000, category: 'Insurance', type: 'Need', frequency: 'yearly', monthOfYear: 4, dayOfMonth: 1, startDate: new Date('2026-04-01'), nextDueDate: new Date('2027-04-01'), autoDeduct: false, status: 'active' },
+      { id: `lia-weekly-${Date.now()}`, userId: emptyUserId, name: 'Weekly cleaner', amount: 600, category: 'Utilities & Bills', type: 'Need', frequency: 'weekly', dayOfWeek: 1, startDate: new Date('2026-01-05'), nextDueDate: new Date(Date.now() + 3 * 86400000), autoDeduct: false, status: 'active' }
+    ]);
+    const freqCtx = await buildChatContext(emptyUserId);
+    const annual = freqCtx.liabilities.active.find((l) => l.frequency === 'yearly');
+    const weekly = freqCtx.liabilities.active.find((l) => l.frequency === 'weekly');
+    assert.strictEqual(annual.amount, 12000, 'detail row keeps the actual annual installment');
+    assert.strictEqual(annual.monthlyEquivalent, 1000, '₹12,000 a year is ₹1,000 a month');
+    assert.strictEqual(weekly.amount, 600, 'detail row keeps the actual weekly installment');
+    assert.strictEqual(weekly.monthlyEquivalent, 2600, '₹600 a week is ₹2,600 a month');
+    assert.strictEqual(freqCtx.liabilities.monthlyLiabilityService, 3600, 'monthly obligation uses monthly equivalents');
+    await Liability.deleteMany({ userId: emptyUserId });
+    console.log('  ✓ Annual and weekly bills reported as monthly equivalents, installments kept');
+
+    // ── TEST 20: FIRE FIELDS MATCH THE FORECAST CONTRACT ─────────
+    console.log('Running Test 20: FIRE fields match the forecast for a profile that reaches its target...');
+    const fireUser = await User.create({
+      id: fireUserId, name: 'Fire Saver', email: `fire-${Date.now()}@test.com`, password: 'hashedpassword000',
+      dateOfBirth: new Date(Date.UTC(now.getUTCFullYear() - 25, 0, 1)), retirementAge: 60,
+      monthlyIncome: 150000, currentBalance: 200000
+    });
+    const fireTxs = [];
+    for (let m = 1; m <= 3; m++) {
+      const ts = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - m, 12, 12));
+      fireTxs.push(
+        { id: `fire-need-${m}-${Date.now()}`, userId: fireUserId, amount: 15000, category: 'Groceries', type: 'Need', timestamp: ts },
+        { id: `fire-want-${m}-${Date.now()}`, userId: fireUserId, amount: 5000, category: 'Shopping', type: 'Want', timestamp: ts },
+        { id: `fire-inv-${m}-${Date.now()}`, userId: fireUserId, amount: 80000, category: 'Investments', type: 'Investment', timestamp: ts }
+      );
+    }
+    await Transaction.create(fireTxs);
+    await Asset.create({ id: `fire-mf-${Date.now()}`, userId: fireUserId, name: 'Index fund', assetType: 'Mutual Fund', assetClass: 'FIRE_INVESTABLE', currentValue: 3000000, annualReturnRate: 0.12, includedInFireCorpus: true, liquidity: 'liquid' });
+
+    const fireCtx = await buildChatContext(fireUserId);
+    const forecast = buildPredictabilitySnapshot(...zoneForecastInput({
+      user: fireUser.toObject(),
+      incomes: await Income.find({ userId: fireUserId }).lean(),
+      transactions: await Transaction.find({ userId: fireUserId }).sort({ timestamp: -1 }).lean(),
+      assets: await Asset.find({ userId: fireUserId }).lean(),
+      liabilities: []
+    }));
+    const base = forecast.retirement;
+    assert.ok(base.projectedFire.reached, 'fixture reaches its FIRE target');
+    assert.strictEqual(fireCtx.fire.available, true);
+    assert.ok(typeof fireCtx.fire.fundedAge === 'number', 'funded age is populated');
+    assert.strictEqual(fireCtx.fire.fundedAge, base.projectedFire.projectedAge);
+    assert.strictEqual(fireCtx.fire.monthsUntilRetirement, base.monthsUntilRetirement);
+    assert.strictEqual(fireCtx.fire.monthsUntilRetirement, 420);
+    assert.strictEqual(fireCtx.fire.projectedCorpusAtRetirement, base.projectedCorpusAtRetirement);
+    assert.ok(fireCtx.fire.projectedCorpusAtRetirement > 0);
+    for (const id of ['base', 'conservative', 'optimistic']) {
+      assert.strictEqual(fireCtx.fire.scenarios[id].projectedCorpus, forecast.scenarios[id].projectedCorpusAtRetirement, `${id} corpus`);
+      assert.strictEqual(fireCtx.fire.scenarios[id].projectedFireAge, forecast.scenarios[id].projectedFire.projectedAge, `${id} funded age`);
+    }
+    const ageAnswer = routeDeterministicIntent('what is my projected funded age?', fireCtx);
+    assert.strictEqual(ageAnswer.intent, 'FIRE_FUNDED_AGE');
+    assert.ok(ageAnswer.response.includes(String(Math.round(base.projectedFire.projectedAge * 10) / 10)), 'assistant answers with the planner\'s funded age');
+    console.log(`  ✓ Assistant FIRE fields match the forecast (funded age ${Math.round(base.projectedFire.projectedAge * 10) / 10})`);
+
   } finally {
     // Clean up test data
-    const allUserIds = [testUserId, otherUserId, emptyUserId];
+    const allUserIds = [testUserId, otherUserId, emptyUserId, fireUserId];
     await User.deleteMany({ id: { $in: allUserIds } });
     await Transaction.deleteMany({ userId: { $in: allUserIds } });
     await Income.deleteMany({ userId: { $in: allUserIds } });
@@ -448,7 +514,7 @@ async function main() {
   }
 
   console.log('\n================================================================');
-  console.log('  ALL 18 CHAT CONTEXT & MULTI-TURN TESTS PASSED (100% GREEN) 🚀');
+  console.log('  ALL 20 CHAT CONTEXT & MULTI-TURN TESTS PASSED (100% GREEN) 🚀');
   console.log('================================================================\n');
 }
 

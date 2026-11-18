@@ -1,7 +1,7 @@
 /**
  * test_transaction_integrity.js — Integration tests for the hardened transaction system.
  *
- * Runs against the live backend on PORT 4000.
+ * Runs against the live backend (API_URL, default http://localhost:4000/api).
  * Requires: server running, MongoDB running, a valid auth token.
  *
  * Usage:
@@ -12,7 +12,7 @@
  *       It does NOT modify existing user transactions.
  */
 
-const BASE_URL = 'http://localhost:4000/api';
+const BASE_URL = process.env.API_URL || 'http://localhost:4000/api';
 let AUTH_TOKEN = null;
 
 const TEST_USER_EMAIL = 'test-integrity@finaura.test';

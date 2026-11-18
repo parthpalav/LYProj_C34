@@ -4,8 +4,9 @@ import assert from 'node:assert/strict';
 import User from '../../models/User.js';
 import RefreshToken from '../../models/RefreshToken.js';
 import { changePassword, comparePassword, hashPassword, issueRefreshToken } from '../../services/authService.js';
+import { connectTestDB } from '../testDb.js';
 
-await mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/lyproj_test');
+await connectTestDB();
 const id = 'u-test-change-password';
 await User.deleteMany({ id });
 await RefreshToken.deleteMany({ userId: id });

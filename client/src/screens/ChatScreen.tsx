@@ -21,6 +21,7 @@ import { ThemeToggle } from '../components/ui/ThemeToggle';
 import { Sheet } from '../components/ui/Sheet';
 import { formatDay } from '../components/ui/DateField';
 import { useSpeechInput } from '../utils/useSpeechInput';
+import { loadSessionMessages } from '../utils/chatSessions';
 
 const finauraLogo = require('../assets/finaura_logo.png');
 
@@ -270,10 +271,8 @@ export function ChatScreen(): React.ReactElement {
     sessionRef.current = id;
     setFetchingHistory(true);
     try {
-      const history = await getChatHistory(id);
+      const history = await loadSessionMessages(id, getChatHistory);
       if (sessionRef.current === id) setChatHistory(history);
-    } catch (err) {
-      console.warn('Failed to load chat session:', err);
     } finally {
       setFetchingHistory(false);
     }

@@ -11,7 +11,7 @@
 import mongoose from 'mongoose';
 import assert from 'node:assert/strict';
 import FMIHistory from '../../models/FMIHistory.js';
-import { connectDB } from '../../config/db.js';
+import { connectTestDB } from '../testDb.js';
 
 console.log('='.repeat(64));
 console.log('  FINAURA FMI HISTORY PILLARS PERSISTENCE TEST SUITE');
@@ -45,7 +45,7 @@ function normalizeFmi(item) {
 }
 
 async function runSuite() {
-  await connectDB();
+  await connectTestDB();
 
   const testUserId = `test-pillar-user-${Date.now()}`;
   const legacyDocId = new mongoose.Types.ObjectId();

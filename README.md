@@ -675,6 +675,8 @@ Copy each `.env.example` to `.env`.
 | File | Variable | Default | What it does |
 | :--- | :--- | :--- | :--- |
 | `ml-service/.env` | `FLASK_APP` | `api.py` | Flask entry point |
+| ML environment | `ML_HOST` / `ML_PORT` | `127.0.0.1` / `5001` | Where `python3 api.py` listens. Loopback by default; the API server is the only client |
+| ML environment | `FLASK_DEBUG` | unset | `1` turns on the Flask debugger for local debugging. Never set it on a reachable host |
 | `ml-service/.env` | `MODEL_BACKEND` | `legacy` | `legacy` loads the hybrid pipeline: rules, then the model in `models/active_model.json` (v7), then TF-IDF / MiniLM as fallback |
 | `web/.env` | `VITE_API_URL` | `http://localhost:4000` | API base URL |
 | `client/.env` | `EXPO_PUBLIC_API_URL` | Expo host | Set to your computer's LAN IP when using a real phone |
@@ -697,10 +699,16 @@ Logs go to `.logs/ml-service.log`, `.logs/server.log` and `.logs/web.log`.
 
 ```bash
 brew services start mongodb-community          # or: mongod --dbpath /data/db
-cd ml-service && source .venv/bin/activate && python3 api.py
+cd ml-service && source .venv/bin/activate && python3 api.py    # dev server on 127.0.0.1:5001, debugger off
 cd server && npm start
 cd web && npm run dev                          # http://localhost:5173
 cd client && npm start                         # i = iOS sim, a = Android, or scan with Expo Go
+```
+
+For a shared or hosted ML service, run the WSGI entry point instead of `api.py`:
+
+```bash
+cd ml-service && gunicorn --workers 1 --threads 4 --bind 127.0.0.1:5001 wsgi:app
 ```
 
 ### Demo data
@@ -730,7 +738,7 @@ npm run test:integration   # API ↔ ML contracts (needs MongoDB + ML service ru
 npm run test:research      # research acceptance audit
 ```
 
-> ⚠️ Some server suites clear the `Liability` and `Transaction` collections. Point them at a separate database, for example `MONGO_URI=mongodb://127.0.0.1:27017/lyproj_test npm run test:server`, so your demo data survives.
+> Server suites connect to `TEST_MONGO_URI` (default `mongodb://127.0.0.1:27017/lyproj_test`) and ignore `MONGO_URI`. They refuse to start if the database name does not contain `test`, and they only delete their own fixture users. Suites that call the HTTP API (`creditCardFlow`, `transactionIntegrity`, `userTimezone`, `classificationFmiPipeline` and the integration suites) read `API_URL` and `ML_SERVICE_URL`; run that API with `MONGO_URI` set to the same test database.
 
 Type-check and lint:
 

@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config({ path: '.env' });
 
-const BASE_URL = 'http://localhost:4000/api';
+const BASE_URL = process.env.API_URL || 'http://localhost:4000/api';
 let AUTH_TOKEN = null;
 
 const TEST_EMAIL = 'v2-integration-test@finaura.test';
@@ -63,9 +63,13 @@ async function setup() {
   return false;
 }
 
-// Sources the ML layer reports when no rule matches: the fine-tuned joint model (finaura_v4) when it is
-// loaded, else the legacy pair (TF-IDF for category, MiniLM for type).
-const MODEL_SOURCES = { category: ['finaura_v4', 'tfidf_v2', 'tfidf'], type: ['finaura_v4', 'minilm'] };
+// Sources the ML layer reports when no rule matches: the fine-tuned joint model family (finaura_v7, ...)
+// when it is loaded, else the legacy pair (TF-IDF for category, MiniLM for type).
+const JOINT = /^finaura_v\d+[a-z]?$/;
+const MODEL_SOURCES = {
+  category: { includes: (s) => JOINT.test(s) || ['tfidf_v2', 'tfidf'].includes(s) },
+  type: { includes: (s) => JOINT.test(s) || s === 'minilm' },
+};
 
 async function runTests() {
   console.log('\n' + '='.repeat(70));

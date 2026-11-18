@@ -12,6 +12,7 @@ import Income from '../../models/Income.js';
 import Transaction from '../../models/Transaction.js';
 import { getPredictabilitySnapshot } from '../../services/PredictabilityService.js';
 import { stripUser } from '../../services/authService.js';
+import { connectTestDB } from '../testDb.js';
 
 console.log('='.repeat(64));
 console.log('  FINAURA USER PROFILE & PLANNING ASSUMPTIONS TEST SUITE');
@@ -35,7 +36,7 @@ async function test(name, fn) {
 }
 
 async function runSuite() {
-  await mongoose.connect('mongodb://127.0.0.1:27017/lyproj');
+  await connectTestDB();
 
   const userA = 'u-test-profile-a';
   const userB = 'u-test-profile-b';
@@ -230,10 +231,17 @@ async function runSuite() {
     await mongoose.disconnect();
   }
 
+  if (failed > 0) {
+    console.log(`\n  ${failed} FAILED, ${passed} passed`);
+    process.exit(1);
+  }
   console.log();
   console.log('='.repeat(64));
   console.log(`  ALL ${passed} PROFILE UPDATE TESTS PASSED! 🚀`);
   console.log('='.repeat(64));
 }
 
-runSuite().catch(console.error);
+runSuite().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

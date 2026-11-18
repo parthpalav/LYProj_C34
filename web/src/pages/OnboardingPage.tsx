@@ -114,7 +114,7 @@ export const OnboardingPage: React.FC = () => {
     field('ob-balance', 'Current liquid balance (₹)', balance, setBalance, { placeholder: 'e.g. 120000', hint: 'Savings and current accounts. Investments come later, under Assets.' }),
     <>
       {field('ob-retire', 'Target retirement age', retirementAge, setRetirementAge, { mode: 'numeric' })}
-      {field('ob-corpus', 'Retirement corpus goal (₹)', corpus, setCorpus, { placeholder: 'Optional', hint: 'Leave blank and FINAURA will estimate one from your spending.' })}
+      {field('ob-corpus', 'Retirement corpus goal (₹)', corpus, setCorpus, { placeholder: 'Optional', hint: 'Leave blank and FINAURA will estimate one. A goal named "Retirement" takes priority.' })}
     </>,
   ];
 

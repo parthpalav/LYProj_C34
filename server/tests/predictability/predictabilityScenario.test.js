@@ -20,7 +20,7 @@ import mongoose from 'mongoose';
 import assert from 'assert';
 import dotenv from 'dotenv';
 import routes from '../../routes/index.js';
-import { connectDB } from '../../config/db.js';
+import { connectTestDB } from '../testDb.js';
 import User from '../../models/User.js';
 import Income from '../../models/Income.js';
 import Transaction from '../../models/Transaction.js';
@@ -66,7 +66,7 @@ async function runTests() {
   console.log('  FINAURA PREDICTABILITY SCENARIO ENDPOINT TEST SUITE');
   console.log('============================================================\n');
 
-  await connectDB();
+  await connectTestDB();
 
   const app = express();
   app.use(express.json());

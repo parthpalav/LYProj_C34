@@ -1,5 +1,5 @@
 /**
- * client/test_chatbot_ux.js
+ * client/tests/screens/chatbotUx.test.js
  * 
  * Unit & Integration test suite for FINAURA ChatScreen UX,
  * persistent history hydration, fake demo removal, and message flows.
@@ -24,54 +24,50 @@ const chatScreenSource = fs.readFileSync(chatScreenPath, 'utf8');
 const apiPath = path.join(clientRoot, 'src', 'services', 'api.ts');
 const apiSource = fs.readFileSync(apiPath, 'utf8');
 
-// ── TEST 1: HISTORY API INTEGRATION ────────────────────────────
-console.log('Running Test 1: ChatScreen imports & calls getChatHistory...');
+// ── TEST 1: A NEWLY FOCUSED CHAT STARTS EMPTY ─────────────────
+console.log('Running Test 1: Opening the assistant starts a new chat...');
+assert.ok(chatScreenSource.includes('useFocusEffect(startNewChat)'), 'Focusing the screen starts a new chat');
+const startNewChatSrc = chatScreenSource.slice(chatScreenSource.indexOf('const startNewChat = useCallback'), chatScreenSource.indexOf('useFocusEffect(startNewChat)'));
+assert.ok(startNewChatSrc.includes('sessionRef.current = newSessionId()'), 'A new chat gets a fresh session id');
+assert.ok(startNewChatSrc.includes('setChatHistory([])'), 'A new chat starts with no messages (welcome shown)');
 assert.ok(
-  chatScreenSource.includes('getChatHistory'),
-  'ChatScreen imports getChatHistory'
+  apiSource.includes("api.get('/api/agent/history', { params: { sessionId } })"),
+  'api.ts loads one session\'s history from /api/agent/history'
 );
-assert.ok(
-  chatScreenSource.includes('await getChatHistory()'),
-  'ChatScreen calls getChatHistory() inside useEffect'
-);
-assert.ok(
-  apiSource.includes("api.get('/api/agent/history')"),
-  'api.ts defines getChatHistory calling /api/agent/history'
-);
-console.log('  ✓ getChatHistory is imported and invoked on ChatScreen mount');
+console.log('  ✓ A freshly focused chat has its own session and an empty history');
 
-// ── TEST 2: CHRONOLOGICAL SORTING & HYDRATION ──────────────────
-console.log('Running Test 2: Chronological sorting logic...');
-assert.ok(
-  chatScreenSource.includes('new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()'),
-  'ChatScreen sorts history chronologically (oldest to newest)'
-);
+// ── TEST 2: SELECTING A SAVED SESSION SHOWS ITS MESSAGES ───────
+console.log('Running Test 2: Selecting a saved session...');
+const openSessionSrc = chatScreenSource.slice(chatScreenSource.indexOf('const openSession = async'), chatScreenSource.indexOf('const INITIAL_MESSAGES'));
+assert.ok(openSessionSrc.includes('sessionRef.current = id'), 'Selecting a session switches to its id');
+assert.ok(openSessionSrc.includes('loadSessionMessages(id, getChatHistory)'), 'Selecting a session loads that session\'s history');
+assert.ok(openSessionSrc.includes('if (sessionRef.current === id) setChatHistory(history)'), 'A late reply for a session the user left is ignored');
 
-// Verify sorting implementation with simulated out-of-order backend payload
-const rawBackendHistory = [
-  { id: '3', role: 'user', content: 'Third', timestamp: '2026-08-29T10:02:00.000Z' },
-  { id: '1', role: 'user', content: 'First', timestamp: '2026-08-29T10:00:00.000Z' },
-  { id: '2', role: 'assistant', content: 'Second', timestamp: '2026-08-29T10:01:00.000Z' },
+const { loadSessionMessages, SESSION_LOAD_FAILED } = await import(path.join(clientRoot, 'src', 'utils', 'chatSessions.ts'));
+const saved = [
+  { id: '1', role: 'user', content: 'How much did I spend on food?', timestamp: '2026-08-29T10:00:00.000Z' },
+  { id: '2', role: 'assistant', content: 'You spent ₹4,200 on Food & Dining.', timestamp: '2026-08-29T10:00:02.000Z' },
 ];
-const sorted = [...rawBackendHistory].sort(
-  (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
-);
-assert.equal(sorted[0].id, '1');
-assert.equal(sorted[1].id, '2');
-assert.equal(sorted[2].id, '3');
-console.log('  ✓ Chronological sorting verified for out-of-order payloads');
+const asked = [];
+const shown = await loadSessionMessages('sess-42', async (id) => { asked.push(id); return saved; });
+assert.deepEqual(asked, ['sess-42'], 'History is requested for the selected session');
+assert.deepEqual(shown, saved, 'The selected session\'s messages are shown in order');
+console.log('  ✓ Selecting a session displays its messages');
 
-// ── TEST 3: NO DUPLICATION IN STORE HYDRATION ──────────────────
-console.log('Running Test 3: History store hydration deduplication...');
-assert.ok(
-  chatScreenSource.includes('setChatHistory(sorted)'),
-  'ChatScreen hydrates store directly via setChatHistory'
-);
+// ── TEST 3: EMPTY OR FAILED HISTORY ────────────────────────────
+console.log('Running Test 3: Empty and failed history requests...');
+assert.deepEqual(await loadSessionMessages('sess-empty', async () => []), [], 'An empty session shows the welcome state');
+const warn = console.warn; console.warn = () => {};
+const failedLoad = await loadSessionMessages('sess-down', async () => { throw new Error('Network Error'); });
+console.warn = warn;
+assert.equal(failedLoad.length, 1);
+assert.equal(failedLoad[0].role, 'assistant');
+assert.equal(failedLoad[0].content, SESSION_LOAD_FAILED, 'A failed load says so instead of looking like an empty chat');
 assert.ok(
   chatScreenSource.includes('storeHistory.length > 0 ? storeHistory : INITIAL_MESSAGES'),
   'ChatScreen renders storeHistory directly when populated without prepending artificial duplicates'
 );
-console.log('  ✓ Stored history renders cleanly without duplication');
+console.log('  ✓ Empty history shows the welcome; a failed load shows a clear note');
 
 // ── TEST 4: EMPTY STATE & GUIDANCE ─────────────────────────────
 console.log('Running Test 4: Welcoming empty state for first-time users...');
@@ -118,8 +114,8 @@ assert.ok(
   'Guards against empty/whitespace strings and concurrent sending'
 );
 assert.ok(
-  chatScreenSource.includes('sendMessageToAgent(trimmed, {})'),
-  'Calls sendMessageToAgent with trimmed text'
+  chatScreenSource.includes('sendMessageToAgent(trimmed, session)'),
+  'Calls sendMessageToAgent with trimmed text and the current session'
 );
 console.log('  ✓ Input validation and send dispatch properly guarded');
 

@@ -197,7 +197,7 @@ function runTests() {
     user: { id: 'u_a', age: 30, retirementAge: 60 },
     transactions: [
       { amount: 30000, type: 'Need', timestamp: '2026-05-15T00:00:00Z' },
-      { amount: 10000, type: 'Need', timestamp: '2026-06-01T12:00:00Z' } // Partial current month
+      { amount: 10000, type: 'Need', timestamp: '2026-06-01T00:00:00Z' } // Partial current month (at, not after, the reference date)
     ]
   }, { referenceDate: refDate });
   assert.strictEqual(snapA.dataQuality.transactionMonthsObserved, 2);

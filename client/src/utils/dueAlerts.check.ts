@@ -1,4 +1,4 @@
-// Self-check for dueAlerts.ts. Day math uses the device timezone, so the test pins TZ.
+// Self-check for dueAlerts.ts. Without an account timezone the day math uses the device one, so the test pins TZ.
 import assert from 'node:assert/strict';
 import { buildDueAlerts, buildReviewAlerts, daysUntil, dueLabel } from './dueAlerts.ts';
 
@@ -41,4 +41,11 @@ assert.deepEqual(ids(reviews), ['eq', 'mf']);
 // 31 Jan clamps to end of Feb.
 assert.equal(buildReviewAlerts([asset('g', 'Gold', '2026-01-31T00:00:00Z')], new Date('2026-02-28T12:00:00Z')).length, 1);
 
+
+// Kolkata account on a New York device: a bill due 20 Nov 00:00 IST is 2 days away on 18 Nov IST.
+process.env.TZ = 'America/New_York';
+const nov18 = new Date('2026-11-18T06:00:00Z');
+assert.equal(daysUntil(at('2026-11-20'), nov18, 'Asia/Kolkata'), 2, 'account-timezone days on a travelling device');
+assert.deepEqual(buildDueAlerts([bill('k', at('2026-11-20'))], [], nov18, 7, 'Asia/Kolkata').map((x) => x.daysUntil), [2]);
+process.env.TZ = 'Asia/Kolkata';
 console.log('dueAlerts.check: ok');

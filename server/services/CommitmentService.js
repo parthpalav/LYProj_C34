@@ -11,13 +11,15 @@ import { calculateNextDueDate } from '../controllers/liabilityController.js';
 import { zonedDateKey, zonedMonthStart } from '../utils/userTime.js';
 import { getUserTimezone } from './userTimezone.js';
 
-const MAX_STEPS = 32; // a daily bill has at most 31 dues in a month
+const MAX_STEPS = 400; // a daily bill: 31 dues this month plus up to a year of missed ones
 
 /**
  * Pure core.
  * - Paid: scheduler charges this month (Transaction with liabilityId + scheduledFor in the month).
  * - Remaining: dues from the scheduler's own pointer (nextDueDate) until month end, so a
  *   due skipped because the bill was created later is never counted.
+ * - Overdue: unpaid dues from earlier months (the scheduler missed them and will catch
+ *   up). Kept out of this month's total, but still reserved in freeBalance.
  */
 export function buildCommitments({ liabilities, paidTxs, currentBalance, now = new Date(), tz }) {
   const monthStart = zonedMonthStart(now, tz, 0);
@@ -39,15 +41,18 @@ export function buildCommitments({ liabilities, paidTxs, currentBalance, now = n
     const paidKeys = new Set(paid.map((p) => p.date.getTime()));
 
     const upcoming = [];
+    const overdue = [];
     let due = l.nextDueDate ? new Date(l.nextDueDate) : calculateNextDueDate(l, now, tz, { inclusive: true });
     for (let i = 0; due && due < monthEnd && i < MAX_STEPS; i++) {
-      if (!paidKeys.has(due.getTime())) upcoming.push(due);
+      if (due < monthStart) overdue.push(due);
+      else if (!paidKeys.has(due.getTime())) upcoming.push(due);
       due = calculateNextDueDate(l, due, tz);
     }
 
     const paidAmount = paid.reduce((s, p) => s + p.amount, 0);
     const remainingAmount = upcoming.length * Number(l.amount);
-    if (!paid.length && !upcoming.length) continue;
+    const overdueAmount = overdue.length * Number(l.amount);
+    if (!paid.length && !upcoming.length && !overdue.length) continue;
 
     items.push({
       id: l.id,
@@ -58,16 +63,20 @@ export function buildCommitments({ liabilities, paidTxs, currentBalance, now = n
       frequency: l.frequency,
       paidDates: paid.map((p) => zonedDateKey(p.date, tz)).sort(),
       dueDates: upcoming.map((d) => zonedDateKey(d, tz)),
+      overdueDates: overdue.map((d) => zonedDateKey(d, tz)),
       paidCount: paid.length,
       paidAmount,
       remainingAmount,
-      nextDueDate: upcoming[0] || null,
+      overdueAmount,
+      nextDueDate: overdue[0] || upcoming[0] || null,
     });
   }
-  items.sort((a, b) => (a.dueDates[0] || '9999').localeCompare(b.dueDates[0] || '9999'));
+  const firstDue = (it) => it.overdueDates[0] || it.dueDates[0] || '9999';
+  items.sort((a, b) => firstDue(a).localeCompare(firstDue(b)));
 
   const sum = (rows, key) => rows.reduce((s, r) => s + r[key], 0);
   const remaining = sum(items, 'remainingAmount');
+  const overdue = sum(items, 'overdueAmount');
   const paidSoFar = sum(items, 'paidAmount');
   const byType = {};
   for (const it of items) {
@@ -84,7 +93,9 @@ export function buildCommitments({ liabilities, paidTxs, currentBalance, now = n
     committedTotal: paidSoFar + remaining,
     paidSoFar,
     remaining,
-    freeBalance: balance - remaining,
+    overdue,
+    // Reserve for this month's dues plus missed ones the scheduler will still take.
+    freeBalance: balance - remaining - overdue,
     byType,
     items,
   };

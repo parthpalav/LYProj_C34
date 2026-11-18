@@ -123,7 +123,9 @@ export function buildPredictabilitySnapshot(data = {}, options = {}) {
     liabilityOverhang
   } = resolved;
 
-  const incomes = Array.isArray(data.incomes) ? data.incomes : [];
+  // Income that has not arrived by the reference date is not history yet.
+  const incomes = (Array.isArray(data.incomes) ? data.incomes : [])
+    .filter((i) => !i?.timestamp || new Date(i.timestamp) <= referenceDate);
   const needsConsumption = averageMonthlyNeeds;
 
   const limitations = [];

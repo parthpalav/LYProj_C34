@@ -7,7 +7,7 @@ import {
   getLiabilityTransactions
 } from '../../controllers/liabilityController.js';
 import { processLiabilities } from '../../services/LiabilityScheduler.js';
-import { connectDB } from '../../config/db.js';
+import { connectTestDB, plantSentinel } from '../testDb.js';
 import 'dotenv/config';
 
 function mockRes() {
@@ -31,9 +31,11 @@ async function runTests() {
   console.log('  LIABILITY PAYMENT HISTORY & VISIBILITY TEST SUITE');
   console.log('============================================================\n');
 
-  await connectDB();
-  await Liability.deleteMany({});
-  await Transaction.deleteMany({});
+  await connectTestDB();
+  const sentinel = await plantSentinel();
+  const fixtureUsers = { userId: { $in: ['USER_A', 'USER_B'] } };
+  await Liability.deleteMany(fixtureUsers);
+  await Transaction.deleteMany(fixtureUsers);
 
   // ─────────────────────────────────────────────────────────
   // TEST 1: Liability with Zero Payments
@@ -376,6 +378,7 @@ async function runTests() {
   console.log('\n============================================================');
   console.log('  ALL 9 LIABILITY PAYMENT HISTORY TESTS PASSED SUCCESSFULLY!');
   console.log('============================================================');
+  await sentinel.assertSurvived();
   process.exit(0);
 }
 

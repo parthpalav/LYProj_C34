@@ -1,14 +1,13 @@
 /**
  * Statement import and SMS capture, end to end through the controllers.
- * Needs local MongoDB (MONGO_URI). Gemini is switched off so the local PDF parser runs;
+ * Needs a disposable MongoDB database (TEST_MONGO_URI). Gemini is switched off so the local PDF parser runs;
  * the ML service may be offline (keyword fallback is used).
  */
 import '../setupEnv.js';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import mongoose from 'mongoose';
-import 'dotenv/config';
-import { connectDB } from '../../config/db.js';
+import { connectTestDB } from '../testDb.js';
 import controllerRouter from '../../controllers/index.js';
 import * as auto from '../../controllers/autoInputController.js';
 import Transaction from '../../models/Transaction.js';
@@ -50,7 +49,7 @@ async function run() {
   console.log('STATEMENT IMPORT + SMS CAPTURE TEST SUITE');
   process.env.GEMINI_API_KEY = ''; // force the local fallback path
 
-  await connectDB();
+  await connectTestDB();
   const users = [A, B];
   await Promise.all([
     Transaction.deleteMany({ userId: { $in: users } }),
@@ -131,6 +130,20 @@ async function run() {
   const bad = await call(auto.commitStatement, { user: { id: A }, body: { rows: [{ ...p1.data.rows[0], amount: -5 }] } });
   assert.equal(bad.statusCode, 400);
   console.log('  ✅ closing balance only when asked; bad rows rejected');
+
+  const importedExpense = await Transaction.findOne({ userId: A, importBatchId: c4.data.batchId }).lean();
+  const importedIncome = await Income.findOne({ userId: A, importBatchId: c4.data.batchId }).lean();
+  const expenseRequest = { user: { id: A }, params: { id: importedExpense.id } };
+  const incomeRequest = { user: { id: A }, params: { id: importedIncome.id } };
+  const editedExpense = await call(getHandler('PUT', '/transactions/:id'), { ...expenseRequest, body: { amount: 1000 } });
+  const editedIncome = await call(getHandler('PUT', '/income/:id'), { ...incomeRequest, body: { amount: 750 } });
+  assert.equal(editedExpense.data.amount, 1000);
+  assert.equal(editedIncome.data.amount, 750);
+  assert.equal(await balance(), 101046.5, 'edits to imported history do not move the balance');
+  assert.equal((await call(getHandler('DELETE', '/transactions/:id'), expenseRequest)).statusCode, 200);
+  assert.equal((await call(getHandler('DELETE', '/income/:id'), incomeRequest)).statusCode, 200);
+  assert.equal(await balance(), 101046.5, 'deleting imported history does not move the balance');
+  console.log('  ✅ editing and deleting imported history keeps the balance');
 
   // 7. SMS capture via personal token
   const tok = await call(auto.createSmsToken, { user: { id: A } });

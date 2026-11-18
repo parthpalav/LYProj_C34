@@ -136,56 +136,64 @@ export async function resetFailedLogin(user) {
   }
 }
 
+// A second refresh with the same token inside this window is an overlapping
+// legitimate request (two tabs, a retried call), not a stolen token.
+export const ROTATION_GRACE_MS = 30 * 1000;
+const REFRESH_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+
+function authError(message, status) {
+  const error = new Error(message);
+  error.status = status;
+  return error;
+}
+
 export async function refreshTokens(rawRefreshToken) {
   const tokenHash = hashToken(rawRefreshToken);
-  const tokenDoc = await RefreshToken.findOne({ tokenHash });
-
-  if (!tokenDoc) {
-    const error = new Error('Invalid refresh token');
-    error.status = 401;
-    throw error;
-  }
-
-  // Automatic reuse detection (token was already revoked)
-  if (tokenDoc.isRevoked) {
-    logger.error(`Revoked refresh token reuse attempt for user: ${tokenDoc.userId}`);
-    await RefreshToken.updateMany({ userId: tokenDoc.userId }, { isRevoked: true });
-    const error = new Error('Refresh token has been revoked. All sessions invalidated.');
-    error.status = 401;
-    throw error;
-  }
-
-  if (tokenDoc.expiresAt < new Date()) {
-    const error = new Error('Refresh token expired');
-    error.status = 401;
-    throw error;
-  }
-
-  const user = await findUserById(tokenDoc.userId);
-
-  if (!user) {
-    const error = new Error('User not found for provided token');
-    error.status = 404;
-    throw error;
-  }
-
-  // Generate new tokens (rotation)
-  const newAccessToken = issueAccessToken(user);
+  const now = new Date();
   const newRawRefreshToken = generateRandomToken();
   const newTokenHash = hashToken(newRawRefreshToken);
 
-  tokenDoc.isRevoked = true;
-  tokenDoc.replacedByTokenHash = newTokenHash;
-  await tokenDoc.save();
+  // One atomic claim retires a live token, so it gets exactly one successor.
+  const claimed = await RefreshToken.findOneAndUpdate(
+    { tokenHash, isRevoked: false, expiresAt: { $gt: now } },
+    { $set: { isRevoked: true, replacedByTokenHash: newTokenHash, rotatedAt: now } },
+    { new: true }
+  ).lean();
 
-  await RefreshToken.create({
-    userId: tokenDoc.userId,
-    tokenHash: newTokenHash,
-    expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-  });
+  if (!claimed) {
+    const tokenDoc = await RefreshToken.findOne({ tokenHash }).lean();
+    if (!tokenDoc) throw authError('Invalid refresh token', 401);
+    if (!tokenDoc.isRevoked) throw authError('Refresh token expired', 401);
+    if (tokenDoc.rotatedAt && now - tokenDoc.rotatedAt < ROTATION_GRACE_MS) {
+      throw authError('Refresh token was just rotated by another request. Use the newest token.', 409);
+    }
+    // Automatic reuse detection (token was already revoked)
+    logger.error(`Revoked refresh token reuse attempt for user: ${tokenDoc.userId}`);
+    await RefreshToken.updateMany({ userId: tokenDoc.userId }, { isRevoked: true });
+    throw authError('Refresh token has been revoked. All sessions invalidated.', 401);
+  }
+
+  const user = await findUserById(claimed.userId);
+  if (!user) throw authError('User not found for provided token', 404);
+
+  // Successor write. If it fails, the claim is undone so the client's current
+  // token keeps working and it can simply retry.
+  try {
+    await RefreshToken.create({
+      userId: claimed.userId,
+      tokenHash: newTokenHash,
+      expiresAt: new Date(Date.now() + REFRESH_TTL_MS)
+    });
+  } catch (err) {
+    await RefreshToken.updateOne(
+      { tokenHash, replacedByTokenHash: newTokenHash },
+      { $set: { isRevoked: false, replacedByTokenHash: null }, $unset: { rotatedAt: 1 } }
+    );
+    throw err;
+  }
 
   return {
-    accessToken: newAccessToken,
+    accessToken: issueAccessToken(user),
     refreshToken: newRawRefreshToken,
     user
   };

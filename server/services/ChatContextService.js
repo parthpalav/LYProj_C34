@@ -23,7 +23,7 @@ import Liability from '../models/Liability.js';
 import Goal from '../models/Goal.js';
 import Alert from '../models/Alert.js';
 import FMIHistory from '../models/FMIHistory.js';
-import { calculateFMI } from './FMIService.js';
+import { calculateFMI, resolveRetirementGoal } from './FMIService.js';
 import { annotateTransactions } from './SentimentService.js';
 import {
   calculateInvestableCorpus,
@@ -281,8 +281,7 @@ export async function buildChatContext(userId) {
   let fmiData;
   try {
     const annotatedMonthly = annotateTransactions(currentMonthTxs, tz);
-    const retirementGoalObj = goalDocs.find(g => /retire/i.test(g.name)) || null;
-    const retirementGoal = retirementGoalObj?.targetAmount || Math.round(profile.monthlyIncome * 12 * 20);
+    const retirementGoal = resolveRetirementGoal(user, goalDocs);
 
     const fmiUser = {
       currentBalance: balance.current,

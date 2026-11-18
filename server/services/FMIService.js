@@ -171,6 +171,18 @@ export function resolveMonthlyIncome(user = {}, recentIncome = 0, hasAnyIncome =
 }
 
 /**
+ * The one retirement-target rule for onboarding, profile and FMI: a goal named
+ * "retirement" wins, then the corpus target saved on the profile, then an
+ * estimate of 20 years of declared income.
+ */
+export function resolveRetirementGoal(user = {}, goals = []) {
+  const goal = goals.find((g) => /retire/i.test(g.name));
+  if (Number(goal?.targetAmount) > 0) return Number(goal.targetAmount);
+  if (Number(user.retirementCorpusGoal) > 0) return Number(user.retirementCorpusGoal);
+  return Math.round(Number(user.monthlyIncome ?? user.income ?? 0) * 12 * 20);
+}
+
+/**
  * Computes an individual member's retirement goal obligation without side effects.
  *
  * @param {Object} user
@@ -190,13 +202,7 @@ export function calculateMemberGoalDetail(user = {}, goals = []) {
 
   const retirementAge = Number(user.retirementAge ?? 60);
 
-  const retirementGoalObj = goals.find((g) => /retire/i.test(g.name)) || null;
-  const retirementGoal = Number(
-    user.retirementGoal ||
-    retirementGoalObj?.targetAmount ||
-    (user.retirementCorpusGoal > 0 ? user.retirementCorpusGoal : 0) ||
-    Math.round(monthlyIncome * 12 * 20)
-  );
+  const retirementGoal = Number(user.retirementGoal) || resolveRetirementGoal({ ...user, monthlyIncome }, goals);
 
   const previousShortfall = Number(user.previousShortfall ?? 0);
 

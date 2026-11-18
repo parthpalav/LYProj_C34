@@ -1124,6 +1124,15 @@ a:focus-visible {
   font-size: 12px;
 }
 
+/* Bills due this month exceed the balance */
+.metric-bills-short .metric-subtext {
+  color: var(--danger);
+  font-weight: 600;
+  animation: bills-short-flash 1s ease-in-out infinite;
+}
+@keyframes bills-short-flash { 50% { opacity: 0.35; } }
+@media (prefers-reduced-motion: reduce) { .metric-bills-short .metric-subtext { animation: none; } }
+
 /* Dashboard Section Card */
 .dashboard-card {
   background-color: var(--bg-surface);

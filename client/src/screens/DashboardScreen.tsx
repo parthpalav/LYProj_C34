@@ -3,7 +3,7 @@ import { Dimensions, Image, Modal, Pressable, RefreshControl, ScrollView, StyleS
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import Animated from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, useReducedMotion, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
 import {
   getAlerts,
   getAssets,
@@ -110,6 +110,25 @@ type FeedItem = {
 // ═══════════════════════════════════════════════════════════
 // HOME
 // ═══════════════════════════════════════════════════════════
+/** Bills still due this month under the balance; flashes red when they exceed it. */
+function CommittedCaption({ remaining, free, style }: { remaining: number; free: number; style: object }) {
+  const { c } = useTheme();
+  const reduced = useReducedMotion();
+  const pulse = useSharedValue(1);
+  const short = free < 0;
+  useEffect(() => {
+    pulse.value = short && !reduced ? withRepeat(withTiming(0.35, { duration: 500 }), -1, true) : 1;
+  }, [short, reduced, pulse]);
+  const flash = useAnimatedStyle(() => ({ opacity: pulse.value }));
+  return (
+    <Animated.Text style={[style, short && { color: c.danger, fontWeight: '600' }, flash]} numberOfLines={1}>
+      {short
+        ? `⚠ ${formatCurrency(remaining)} due for bills · ${formatCurrency(-free)} short`
+        : `${formatCurrency(remaining)} committed · ${formatCurrency(free)} free`}
+    </Animated.Text>
+  );
+}
+
 export function DashboardScreen(): React.ReactElement {
   const { c } = useTheme();
   const styles = useStyles();
@@ -480,9 +499,7 @@ export function DashboardScreen(): React.ReactElement {
                     accessibilityLabel="Show auto-deduct bills committed this month"
                     style={styles.committedLine}
                   >
-                    <Text style={styles.heroCaption} numberOfLines={1}>
-                      {formatCurrency(commitments.remaining)} committed · {formatCurrency(balance - commitments.remaining)} free
-                    </Text>
+                    <CommittedCaption remaining={commitments.remaining} free={balance - commitments.remaining} style={styles.heroCaption} />
                     <Ionicons name="chevron-forward" size={12} color={c.onAuroraMuted} />
                   </Pressable>
                 ) : null}

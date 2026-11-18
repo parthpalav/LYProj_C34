@@ -202,9 +202,12 @@ export const OverviewPage: React.FC = () => {
               value={formatCurrencyINR(animBalance ?? currentBalance)}
               subtext={
                 dashboard?.commitments && dashboard.commitments.remaining > 0
-                  ? `${formatCurrencyINR(dashboard.commitments.remaining)} set aside for auto-deduct bills · ${formatCurrencyINR(dashboard.commitments.freeBalance)} free`
+                  ? dashboard.commitments.freeBalance < 0
+                    ? `⚠ ${formatCurrencyINR(dashboard.commitments.remaining)} due for bills · ${formatCurrencyINR(-dashboard.commitments.freeBalance)} short`
+                    : `${formatCurrencyINR(dashboard.commitments.remaining)} set aside for auto-deduct bills · ${formatCurrencyINR(dashboard.commitments.freeBalance)} free`
                   : 'Liquid operating balance across active accounts'
               }
+              className={dashboard?.commitments && dashboard.commitments.remaining > 0 && dashboard.commitments.freeBalance < 0 ? 'metric-bills-short' : ''}
               icon={Wallet}
             />
 

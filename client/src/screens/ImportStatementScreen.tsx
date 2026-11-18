@@ -2,17 +2,20 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { FlatList, Pressable, ScrollView, Switch, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../navigation/AppNavigator';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   apiErrorCode, commitStatement, getPaymentMethods, previewStatement, undoImport,
-  StatementPreview, StatementRow,
+  StatementCommitResult, StatementPreview, StatementRow,
 } from '../services/api';
 import { PaymentMethod } from '../types';
 import { paymentMethodLabel } from '../utils/paymentMethods';
 import { CATEGORY_ITEMS } from '../utils/categories';
 import { formatCurrency } from '../utils/format';
+import { DEFAULT_TIMEZONE } from '../utils/timezone';
 import { uriToBase64 } from '../utils/fileData';
-import { toast } from '../store/useCelebrationStore';
+import { useAuthStore } from '../store/useAuthStore';
 import { createStyles, radius, tabular, typeScale, useTheme } from '../theme';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
@@ -27,7 +30,7 @@ const MAX_BYTES = 6 * 1024 * 1024;
 const TYPES = ['Need', 'Want', 'Investment'] as const;
 const PARSER_LABEL: Record<StatementPreview['parser'], string> = { csv: 'Read from CSV', gemini: 'Read by Gemini AI', local: 'Offline parser' };
 const emojiFor = (cat?: string) => CATEGORY_ITEMS.find((i) => i.key === cat)?.emoji ?? '📦';
-const shortDate = (iso: string | null) => (iso ? new Date(iso).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '');
+const INCOME_SOURCES = ['salary', 'freelance', 'investments', 'bonus', 'business', 'rental', 'consulting', 'gift', 'reimbursement', 'other'];
 
 type PickedFile = { name: string; uri: string; mimeType: string; size: number };
 
@@ -38,7 +41,11 @@ type PickedFile = { name: string; uri: string; mimeType: string; size: number };
 export function ImportStatementScreen(): React.ReactElement {
   const s = useStyles();
   const { c } = useTheme();
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const timeZone = useAuthStore((state) => state.user?.timezone) || DEFAULT_TIMEZONE;
+  const shortDate = (iso: string | null) => iso
+    ? new Date(iso).toLocaleDateString('en-IN', { timeZone, day: 'numeric', month: 'short', year: 'numeric' })
+    : '';
   const insets = useSafeAreaInsets();
   const headerHeight = useHeaderHeight();
 
@@ -56,13 +63,16 @@ export function ImportStatementScreen(): React.ReactElement {
   const [editing, setEditing] = useState<StatementRow | null>(null);
   const [setBalance, setSetBalance] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [result, setResult] = useState<StatementCommitResult | null>(null);
+  const [undone, setUndone] = useState(false);
 
   useEffect(() => {
     getPaymentMethods().then((m) => setMethods(m.filter((x) => x.status === 'active'))).catch(() => {});
   }, []);
 
   const reset = () => {
-    setFile(null); setPassword(''); setNeedsPassword(false); setError('');
+    setFile(null); setPassword(''); setNeedsPassword(false); setShowPassword(false); setMethodId(''); setError('');
+    setResult(null); setUndone(false);
     setPreview(null); setRows([]); setSelected(new Set()); setSetBalance(false);
   };
 
@@ -75,7 +85,16 @@ export function ImportStatementScreen(): React.ReactElement {
       setError('File picking needs the latest app build. Rebuild the app, then try again.');
       return;
     }
-    const res = await DocumentPicker.getDocumentAsync({ type: ['text/csv', 'text/comma-separated-values', 'application/pdf', 'public.comma-separated-values-text'], copyToCacheDirectory: true });
+    let res: Awaited<ReturnType<typeof DocumentPicker.getDocumentAsync>>;
+    try {
+      res = await DocumentPicker.getDocumentAsync({
+        type: ['text/csv', 'text/comma-separated-values', 'application/pdf', 'public.comma-separated-values-text'],
+        copyToCacheDirectory: true,
+      });
+    } catch {
+      setError("Couldn't open Files. Try again.");
+      return;
+    }
     if (res.canceled || !res.assets?.[0]) return;
     const a = res.assets[0];
     reset();
@@ -85,13 +104,15 @@ export function ImportStatementScreen(): React.ReactElement {
   };
 
   const read = async () => {
-    if (!file) return;
+    if (!file || reading || (needsPassword && !password)) return;
     setReading(true);
     setError('');
     try {
       const data = await uriToBase64(file.uri);
       const p = await previewStatement({ fileName: file.name, mimeType: file.mimeType, data, password: password || undefined });
       setNeedsPassword(false);
+      setPassword('');
+      setShowPassword(false);
       setPreview(p);
       setRows(p.rows);
       setSelected(new Set(p.rows.filter((r) => !r.duplicate).map((r) => r.rowId)));
@@ -128,7 +149,7 @@ export function ImportStatementScreen(): React.ReactElement {
   const isBank = methodId === '';
 
   const save = async () => {
-    if (!chosen.length) return;
+    if (!chosen.length || saving) return;
     setSaving(true);
     setError('');
     try {
@@ -137,14 +158,7 @@ export function ImportStatementScreen(): React.ReactElement {
         paymentMethodId: methodId || null,
         ...(setBalance && isBank && closing !== null ? { setClosingBalance: true, closingBalance: closing } : {}),
       });
-      navigation.goBack();
-      toast('Statement imported', {
-        subtitle: `${r.insertedTransactions} expenses, ${r.insertedIncome} income${r.skipped ? `, ${r.skipped} already there` : ''}`,
-        action: {
-          label: 'Undo',
-          onPress: () => { undoImport(r.batchId).then(() => toast('Import undone')).catch(() => toast("Couldn't undo the import", { tone: 'error' })); },
-        },
-      });
+      setResult(r);
     } catch (err: any) {
       setError(err?.response?.data?.error || 'Could not import these rows.');
     } finally {
@@ -152,22 +166,58 @@ export function ImportStatementScreen(): React.ReactElement {
     }
   };
 
+  const undo = async () => {
+    if (!result || undone) return;
+    setError('');
+    try {
+      await undoImport(result.batchId);
+      setUndone(true);
+    } catch {
+      setError("Couldn't undo the import. Try again.");
+    }
+  };
+
+  if (result) {
+    const hasEntries = result.insertedTransactions + result.insertedIncome > 0;
+    return (
+      <View style={s.screen}>
+        <ScrollView contentContainerStyle={{ paddingTop: headerHeight + 8, paddingBottom: insets.bottom + 32, paddingHorizontal: 16 }}>
+          <Card>
+            <Text style={s.title} accessibilityRole="header">{undone ? 'Imported entries removed' : hasEntries ? 'Statement imported' : 'No new entries imported'}</Text>
+            {!undone && <Text style={s.muted}>{result.insertedTransactions} expenses · {result.insertedIncome} income entries{result.skipped ? ` · ${result.skipped} skipped` : ''}</Text>}
+            {result.balanceSetTo !== undefined && <Text style={s.muted}>Bank balance set to {formatCurrency(result.balanceSetTo)}. Undo removes the entries and keeps this balance update.</Text>}
+            {!!error && <Text style={s.error} accessibilityRole="alert">{error}</Text>}
+            {hasEntries && !undone && (
+              <>
+                <Button label="View Activity" onPress={() => navigation.navigate('MainTabs', { screen: 'Transactions' })} style={s.cta} />
+                {result.insertedTransactions > 0 && chosen.some((r) => r.needsReview && !r.userEdited) && <Button label="Check AI guesses" variant="secondary" onPress={() => navigation.navigate('Review')} style={s.cta} />}
+                <Button label="Undo import" icon="arrow-undo-outline" variant="secondary" onPress={undo} style={s.cta} />
+              </>
+            )}
+            <Button label="Import another statement" variant="ghost" onPress={reset} style={s.cta} />
+          </Card>
+        </ScrollView>
+        <ScreenHeader title="Import statement" onBack={() => navigation.goBack()} />
+      </View>
+    );
+  }
+
   const header = (
     <View>
       <Card style={s.card}>
         <Text style={s.title}>1. Choose the statement</Text>
         <Text style={s.muted}>CSV from net banking works best. PDF statements work too, including password-protected ones.</Text>
-        <Pressable style={s.drop} onPress={pick} accessibilityRole="button" accessibilityLabel="Choose a statement file">
+        <Pressable style={s.drop} onPress={pick} disabled={reading || saving} accessibilityRole="button" accessibilityLabel="Choose a statement file">
           <Ionicons name="document-attach-outline" size={28} color={c.primary} />
           <Text style={s.dropTitle} numberOfLines={1}>{file ? file.name : 'Choose a CSV or PDF'}</Text>
           <Text style={s.mutedSmall}>{file ? `${Math.ceil(file.size / 1024)} KB` : 'From Files, iCloud Drive or Downloads · up to 6 MB'}</Text>
         </Pressable>
 
-        <Text style={s.label}>Which account is this?</Text>
+        <Text style={s.label}>Payment method for expenses</Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={s.chips}>
-          <Chip label="Bank account" icon="wallet-outline" selected={methodId === ''} onPress={() => setMethodId('')} />
+          <Chip label="Bank account" icon="wallet-outline" selected={methodId === ''} onPress={() => { setMethodId(''); setSetBalance(false); }} />
           {methods.map((m) => (
-            <Chip key={m.id} label={paymentMethodLabel(m)} icon={m.kind === 'upi' ? 'phone-portrait-outline' : 'card-outline'} selected={methodId === m.id} onPress={() => setMethodId(m.id)} />
+            <Chip key={m.id} label={paymentMethodLabel(m)} icon={m.kind === 'upi' ? 'phone-portrait-outline' : 'card-outline'} selected={methodId === m.id} onPress={() => { setMethodId(m.id); setSetBalance(false); }} />
           ))}
         </ScrollView>
 
@@ -186,26 +236,27 @@ export function ImportStatementScreen(): React.ReactElement {
             autoCapitalize="none"
             autoCorrect={false}
             returnKeyType="go"
+            autoFocus
             onSubmitEditing={read}
           />
         )}
-        {!!error && <Text style={s.error} accessibilityRole="alert">{error}</Text>}
-        <Text style={s.mutedSmall}>The file is read once and not stored. PDF text goes to Google Gemini with account numbers masked; if Gemini is busy an offline parser reads it.</Text>
+        {!preview && !!error && <Text style={s.error} accessibilityRole="alert">{error}</Text>}
+        <Text style={s.mutedSmall}>The file is read once and not stored. FINAURA can send PDF text to Google Gemini. Long digit sequences are partially masked, but names and transaction details may remain. If Gemini is unavailable, the server reads the PDF locally.</Text>
         <Button label={reading ? 'Reading statement…' : 'Read statement'} onPress={read} loading={reading} disabled={!file || (needsPassword && !password)} style={s.cta} />
       </Card>
 
       {preview && (
         <View style={s.reviewHead}>
           <View style={s.rowBetween}>
-            <Text style={s.title}>2. Review {rows.length}</Text>
+            <Text style={s.title}>Review {rows.length} {rows.length === 1 ? 'entry' : 'entries'}</Text>
             <Badge label={PARSER_LABEL[preview.parser]} tone={preview.parser === 'local' ? 'warning' : 'primary'} />
           </View>
           <Text style={s.muted}>
             {shortDate(preview.summary.periodStart)} – {shortDate(preview.summary.periodEnd)}
             {preview.summary.last4 ? ` · ending ${preview.summary.last4}` : ''}
-            {preview.summary.duplicates ? ` · ${preview.summary.duplicates} already recorded (unticked)` : ''}
+            {preview.summary.duplicates ? ` · ${preview.summary.duplicates} already recorded or possible duplicates` : ''}
           </Text>
-          <Text style={s.mutedSmall}>Tap a row to change its label. Imported rows are history only: balances are not changed.</Text>
+          <Text style={s.mutedSmall}>Tap an entry to edit its label. Possible duplicates start unchecked.</Text>
         </View>
       )}
     </View>
@@ -215,10 +266,11 @@ export function ImportStatementScreen(): React.ReactElement {
     <View style={s.footer}>
       {isBank && closing !== null && (
         <View style={s.switchRow}>
-          <Text style={[s.muted, s.flex]}>Set my bank balance to the closing balance, {formatCurrency(closing)}</Text>
-          <Switch value={setBalance} onValueChange={setSetBalance} trackColor={{ true: c.primary }} />
+          <Text style={[s.muted, s.flex]}>Set my bank balance to {formatCurrency(closing)}, the closing balance on {shortDate(preview.summary.periodEnd)}. Undo keeps this update.</Text>
+          <Switch accessibilityLabel="Set bank balance to the statement closing balance" value={setBalance} onValueChange={setSetBalance} trackColor={{ true: c.primary }} />
         </View>
       )}
+      {!!error && <Text style={s.error} accessibilityRole="alert">{error}</Text>}
       <Text style={s.mutedSmall}>{formatCurrency(out)} out · {formatCurrency(inn)} in</Text>
       <Button label={`Import ${chosen.length} row${chosen.length === 1 ? '' : 's'}`} onPress={save} loading={saving} disabled={!chosen.length} style={s.cta} />
     </View>
@@ -239,10 +291,10 @@ export function ImportStatementScreen(): React.ReactElement {
           const on = selected.has(r.rowId);
           return (
             <View style={[s.row, !on && s.rowOff]}>
-              <Pressable onPress={() => toggle(r.rowId)} hitSlop={8} accessibilityRole="checkbox" accessibilityState={{ checked: on }} accessibilityLabel={`Import ${r.description}`}>
+              <Pressable onPress={() => toggle(r.rowId)} disabled={r.duplicate === 'imported'} hitSlop={8} accessibilityRole="checkbox" accessibilityState={{ checked: on, disabled: r.duplicate === 'imported' }} accessibilityLabel={`Import ${r.description}`}>
                 <Ionicons name={on ? 'checkbox' : 'square-outline'} size={22} color={on ? c.primary : c.textSubtle} />
               </Pressable>
-              <Pressable style={s.flex} onPress={() => r.direction === 'debit' && setEditing(r)} accessibilityRole="button" accessibilityLabel={`${r.description}, ${formatCurrency(r.amount)}`}>
+              <Pressable style={s.flex} onPress={() => setEditing(r)} disabled={r.duplicate === 'imported'} accessibilityRole="button" accessibilityLabel={`Edit label for ${r.description}, ${formatCurrency(r.amount)}`}>
                 <Text style={s.rowDesc} numberOfLines={1}>{r.description || '—'}</Text>
                 <Text style={s.rowMeta} numberOfLines={1}>
                   {shortDate(r.date)} · {r.direction === 'debit' ? `${emojiFor(r.category)} ${r.category} · ${r.type}` : `Income · ${r.source}`}
@@ -261,14 +313,24 @@ export function ImportStatementScreen(): React.ReactElement {
 
       <Sheet visible={!!editing} onClose={() => setEditing(null)} title={editing?.description?.slice(0, 40) || 'Label'}>
         <ScrollView style={s.sheetScroll} showsVerticalScrollIndicator={false}>
-          <CategoryGrid items={CATEGORY_ITEMS} isSelected={(key) => key === editing?.category} onPress={(key) => editRow({ category: key })} />
-          <Text style={s.label}>Type</Text>
-          <SegmentedControl
-            segments={TYPES.map((t) => ({ key: t, label: t, dot: { Need: c.info, Want: c.warningStrong, Investment: c.successStrong }[t] }))}
-            value={(editing?.type ?? 'Need') as (typeof TYPES)[number]}
-            onChange={(t) => editRow({ type: t })}
-            accessibilityLabel="Type"
-          />
+          {editing?.direction === 'credit' ? (
+            <View style={s.incomeSources}>
+              {INCOME_SOURCES.map((source) => (
+                <Chip key={source} label={source.charAt(0).toUpperCase() + source.slice(1)} selected={editing.source === source} onPress={() => editRow({ source })} />
+              ))}
+            </View>
+          ) : (
+            <>
+              <CategoryGrid items={CATEGORY_ITEMS} isSelected={(key) => key === editing?.category} onPress={(key) => editRow({ category: key })} />
+              <Text style={s.label}>Type</Text>
+              <SegmentedControl
+                segments={TYPES.map((t) => ({ key: t, label: t, dot: { Need: c.info, Want: c.warningStrong, Investment: c.successStrong }[t] }))}
+                value={(editing?.type ?? 'Need') as (typeof TYPES)[number]}
+                onChange={(t) => editRow({ type: t })}
+                accessibilityLabel="Type"
+              />
+            </>
+          )}
           <Button label="Done" onPress={() => setEditing(null)} style={s.cta} />
         </ScrollView>
       </Sheet>
@@ -294,7 +356,8 @@ const useStyles = createStyles((c) => ({
   reviewHead: { marginBottom: 8, paddingHorizontal: 4 },
   rowBetween: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 },
   row: { flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 12, paddingHorizontal: 12, marginBottom: 8, borderRadius: radius.md, backgroundColor: c.surface, borderWidth: 1, borderColor: c.border },
-  rowOff: { opacity: 0.5 },
+  rowOff: { backgroundColor: c.surfaceAlt },
+  incomeSources: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
   rowDesc: { ...typeScale.label, color: c.text },
   rowMeta: { ...typeScale.caption, color: c.textMuted, marginTop: 2 },
   flag: { ...typeScale.caption, color: c.warningStrong, marginTop: 2, fontWeight: '700' },

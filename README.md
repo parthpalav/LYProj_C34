@@ -622,6 +622,7 @@ LYProj_C34/
 - **Node.js** 18+ (20+ recommended) and npm 9+
 - **Python** 3.9+ with `pip` and `venv`
 - **MongoDB** 6+ on `localhost:27017`, or an Atlas URI
+- **For iOS Shortcut SMS confirmation**, use MongoDB Atlas or a MongoDB replica set. Confirmation saves the ledger entry and balance together in a database transaction. On standalone MongoDB, captures stay pending and manual entry, SMS paste and statement imports are available.
 - About 1 GB free for the v7 model (downloaded automatically on first start)
 - Optional: Xcode / Android Studio or Expo Go for the mobile app
 

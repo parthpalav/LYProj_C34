@@ -73,7 +73,7 @@ export function SmsCaptureScreen(): React.ReactElement {
           </View>
           <Text style={s.muted}>
             iPhones don't let apps read your messages. An iOS Shortcut can forward each bank SMS to FINAURA instead.
-            Captured payments show up on Home for a one-tap check. OTPs, offers and reminders are ignored, and the SMS text itself is not stored.
+            Captured payments show up on Home. FINAURA keeps the parsed details. Unrecognized message formats may be sent to Google Gemini.
           </Text>
         </Card>
 

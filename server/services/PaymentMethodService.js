@@ -22,10 +22,10 @@ export class PaymentMethodError extends Error {
 
 // Validates a client-supplied paymentMethodId for a new or edited transaction.
 // Returns the id to store: null (unspecified, bank), 'cash', or an active method's id.
-export async function resolvePaymentMethodId(userId, rawId) {
+export async function resolvePaymentMethodId(userId, rawId, { session } = {}) {
   if (rawId === undefined || rawId === null || rawId === '') return null;
   if (rawId === CASH_METHOD_ID) return CASH_METHOD_ID;
-  const method = await PaymentMethod.findOne({ id: String(rawId), userId: String(userId), status: 'active' }).lean();
+  const method = await PaymentMethod.findOne({ id: String(rawId), userId: String(userId), status: 'active' }, null, { session }).lean();
   if (!method) throw new PaymentMethodError(400, 'Invalid or inactive payment method');
   return method.id;
 }
@@ -33,17 +33,18 @@ export async function resolvePaymentMethodId(userId, rawId) {
 // The credit card a stored paymentMethodId points at, or null when the money comes
 // from the bank balance (unspecified, cash, UPI, debit card). Archived cards count,
 // so editing or deleting an old purchase still settles against the right card.
-async function creditCardFor(userId, paymentMethodId) {
+async function creditCardFor(userId, paymentMethodId, session) {
   if (!paymentMethodId || paymentMethodId === CASH_METHOD_ID) return null;
-  return PaymentMethod.findOne({ id: paymentMethodId, userId: String(userId), kind: 'credit_card' }).lean();
+  return PaymentMethod.findOne({ id: paymentMethodId, userId: String(userId), kind: 'credit_card' }, null, { session }).lean();
 }
 
 // Takes `amount` from the transaction's source. Credit card purchases are blocked
 // past the limit unless `force` (used only to restore a charge during rollback).
-export async function chargeSource(userId, paymentMethodId, amount, { force = false } = {}) {
-  const card = await creditCardFor(userId, paymentMethodId);
+export async function chargeSource(userId, paymentMethodId, amount, { force = false, session } = {}) {
+  const card = await creditCardFor(userId, paymentMethodId, session);
   if (!card) {
-    await User.findOneAndUpdate(userFilter(userId), { $inc: { currentBalance: -amount } });
+    const user = await User.findOneAndUpdate(userFilter(userId), { $inc: { currentBalance: -amount } }, { session });
+    if (session && !user) throw new PaymentMethodError(404, 'User not found.');
     return;
   }
   if (!force && card.status !== 'active') {
@@ -54,7 +55,7 @@ export async function chargeSource(userId, paymentMethodId, amount, { force = fa
     filter.status = 'active';
     filter.$expr = { $lte: [{ $add: ['$outstanding', amount] }, '$creditLimit'] };
   }
-  const updated = await PaymentMethod.findOneAndUpdate(filter, { $inc: { outstanding: amount } });
+  const updated = await PaymentMethod.findOneAndUpdate(filter, { $inc: { outstanding: amount } }, { session });
   if (!updated) {
     const available = Math.max(0, card.creditLimit - card.outstanding);
     throw new PaymentMethodError(400, `Exceeds available credit on ${card.nickname} (available ${available})`);

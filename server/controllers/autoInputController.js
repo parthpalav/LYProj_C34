@@ -63,17 +63,20 @@ export async function commitStatement(req, res, next) {
     const { rows, paymentMethodId: rawMethod, setClosingBalance, closingBalance } = req.body || {};
     const clean = validateCommitRows(rows);
     const paymentMethodId = await resolvePaymentMethodId(userId, rawMethod);
+    const shouldSetBalance = setClosingBalance === true && paymentMethodId === null;
+    if (shouldSetBalance && (!Number.isFinite(closingBalance) || Math.abs(closingBalance) > 1e12)) {
+      throw new ImportError(400, 'BAD_BALANCE', 'Invalid closing balance.');
+    }
     const result = await commitRows(userId, paymentMethodId, clean);
 
     // User corrections teach merchant memory, same as editing a single transaction.
     await Promise.all(clean.filter((r) => r.direction === 'debit' && r.userEdited)
       .map((r) => rememberMerchant(userId, r.description, r.category, r.type).catch(() => null)));
 
-    if (setClosingBalance === true && paymentMethodId === null) {
-      const balance = Number(closingBalance);
-      if (!Number.isFinite(balance) || Math.abs(balance) > 1e12) throw new ImportError(400, 'BAD_BALANCE', 'Invalid closing balance.');
-      await User.findOneAndUpdate(userFilter(userId), { $set: { currentBalance: Math.round(balance * 100) / 100 } });
-      result.balanceSetTo = Math.round(balance * 100) / 100;
+    if (shouldSetBalance && result.insertedTransactions + result.insertedIncome > 0) {
+      const balance = Math.round(closingBalance * 100) / 100;
+      await User.findOneAndUpdate(userFilter(userId), { $set: { currentBalance: balance } });
+      result.balanceSetTo = balance;
     }
     res.status(201).json(result);
   } catch (err) { sendError(res, err, next); }
@@ -204,12 +207,6 @@ export async function dismissCaptured(req, res, next) {
     if (!updated) return res.status(404).json({ success: false, error: 'Captured item not found' });
     res.json({ id: updated.id, status: updated.status });
   } catch (err) { next(err); }
-}
-
-/** Marks a pending capture confirmed after the user saved it as a transaction or income. */
-export async function confirmCaptured(userId, capturedId) {
-  if (typeof capturedId !== 'string' || !capturedId) return;
-  await CapturedTransaction.updateOne({ id: capturedId, userId: String(userId), status: 'pending' }, { $set: { status: 'confirmed' } });
 }
 
 // ── Receipt scan ─────────────────────────────────────────────

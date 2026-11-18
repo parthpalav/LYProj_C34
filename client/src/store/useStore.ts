@@ -63,7 +63,10 @@ export const useStore = create<AppState>((set) => ({
   setAlerts:       (alerts)       => set({ alerts }),
   setChatHistory:  (chatHistory)  => set({ chatHistory }),
   addChatMessage:  (message)      => set((state) => ({ chatHistory: [...state.chatHistory, message] })),
-  addTransaction:  (transaction)  => set((state) => ({ transactions: [transaction, ...state.transactions] })),
+  addTransaction:  (transaction)  => set((state) => {
+    if (state.transactions.some((entry) => entry.id === transaction.id)) return state;
+    return { transactions: [transaction, ...state.transactions] };
+  }),
   setGoals:        (goals)        => set({ goals }),
   addGoal:         (goal)         => set((state) => ({ goals: [...state.goals, goal] })),
   removeGoal:      (id)           => set((state) => ({ goals: state.goals.filter((g) => g.id !== id) })),

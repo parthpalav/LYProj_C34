@@ -2,24 +2,19 @@ import React, { useCallback, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { addIncome, CapturedItem, dismissCaptured, getCaptured } from '../../services/api';
-import { celebrate, toast } from '../../store/useCelebrationStore';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import type { RootStackParamList } from '../../navigation/AppNavigator';
+import { CapturedItem, dismissCaptured, getCaptured } from '../../services/api';
 import { formatCurrency } from '../../utils/format';
 import { createStyles, radius, tabular, typeScale, useTheme } from '../../theme';
 import { Card } from '../ui/Card';
 import { IconTile } from '../ui/Bits';
 
-const incomeSourceFor = (text: string) =>
-  /salary|payroll/i.test(text) ? 'salary' : /refund|reversal|cashback/i.test(text) ? 'reimbursement' : 'other';
-
-/**
- * Bank SMS forwarded by the iOS Shortcut, waiting for a one-tap check. Expenses open the
- * entry sheet pre-filled; money received saves straight to income. Renders nothing when empty.
- */
+/** Pending bank SMS entries forwarded by the iOS Shortcut. */
 export function CapturedSmsCard(): React.ReactElement | null {
   const s = useStyles();
   const { c } = useTheme();
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [items, setItems] = useState<CapturedItem[]>([]);
 
   const load = useCallback(() => { getCaptured().then(setItems).catch(() => {}); }, []);
@@ -27,17 +22,11 @@ export function CapturedSmsCard(): React.ReactElement | null {
 
   if (!items.length) return null;
 
-  const open = async (item: CapturedItem) => {
-    if (item.direction === 'debit') {
+  const open = (item: CapturedItem) => {
+    if (item.direction === 'credit') {
+      navigation.navigate('IncomeFlow', { capture: item });
+    } else {
       navigation.navigate('QuickAdd', { draft: { ...item, capturedId: item.id } });
-      return;
-    }
-    try {
-      await addIncome({ amount: item.amount, source: incomeSourceFor(item.description), description: item.description, timestamp: item.date, capturedId: item.id });
-      setItems((list) => list.filter((i) => i.id !== item.id));
-      celebrate({ kind: 'coins', title: `${formatCurrency(item.amount)} income added`, subtitle: 'Balance credited.' });
-    } catch {
-      toast("Couldn't save the income", { tone: 'error' });
     }
   };
 
@@ -58,14 +47,14 @@ export function CapturedSmsCard(): React.ReactElement | null {
       {items.slice(0, 5).map((item) => (
         <View key={item.id} style={s.item}>
           <Pressable style={s.flex} onPress={() => open(item)} accessibilityRole="button"
-            accessibilityLabel={`${item.direction === 'credit' ? 'Save income' : 'Review expense'} ${formatCurrency(item.amount)} ${item.description}`}>
+            accessibilityLabel={`${item.direction === 'credit' ? 'Review income' : 'Review expense'} ${formatCurrency(item.amount)} ${item.description}`}>
             <Text style={[s.amount, item.direction === 'credit' && { color: c.successStrong }]}>
               {item.direction === 'credit' ? '+' : ''}{formatCurrency(item.amount)}
             </Text>
             <Text style={s.desc} numberOfLines={1}>
               {item.description} · {new Date(item.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
             </Text>
-            <Text style={s.action}>{item.direction === 'credit' ? 'Tap to save as income' : 'Tap to review and log'}</Text>
+            <Text style={s.action}>{item.direction === 'credit' ? 'Review income' : 'Review expense'}</Text>
           </Pressable>
           <Pressable onPress={() => dismiss(item)} hitSlop={10} accessibilityRole="button" accessibilityLabel={`Dismiss ${item.description}`}>
             <Ionicons name="close-circle" size={22} color={c.textSubtle} />

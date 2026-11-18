@@ -1,6 +1,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import type { NavigatorScreenParams } from '@react-navigation/native';
 import React from 'react';
 import { ChatScreen } from '../screens/ChatScreen';
 import { DashboardScreen } from '../screens/DashboardScreen';
@@ -27,7 +28,7 @@ import { SpendingScreen } from '../screens/SpendingScreen';
 import { PaymentMethodsScreen } from '../screens/PaymentMethodsScreen';
 import { ImportStatementScreen } from '../screens/ImportStatementScreen';
 import { SmsCaptureScreen } from '../screens/SmsCaptureScreen';
-import type { EntryDraft } from '../services/api';
+import type { CapturedItem, EntryDraft } from '../services/api';
 import { TabBar } from '../components/navigation/TabBar';
 import { withFocusFade } from '../components/navigation/FocusFade';
 import { useAuthStore } from '../store/useAuthStore';
@@ -44,12 +45,12 @@ export type RootStackParamList = {
   Auth: undefined;
   Onboarding: undefined;
   Welcome: undefined;
-  MainTabs: undefined;
+  MainTabs: NavigatorScreenParams<RootTabParamList> | undefined;
   /** Optional pre-fill, e.g. a bank SMS capture */
   QuickAdd: { draft?: EntryDraft & { capturedId?: string } } | undefined;
   FinancialOutlook: undefined;
   FMI: undefined;
-  IncomeFlow: undefined;
+  IncomeFlow: { capture?: CapturedItem } | undefined;
   Assets: undefined;
   Family: undefined;
   Goals: undefined;

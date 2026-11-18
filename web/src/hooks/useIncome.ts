@@ -96,7 +96,7 @@ export function useIncome(): UseIncomeReturn {
 
   const add = useCallback(async (payload: IncomePayload): Promise<IncomeRecord> => {
     const created = await createIncome(payload);
-    setIncomes((prev) => [created, ...prev]);
+    setIncomes((prev) => prev.some((entry) => entry.id === created.id) ? prev : [created, ...prev]);
     // Refresh flow in background
     getIncomeFlow().then(setFlow).catch(() => {});
     return created;

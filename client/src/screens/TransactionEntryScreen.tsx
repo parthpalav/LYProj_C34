@@ -219,23 +219,25 @@ export function TransactionEntryScreen({ onClose, draft }: Props): React.ReactEl
   };
 
   const readReceipt = async (source: 'camera' | 'library') => {
-    const perm = source === 'camera' ? await ImagePicker.requestCameraPermissionsAsync() : await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!perm.granted) {
-      toast(source === 'camera' ? 'Camera access is off' : 'Photo access is off', { tone: 'warning', subtitle: 'Allow it in Settings to scan receipts.' });
-      return;
-    }
-    const opts: ImagePicker.ImagePickerOptions = { mediaTypes: ['images'], quality: 0.5, base64: true };
-    const res = source === 'camera' ? await ImagePicker.launchCameraAsync(opts) : await ImagePicker.launchImageLibraryAsync(opts);
-    const asset = res.canceled ? null : res.assets?.[0];
-    if (!asset?.base64) return;
-    setPicker(null);
     setReading('receipt');
+    setFormError('');
     try {
-      const d = await scanReceipt({ data: asset.base64, mimeType: asset.mimeType === 'image/png' ? 'image/png' : 'image/jpeg' });
+      const perm = source === 'camera' ? await ImagePicker.requestCameraPermissionsAsync() : await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (!perm.granted) {
+        toast(source === 'camera' ? 'Camera access is off' : 'Photo access is off', { tone: 'warning', subtitle: 'Allow it in Settings to scan receipts.' });
+        return;
+      }
+      const opts: ImagePicker.ImagePickerOptions = { mediaTypes: ['images'], quality: 0.5, base64: true };
+      const res = source === 'camera' ? await ImagePicker.launchCameraAsync(opts) : await ImagePicker.launchImageLibraryAsync(opts);
+      const asset = res.canceled ? null : res.assets?.[0];
+      if (!asset?.base64) return;
+      setPicker(null);
+      const d = await scanReceipt({ data: asset.base64, mimeType: 'image/jpeg' });
       applyDraft(d);
       setFillNote('Filled from your receipt. Check it, then log.');
     } catch (err: any) {
-      setFormError(err?.response?.data?.error || "Couldn't read that receipt.");
+      setPicker(null);
+      setFormError(err?.response?.data?.error || "Couldn't read that receipt. You can enter it manually.");
     } finally {
       setReading(null);
     }
@@ -387,10 +389,12 @@ export function TransactionEntryScreen({ onClose, draft }: Props): React.ReactEl
         showsVerticalScrollIndicator={false}
       >
         {/* Quick fill */}
-        <View style={styles.quickFill}>
-          <Chip label="Paste bank SMS" icon="chatbox-ellipses-outline" onPress={() => { setSmsError(''); setIncomeDraft(null); setPicker('sms'); }} />
-          <Chip label={reading === 'receipt' ? 'Reading receipt…' : 'Scan receipt'} icon="camera-outline" onPress={() => reading !== 'receipt' && setPicker('receipt')} />
-        </View>
+        {!draft?.capturedId && (
+          <View style={styles.quickFill}>
+            <Chip label="Paste bank SMS" icon="chatbox-ellipses-outline" onPress={() => { if (!reading) { setSmsError(''); setIncomeDraft(null); setPicker('sms'); } }} />
+            <Chip label={reading === 'receipt' ? 'Reading receipt…' : 'Scan receipt'} icon="camera-outline" onPress={() => { if (!reading) setPicker('receipt'); }} />
+          </View>
+        )}
         {!!fillNote && <Text style={styles.fillNote}>{fillNote}</Text>}
 
         {/* Amount */}
@@ -585,6 +589,7 @@ export function TransactionEntryScreen({ onClose, draft }: Props): React.ReactEl
           autoFocus
           accessibilityLabel="Bank SMS text"
         />
+        <Text style={styles.linkSub}>Unrecognized message formats may be sent to Google Gemini.</Text>
         {!!smsError && <Text style={styles.formError} accessibilityRole="alert">{smsError}</Text>}
         {incomeDraft ? (
           <>
@@ -598,9 +603,9 @@ export function TransactionEntryScreen({ onClose, draft }: Props): React.ReactEl
 
       {/* Receipt source */}
       <Sheet visible={picker === 'receipt'} onClose={() => setPicker(null)} title="Scan a receipt">
-        <Text style={styles.linkSub}>FINAURA reads the total, shop and date. You check them before logging.</Text>
-        <Button label="Take a photo" icon="camera-outline" onPress={() => readReceipt('camera')} style={styles.logButton} />
-        <Button label="Choose from photos" icon="images-outline" variant="secondary" onPress={() => readReceipt('library')} style={styles.sheetGap} />
+        <Text style={styles.linkSub}>The photo is sent to Google Gemini to read the total, shop and date. Review the details before saving.</Text>
+        <Button label="Take a photo" icon="camera-outline" disabled={reading === 'receipt'} onPress={() => readReceipt('camera')} style={styles.logButton} />
+        <Button label="Choose from photos" icon="images-outline" variant="secondary" disabled={reading === 'receipt'} onPress={() => readReceipt('library')} style={styles.sheetGap} />
       </Sheet>
 
       {/* Category picker */}

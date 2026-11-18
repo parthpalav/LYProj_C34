@@ -14,6 +14,7 @@ export interface TopBarProps {
 const ROUTE_TITLES: Record<string, string> = {
   '/app': 'Overview',
   '/app/activity': 'Activity',
+  '/app/import': 'Activity',
   '/app/insights': 'Insights',
   '/app/plan': 'Plan',
   '/app/net-worth': 'Net worth',

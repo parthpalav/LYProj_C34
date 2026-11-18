@@ -13,7 +13,7 @@ import { detectBehavioralPatterns, calculateFIS, generateWeeklyReport } from '..
 import { smoothIncomeFlow } from '../services/IncomeFlowService.js';
 import { recallMerchant, rememberMerchant, memoryResult } from '../services/MerchantMemoryService.js';
 import { classifyLocally, CATEGORY_SENTIMENT_MAP } from '../services/LocalClassifier.js';
-import { confirmCaptured } from './autoInputController.js';
+import { confirmSmsCapture, SmsCaptureError } from '../services/SmsCaptureService.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 import * as authService from '../services/authService.js';
 import * as emailService from '../services/emailService.js';
@@ -858,6 +858,13 @@ router.get('/transactions', async (req, res, next) => {
   } catch (error) { next(error); }
 });
 
+class ExpenseInputError extends Error {
+  constructor(status, message) {
+    super(message);
+    this.status = status;
+  }
+}
+
 router.post('/transactions', async (req, res, next) => {
   try {
     // Always use the authenticated user's ID — never accept userId from body
@@ -879,12 +886,10 @@ router.post('/transactions', async (req, res, next) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
+    const { capturedId } = req.body;
     let paymentMethodId;
-    try {
+    if (capturedId == null) {
       paymentMethodId = await resolvePaymentMethodId(userId, req.body.paymentMethodId);
-    } catch (err) {
-      if (err instanceof PaymentMethodError) return res.status(err.status).json({ error: err.message });
-      throw err;
     }
 
     // Call sentiment analyzer and ML classifier (graceful fallback if ML is offline)
@@ -982,113 +987,99 @@ router.post('/transactions', async (req, res, next) => {
     let typeConfidence = req.body.typeConfidence !== undefined ? Number(req.body.typeConfidence) : (req.body.type ? 0 : mlData.typeConfidence || 0);
     let needsReview = req.body.needsReview !== undefined ? (req.body.needsReview === true) : (req.body.category && req.body.type ? false : mlData.needsReview || false);
 
-    // Validate optional liabilityId if supplied by user
-    let validatedLiabilityId = null;
-    let scheduledFor = null;
-    let expectedNextDueDate = null;
+    const entryFields = {
+      userId,
+      amount: debitAmount,
+      category: finalCategory,
+      sentiment: req.body.sentiment || sentimentResult.sentiment,
+      sentimentScore: sentimentResult.score || 0,
+      type: finalType,
+      confidenceScore: finalConfidence,
+      classificationSource,
+      categorySource,
+      typeSource,
+      categoryConfidence,
+      typeConfidence,
+      needsReview,
+      tags: sentimentResult.tags || [],
+      description: req.body.description || 'manual input',
+      timestamp: req.body.timestamp ? new Date(req.body.timestamp) : new Date()
+    };
 
-    if (req.body.liabilityId) {
-      const liability = await Liability.findOne({
-        id: String(req.body.liabilityId),
-        userId: String(userId),
-        status: 'active'
-      });
-      if (!liability) {
-        return res.status(400).json({ error: 'Invalid or inactive liability' });
-      }
-      validatedLiabilityId = liability.id;
-
-      if (req.body.expectedScheduledFor) {
-        if (!liability.autoDeduct || !liability.nextDueDate) {
-          return res.status(400).json({ error: 'Cannot mark payment as paid for a liability without auto-deduct enabled or a valid scheduled date.' });
-        }
-
-        const expectedTime = new Date(req.body.expectedScheduledFor).getTime();
-        const nextDueTime = liability.nextDueDate.getTime();
-
-        if (isNaN(expectedTime) || expectedTime !== nextDueTime) {
-          return res.status(409).json({ error: 'The scheduled payment date has changed. Please refresh and try again.' });
-        }
-
-        scheduledFor = liability.nextDueDate;
-        expectedNextDueDate = liability.nextDueDate;
-      }
-    }
-
-    // Deduct from the bank balance or the credit card only after all validations pass
-    try {
-      await chargeSource(userId, paymentMethodId, debitAmount);
-    } catch (err) {
-      if (err instanceof PaymentMethodError) return res.status(err.status).json({ error: err.message });
-      throw err;
-    }
-
-    let tx;
-    try {
-      tx = await Transaction.create({
-        id:                  `t-${Date.now()}`,
-        userId:              userId,
-        amount:              debitAmount,
-        category:            finalCategory,
-        sentiment:           req.body.sentiment || sentimentResult.sentiment,
-        sentimentScore:      sentimentResult.score || 0,
-        type:                finalType,
-        confidenceScore:     finalConfidence,
-        classificationSource,
-        categorySource,
-        typeSource,
-        categoryConfidence,
-        typeConfidence,
-        needsReview,
-        liabilityId:         validatedLiabilityId,
-        scheduledFor:        scheduledFor,
-        paymentMethodId,
-        tags:                sentimentResult.tags || [],
-        description:         req.body.description || 'manual input',
-        timestamp:           req.body.timestamp ? new Date(req.body.timestamp) : new Date()
-      });
-
-      // Advance the liability's nextDueDate if this transaction fulfilled an occurrence
-      if (scheduledFor && expectedNextDueDate) {
-        try {
-          const liability = await Liability.findOne({ id: validatedLiabilityId });
-          if (liability) {
-            const nextDate = calculateNextDueDate(liability, expectedNextDueDate, await getUserTimezone(userId));
-            const updated = await Liability.findOneAndUpdate(
-              { id: validatedLiabilityId, nextDueDate: expectedNextDueDate },
-              { $set: { nextDueDate: nextDate } },
-              { new: true }
-            );
-            if (!updated) {
-              logger.warn(`Liability nextDueDate was modified concurrently for ${validatedLiabilityId}. Idempotent transaction with scheduledFor=${scheduledFor} protects against duplicate auto-deduction.`);
-            }
+    const saveExpense = async (id, session) => {
+      let liability = null;
+      let scheduledFor = null;
+      if (req.body.liabilityId) {
+        liability = await Liability.findOne(
+          { id: String(req.body.liabilityId), userId: String(userId), status: 'active' }, null, { session },
+        );
+        if (!liability) throw new ExpenseInputError(400, 'Invalid or inactive liability');
+        if (req.body.expectedScheduledFor) {
+          if (!liability.autoDeduct || !liability.nextDueDate) {
+            throw new ExpenseInputError(400, 'Cannot mark payment as paid for a liability without auto-deduct enabled or a valid scheduled date.');
           }
-        } catch (schedErr) {
-          logger.error(`Failed to advance nextDueDate for liability ${validatedLiabilityId}:`, schedErr);
+          if (new Date(req.body.expectedScheduledFor).getTime() !== liability.nextDueDate.getTime()) {
+            throw new ExpenseInputError(409, 'The scheduled payment date has changed. Please refresh and try again.');
+          }
+          scheduledFor = liability.nextDueDate;
         }
       }
-    } catch (createError) {
-      if (createError.code === 11000 && createError.keyPattern && createError.keyPattern.liabilityId && createError.keyPattern.scheduledFor) {
-         // Revert the charge on concurrency failure
-         await refundSource(userId, paymentMethodId, debitAmount);
-         return res.status(409).json({ error: 'The scheduled payment was just fulfilled by another transaction. Please try again.' });
+
+      const method = session
+        ? await resolvePaymentMethodId(userId, req.body.paymentMethodId, { session })
+        : paymentMethodId;
+      await chargeSource(userId, method, debitAmount, { session });
+
+      const fields = { ...entryFields, id, paymentMethodId: method, liabilityId: liability?.id ?? null, scheduledFor };
+      let entry;
+      try {
+        entry = session
+          ? (await Transaction.create([fields], { session }))[0]
+          : await Transaction.create(fields);
+      } catch (error) {
+        if (!session) await refundSource(userId, method, debitAmount);
+        throw error;
       }
 
-      // revert the charge on create failure
-      await refundSource(userId, paymentMethodId, debitAmount);
-      throw createError;
-    }
+      if (scheduledFor) {
+        try {
+          const nextDate = calculateNextDueDate(liability, scheduledFor, resolveTimezone(userExists.timezone));
+          const updated = await Liability.findOneAndUpdate(
+            { id: liability.id, nextDueDate: scheduledFor },
+            { $set: { nextDueDate: nextDate } },
+            { new: true, session },
+          );
+          if (!updated && session) {
+            throw new ExpenseInputError(409, 'The scheduled payment date has changed. Please refresh and try again.');
+          }
+          if (!updated) logger.warn(`Liability nextDueDate changed concurrently for ${liability.id}`);
+        } catch (error) {
+          if (session) throw error;
+          logger.error(`Failed to advance nextDueDate for liability ${liability.id}:`, error);
+        }
+      }
+      return entry;
+    };
 
-    if (categorySource === 'manual' || typeSource === 'manual') {
-      await rememberMerchant(userId, tx.description, tx.category, tx.type)
+    const { entry, created } = capturedId == null
+      ? { entry: await saveExpense(`t-${Date.now()}`), created: true }
+      : await confirmSmsCapture(userId, capturedId, 'debit', saveExpense);
+
+    if (created && (categorySource === 'manual' || typeSource === 'manual')) {
+      await rememberMerchant(userId, entry.description, entry.category, entry.type)
         .catch((err) => logger.warn(`Merchant memory write failed: ${err.message}`));
     }
-    // Saved from an SMS capture: take it off the pending list
-    await confirmCaptured(userId, req.body.capturedId)
-      .catch((err) => logger.warn(`Captured SMS confirm failed: ${err.message}`));
 
-    res.status(201).json(normalizeTransaction(tx));
-  } catch (error) { next(error); }
+    res.status(created ? 201 : 200).json(normalizeTransaction(entry));
+  } catch (error) {
+    if (error instanceof SmsCaptureError || error instanceof PaymentMethodError || error instanceof ExpenseInputError) {
+      return res.status(error.status).json({ error: error.message });
+    }
+    if (error.code === 11000 && error.keyPattern?.liabilityId && error.keyPattern?.scheduledFor) {
+      return res.status(409).json({ error: 'The scheduled payment was just fulfilled by another transaction. Please try again.' });
+    }
+    next(error);
+  }
 });
 
 router.put('/transactions/:id', async (req, res, next) => {
@@ -1206,7 +1197,7 @@ router.put('/transactions/:id', async (req, res, next) => {
       const oldSource = oldTx.paymentMethodId ?? null;
       const newSource = sanitized.paymentMethodId !== undefined ? sanitized.paymentMethodId : oldSource;
       const newAmount = sanitized.amount !== undefined ? sanitized.amount : oldTx.amount;
-      const moved = oldSource !== newSource || oldTx.amount !== newAmount;
+      const moved = !oldTx.importBatchId && (oldSource !== newSource || oldTx.amount !== newAmount);
       const undoMove = async () => {
         await refundSource(userId, newSource, newAmount);
         await chargeSource(userId, oldSource, oldTx.amount, { force: true });
@@ -1266,18 +1257,18 @@ router.delete('/transactions/:id', async (req, res, next) => {
 
     const source = oldTx.paymentMethodId ?? null;
 
-    // Refund the bank balance or credit card for the deleted expense
-    await refundSource(userId, source, refundAmount);
+    const affectsBalance = !oldTx.importBatchId;
+    if (affectsBalance) await refundSource(userId, source, refundAmount);
 
     try {
       const deleted = await Transaction.findOneAndDelete({ id: req.params.id, userId }).lean();
       if (!deleted) {
         // Rollback refund if delete fails
-        await chargeSource(userId, source, refundAmount, { force: true });
+        if (affectsBalance) await chargeSource(userId, source, refundAmount, { force: true });
         return res.status(404).json({ error: 'Transaction not found' });
       }
     } catch (deleteErr) {
-      await chargeSource(userId, source, refundAmount, { force: true });
+      if (affectsBalance) await chargeSource(userId, source, refundAmount, { force: true });
       throw deleteErr;
     }
 
@@ -1801,37 +1792,45 @@ router.post('/income', async (req, res, next) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    // Increment user balance first (safe fallback query approach)
-    await User.findOneAndUpdate(
-      { id: userId },
-      { $inc: { currentBalance: numericAmount } }
-    );
+    const incomeDate = timestamp || date ? new Date(timestamp || date) : new Date();
+    const entryFields = {
+      userId,
+      amount: numericAmount,
+      source: source || 'salary',
+      description: description || '',
+      timestamp: isNaN(incomeDate.getTime()) ? new Date() : incomeDate
+    };
 
-    let income;
-    try {
-      const incomeDate = timestamp || date ? new Date(timestamp || date) : new Date();
-      income = await Income.create({
-        id:          `i-${Date.now()}`,
-        userId:      userId,
-        amount:      numericAmount,
-        source:      source || 'salary',
-        description: description || '',
-        timestamp:   isNaN(incomeDate.getTime()) ? new Date() : incomeDate
-      });
-    } catch (createErr) {
-      // Revert currentBalance on creation failure
-      await User.findOneAndUpdate(
+    const saveIncome = async (id, session) => {
+      const user = await User.findOneAndUpdate(
         { id: userId },
-        { $inc: { currentBalance: -numericAmount } }
+        { $inc: { currentBalance: numericAmount } },
+        { session },
       );
-      throw createErr;
-    }
+      if (!user && session) throw new SmsCaptureError(404, 'User not found.');
+      const fields = { ...entryFields, id };
+      try {
+        return session
+          ? (await Income.create([fields], { session }))[0]
+          : await Income.create(fields);
+      } catch (error) {
+        if (!session) {
+          await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: -numericAmount } });
+        }
+        throw error;
+      }
+    };
 
-    await confirmCaptured(userId, req.body.capturedId)
-      .catch((err) => logger.warn(`Captured SMS confirm failed: ${err.message}`));
+    const { capturedId } = req.body;
+    const { entry, created } = capturedId == null
+      ? { entry: await saveIncome(`i-${Date.now()}`), created: true }
+      : await confirmSmsCapture(userId, capturedId, 'credit', saveIncome);
 
-    res.status(201).json(income);
-  } catch (error) { next(error); }
+    res.status(created ? 201 : 200).json(entry);
+  } catch (error) {
+    if (error instanceof SmsCaptureError) return res.status(error.status).json({ error: error.message });
+    next(error);
+  }
 });
 
 router.put('/income/:id', async (req, res, next) => {
@@ -1866,22 +1865,22 @@ router.put('/income/:id', async (req, res, next) => {
       const oldIncome = await Income.findOne({ id: req.params.id, userId }).lean();
       if (!oldIncome) return res.status(404).json({ message: 'Income not found' });
 
-      const delta = numericAmount - oldIncome.amount;
+      const delta = oldIncome.importBatchId ? 0 : numericAmount - oldIncome.amount;
       update.amount = numericAmount;
 
       // Adjust user balance
-      await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: delta } });
+      if (delta) await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: delta } });
 
       try {
         income = await Income.findOneAndUpdate({ id: req.params.id, userId }, update, { new: true }).lean();
         if (!income) {
           // Revert balance adjustment if update fails
-          await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: -delta } });
+          if (delta) await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: -delta } });
           return res.status(404).json({ message: 'Income not found' });
         }
       } catch (err) {
         // Revert balance adjustment
-        await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: -delta } });
+        if (delta) await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: -delta } });
         throw err;
       }
     } else {
@@ -1899,19 +1898,19 @@ router.delete('/income/:id', async (req, res, next) => {
     const oldIncome = await Income.findOne({ id: req.params.id, userId }).lean();
     if (!oldIncome) return res.status(404).json({ message: 'Income not found' });
 
-    // Deduct user balance
-    await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: -oldIncome.amount } });
+    const affectsBalance = !oldIncome.importBatchId;
+    if (affectsBalance) await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: -oldIncome.amount } });
 
     try {
       const deleted = await Income.findOneAndDelete({ id: req.params.id, userId }).lean();
       if (!deleted) {
         // Revert balance deduction if delete fails
-        await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: oldIncome.amount } });
+        if (affectsBalance) await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: oldIncome.amount } });
         return res.status(404).json({ message: 'Income not found' });
       }
     } catch (err) {
       // Revert balance deduction
-      await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: oldIncome.amount } });
+      if (affectsBalance) await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: oldIncome.amount } });
       throw err;
     }
 

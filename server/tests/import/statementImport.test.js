@@ -151,11 +151,33 @@ async function run() {
 
   const before = await balance();
   const post = getHandler('POST', '/transactions');
-  const t = await call(post, { user: { id: A }, body: { amount: 250, description: 'SWIGGY', capturedId: list.data[0].id } });
-  assert.equal(t.statusCode, 201);
-  assert.equal(await balance(), before - 250, 'confirmed capture is a normal entry');
-  assert.equal((await CapturedTransaction.findOne({ id: list.data[0].id }).lean()).status, 'confirmed');
-  assert.equal((await call(auto.dismissCaptured, { user: { id: B }, params: { id: list.data[0].id } })).statusCode, 404);
+  const captureId = list.data[0].id;
+  const confirm = () => call(post, { user: { id: A }, body: { amount: 250, description: 'SWIGGY', category: 'Food & Dining', type: 'Want', capturedId: captureId } });
+  const hello = await mongoose.connection.db.admin().command({ hello: 1 });
+  if (hello.setName || hello.msg === 'isdbgrid') {
+    const [first, second] = await Promise.all([confirm(), confirm()]);
+    assert.deepEqual([first.statusCode, second.statusCode].sort(), [200, 201]);
+    assert.equal(first.data.id, second.data.id);
+    assert.equal(await balance(), before - 250, 'confirmed capture debits exactly once');
+    assert.equal(await Transaction.countDocuments({ userId: A, id: first.data.id }), 1);
+    assert.equal((await CapturedTransaction.findOne({ id: captureId }).lean()).status, 'confirmed');
+
+    const credit = await ingest(tok.data.token, 'Rs 1400 credited to A/c XX1234 by NEFT from ACME on 13/11/26');
+    assert.equal(credit.statusCode, 201);
+    assert.equal(credit.data.captured.direction, 'credit');
+    const postIncome = getHandler('POST', '/income');
+    const receive = () => call(postIncome, { user: { id: A }, body: { amount: 1400, source: 'salary', capturedId: credit.data.captured.id } });
+    const [creditFirst, creditSecond] = await Promise.all([receive(), receive()]);
+    assert.deepEqual([creditFirst.statusCode, creditSecond.statusCode].sort(), [200, 201]);
+    assert.equal(creditFirst.data.id, creditSecond.data.id);
+    assert.equal(await balance(), before - 250 + 1400, 'confirmed capture credits exactly once');
+  } else {
+    assert.equal((await confirm()).statusCode, 503);
+    assert.equal(await balance(), before, 'standalone cannot move money for a capture');
+    assert.equal((await CapturedTransaction.findOne({ id: captureId }).lean()).status, 'pending');
+    console.log('  ℹ️ Capture persistence requires a replica set. Standalone fail-closed path verified.');
+  }
+  assert.equal((await call(auto.dismissCaptured, { user: { id: B }, params: { id: captureId } })).statusCode, 404);
 
   await call(auto.revokeSmsToken, { user: { id: A } });
   assert.equal((await ingest(tok.data.token, 'Rs 10 debited from A/c XX1234 to CHAI')).statusCode, 401);

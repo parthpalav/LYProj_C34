@@ -324,7 +324,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
           </div>
         )}
 
-        {!isEditing && (
+        {!isEditing && !capturedId && (
           <div className="quick-fill">
             <div className="quick-fill-actions">
               <Button type="button" variant="outline" size="sm" leftIcon={<MessageSquareText size={14} />} onClick={() => setSmsOpen((v) => !v)} aria-expanded={smsOpen}>
@@ -335,6 +335,7 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
               </Button>
               <input ref={receiptInputRef} type="file" accept="image/*" capture="environment" hidden onChange={(e) => readReceipt(e.target.files?.[0])} />
             </div>
+            <p className="parity-hint">Receipt photos are sent to Google Gemini to read the total, shop and date.</p>
             {smsOpen && (
               <div className="quick-fill-sms animate-fade-in">
                 <label htmlFor="tx-sms" className="form-label">Bank SMS</label>
@@ -347,12 +348,13 @@ export const TransactionModal: React.FC<TransactionModalProps> = ({
                   value={smsText}
                   onChange={(e) => setSmsText(e.target.value)}
                 />
+                <p className="parity-hint">Unrecognized message formats may be sent to Google Gemini.</p>
                 <Button type="button" size="sm" onClick={readSms} isLoading={isReading === 'sms'} disabled={!smsText.trim()}>Read SMS</Button>
               </div>
             )}
-            {fillNote && <span className="form-help-text" role="status">{fillNote}</span>}
           </div>
         )}
+        {fillNote && <p className="form-help-text" role="status">{fillNote}</p>}
 
         {/* Amount Input */}
         <div className="form-group">

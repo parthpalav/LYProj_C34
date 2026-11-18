@@ -100,6 +100,7 @@ class HybridClassifier:
         self._type_loaded = False
         self.minilm_type_available = False
         self.v4_model = None
+        self.v4_member_names = []
         self._v4_checked = False
 
     def load_v4(self, members: Optional[list] = None) -> bool:
@@ -127,6 +128,7 @@ class HybridClassifier:
             assert all(m["labels"] == self.v4_meta["labels"] for _, _, m in self.v4_members), "members disagree on labels"
             self.v4_threshold = active.get("review_threshold", self.v4_meta["review_threshold"])
             self.v4_model = self.v4_members[0][1]
+            self.v4_member_names = list(members)
             self._torch = torch
             log.info(f"✅ joint classifier loaded in HybridPipeline: {members}")
             return True
@@ -134,6 +136,14 @@ class HybridClassifier:
             log.warning(f"⚠️ Failed to load {members} ({e}) — using legacy TF-IDF + MiniLM type head")
             self.v4_model = None
             return False
+
+    def active_backend(self) -> Dict[str, Any]:
+        """Which classifier answers /classify right now (no loading side effects)."""
+        if self.v4_model is not None:
+            return {"backend": "joint_encoder", "models": list(self.v4_member_names)}
+        if self._category_loaded:
+            return {"backend": self.category_source_name, "models": []}
+        return {"backend": "not_loaded", "models": []}
 
     def _classify_v4_probs(self, cleaned: str) -> np.ndarray:
         """Mean of the members' temperature-calibrated joint-label probabilities."""

@@ -15,6 +15,7 @@ import Transaction from '../../models/Transaction.js';
 import Liability from '../../models/Liability.js';
 import controllerRouter from '../../controllers/index.js';
 import { processSingleLiability } from '../../services/LiabilityScheduler.js';
+import { getMonthlyCommitments } from '../../services/CommitmentService.js';
 import { connectTestDB, plantSentinel } from '../testDb.js';
 
 const USER = 'u-test-ledger-concurrency';
@@ -173,6 +174,28 @@ async function run() {
   assert.equal(r.status, 409);
   assert.equal(await balance(), 5000);
   console.log('  ✅ manual payment cannot overlap a scheduler run');
+
+  // 8. Scheduler catches up after a missed month; the monthly view keeps arrears apart.
+  await reset(1500);
+  await Liability.create({ id: 'L-ledger-missed', userId: USER, name: 'Broadband', amount: 1000, category: 'Utilities & Bills', type: 'Need', autoDeduct: true, frequency: 'monthly', dayOfMonth: 5, startDate: new Date('2026-10-05T00:00:00+05:30'), nextDueDate: new Date('2026-10-05T00:00:00+05:30'), status: 'active' });
+  const nov18 = new Date('2026-11-18T06:00:00Z');
+  let c = await getMonthlyCommitments(USER, { now: nov18, tz: 'Asia/Kolkata' });
+  assert.equal(c.remaining, 1000);
+  assert.equal(c.overdue, 1000);
+  assert.deepEqual(c.items[0].overdueDates, ['2026-10-05']);
+  assert.deepEqual(c.items[0].dueDates, ['2026-11-05']);
+  for (let i = 0; i < 4; i++) {
+    const l = await Liability.findOne({ id: 'L-ledger-missed' });
+    if (l.nextDueDate > nov18) break;
+    await processSingleLiability(l, nov18);
+  }
+  assert.equal(await balance(), -500, 'October and November each debited once');
+  assert.equal(await Transaction.countDocuments({ ...own, liabilityId: 'L-ledger-missed' }), 2);
+  c = await getMonthlyCommitments(USER, { now: nov18, tz: 'Asia/Kolkata' });
+  assert.equal(c.overdue, 0);
+  assert.equal(c.remaining, 0);
+  assert.equal(c.paidSoFar, 1000, 'November shows only its own debit');
+  console.log('  ✅ scheduler catch-up after a missed month; monthly totals keep arrears separate');
 
   await reset(0);
   await User.deleteMany({ id: USER });

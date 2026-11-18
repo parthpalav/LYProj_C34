@@ -27,13 +27,26 @@ import { CommittedBalanceCard } from '../components/dashboard/CommittedBalanceCa
 import { RecentActivityTable } from '../components/dashboard/RecentActivityTable';
 import { FutureOutlookPanel } from '../components/dashboard/FutureOutlookPanel';
 import { getFamilyDashboard, getReceivedFamilyInvitations } from '../services/api';
-import type { FamilyDashboard } from '../types';
+import type { FamilyDashboard, MonthlyCommitments } from '../types';
 import { FamilyOverviewCard } from '../components/family/FamilyOverviewCard';
 import { NextStep } from '../components/ui/NextStep';
 import { FMI_NAME } from '../utils/presentation';
 import { AdjustBalanceModal } from '../components/dashboard/AdjustBalanceModal';
 import { Toast } from '../components/ui/Toast';
 import { getAppTimezone, zparts } from '../utils/timezone';
+
+/** Balance card caption: this month's auto-deduct dues, with missed earlier dues named separately. */
+function commitmentsCaption(c?: MonthlyCommitments | null): string {
+  const overdue = c?.overdue ?? 0;
+  if (!c || (c.remaining <= 0 && overdue <= 0)) return 'Liquid operating balance across active accounts';
+  const dues = [
+    c.remaining > 0 ? `${formatCurrencyINR(c.remaining)} due this month` : '',
+    overdue > 0 ? `${formatCurrencyINR(overdue)} overdue` : '',
+  ].filter(Boolean).join(' + ');
+  return c.freeBalance < 0
+    ? `⚠ ${dues} · ${formatCurrencyINR(-c.freeBalance)} short`
+    : `${dues} set aside for auto-deduct bills · ${formatCurrencyINR(c.freeBalance)} free`;
+}
 
 export const OverviewPage: React.FC = () => {
   const { user } = useAuth();
@@ -200,14 +213,8 @@ export const OverviewPage: React.FC = () => {
               variant="hero"
               label="Current Balance"
               value={formatCurrencyINR(animBalance ?? currentBalance)}
-              subtext={
-                dashboard?.commitments && dashboard.commitments.remaining > 0
-                  ? dashboard.commitments.freeBalance < 0
-                    ? `⚠ ${formatCurrencyINR(dashboard.commitments.remaining)} due for bills · ${formatCurrencyINR(-dashboard.commitments.freeBalance)} short`
-                    : `${formatCurrencyINR(dashboard.commitments.remaining)} set aside for auto-deduct bills · ${formatCurrencyINR(dashboard.commitments.freeBalance)} free`
-                  : 'Liquid operating balance across active accounts'
-              }
-              className={dashboard?.commitments && dashboard.commitments.remaining > 0 && dashboard.commitments.freeBalance < 0 ? 'metric-bills-short' : ''}
+              subtext={commitmentsCaption(dashboard?.commitments)}
+              className={dashboard?.commitments && dashboard.commitments.freeBalance < 0 && (dashboard.commitments.remaining > 0 || (dashboard.commitments.overdue ?? 0) > 0) ? 'metric-bills-short' : ''}
               icon={Wallet}
             />
 

@@ -6,8 +6,8 @@ import Asset from '../../models/Asset.js';
 import Liability from '../../models/Liability.js';
 import { createAsset, updateAsset, getAssets } from '../../controllers/assetController.js';
 import { createLiability, updateLiability } from '../../controllers/liabilityController.js';
+import { connectTestDB } from '../testDb.js';
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/lyproj';
 const userId = 'test-asset-plan-' + Date.now();
 
 async function call(handler, body = {}, params = {}) {
@@ -21,7 +21,7 @@ async function call(handler, body = {}, params = {}) {
 const base = { assetClass: 'FIRE_INVESTABLE', includedInFireCorpus: true, liquidity: 'locked' };
 
 async function main() {
-  await mongoose.connect(MONGO_URI);
+  await connectTestDB();
   try {
     // SIP on a mutual fund is stored; review stamp set on create.
     const mf = await call(createAsset, { ...base, name: 'Index Fund', assetType: 'Mutual Fund', currentValue: 50000, annualReturnRate: 12, monthlyContribution: 5000 });

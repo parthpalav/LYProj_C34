@@ -729,7 +729,7 @@ npm run test:integration   # API ↔ ML contracts (needs MongoDB + ML service ru
 npm run test:research      # research acceptance audit
 ```
 
-> ⚠️ Some server suites clear the `Liability` and `Transaction` collections. Point them at a separate database, for example `MONGO_URI=mongodb://127.0.0.1:27017/lyproj_test npm run test:server`, so your demo data survives.
+> Server suites connect to `TEST_MONGO_URI` (default `mongodb://127.0.0.1:27017/lyproj_test`) and ignore `MONGO_URI`. They refuse to start if the database name does not contain `test`, and they only delete their own fixture users. Suites that call the HTTP API (`creditCardFlow`, `transactionIntegrity`, `userTimezone`, `classificationFmiPipeline` and the integration suites) read `API_URL` and `ML_SERVICE_URL`; run that API with `MONGO_URI` set to the same test database.
 
 Type-check and lint:
 

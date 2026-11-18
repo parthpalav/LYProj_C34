@@ -33,7 +33,7 @@ import express from 'express';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import routes from '../../routes/index.js';
-import { connectDB } from '../../config/db.js';
+import { connectTestDB } from '../testDb.js';
 import User from '../../models/User.js';
 import Goal from '../../models/Goal.js';
 import Family from '../../models/Family.js';
@@ -77,7 +77,7 @@ async function runTests() {
   console.log('  FINAURA FAMILY SYSTEM PHASE 4 FAMILY FMI TEST SUITE');
   console.log('='.repeat(64));
 
-  await connectDB();
+  await connectTestDB();
 
   // Create test express app & mount routes
   const app = express();

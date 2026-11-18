@@ -18,7 +18,7 @@
 
 import assert from 'node:assert/strict';
 import mongoose from 'mongoose';
-import { connectDB } from '../../config/db.js';
+import { connectTestDB } from '../testDb.js';
 import User from '../../models/User.js';
 import Goal from '../../models/Goal.js';
 import Transaction from '../../models/Transaction.js';
@@ -55,7 +55,7 @@ function audit(stepNumber, title, fn) {
 }
 
 async function runAudit() {
-  await connectDB();
+  await connectTestDB();
 
   const auditTimestamp = Date.now();
   const emailA = `family.audit.a.${auditTimestamp}@example.com`;

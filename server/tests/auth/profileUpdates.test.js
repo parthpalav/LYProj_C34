@@ -12,6 +12,7 @@ import Income from '../../models/Income.js';
 import Transaction from '../../models/Transaction.js';
 import { getPredictabilitySnapshot } from '../../services/PredictabilityService.js';
 import { stripUser } from '../../services/authService.js';
+import { connectTestDB } from '../testDb.js';
 
 console.log('='.repeat(64));
 console.log('  FINAURA USER PROFILE & PLANNING ASSUMPTIONS TEST SUITE');
@@ -35,7 +36,7 @@ async function test(name, fn) {
 }
 
 async function runSuite() {
-  await mongoose.connect('mongodb://127.0.0.1:27017/lyproj');
+  await connectTestDB();
 
   const userA = 'u-test-profile-a';
   const userB = 'u-test-profile-b';

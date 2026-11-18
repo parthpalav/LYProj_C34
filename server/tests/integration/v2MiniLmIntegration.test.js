@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config({ path: '.env' });
 
-const BASE_URL = 'http://localhost:4000/api';
+const BASE_URL = process.env.API_URL || 'http://localhost:4000/api';
 let AUTH_TOKEN = null;
 
 const TEST_EMAIL = 'v2-integration-test@finaura.test';

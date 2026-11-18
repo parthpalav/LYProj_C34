@@ -26,7 +26,7 @@ import helmet from 'helmet';
 import mongoose from 'mongoose';
 
 import { validateJwtSecret, validateEnv, config, getJwtSecret } from '../../config/env.js';
-import { connectDB } from '../../config/db.js';
+import { connectTestDB } from '../testDb.js';
 import { errorHandler } from '../../middleware/errorHandler.js';
 import { createRateLimiter } from '../../middleware/rateLimiter.js';
 import User from '../../models/User.js';
@@ -172,7 +172,7 @@ async function main() {
   // ══════════════════════════════════════════════════════════════
   // Connect to DB and Start ephemeral HTTP server
   // ══════════════════════════════════════════════════════════════
-  await connectDB();
+  await connectTestDB();
 
   const testApp = buildTestApp();
   const server = http.createServer(testApp);

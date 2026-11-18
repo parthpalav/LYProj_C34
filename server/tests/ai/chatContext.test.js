@@ -22,15 +22,15 @@ import {
   generateResponse,
   normalizeConversationHistory
 } from '../../services/AgentService.js';
+import { connectTestDB } from '../testDb.js';
 
 console.log('================================================================');
 console.log('  FINAURA CHAT CONTEXT & MULTI-TURN MEMORY TEST SUITE');
 console.log('================================================================\n');
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/lyproj';
 
 async function main() {
-  await mongoose.connect(MONGO_URI);
+  await connectTestDB();
   console.log('Connected to MongoDB');
 
   const testUserId = 'test-chat-user-' + Date.now();

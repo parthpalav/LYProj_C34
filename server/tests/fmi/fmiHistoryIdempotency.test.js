@@ -13,6 +13,7 @@ import Transaction from '../../models/Transaction.js';
 import FMIHistory from '../../models/FMIHistory.js';
 import { calculateFMI } from '../../services/FMIService.js';
 import { annotateTransactions } from '../../services/SentimentService.js';
+import { connectTestDB } from '../testDb.js';
 
 console.log('='.repeat(64));
 console.log('  FINAURA FMI HISTORY IDEMPOTENCY TEST SUITE');
@@ -105,7 +106,7 @@ async function processFmiRequest(userId, customDate = new Date()) {
 }
 
 async function runSuite() {
-  await mongoose.connect('mongodb://127.0.0.1:27017/lyproj');
+  await connectTestDB();
 
   // Ensure index is created
   await FMIHistory.syncIndexes();

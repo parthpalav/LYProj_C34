@@ -14,6 +14,10 @@ import Transaction, { VALID_CATEGORIES } from '../../models/Transaction.js';
 import Income from '../../models/Income.js';
 import { calculateFMI } from '../../services/FMIService.js';
 import { getPredictabilitySnapshot } from '../../services/PredictabilityService.js';
+import { connectTestDB } from '../testDb.js';
+
+const API_URL = process.env.API_URL || 'http://127.0.0.1:4000/api';
+const ML_URL = process.env.ML_SERVICE_URL || 'http://127.0.0.1:5001';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -39,7 +43,7 @@ async function test(name, fn) {
 }
 
 async function runSuite() {
-  await mongoose.connect('mongodb://127.0.0.1:27017/lyproj');
+  await connectTestDB();
 
   const userId = 'u-test-ml-presentation';
   await User.deleteMany({ id: userId });
@@ -74,7 +78,7 @@ async function runSuite() {
   try {
     // ── 1. CLASSIFIER ENDPOINT WORKS & RETURNS PROPER TYPES ──
     await test('Test 1: POST /api/classify returns 200 with complete JSON contract', async () => {
-      const res = await fetch('http://127.0.0.1:4000/api/classify', {
+      const res = await fetch(`${API_URL}/classify`, {
         method: 'POST',
         headers: authHeaders,
         body: JSON.stringify({ text: 'Zomato dinner order' })
@@ -95,7 +99,7 @@ async function runSuite() {
     // ── 2. EXACT PRESENTATION EXAMPLES ──────────────────────
     await test('Test 2: Canonical Presentation Examples Classify Accurately', async () => {
       // 1. SIP -> Investments / Investment
-      let r = await (await fetch('http://127.0.0.1:4000/api/classify', {
+      let r = await (await fetch(`${API_URL}/classify`, {
         method: 'POST',
         headers: authHeaders,
         body: JSON.stringify({ text: 'Monthly mutual fund SIP' })
@@ -105,7 +109,7 @@ async function runSuite() {
       assert.equal(r.needsReview, false);
 
       // 2. Electricity -> Utilities & Bills (Need)
-      r = await (await fetch('http://127.0.0.1:4000/api/classify', {
+      r = await (await fetch(`${API_URL}/classify`, {
         method: 'POST',
         headers: authHeaders,
         body: JSON.stringify({ text: 'Electricity bill payment' })
@@ -115,7 +119,7 @@ async function runSuite() {
       assert.equal(r.needsReview, false);
 
       // 3. Netflix -> Entertainment (Want)
-      r = await (await fetch('http://127.0.0.1:4000/api/classify', {
+      r = await (await fetch(`${API_URL}/classify`, {
         method: 'POST',
         headers: authHeaders,
         body: JSON.stringify({ text: 'Netflix subscription' })
@@ -129,7 +133,7 @@ async function runSuite() {
     await test('Test 3: Ambiguous and Vague Descriptions Flag for Human Review', async () => {
       const ambiguous = ['payment', 'transfer', 'online purchase', 'misc'];
       for (const text of ambiguous) {
-        const r = await (await fetch('http://127.0.0.1:4000/api/classify', {
+        const r = await (await fetch(`${API_URL}/classify`, {
           method: 'POST',
           headers: authHeaders,
           body: JSON.stringify({ text })
@@ -164,7 +168,7 @@ async function runSuite() {
 
     // ── 5. OFFLINE / TIMEOUT KEYWORD FALLBACK ───────────────
     await test('Test 5: Node Local Keyword Fallback Works Transparently', async () => {
-      const r = await (await fetch('http://127.0.0.1:4000/api/classify', {
+      const r = await (await fetch(`${API_URL}/classify`, {
         method: 'POST',
         headers: authHeaders,
         body: JSON.stringify({ text: 'Medicines from chemist store' })
@@ -245,7 +249,7 @@ async function runSuite() {
 
       // Send 5 classification requests to Flask
       for (let i = 0; i < 5; i++) {
-        await fetch('http://127.0.0.1:5001/classify', {
+        await fetch(`${ML_URL}/classify`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ text: `Random test text ${i}` })

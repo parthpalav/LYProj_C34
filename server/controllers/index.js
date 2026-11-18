@@ -1,7 +1,7 @@
 import express, { Router } from 'express';
 import jwt from 'jsonwebtoken';
 import { detectAnomaly } from '../services/TransactionService.js';
-import { calculateFMI, resolveMonthlyIncome, resolveRetirementGoal, VARIABLE_INCOME_TYPES, VARIABLE_INCOME_WINDOW_DAYS, NON_EARNED_INCOME_SOURCES } from '../services/FMIService.js';
+import { calculateFMI, buildFmiUser, VARIABLE_INCOME_TYPES } from '../services/FMIService.js';
 import { predictOverspend, detectLowBalanceRisk } from '../services/PredictionService.js';
 import { applyRoundup, allocateToEnvelope, generateMicroActions } from '../services/MicroActionService.js';
 import { generateResponse } from '../services/AgentService.js';
@@ -1309,52 +1309,25 @@ router.get('/fmi', async (req, res, next) => {
     const user = await User.findOne({ id: userId }).lean();
     const goals = await Goal.find({ userId }).lean();
 
-    // Get current month's transactions (month boundaries in the user's timezone)
+    // This month so far, in the user's timezone. Future-dated entries have not happened yet.
+    const now = new Date();
     const tz = resolveTimezone(user?.timezone);
-    const monthStart = zonedMonthStart(new Date(), tz);
     const monthlyExpenses = await Transaction.find({
       userId,
-      timestamp: { $gte: monthStart }
+      timestamp: { $gte: zonedMonthStart(now, tz), $lte: now }
     }).sort({ timestamp: -1 }).lean();
 
     // Annotate transactions for behavioral analysis
     const annotated = annotateTransactions(monthlyExpenses, tz);
 
-    // Derive user age from dateOfBirth
-    const currentAge = user?.dateOfBirth
-      ? Math.max(18, new Date().getFullYear() - new Date(user.dateOfBirth).getFullYear())
-      : 25;
-
-    // Retirement goal, then the profile's corpus target, then an estimate on the
-    // declared income (a 30-day window would swing a 20-year target)
-    const declaredIncome = Number(user?.monthlyIncome ?? 0);
-    const retirementGoal = resolveRetirementGoal(user || {}, goals);
-
-    let monthlyIncome = declaredIncome;
-    if (VARIABLE_INCOME_TYPES.includes(user?.incomeType)) {
-      const since = new Date(Date.now() - VARIABLE_INCOME_WINDOW_DAYS * 86400000);
-      const earned = { userId, source: { $nin: NON_EARNED_INCOME_SOURCES } };
-      const recent = await Income.find({ ...earned, timestamp: { $gte: since, $lte: new Date() } }).lean();
-      const recentIncome = recent.reduce((s, i) => s + (Number(i.amount) || 0), 0);
-      monthlyIncome = resolveMonthlyIncome(user, recentIncome, recent.length > 0 || !!(await Income.exists(earned)));
-    }
-
-    // Build the user profile for FMI calculation
-    const fmiUser = {
-      currentBalance:    Number(user?.currentBalance ?? 0),
-      monthlyIncome,
-      currentAge,
-      retirementAge:     Number(user?.retirementAge ?? 60),
-      retirementGoal,
-      previousShortfall: 0, // no historical shortfall tracking yet
-      timezone:          tz
-    };
+    // Same inputs as the assistant: retirement target rule, recent earned income for variable earners
+    const incomes = VARIABLE_INCOME_TYPES.includes(user?.incomeType) ? await Income.find({ userId }).lean() : [];
+    const fmiUser = buildFmiUser(user || {}, goals, incomes, now);
 
     // Calculate FMI (fully deterministic, no external service)
     const computed = calculateFMI(fmiUser, annotated);
 
     // Persist or update today's FMI snapshot (at most 1 per user per calendar day)
-    const now = new Date();
     const snapshotDate = zonedDateKey(now, tz); // "YYYY-MM-DD" in the user's timezone
 
     try {

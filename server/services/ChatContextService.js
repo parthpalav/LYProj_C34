@@ -23,7 +23,7 @@ import Liability from '../models/Liability.js';
 import Goal from '../models/Goal.js';
 import Alert from '../models/Alert.js';
 import FMIHistory from '../models/FMIHistory.js';
-import { calculateFMI, resolveRetirementGoal } from './FMIService.js';
+import { calculateFMI, buildFmiUser } from './FMIService.js';
 import { annotateTransactions } from './SentimentService.js';
 import {
   calculateInvestableCorpus,
@@ -120,7 +120,6 @@ export async function buildChatContext(userId) {
   const now = new Date();
   const tz = resolveTimezone(user.timezone);
   const currentMonthStart = zonedMonthStart(now, tz);
-  const currentMonthEnd = new Date(zonedMonthStart(now, tz, 1).getTime() - 1);
 
   const prevMonthStart = zonedMonthStart(now, tz, -1);
   const prevMonthEnd = new Date(currentMonthStart.getTime() - 1);
@@ -157,7 +156,7 @@ export async function buildChatContext(userId) {
   const currentMonthTxs = txDocs.filter(t => {
     if (!t.timestamp) return false;
     const d = new Date(t.timestamp);
-    return d >= currentMonthStart && d <= currentMonthEnd;
+    return d >= currentMonthStart && d <= now; // this month so far: future-dated entries have not happened
   });
 
   const prevMonthTxs = txDocs.filter(t => {
@@ -189,7 +188,7 @@ export async function buildChatContext(userId) {
   const currentMonthIncomes = incomeDocs.filter(i => {
     if (!i.timestamp) return false;
     const d = new Date(i.timestamp);
-    return d >= currentMonthStart && d <= currentMonthEnd;
+    return d >= currentMonthStart && d <= now; // this month so far: future-dated entries have not happened
   });
   const recordedCurrentMonthIncome = currentMonthIncomes.reduce((s, i) => s + (Number(i.amount) || 0), 0);
   const totalRecordedIncome = incomeDocs.reduce((s, i) => s + (Number(i.amount) || 0), 0);
@@ -281,17 +280,8 @@ export async function buildChatContext(userId) {
   let fmiData;
   try {
     const annotatedMonthly = annotateTransactions(currentMonthTxs, tz);
-    const retirementGoal = resolveRetirementGoal(user, goalDocs);
-
-    const fmiUser = {
-      currentBalance: balance.current,
-      monthlyIncome: profile.monthlyIncome,
-      currentAge: profile.age,
-      retirementAge: profile.retirementAge,
-      retirementGoal,
-      previousShortfall: 0,
-      timezone: tz
-    };
+    // Same inputs as GET /api/fmi (income resolver, retirement target, age).
+    const fmiUser = buildFmiUser(user, goalDocs, incomeDocs, now);
 
     const computed = calculateFMI(fmiUser, annotatedMonthly);
     fmiData = {

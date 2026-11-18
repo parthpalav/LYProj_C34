@@ -58,6 +58,35 @@ async function run() {
   assert.equal(api.goalDetail.retirementGoal, 40000 * 12 * 20, 'estimate only when nothing is saved');
   console.log('  ✅ one retirement-target rule across FMI and assistant');
 
+  // Freelancer: the FMI screen and the assistant resolve income the same way.
+  const cases = [
+    ['recent earned income', [{ amount: 5000, source: 'freelance', daysAgo: 5 }]],
+    ['old income only', [{ amount: 30000, source: 'freelance', daysAgo: 60 }]],
+    ['reimbursement only', [{ amount: 2000, source: 'reimbursement', daysAgo: 3 }]],
+  ];
+  for (const [label, incomes] of cases) {
+    await reset({ incomeType: 'freelancer', retirementCorpusGoal: 4200000 });
+    await Income.insertMany(incomes.map((i, n) => ({ id: `i-parity-${n}`, userId: USER, amount: i.amount, source: i.source, timestamp: new Date(Date.now() - i.daysAgo * DAY) })));
+    await Transaction.create({ id: 't-parity-spend', userId: USER, amount: 10000, category: 'Shopping', type: 'Want', description: 'month spend', timestamp: new Date(Date.now() - 60000) });
+    api = await fmiApi();
+    chat = await buildChatContext(USER);
+    assert.equal(chat.fmi.score, api.score, `${label}: assistant FMI ${chat.fmi.score} vs screen ${api.score}`);
+    assert.equal(chat.fmi.pillars.spendingControl, api.pillars.D2_spendingControl.score, `${label}: spending-control pillar differs`);
+    assert.equal(chat.fmi.pillars.savingDiscipline, api.pillars.D1_savingDiscipline.score, `${label}: saving pillar differs`);
+    assert.equal(chat.fmi.requiredMonthlySaving, api.requiredMonthlySaving, `${label}: required saving differs`);
+  }
+  console.log('  ✅ freelancer FMI matches between screen and assistant (recent, old-only, reimbursement-only income)');
+
+  // A future-dated expense has not happened yet: it is not part of this month's FMI.
+  await reset({});
+  await Transaction.create({ id: 't-parity-now', userId: USER, amount: 1000, category: 'Groceries', type: 'Need', description: 'today', timestamp: new Date(Date.now() - 60000) });
+  await Transaction.create({ id: 't-parity-future', userId: USER, amount: 9000, category: 'Shopping', type: 'Want', description: 'scheduled later', timestamp: new Date(Date.now() + 3600000) });
+  api = await fmiApi();
+  chat = await buildChatContext(USER);
+  assert.equal(api.totalSpent, 1000, 'FMI ignores a future-dated expense');
+  assert.equal(chat.fmi.score, api.score);
+  console.log('  ✅ future-dated expenses stay out of the current FMI');
+
   await Promise.all([User.deleteMany({ id: USER }), Goal.deleteMany(own), Income.deleteMany(own), Transaction.deleteMany(own)]);
   await mongoose.disconnect();
   console.log('\nfmiInputParity: all checks passed');

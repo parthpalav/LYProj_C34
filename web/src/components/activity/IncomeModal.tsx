@@ -20,6 +20,7 @@ const COMMON_INCOME_SOURCES = [
   'rental',
   'consulting',
   'gift',
+  'reimbursement',
   'other',
 ];
 

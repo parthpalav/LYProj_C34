@@ -19,7 +19,7 @@ import Income from '../models/Income.js';
 import { getActiveFamilyForUser } from './FamilyService.js';
 import { DEFAULT_TIMEZONE, toZoned, zonedMonthStart } from '../utils/userTime.js';
 import { getUserTimezone } from './userTimezone.js';
-import { daysInMonth as fmiDaysInMonth, dayOfMonth as fmiDayOfMonth } from './FMIService.js';
+import { daysInMonth as fmiDaysInMonth, dayOfMonth as fmiDayOfMonth, NON_EARNED_INCOME_SOURCES } from './FMIService.js';
 
 // ── Calendar Month Boundary Helpers (Aligned with Individual FMI) ────────────
 
@@ -152,6 +152,7 @@ export async function getHouseholdData(userId, referenceDate = new Date()) {
   // 4. Fetch member Income events for current calendar month
   const incomeDocs = await Income.find({
     userId: { $in: memberUserIds },
+    source: { $nin: NON_EARNED_INCOME_SOURCES },
     timestamp: { $gte: period.startDate, $lte: period.endDate }
   }).lean();
 

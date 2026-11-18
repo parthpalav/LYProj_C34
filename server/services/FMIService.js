@@ -149,6 +149,27 @@ export function getFMILabel(score) {
   return 'Critical';
 }
 
+// Income types with no fixed monthly pay
+export const VARIABLE_INCOME_TYPES = ['freelancer', 'gig'];
+export const VARIABLE_INCOME_WINDOW_DAYS = 30;
+// Money paid back (friends settling up, refunds) is not earned income
+export const NON_EARNED_INCOME_SOURCES = ['reimbursement'];
+
+/**
+ * Monthly income FMI should score against. Freelance/gig pay is irregular, so it is the
+ * income actually received in the last 30 days; the declared figure is used only when the
+ * user has never logged any income.
+ *
+ * @param {Object} user
+ * @param {number} recentIncome - sum of Income received in the trailing window
+ * @param {boolean} hasAnyIncome - whether the user has ever logged income
+ */
+export function resolveMonthlyIncome(user = {}, recentIncome = 0, hasAnyIncome = false) {
+  const declared = Number(user.monthlyIncome ?? 0);
+  if (!VARIABLE_INCOME_TYPES.includes(user.incomeType) || !hasAnyIncome) return declared;
+  return recentIncome;
+}
+
 /**
  * Computes an individual member's retirement goal obligation without side effects.
  *

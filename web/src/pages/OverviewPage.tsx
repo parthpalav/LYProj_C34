@@ -151,6 +151,7 @@ export const OverviewPage: React.FC = () => {
     <div className="overview-page">
       <Toast message={toastMessage} type="success" onClose={() => setToastMessage(null)} />
       <AdjustBalanceModal
+        key={adjustingBalance ? 'open' : 'closed'}
         isOpen={adjustingBalance}
         onClose={() => setAdjustingBalance(false)}
         currentBalance={currentBalance}

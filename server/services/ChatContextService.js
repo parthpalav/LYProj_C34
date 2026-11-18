@@ -350,31 +350,27 @@ export async function buildChatContext(userId) {
     const predSnapshot = buildPredictabilitySnapshot(...zoneForecastInput(predData));
 
     if (predSnapshot && predSnapshot.forecastStatus?.available) {
+      // Every field comes from the forecast's retirement contract
+      // (PredictabilityService.runProjection), the same shape for each scenario.
+      const retirement = predSnapshot.retirement;
+      const scenario = (sc, fallbackLabel) => ({
+        label: sc?.label || fallbackLabel,
+        projectedCorpus: sc?.projectedCorpusAtRetirement ?? null,
+        projectedFireAge: sc?.projectedFire?.projectedAge ?? null
+      });
       fireData = {
         available: true,
-        fireTarget: predSnapshot.retirement?.estimatedFireCorpus ?? 0,
+        fireTarget: retirement?.estimatedFireCorpus ?? 0,
         currentInvestableCorpus: predSnapshot.assets?.fireInvestableCorpus ?? fireInvestableCorpus,
-        fundedAge: predSnapshot.retirement?.projectedFireAge ?? null,
-        monthsUntilRetirement: predSnapshot.monthsUntilRetirement ?? null,
-        monthsToTarget: predSnapshot.retirement?.projectedFire?.months ?? null,
+        fundedAge: retirement?.projectedFire?.projectedAge ?? null,
+        monthsUntilRetirement: retirement?.monthsUntilRetirement ?? null,
+        monthsToTarget: retirement?.projectedFire?.months ?? null,
         monthlyContributionUsed: predSnapshot.currentState?.observedAverageMonthlyInvestment ?? 0,
-        projectedCorpusAtRetirement: predSnapshot.retirement?.projectedCorpus ?? null,
+        projectedCorpusAtRetirement: retirement?.projectedCorpusAtRetirement ?? null,
         scenarios: {
-          base: {
-            label: predSnapshot.scenarios?.base?.label || 'Base',
-            projectedCorpus: predSnapshot.scenarios?.base?.projectedCorpus,
-            projectedFireAge: predSnapshot.scenarios?.base?.projectedFireAge
-          },
-          conservative: {
-            label: predSnapshot.scenarios?.conservative?.label || 'Conservative',
-            projectedCorpus: predSnapshot.scenarios?.conservative?.projectedCorpus,
-            projectedFireAge: predSnapshot.scenarios?.conservative?.projectedFireAge
-          },
-          optimistic: {
-            label: predSnapshot.scenarios?.optimistic?.label || 'Optimistic',
-            projectedCorpus: predSnapshot.scenarios?.optimistic?.projectedCorpus,
-            projectedFireAge: predSnapshot.scenarios?.optimistic?.projectedFireAge
-          }
+          base: scenario(predSnapshot.scenarios?.base, 'Base'),
+          conservative: scenario(predSnapshot.scenarios?.conservative, 'Conservative'),
+          optimistic: scenario(predSnapshot.scenarios?.optimistic, 'Optimistic')
         }
       };
     }

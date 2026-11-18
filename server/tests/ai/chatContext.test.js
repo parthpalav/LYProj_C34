@@ -23,6 +23,9 @@ import {
   normalizeConversationHistory
 } from '../../services/AgentService.js';
 import { connectTestDB } from '../testDb.js';
+import { routeDeterministicIntent } from '../../services/ChatIntentRouter.js';
+import { buildPredictabilitySnapshot } from '../../services/PredictabilityService.js';
+import { zoneForecastInput } from '../../services/userTimezone.js';
 
 console.log('================================================================');
 console.log('  FINAURA CHAT CONTEXT & MULTI-TURN MEMORY TEST SUITE');
@@ -36,10 +39,11 @@ async function main() {
   const testUserId = 'test-chat-user-' + Date.now();
   const otherUserId = 'other-chat-user-' + Date.now();
   const emptyUserId = 'empty-chat-user-' + Date.now();
+  const fireUserId = 'fire-chat-user-' + Date.now();
 
   try {
     // Cleanup prior test artifacts
-    const allUserIds = [testUserId, otherUserId, emptyUserId];
+    const allUserIds = [testUserId, otherUserId, emptyUserId, fireUserId];
     await User.deleteMany({ id: { $in: allUserIds } });
     await Transaction.deleteMany({ userId: { $in: allUserIds } });
     await Income.deleteMany({ userId: { $in: allUserIds } });
@@ -431,9 +435,54 @@ async function main() {
     assert.ok(savedAssistant.timestamp);
     console.log('  ✓ End-to-end chat flow deduplication and persistence verified');
 
+    // ── TEST 19: FIRE FIELDS MATCH THE FORECAST CONTRACT ─────────
+    console.log('Running Test 19: FIRE fields match the forecast for a profile that reaches its target...');
+    const fireUser = await User.create({
+      id: fireUserId, name: 'Fire Saver', email: `fire-${Date.now()}@test.com`, password: 'hashedpassword000',
+      dateOfBirth: new Date(Date.UTC(now.getUTCFullYear() - 25, 0, 1)), retirementAge: 60,
+      monthlyIncome: 150000, currentBalance: 200000
+    });
+    const fireTxs = [];
+    for (let m = 1; m <= 3; m++) {
+      const ts = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - m, 12, 12));
+      fireTxs.push(
+        { id: `fire-need-${m}-${Date.now()}`, userId: fireUserId, amount: 15000, category: 'Groceries', type: 'Need', timestamp: ts },
+        { id: `fire-want-${m}-${Date.now()}`, userId: fireUserId, amount: 5000, category: 'Shopping', type: 'Want', timestamp: ts },
+        { id: `fire-inv-${m}-${Date.now()}`, userId: fireUserId, amount: 80000, category: 'Investments', type: 'Investment', timestamp: ts }
+      );
+    }
+    await Transaction.create(fireTxs);
+    await Asset.create({ id: `fire-mf-${Date.now()}`, userId: fireUserId, name: 'Index fund', assetType: 'Mutual Fund', assetClass: 'FIRE_INVESTABLE', currentValue: 3000000, annualReturnRate: 0.12, includedInFireCorpus: true, liquidity: 'liquid' });
+
+    const fireCtx = await buildChatContext(fireUserId);
+    const forecast = buildPredictabilitySnapshot(...zoneForecastInput({
+      user: fireUser.toObject(),
+      incomes: await Income.find({ userId: fireUserId }).lean(),
+      transactions: await Transaction.find({ userId: fireUserId }).sort({ timestamp: -1 }).lean(),
+      assets: await Asset.find({ userId: fireUserId }).lean(),
+      liabilities: []
+    }));
+    const base = forecast.retirement;
+    assert.ok(base.projectedFire.reached, 'fixture reaches its FIRE target');
+    assert.strictEqual(fireCtx.fire.available, true);
+    assert.ok(typeof fireCtx.fire.fundedAge === 'number', 'funded age is populated');
+    assert.strictEqual(fireCtx.fire.fundedAge, base.projectedFire.projectedAge);
+    assert.strictEqual(fireCtx.fire.monthsUntilRetirement, base.monthsUntilRetirement);
+    assert.strictEqual(fireCtx.fire.monthsUntilRetirement, 420);
+    assert.strictEqual(fireCtx.fire.projectedCorpusAtRetirement, base.projectedCorpusAtRetirement);
+    assert.ok(fireCtx.fire.projectedCorpusAtRetirement > 0);
+    for (const id of ['base', 'conservative', 'optimistic']) {
+      assert.strictEqual(fireCtx.fire.scenarios[id].projectedCorpus, forecast.scenarios[id].projectedCorpusAtRetirement, `${id} corpus`);
+      assert.strictEqual(fireCtx.fire.scenarios[id].projectedFireAge, forecast.scenarios[id].projectedFire.projectedAge, `${id} funded age`);
+    }
+    const ageAnswer = routeDeterministicIntent('what is my projected funded age?', fireCtx);
+    assert.strictEqual(ageAnswer.intent, 'FIRE_FUNDED_AGE');
+    assert.ok(ageAnswer.response.includes(String(Math.round(base.projectedFire.projectedAge * 10) / 10)), 'assistant answers with the planner\'s funded age');
+    console.log(`  ✓ Assistant FIRE fields match the forecast (funded age ${Math.round(base.projectedFire.projectedAge * 10) / 10})`);
+
   } finally {
     // Clean up test data
-    const allUserIds = [testUserId, otherUserId, emptyUserId];
+    const allUserIds = [testUserId, otherUserId, emptyUserId, fireUserId];
     await User.deleteMany({ id: { $in: allUserIds } });
     await Transaction.deleteMany({ userId: { $in: allUserIds } });
     await Income.deleteMany({ userId: { $in: allUserIds } });
@@ -448,7 +497,7 @@ async function main() {
   }
 
   console.log('\n================================================================');
-  console.log('  ALL 18 CHAT CONTEXT & MULTI-TURN TESTS PASSED (100% GREEN) 🚀');
+  console.log('  ALL 19 CHAT CONTEXT & MULTI-TURN TESTS PASSED (100% GREEN) 🚀');
   console.log('================================================================\n');
 }
 

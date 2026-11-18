@@ -544,6 +544,12 @@ def prepare_classifier(classifier=None):
 
 
 if __name__ == '__main__':
+    # Local development server: loopback only, debugger off unless FLASK_DEBUG=1.
+    # A shared or hosted deployment runs wsgi.py under gunicorn instead.
     prepare_classifier()
-    app.run(host='0.0.0.0', port=5001, debug=True)
+    app.run(
+        host=os.getenv('ML_HOST', '127.0.0.1'),
+        port=int(os.getenv('ML_PORT', '5001')),
+        debug=os.getenv('FLASK_DEBUG') == '1',
+    )
 

@@ -18,7 +18,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, BASE_DIR)
 
 from classifier.rules import match_merchant_rule
-from classifier.hybrid_pipeline import HybridClassifier
+from classifier.hybrid_pipeline import HybridClassifier, is_vague
 
 class TestHybridClassifier(unittest.TestCase):
     @classmethod
@@ -145,6 +145,12 @@ class TestHybridClassifier(unittest.TestCase):
         self.assertIn("Personal Care", res["all_probs"])
         self.assertIn("Insurance", res["all_probs"])
         self.assertIn("Investments", res["all_probs"])
+
+    def test_vague_descriptions_always_go_to_review(self):
+        for text in ["transfer", "payment", "upi transfer", "online purchase", "misc", "UPI/DR/123456789012/transfer"]:
+            self.assertTrue(self.classifier.classify(text)["needsReview"], f"'{text}' should be flagged for review")
+        for text in ["transfer to ravi for rent", "zomato order"]:
+            self.assertFalse(is_vague(text), text)
 
     def test_full_contract_compatibility(self):
         test_inputs = [

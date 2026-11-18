@@ -90,6 +90,21 @@ def clean_tfidf_text(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
 
+# Words that say money moved but not what for. A description made only of these
+# ("transfer", "upi payment", "online purchase") cannot be labelled with confidence,
+# however sure the model is, so it always goes to review.
+_GENERIC_WORDS = {
+    "transfer", "transferred", "payment", "pay", "paid", "upi", "neft", "imps", "rtgs", "online",
+    "purchase", "misc", "miscellaneous", "money", "txn", "transaction", "debit", "credit", "sent",
+    "send", "bank", "amount", "fund", "funds", "to", "for", "the", "a", "of",
+}
+
+
+def is_vague(text: str) -> bool:
+    words = re.findall(r"[a-z]+", (text or "").lower())
+    return bool(words) and all(w in _GENERIC_WORDS for w in words)
+
+
 class HybridClassifier:
     def __init__(self, base_dir: str):
         self.base_dir = base_dir
@@ -342,6 +357,9 @@ class HybridClassifier:
 
             needs_review = category_needs_review or type_needs_review
             log.info(f"HybridClassifier [ML Fallback]: '{raw}' -> {category} (Conf: {category_conf*100:.1f}%, Source: {category_source}) | Type: {spend_type} (Conf: {type_conf*100:.1f}%, Source: {type_source}) | needsReview={needs_review}")
+
+        if is_vague(cleaned or raw):
+            needs_review = True
 
         # ── Step 4: Build Sentiment & Metadata ─────────────────────────────────
         sentiment = CATEGORY_SENTIMENT.get(category, "neutral")

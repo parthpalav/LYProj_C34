@@ -1198,45 +1198,49 @@ router.put('/transactions/:id', async (req, res, next) => {
 
     let updated;
     if (sanitized.amount !== undefined || sanitized.paymentMethodId !== undefined) {
-      const oldTx = await Transaction.findOne({ id: req.params.id, userId }).lean();
-      if (!oldTx) return res.status(404).json({ error: 'Transaction not found' });
+      // The record update is conditional on the amount and source the money move
+      // was computed from. If another edit or a delete got there first, the move
+      // is undone and the edit retries against the fresh record.
+      for (let attempt = 0; attempt < 5 && !updated; attempt++) {
+        const oldTx = await Transaction.findOne({ id: req.params.id, userId }).lean();
+        if (!oldTx) return res.status(404).json({ error: 'Transaction not found' });
 
-      // Move the money: give the old amount back to the old source, then take the
-      // new amount from the new source (bank balance or credit card).
-      const oldSource = oldTx.paymentMethodId ?? null;
-      const newSource = sanitized.paymentMethodId !== undefined ? sanitized.paymentMethodId : oldSource;
-      const newAmount = sanitized.amount !== undefined ? sanitized.amount : oldTx.amount;
-      const moved = oldSource !== newSource || oldTx.amount !== newAmount;
-      const undoMove = async () => {
-        await refundSource(userId, newSource, newAmount);
-        await chargeSource(userId, oldSource, oldTx.amount, { force: true });
-      };
-
-      if (moved) {
-        await refundSource(userId, oldSource, oldTx.amount);
-        try {
-          await chargeSource(userId, newSource, newAmount);
-        } catch (err) {
+        // Move the money: give the old amount back to the old source, then take the
+        // new amount from the new source (bank balance or credit card).
+        const oldSource = oldTx.paymentMethodId ?? null;
+        const newSource = sanitized.paymentMethodId !== undefined ? sanitized.paymentMethodId : oldSource;
+        const newAmount = sanitized.amount !== undefined ? sanitized.amount : oldTx.amount;
+        const moved = oldSource !== newSource || oldTx.amount !== newAmount;
+        const undoMove = async () => {
+          await refundSource(userId, newSource, newAmount);
           await chargeSource(userId, oldSource, oldTx.amount, { force: true });
-          if (err instanceof PaymentMethodError) return res.status(err.status).json({ error: err.message });
-          throw err;
+        };
+
+        if (moved) {
+          await refundSource(userId, oldSource, oldTx.amount);
+          try {
+            await chargeSource(userId, newSource, newAmount);
+          } catch (err) {
+            await chargeSource(userId, oldSource, oldTx.amount, { force: true });
+            if (err instanceof PaymentMethodError) return res.status(err.status).json({ error: err.message });
+            throw err;
+          }
         }
-      }
 
-      try {
-        updated = await Transaction.findOneAndUpdate(
-          { id: req.params.id, userId },
-          { $set: sanitized },
-          { new: true, runValidators: true }
-        ).lean();
-
-        if (!updated) {
+        try {
+          updated = await Transaction.findOneAndUpdate(
+            { id: req.params.id, userId, amount: oldTx.amount, paymentMethodId: oldSource },
+            { $set: sanitized },
+            { new: true, runValidators: true }
+          ).lean();
+        } catch (updateErr) {
           if (moved) await undoMove();
-          return res.status(404).json({ error: 'Transaction not found' });
+          throw updateErr;
         }
-      } catch (updateErr) {
-        if (moved) await undoMove();
-        throw updateErr;
+        if (!updated && moved) await undoMove();
+      }
+      if (!updated) {
+        return res.status(409).json({ error: 'This expense is being changed elsewhere. Reload and try again.' });
       }
     } else {
       updated = await Transaction.findOneAndUpdate(
@@ -1259,26 +1263,17 @@ router.put('/transactions/:id', async (req, res, next) => {
 router.delete('/transactions/:id', async (req, res, next) => {
   try {
     const userId = req.user.id;
-    const oldTx = await Transaction.findOne({ id: req.params.id, userId }).lean();
-    if (!oldTx) return res.status(404).json({ error: 'Transaction not found' });
-
-    const refundAmount = oldTx.amount;
-
-    const source = oldTx.paymentMethodId ?? null;
+    // Delete first: the removed document carries the amount and source that were
+    // actually on record, even if an edit landed a moment earlier.
+    const deleted = await Transaction.findOneAndDelete({ id: req.params.id, userId }).lean();
+    if (!deleted) return res.status(404).json({ error: 'Transaction not found' });
 
     // Refund the bank balance or credit card for the deleted expense
-    await refundSource(userId, source, refundAmount);
-
     try {
-      const deleted = await Transaction.findOneAndDelete({ id: req.params.id, userId }).lean();
-      if (!deleted) {
-        // Rollback refund if delete fails
-        await chargeSource(userId, source, refundAmount, { force: true });
-        return res.status(404).json({ error: 'Transaction not found' });
-      }
-    } catch (deleteErr) {
-      await chargeSource(userId, source, refundAmount, { force: true });
-      throw deleteErr;
+      await refundSource(userId, deleted.paymentMethodId ?? null, deleted.amount);
+    } catch (refundErr) {
+      await Transaction.create(deleted);
+      throw refundErr;
     }
 
     res.json({ success: true, id: req.params.id });
@@ -1859,28 +1854,26 @@ router.put('/income/:id', async (req, res, next) => {
       if (isNaN(numericAmount) || !Number.isFinite(numericAmount) || numericAmount <= 0) {
         return res.status(400).json({ error: 'Income amount must be a finite positive number' });
       }
-
-      const oldIncome = await Income.findOne({ id: req.params.id, userId }).lean();
-      if (!oldIncome) return res.status(404).json({ message: 'Income not found' });
-
-      const delta = numericAmount - oldIncome.amount;
       update.amount = numericAmount;
 
-      // Adjust user balance
-      await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: delta } });
+      // The record update is conditional on the amount the balance delta came
+      // from; a concurrent edit or delete makes it miss, the delta is undone and
+      // the edit retries against the fresh record.
+      for (let attempt = 0; attempt < 5 && !income; attempt++) {
+        const oldIncome = await Income.findOne({ id: req.params.id, userId }).lean();
+        if (!oldIncome) return res.status(404).json({ message: 'Income not found' });
 
-      try {
-        income = await Income.findOneAndUpdate({ id: req.params.id, userId }, update, { new: true }).lean();
-        if (!income) {
-          // Revert balance adjustment if update fails
+        const delta = numericAmount - oldIncome.amount;
+        await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: delta } });
+        try {
+          income = await Income.findOneAndUpdate({ id: req.params.id, userId, amount: oldIncome.amount }, update, { new: true }).lean();
+        } catch (err) {
           await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: -delta } });
-          return res.status(404).json({ message: 'Income not found' });
+          throw err;
         }
-      } catch (err) {
-        // Revert balance adjustment
-        await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: -delta } });
-        throw err;
+        if (!income) await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: -delta } });
       }
+      if (!income) return res.status(409).json({ message: 'This income is being changed elsewhere. Reload and try again.' });
     } else {
       income = await Income.findOneAndUpdate({ id: req.params.id, userId }, update, { new: true }).lean();
       if (!income) return res.status(404).json({ message: 'Income not found' });
@@ -1893,22 +1886,14 @@ router.put('/income/:id', async (req, res, next) => {
 router.delete('/income/:id', async (req, res, next) => {
   try {
     const userId = req.user.id;
-    const oldIncome = await Income.findOne({ id: req.params.id, userId }).lean();
-    if (!oldIncome) return res.status(404).json({ message: 'Income not found' });
-
-    // Deduct user balance
-    await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: -oldIncome.amount } });
+    // Delete first so the balance moves by the amount that was actually on record.
+    const deleted = await Income.findOneAndDelete({ id: req.params.id, userId }).lean();
+    if (!deleted) return res.status(404).json({ message: 'Income not found' });
 
     try {
-      const deleted = await Income.findOneAndDelete({ id: req.params.id, userId }).lean();
-      if (!deleted) {
-        // Revert balance deduction if delete fails
-        await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: oldIncome.amount } });
-        return res.status(404).json({ message: 'Income not found' });
-      }
+      await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: -deleted.amount } });
     } catch (err) {
-      // Revert balance deduction
-      await User.findOneAndUpdate({ id: userId }, { $inc: { currentBalance: oldIncome.amount } });
+      await Income.create(deleted);
       throw err;
     }
 

@@ -78,6 +78,54 @@ async function run() {
   assert.equal(await balance(), 5000);
   console.log('  ✅ absolute replacement needs the current balance');
 
+  // 3. Two edits of one ₹100 receipt (to ₹120 and ₹130) move the balance by exactly final − 100.
+  for (let i = 0; i < 5; i++) {
+    await reset(1000);
+    await call('post', '/income', { body: { amount: 100, source: 'salary' } });
+    const inc = await Income.findOne(own).lean();
+    const edits = await Promise.all([120, 130].map((amount) => call('put', '/income/:id', { params: { id: inc.id }, body: { amount } })));
+    edits.forEach((e) => assert.equal(e.status, 200));
+    const final = (await Income.findOne({ id: inc.id }).lean()).amount;
+    assert.ok([120, 130].includes(final));
+    assert.equal(await balance(), 1000 + final, `income edits left balance ${await balance()} for a ₹${final} receipt`);
+  }
+  console.log('  ✅ concurrent income edits match the final receipt');
+
+  // 4. Same for an expense: ₹100 edited to ₹120 and ₹130 at once.
+  for (let i = 0; i < 5; i++) {
+    await reset(1000);
+    await call('post', '/transactions', { body: { amount: 100, description: 'groceries', category: 'Groceries', type: 'Need' } });
+    const tx = await Transaction.findOne(own).lean();
+    const edits = await Promise.all([120, 130].map((amount) => call('put', '/transactions/:id', { params: { id: tx.id }, body: { amount } })));
+    edits.forEach((e) => assert.equal(e.status, 200));
+    const final = (await Transaction.findOne({ id: tx.id }).lean()).amount;
+    assert.equal(await balance(), 1000 - final, `expense edits left balance ${await balance()} for a ₹${final} expense`);
+  }
+  console.log('  ✅ concurrent expense edits match the final record');
+
+  // 5. Edits racing deletes: whichever wins, the balance matches what is left on record.
+  for (let i = 0; i < 5; i++) {
+    await reset(1000);
+    await call('post', '/income', { body: { amount: 100, source: 'salary' } });
+    const inc = await Income.findOne(own).lean();
+    await Promise.all([
+      call('put', '/income/:id', { params: { id: inc.id }, body: { amount: 150 } }),
+      call('delete', '/income/:id', { params: { id: inc.id } }),
+    ]);
+    assert.equal(await Income.countDocuments(own), 0);
+    assert.equal(await balance(), 1000, 'deleted income must leave no trace in the balance');
+
+    await call('post', '/transactions', { body: { amount: 100, description: 'cab', category: 'Transport & Travel', type: 'Need' } });
+    const tx = await Transaction.findOne(own).lean();
+    await Promise.all([
+      call('put', '/transactions/:id', { params: { id: tx.id }, body: { amount: 250 } }),
+      call('delete', '/transactions/:id', { params: { id: tx.id } }),
+    ]);
+    assert.equal(await Transaction.countDocuments(own), 0);
+    assert.equal(await balance(), 1000, 'deleted expense must be fully refunded');
+  }
+  console.log('  ✅ edits racing deletes leave the balance consistent');
+
   await reset(0);
   await User.deleteMany({ id: USER });
   await sentinel.assertSurvived();

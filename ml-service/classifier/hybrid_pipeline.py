@@ -14,7 +14,8 @@ Contract:
 - confidence: float (0.0 to 1.0)
 - confidenceScore: float (0.0 to 1.0)
 - all_probs: dict[str, float]
-- classificationSource: 'merchant_rule' | 'finaura_v4' | 'tfidf' | 'fallback'
+- classificationSource: 'merchant_rule' | 'finaura_vN' (the loaded model family, e.g. finaura_v7) | 'tfidf_v2' | 'tfidf' | 'fallback'
+- modelVersion: the model directory (or ensemble members) that produced the label, null for rules
 - needsReview: bool
 - flagged_for_review: bool
 - sentiment: 'positive' | 'neutral' | 'negative'
@@ -101,6 +102,7 @@ class HybridClassifier:
         self.minilm_type_available = False
         self.v4_model = None
         self.v4_member_names = []
+        self.v4_source = "finaura_v4"
         self._v4_checked = False
 
     def load_v4(self, members: Optional[list] = None) -> bool:
@@ -129,6 +131,9 @@ class HybridClassifier:
             self.v4_threshold = active.get("review_threshold", self.v4_meta["review_threshold"])
             self.v4_model = self.v4_members[0][1]
             self.v4_member_names = list(members)
+            # Report the family of the weights actually loaded (finaura-v7-bge-... -> finaura_v7).
+            family = re.match(r"finaura-(v\d+[a-z]?)", members[0])
+            self.v4_source = f"finaura_{family.group(1)}" if family else members[0]
             self._torch = torch
             log.info(f"✅ joint classifier loaded in HybridPipeline: {members}")
             return True
@@ -262,13 +267,15 @@ class HybridClassifier:
             category_conf = confidence
             type_conf = confidence
             needs_review = False
+            model_version = None
             log.info(f"HybridClassifier [merchant_rule]: '{raw}' -> {category} ({spend_type}, {confidence*100:.0f}%)")
 
         # ── Step 2: Fine-tuned v4 joint classifier ────────────────────────────
         elif self.load_v4():
             category, spend_type, category_conf, type_conf, all_probs, needs_review = self._classify_v4(cleaned or raw.lower())
-            category_source = type_source = "finaura_v4"
-            log.info(f"HybridClassifier [finaura_v4]: '{raw}' -> {category} ({category_conf*100:.1f}%) | {spend_type} ({type_conf*100:.1f}%) | needsReview={needs_review}")
+            category_source = type_source = self.v4_source
+            model_version = "+".join(self.v4_member_names)
+            log.info(f"HybridClassifier [{self.v4_source}]: '{raw}' -> {category} ({category_conf*100:.1f}%) | {spend_type} ({type_conf*100:.1f}%) | needsReview={needs_review}")
 
         # ── Step 3: Legacy fallback: TF-IDF for Category and MiniLM for Type ──
         else:
@@ -300,6 +307,7 @@ class HybridClassifier:
             category_conf = float(probs.max())
             all_probs = {cls: round(float(p), 4) for cls, p in zip(self.category_model.classes_, probs)}
             category_source = self.category_source_name
+            model_version = self.category_source_name
 
             sorted_probs = sorted(probs, reverse=True)
             margin = (sorted_probs[0] - sorted_probs[1]) if len(sorted_probs) > 1 else 1.0
@@ -350,6 +358,7 @@ class HybridClassifier:
             "classificationSource": category_source,
             "categorySource":       category_source,
             "typeSource":           type_source,
+            "modelVersion":         model_version,
             "needsReview":          needs_review,
             "flagged_for_review":   needs_review,
             "sentiment":            sentiment,

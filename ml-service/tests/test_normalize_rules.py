@@ -90,8 +90,12 @@ class TestPipelinePairs(unittest.TestCase):
                      "UPI/DR/412345678901/RAMESH KIRANA/okaxis", "school van fees", "monthly sip"]:
             res = clf.classify(text)
             self.assertIn(res["type"], ALLOWED_TYPES[res["category"]], f"{text}: {res['category']}|{res['type']}")
-            if res["classificationSource"] == "finaura_v4":
+            if res["classificationSource"].startswith("finaura_v"):
                 self.assertEqual(len(res["all_probs"]), 14)
+                # The reported family and version name the weights actually loaded (v7, not a legacy "v4" tag).
+                loaded = clf.v4_member_names[0]
+                self.assertTrue(loaded.startswith(res["classificationSource"].replace("_", "-")), (loaded, res["classificationSource"]))
+                self.assertEqual(res["modelVersion"], "+".join(clf.v4_member_names))
 
 
 if __name__ == "__main__":

@@ -678,6 +678,10 @@ async function runAudit() {
 
 runAudit()
   .then(() => {
+    if (failed > 0) {
+      console.log(`\n  ${failed} AUDIT STEPS FAILED, ${passed} passed`);
+      process.exit(1);
+    }
     console.log('='.repeat(68));
     console.log(`  ALL ${passed} INTEGRATION AUDIT STEPS PASSED WITH 100% SUCCESS! 🚀`);
     console.log('='.repeat(68));

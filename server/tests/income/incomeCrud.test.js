@@ -232,10 +232,17 @@ async function runSuite() {
     await mongoose.disconnect();
   }
 
+  if (failed > 0) {
+    console.log(`\n  ${failed} FAILED, ${passed} passed`);
+    process.exit(1);
+  }
   console.log();
   console.log('='.repeat(64));
   console.log(`  ALL ${passed} INCOME CRUD & INTEGRATION TESTS PASSED! 🚀`);
   console.log('='.repeat(64));
 }
 
-runSuite().catch(console.error);
+runSuite().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

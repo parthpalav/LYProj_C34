@@ -7,7 +7,7 @@
  */
 import mongoose from 'mongoose';
 import assert from 'node:assert/strict';
-import 'dotenv/config';
+import './setupEnv.js';
 import Transaction from '../models/Transaction.js';
 
 export const TEST_MONGO_URI = process.env.TEST_MONGO_URI || 'mongodb://127.0.0.1:27017/lyproj_test';

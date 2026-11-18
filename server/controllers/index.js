@@ -789,19 +789,34 @@ router.put('/user/:id/onboarding-complete', async (req, res, next) => {
 router.put('/user/:id/current-balance', async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { operation, amount, currentBalance } = req.body;
-    let nextBalance;
+    const { operation, amount, currentBalance, expectedBalance } = req.body;
 
     if (id !== req.user.id) {
       return res.status(403).json({ error: 'Forbidden' });
     }
 
+    let updated;
     if (currentBalance !== undefined && currentBalance !== null) {
+      // Replacing the balance must name the balance being replaced, so a stale
+      // screen cannot erase a credit, debit or ledger write that landed since.
       const absoluteBalance = Number(currentBalance);
+      const expected = Number(expectedBalance);
       if (!Number.isFinite(absoluteBalance)) {
         return res.status(400).json({ error: 'Current balance must be a valid number' });
       }
-      nextBalance = absoluteBalance;
+      if (expectedBalance === undefined || expectedBalance === null || !Number.isFinite(expected)) {
+        return res.status(400).json({ error: 'expectedBalance is required when replacing the balance' });
+      }
+      updated = await User.findOneAndUpdate(
+        { id, currentBalance: expected },
+        { $set: { currentBalance: absoluteBalance } },
+        { new: true }
+      ).lean();
+      if (!updated) {
+        const user = await User.findOne({ id }, { currentBalance: 1 }).lean();
+        if (!user) return res.status(404).json({ error: 'User not found' });
+        return res.status(409).json({ error: 'Balance changed since it was loaded. Reload and try again.', currentBalance: user.currentBalance });
+      }
     } else {
       if (!operation || amount === undefined || amount === null) {
         return res.status(400).json({ error: 'Operation and amount are required' });
@@ -816,27 +831,17 @@ router.put('/user/:id/current-balance', async (req, res, next) => {
         return res.status(400).json({ error: 'Amount must be a positive number' });
       }
 
-      const user = await User.findOne({ id }).lean();
-      if (!user) {
+      // Signed increment in one write: concurrent adjustments all land.
+      updated = await User.findOneAndUpdate(
+        { id },
+        { $inc: { currentBalance: operation === 'credit' ? parsedAmount : -parsedAmount } },
+        { new: true }
+      ).lean();
+      if (!updated) {
         return res.status(404).json({ error: 'User not found' });
       }
-
-      const existingBalance = parseFloat(user.currentBalance || 0);
-      nextBalance = operation === 'credit'
-        ? existingBalance + parsedAmount
-        : existingBalance - parsedAmount;
     }
 
-    const updated = await User.findOneAndUpdate(
-      { id },
-      { currentBalance: nextBalance },
-      { new: true }
-    ).lean();
-    
-    if (!updated) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-    
     res.json({ success: true, currentBalance: updated.currentBalance });
   } catch (error) { next(error); }
 });

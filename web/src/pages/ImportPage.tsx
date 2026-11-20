@@ -4,8 +4,10 @@ import { FileUp, CheckCircle2, Undo2 } from 'lucide-react';
 import { PageHeader } from '../components/ui/PageHeader';
 import { Button } from '../components/ui/Button';
 import { Toast } from '../components/ui/Toast';
+import { ImportProgressOverlay } from '../components/ui/ImportProgressOverlay';
 import { COMMON_INCOME_SOURCES } from '../utils/incomeSources';
 import { usePaymentMethods } from '../hooks/usePaymentMethods';
+import axios from 'axios';
 import { previewStatement, commitStatement, undoImport, apiErrorCode } from '../services/api';
 import type { StatementPreview, StatementRow, StatementCommitResult } from '../services/api';
 import { CANONICAL_CATEGORIES, VALID_TRANSACTION_TYPES } from '../types';
@@ -16,10 +18,16 @@ import { getAppTimezone } from '../utils/timezone';
 import { fileToBase64 } from '../utils/fileData';
 
 const MAX_BYTES = 6 * 1024 * 1024;
+const MIN_WAIT_MS = 1200;
 const PARSER_LABEL: Record<StatementPreview['parser'], string> = {
   csv: 'Read from CSV',
   gemini: 'Read by Gemini AI',
   local: 'Read by the offline parser',
+};
+
+const doneLabelFor = (p: StatementPreview) => {
+  const expenses = p.rows.filter((r) => r.direction === 'debit').length;
+  return `${p.rows.length} ${p.rows.length === 1 ? 'entry' : 'entries'} read · ${expenses} expense${expenses === 1 ? '' : 's'} classified`;
 };
 
 const shortDate = (iso: string | null) => (iso
@@ -44,6 +52,9 @@ export const ImportPage: React.FC = () => {
   const [methodId, setMethodId] = useState('');
   const [dragging, setDragging] = useState(false);
   const [reading, setReading] = useState(false);
+  // Preview that has arrived but waits for the ring to finish before the review shows.
+  const [arrived, setArrived] = useState<StatementPreview | null>(null);
+  const readAbort = useRef<AbortController | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const [preview, setPreview] = useState<StatementPreview | null>(null);
@@ -71,19 +82,25 @@ export const ImportPage: React.FC = () => {
 
   const read = async () => {
     if (!file || reading || (needsPassword && !password)) return;
+    const controller = new AbortController();
+    readAbort.current = controller;
     setReading(true);
     setError(null);
+    setToast({ message: null, type: 'success' });
     try {
+      const startedAt = Date.now();
       const data = await fileToBase64(file);
-      const p = await previewStatement({ fileName: file.name, mimeType: file.type || '', data, password: password || undefined });
+      if (controller.signal.aborted) return;
+      const p = await previewStatement({ fileName: file.name, mimeType: file.type || '', data, password: password || undefined }, controller.signal);
+      // A CSV answers in ~0.1 s: keep the wait screen up briefly so it reads as progress, not a flash.
+      await new Promise((resolve) => { window.setTimeout(resolve, Math.max(0, MIN_WAIT_MS - (Date.now() - startedAt))); });
+      if (controller.signal.aborted) return;
       setNeedsPassword(false);
       setPassword('');
-      setPreview(p);
-      setRows(p.rows);
-      // Rows that look already recorded start unticked.
-      setSelected(new Set(p.rows.filter((r) => !r.duplicate).map((r) => r.rowId)));
-      if (p.suggestedPaymentMethodId && activeMethods.some((m) => m.id === p.suggestedPaymentMethodId)) setMethodId(p.suggestedPaymentMethodId);
+      setArrived(p); // the overlay plays its finish, then showPreview() reveals the rows
     } catch (err) {
+      setReading(false);
+      if (axios.isCancel(err) || controller.signal.aborted) return;
       const code = apiErrorCode(err);
       if (code === 'PASSWORD_REQUIRED' || code === 'PASSWORD_INCORRECT') {
         setNeedsPassword(true);
@@ -93,9 +110,31 @@ export const ImportPage: React.FC = () => {
         setError(message || ((err as any)?.code === 'ECONNABORTED' ? 'Reading took too long. Try again, or use the CSV.' : 'Could not read this statement.'));
       }
     } finally {
-      setReading(false);
+      if (readAbort.current === controller) readAbort.current = null;
     }
   };
+
+  // Stops waiting. The server only reads the file (nothing is saved), so dropping the request is safe.
+  const cancelRead = () => {
+    if (arrived) return;
+    readAbort.current?.abort();
+    readAbort.current = null;
+    setReading(false);
+    setToast({ message: 'Import cancelled. Nothing was saved.', type: 'success' });
+  };
+
+  const showPreview = () => {
+    const p = arrived;
+    setArrived(null);
+    setReading(false);
+    if (!p) return;
+    setPreview(p);
+    setRows(p.rows);
+    // Rows that look already recorded start unticked.
+    setSelected(new Set(p.rows.filter((r) => !r.duplicate).map((r) => r.rowId)));
+    if (p.suggestedPaymentMethodId && activeMethods.some((m) => m.id === p.suggestedPaymentMethodId)) setMethodId(p.suggestedPaymentMethodId);
+  };
+  useEffect(() => () => readAbort.current?.abort(), []);
 
   const editRow = (rowId: string, patch: Partial<StatementRow>) => {
     setRows((list) => list.map((r) => (r.rowId === rowId ? { ...r, ...patch, userEdited: true } : r)));
@@ -152,6 +191,14 @@ export const ImportPage: React.FC = () => {
   return (
     <div className="parity-page">
       <Toast message={toast.message} type={toast.type} onClose={() => setToast({ message: null, type: 'success' })} />
+      {reading && <ImportProgressOverlay
+        done={!!arrived}
+        fileName={file?.name ?? ''}
+        slow={!!file && /\.pdf$/i.test(file.name)}
+        doneLabel={arrived ? doneLabelFor(arrived) : ''}
+        onCancel={cancelRead}
+        onFinished={showPreview}
+      />}
       <PageHeader
         title="Import bank statement"
         category="ACTIVITY"

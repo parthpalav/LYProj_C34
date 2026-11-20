@@ -5,7 +5,7 @@
 // line parser takes over. Imports are history only: they never move balances.
 import crypto from 'node:crypto';
 import { parse as parseCsv } from 'csv-parse/sync';
-import Transaction, { VALID_CATEGORIES, VALID_TYPES } from '../models/Transaction.js';
+import Transaction, { VALID_CATEGORIES, VALID_TYPES, CLASSIFICATION_SOURCE_RE } from '../models/Transaction.js';
 import Income from '../models/Income.js';
 import PaymentMethod from '../models/PaymentMethod.js';
 import { fromZoned, toZoned, DEFAULT_TIMEZONE } from '../utils/userTime.js';
@@ -380,7 +380,7 @@ export function balancesAddUp(rows, openingBalance) {
 
 // ── Classification ───────────────────────────────────────────
 
-const CLASSIFICATION_SOURCES = Transaction.schema.path('classificationSource').enumValues;
+const isClassificationSource = (s) => typeof s === 'string' && CLASSIFICATION_SOURCE_RE.test(s);
 
 function normalizeLabel(category, type) {
   const cat = VALID_CATEGORIES.find((c) => c.toLowerCase() === String(category || '').toLowerCase()) || 'Misc';
@@ -395,7 +395,7 @@ function labelFrom(d, fallbackSource) {
     category,
     type,
     confidenceScore: confidence,
-    classificationSource: CLASSIFICATION_SOURCES.includes(source) ? source : 'unknown',
+    classificationSource: isClassificationSource(source) ? source : 'unknown',
     categorySource: d.categorySource || source,
     typeSource: d.typeSource || source,
     categoryConfidence: typeof d.categoryConfidence === 'number' ? d.categoryConfidence : confidence,
@@ -457,6 +457,7 @@ function withHashes(userId, rows, tz) {
 const incomeSourceFor = (description) => {
   if (/\b(salary|sal|payroll)\b/i.test(description)) return 'salary';
   if (/\b(refund|reversal|reversed|cashback)\b/i.test(description)) return 'reimbursement';
+  if (/\b(interest|dividend)\b/i.test(description)) return 'investments';
   return 'other';
 };
 
@@ -584,7 +585,7 @@ export function validateCommitRows(rows) {
       type,
       confidence: Number.isFinite(confidence) && confidence >= 0 && confidence <= 1 ? confidence : 0,
       needsReview: r.needsReview === true,
-      classificationSource: CLASSIFICATION_SOURCES.includes(r.classificationSource) ? r.classificationSource : 'unknown',
+      classificationSource: isClassificationSource(r.classificationSource) ? r.classificationSource : 'unknown',
       userEdited: r.userEdited === true,
     };
   });

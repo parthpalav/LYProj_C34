@@ -203,6 +203,7 @@
 .import-drop span { font-size: 12px; }
 .import-drop:hover, .import-drop.is-dragging { border-color: var(--accent-primary); background: var(--accent-subtle); }
 .import-drop:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.import-summary-head h2:focus { outline: none; } /* focused only to move screen readers to the review */
 .import-summary-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .import-parser { font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: var(--radius-full); background: var(--accent-subtle); color: var(--accent-text); }
 .import-parser-local { background: var(--warning-subtle); color: var(--warning-text); }
@@ -228,6 +229,28 @@
 .import-done { text-align: center; display: grid; justify-items: center; gap: 6px; }
 .import-done .parity-actions { justify-content: center; }
 .import-done-icon { color: var(--success); }
+
+/* Statement import wait screen: blurs the whole app until rows are read and classified. */
+.import-overlay { position: fixed; inset: 0; z-index: 1100; display: grid; place-items: center; padding: 24px; background: color-mix(in srgb, var(--bg-app) 55%, transparent); backdrop-filter: blur(16px) saturate(140%); -webkit-backdrop-filter: blur(16px) saturate(140%); animation: importOverlayIn 220ms ease-out; }
+.import-overlay-center { display: grid; justify-items: center; gap: 10px; text-align: center; max-width: 420px; }
+.import-ring { position: relative; width: 220px; height: 220px; margin-bottom: 14px; filter: drop-shadow(0 10px 30px rgb(37 99 235 / 0.22)); }
+.import-ring svg { display: block; }
+.import-ring-track { stroke: var(--border-default); }
+.import-ring-bar { transition: stroke-dashoffset 260ms linear, stroke 300ms ease; }
+.import-overlay.is-done .import-ring-bar { transition: stroke-dashoffset 520ms cubic-bezier(0.22, 1, 0.36, 1), stroke 300ms ease; }
+.import-ring-label { position: absolute; inset: 0; display: grid; place-items: center; color: var(--text-primary); font-size: 48px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -0.5px; }
+.import-ring-label small { font-size: 20px; font-weight: 600; color: var(--text-secondary); margin-left: 2px; }
+.import-ring-check { color: var(--success); animation: importCheckIn 360ms 380ms cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+.import-overlay-title { margin: 0; font-size: 26px; font-weight: 700; color: var(--text-primary); }
+.import-overlay-stage { margin: 0; font-size: 15px; color: var(--text-secondary); min-height: 1.5em; }
+.import-overlay-file { margin: 0; font-size: 13px; color: var(--text-tertiary); max-width: 320px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.import-overlay-cancel { position: fixed; right: 24px; bottom: 24px; display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border: 1px solid var(--border-strong); border-radius: var(--radius-full); background: var(--bg-surface); color: var(--text-primary); font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 14px rgb(15 23 42 / 0.12); transition: background 160ms, border-color 160ms; }
+.import-overlay-cancel:hover { background: var(--bg-surface-subtle); border-color: var(--text-tertiary); }
+.import-overlay-cancel:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+@keyframes importOverlayIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes importCheckIn { from { opacity: 0; transform: scale(0.4); } to { opacity: 1; transform: scale(1); } }
+@media (max-width: 600px) { .import-overlay-cancel { right: 16px; bottom: max(16px, env(safe-area-inset-bottom)); } }
+@media (prefers-reduced-motion: reduce) { .import-overlay, .import-ring-check { animation: none; } .import-ring-bar, .import-overlay.is-done .import-ring-bar { transition: none; } }
 
 /* Quick fill (transaction form) and SMS captures (Activity) */
 .quick-fill { display: grid; gap: 10px; margin-bottom: 16px; }

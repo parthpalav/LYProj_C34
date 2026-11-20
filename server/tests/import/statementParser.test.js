@@ -112,6 +112,11 @@ test('validateCommitRows rejects bad rows and normalises labels', () => {
   const rowId = 'a'.repeat(40);
   const [r] = validateCommitRows([{ rowId, amount: '12.5', date: '2026-04-01T06:30:00Z', direction: 'debit', category: 'shopping', type: 'Want' }]);
   assert.equal(r.category, 'Shopping');
+  // Model and rule sources survive the commit; unknown strings fall back to 'unknown'.
+  const sourceOf = (classificationSource) => validateCommitRows([{ rowId, amount: 1, date: '2026-04-01', direction: 'debit', classificationSource }])[0].classificationSource;
+  assert.equal(sourceOf('finaura_v7'), 'finaura_v7');
+  assert.equal(sourceOf('merchant_rule'), 'merchant_rule');
+  assert.equal(sourceOf('bogus'), 'unknown');
   assert.throws(() => validateCommitRows([{ rowId, amount: -1, date: '2026-04-01', direction: 'debit' }]), /positive/);
   assert.throws(() => validateCommitRows([{ rowId: 'x', amount: 1, date: '2026-04-01', direction: 'debit' }]), /row id/);
   assert.throws(() => validateCommitRows([]), (e) => e.code === 'NO_ROWS');

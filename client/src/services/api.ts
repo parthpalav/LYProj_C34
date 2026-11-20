@@ -536,9 +536,9 @@ export function apiErrorCode(err: unknown): string | undefined {
   return (err as { response?: { data?: { code?: string } } })?.response?.data?.code;
 }
 
-export async function previewStatement(payload: { fileName: string; mimeType: string; data: string; password?: string }): Promise<StatementPreview> {
+export async function previewStatement(payload: { fileName: string; mimeType: string; data: string; password?: string }, signal?: AbortSignal): Promise<StatementPreview> {
   // PDF parsing can wait on Gemini before falling back, so allow longer than the default 10 s.
-  const { data } = await api.post('/api/import/statement/preview', payload, { timeout: 90000 });
+  const { data } = await api.post('/api/import/statement/preview', payload, { timeout: 90000, signal });
   return data;
 }
 

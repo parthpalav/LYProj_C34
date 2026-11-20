@@ -34,6 +34,10 @@ PODS:
     - Yoga
   - ExpoAsset (58.0.18):
     - ExpoModulesCore
+  - ExpoBlur (58.0.5):
+    - ExpoModulesCore
+  - ExpoDocumentPicker (58.0.5):
+    - ExpoModulesCore
   - ExpoDomWebView (58.0.2):
     - ExpoModulesCore
   - ExpoFileSystem (58.0.12):
@@ -45,6 +49,8 @@ PODS:
   - ExpoImagePicker (58.0.10):
     - ExpoModulesCore
   - ExpoKeepAwake (58.0.3):
+    - ExpoModulesCore
+  - ExpoLinearGradient (58.0.3):
     - ExpoModulesCore
   - ExpoLogBox (58.0.13):
     - React-Core
@@ -85,6 +91,8 @@ PODS:
     - ExpoModulesWorklets
     - RNWorklets
   - ExpoSecureStore (58.0.2):
+    - ExpoModulesCore
+  - ExpoSpeechRecognition (58.0.1):
     - ExpoModulesCore
   - ExpoSplashScreen (58.0.11):
     - ExpoModulesCore
@@ -2099,6 +2107,53 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
+  - RNSVG (15.16.0):
+    - hermes-engine
+    - RCTRequired
+    - RCTTypeSafety
+    - React-bridging
+    - React-Core
+    - React-Core-prebuilt
+    - React-cxxstableapi
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/core
+    - ReactNativeDependencies
+    - RNSVG/common (= 15.16.0)
+    - Yoga
+  - RNSVG/common (15.16.0):
+    - hermes-engine
+    - RCTRequired
+    - RCTTypeSafety
+    - React-bridging
+    - React-Core
+    - React-Core-prebuilt
+    - React-cxxstableapi
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/core
+    - ReactNativeDependencies
+    - Yoga
   - RNWorklets (0.13.0):
     - hermes-engine
     - RCTRequired
@@ -2184,18 +2239,22 @@ DEPENDENCIES:
   - EXConstants (from `../node_modules/expo-constants/ios`)
   - Expo (from `../node_modules/expo`)
   - ExpoAsset (from `../node_modules/expo-asset/ios`)
+  - ExpoBlur (from `../node_modules/expo-blur/ios`)
+  - ExpoDocumentPicker (from `../node_modules/expo-document-picker/ios`)
   - "ExpoDomWebView (from `../node_modules/expo/node_modules/@expo/dom-webview/ios`)"
-  - ExpoFileSystem (from `../node_modules/expo/node_modules/expo-file-system/ios/ExpoFileSystem.podspec`)
-  - ExpoFont (from `../node_modules/expo-font/ios/ExpoFont.podspec`)
+  - ExpoFileSystem (from `../node_modules/expo/node_modules/expo-file-system/ios`)
+  - ExpoFont (from `../node_modules/expo-font/ios`)
   - ExpoHaptics (from `../node_modules/expo-haptics/ios`)
   - ExpoImagePicker (from `../node_modules/expo-image-picker/ios`)
   - ExpoKeepAwake (from `../node_modules/expo/node_modules/expo-keep-awake/ios`)
+  - ExpoLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
   - "ExpoLogBox (from `../node_modules/expo/node_modules/@expo/log-box`)"
-  - ExpoModulesCore (from `../node_modules/expo/node_modules/expo-modules-core/ExpoModulesCore.podspec`)
+  - ExpoModulesCore (from `../node_modules/expo/node_modules/expo-modules-core`)
   - ExpoModulesJSI (from `../node_modules/expo-modules-jsi/apple`)
-  - ExpoModulesWorklets (from `../node_modules/expo/node_modules/expo-modules-core/ExpoModulesWorklets.podspec`)
+  - ExpoModulesWorklets (from `../node_modules/expo/node_modules/expo-modules-core`)
   - ExpoModulesWorkletsAdapter (from `../node_modules/expo/node_modules/expo-modules-core`)
   - ExpoSecureStore (from `../node_modules/expo-secure-store/ios`)
+  - ExpoSpeechRecognition (from `../node_modules/expo-speech-recognition/ios`)
   - ExpoSplashScreen (from `../node_modules/expo-splash-screen/ios`)
   - ExpoStatusBar (from `../node_modules/expo-status-bar/ios`)
   - fast_float (from `build/rndeps-facades/fast_float`)
@@ -2286,6 +2345,7 @@ DEPENDENCIES:
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNSVG (from `../node_modules/react-native-svg`)
   - RNWorklets (from `../node_modules/react-native-worklets`)
   - SocketRocket (from `build/rndeps-facades/SocketRocket`)
   - Yoga (from `build/rncore-facades/Yoga`)
@@ -2301,30 +2361,38 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo"
   ExpoAsset:
     :path: "../node_modules/expo-asset/ios"
+  ExpoBlur:
+    :path: "../node_modules/expo-blur/ios"
+  ExpoDocumentPicker:
+    :path: "../node_modules/expo-document-picker/ios"
   ExpoDomWebView:
     :path: "../node_modules/expo/node_modules/@expo/dom-webview/ios"
   ExpoFileSystem:
-    :podspec: "../node_modules/expo/node_modules/expo-file-system/ios/ExpoFileSystem.podspec"
+    :path: "../node_modules/expo/node_modules/expo-file-system/ios"
   ExpoFont:
-    :podspec: "../node_modules/expo-font/ios/ExpoFont.podspec"
+    :path: "../node_modules/expo-font/ios"
   ExpoHaptics:
     :path: "../node_modules/expo-haptics/ios"
   ExpoImagePicker:
     :path: "../node_modules/expo-image-picker/ios"
   ExpoKeepAwake:
     :path: "../node_modules/expo/node_modules/expo-keep-awake/ios"
+  ExpoLinearGradient:
+    :path: "../node_modules/expo-linear-gradient/ios"
   ExpoLogBox:
     :path: "../node_modules/expo/node_modules/@expo/log-box"
   ExpoModulesCore:
-    :podspec: "../node_modules/expo/node_modules/expo-modules-core/ExpoModulesCore.podspec"
+    :path: "../node_modules/expo/node_modules/expo-modules-core"
   ExpoModulesJSI:
     :path: "../node_modules/expo-modules-jsi/apple"
   ExpoModulesWorklets:
-    :podspec: "../node_modules/expo/node_modules/expo-modules-core/ExpoModulesWorklets.podspec"
+    :path: "../node_modules/expo/node_modules/expo-modules-core"
   ExpoModulesWorkletsAdapter:
     :path: "../node_modules/expo/node_modules/expo-modules-core"
   ExpoSecureStore:
     :path: "../node_modules/expo-secure-store/ios"
+  ExpoSpeechRecognition:
+    :path: "../node_modules/expo-speech-recognition/ios"
   ExpoSplashScreen:
     :path: "../node_modules/expo-splash-screen/ios"
   ExpoStatusBar:
@@ -2504,6 +2572,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSVG:
+    :path: "../node_modules/react-native-svg"
   RNWorklets:
     :path: "../node_modules/react-native-worklets"
   SocketRocket:
@@ -2517,18 +2587,22 @@ SPEC CHECKSUMS:
   EXConstants: e90e362a4ffafaa03999f456bf81d7fb8021db9d
   Expo: dbf974c6df7a0fbb3877ea2a17b6593e3be5710f
   ExpoAsset: 9548991f0332bd8ed8819299e0b413d713104a1a
+  ExpoBlur: 68f7f85ae6584f0bec52a0a42ee5088b093d1473
+  ExpoDocumentPicker: 3e8fdb323db3ad2f7c8bbd21fdad3b982f1cf178
   ExpoDomWebView: b2a6d681b9d34c23b1f584321386ca8da1d36afb
   ExpoFileSystem: eb51c84b0496cb6bf384c1be8a0f86dfbe61454a
   ExpoFont: b215bc738b2e3fba7ffed79903a6fccf66959dd0
   ExpoHaptics: c95d1e2162895e710b68dd912eec619900ebdf33
   ExpoImagePicker: a466134ec92fed0b38bbf9062c7eb5f3c8c49d94
   ExpoKeepAwake: fd18a5d233329013c578030ad399d8e10b252b5f
+  ExpoLinearGradient: 0a669599d57e1421c4718d59eed8c96fe02c1467
   ExpoLogBox: 624d64042d73abe0dc230a24b1a9f835adb2cec9
-  ExpoModulesCore: edfe04234360339382f9a83e8f5276d7f039430d
+  ExpoModulesCore: cd86371968bee2ad7204f06e4cb1693fd8a9a277
   ExpoModulesJSI: 44703b8507be8a1390ba1576ac7f6fb8d6ad8491
   ExpoModulesWorklets: 208e6112a0467df1cc21530e280d650a3adf6261
   ExpoModulesWorkletsAdapter: 74a84fa619c35a99c6444317fa62111dcf46f695
   ExpoSecureStore: 64e1fe78b5b0a1edb61beff044bb2cad03084f9c
+  ExpoSpeechRecognition: b5cca2abcecfa2f784466f2845dbd02ab2f83e45
   ExpoSplashScreen: 4a16996856aeceb61b1c253c5fc9b43208705fa5
   ExpoStatusBar: 56aa9746e1bee4d8adbab12f4d7efc97000ac49f
   fast_float: 7c925d1cebf8328d4018d061f49377e9f887e3b4
@@ -2616,12 +2690,13 @@ SPEC CHECKSUMS:
   ReactNativeDependencies: d3b7423ba1e52525e42085c8470109abde583d2e
   RNDateTimePicker: 5ddeb7b9142ea2b53386cf9e1737fd0ddc5a186f
   RNGestureHandler: e19fcf39b0212e0eb8bc7ca1e645500eb492f6be
-  RNReanimated: 3018727dbf272754d0f31ef73f619e49ade7baf0
+  RNReanimated: d8e0e3687ff232c7668bf834e7cee4f05ea7976c
   RNScreens: 6d0d3b7819284dbf9f222899eb819f069fce4b8b
+  RNSVG: c35beed3dcf6fd14b50ca1fc0d4214a17ec5334d
   RNWorklets: 488806637a21eb17812a48dadca7cb8c698c8cfd
   SocketRocket: 37aec555668fb852ec12e3c0de59a86ca58f0871
   Yoga: d1c536142c5ff8ec8cd856ab2a7c227a1d875c8e
 
-PODFILE CHECKSUM: eff10ccf1af1beed712aa7d1213701c7bf44fc73
+PODFILE CHECKSUM: e3be9f3371c862e34dbdb4cff05c3f9f0973b00d
 
 COCOAPODS: 1.17.0
